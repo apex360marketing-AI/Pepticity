@@ -490,7 +490,9 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
   .brand-w { font-size: 2rem; }
   .slim-toc, .slim-sec { display: none; }
   .slim { gap: 10px; }
-  .slim .btn-s { margin-left: auto; }
+  .slim .btn-s { display: none; }
+  .slim .contents-btn { margin-left: auto; }
+  .mcta .btn-solid::after { display: none; }
   .slim .contents-btn { display: inline-flex; align-items: center; padding: 0 10px; }
   .cover, .b-grid, .b-flip, .range-grid, .notes-grid, .plans, .range, .mt-grid, .faq, .ask-in, .ins-in { grid-template-columns: minmax(0, 1fr); }
   .cover { padding-top: 20px; gap: 32px; }
@@ -562,6 +564,11 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
   summary { font-size: 1.15rem; }
   details > p, details > figure { margin-left: 0; }
   .rp-log li { grid-template-columns: 1fr; gap: 0; }
+  .kv tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; border-bottom: 1px dotted var(--rule); padding: 4px 0; }
+  .kv th, .kv td { border-bottom: 0; padding: 2px 0; }
+  .kv:has(td.lim) th { grid-column: 1 / -1; }
+  .kv:has(td.lim) td:not(.lim) { text-align: left; }
+  .qz-nav { flex-wrap: wrap; gap: 4px 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
