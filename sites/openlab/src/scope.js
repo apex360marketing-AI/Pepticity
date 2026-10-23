@@ -141,8 +141,8 @@
         const tw = g.measureText(txt).width + 16, ly = Math.max(t + 4, yy - 34);
         let lx = Math.min(W - r - tw, Math.max(l, X + 10));
         g.strokeStyle = C.slate; g.lineWidth = 1; g.beginPath(); g.moveTo(X, yy - 5); g.lineTo(X, ly + 10); g.lineTo(lx, ly + 10); g.stroke();
-        g.fillStyle = "#fff"; g.fillRect(lx, ly, tw, 20); g.strokeRect(lx + 0.5, ly + 0.5, tw - 1, 19);
-        g.fillStyle = this.peak ? C.ion : C.slate; g.textAlign = "left"; g.fillText(txt, lx + 8, ly + 10.5);
+        g.fillStyle = "#fff"; g.fillRect(lx, ly, tw, 20); g.strokeStyle = this.peak ? C.ion : C.slate; g.lineWidth = this.peak ? 1.5 : 1; g.strokeRect(lx + 0.5, ly + 0.5, tw - 1, 19);
+        g.fillStyle = C.slate; g.textAlign = "left"; g.fillText(txt, lx + 8, ly + 10.5);
       }
     }
   }

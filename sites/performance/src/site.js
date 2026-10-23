@@ -86,7 +86,7 @@
     `<span class="lp-st mono">In panel</span></li>`).join("");
 
   const tileHTML = ([f, w, alt], i) =>
-    `<figure class="tile" style="margin:0"><div class="ph" style="--lx:${15 + (i * 37) % 70}%"><img src="media/${f}.jpg" alt="${alt} (sample photo)" loading="lazy" onerror="this.remove()"></div>` +
+    `<figure class="tile" style="margin:0"><div class="ph" style="--lx:${15 + (i * 37) % 70}%;--ang:${100 + (i * 29) % 80}deg"><img src="media/${f}.jpg" alt="${alt} (sample photo)" loading="lazy" onerror="this.remove()"></div>` +
     `<span class="cam mono">CAM ${String(i + 1).padStart(2, "0")}</span><span class="ghost" aria-hidden="true">${w}</span>` +
     `<figcaption class="cap"><b>${w}</b><span class="mono">SAMPLE</span></figcaption></figure>`;
   $(".g-a").innerHTML = TILES.slice(0, 7).map(tileHTML).join("");
@@ -142,6 +142,10 @@
     // proof order
     M.order.forEach((id, i) => { const s = $(`[data-proof="${id}"]`); if (s) s.style.order = i; });
     $(".clin-who").textContent = M.who;
+    $(".hp-mode").textContent = M.label;
+    $(".hp-count").textContent = String(mode === "all" ? 11 : M.markers.length).padStart(2, "0");
+    const keys = Object.keys(MARKERS);
+    $$(".hp-bars i").forEach((b, i) => { const on = mode === "all" || M.markers.includes(keys[i]); b.classList.toggle("on", on); b.style.transform = `scaleY(${on ? 0.55 + ((i * 37) % 45) / 100 : 0.25})`; });
     buildQ1();
     requestAnimationFrame(() => { renumber(); if (ready) { ScrollTrigger.refresh(); buildRail(); } });
   }

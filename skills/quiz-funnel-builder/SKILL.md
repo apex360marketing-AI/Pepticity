@@ -48,7 +48,7 @@ Quizzes are the highest-converting lead path for health DTC (about 7.9–11.3% l
 - Run every question, help text and result through `regulated-claims-check`.
 
 ## 3. Screen rules
-- One question per screen. Answer options are real `<input type="radio">` or `type="checkbox"` inside `<fieldset>` + `<legend>` (the question). Labels are the whole row, ≥ 56px tall, 18–20px text.
+- One question per screen. Answer options are real `<input type="radio">` or `type="checkbox"` inside `<fieldset>` + `<legend>` (the question). Labels are the whole row, ≥ 56px tall, 18–20px text. Site 1's `aria-pressed` buttons inside a `<fieldset>` are an acceptable alternative for single-choice. Never use bare `<div>` tiles.
 - Single-choice auto-advances 250 ms after selection (visible check first), with a Back button always present. Multi-choice uses a Continue button that stays disabled until valid, with the reason shown as text.
 - Progress is text plus a bar: "Question 2 of 5". Recompute "of" from the current branch (shortest remaining path).
 - Result screen order: (1) the personalised path title and body, shown BEFORE asking for anything; (2) the email field (+ optional phone) with the value stated ("Email me my path and book my free clinician review"); (3) an unticked consent checkbox for marketing, separate from submission; (4) "Prefer to talk? [phone number]" and "Call me back".
