@@ -1,8 +1,11 @@
-# Handoff — Pepticity templates
-Building 5 all-in-one Pepticity site versions (brief: BRIEF.md, bottom section overrides). Live: V1 Clinic (dist/), V3 Prime (sites/prime/dist), Logo Lab (logos/), Plan (plan/).
-Done: all 5 versions live and tested.
-Next action: for each unfinished site, finish per BRIEF.md, then `python3 build.py sites/<slug>` and smoke-test with scratchpad deps/smoke.mjs (`node smoke.mjs <slug> home,<views>`), publish dist/index.html as an artifact, add its link to plan/index.html, commit + push.
-Media: 44 Higgsfield assets listed in media/manifest.tsv; host d8j0ntlcm91z4.cloudfront.net is blocked by the network policy — once allowed, run media/fetch.sh and copy pool files into each site's media/.
-Pending Higgsfield jobs: Open Lab images (job ids in chat, indices 500–507) and Performance intro film (e6c309a4-d2ac-484b-9bf5-aaeac2485500) — add URLs to manifest.tsv.
-Open questions: Grace's partner pharmacy, markets, pricing; counsel review. Repo rule: this project lives ONLY in apex360marketing-AI/Pepticity — never Apex_Agents_Bots.
+# Handoff — Pepticity rebuild (user is on a tight budget: work inline, NO subagents)
+Verdict from the user: the 5 sites in this repo read as generic; three are light (banned). Rebuild ONE site for Grace, properly.
+Next action: copy the user's approved Lead Magnet design as the base instead of starting fresh —
+`/home/user/apex_agents_bots/design/landing-options/apex-bp8.html` (The Descent, favourite) or `apex-bp9.html` (Frame by Frame).
+Ask the user which one (one multiple-choice question), then re-skin it into a dark research-use peptide store: catalogue with
+sequence/MW/purity/lot/price, cart + bundles + subscribe, COA lot lookup, email/SMS capture, keep the intro + scroll signature.
+Buttons/cards: only the custom library (design/effects.json HOV-14/16/22/23/36, apex-glassmorphism shapes, chrome-lift-icons). No pills.
+Copy limits: no treatment/aging/fatigue claims, no dosing, nothing aimed at sick people or seniors as patients.
+Do not claim a clinician or pharmacy (Grace has neither). Save only to apex360marketing-AI/Pepticity, never Apex_Agents_Bots.
+Open questions: which base (bp8 or bp9); media still blocked until d8j0ntlcm91z4.cloudfront.net is allowed.
 **Autostart:** no
