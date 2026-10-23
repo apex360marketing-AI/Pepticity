@@ -1,0 +1,897 @@
+<title>APEX — The Launch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--smoke:#161314;--char:#241f20;--char2:#2e2729;--rose:#a8706f;--rose-l:#c49592;--rose-d:#7f5150;--porc:#ece7e4;--mauve:#6e6265;--text:#ece7e4;--muted:#b6aaab;--line:rgba(236,231,228,.14);--glass:rgba(36,31,32,.58);--glass-s:rgba(33,28,29,.86);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--smoke);color:var(--text);font-family:Manrope,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--smoke)}
+.serif{font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-weight:400}
+a{color:var(--rose-l)}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--rose-l)}
+
+/* ---------- ambient layers ---------- */
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;transition:opacity .8s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1)}
+#gl.soft{filter:blur(6px) saturate(.8)}
+#gl.gone{opacity:0}
+.ambient{position:fixed;inset:-10%;z-index:0;pointer-events:none;will-change:transform;background:radial-gradient(34% 30% at 50% 80%,rgba(168,112,111,.16),transparent 70%),radial-gradient(30% 30% at 12% 20%,rgba(110,98,101,.08),transparent 70%),radial-gradient(28% 26% at 88% 30%,rgba(127,81,80,.07),transparent 70%);animation-name:drift;animation-duration:26s;animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-direction:alternate}
+@keyframes drift{to{transform:translate3d(2%,-3%,0) scale(1.06)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+@keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-1%,-2%)}}
+main{position:relative;z-index:2}
+
+/* ---------- cursor ---------- */
+.cur-dot,.cur-ring{position:fixed;left:0;top:0;z-index:80;pointer-events:none;border-radius:50%;opacity:0;transition:opacity .3s}
+.cur-dot{width:8px;height:8px;margin:-4px;background:var(--rose)}
+.cur-ring{width:38px;height:38px;margin:-19px;border:1px solid rgba(236,231,228,.35);transition:opacity .3s,width .35s cubic-bezier(.16,1,.3,1),height .35s cubic-bezier(.16,1,.3,1),margin .35s cubic-bezier(.16,1,.3,1),border-color .3s}
+.cur-on .cur-dot,.cur-on .cur-ring{opacity:1}
+.cur-hot .cur-ring{width:64px;height:64px;margin:-32px;border-color:var(--rose-l)}
+@media (hover:none){.cur-dot,.cur-ring{display:none}}
+
+/* ---------- masthead ---------- */
+.mast{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;transition:background .5s,backdrop-filter .5s,border-color .5s;border-bottom:1px solid transparent}
+.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px;transition:padding .5s cubic-bezier(.16,1,.3,1)}
+.mast.compact{background:rgba(22,19,20,.72);backdrop-filter:blur(14px) saturate(140%);border-color:var(--line)}
+.mast.compact .wrap{padding-block:10px}
+.word{position:relative;font-size:26px;letter-spacing:.06em;color:var(--porc);text-decoration:none;overflow:hidden;display:inline-block;padding-right:2px}
+.word::after{content:attr(data-t);position:absolute;inset:0;padding-right:2px;color:transparent;background:linear-gradient(100deg,transparent 42%,rgba(255,250,248,.95) 50%,transparent 58%) no-repeat;background-size:300% 100%;background-position:120% 0;-webkit-background-clip:text;background-clip:text;pointer-events:none;animation-name:glint;animation-duration:6s;animation-timing-function:cubic-bezier(.4,0,.2,1);animation-iteration-count:infinite}
+@keyframes glint{0%,70%{background-position:120% 0}100%{background-position:-20% 0}}
+.mast nav{display:flex;align-items:center;gap:34px;font-size:14px;font-weight:600}
+.mast nav a.lk{position:relative;color:var(--muted);text-decoration:none;padding-block:12px}
+.mast nav a.lk::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:1px;background:var(--rose-l);transform:scaleX(0);transform-origin:right;transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.mast nav a.lk:hover{color:var(--porc)}
+.mast nav a.lk:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* ---------- ticket-stub buttons ---------- */
+.stub{--n:8px;--tw:56px;position:relative;display:inline-flex;align-items:stretch;min-height:52px;border:0;padding:0;border-radius:5px;font:700 15px/1 Manrope,system-ui,sans-serif;letter-spacing:.01em;text-decoration:none;cursor:pointer;color:var(--smoke);background:var(--rose);
+  -webkit-mask:radial-gradient(circle at calc(100% - var(--tw)) 0,#0000 var(--n),#000 calc(var(--n) + .5px)) top/100% 51% no-repeat,radial-gradient(circle at calc(100% - var(--tw)) 100%,#0000 var(--n),#000 calc(var(--n) + .5px)) bottom/100% 51% no-repeat;
+          mask:radial-gradient(circle at calc(100% - var(--tw)) 0,#0000 var(--n),#000 calc(var(--n) + .5px)) top/100% 51% no-repeat,radial-gradient(circle at calc(100% - var(--tw)) 100%,#0000 var(--n),#000 calc(var(--n) + .5px)) bottom/100% 51% no-repeat;
+  transition:transform .4s cubic-bezier(.16,1,.3,1),background .3s,box-shadow .4s}
+.stub .lab{display:flex;align-items:center;padding:0 24px;white-space:nowrap}
+.stub .tear{position:relative;width:var(--tw);display:grid;place-items:center;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+.stub .tear::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:1px;background-image:linear-gradient(to bottom,currentColor 55%,transparent 0);background-size:1px 6px;opacity:.55}
+.stub .tear svg{transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.stub:hover{background:var(--rose-l);transform:translateY(-2px)}
+.stub:hover .tear{transform:translate(3px,1px) rotate(5deg)}
+.stub:hover .tear svg{transform:translateX(4px)}
+.stub:active{transform:translateY(0) scale(.98)}
+.stub:focus-visible{outline:2px solid var(--porc);outline-offset:4px}
+.stub.ghost{color:var(--porc);background:rgba(46,39,41,.9)}
+.stub.ghost:hover{background:rgba(70,58,61,.95)}
+.stub.small{min-height:44px;--tw:44px;font-size:13px}
+.stub.small .lab{padding:0 16px}
+
+/* ---------- stub cards (horizontal perforation) ---------- */
+.card{--y:64%;--n:11px;position:relative;background:var(--glass-s);border-radius:8px;
+  -webkit-mask:radial-gradient(circle at 0 var(--y),#0000 var(--n),#000 calc(var(--n) + .5px)) left/51% 100% no-repeat,radial-gradient(circle at 100% var(--y),#0000 var(--n),#000 calc(var(--n) + .5px)) right/51% 100% no-repeat;
+          mask:radial-gradient(circle at 0 var(--y),#0000 var(--n),#000 calc(var(--n) + .5px)) left/51% 100% no-repeat,radial-gradient(circle at 100% var(--y),#0000 var(--n),#000 calc(var(--n) + .5px)) right/51% 100% no-repeat;
+  box-shadow:inset 0 1px 0 rgba(236,231,228,.10);transition:transform .5s cubic-bezier(.16,1,.3,1),background .4s}
+.card::before{content:"";position:absolute;left:18px;right:18px;top:var(--y);height:1px;background-image:linear-gradient(to right,rgba(236,231,228,.32) 55%,transparent 0);background-size:8px 1px;will-change:transform;animation-name:march;animation-duration:2.4s;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes march{to{background-position:16px 0}}
+@supports not (backdrop-filter:blur(4px)){.card,.stub.ghost{background:var(--char)}}
+
+/* ---------- focus-pull reveals ---------- */
+.focus{opacity:0;filter:blur(14px);transform:translateY(22px);transition:opacity 1s cubic-bezier(.16,1,.3,1),filter 1.1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+.focus.in{opacity:1;filter:blur(0);transform:none}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding-top:clamp(120px,18vh,190px);padding-bottom:40px}
+.hero .kicker{opacity:0;animation-name:fadeup;animation-duration:1.2s;animation-delay:.2s;animation-fill-mode:both;animation-timing-function:cubic-bezier(.16,1,.3,1)}
+.hero h1{margin:22px 0 0;max-width:1000px;font-size:clamp(46px,8.2vw,124px);line-height:.98;letter-spacing:-.01em;text-wrap:balance}
+.hero h1 .w{display:inline-block;opacity:0;animation-name:pull;animation-duration:1.6s;animation-fill-mode:both;animation-timing-function:cubic-bezier(.16,1,.3,1)}
+.hero h1 em{font-style:italic;color:var(--rose-l)}
+@keyframes pull{from{opacity:0;filter:blur(18px);transform:translateY(30px) scale(1.04)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero p.sub{margin:26px auto 0;max-width:600px;font-size:18px;line-height:1.65;color:var(--muted);opacity:0;animation-name:fadeup;animation-duration:1.2s;animation-delay:1.1s;animation-fill-mode:both}
+.hero p.sub b{color:var(--porc);font-weight:600}
+.hero .ctas{margin-top:34px;display:flex;flex-wrap:wrap;justify-content:center;gap:14px;opacity:0;animation-name:fadeup;animation-duration:1.2s;animation-delay:1.35s;animation-fill-mode:both}
+.cue{margin-top:auto;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);padding-top:40px}
+.cue i{display:block;width:1px;height:56px;background:linear-gradient(var(--rose-l),transparent);transform-origin:top;animation-name:cue;animation-duration:2.2s;animation-iteration-count:infinite;animation-timing-function:cubic-bezier(.65,0,.35,1)}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- pinned phone sequence ---------- */
+#seq{position:relative;height:1000vh}
+.seq-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.seq-pin .wrap{height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}
+.seq-copy{grid-column:2;position:relative;min-height:340px}
+.seq-head{position:absolute;top:-120px;left:0;right:0}
+.seq-head h2{margin:12px 0 0;font-size:clamp(28px,3.2vw,44px);line-height:1.05}
+.step{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:16px;opacity:0;filter:blur(10px);transform:translateY(26px);transition:opacity .7s cubic-bezier(.16,1,.3,1),filter .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.step.on{opacity:1;filter:blur(0);transform:none;pointer-events:auto}
+.step.past{transform:translateY(-26px)}
+.step .num{font-size:clamp(72px,9vw,128px);line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(196,149,146,.55)}
+.step h3{margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.04}
+.step p{margin:0;max-width:460px;font-size:17px;line-height:1.7;color:var(--muted)}
+.rail{position:absolute;left:max(20px,env(safe-area-inset-left,0px));bottom:36px;right:max(20px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;max-width:1280px;margin:0 auto}
+.rail span{position:relative;height:2px;background:rgba(236,231,228,.14);overflow:hidden}
+.rail span i{position:absolute;inset:0;background:var(--rose-l);transform-origin:left;transform:scaleX(0)}
+.rail-lab{position:absolute;left:max(20px,env(safe-area-inset-left,0px));bottom:50px;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- token wall ---------- */
+section.block{position:relative;padding-block:140px 60px}
+.bighead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px}
+.bighead h2{margin:14px 0 0;font-size:clamp(40px,5.4vw,80px);line-height:1;max-width:760px;text-wrap:balance}
+.bighead h2 em{font-style:italic;color:var(--rose-l)}
+.bighead p{margin:0;max-width:400px;font-size:16px;line-height:1.7;color:var(--muted)}
+.ghostnum{position:absolute;right:-2%;top:40px;font-size:clamp(220px,34vw,520px);line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(236,231,228,.07);pointer-events:none;will-change:transform}
+.tabs{display:flex;gap:26px;margin-top:40px;border-bottom:1px solid var(--line)}
+.tabs button{position:relative;min-height:46px;padding:0;border:0;background:none;color:var(--muted);font:600 14px Manrope,sans-serif;cursor:pointer;letter-spacing:.02em}
+.tabs button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--rose);transform:scaleX(0);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.tabs button[aria-selected=true]{color:var(--porc)}
+.tabs button[aria-selected=true]::after{transform:scaleX(1)}
+.wall{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;margin-top:32px;align-items:start}
+.wallgl{position:relative;width:100%;aspect-ratio:11/3.6;min-height:300px;border-radius:10px;overflow:hidden;background:none;box-shadow:inset 0 0 0 1px rgba(236,231,228,.08);cursor:pointer;touch-action:pan-y}
+.wallhint{position:absolute;left:18px;bottom:14px;font-size:12px;color:var(--muted);letter-spacing:.04em;pointer-events:none}
+.detail{--y:70%;padding:28px 28px 26px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.detail h3{margin:6px 0 0;font-size:30px;line-height:1.1}
+.detail .val{font-size:15px;color:var(--porc);font-weight:700}
+.months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.months span{height:26px;display:grid;place-items:center;font-size:10px;color:var(--muted);border-radius:3px;background:rgba(236,231,228,.05);transition:background .5s,color .5s}
+.months span.pk{background:var(--rose);color:var(--smoke);font-weight:700}
+.detail .lower{padding-top:22px;display:flex;flex-direction:column;gap:12px}
+.swap{transition:opacity .35s,filter .35s,transform .35s}
+.swap.out{opacity:0;filter:blur(6px);transform:translateY(6px)}
+.list-sr{columns:3;font-size:13px;color:var(--muted);margin-top:22px;padding-left:18px}
+
+/* ---------- pricing ---------- */
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:48px}
+.plan{--y:62%;padding:34px 34px 30px;display:flex;flex-direction:column;gap:12px}
+.plan:hover{transform:translateY(-6px);background:rgba(46,39,41,.66)}
+.plan h3{margin:4px 0 0;font-size:32px}
+.plan .price{font-size:20px;color:var(--porc);font-weight:700}
+.plan p{margin:0;color:var(--muted);line-height:1.65}
+.plan ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:15px}
+.plan li::before{content:"—";color:var(--rose-l);margin-right:10px}
+.plan .lower{padding-top:24px;margin-top:auto}
+
+/* ---------- reserve (area checker) ---------- */
+.reserve{--y:0%;margin-top:48px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);border-radius:10px;overflow:hidden;background:var(--glass-s);
+  -webkit-mask:radial-gradient(circle at 62% 0,#0000 14px,#000 14.5px) top/100% 51% no-repeat,radial-gradient(circle at 62% 100%,#0000 14px,#000 14.5px) bottom/100% 51% no-repeat;
+          mask:radial-gradient(circle at 62% 0,#0000 14px,#000 14.5px) top/100% 51% no-repeat,radial-gradient(circle at 62% 100%,#0000 14px,#000 14.5px) bottom/100% 51% no-repeat}
+.reserve form{padding:42px;display:flex;flex-direction:column;gap:22px;min-width:0}
+.reserve .fields{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px}
+.reserve label{display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.reserve select,.reserve input{min-height:52px;width:100%;padding:0 14px;border:0;border-bottom:1px solid rgba(236,231,228,.3);border-radius:0;background:transparent;color:var(--porc);font:500 17px Manrope,sans-serif;letter-spacing:.01em;outline:none;transition:border-color .3s}
+.reserve select:focus,.reserve input:focus{border-color:var(--rose-l)}
+.reserve select option{background:var(--char);color:var(--porc)}
+.reserve label:focus-within{color:var(--rose-l)}
+.stubside{position:relative;padding:42px 36px;display:flex;flex-direction:column;justify-content:center;gap:12px;background:rgba(168,112,111,.10);transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.stubside::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:1px;background-image:linear-gradient(to bottom,rgba(236,231,228,.35) 55%,transparent 0);background-size:1px 8px;will-change:transform;animation-name:marchy;animation-duration:2.4s;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes marchy{to{background-position:0 16px}}
+.reserve:hover .stubside{transform:translate(4px,2px) rotate(.6deg)}
+.ticket-code{font-size:42px;line-height:1;color:var(--porc)}
+.printout{font-size:15px;line-height:1.6;color:var(--muted);min-height:72px}
+.printout b{color:var(--porc)}
+.printout .line{display:block;overflow:hidden;white-space:nowrap;animation-name:type;animation-duration:1.2s;animation-timing-function:steps(36);animation-fill-mode:both}
+@keyframes type{from{max-width:0}to{max-width:100%}}
+.err{color:var(--rose-l);font-size:14px;min-height:20px}
+
+/* ---------- returns ---------- */
+.promise h2{font-size:clamp(46px,7vw,108px);line-height:.95;margin:16px 0 0}
+.perf{height:1px;margin-top:46px;background-image:linear-gradient(to right,rgba(236,231,228,.4) 55%,transparent 0);background-size:10px 1px;transform-origin:left;transform:scaleX(0);transition:transform 1.6s cubic-bezier(.16,1,.3,1)}
+.perf.in{transform:scaleX(1)}
+.reasons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:40px}
+.reason{--y:calc(100% - 58px);padding:30px 28px 26px;display:flex;flex-direction:column;gap:10px}
+.reason:hover{transform:translateY(-6px) rotate(-.4deg)}
+.reason .ic{width:44px;height:44px}
+.reason .ic path{stroke-dasharray:80;stroke-dashoffset:80;transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1) .3s}
+.reason.in .ic path{stroke-dashoffset:0}
+.reason h3{margin:4px 0 0;font-size:24px}
+.reason p{margin:0;color:var(--muted);line-height:1.6;font-size:15px}
+.reason .lower{margin-top:auto;padding-top:22px;font-size:13px;color:var(--rose-l);letter-spacing:.04em}
+
+/* ---------- closing ---------- */
+.closing{position:relative;text-align:center;padding-block:180px 140px;overflow:hidden}
+.closing::before{content:"";position:absolute;left:50%;top:50%;width:900px;height:900px;margin:-450px;border-radius:50%;background:radial-gradient(circle,rgba(168,112,111,.22),transparent 62%);animation-name:breathe;animation-duration:9s;animation-iteration-count:infinite;animation-timing-function:ease-in-out;pointer-events:none}
+@keyframes breathe{50%{transform:scale(1.15);opacity:.7}}
+.closing h2{position:relative;margin:0 auto;max-width:900px;font-size:clamp(44px,6.6vw,100px);line-height:1;text-wrap:balance}
+.closing h2 em{font-style:italic;color:var(--rose-l)}
+.closing p{position:relative;margin:24px auto 0;max-width:520px;color:var(--muted);font-size:17px;line-height:1.65}
+.closing .ctas{position:relative;margin-top:36px;display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+footer{position:relative;border-top:1px solid var(--line);padding-block:30px 44px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;font-size:13px;color:var(--muted)}
+footer .perfline{position:absolute;left:0;right:0;top:-1px;height:1px;background-image:linear-gradient(to right,var(--rose) 55%,transparent 0);background-size:12px 1px;will-change:transform;animation-name:march2;animation-duration:3s;animation-timing-function:linear;animation-iteration-count:infinite;opacity:.6}
+@keyframes march2{to{background-position:24px 0}}
+
+
+/* ---------- control centre menu ---------- */
+.cc-handle{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;z-index:55;width:96px;height:26px;margin-left:-48px;border:0;background:none;cursor:grab;display:grid;place-items:center;touch-action:none}
+.cc-handle i{display:block;width:44px;height:5px;border-radius:3px;background:rgba(236,231,228,.38);transition:width .4s cubic-bezier(.16,1,.3,1),background .3s}
+.cc-handle:hover i,.cc-handle:focus-visible i{width:64px;background:var(--rose-l)}
+.cc-handle:focus-visible{outline:none}
+.ccbtn{width:46px;height:46px;border:0;border-radius:14px;background:rgba(46,39,41,.6);backdrop-filter:blur(10px);display:grid;place-items:center;cursor:pointer;color:var(--porc);transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s}
+.ccbtn:hover{background:rgba(70,58,61,.8)}
+.ccbtn:active{transform:scale(.9)}
+.ccbtn:focus-visible,.tile:focus-visible,.cc-close:focus-visible,.cc-slider:focus-visible{outline:2px solid var(--rose-l);outline-offset:3px}
+.cc-scrim{position:fixed;inset:0;z-index:69;background:rgba(10,8,9,.5);opacity:0;transition:opacity .45s}
+.cc-scrim.open{opacity:1;backdrop-filter:blur(6px)}
+.cc{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:70;width:min(720px,calc(100% - 24px));transform:translate(-50%,calc(-100% - 40px));transition:transform .62s cubic-bezier(.22,1.18,.36,1)}
+.cc.open{transform:translate(-50%,0)}
+.cc.dragging{transition:none}
+.cc-panel{border-radius:34px;padding:20px;background:rgba(36,31,32,.62);backdrop-filter:blur(26px) saturate(150%);box-shadow:inset 0 1px 0 rgba(236,231,228,.16),0 40px 90px -30px rgba(0,0,0,.85)}
+.cc-top{display:flex;justify-content:space-between;align-items:center;padding:4px 8px 16px}
+.cc-close{min-height:40px;padding:0 16px;border:0;border-radius:12px;background:rgba(236,231,228,.08);color:var(--porc);font:600 13px Manrope,sans-serif;cursor:pointer}
+.cc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:118px;gap:12px}
+.tile{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:16px;border:0;border-radius:26px;background:rgba(236,231,228,.07);color:var(--porc);text-align:left;text-decoration:none;font:inherit;cursor:pointer;overflow:hidden;opacity:0;transform:translateY(-14px) scale(.96);transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .4s,background .3s}
+.cc.open .tile{opacity:1;transform:none}
+.tile:hover{background:rgba(236,231,228,.12)}
+.tile.press{transform:scale(.92)!important;transition:transform .12s ease-out,background .2s;background:rgba(236,231,228,.16)}
+.tile b{font-size:15px;font-weight:700;letter-spacing:.01em}
+.tile small{font-size:12px;line-height:1.35;color:var(--muted)}
+.tile .ti{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(236,231,228,.1)}
+.tile.big{grid-column:span 2;grid-row:span 2;background:var(--rose);color:var(--smoke)}
+.tile.big small{color:rgba(22,19,20,.75)}
+.tile.big .ti{background:rgba(22,19,20,.15)}
+.tile.big b{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:30px;line-height:1.05}
+.tile.big:hover{background:var(--rose-l)}
+.tile[aria-pressed=true]{background:rgba(196,149,146,.28)}
+.cc-sliderwrap{grid-row:span 2;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:26px;background:rgba(236,231,228,.05);opacity:0;transform:translateY(-14px);transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .4s}
+.cc.open .cc-sliderwrap{opacity:1;transform:none}
+.cc-slider{position:relative;flex:1;border-radius:22px;background:rgba(236,231,228,.1);overflow:hidden;cursor:ns-resize;touch-action:none}
+.cc-slider .fill{position:absolute;inset:0;transform-origin:50% 100%;transform:scaleY(0);background:linear-gradient(to top,rgba(196,149,146,.85),rgba(236,231,228,.85));transition:transform .12s}
+.cc-slider .knob{position:absolute;left:50%;top:14px;margin-left:-11px;width:22px;height:22px;color:var(--smoke);z-index:1}
+.cc-sliderwrap .lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.cc-sliderwrap .sec{font-size:13px;font-weight:700;color:var(--porc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:640px){
+  .cc{width:calc(100% - 16px);top:calc(env(safe-area-inset-top,0px) + 8px)}
+  .cc-panel{border-radius:28px;padding:14px}
+  .cc-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(100px,auto);grid-auto-flow:dense;gap:10px}
+  .tile.big{grid-row:span 1}
+  .tile.big b{font-size:22px}
+  .cc-sliderwrap{grid-column:span 2;grid-row:span 1}
+  .cc-slider{cursor:ew-resize}
+  .cc-slider .fill{transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(to right,rgba(196,149,146,.85),rgba(236,231,228,.85))}
+  .cc-slider .knob{left:12px;top:50%;margin:-11px 0 0}
+}
+body.calm .ambient,body.calm .word::after,body.calm .card::before,body.calm .closing::before{animation-play-state:paused}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .mast nav a.lk{display:none}
+  .seq-pin .wrap{grid-template-columns:minmax(0,1fr);align-items:end;padding-bottom:110px}
+  .seq-copy{grid-column:1;min-height:250px}
+  .seq-head{position:relative;top:auto;display:none}
+  .step{justify-content:flex-end;background:linear-gradient(transparent,rgba(22,19,20,.92) 30%);padding-top:40px}
+  .step .num{font-size:64px}
+  .step h3{font-size:30px}
+  .step p{font-size:15px}
+  .wall{grid-template-columns:minmax(0,1fr)}
+  .wallgl{aspect-ratio:6/6.4}
+  .plans,.reasons{grid-template-columns:minmax(0,1fr)}
+  .reserve{grid-template-columns:minmax(0,1fr);-webkit-mask:none;mask:none}
+  .reserve form{padding:28px 22px}
+  .reserve .fields{grid-template-columns:minmax(0,1fr)}
+  .stubside{padding:28px 22px;border-top:1px dashed rgba(236,231,228,.3)}
+  .stubside::before{display:none}
+  .list-sr{columns:2}
+  .ghostnum{display:none}
+  section.block{padding-block:100px 40px}
+}
+@media (max-width:520px){.hero .ctas .stub{width:100%;justify-content:space-between}.stub .lab{padding:0 18px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.focus,.hero h1 .w{opacity:1;filter:none;transform:none}}
+</style>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="ambient" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cur-ring" aria-hidden="true"></div><div class="cur-dot" aria-hidden="true"></div>
+
+
+<button class="cc-handle" id="ccHandle" type="button" aria-label="Pull down to open the control centre" aria-expanded="false" aria-controls="cc"><i></i></button>
+<div class="cc-scrim" id="ccScrim" hidden></div>
+<div class="cc" id="cc" role="dialog" aria-modal="true" aria-label="Control centre" hidden>
+  <div class="cc-panel">
+    <div class="cc-top"><span class="kicker">Control centre</span><button class="cc-close" id="ccClose" type="button">Close</button></div>
+    <div class="cc-grid">
+      <a class="tile big" href="#reserve" style="transition-delay:.04s"><span class="ti"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z M12 11.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 1 0 0 5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span><span><b>Reserve your territory</b><br><small>Check if your area is open</small></span></a>
+      <a class="tile" href="#industries" style="transition-delay:.08s"><span class="ti"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 7a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span><b>Industries</b><br><small>33 tokens</small></span></a>
+      <div class="cc-sliderwrap" style="transition-delay:.12s"><span class="lbl"><span>Page</span><span id="ccPct">0%</span></span><div class="cc-slider" id="ccSlider" role="slider" tabindex="0" aria-label="Scroll through the page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Top of page"><span class="fill" id="ccFill"></span><svg class="knob" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v2 M12 18v2 M4 12h2 M18 12h2 M6.3 6.3l1.4 1.4 M16.3 16.3l1.4 1.4 M6.3 17.7l1.4-1.4 M16.3 7.7l1.4-1.4 M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><span class="sec" id="ccSec">Top</span></div>
+      <a class="tile" href="#seq" style="transition-delay:.16s"><span class="ti"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v18H7z M11 18h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span><span><b>How it works</b><br><small>9 steps</small></span></a>
+      <a class="tile" href="#pricing" style="transition-delay:.2s"><span class="ti"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z M4 11h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span><span><b>Pricing</b><br><small>Two ways to pay</small></span></a>
+      <a class="tile" href="#returns" style="transition-delay:.24s"><span class="ti"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Returns</b><br><small>Bad lead? Send it back</small></span></a>
+      <button class="tile" id="ccMotion" type="button" aria-pressed="false" style="transition-delay:.28s"><span class="ti"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c3-6 6-6 9 0s6 6 9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span><b>Calm motion</b><br><small id="ccMotionS">Off</small></span></button>
+      <a class="tile" href="#top" style="transition-delay:.32s"><span class="ti"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5 M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Back to top</b><br><small>The launch</small></span></a>
+    </div>
+  </div>
+</div>
+<header class="mast" id="mast">
+  <div class="wrap">
+    <a class="word serif" href="#top" aria-label="APEX home" data-t="APEX">APEX</a>
+    <nav aria-label="Main">
+      <a class="lk" href="#industries">Industries</a>
+      <a class="lk" href="#seq">How it works</a>
+      <a class="lk" href="#pricing">Pricing</a>
+      <button class="ccbtn" id="ccBtn" type="button" aria-label="Open control centre" aria-expanded="false" aria-controls="cc"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <a class="stub small" href="#reserve"><span class="lab">Get leads</span><span class="tear"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" id="top">
+    <span class="kicker">Verified, exclusive leads · 33 industries</span>
+    <h1 class="serif" id="h1">Your next customer, <em>in your pocket.</em></h1>
+    <p class="sub">APEX finds <b>real people in your area asking for your service</b>, checks they're genuine, and sends them <b>straight to your phone and CRM</b>. Each lead goes to one business only — yours.</p>
+    <div class="ctas">
+      <a class="stub" href="#reserve"><span class="lab">Reserve my territory</span><span class="tear"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="stub ghost" href="#seq"><span class="lab">See how a lead reaches you</span><span class="tear"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    </div>
+    <div class="cue" aria-hidden="true">Scroll<i></i></div>
+  </section>
+
+  <section id="seq" aria-label="How a lead reaches you">
+    <div class="seq-pin">
+      <div class="wrap">
+        <div class="seq-copy">
+          <div class="seq-head"><span class="kicker">How it works</span><h2 class="serif">One lead, from their request to your pocket.</h2></div>
+          <div id="steps"></div>
+        </div>
+      </div>
+      <span class="rail-lab" id="railLab">Step 01 of 09 · sample lead</span>
+      <div class="rail" id="rail" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="block wrap" id="industries">
+    <span class="ghostnum serif" id="ghost" aria-hidden="true">33</span>
+    <div class="bighead focus">
+      <div><span class="kicker">Industries</span><h2 class="serif">Every trade, <em>one token each.</em></h2></div>
+      <p>Hover or tap a token to turn it over. Each one shows what a lead is worth in that industry and when its customers are busiest.</p>
+    </div>
+    <div class="tabs focus" role="tablist" aria-label="Filter industries" id="tabs">
+      <button role="tab" aria-selected="true" data-f="all" type="button">All 33</button>
+      <button role="tab" aria-selected="false" data-f="high" type="button">High-ticket · 12</button>
+      <button role="tab" aria-selected="false" data-f="std" type="button">Trades · 21</button>
+    </div>
+    <div class="wall focus">
+      <div class="wallgl" id="wallgl" aria-label="Industry tokens"><span class="wallhint" id="wallhint">Hover a token</span></div>
+      <div class="card detail" id="detail" aria-live="polite">
+        <div class="swap" id="dswap">
+          <span class="kicker" id="dcat">High-ticket</span>
+          <h3 class="serif" id="dname">Executive Recruitment</h3>
+          <div class="val" id="dval"></div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Busiest months</span><div class="months" id="dmonths"></div></div>
+        </div>
+        <div class="lower"><a class="stub small" href="#reserve" id="dcta"><span class="lab">Reserve this industry</span><span class="tear"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div>
+      </div>
+    </div>
+    <ul class="list-sr focus" id="indlist" aria-label="All industries"></ul>
+  </section>
+
+  <section class="block wrap" id="pricing">
+    <div class="bighead focus"><div><span class="kicker">Pricing</span><h2 class="serif">Two ways to <em>pay.</em></h2></div><p>Pick what suits your business. Every lead is exclusive to you, and bad ones can be returned for credit.</p></div>
+    <div class="plans">
+      <article class="card plan focus">
+        <span class="kicker">Pay per lead</span>
+        <h3 class="serif">Only pay for what lands</h3>
+        <div class="price">[Price per lead, by industry]</div>
+        <p>Top up credits and spend them as verified leads arrive in your territory.</p>
+        <div class="lower"><ul><li>Exclusive to you</li><li>Text + email alert</li><li>Return bad leads for credit</li></ul></div>
+      </article>
+      <article class="card plan focus">
+        <span class="kicker">Territory plan</span>
+        <h3 class="serif">Own your area, monthly</h3>
+        <div class="price">[Monthly price]</div>
+        <p>A set number of leads each month in your trade and area, plus your own CRM with the phone app.</p>
+        <div class="lower"><ul><li>[Leads included per month]</li><li>CRM and phone app included</li><li>Priority in peak season</li></ul></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="block wrap" id="reserve">
+    <div class="bighead focus"><div><span class="kicker">Reserve your territory</span><h2 class="serif">One business per trade, <em>per area.</em></h2></div><p>Tell us your trade and postal or ZIP code. If your area is open, it can be yours.</p></div>
+    <div class="reserve focus">
+      <form id="rform" novalidate>
+        <div class="fields">
+          <label>Your industry<select id="rind" required></select></label>
+          <label>Postal or ZIP code<input id="rcode" inputmode="text" autocomplete="postal-code" placeholder="e.g. T2P 1J9 or 30301" maxlength="7"></label>
+        </div>
+        <div class="err" id="rerr" role="alert"></div>
+        <div><button class="stub" type="submit"><span class="lab">Check my area</span><span class="tear"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div>
+      </form>
+      <div class="stubside">
+        <span class="kicker">Territory ticket</span>
+        <div class="ticket-code serif" id="tcode">— — —</div>
+        <div class="printout" id="tout" aria-live="polite">Your ticket prints here.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block wrap promise" id="returns">
+    <div class="focus"><span class="kicker">Our promise</span><h2 class="serif">Bad lead?<br><em>Send it back.</em></h2></div>
+    <div class="perf" id="perf"></div>
+    <div class="reasons">
+      <article class="card reason focus"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2 M16 3l5 5 M21 3l-5 5" fill="none" stroke="#c49592" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><h3 class="serif">Wrong number</h3><p>If the phone number doesn't reach the person who asked, it doesn't count.</p><div class="lower">Return within [return window]</div></article>
+      <article class="card reason focus"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11v11H8z M5 16V5h11" fill="none" stroke="#c49592" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><h3 class="serif">Duplicate</h3><p>Already sent you the same person? You get the credit back.</p><div class="lower">Credited to your balance</div></article>
+      <article class="card reason focus"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8a4 4 0 1 0 0 8z M4 21a8 8 0 0 1 16 0 M3 3l18 18" fill="none" stroke="#c49592" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><h3 class="serif">Fake or a test</h3><p>Made-up names and test entries are filtered first — and refundable if one slips through.</p><div class="lower">[Credit policy details]</div></article>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <h2 class="serif focus">Your next customer is <em>already looking.</em></h2>
+      <p class="focus">Reserve your trade in your area before someone else does.</p>
+      <div class="ctas focus"><a class="stub" href="#reserve"><span class="lab">Reserve my territory</span><span class="tear"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <span class="perfline" aria-hidden="true"></span>
+  <div class="wrap"><span class="serif" style="font-size:22px;color:var(--porc);letter-spacing:.06em">APEX</span><span>Verified, exclusive leads for 33 industries. Leads and alerts shown are sample illustrations.</span></div>
+</footer>
+
+<script>
+const IND = [
+  ["Executive Recruitment","high",125000,175000,"M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2"],
+  ["Industrial Water Treatment","high",1000000,14000000,"M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0"],
+  ["Commercial Security Systems","high",500000,15000000,"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"],
+  ["Industrial Automation & Manufacturing","high",5300000,53000000,"M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"],
+  ["Commercial Kitchen Equipment","high",50000,355000,"M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12"],
+  ["Specialized Medical Staffing","high",25000,100000,"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8"],
+  ["Commercial HVAC & Refrigeration","high",65000,3000000,"M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2"],
+  ["Custom Contract Manufacturing","high",100000,5000000,"M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2"],
+  ["Commercial Real Estate","high",25000,100000,"M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1"],
+  ["Specialty Medical (Cosmetic/Dental)","high",3000,43000,"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"],
+  ["Commercial Printing & Fulfillment","high",50000,500000,"M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z"],
+  ["Niche Insurance — Cyber Liability","high",30000,100000,"M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2"],
+  ["Roofing","std",500,5000,"M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6"],
+  ["Landscaping","std",300,3000,"M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8"],
+  ["Home Cleaning (Interior)","std",100,1000,"M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6"],
+  ["Home Cleaning (Exterior)","std",150,1500,"M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2"],
+  ["Plumbers","std",200,2000,"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"],
+  ["Electricians","std",300,3000,"M13 2L4 14h7l-1 8 9-12h-7z"],
+  ["HVAC","std",250,2500,"M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0"],
+  ["Dentists","std",150,1500,"M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z"],
+  ["Lawyers","std",500,5000,"M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z"],
+  ["Real Estate Agents","std",300,3000,"M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01"],
+  ["Gyms & Fitness","std",50,500,"M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12"],
+  ["Auto Repair","std",200,2000,"M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Pest Control","std",300,2000,"M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2"],
+  ["Hair Salons & Barbershops","std",50,500,"M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4"],
+  ["Insurance Agents","std",400,3000,"M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1"],
+  ["Healthcare Clinics","std",200,1500,"M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2"],
+  ["Moving Companies","std",400,4000,"M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Personal Trainers","std",100,1000,"M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5"],
+  ["Photographers","std",300,3000,"M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z"],
+  ["Wedding Venues","std",2000,15000,"M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z"],
+  ["Restaurants","std",500,5000,"M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12"]
+].map(([name, cat, min, max, d]) => ({ name, cat, min, max, d, range: money(min) + ' – ' + money(max) }));
+function money(n) {
+  if (n >= 1e6) return '$' + (+(n / 1e6).toFixed(1)) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'k';
+  return '$' + n;
+}
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+[[1,4,10,12],[4,5,6,7,10,11,12],[10,11,12,1,2,3],[4,5,6,7,8,9,10,11,12],[1,2,7,8,9,10],[1,2,3,7,8,9,10,11,12],[1,2,10,11,12],[4,5,6,7,8,9,10,11,12],[1,3,4,5,9,10,11,12],[10,11,12,1],[7,8,9,10,11,12,1,2],[4,5,10,11,12],[3,4,5,9,10,11],[3,4,5,6,7,8,9],[1,2,3,12],[3,4,5,9,10],[1,2,11,12],[3,4,5,9,10,11],[1,2,7,8,11,12],[1,2,3,9],[1,4,7,10],[3,4,5,9,10,11],[1,2,8,9],[3,4,9,10,11],[3,4,5,9,10],[12,1,5,6],[10,11,12,1],[1,2,9],[5,6,7,8,9],[1,2,6,7],[5,6,7,8,9,10,11],[4,5,6,9,10],[5,6,7,8,12]].forEach((p, i) => { IND[i].peak = p; });
+const SAMPLE = [
+  [6, 'Rooftop unit replacement · 3 sites', 420000],
+  [12, 'Full tear-off, 2,400 sq ft', 4800],
+  [1, 'Cooling tower treatment program', 2600000],
+  [19, 'New patient, implant consult', 1200],
+  [2, 'Access control for 8 branches', 1900000],
+  [16, 'Emergency re-pipe, older home', 1800],
+  [0, 'VP Operations search, retained', 150000],
+  [31, 'Spring wedding, 180 guests', 14000],
+  [3, 'Packaging line automation', 8400000],
+  [17, 'Panel upgrade to 200A', 2400],
+  [8, 'Industrial lease, 40k sq ft', 72000],
+  [18, 'Heat pump install, 2 zones', 2200]
+].map(([i, job, v]) => ({ ind: IND[i], job, v }));
+const MONTHS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+</script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // headline words
+  const h1 = $('h1');
+  let wi = 0;
+  h1.querySelectorAll('em').forEach(e => e.dataset.em = '1');
+  const parts = [];
+  h1.childNodes.forEach(n => {
+    const isEm = n.nodeType === 1;
+    (n.textContent || '').split(/(\s+)/).forEach(t => { if (t) parts.push({ t, isEm }); });
+  });
+  h1.innerHTML = parts.map(p => /^\s+$/.test(p.t) ? ' ' : `<span class="w" style="animation-delay:${0.35 + 0.11 * wi++}s">${p.isEm ? '<em>' + esc(p.t) + '</em>' : esc(p.t)}</span>`).join('');
+
+  // steps
+  window.STEPS = [
+    ['A customer asks for a quote', 'Someone near you fills in a request on an APEX page for your trade: what they need, where, and when.'],
+    ['They agree to hear from you', 'Before anything else, we record their permission for your business to contact them, time-stamped.'],
+    ["We check they're real", 'Phone and email are verified. Fake names, test entries and duplicates are filtered out. [Your verification process]'],
+    ["We check they're serious", 'A few quick questions about budget, timing and the job itself. Every lead gets a readiness score.'],
+    ["It's yours alone", 'The lead goes to one business only: the one that owns this trade in this area. That is you.'],
+    ['Your phone buzzes', 'A text and an email land the moment it is ready. No logging in, no waiting.'],
+    ['Everything you need to call', 'Name, number, the job, timing and their answers. Open it and call while they are still looking.'],
+    ['Already in your CRM', 'The lead is added to your pipeline automatically, so nothing slips through.'],
+    ['Not a fit? Send it back', 'Wrong number or a duplicate? Return it with one tap and the credit goes back to your balance.']
+  ];
+  $('steps').innerHTML = STEPS.map((s, i) => `<div class="step" data-i="${i}"><span class="num serif">${String(i + 1).padStart(2, '0')}</span><h3 class="serif">${esc(s[0])}</h3><p>${esc(s[1])}</p></div>`).join('');
+  $('rail').innerHTML = STEPS.map(() => '<span><i></i></span>').join('');
+  window.__bp5 = window.__bp5 || { frames: 0, wallFrames: 0, stage: -1 };
+  const seqEl = $('seq'), stepEls = [...document.querySelectorAll('.step')], railEls = [...document.querySelectorAll('#rail i')], railVals = [];
+  let seqTop = 0, seqH = 1;
+  function updateSteps() {
+    const top = seqTop - scrollY, p = Math.max(0, Math.min(1, -top / Math.max(1, seqH - innerHeight)));
+    const stageF = p * STEPS.length, shown = Math.min(STEPS.length - 1, Math.floor(stageF));
+    if (shown !== window.__bp5.stage) { stepEls.forEach((el, i) => { el.classList.toggle('on', i === shown); el.classList.toggle('past', i < shown); }); window.__bp5.stage = shown; $('railLab').textContent = `Step ${String(shown + 1).padStart(2, '0')} of 09 · sample lead`; }
+    railEls.forEach((el, i) => { const v = top > 0 ? 0 : Math.round(Math.max(0, Math.min(1, stageF - i)) * 100) / 100; if (railVals[i] !== v) { railVals[i] = v; el.style.transform = `scaleX(${v})`; } });
+  }
+
+  // reserve form
+  $('rind').innerHTML = '<option value="">Choose your industry</option>' + IND.map((it, i) => `<option value="${i}">${esc(it.name)}</option>`).join('');
+  $('indlist').innerHTML = IND.map(it => `<li>${esc(it.name)} · ${it.range}</li>`).join('');
+  $('rform').addEventListener('submit', e => {
+    e.preventDefault();
+    const ind = $('rind').value, code = $('rcode').value.trim().toUpperCase().replace(/\s+/g, ' ');
+    const ok = /^[A-Z]\d[A-Z] ?\d[A-Z]\d$/.test(code) || /^\d{5}$/.test(code);
+    if (!ind) { $('rerr').textContent = 'Choose your industry first.'; return; }
+    if (!ok) { $('rerr').textContent = 'Enter a Canadian postal code (A1A 1A1) or a US ZIP (12345).'; return; }
+    $('rerr').textContent = '';
+    const it = IND[+ind], area = code.length === 5 ? code : code.slice(0, 3);
+    $('tcode').textContent = area;
+    $('tout').innerHTML = `<span class="line">Checking <b>${esc(it.name)}</b> in ${esc(area)}…</span>`;
+    setTimeout(() => { $('tout').innerHTML = `<span class="line">Checking <b>${esc(it.name)}</b> in ${esc(area)}…</span><span class="line" style="animation-delay:.1s">[Live availability result for this area appears here.]</span><span class="line" style="animation-delay:.3s">We will confirm by email within [timeframe].</span>`; }, 1300);
+  });
+
+  // focus-pull reveals
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.focus, #perf').forEach((el, i) => { el.style.transitionDelay = (el.classList.contains('reason') || el.classList.contains('plan') ? (i % 3) * 120 : 0) + 'ms'; io.observe(el); });
+  document.querySelectorAll('.reason').forEach(el => io.observe(el));
+
+  // masthead + ghost numeral parallax
+  const mast = $('mast'), ghost = $('ghost'), ind = $('industries');
+  let indTop = 0, wide = innerWidth > 900, scrollQueued = false, compact = null, lastGhost = null;
+  const pageTop = el => { let y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; };
+  const secTops = {};
+  const measure = () => { seqTop = pageTop(seqEl); seqH = seqEl.offsetHeight; updateSteps(); indTop = pageTop(ind); wide = innerWidth > 900; document.querySelectorAll('main [id], #top').forEach(el => { secTops[el.id] = pageTop(el); }); };
+  measure(); addEventListener('resize', measure); addEventListener('load', measure); if ('ResizeObserver' in window) new ResizeObserver(measure).observe(document.body);
+  const onScroll = () => {
+    scrollQueued = false; const y = scrollY, c = y > 40;
+    if (c !== compact) { compact = c; mast.classList.toggle('compact', c); }
+    if (!reduceMotion && wide) { const g = Math.round((indTop - y) * -0.18); if (g !== lastGhost && Math.abs(indTop - y) < innerHeight * 2) { lastGhost = g; ghost.style.transform = `translate3d(0,${g}px,0)`; } }
+    updateSteps();
+    if (ccOpen) syncSlider();
+  };
+  addEventListener('scroll', () => { if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(onScroll); } }, { passive: true });
+
+  // anchor clicks scroll smoothly
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const t = document.querySelector(a.getAttribute('href')); if (!t) return;
+    e.preventDefault(); t.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+  });
+
+
+  // ---------- control centre ----------
+  const cc = $('cc'), scrim = $('ccScrim'), handle = $('ccHandle'), ccBtn = $('ccBtn');
+  let ccOpen = false, opener = null;
+  const SECTIONS = [['top', 'Top'], ['seq', 'How it works'], ['industries', 'Industries'], ['pricing', 'Pricing'], ['reserve', 'Reserve'], ['returns', 'Returns']];
+  function buzz() { try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} }
+  function openCC(from) {
+    if (ccOpen) return; ccOpen = true; opener = from || document.activeElement;
+    cc.hidden = false; scrim.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => { cc.classList.add('open'); scrim.classList.add('open'); }));
+    [handle, ccBtn].forEach(b => b.setAttribute('aria-expanded', 'true')); syncSlider();
+    setTimeout(() => { const f = cc.querySelector('.tile'); f && f.focus({ preventScroll: true }); }, 120); buzz();
+  }
+  function closeCC() {
+    if (!ccOpen) return; ccOpen = false; cc.classList.remove('open', 'dragging'); cc.style.transform = ''; scrim.classList.remove('open');
+    [handle, ccBtn].forEach(b => b.setAttribute('aria-expanded', 'false'));
+    setTimeout(() => { if (!ccOpen) { cc.hidden = true; scrim.hidden = true; } }, 620);
+    if (opener && opener.focus) opener.focus({ preventScroll: true });
+  }
+  ccBtn.addEventListener('click', () => ccOpen ? closeCC() : openCC(ccBtn));
+  $('ccClose').addEventListener('click', closeCC); scrim.addEventListener('click', closeCC);
+  document.addEventListener('keydown', e => {
+    if (!ccOpen) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeCC(); return; }
+    if (e.key === 'Tab') { const f = [...cc.querySelectorAll('a,button,[tabindex="0"]')]; const i = f.indexOf(document.activeElement); if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } }
+  });
+  // pull-down gesture on the handle (click also opens)
+  let dragY = null, dragMoved = false;
+  handle.addEventListener('pointerdown', e => { dragY = e.clientY; dragMoved = false; handle.setPointerCapture(e.pointerId); cc.hidden = false; cc.classList.add('dragging'); });
+  handle.addEventListener('pointermove', e => { if (dragY == null) return; const dy = Math.max(0, e.clientY - dragY); if (dy > 4) dragMoved = true; const h = cc.offsetHeight + 40; cc.style.transform = `translate(-50%,${Math.min(0, -h + dy * 1.6)}px)`; });
+  handle.addEventListener('pointerup', e => { if (dragY == null) return; const dy = e.clientY - dragY; dragY = null; cc.classList.remove('dragging'); cc.style.transform = ''; if (!dragMoved || dy > 50) openCC(handle); else { cc.hidden = !ccOpen; } });
+  handle.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); openCC(handle); } });
+  // tiles: haptic press + navigate
+  cc.querySelectorAll('.tile').forEach(t => {
+    t.addEventListener('pointerdown', () => { t.classList.add('press'); buzz(); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => t.addEventListener(ev, () => t.classList.remove('press')));
+  });
+  cc.querySelectorAll('a.tile').forEach(a => a.addEventListener('click', () => setTimeout(closeCC, 60)));
+  $('ccMotion').addEventListener('click', e => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); $('ccMotionS').textContent = on ? 'On' : 'Off'; document.body.classList.toggle('calm', on); });
+  // brightness-style page scrubber
+  const slider = $('ccSlider'), fill = $('ccFill');
+  const isH = () => matchMedia('(max-width:640px)').matches;
+  function maxScroll() { return document.documentElement.scrollHeight - innerHeight; }
+  function sectionAt(y) { let name = 'Top'; SECTIONS.forEach(([id, n]) => { const top = secTops[id]; if (top != null && top - innerHeight * .4 <= y) name = n; }); return name; }
+  function syncSlider() { const v = clamp01(scrollY / Math.max(1, maxScroll())); const pct = Math.round(v * 100); fill.style.transform = (isH() ? 'scaleX(' : 'scaleY(') + v.toFixed(4) + ')'; $('ccPct').textContent = pct + '%'; const sec = sectionAt(scrollY); $('ccSec').textContent = sec; slider.setAttribute('aria-valuenow', pct); slider.setAttribute('aria-valuetext', pct + '% · ' + sec); }
+  function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+  function scrubTo(v) { window.scrollTo(0, clamp01(v) * maxScroll()); syncSlider(); }
+  let sliding = false;
+  function fromPointer(e) { const r = slider.getBoundingClientRect(); return isH() ? (e.clientX - r.left) / r.width : 1 - (e.clientY - r.top) / r.height; }
+  slider.addEventListener('pointerdown', e => { sliding = true; slider.setPointerCapture(e.pointerId); scrubTo(fromPointer(e)); buzz(); });
+  slider.addEventListener('pointermove', e => { if (sliding) scrubTo(fromPointer(e)); });
+  slider.addEventListener('pointerup', () => { sliding = false; });
+  slider.addEventListener('keydown', e => { const step = { ArrowUp: .05, ArrowRight: .05, ArrowDown: -.05, ArrowLeft: -.05, PageUp: .2, PageDown: -.2 }[e.key]; const cur = scrollY / Math.max(1, maxScroll()); if (step != null) { e.preventDefault(); scrubTo(cur + step); } if (e.key === 'Home') { e.preventDefault(); scrubTo(0); } if (e.key === 'End') { e.preventDefault(); scrubTo(1); } });
+  window.__cc = { openCC, closeCC };
+  // cursor
+  if (fine && !reduceMotion) {
+    const dot = document.querySelector('.cur-dot'), ring = document.querySelector('.cur-ring');
+    let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my, dx = mx, dy = my;
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; document.body.classList.add('cur-on'); document.body.classList.toggle('cur-hot', !!e.target.closest('a,button,select,input,.wallgl')); }, { passive: true });
+    document.addEventListener('pointerleave', () => document.body.classList.remove('cur-on'));
+    (function loop() { dx += (mx - dx) * .45; dy += (my - dy) * .45; rx += (mx - rx) * .12; ry += (my - ry) * .12; dot.style.transform = `translate3d(${dx}px,${dy}px,0)`; ring.style.transform = `translate3d(${rx}px,${ry}px,0)`; requestAnimationFrame(loop); })();
+  }
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const $ = id => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const C = { smoke: '#161314', char: '#241f20', char2: '#2e2729', rose: '#a8706f', roseL: '#c49592', roseD: '#7f5150', porc: '#ece7e4', muted: '#b6aaab', mauve: '#6e6265' };
+const DPR = Math.min(2, devicePixelRatio || 1);
+let pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+addEventListener('pointermove', e => { pointer.tx = e.clientX / innerWidth - .5; pointer.ty = e.clientY / innerHeight - .5; }, { passive: true });
+
+function webglOK() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
+const HAS_GL = webglOK();
+window.__bp5 = Object.assign(window.__bp5 || { stage: -1 }, { frames: 0, wallFrames: 0 });
+
+/* ============ PHONE SCREEN (CanvasTexture) ============ */
+const SW = 600, SH = 1240;
+const scr = document.createElement('canvas'); scr.width = SW; scr.height = SH;
+const g = scr.getContext('2d');
+const LEAD = SAMPLE[1];
+function rr(x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function font(w, s, serif) { g.font = `${w} ${s}px ${serif ? "'DM Serif Display', Georgia, serif" : 'Manrope, system-ui, sans-serif'}`; }
+function txt(t, x, y, col, align) { g.fillStyle = col; g.textAlign = align || 'left'; g.fillText(t, x, y); }
+function iconPath(d, x, y, s, col, lw) { g.save(); g.translate(x, y); g.scale(s / 24, s / 24); g.strokeStyle = col; g.lineWidth = lw || 1.8; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(new Path2D(d)); g.restore(); }
+function wallpaper(t) {
+  const gr = g.createLinearGradient(0, 0, 0, SH); gr.addColorStop(0, '#1d1819'); gr.addColorStop(1, '#120f10'); g.fillStyle = gr; rr(0, 0, SW, SH, 70); g.fill();
+  const r = g.createRadialGradient(SW * .5, SH * (.9 + .02 * Math.sin(t * .7)), 20, SW * .5, SH * .9, SH * .7); r.addColorStop(0, 'rgba(168,112,111,.3)'); r.addColorStop(1, 'rgba(168,112,111,0)'); g.fillStyle = r; rr(0, 0, SW, SH, 70); g.fill();
+}
+function status() { font(700, 26); txt('9:41', 58, 62, C.porc); g.fillStyle = '#000'; rr(SW / 2 - 70, 26, 140, 42, 21); g.fill(); g.fillStyle = C.porc; for (let i = 0; i < 4; i++) { rr(SW - 150 + i * 14, 54 - i * 6, 8, 10 + i * 6, 2); g.fill(); } rr(SW - 86, 40, 40, 20, 5); g.strokeStyle = C.porc; g.lineWidth = 2; g.stroke(); rr(SW - 83, 43, 26, 14, 3); g.fill(); }
+function sampleTag() { font(800, 17); g.save(); g.globalAlpha = .7; txt('SAMPLE', SW - 56, 120, C.roseL, 'right'); g.restore(); }
+function title(k, h, y) { font(800, 18); txt(k, 56, y, C.roseL); font(400, 46, 1); txt(h, 56, y + 56, C.porc); }
+function panel(x, y, w, h) { g.fillStyle = 'rgba(236,231,228,.07)'; rr(x, y, w, h, 28); g.fill(); g.strokeStyle = 'rgba(236,231,228,.12)'; g.lineWidth = 1.5; g.stroke(); }
+function row(label, value, y, a) { g.save(); g.globalAlpha = a == null ? 1 : a; font(600, 22); txt(label, 84, y, C.muted); font(700, 24); txt(value, SW - 84, y, C.porc, 'right'); g.restore(); }
+function check(x, y, p, label) { g.save(); g.globalAlpha = clamp(p * 1.4, 0, 1); g.beginPath(); g.arc(x, y, 20, 0, Math.PI * 2); g.fillStyle = p > .5 ? C.rose : 'rgba(236,231,228,.1)'; g.fill(); if (p > .5) { g.strokeStyle = C.smoke; g.lineWidth = 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(x - 9, y); g.lineTo(x - 2, y + 7); g.lineTo(x + 10, y - 7); g.stroke(); } font(700, 26); txt(label, x + 40, y + 9, C.porc); g.restore(); }
+function notif(y, app, head, body, a) { g.save(); g.globalAlpha = a; g.fillStyle = 'rgba(46,39,41,.92)'; rr(36, y, SW - 72, 150, 34); g.fill(); g.strokeStyle = 'rgba(236,231,228,.1)'; g.stroke(); g.fillStyle = C.rose; rr(62, y + 28, 50, 50, 14); g.fill(); font(400, 30, 1); txt('A', 87, y + 64, C.smoke, 'center'); font(700, 18); txt(app, 130, y + 46, C.muted); txt('now', SW - 66, y + 46, C.muted, 'right'); font(800, 25); txt(head, 130, y + 84, C.porc); font(500, 22); txt(body, 130, y + 118, C.muted); g.restore(); }
+function sheen(t) { const x = ((t * 0.18) % 1.6 - .3) * SW; const gr = g.createLinearGradient(x - 140, 0, x + 140, SH * .4); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(.5, 'rgba(255,255,255,.07)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; rr(0, 0, SW, SH, 70); g.fill(); }
+
+let heroN = 0, heroNT = 0;
+function drawScreen(stage, local, t) {
+  g.clearRect(0, 0, SW, SH);
+  wallpaper(t); status();
+  const e = ease(clamp(local * 1.6, 0, 1));
+  const req = () => { panel(48, 330, SW - 96, 380); iconPath(LEAD.ind.d, 84, 372, 54, C.roseL, 1.6); font(800, 30); txt(LEAD.ind.name, 160, 412, C.porc); font(500, 22); txt('New quote request', 160, 446, C.muted); row('Job', 'Full tear-off', 520); row('Size', '2,400 sq ft', 572); row('Wants to start', 'Next month', 624); row('Area', '[Your territory]', 676); };
+  if (stage < 0) { // hero lock screen, cycling sample alerts
+    font(400, 150, 1); txt('9:41', SW / 2, 330, C.porc, 'center'); font(600, 26); txt('Tuesday', SW / 2, 380, C.muted, 'center');
+    const s = SAMPLE[heroN % SAMPLE.length], s2 = SAMPLE[(heroN + SAMPLE.length - 1) % SAMPLE.length];
+    const a = clamp((t - heroNT) / .6, 0, 1), y = lerp(460, 520, 1 - ease(a));
+    notif(y + 170, 'APEX · lead', 'New lead · ' + s2.ind.name.split(' ')[0], s2.job.slice(0, 30), .55);
+    notif(y, 'APEX · lead', 'New lead · ' + s.ind.name.split(' ')[0], s.job.slice(0, 30), a);
+    sampleTag(); sheen(t); return;
+  }
+  sampleTag();
+  if (stage === 0) { title('INCOMING REQUEST', 'A customer asks', 210); g.save(); g.globalAlpha = e; g.translate(0, (1 - e) * 80); req(); g.restore(); }
+  if (stage === 1) { title('CONSENT', 'They say yes to you', 210); req(); g.save(); const s = .6 + .4 * ease(clamp(local * 2, 0, 1)); g.globalAlpha = clamp(local * 3, 0, 1); g.translate(SW - 170, 820); g.rotate(-.18); g.scale(s, s); g.strokeStyle = C.roseL; g.lineWidth = 6; g.beginPath(); g.arc(0, 0, 110, 0, Math.PI * 2); g.stroke(); g.lineWidth = 2; g.beginPath(); g.arc(0, 0, 92, 0, Math.PI * 2); g.stroke(); font(800, 22); txt('CONSENT', 0, -8, C.roseL, 'center'); txt('RECORDED', 0, 22, C.roseL, 'center'); font(600, 16); txt('Today · 9:41', 0, 54, C.roseL, 'center'); g.restore(); font(500, 22); txt('Permission for your business only,', 56, 1000, C.muted); txt('time-stamped and saved.', 56, 1034, C.muted); }
+  if (stage === 2) { title('VERIFY', "Checking they're real", 210); panel(48, 330, SW - 96, 420); check(98, 420, clamp(local * 3, 0, 1), 'Real phone number'); check(98, 530, clamp(local * 3 - 1, 0, 1), 'Valid email address'); check(98, 640, clamp(local * 3 - 2, 0, 1), 'Not a duplicate or test'); }
+  if (stage === 3) { title('QUALIFY', "Checking they're serious", 210); const p = ease(clamp(local * 1.4, 0, 1)); const cx = SW / 2, cy = 560; g.lineWidth = 26; g.strokeStyle = 'rgba(236,231,228,.1)'; g.beginPath(); g.arc(cx, cy, 170, 0, Math.PI * 2); g.stroke(); g.strokeStyle = C.rose; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cy, 170, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * .91 * p); g.stroke(); font(400, 120, 1); txt(String(Math.round(91 * p)), cx, cy + 40, C.porc, 'center'); font(700, 20); txt('READY TO HIRE', cx, cy + 82, C.muted, 'center'); row('Budget', 'Has one in mind', 860, p); row('Timing', 'Within 30 days', 912, p); row('Owns the home', 'Yes', 964, p); }
+  if (stage === 4) { title('MATCH', 'Yours alone', 210); const p = ease(clamp(local * 1.5, 0, 1)); g.save(); g.translate(SW / 2, 560 - 40 * (1 - p)); g.globalAlpha = p; g.fillStyle = C.rose; g.beginPath(); g.moveTo(0, 120); g.bezierCurveTo(-110, -10, -90, -120, 0, -120); g.bezierCurveTo(90, -120, 110, -10, 0, 120); g.fill(); g.fillStyle = C.smoke; g.beginPath(); g.arc(0, -40, 36, 0, Math.PI * 2); g.fill(); g.restore(); g.strokeStyle = 'rgba(196,149,146,.5)'; g.lineWidth = 2; for (let k = 0; k < 3; k++) { const rp = ((t * .5 + k / 3) % 1); g.globalAlpha = 1 - rp; g.beginPath(); g.ellipse(SW / 2, 690, 60 + rp * 200, 18 + rp * 60, 0, 0, Math.PI * 2); g.stroke(); } g.globalAlpha = 1; font(800, 30); txt('Matched to you', SW / 2, 860, C.porc, 'center'); font(500, 22); txt('One business per trade, per area.', SW / 2, 900, C.muted, 'center'); }
+  if (stage === 5) { font(400, 150, 1); txt('9:41', SW / 2, 330, C.porc, 'center'); font(600, 26); txt('Tuesday', SW / 2, 380, C.muted, 'center'); const a = ease(clamp(local * 2.2, 0, 1)), b = ease(clamp(local * 2.2 - .8, 0, 1)); notif(lerp(400, 470, a), 'MESSAGES', 'New lead · Roofing', 'Full tear-off, 2,400 sq ft', a); notif(lerp(570, 640, b), 'MAIL', 'APEX: full lead details', 'Consent recorded · answers inside', b); }
+  if (stage === 6) { title('OPEN LEAD', 'Ready to call', 210); panel(48, 330, SW - 96, 560); font(800, 32); txt('[Customer name]', 84, 400, C.porc); font(500, 22); txt('Roofing · ' + LEAD.job, 84, 440, C.muted); row('Timing', 'Next month', 520); row('Budget', 'Has one in mind', 572); row('Consent', 'Recorded 9:41', 624); row('Score', '91 · ready', 676); const p = ease(clamp(local * 1.6, 0, 1)); g.save(); g.globalAlpha = p; g.fillStyle = C.rose; rr(84, 740, 200, 86, 22); g.fill(); g.fillStyle = 'rgba(236,231,228,.12)'; rr(SW - 284, 740, 200, 86, 22); g.fill(); font(800, 28); txt('Call', 184, 794, C.smoke, 'center'); txt('Text', SW - 184, 794, C.porc, 'center'); g.restore(); }
+  if (stage === 7) { title('YOUR CRM', 'Added to your pipeline', 210); const cols = ['New', 'Contacted', 'Booked'], cw = (SW - 96 - 24) / 3; cols.forEach((c, i) => { const x = 48 + i * (cw + 12); g.fillStyle = 'rgba(236,231,228,.05)'; rr(x, 330, cw, 600, 22); g.fill(); font(800, 20); txt(c.toUpperCase(), x + 20, 372, C.muted); g.fillStyle = 'rgba(236,231,228,.08)'; rr(x + 14, 400 + (i === 2 ? 0 : 140), cw - 28, 96, 16); g.fill(); }); const p = ease(clamp(local * 1.5, 0, 1)); const x = lerp(48 + 14, 48 + cw + 12 + 14, p); g.save(); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 30; g.fillStyle = C.char2; rr(x, 400, cw - 28, 120, 16); g.fill(); g.restore(); g.strokeStyle = C.rose; g.lineWidth = 3; rr(x, 400, cw - 28, 120, 16); g.stroke(); font(800, 20); txt('Roofing', x + 16, 440, C.porc); font(500, 17); txt('Tear-off', x + 16, 470, C.muted); txt('Score 91', x + 16, 498, C.roseL); }
+  if (stage === 8) { title('BALANCE', 'Your lead balance', 210); panel(48, 330, SW - 96, 260); font(400, 70, 1); txt('[credits]', SW / 2, 470, C.porc, 'center'); font(600, 20); txt('available for new leads', SW / 2, 520, C.muted, 'center'); const p = ease(clamp(local * 1.6, 0, 1)); g.save(); g.globalAlpha = p; g.strokeStyle = C.roseL; g.lineWidth = 3; rr(84, 650, SW - 168, 96, 48); g.stroke(); font(800, 28); txt('Return this lead', SW / 2, 708, C.roseL, 'center'); font(500, 21); txt('Wrong number · duplicate · fake name', SW / 2, 800, C.muted, 'center'); txt('Credit goes back to your balance.', SW / 2, 836, C.muted, 'center'); g.restore(); }
+  sheen(t);
+}
+
+/* ============ PHONE SCENE ============ */
+function roundedSlab(w, h, r, depth, bevel) {
+  const sh = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  sh.moveTo(x + r, y); sh.lineTo(x + w - r, y); sh.quadraticCurveTo(x + w, y, x + w, y + r); sh.lineTo(x + w, y + h - r); sh.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  sh.lineTo(x + r, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - r); sh.lineTo(x, y + r); sh.quadraticCurveTo(x, y, x + r, y);
+  const g = new THREE.ExtrudeGeometry(sh, { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 6, curveSegments: 28 });
+  g.translate(0, 0, -depth / 2); g.computeVertexNormals(); return g;
+}
+let renderer, scene, camera, phone, screenTex, glass, rim;
+const canvas = $('gl');
+if (HAS_GL) {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(DPR); renderer.setSize(innerWidth, innerHeight, false);
+  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  scene = new THREE.Scene();
+  const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture;
+  camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, .1, 100); camera.position.set(0, 0, 11);
+  phone = new THREE.Group(); scene.add(phone);
+  const faceMat = new THREE.MeshStandardMaterial({ color: 0x1d1819, metalness: .55, roughness: .3 });
+  const bandMat = new THREE.MeshStandardMaterial({ color: 0x8c5a59, metalness: 1, roughness: .2 });
+  const body = new THREE.Mesh(roundedSlab(1.58, 3.28, .25, .13, .035), [faceMat, bandMat]);
+  phone.add(body);
+  screenTex = new THREE.CanvasTexture(scr); screenTex.colorSpace = THREE.SRGBColorSpace; screenTex.anisotropy = 8;
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 3.1), new THREE.MeshBasicMaterial({ map: screenTex, transparent: true, toneMapped: false }));
+  screen.position.z = .102; phone.add(screen);
+  glass = new THREE.Mesh(new THREE.PlaneGeometry(1.52, 3.12), new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0, roughness: .08, transparent: true, opacity: .05, envMapIntensity: .25, depthWrite: false }));
+  glass.position.z = .106; phone.add(glass);
+  const cam = new THREE.Mesh(roundedSlab(.54, .54, .14, .04, .015), new THREE.MeshStandardMaterial({ color: 0x1b1617, metalness: .6, roughness: .2 }));
+  cam.position.set(-.4, 1.2, -.12); phone.add(cam);
+  [[-.53, 1.33], [-.27, 1.33], [-.53, 1.07]].forEach(([x, y]) => { const l = new THREE.Mesh(new THREE.CylinderGeometry(.09, .09, .05, 32), new THREE.MeshStandardMaterial({ color: 0x0b0909, metalness: .9, roughness: .1 })); l.rotation.x = Math.PI / 2; l.position.set(x + .13, y - .13, -.16); phone.add(l); });
+  rim = new THREE.PointLight(0xc49592, 30, 12); rim.position.set(2.5, 1.5, 2); scene.add(rim);
+  const fill = new THREE.PointLight(0xece7e4, 8, 12); fill.position.set(-3, -2, 3); scene.add(fill);
+  addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
+}
+
+const STAGE_POSE = [[-.42, .06], [.32, -.04], [-.28, .05], [.36, .02], [-.12, -.06], [0, .04], [.3, -.03], [-.32, .04], [.08, 0]];
+const seq = $('seq');
+const wallEl = $('wallgl');
+// cached layout metrics (no getBoundingClientRect in the frame loop)
+const M = { seqTop: 0, seqH: 1, wallTop: 0, wallLeft: 0, wallW: 1, wallH: 1, vw: innerWidth, vh: innerHeight };
+function docTop(el) { let y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; }
+function measure() {
+  M.vw = innerWidth; M.vh = innerHeight; M.seqTop = docTop(seq); M.seqH = seq.offsetHeight;
+  const wr = document.querySelector('.seq-pin .wrap'), cr = document.querySelector('.seq-copy').getBoundingClientRect(), wcs = getComputedStyle(wr), wl = wr.getBoundingClientRect().left + parseFloat(wcs.paddingLeft);
+  M.upp = 2 * 11 * Math.tan(THREE.MathUtils.degToRad(15)) / M.vh; M.colCx = (wl + cr.left - 60) / 2; M.colW = cr.left - 60 - wl;
+  M.phoneS = Math.min(1, (M.vh * .62) / (3.28 / M.upp), (M.colW * .8) / (1.58 / M.upp));
+  M.wallTop = docTop(wallEl); const r = wallEl.getBoundingClientRect(); M.wallLeft = r.left; M.wallW = wallEl.clientWidth; M.wallH = wallEl.clientHeight;
+}
+measure(); addEventListener('resize', measure); addEventListener('load', measure); new ResizeObserver(measure).observe(document.body);
+let cur = { x: 0, y: -2.2, ry: 0, rx: .1, s: 1 }, lastKey = '';
+const phoneBox = new THREE.Box3(), boxV = new THREE.Vector3();
+const t0 = performance.now();
+
+/* ============ TOKEN WALL (same renderer, drawn into its own box) ============ */
+let filter = 'all', selected = 0, hovered = -1;
+function months(it) { return MONTHS.map((m, i) => `<span class="${it.peak.includes(i + 1) ? 'pk' : ''}">${m}</span>`).join(''); }
+function showDetail(i) {
+  const it = IND[i], sw = $('dswap'); sw.classList.add('out');
+  setTimeout(() => { $('dcat').textContent = it.cat === 'high' ? 'High-ticket' : 'Local trade'; $('dname').textContent = it.name; $('dval').textContent = 'Typical lead value ' + it.range; $('dmonths').innerHTML = months(it); $('dcta').querySelector('.lab').textContent = 'Reserve ' + (it.name.length > 22 ? 'this industry' : it.name); sw.classList.remove('out'); }, 220);
+}
+showDetail(0);
+function matches(it) { return filter === 'all' || it.cat === filter; }
+$('tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; filter = b.dataset.f; document.querySelectorAll('#tabs button').forEach(x => x.setAttribute('aria-selected', x === b)); const first = IND.findIndex(matches); selected = first; showDetail(first); });
+function tokenTex(it, back) {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); x.scale(.5, .5);
+  if (!back) {
+    const gr = x.createRadialGradient(200, 170, 30, 256, 256, 300); gr.addColorStop(0, '#f6f2ef'); gr.addColorStop(1, '#d8cfcb'); x.fillStyle = gr; x.fillRect(0, 0, 512, 512);
+    x.strokeStyle = 'rgba(127,81,80,.55)'; x.lineWidth = 6; x.beginPath(); x.arc(256, 256, 214, 0, Math.PI * 2); x.stroke();
+    x.strokeStyle = 'rgba(127,81,80,.25)'; x.lineWidth = 2; x.beginPath(); x.arc(256, 256, 196, 0, Math.PI * 2); x.stroke();
+    x.save(); x.translate(256 - 120, 256 - 120); x.scale(10, 10); x.lineCap = 'round'; x.lineJoin = 'round';
+    const pth = new Path2D(it.d);
+    x.strokeStyle = 'rgba(255,255,255,.9)'; x.lineWidth = 2.6; x.translate(.08, .12); x.stroke(pth);
+    x.translate(-.16, -.24); x.strokeStyle = '#5c3534'; x.lineWidth = 2.6; x.stroke(pth);
+    x.translate(.08, .12); x.strokeStyle = '#8c5554'; x.lineWidth = 2.1; x.stroke(pth);
+    x.restore();
+  } else {
+    const gr = x.createRadialGradient(200, 170, 30, 256, 256, 300); gr.addColorStop(0, '#9a6463'); gr.addColorStop(1, '#6d4342'); x.fillStyle = gr; x.fillRect(0, 0, 512, 512);
+    x.strokeStyle = 'rgba(236,231,228,.5)'; x.lineWidth = 4; x.beginPath(); x.arc(256, 256, 214, 0, Math.PI * 2); x.stroke();
+    x.fillStyle = '#ece7e4'; x.textAlign = 'center'; x.font = "400 50px 'DM Serif Display', Georgia, serif";
+    const words = it.name.split(' '), lines = []; let ln = '';
+    words.forEach(w => { const t = ln ? ln + ' ' + w : w; if (x.measureText(t).width > 330 && ln) { lines.push(ln); ln = w; } else ln = t; }); lines.push(ln);
+    const L = lines.slice(0, 3); L.forEach((l, i) => x.fillText(l, 256, 236 - (L.length - 1) * 28 + i * 56));
+    x.font = '700 30px Manrope, system-ui, sans-serif'; x.fillStyle = '#f2e4e2'; x.fillText(it.range, 256, 236 + (L.length - 1) * 28 + 78);
+  }
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4; return tex;
+}
+let ws, wc, kl, tokens = [], cols = 11, wallVisible = false, entered = false, enterT = 0, wallBuilt = false;
+const ray = new THREE.Raycaster(), mv = new THREE.Vector2(-9, -9);
+function buildWall() {
+  if (wallBuilt) return; wallBuilt = true;
+  ws = new THREE.Scene(); ws.environment = scene.environment;
+  wc = new THREE.PerspectiveCamera(28, 1, .1, 100);
+  kl = new THREE.PointLight(0xc49592, 22, 30); kl.position.set(0, 2, 4); ws.add(kl);
+  const geo = new THREE.CylinderGeometry(.42, .42, .1, 48, 1), rimGeo = new THREE.TorusGeometry(.42, .028, 10, 56);
+  const sideMat = new THREE.MeshStandardMaterial({ color: 0xe9e2de, roughness: .32 });
+  const rimMat = new THREE.MeshStandardMaterial({ color: 0xf1ebe8, roughness: .22 });
+  tokens = IND.map((it, i) => {
+    const front = new THREE.MeshStandardMaterial({ map: tokenTex(it, false), roughness: .35 });
+    const bt = tokenTex(it, true); bt.wrapS = THREE.RepeatWrapping; bt.repeat.x = -1; bt.offset.x = 1;
+    const back = new THREE.MeshStandardMaterial({ map: bt, roughness: .4 });
+    const m = new THREE.Mesh(geo, [sideMat, front, back]); m.rotation.x = Math.PI / 2;
+    const grp = new THREE.Group(); grp.add(m);
+    const r1 = new THREE.Mesh(rimGeo, rimMat); r1.position.z = .05; grp.add(r1); const r2 = r1.clone(); r2.position.z = -.05; grp.add(r2);
+    grp.userData = { i, flip: 0, fz: 0 }; ws.add(grp); return grp;
+  });
+  function layoutWall() {
+    wc.aspect = M.wallW / M.wallH;
+    cols = M.wallW < 560 ? 5 : M.wallW < 760 ? 7 : 11; const rows = Math.ceil(IND.length / cols), gx = 1.04, gy = 1.06;
+    tokens.forEach((gp, i) => { const c = i % cols, r = Math.floor(i / cols); gp.userData.hx = (c - (cols - 1) / 2) * gx; gp.userData.hy = ((rows - 1) / 2 - r) * gy; });
+    const needW = cols * gx + .4, needH = rows * gy + .4, vf = Math.tan(THREE.MathUtils.degToRad(wc.fov / 2));
+    const d = Math.max(needH / 2 / vf, needW / 2 / vf / wc.aspect); wc.position.set(0, -.6, d + .2); wc.lookAt(0, 0, 0); wc.updateProjectionMatrix();
+  }
+  layoutWall(); new ResizeObserver(() => { measure(); layoutWall(); }).observe(wallEl);
+  function pick(e) { const left = M.wallLeft, top = M.wallTop - scrollY; mv.set(((e.clientX - left) / M.wallW) * 2 - 1, -((e.clientY - top) / M.wallH) * 2 + 1); ray.setFromCamera(mv, wc); const hit = ray.intersectObjects(tokens, true)[0]; let o = hit && hit.object; while (o && o.userData.i == null) o = o.parent; return o ? o.userData.i : -1; }
+  wallEl.addEventListener('pointermove', e => { const i = pick(e); if (i !== hovered) { hovered = i; if (i >= 0 && matches(IND[i])) { selected = i; showDetail(i); } $('wallhint').textContent = i >= 0 ? IND[i].name : 'Hover a token'; } kl.position.x = mv.x * 6; kl.position.y = mv.y * 3; });
+  wallEl.addEventListener('pointerleave', () => { hovered = -1; $('wallhint').textContent = 'Hover a token'; });
+  wallEl.addEventListener('click', e => { const i = pick(e); if (i >= 0 && matches(IND[i])) { selected = i; hovered = i; showDetail(i); } });
+  new IntersectionObserver(es => es.forEach(e => { wallVisible = e.isIntersecting; if (wallVisible && !entered) { entered = true; enterT = performance.now(); } }), { threshold: .05 }).observe(wallEl);
+}
+if (HAS_GL) {
+  const near = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { near.disconnect(); setTimeout(buildWall, 60); } }, { rootMargin: '1600px 0px' });
+  near.observe(wallEl);
+} else {
+  wallEl.insertAdjacentHTML('afterbegin', '<p style="padding:24px;color:#b6aaab">3D tokens need WebGL. The full list of industries is below.</p>');
+}
+
+function updateTokens(now) {
+  const t = now / 1000, et = (now - enterT) / 1000;
+  tokens.forEach((gp, i) => {
+    const u = gp.userData, ok = matches(IND[i]);
+    const delay = (i % cols) * .05 + Math.floor(i / cols) * .12;
+    const k = reduceMotion ? 1 : clamp((et - delay) / .9, 0, 1), ke = 1 - Math.pow(1 - k, 3);
+    const flipT = (i === hovered || (i === selected && hovered < 0)) && ok ? Math.PI : 0;
+    const tf = reduceMotion ? 1 : 1 - Math.exp(-(lastDt / 1000) * 7);
+    u.flip += (flipT - u.flip) * tf;
+    u.fz += ((ok ? 0 : -1.1) - u.fz) * tf;
+    const wob = reduceMotion ? 0 : Math.sin(t * 1.3 + i * .7) * .08;
+    gp.position.set(u.hx, u.hy + (1 - ke) * 1.6, u.fz + (1 - ke) * -2.5 + (i === hovered ? .25 : 0));
+    gp.rotation.set(wob * .6 + (1 - ke) * 1.2, u.flip + wob, (1 - ke) * .8);
+    const shade = ok ? 1 : .35; gp.children[0].material[1].color.setScalar(shade); gp.children[0].material[2].color.setScalar(shade);
+  });
+}
+
+/* ============ ONE FRAME LOOP ============ */
+let drewLast = false, dpr = DPR, lastNow = 0, slow = 0, fast = 0, lastDt = 16;
+function adapt(now) {
+  const dt = lastNow ? now - lastNow : 16; lastNow = now; lastDt = Math.min(dt, 250);
+  if (dt > 34) { slow++; fast = 0; } else if (dt < 20) { fast++; slow = 0; }
+  if (slow > 20 && dpr > .6) { dpr = Math.max(.6, dpr - .25); renderer.setPixelRatio(dpr); renderer.setSize(M.vw, M.vh, false); slow = 0; }
+  else if (fast > 240 && dpr < DPR) { dpr = Math.min(DPR, dpr + .25); renderer.setPixelRatio(dpr); renderer.setSize(M.vw, M.vh, false); fast = 0; }
+  window.__bp5.dpr = dpr;
+}
+function tick(now) {
+  requestAnimationFrame(tick);
+  if (document.hidden) { lastNow = 0; return; }
+  if (HAS_GL) adapt(now);
+  const t = (now - t0) / 1000, sy = scrollY;
+  const top = M.seqTop - sy, h = M.seqH - M.vh, p = clamp(-top / h, 0, 1);
+  const mobile = M.vw <= 900, pre = top > 0, heroK = clamp(1 - top / M.vh, 0, 1);
+  const stageF = p * STEPS.length, stage = Math.min(STEPS.length - 1, Math.floor(stageF)), local = stageF - stage;
+  if (!HAS_GL) return;
+  const seqBottom = top + M.seqH;
+  const phoneOn = seqBottom > M.vh * .2;
+  const wallTopV = M.wallTop - sy, wallOn = wallVisible && wallTopV < M.vh && wallTopV + M.wallH > 0;
+  if (!phoneOn && !wallOn) { if (drewLast) { renderer.setScissorTest(false); renderer.setViewport(0, 0, M.vw, M.vh); renderer.clear(); drewLast = false; } return; }
+  drewLast = true;
+  renderer.setScissorTest(false); renderer.setViewport(0, 0, M.vw, M.vh); renderer.clear();
+  if (phoneOn) {
+    const pf = 1 - Math.exp(-(lastDt / 1000) * 4); pointer.x += (pointer.tx - pointer.x) * pf; pointer.y += (pointer.ty - pointer.y) * pf;
+    let tx, ty, tr, trx, ts;
+    if (pre) { const k = ease(heroK); tx = lerp(0, mobile ? 0 : (M.colCx - M.vw / 2) * M.upp, k); ty = lerp(mobile ? -3.2 : -3.15, mobile ? 1.05 : 0, k); tr = lerp(Math.sin(t * .5) * .35, STAGE_POSE[0][0], k); trx = lerp(.22, STAGE_POSE[0][1], k); ts = lerp(mobile ? .78 : 1, mobile ? .62 : M.phoneS, k); }
+    else { const a = STAGE_POSE[stage], b = STAGE_POSE[Math.min(stage + 1, STAGE_POSE.length - 1)], k = ease(clamp((local - .55) / .45, 0, 1)); tx = mobile ? 0 : (M.colCx - M.vw / 2) * M.upp; ty = mobile ? 1.05 : 0; tr = lerp(a[0], b[0], k); trx = lerp(a[1], b[1], k); ts = mobile ? .62 : M.phoneS; }
+    if (p >= 1) ty += clamp((M.vh - seqBottom) / M.vh, 0, 1) * 6;
+    const fdt = lastDt / 1000, f = reduceMotion ? 1 : 1 - Math.exp(-fdt * 5.5);
+    cur.x += (tx - cur.x) * f; cur.y += (ty - cur.y) * f; cur.ry += (tr - cur.ry) * f; cur.rx += (trx - cur.rx) * f; cur.s += (ts - cur.s) * f;
+    phone.position.set(cur.x, cur.y + (reduceMotion ? 0 : Math.sin(t * 1.1) * .05), 0);
+    phone.rotation.set(cur.rx + pointer.y * .25, cur.ry + pointer.x * .45, 0);
+    phone.scale.setScalar(cur.s);
+    rim.position.x = 2.5 + Math.sin(t * .4) * 1.2;
+    if (pre && t - heroNT > 3) { heroN++; heroNT = t; }
+    const key = pre ? 'h' + heroN + ':' + Math.floor(t * 15) : stage + ':' + Math.round(local * 48) + ':' + Math.floor(t * 8);
+    if (key !== lastKey) { drawScreen(pre ? -1 : stage, local, t); screenTex.needsUpdate = true; lastKey = key; }
+    renderer.render(scene, camera); window.__bp5.frames++;
+    if (window.__bp5.wantBox) { phoneBox.setFromObject(phone); let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (let i = 0; i < 8; i++) { const v = boxV.set(i & 1 ? phoneBox.max.x : phoneBox.min.x, i & 2 ? phoneBox.max.y : phoneBox.min.y, i & 4 ? phoneBox.max.z : phoneBox.min.z).project(camera); const X = (v.x + 1) / 2 * M.vw, Y = (1 - v.y) / 2 * M.vh; x0 = Math.min(x0, X); x1 = Math.max(x1, X); y0 = Math.min(y0, Y); y1 = Math.max(y1, Y); } window.__bp5.box = [x0, y0, x1, y1].map(Math.round); }
+  }
+  if (wallOn) {
+    const x = M.wallLeft, y = M.vh - (wallTopV + M.wallH);
+    renderer.setScissorTest(true); renderer.setViewport(x, y, M.wallW, M.wallH); renderer.setScissor(x, y, M.wallW, M.wallH);
+    renderer.autoClear = false; renderer.clearDepth(); updateTokens(now); renderer.render(ws, wc); renderer.autoClear = true;
+    renderer.setScissorTest(false); window.__bp5.wallFrames++;
+  }
+}
+if (HAS_GL) requestAnimationFrame(tick); else { canvas.style.display = 'none'; requestAnimationFrame(tick); }
+</script>

@@ -1,0 +1,246 @@
+<title>Pepticity Game Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: a working plan — sticky section index on wide screens, one readable column, tables for things you compare. */
+:root{
+  --bg:#f6f4f2; --panel:#ffffff; --ink:#18151a; --muted:#5f5a63; --line:#e3dfe0; --accent:#c8324a; --accent-soft:#fbe7ea; --ok:#1f7a4d; --warn:#9a5b00;
+  --display:"Unbounded",system-ui,sans-serif; --body:"Geist",system-ui,sans-serif; --mono:"Geist Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0c0e;--panel:#151417;--ink:#efe9e3;--muted:#a4a0a8;--line:#2a282d;--accent:#ff6a7d;--accent-soft:#2a1419;--ok:#5fd39a;--warn:#f0b35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d0c0e;--panel:#151417;--ink:#efe9e3;--muted:#a4a0a8;--line:#2a282d;--accent:#ff6a7d;--accent-soft:#2a1419;--ok:#5fd39a;--warn:#f0b35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 80px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+nav.toc{position:sticky;top:24px;align-self:start;padding-top:56px;display:grid;gap:6px;font:500 .85rem var(--body)}
+nav.toc a{color:var(--muted);text-decoration:none;padding:4px 0}
+nav.toc a:hover{color:var(--accent)}
+main{min-width:0;padding-top:56px}
+.eyebrow{font:600 .78rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+h1{font:800 clamp(2rem,4.6vw,3.4rem)/1.04 var(--display);letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
+h2{font:600 clamp(1.4rem,2.6vw,1.9rem)/1.15 var(--display);letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+h3{font:600 1.05rem/1.3 var(--body);margin:0 0 6px}
+section{padding-block:40px;border-top:1px solid var(--line);display:grid;gap:16px}
+p{margin:0;max-width:68ch}
+.lede{font-size:1.1rem;color:var(--muted)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.link{display:grid;gap:4px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);text-decoration:none;color:var(--ink)}
+.link b{font-weight:600}
+.link span{font:400 .8rem var(--mono);color:var(--muted)}
+.link.live{border-color:var(--accent)}
+.pill{display:inline-block;font:600 .72rem var(--mono);padding:.2em .7em;border-radius:999px;background:var(--accent-soft);color:var(--accent);letter-spacing:.04em}
+.pill.ok{background:transparent;color:var(--ok);border:1px solid currentColor}
+.pill.warn{background:transparent;color:var(--warn);border:1px solid currentColor}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:640px;font-size:.92rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .74rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.sw{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px;border:1px solid rgb(0 0 0/.15)}
+ol.big,ul.big{margin:0;padding-left:1.3em;display:grid;gap:8px;max-width:72ch}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel);display:grid;gap:8px;min-width:0}
+.card p,.card li{font-size:.93rem}
+.card ul{margin:0;padding-left:1.1em;display:grid;gap:4px}
+.tag{font:400 .74rem var(--mono);color:var(--muted)}
+.lines{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;counter-reset:n;padding:0;margin:0;list-style:none}
+.lines li{counter-increment:n;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font:600 1.02rem/1.35 var(--body)}
+.lines li::before{content:counter(n,decimal-leading-zero);display:block;font:400 .72rem var(--mono);color:var(--accent);margin-bottom:4px}
+.missions{display:grid;gap:8px;counter-reset:m;padding:0;margin:0;list-style:none}
+.missions li{counter-increment:m;padding:14px 16px 14px 56px;position:relative;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.missions li::before{content:counter(m);position:absolute;left:18px;top:13px;font:800 1.1rem var(--display);color:var(--accent)}
+.callout{padding:18px 20px;border-radius:14px;background:var(--accent-soft);border:1px solid color-mix(in oklab,var(--accent) 35%,transparent)}
+code{font:400 .88em var(--mono);background:var(--accent-soft);padding:.1em .35em;border-radius:5px}
+@media (max-width:900px){.wrap{grid-template-columns:1fr;gap:0}nav.toc{display:none}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Sections">
+  <a href="#status">Status &amp; links</a><a href="#decide">Decisions for Grace</a><a href="#plan">Game plan</a><a href="#versions">The 5 versions</a><a href="#people">Top 5 buyers</a><a href="#hooks">Sales hooks</a><a href="#upgrades">10 upgrades</a><a href="#taglines">20 taglines</a><a href="#missions">10 missions</a><a href="#logos">25 logos</a><a href="#skills">Skills &amp; repos</a><a href="#rules">Compliance rules</a><a href="#research">Peptide research</a>
+</nav>
+<main>
+  <p class="eyebrow">Pepticity · for Grace · October 2026</p>
+  <h1>The Pepticity game plan</h1>
+  <p class="lede">One all-in-one peptide sales site, built five different ways. It serves people 55 and over, people with low energy, women 40+, men 35+ and anyone training hard, through a clinician-guided model that lets us market to all of them legally.</p>
+
+  <section id="status">
+    <h2>Status &amp; links</h2>
+    <div class="links">
+      <a class="link live" href="https://claude.ai/artifact/Xd6UXyVbeBBL8B7W93Xg3H"><b>V1 · Pepticity Clinic</b><span>Live · 3 intros, funnel, lot lookup</span></a>
+      <a class="link live" href="https://claude.ai/artifact/UrsZ3U16sYYXs9dcqS4JYf"><b>Logo Lab · 25 marks</b><span>Live · replay, shortlist, copy SVG</span></a>
+      <a class="link live" href="https://claude.ai/artifact/FpUE2rrBoLL4UErARqKM7g"><b>V2 · Pepticity Pure</b><span>Live · drop intro, liquid lens</span></a>
+      <a class="link live" href="https://claude.ai/artifact/KojiyBraNAjZPRVnZznvcF"><b>V3 · Pepticity Prime</b><span>Live · dawn intro, age &amp; goal dial</span></a>
+      <a class="link live" href="https://claude.ai/artifact/5DS46jmun7aMLmpS5VzVQH"><b>V4 · Pepticity Performance</b><span>Live · telemetry intro, mode select</span></a>
+      <a class="link live" href="https://claude.ai/artifact/QJmR24ZLjnnzhSj2CjaJ54"><b>V5 · Pepticity Open Lab</b><span>Live · sequence intro, lab data</span></a>
+    </div>
+    <p><span class="pill warn">Media blocked</span> 28 Higgsfield images and 7 intro films are generated, but this build environment's network blocks their host (<code>d8j0ntlcm91z4.cloudfront.net</code>). Until it's allowed, the sites show designed fallbacks. Once it's allowed, one command pulls everything in.</p>
+  </section>
+
+  <section id="decide">
+    <h2>Decisions Grace needs to make</h2>
+    <ol class="big">
+      <li><b>Clinical partner.</b> Which licensed telehealth provider network and which licensed (503A) pharmacy fill prescriptions. Without them, the clinician-guided promise can't go live.</li>
+      <li><b>Where she sells.</b> US states and/or Canadian provinces at launch. This sets the quiz's location list and the waitlist logic.</li>
+      <li><b>Pricing.</b> Membership price, annual price and the founding-member offer. Every <code>[bracket]</code> on the sites waits on this. A founding rate only goes live if it's a real, enforced cap.</li>
+      <li><b>Counsel review.</b> A healthcare attorney signs off on final copy and disclaimers before launch. Ask them about two things: advertising compounded drugs, and LegitScript certification for paid ads.</li>
+      <li><b>Pick a version and a logo.</b> Choose the winning site from the 5 and shortlist 3 marks in the Logo Lab.</li>
+    </ol>
+  </section>
+
+  <section id="plan">
+    <h2>Game plan, start to finish</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Phase</th><th>What happens</th><th>Done when</th></tr></thead>
+      <tbody>
+        <tr><td><b>0 · Decide</b><br><span class="tag">week 1</span></td><td>Grace answers the 5 decisions above. Book the counsel review.</td><td>Partner, pricing and markets confirmed in writing</td></tr>
+        <tr><td><b>1 · Brand lock</b><br><span class="tag">week 1–2</span></td><td>Choose the logo from the shortlist, then vector cleanup and a trademark search. Finalize the palette, type, tagline and mission.</td><td>Brand sheet approved</td></tr>
+        <tr><td><b>2 · Build</b><br><span class="tag">week 2–4</span></td><td>Move the winning version to production (Next.js or static on her domain). Add real photos of clinicians and the team, the CRM and email, the quiz backend, a high-risk-friendly payment processor, analytics events and the real lot certificates.</td><td>Site works end-to-end on staging</td></tr>
+        <tr><td><b>3 · Compliance pass</b><br><span class="tag">week 4</span></td><td>Run the claims check on every line. Counsel review. Screenshot and date-stamp every page.</td><td>Signed off</td></tr>
+        <tr><td><b>4 · Launch traffic</b><br><span class="tag">week 5+</span></td><td>SEO content hub, email and SMS flows, webinars, and affiliates and coaches with disclosure. Paid ads only after LegitScript certification.</td><td>First 100 assessments</td></tr>
+        <tr><td><b>5 · Optimize</b><br><span class="tag">ongoing</span></td><td>A/B test hooks, measure quiz-to-consult conversion, add a retention program.</td><td>Monthly growth review</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="versions">
+    <h2>The 5 versions</h2>
+    <p>Every version is the same business serving all 5 audiences, each with an audience switcher that rewrites the page live. They share nothing visually.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Version</th><th>Palette</th><th>Type</th><th>Intro</th><th>Signature</th></tr></thead>
+      <tbody>
+        <tr><td><b>V1 Clinic</b></td><td><span class="sw" style="background:#09090a"></span><span class="sw" style="background:#efe9e3"></span><span class="sw" style="background:#c9ccd1"></span><span class="sw" style="background:#ff5c70"></span> ink, bone, platinum, rose plasma</td><td>Unbounded + Geist</td><td>3 options: Synthesis cube turn, Film portal, Vial letterbox</td><td>Pinned lab story with a live chromatogram; the molecule leans toward your cursor</td></tr>
+        <tr><td><b>V2 Pure</b></td><td><span class="sw" style="background:#2a1d17"></span><span class="sw" style="background:#eeeae4"></span><span class="sw" style="background:#5b4033"></span><span class="sw" style="background:#c2703d"></span> espresso, porcelain, cocoa, copper</td><td>Gloock + Schibsted Grotesk</td><td>Drop falls, ripple, liquid reveal</td><td>Liquid refraction lens; build-your-plan bundle</td></tr>
+        <tr><td><b>V3 Prime</b></td><td><span class="sw" style="background:#d9d6d0"></span><span class="sw" style="background:#f2f1ee"></span><span class="sw" style="background:#232224"></span><span class="sw" style="background:#6e1423"></span> stone, chalk, charcoal, oxblood</td><td>Instrument Serif + Onest</td><td>Horizon draws, dawn rises</td><td>Scroll through the decades (30s to 80s+); the most readable version</td></tr>
+        <tr><td><b>V4 Performance</b></td><td><span class="sw" style="background:#0b0b0c"></span><span class="sw" style="background:#d7dadf"></span><span class="sw" style="background:#8c9097"></span><span class="sw" style="background:#d4ff3a"></span> onyx, platinum, steel, chartreuse spark</td><td>Big Shoulders + Familjen + Martian Mono</td><td>Telemetry boot, venetian shutters</td><td>Mode select; speed-skew gallery; pinned lab panel</td></tr>
+        <tr><td><b>V5 Open Lab</b></td><td><span class="sw" style="background:#eef2f4"></span><span class="sw" style="background:#0f1a22"></span><span class="sw" style="background:#8a97a1"></span><span class="sw" style="background:#e5383b"></span> ice, slate, fog, ion red</td><td>Fraunces + Martian Mono</td><td>A sequence types itself into a chromatogram peak</td><td>Data is the interface: scrubbable spectra and a lot explorer</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="people">
+    <h2>Top 5 buyers</h2>
+    <p>Ranked on 2025–2026 market data. The two groups who say they're "not feeling well" or "low on energy" are served through the 55+ and women 40+ paths and an "energy" path. "Fatigue" is a symptom the assessment asks about, never a promise the site makes.</p>
+    <div class="cols">
+      <div class="card"><span class="pill">1 · Women 40–60</span><p>The largest group: women are the majority of GLP-1 users, and use peaks at 50–64. They want to be listened to, a clear all-in price, and named women clinicians.</p><p class="tag">Avoid: shrinking-body imagery, bro aesthetics.</p></div>
+      <div class="card"><span class="pill">2 · Healthy aging 55+</span><p>The highest disposable income. 73% are actively working on their health. They want a phone number a human answers, a medication review and plain English.</p><p class="tag">Avoid: hype, countdown timers, tiny grey fine print.</p></div>
+      <div class="card"><span class="pill">3 · Men 35–55</span><p>Data-driven cash payers in the same market as Hims and Maximus. They want labs before anything is prescribed, named clinicians and pharmacy sourcing.</p><p class="tag">Avoid: "gains" talk, supplement-store design.</p></div>
+      <div class="card"><span class="pill">4 · Training &amp; recovery</span><p>The likeliest group to buy grey market today. Win them with "real pharmacy, real prescription" and lab proof. This group carries the highest compliance risk: no dosing content ever.</p><p class="tag">Channels: coaches, gyms, podcasts.</p></div>
+      <div class="card"><span class="pill">5 · Weight &amp; metabolic</span><p>12% of US adults use a GLP-1. They're burned by bait pricing. Lead with an all-in price lock, and never claim equivalence to Wegovy or Zepbound.</p><p class="tag">This group brings people in; keep them with longevity care.</p></div>
+    </div>
+  </section>
+
+  <section id="hooks">
+    <h2>Sales hooks built into the sites</h2>
+    <div class="cols">
+      <div class="card"><h3>Capture</h3><ul><li>60-second assessment that captures email on the result screen</li><li>Audience switcher that rewrites the page for each visitor</li><li>Free field guide (exit intent, shown once)</li><li>Call-me-back scheduler</li><li>A dated "what happens next" timeline</li></ul></div>
+      <div class="card"><h3>Convince</h3><ul><li>Lot lookup on every vial</li><li>"Not another online peptide shop" comparison</li><li>All-in pricing with no hidden fees</li><li>"If peptides aren't right, you pay nothing"</li><li>Larger-text button and a visible phone number</li></ul></div>
+      <div class="card"><h3>Close &amp; keep</h3><ul><li>Founding-member rate (only if it's a real cap)</li><li>Annual plan discount</li><li>Bring a family member; refer a parent</li><li>Cancel in two clicks</li><li>Concierge that answers questions about logistics, never medical ones</li></ul></div>
+    </div>
+  </section>
+
+  <section id="upgrades">
+    <h2>10 upgrades that would put it ahead of everyone</h2>
+    <p>These come from an independent award-jury review and research into what is winning in 2026. Effort: S is under a day, M is 1 to 3 days, L is a week.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>#</th><th>Upgrade</th><th>Why it sells</th><th>Effort</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><b>Live Lot Ledger:</b> a chromatogram you can scrub, plus a public feed of recent lots with a downloadable certificate for each</td><td>Turns "check us" into something no competitor has</td><td>M</td></tr>
+        <tr><td>2</td><td><b>Vial X-ray hero:</b> a 3D vial whose label peels back to show the lot, pharmacy licence and cold-chain seal</td><td>Puts the product on the page as the hero</td><td>L</td></tr>
+        <tr><td>3</td><td><b>Clinician wall:</b> real clinicians with a "verify licence" link to the state board</td><td>Builds trust that fake reviews can't, legally</td><td>S</td></tr>
+        <tr><td>4</td><td><b>Coverage map:</b> your state lights up "clinicians licensed here", or offers the waitlist</td><td>Qualifies leads and makes the free review feel real</td><td>M</td></tr>
+        <tr><td>5</td><td><b>Ad message match:</b> each ad link opens the page already set to that audience</td><td>The biggest single lever for paid traffic</td><td>S</td></tr>
+        <tr><td>6</td><td><b>Book the call inside the quiz</b> (time-slot picker)</td><td>Buyers 55+ convert when they can talk to a person</td><td>S</td></tr>
+        <tr><td>7</td><td><b>Itemised receipt</b> that prints line by line: review $0, shipping $0, lab fees $0</td><td>Makes "no hidden fees" concrete</td><td>S</td></tr>
+        <tr><td>8</td><td><b>Clinician question builder:</b> a printable "questions to ask" sheet</td><td>A lead magnet that captures real intent</td><td>S</td></tr>
+        <tr><td>9</td><td><b>Seller red-flag checker:</b> 8 yes/no questions about any peptide seller</td><td>Wins people comparison-shopping against the grey market</td><td>S</td></tr>
+        <tr><td>10</td><td><b>Read-aloud button + resume quiz by email</b></td><td>Accessible for older visitors; recovers abandoned quizzes</td><td>M</td></tr>
+      </tbody>
+    </table></div>
+    <p class="callout"><b>Ideas nobody is doing yet</b> (from the trend research): the cursor acts as a receptor and the molecule docks to it; each peptide gets its own short opt-in sound motif; one persistent molecule morphs between pages with View Transitions instead of cutting to white. Avoid the worn-out moves: the 0–100% loader counter, an endlessly spinning DNA helix, and generic glass cards.</p>
+  </section>
+
+  <section id="taglines">
+    <h2>20 taglines</h2>
+    <ol class="lines">
+      <li>Precision, prescribed.</li><li>Trace every molecule.</li><li>Peptide care you can verify.</li><li>Don't trust us. Check us.</li><li>Every vial has a lot number. Look it up.</li><li>Science you can see.</li><li>Clinician-led. Lab-proven.</li><li>The lot code is the point.</li><li>Your prime, at any age.</li><li>Perform at every age.</li><li>Pure. Provable. Personal.</li><li>Know your numbers first.</li><li>Built on proof, not promises.</li><li>Real pharmacy. Real prescription. Real people.</li><li>Open lab. Open book.</li><li>Care that starts with a conversation.</li><li>Nine letters. Zero shortcuts.</li><li>From sequence to your door.</li><li>Verified before it's yours.</li><li>Peptides, done properly.</li>
+    </ol>
+  </section>
+
+  <section id="missions">
+    <h2>10 mission statements</h2>
+    <ol class="missions">
+      <li>To make peptide care as provable as it is personal, with a licensed clinician behind every plan and a public lab report behind every vial.</li>
+      <li>To end the guesswork of buying peptides online by putting clinicians, licensed pharmacies and independent labs between our customers and the grey market.</li>
+      <li>To give every adult, from 30 to 90, a straight answer on whether peptide care fits them, from a clinician who will say no when it doesn't.</li>
+      <li>To publish everything: every lot, every test, every price. Trust should be checked, not asked for.</li>
+      <li>To build the most transparent peptide company in North America, one verifiable lot at a time.</li>
+      <li>To bring precision care to people who've been dismissed, rushed or upsold, with time, clarity and a real person on the line.</li>
+      <li>To pair the rigour of a lab with the warmth of a good doctor's office, online, for every age and every goal.</li>
+      <li>To set the standard the category is missing: decisions made by clinicians, preparation by licensed pharmacies, and proof anyone can read.</li>
+      <li>To help people stay active, independent and informed through every decade, without hype and without hidden fees.</li>
+      <li>To make "verified" mean something again in wellness: shown, tested, documented, and yours to check.</li>
+    </ol>
+  </section>
+
+  <section id="logos">
+    <h2>25 logos</h2>
+    <p>All 25 are animated and drawn with sharp lines. Open the <a href="https://claude.ai/artifact/UrsZ3U16sYYXs9dcqS4JYf">Logo Lab</a>, star your favourites, then press "Show shortlist". The strongest fits: <b>L01 Cyclic P</b> (it is the intro), <b>L03 Hex Bond</b>, <b>L05 Chamfer PC</b>, <b>L11 Pepti-City</b> and <b>L23 Seal</b>.</p>
+  </section>
+
+  <section id="skills">
+    <h2>Skills &amp; repos</h2>
+    <h3>10 new UI/UX skills (being written now)</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Skill</th><th>What it adds</th></tr></thead>
+      <tbody>
+        <tr><td>cinematic-preloader-entrance</td><td>7–9 second intros that never slow the page, with 5 hand-off transitions (cube, portal, letterbox, slats, ripple)</td></tr>
+        <tr><td>view-transitions-pages</td><td>App-like page morphs using the View Transitions API</td></tr>
+        <tr><td>webgpu-tsl-shaders</td><td>Next-generation GPU effects with automatic fallback</td></tr>
+        <tr><td>molecule-3d-renderer</td><td>Accurate or stylised 3D peptides, the molecule as the brand</td></tr>
+        <tr><td>conversion-funnel-ux</td><td>Sales-page anatomy, a hook library and A/B testing templates</td></tr>
+        <tr><td>quiz-funnel-builder</td><td>Branching assessments that capture leads without diagnosing</td></tr>
+        <tr><td>ai-concierge-ui</td><td>A guard-railed chat with handoff to a human</td></tr>
+        <tr><td>senior-accessibility-aa-plus</td><td>Readable, tappable and calm for visitors 55+</td></tr>
+        <tr><td>perf-budget-cwv</td><td>Speed budgets so the "wow" never costs sales</td></tr>
+        <tr><td>web-video-pipeline</td><td>Turning Higgsfield films into fast, light web intros</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Colour skills (being written now)</h3>
+    <p>Palette architecture, perceptual colour mixing, tonal scales and tokens, contrast and accessibility, palette-from-image, harmony and mood (with your taste rules built in), dark-mode systems, and gradients and glow. Each comes with a runnable colour tool.</p>
+    <h3>5 repos worth building on</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Repo</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a> · MIT · r186</td><td>Real 3D and WebGPU: the vial X-ray and molecule heroes</td></tr>
+        <tr><td><a href="https://github.com/greensock/GSAP">greensock/GSAP</a> · now 100% free · 3.15</td><td>Scroll choreography, SplitText, MorphSVG and DrawSVG for the logos</td></tr>
+        <tr><td><a href="https://github.com/darkroomengineering/lenis">darkroomengineering/lenis</a> · MIT · 1.3.27</td><td>The smooth "expensive" scroll feel without breaking accessibility</td></tr>
+        <tr><td><a href="https://github.com/motiondivision/motion">motiondivision/motion</a> · MIT</td><td>The React/Next.js animation layer for the production build</td></tr>
+        <tr><td><a href="https://github.com/pmndrs/react-three-fiber">pmndrs/react-three-fiber</a> + drei · MIT</td><td>Reusable 3D components when the site moves to Next.js</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tag">Also verified: 3dmol/3Dmol.js (real molecule files), rive-app/rive-wasm (interactive logo), greensock/gsap-skills and anthropics/skills (official skill packs).</p>
+  </section>
+
+  <section id="rules">
+    <h2>Compliance rules every version follows</h2>
+    <div class="cols">
+      <div class="card"><h3>Never</h3><ul><li>Dosing, cycles, stacks, calculators, reconstitution</li><li>Syringes, bacteriostatic water, injection images</li><li>"Heals", "reverses", "boosts", "may help", "studied for"</li><li>Fake reviews, star ratings, before/after, invented stats</li><li>Saying a compounded drug equals an approved one</li></ul></div>
+      <div class="card"><h3>Always</h3><ul><li>"A licensed clinician decides if a plan is right for you"</li><li>The full price shown before payment; cancel in two clicks</li><li>Sample data labelled SAMPLE; offers in [brackets] until real</li><li>A footer disclaimer, approved by counsel</li><li>A dated screenshot of every published page</li></ul></div>
+    </div>
+    <p class="tag">This is a risk scan, not legal advice. Grace's counsel makes the final call.</p>
+  </section>
+
+  <section id="research">
+    <h2>Peptide research, in brief</h2>
+    <ul class="big">
+      <li><b>FDA, 2026:</b> repeated warning letters to "research use only" sellers (Mar, Jun and Aug 2026). The FDA judges the whole website, and it cited dosing info, calculators, testimonials and bundled bacteriostatic water. A research-use label gives no protection.</li>
+      <li><b>Compounding opening up:</b> in April 2026 the FDA removed 12 peptides from its restricted list. In July 2026 its advisory committee voted to recommend 6 for compounding (including BPC-157, TB-500, MOTS-c, Epitalon and Semax). <b>Nothing is final</b>, so check the 503A list before launch.</li>
+      <li><b>Competition:</b> Hims &amp; Hers plans to add peptides by year-end. Peptide Sciences shut down in March 2026. The gap is a premium, design-led brand that pairs lab-grade transparency with compliant care.</li>
+      <li><b>Canada:</b> Health Canada treats injectable peptides as prescription drugs, has seized products and won a court injunction. Canadian sales need a prescription framework; cosmetic topical peptides are the safe lane.</li>
+      <li><b>Ads &amp; payments:</b> Google and Meta require LegitScript for health and prescription ads. Stripe restricts peptide sellers. Plan on SEO, email, SMS and affiliates first.</li>
+    </ul>
+  </section>
+</main>
+</div>

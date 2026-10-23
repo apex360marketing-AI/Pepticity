@@ -1,0 +1,324 @@
+<title>APEX Orbit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@1,500&display=swap">
+<style>
+:root{--bg:#050812;--fg:#e9eefb;--muted:#9aa6bf;--dim:#6e7a93;--blue:#3b6bff;--blue2:#8aa6ff;--gold:#cfd5de;--lime:#d4ff3a;--line:rgba(138,166,255,.16);--glass:rgba(16,24,46,.62);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'Plus Jakarta Sans',system-ui,sans-serif;margin:0;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.gold-i{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:var(--gold);letter-spacing:0}
+a{color:var(--blue2)}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.sky{position:absolute;inset:0 0 auto;height:1100px;pointer-events:none;background:radial-gradient(50% 45% at 50% 38%,rgba(59,107,255,.28),transparent 70%),radial-gradient(30% 30% at 80% 70%,rgba(207,213,222,.08),transparent 70%)}
+.stars{position:absolute;inset:0 0 auto;height:1100px;pointer-events:none;background-image:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 72% 12%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 88% 48%,rgba(255,255,255,.35),transparent),radial-gradient(1px 1px at 30% 66%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 56% 82%,rgba(255,255,255,.3),transparent);animation:tw 6s ease-in-out infinite}
+@keyframes tw{50%{opacity:.5}}
+main{position:relative}
+header{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-block:28px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);font-weight:800;font-size:18px}
+.mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(155deg,#5b85ff,#2447d6);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 18px -6px rgba(59,107,255,.9)}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(10,16,34,.6);border:1px solid var(--line);backdrop-filter:blur(12px)}
+nav a{padding:10px 16px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:500}
+nav a:hover{color:var(--fg);background:rgba(59,107,255,.12)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:999px;border:0;background:var(--blue);color:#fff;font:inherit;font-weight:700;font-size:15px;text-decoration:none;cursor:pointer;box-shadow:0 12px 30px -12px rgba(59,107,255,.95);transition:transform .2s,background .2s}
+.btn:hover{background:#5480ff;color:#fff;transform:translateY(-1px)}
+.btn.ghost{background:rgba(16,24,46,.6);border:1px solid var(--line);box-shadow:none;color:var(--fg)}
+.btn.ghost:hover{border-color:rgba(138,166,255,.45)}
+.hero{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px;padding-block:56px 20px}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:7px 14px 7px 10px;border-radius:999px;background:var(--glass);border:1px solid var(--line);font-size:12px;letter-spacing:.06em;color:#c7d1e8}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:pulse 2s infinite;display:inline-block}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,244,50,.6)}70%,100%{box-shadow:0 0 0 8px rgba(198,244,50,0)}}
+h1{margin:0;max-width:1020px;font-size:clamp(42px,6.4vw,92px);line-height:1;letter-spacing:-.045em;font-weight:800;text-wrap:balance}
+h1 .gold-i{font-size:1.08em}
+.hero p{margin:0;max-width:620px;font-size:18px;line-height:1.65;color:var(--muted)}
+.hero .row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.stage{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);align-items:center;gap:24px;padding-block:40px 100px;perspective:1600px}
+.panel{position:relative;border-radius:24px;background:var(--glass);border:1px solid rgba(138,166,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 40px 80px -30px rgba(0,0,0,.95),0 0 70px -34px rgba(59,107,255,.6);backdrop-filter:blur(18px);padding:22px;transition:transform .3s ease-out}
+.p-left{transform:rotateY(18deg) rotateZ(-1.5deg);animation:bob 7s ease-in-out infinite}
+.p-right{transform:rotateY(-18deg) rotateZ(1.5deg);animation:bob 8s ease-in-out -3s infinite}
+@keyframes bob{50%{translate:0 -14px}}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ph .tag{padding:4px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);font-size:10px}
+.stream{height:330px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
+.stream-in{display:flex;flex-direction:column;gap:10px;animation:up 30s linear infinite}
+.panel:hover .stream-in{animation-play-state:paused}
+@keyframes up{to{transform:translateY(-50%)}}
+.srow{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(5,8,18,.55);border:1px solid rgba(138,166,255,.1)}
+.srow .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.srow b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .v{font-size:12px;color:var(--gold);white-space:nowrap}
+.ok{font-size:10px;color:var(--lime);letter-spacing:.06em}
+.tile{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(155deg,#1d2a52 0%,#121a35 55%,#0b1124 100%);border:1px solid rgba(138,166,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -6px 12px -6px rgba(59,107,255,.5),0 10px 18px -10px rgba(0,0,0,.9)}
+.tile svg{filter:drop-shadow(0 0 4px rgba(91,133,255,.55))}
+.tile.hi{border-color:rgba(207,213,222,.4);background:linear-gradient(155deg,#1e2227 0%,#101215 55%,#090a0c 100%);box-shadow:inset 0 1px 0 rgba(213,217,222,.2),inset 0 -6px 12px -6px rgba(207,213,222,.35),0 10px 18px -10px rgba(0,0,0,.9)}
+.tile.hi svg{filter:drop-shadow(0 0 4px rgba(207,213,222,.5))}
+.orbit-wrap{overflow:hidden;padding:30px;min-width:0}
+.orbit{position:relative;width:100%;max-width:440px;aspect-ratio:1;margin:0 auto}
+.ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(138,166,255,.25);animation:rot 60s linear infinite}
+.ring2{position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(207,213,222,.18)}
+.orbit:hover .ring,.orbit:hover .sat{animation-play-state:paused}
+@keyframes rot{to{transform:rotate(360deg)}}
+.sat{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px;animation:counter 60s linear infinite}
+.sat .tile{width:52px;height:52px;border-radius:15px;transition:transform .25s}
+.sat button{all:unset;cursor:pointer;display:block;border-radius:15px}
+.sat button:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
+.sat button:hover .tile,.sat button.on .tile{transform:scale(1.18);box-shadow:0 0 0 1px var(--gold),0 0 30px -4px rgba(207,213,222,.7)}
+@keyframes counter{to{transform:rotate(-360deg)}}
+.core{position:absolute;inset:31%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:12px;background:radial-gradient(circle at 35% 30%,#4f7bff,#1c38b8 55%,#0a1440 100%);box-shadow:0 0 80px -6px rgba(59,107,255,.8),inset 0 2px 0 rgba(255,255,255,.25);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 110px 0 rgba(59,107,255,.9),inset 0 2px 0 rgba(255,255,255,.25)}}
+.core b{font-size:clamp(13px,1.3vw,16px);line-height:1.2}
+.core span{font-size:11px;color:#dbe4ff}
+.est{display:flex;flex-direction:column;gap:16px}
+.est label{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}
+.est label output{color:var(--fg)}
+.est select{min-height:44px;width:100%;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:#0b1124;color:var(--fg);font:inherit;font-size:14px}
+.est input[type=range]{width:100%;accent-color:var(--blue);min-height:28px}
+.result{padding:16px;border-radius:16px;background:rgba(5,8,18,.6);border:1px solid rgba(207,213,222,.25);display:flex;flex-direction:column;gap:6px}
+.result span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.result b{font-size:clamp(24px,2.4vw,32px);font-weight:800;color:var(--gold);letter-spacing:-.02em}
+.result small{font-size:11px;color:var(--dim);line-height:1.5}
+section.block{position:relative;z-index:2;padding-block:100px 30px;display:flex;flex-direction:column;gap:40px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2)}
+h2{margin:10px 0 0;font-size:clamp(34px,4vw,56px);line-height:1.04;letter-spacing:-.035em;font-weight:800;text-wrap:balance}
+.center{text-align:center;display:flex;flex-direction:column;align-items:center}
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.hcard{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-height:200px;padding:22px;border-radius:24px;background:linear-gradient(160deg,rgba(24,26,30,.7),rgba(12,16,32,.7));border:1px solid rgba(207,213,222,.22);text-decoration:none;color:var(--fg);transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s}
+.hcard:hover{transform:translateY(-5px);border-color:rgba(207,213,222,.55);color:var(--fg)}
+.hcard.big{grid-column:span 2;grid-row:span 2;min-height:414px}
+.hcard .tile{width:56px;height:56px;border-radius:16px}
+.hcard.big .tile{width:84px;height:84px;border-radius:24px}
+.hcard b{font-size:18px;line-height:1.25}.hcard.big b{font-size:30px;letter-spacing:-.02em}
+.hcard .val{font-size:13px;color:var(--gold)}.hcard.big .val{font-size:20px}
+.hcard .sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(230,232,235,.08) 45%,transparent 60%);transform:translateX(-100%);transition:transform .9s}
+.hcard:hover .sheen{transform:translateX(100%)}
+.trades{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px}
+.tcard{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--glass);border:1px solid var(--line);text-decoration:none;color:var(--fg);transition:border-color .25s,transform .25s}
+.tcard:hover{border-color:rgba(138,166,255,.45);transform:translateY(-2px);color:var(--fg)}
+.tcard .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tcard b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tcard small{font-size:11px;color:var(--muted)}
+.subhead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line)}
+.stagger{opacity:0;transform:translateY(18px) scale(.98);transition:opacity .55s,transform .55s}
+.stagger.in{opacity:1;transform:none}
+.steps{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
+.steps .sticky{position:sticky;top:60px;display:flex;flex-direction:column;gap:16px}
+.steps .sticky p{margin:0;font-size:17px;line-height:1.65;color:var(--muted);max-width:420px}
+.slist{display:flex;flex-direction:column;gap:16px}
+.sitem{padding:30px;border-radius:24px;background:var(--glass);border:1px solid var(--line);display:flex;gap:20px;align-items:flex-start;opacity:.4;transform:scale(.97);transition:opacity .5s,transform .5s,border-color .5s}
+.sitem.active{opacity:1;transform:none;border-color:rgba(138,166,255,.45);box-shadow:0 0 60px -30px rgba(59,107,255,.8)}
+.sitem .n{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(59,107,255,.16);color:var(--blue2);font-size:13px}
+.sitem.active .n{background:var(--lime);color:#0b0d10}
+.sitem h3{margin:0 0 8px;font-size:21px}.sitem p{margin:0;font-size:15px;line-height:1.65;color:var(--muted)}
+.cta{position:relative;z-index:2;margin-block:110px 90px;padding:80px max(24px,6vw);border-radius:36px;text-align:center;overflow:hidden;background:radial-gradient(70% 120% at 50% 0%,rgba(59,107,255,.35),rgba(10,16,34,.9) 70%);border:1px solid rgba(138,166,255,.26);display:flex;flex-direction:column;align-items:center;gap:20px}
+.cta h2{margin:0}.cta p{margin:0;color:var(--muted);font-size:17px;max-width:480px;line-height:1.6}
+.capture{display:flex;flex-wrap:wrap;gap:10px;padding:8px;border-radius:999px;background:rgba(5,8,18,.7);border:1px solid var(--line);width:min(100%,520px)}
+.capture input{flex:1 1 200px;min-height:48px;padding:0 18px;border:0;background:transparent;color:var(--fg);font:inherit;font-size:16px;outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-bottom:48px;font-size:13px;color:var(--dim)}
+input::placeholder{color:var(--dim)}
+@media (max-width:1100px){.stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.orbit-wrap{grid-column:1/-1;order:-1}.p-left,.p-right{transform:none}}
+@media (max-width:900px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:minmax(0,1fr)}.steps .sticky{position:relative;top:0}}
+@media (max-width:640px){nav a:not(.btn){display:none}nav{padding:4px}.stage{grid-template-columns:minmax(0,1fr)}.bento{grid-template-columns:minmax(0,1fr)}.hcard.big{grid-column:auto;grid-row:auto;min-height:240px}.sat,.sat .tile{width:40px;height:40px}.sat{margin:-20px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.stagger,.sitem{opacity:1;transform:none}}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="gb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9bdff"/><stop offset="1" stop-color="#3b6bff"/></linearGradient>
+<linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2f4f7"/><stop offset="1" stop-color="#9aa3ae"/></linearGradient>
+</defs></svg>
+<main>
+<div class="sky" aria-hidden="true"></div><div class="stars" aria-hidden="true"></div>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L12 4l8 16M8 14h8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Apex</a>
+    <nav><a href="#markets">Markets</a><a href="#how">How it works</a><a href="#start" class="btn">Get started</a></nav>
+  </header>
+
+  <section class="hero" id="top">
+    <span class="pill mono"><i class="pulse"></i>12 high-ticket sectors · 21 trades</span>
+    <h1>Every buyer worth calling, <span class="gold-i">found first.</span></h1>
+    <p>APEX finds verified, high-intent buyers across 33 industries and delivers them ahead of your peak season — from eight-figure contracts to tomorrow's service call.</p>
+    <div class="row"><a class="btn" href="#start">Get a sample lead</a><a class="btn ghost" href="#markets">See all markets</a></div>
+  </section>
+
+  <section class="stage" aria-label="Interactive preview">
+    <div class="panel p-left" id="pleft">
+      <div class="ph mono"><span><i class="pulse" style="margin-right:8px;vertical-align:middle"></i>Lead stream</span><span class="tag">Sample data</span></div>
+      <div class="stream"><div class="stream-in" id="stream"></div></div>
+    </div>
+    <div class="orbit-wrap">
+      <div class="orbit" id="orbit">
+        <div class="ring2"></div>
+        <div class="ring" id="ring"></div>
+        <div class="core"><b id="coreName">12 high-ticket sectors</b><span class="mono" id="coreVal">Hover an icon</span></div>
+      </div>
+    </div>
+    <div class="panel p-right" id="pright">
+      <div class="ph mono"><span>Pipeline estimator</span><span class="tag">Your numbers</span></div>
+      <form class="est" onsubmit="event.preventDefault()">
+        <div style="display:flex;flex-direction:column;gap:8px"><label for="ind">Industry</label><select id="ind"></select></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><label for="leads">Leads per month <output id="leadsOut" class="mono">20</output></label><input id="leads" type="range" min="5" max="100" step="5" value="20"></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><label for="close">Your close rate <output id="closeOut" class="mono">15%</output></label><input id="close" type="range" min="5" max="50" step="1" value="15"></div>
+        <div class="result" aria-live="polite"><span class="mono">Estimated monthly pipeline</span><b class="mono" id="est">$0</b><small>Leads × close rate × the industry's typical lead value. An estimate from your inputs, not a promise.</small></div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section class="block" id="markets">
+    <div class="center"><span class="eyebrow mono">Markets</span><h2>33 markets. Each with its own <span class="gold-i">price of a lead.</span></h2></div>
+    <div class="subhead mono"><span>High-ticket</span><span>12 sectors</span></div>
+    <div class="bento" id="bento"></div>
+    <div class="subhead mono" style="margin-top:24px"><span>Trades &amp; services</span><span>21 trades</span></div>
+    <div class="trades" id="trades"></div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="steps">
+      <div class="sticky"><span class="eyebrow mono">How it works</span><h2>Three steps. <span class="gold-i">Zero guesswork.</span></h2><p>Scroll through how a buyer goes from first signal to a booked call on your calendar.</p></div>
+      <div class="slist">
+        <div class="sitem"><span class="n mono">01</span><div><h3>Pick your market and territory</h3><p>Tell us what you sell, where, and the job size you want more of. We map it against your peak months.</p></div></div>
+        <div class="sitem"><span class="n mono">02</span><div><h3>We find and verify buyers</h3><p>Every lead is checked for intent, budget and timing before it reaches you. [Describe your verification process.]</p></div></div>
+        <div class="sitem"><span class="n mono">03</span><div><h3>Delivered where you work</h3><p>Straight into your CRM, inbox or calendar, with full context for the first call.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="start">
+    <h2>Your market is <span class="gold-i">waiting.</span></h2>
+    <p>Tell us your industry and territory. We'll send a sample lead and expected monthly volume.</p>
+    <form class="capture" onsubmit="event.preventDefault()"><label class="sr" for="e2">Work email</label><input id="e2" type="email" placeholder="Work email"><button class="btn" type="submit">Get a sample lead</button></form>
+  </section>
+  <footer class="mono"><span>Apex</span><span>Verified leads for 33 industries</span></footer>
+</div>
+</main>
+<script>
+const IND = [
+  ["Executive Recruitment","high",125000,175000,"M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2"],
+  ["Industrial Water Treatment","high",1000000,14000000,"M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0"],
+  ["Commercial Security Systems","high",500000,15000000,"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"],
+  ["Industrial Automation & Manufacturing","high",5300000,53000000,"M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"],
+  ["Commercial Kitchen Equipment","high",50000,355000,"M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12"],
+  ["Specialized Medical Staffing","high",25000,100000,"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8"],
+  ["Commercial HVAC & Refrigeration","high",65000,3000000,"M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2"],
+  ["Custom Contract Manufacturing","high",100000,5000000,"M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2"],
+  ["Commercial Real Estate","high",25000,100000,"M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1"],
+  ["Specialty Medical (Cosmetic/Dental)","high",3000,43000,"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"],
+  ["Commercial Printing & Fulfillment","high",50000,500000,"M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z"],
+  ["Niche Insurance — Cyber Liability","high",30000,100000,"M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2"],
+  ["Roofing","std",500,5000,"M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6"],
+  ["Landscaping","std",300,3000,"M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8"],
+  ["Home Cleaning (Interior)","std",100,1000,"M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6"],
+  ["Home Cleaning (Exterior)","std",150,1500,"M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2"],
+  ["Plumbers","std",200,2000,"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"],
+  ["Electricians","std",300,3000,"M13 2L4 14h7l-1 8 9-12h-7z"],
+  ["HVAC","std",250,2500,"M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0"],
+  ["Dentists","std",150,1500,"M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z"],
+  ["Lawyers","std",500,5000,"M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z"],
+  ["Real Estate Agents","std",300,3000,"M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01"],
+  ["Gyms & Fitness","std",50,500,"M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12"],
+  ["Auto Repair","std",200,2000,"M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Pest Control","std",300,2000,"M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2"],
+  ["Hair Salons & Barbershops","std",50,500,"M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4"],
+  ["Insurance Agents","std",400,3000,"M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1"],
+  ["Healthcare Clinics","std",200,1500,"M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2"],
+  ["Moving Companies","std",400,4000,"M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Personal Trainers","std",100,1000,"M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5"],
+  ["Photographers","std",300,3000,"M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z"],
+  ["Wedding Venues","std",2000,15000,"M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z"],
+  ["Restaurants","std",500,5000,"M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12"]
+].map(([name, cat, min, max, d]) => ({ name, cat, min, max, d, range: money(min) + ' – ' + money(max) }));
+function money(n) {
+  if (n >= 1e6) return '$' + (+(n / 1e6).toFixed(1)) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'k';
+  return '$' + n;
+}
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+[[1,4,10,12],[4,5,6,7,10,11,12],[10,11,12,1,2,3],[4,5,6,7,8,9,10,11,12],[1,2,7,8,9,10],[1,2,3,7,8,9,10,11,12],[1,2,10,11,12],[4,5,6,7,8,9,10,11,12],[1,3,4,5,9,10,11,12],[10,11,12,1],[7,8,9,10,11,12,1,2],[4,5,10,11,12],[3,4,5,9,10,11],[3,4,5,6,7,8,9],[1,2,3,12],[3,4,5,9,10],[1,2,11,12],[3,4,5,9,10,11],[1,2,7,8,11,12],[1,2,3,9],[1,4,7,10],[3,4,5,9,10,11],[1,2,8,9],[3,4,9,10,11],[3,4,5,9,10],[12,1,5,6],[10,11,12,1],[1,2,9],[5,6,7,8,9],[1,2,6,7],[5,6,7,8,9,10,11],[4,5,6,9,10],[5,6,7,8,12]].forEach((p, i) => { IND[i].peak = p; });
+const SAMPLE = [
+  [6, 'Rooftop unit replacement · 3 sites', 420000],
+  [12, 'Full tear-off, 2,400 sq ft', 4800],
+  [1, 'Cooling tower treatment program', 2600000],
+  [19, 'New patient, implant consult', 1200],
+  [2, 'Access control for 8 branches', 1900000],
+  [16, 'Emergency re-pipe, older home', 1800],
+  [0, 'VP Operations search, retained', 150000],
+  [31, 'Spring wedding, 180 guests', 14000],
+  [3, 'Packaging line automation', 8400000],
+  [17, 'Panel upgrade to 200A', 2400],
+  [8, 'Industrial lease, 40k sq ft', 72000],
+  [18, 'Heat pump install, 2 zones', 2200]
+].map(([i, job, v]) => ({ ind: IND[i], job, v }));
+const MONTHS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const svg = (it, w) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" aria-hidden="true"><path d="${it.d}" fill="none" stroke="url(#${it.cat === 'high' ? 'gg' : 'gb'})" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const tile = (it, w) => `<div class="tile${it.cat === 'high' ? ' hi' : ''}">${svg(it, w)}</div>`;
+const $ = id => document.getElementById(id);
+
+// lead stream (duplicated for a seamless loop)
+const rows = SAMPLE.map(s => `<div class="srow">${tile(s.ind, 20)}<div class="t"><b>${esc(s.ind.name)}</b><small>${esc(s.job)}</small></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="v mono">${money(s.v)}</span><span class="ok mono">✓ VERIFIED</span></div></div>`).join('');
+$('stream').innerHTML = rows + rows;
+
+// orbit of the 12 high-ticket sectors
+const high = IND.filter(i => i.cat === 'high');
+$('ring').innerHTML = high.map((it, k) => {
+  const a = k / high.length * Math.PI * 2, x = Math.cos(a) * 50, y = Math.sin(a) * 50;
+  return `<div class="sat" style="left:${50 + x}%;top:${50 + y}%"><button type="button" data-n="${IND.indexOf(it)}" aria-label="${esc(it.name)}">${tile(it, 24)}</button></div>`;
+}).join('');
+function focusSat(btn) {
+  document.querySelectorAll('.sat button').forEach(b => b.classList.toggle('on', b === btn));
+  const it = IND[+btn.dataset.n];
+  $('coreName').textContent = it.name; $('coreVal').textContent = it.range;
+}
+$('ring').addEventListener('pointerover', e => { const b = e.target.closest('button'); if (b) focusSat(b); });
+$('ring').addEventListener('focusin', e => { const b = e.target.closest('button'); if (b) focusSat(b); });
+$('ring').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { focusSat(b); $('ind').value = b.dataset.n; calc(); } });
+let auto = 0;
+if (!reduceMotion) setInterval(() => { if (!$('orbit').matches(':hover')) { const bs = document.querySelectorAll('.sat button'); focusSat(bs[auto++ % bs.length]); } }, 2400);
+
+// pipeline estimator: leads x close rate x typical (midpoint) lead value
+$('ind').innerHTML = IND.map((it, i) => `<option value="${i}">${esc(it.name)}</option>`).join('');
+$('ind').value = 6;
+let shown = 0;
+function fmt(n) { return n >= 1e6 ? '$' + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M' : n >= 1e3 ? '$' + Math.round(n / 1e3) + 'k' : '$' + Math.round(n); }
+function calc() {
+  const it = IND[+$('ind').value], leads = +$('leads').value, rate = +$('close').value / 100;
+  $('leadsOut').textContent = leads; $('closeOut').textContent = Math.round(rate * 100) + '%';
+  const target = leads * rate * (it.min + it.max) / 2, from = shown, t0 = performance.now();
+  if (reduceMotion) { shown = target; $('est').textContent = fmt(target); return; }
+  const step = t => { const k = Math.min(1, (t - t0) / 600), e = 1 - Math.pow(1 - k, 3); shown = from + (target - from) * e; $('est').textContent = fmt(shown); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+['ind', 'leads', 'close'].forEach(id => $(id).addEventListener('input', calc));
+calc();
+
+// tilt panels toward the pointer
+document.querySelectorAll('.panel').forEach(p => {
+  const base = p.classList.contains('p-left') ? 18 : -18;
+  p.addEventListener('pointermove', e => {
+    if (reduceMotion || window.innerWidth < 1100) return;
+    const r = p.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    p.style.transform = `rotateY(${base + x * 10}deg) rotateX(${-y * 8}deg)`;
+  });
+  p.addEventListener('pointerleave', () => { p.style.transform = ''; });
+});
+
+// markets bento + trades
+$('bento').innerHTML = high.map((it, k) => `<a class="hcard stagger${k === 0 ? ' big' : ''}" href="#start"><span class="sheen"></span>${tile(it, k === 0 ? 40 : 26)}<div style="display:flex;flex-direction:column;gap:8px"><b>${esc(it.name)}</b><span class="val mono">${it.range}</span></div></a>`).join('');
+$('trades').innerHTML = IND.filter(i => i.cat === 'std').map(it => `<a class="tcard stagger" href="#start">${tile(it, 20)}<div class="t"><b>${esc(it.name)}</b><small class="mono">${it.range}</small></div></a>`).join('');
+
+// staggered reveal + active step on scroll
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const sibs = [...e.target.parentElement.children];
+  e.target.style.transitionDelay = (sibs.indexOf(e.target) % 8) * 60 + 'ms';
+  e.target.classList.add('in'); io.unobserve(e.target);
+}), { threshold: .1 });
+document.querySelectorAll('.stagger').forEach(el => io.observe(el));
+const items = [...document.querySelectorAll('.sitem')];
+const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) items.forEach(i => i.classList.toggle('active', i === e.target)); }), { rootMargin: '-45% 0px -45% 0px' });
+items.forEach(i => io2.observe(i));
+items[0].classList.add('active');
+</script>

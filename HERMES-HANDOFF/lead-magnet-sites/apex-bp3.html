@@ -1,0 +1,1312 @@
+<title>APEX Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
+<style>
+:root{--esp:#12100e;--roast:#2a211b;--roast2:#1c1714;--taupe:#9c8c7e;--taupe2:#b9ab9d;--ivory:#f1ebe1;--ivory2:#d8cfc2;--oxide:#a6493b;--line:rgba(241,235,225,.16);--line2:rgba(241,235,225,.3);--glass:rgba(30,24,20,.62);--ease:cubic-bezier(.16,1,.3,1);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--esp)}
+body{margin:0;background:var(--esp);color:var(--ivory);font-family:Jost,'Helvetica Neue',Arial,sans-serif;font-weight:300;font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--esp)}
+@media (hover:hover) and (pointer:fine){html.compass-on,html.compass-on a,html.compass-on button{cursor:none}html.compass-on input,html.compass-on select{cursor:text}}
+a{color:var(--ivory)}
+.serif{font-family:'Cormorant Garamond',Garamond,'Times New Roman',serif}
+.caps{font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;font-weight:400;color:var(--taupe2)}
+.wrap{position:relative;max-width:1280px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* fixed layers */
+#atlas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,rgba(18,16,14,0) 30%,rgba(18,16,14,.85) 100%)}
+.veil i{position:absolute;inset:0;background:var(--esp);opacity:0;transition:opacity .9s var(--ease)}
+main,footer,.mast{position:relative;z-index:2}
+html.no-gl #atlas{display:none}
+html.no-gl body{background:radial-gradient(80% 60% at 60% 30%,#2a211b,#12100e 70%)}
+
+/* compass cursor */
+.compass{position:fixed;left:0;top:0;z-index:80;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;opacity:0;will-change:transform;transition:opacity .4s,width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease)}
+html.compass-on .compass{opacity:1}
+.compass svg{width:100%;height:100%;overflow:visible}
+.compass .ndl{transform-origin:23px 23px;transition:transform .5s var(--ease)}
+.compass.hot{width:64px;height:64px;margin:-32px 0 0 -32px}
+@media (hover:none),(pointer:coarse){.compass{display:none}}
+
+/* masthead */
+.mast{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:50;transition:background .5s,backdrop-filter .5s}
+.mast.solid{background:rgba(18,16,14,.72);backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%)}
+.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:18px}
+.mast .rule{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line2);transform-origin:left;transform:scaleX(0);animation-name:rule;animation-duration:1.6s;animation-timing-function:var(--ease);animation-delay:.2s;animation-fill-mode:both}
+@keyframes rule{to{transform:scaleX(1)}}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand svg{width:30px;height:30px}
+.brand .rose{transform-origin:15px 15px;animation-name:spin;animation-duration:40s;animation-timing-function:linear;animation-iteration-count:infinite}
+.brand b{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:22px;letter-spacing:.42em}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mast nav{display:flex;align-items:center;gap:30px}
+.mast nav a.ln{position:relative;text-decoration:none;font-size:14px;letter-spacing:.08em;color:var(--ivory2);padding-block:8px}
+.ln::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:var(--ivory);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.ln:hover::after,.ln:focus-visible::after{transform:scaleX(1);transform-origin:left}
+.ln:hover{color:var(--ivory)}
+
+/* wax-seal stamp buttons */
+.seal{--sz:124px;position:relative;display:inline-grid;place-items:center;width:var(--sz);height:var(--sz);flex:none;border:0;padding:0;background:none;color:var(--ivory);font:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.seal svg{width:100%;height:100%;overflow:visible;transition:transform .5s var(--ease),filter .5s}
+.seal .s-o{fill:rgba(18,16,14,.45);stroke:var(--line2);stroke-width:1}
+.seal .s-i{fill:none;stroke:var(--line);stroke-width:1}
+.seal text{font-family:Jost,sans-serif;font-size:10.4px;letter-spacing:2.6px;fill:var(--ivory2);text-transform:uppercase}
+.seal .s-wax{fill:url(#waxG);transition:r .5s var(--ease)}
+.seal .s-lip{fill:none;stroke:rgba(255,235,225,.18);stroke-width:2.2;stroke-dasharray:3 4;opacity:.8}
+.seal .s-arrow{fill:none;stroke:var(--ivory);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s var(--ease)}
+.seal:hover svg,.seal:focus-visible svg{transform:scale(.94) rotate(-4deg);filter:drop-shadow(0 0 18px rgba(196,106,91,.45)) drop-shadow(0 6px 14px rgba(0,0,0,.6))}
+.seal:hover .s-arrow,.seal:focus-visible .s-arrow{transform:translateX(3px)}
+.seal:active svg{transform:scale(.88) rotate(-6deg)}
+.seal:focus-visible{outline:1px solid var(--ivory2);outline-offset:6px;border-radius:50%}
+.seal.sm{--sz:68px}
+.seal.sm text{font-size:9.5px;letter-spacing:1.6px}
+.tl{position:relative;display:inline-flex;align-items:center;gap:12px;min-height:44px;text-decoration:none;font-size:15px;letter-spacing:.06em;color:var(--ivory)}
+.tl::after{content:"";position:absolute;left:0;right:26px;bottom:8px;height:1px;background:var(--line2)}
+.tl::before{content:"";position:absolute;left:0;right:26px;bottom:8px;height:1px;background:var(--ivory);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease);z-index:1}
+.tl:hover::before,.tl:focus-visible::before{transform:scaleX(1)}
+.tl svg{width:16px;height:16px;transition:transform .45s var(--ease)}
+.tl:hover svg{transform:translateX(5px)}
+
+/* arch cards */
+.arch{position:relative;border-radius:999px 999px 20px 20px/240px 240px 20px 20px;background:rgba(26,21,18,.84);box-shadow:inset 0 0 0 1px var(--line2),0 40px 70px -40px rgba(0,0,0,.85)}
+.arch.blur{background:var(--glass);backdrop-filter:blur(10px) saturate(125%);-webkit-backdrop-filter:blur(10px) saturate(125%)}
+.arch::before{content:"";position:absolute;inset:9px;border-radius:999px 999px 13px 13px/230px 230px 13px 13px;box-shadow:inset 0 0 0 1px var(--line);pointer-events:none}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.arch.blur,.mast.solid,.lcart,.cres,.legend-box{background:rgba(28,23,20,.96)}}
+.arch.rv{clip-path:inset(100% 0 0 0);opacity:1;transform:none;filter:none;transition:clip-path 1.3s var(--ease),transform .7s var(--ease)}
+.arch.rv.in{clip-path:inset(0 0 0 0)}
+
+/* reveals */
+.rv{opacity:0;transform:translateY(26px);filter:blur(6px);transition:opacity 1s var(--ease),transform 1.1s var(--ease),filter 1s var(--ease);transition-delay:var(--d,0ms)}
+.rv.in{opacity:1;transform:none;filter:none}
+.w{display:inline-block;opacity:0;transform:translateY(.45em);filter:blur(10px);transition:opacity 1s var(--ease),transform 1.2s var(--ease),filter 1.1s var(--ease);transition-delay:calc(var(--i)*60ms + var(--d,0ms))}
+.in .w,.w.in{opacity:1;transform:none;filter:none}
+
+h1,h2,h3{font-family:'Cormorant Garamond',Garamond,serif;font-weight:300;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 em,h2 em{font-style:italic;font-weight:300;color:var(--ivory2)}
+h2{font-size:clamp(40px,5.4vw,78px);line-height:1.02}
+
+/* hero */
+.hero{position:relative;height:330vh}
+.hstick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.cart{position:absolute;left:max(20px,env(safe-area-inset-left,0px));bottom:8vh;width:min(640px,calc(100% - 40px));padding:44px 46px 40px;transition:opacity .6s,transform .9s var(--ease),filter .6s}
+.cart{isolation:isolate}.cart .frame{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none;overflow:visible}
+.cart .frame rect{fill:rgba(18,16,14,.38);stroke:var(--line2);stroke-width:1;stroke-dasharray:3200;stroke-dashoffset:3200;animation-name:draw;animation-duration:2.6s;animation-timing-function:var(--ease);animation-delay:.3s;animation-fill-mode:both}
+.cart .frame rect+rect{fill:none;stroke:var(--line);animation-delay:.6s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.cart h1{font-size:clamp(44px,min(6.6vw,9.4vh),96px);line-height:.98;margin:18px 0 22px}
+.cart p{margin:0 0 30px;max-width:520px;color:var(--ivory2);font-size:17.5px}
+.cart .acts{display:flex;flex-wrap:wrap;align-items:center;gap:26px}
+.hero[data-stage="1"] .cart,.hero[data-stage="2"] .cart{opacity:0;transform:translateY(-40px);filter:blur(8px);pointer-events:none}
+.legend-box{position:absolute;right:max(20px,env(safe-area-inset-right,0px));bottom:12vh;width:280px;padding:20px 22px;border:1px solid var(--line);background:rgba(18,16,14,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:13px;color:var(--ivory2);transition:opacity .6s}
+.legend-box .row{display:flex;align-items:center;gap:12px;margin-top:10px}
+.legend-box .pil{width:2px;height:22px;background:linear-gradient(var(--ivory),transparent);flex:none;margin-inline:6px}
+.legend-box .dot{width:9px;height:9px;border-radius:50%;background:var(--oxide);box-shadow:0 0 0 4px rgba(166,73,59,.25);flex:none;margin-inline:2.5px}
+.legend-box .coords{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--taupe2);font-variant-numeric:tabular-nums}
+.scalebar{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:var(--taupe)}
+.scalebar i{display:block;width:90px;height:5px;border:1px solid var(--taupe);background:linear-gradient(90deg,var(--taupe) 0 25%,transparent 25% 50%,var(--taupe) 50% 75%,transparent 75%)}
+.hero[data-stage="2"] .legend-box{opacity:0}
+.rose-big{position:absolute;right:max(26px,env(safe-area-inset-right,0px));top:110px;width:92px;height:92px;opacity:.7}
+.rose-big g{transform-origin:46px 46px;animation-name:spin;animation-duration:90s;animation-timing-function:linear;animation-iteration-count:infinite}
+.cap1{position:absolute;left:50%;bottom:13vh;transform:translate(-50%,30px);text-align:center;width:min(720px,calc(100% - 40px));opacity:0;filter:blur(8px);transition:opacity .8s,transform 1s var(--ease),filter .8s;pointer-events:none}
+.cap1 h2{font-size:clamp(34px,4.4vw,62px)}
+.hero[data-stage="1"] .cap1{opacity:1;transform:translate(-50%,0);filter:none}
+.leadc{position:absolute;left:0;top:0;width:340px;padding:64px 30px 28px;opacity:0;transition:opacity .8s;pointer-events:none;will-change:transform}
+.leadc>*{transform:translateY(18px);transition:transform 1s var(--ease)}
+.hero[data-stage="2"] .leadc{opacity:1;pointer-events:auto}
+.hero[data-stage="2"] .leadc>*{transform:none}
+.leadc h3{font-size:30px;line-height:1.05;margin:8px 0 6px}
+.leadc .m{font-size:13px;color:var(--taupe2);letter-spacing:.06em}
+.leadc .q{margin:16px 0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.35;color:var(--ivory)}
+.leadc ul{list-style:none;margin:0;padding:0;font-size:13.5px;color:var(--ivory2)}
+.leadc li{display:flex;gap:10px;align-items:flex-start;padding-block:7px;border-top:1px solid var(--line)}
+.ck{flex:none;width:15px;height:15px;margin-top:3px}
+.ck path{fill:none;stroke:var(--ivory);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cap2{position:absolute;left:50%;top:15vh;transform:translateX(-50%);text-align:center;width:min(700px,calc(100% - 40px));opacity:0;transition:opacity .8s .2s;pointer-events:none}
+.cap2 h2{font-size:clamp(30px,3.6vw,52px)}
+.hero[data-stage="2"] .cap2{opacity:1}
+.scrollcue{position:absolute;left:50%;bottom:3vh;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.3em;color:var(--taupe);text-transform:uppercase;transition:opacity .5s}
+.scrollcue i{width:1px;height:46px;background:linear-gradient(var(--taupe),transparent);transform-origin:top;animation-name:cue;animation-duration:2.4s;animation-iteration-count:infinite;animation-timing-function:var(--ease)}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.hero:not([data-stage="0"]) .scrollcue{opacity:0}
+
+/* journey */
+.journey{position:relative;padding-block:16vh 10vh}
+.jgrid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:7vw;align-items:start}
+.legendcol{position:sticky;top:112px}
+.lcart{padding:36px 36px 30px;border:1px solid var(--line2);background:rgba(18,16,14,.58);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);outline:1px solid var(--line);outline-offset:-9px}
+.lcart h2{font-size:clamp(38px,4vw,60px);margin:12px 0 10px}
+.lcart>p{margin:0 0 24px;color:var(--ivory2)}
+.stops{list-style:none;margin:0;padding:0;counter-reset:s}
+.stops li{display:grid;grid-template-columns:34px 44px minmax(0,1fr);align-items:center;gap:6px;padding-block:11px;border-top:1px solid var(--line);color:var(--taupe);transition:color .6s}
+.stops li svg{width:22px;height:22px;overflow:visible}
+.stops li svg *{fill:none;stroke:currentColor;stroke-width:1.3;transition:fill .6s,stroke .6s}
+.stops li .rn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px}
+.stops li b{font-weight:400;font-size:15.5px;letter-spacing:.02em}
+.stops li.on{color:var(--ivory)}
+.stops li.on svg .f{fill:var(--oxide);stroke:var(--oxide)}
+.stops li.done{color:var(--ivory2)}
+.jprog{margin-top:18px;height:1px;background:var(--line);position:relative}
+.jprog i{position:absolute;left:0;top:-.5px;height:2px;width:0;background:var(--ivory);transition:width .3s}
+.steps{display:flex;flex-direction:column;gap:30vh;padding-block:14vh 30vh}
+.stop{padding:84px 42px 38px;min-height:420px}
+.stop .num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:var(--taupe2)}
+.stop h3{font-size:clamp(34px,3.4vw,50px);line-height:1.04;margin:6px 0 14px}
+.stop>p{margin:0 0 26px;color:var(--ivory2);max-width:460px}
+.viz{position:relative;padding:20px 22px;border-top:1px solid var(--line2);font-size:14px;color:var(--ivory2);min-height:150px}
+.typer{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;color:var(--ivory);min-height:58px}
+.typer::after{content:"";display:inline-block;width:1px;height:1em;margin-left:3px;vertical-align:-3px;background:var(--ivory);animation-name:blink;animation-duration:1s;animation-iteration-count:infinite}
+@keyframes blink{50%{opacity:0}}
+.field-mock{display:flex;gap:10px;margin-top:12px;font-size:12px;letter-spacing:.14em;color:var(--taupe);text-transform:uppercase}
+.field-mock span{flex:1;border-bottom:1px solid var(--line2);padding-bottom:6px}
+.stamp{position:absolute;right:20px;top:14px;width:112px;height:112px;opacity:0;transform:scale(1.6) rotate(-24deg)}
+.stop.on .stamp{animation-name:stamp;animation-duration:.7s;animation-delay:.6s;animation-timing-function:cubic-bezier(.3,1.6,.5,1);animation-fill-mode:both}
+@keyframes stamp{0%{opacity:0;transform:scale(1.6) rotate(-24deg)}70%{opacity:1}100%{opacity:.92;transform:scale(1) rotate(-12deg)}}
+.stamp circle,.stamp path{fill:none;stroke:var(--oxide);stroke-width:2}
+.stamp text{fill:var(--oxide);font-family:Jost,sans-serif;font-size:10px;letter-spacing:2px;font-weight:500}
+.checks{list-style:none;margin:0;padding:0}
+.checks li{display:flex;justify-content:space-between;gap:16px;padding-block:10px;border-bottom:1px solid var(--line)}
+.checks li em{font-style:normal;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--taupe)}
+.checks li.ok em{color:var(--ivory)}
+.dial{display:flex;align-items:center;gap:22px}
+.dial svg{width:118px;height:118px;flex:none}
+.dial .tr{fill:none;stroke:var(--line2);stroke-width:2}
+.dial .ar{fill:none;stroke:var(--ivory);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:302;stroke-dashoffset:302;transform:rotate(-90deg);transform-origin:60px 60px;transition:stroke-dashoffset 1.8s var(--ease) .3s}
+.stop.on .dial .ar{stroke-dashoffset:42}
+.dial .sc{font-family:'Cormorant Garamond',serif;font-size:40px;fill:var(--ivory)}
+.dial dl{margin:0;display:grid;grid-template-columns:auto auto;gap:6px 14px;font-size:13px}
+.dial dt{color:var(--taupe)}.dial dd{margin:0;color:var(--ivory)}
+.terr svg{width:100%;height:150px}
+.terr .hatch{stroke:var(--line2);stroke-width:1}
+.terr .edge{fill:none;stroke:var(--ivory);stroke-width:1.4;stroke-dasharray:600;stroke-dashoffset:600;transition:stroke-dashoffset 2s var(--ease) .2s}
+.stop.on .terr .edge{stroke-dashoffset:0}
+.terr .pinm{fill:var(--oxide)}
+.terr text{fill:var(--ivory2);font-family:Jost,sans-serif;font-size:11px;letter-spacing:2px}
+.deliver{display:grid;gap:10px}
+.deliver .n{padding:12px 14px;border:1px solid var(--line2);background:rgba(18,16,14,.5);opacity:0;transform:translateX(30px);transition:opacity .7s,transform .9s var(--ease)}
+.stop.on .deliver .n{opacity:1;transform:none}
+.stop.on .deliver .n:nth-child(2){transition-delay:.35s}.stop.on .deliver .n:nth-child(3){transition-delay:.7s}
+.deliver .n b{display:block;font-weight:400;color:var(--ivory);font-size:14px}
+.deliver .n small{font-size:12.5px;color:var(--taupe2)}
+
+/* industries */
+.ind{position:relative;padding-block:16vh 12vh}
+.ind .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:34px}
+.ind .top p{margin:14px 0 0;max-width:520px;color:var(--ivory2)}
+.tabs{display:flex;gap:30px;flex-wrap:wrap}
+.tabs button{position:relative;min-height:44px;padding:0;border:0;background:none;color:var(--taupe);font:inherit;font-size:15px;letter-spacing:.04em;cursor:pointer;transition:color .4s}
+.tabs button span{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;margin-left:8px}
+.tabs button::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:var(--ivory);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+.tabs button[aria-pressed="true"]{color:var(--ivory)}
+.tabs button[aria-pressed="true"]::after{transform:scaleX(1)}
+.wallbox{position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#wall{display:block;width:100%}
+html:not(.gl-wall) #wall{display:none}
+.fgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding-block:24px}
+html.gl-wall .fgrid{display:none}
+.ft{padding:18px 12px;border-radius:18px;background:linear-gradient(160deg,#ece4d6,#d6ccbe);color:#3a2c23;text-align:center;font-size:13px;box-shadow:inset 0 2px 0 rgba(255,255,255,.6),0 10px 20px -12px rgba(0,0,0,.8)}
+.ft.hi{background:linear-gradient(160deg,#45362b,#2c221c);color:var(--ivory)}
+.ft svg{width:34px;height:34px;display:block;margin:0 auto 8px}
+.ft svg path{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ft.off{opacity:.25}
+.hint{margin-top:16px;font-size:13px;color:var(--taupe);display:flex;gap:10px;align-items:center}
+.tip{position:absolute;left:0;top:0;z-index:5;width:260px;padding:46px 22px 20px;pointer-events:none;opacity:0;transform:translate(-50%,calc(-100% - 22px)) scale(.92);transform-origin:50% 100%;transition:opacity .3s,transform .45s var(--ease)}
+.tip.on{opacity:1;transform:translate(-50%,calc(-100% - 22px)) scale(1)}
+.tip h3{font-size:24px;line-height:1.05;margin:6px 0 8px}
+.tip .v{font-size:14px;color:var(--ivory)}
+.mstrip{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin-top:12px}
+.mstrip span{height:22px;display:grid;place-items:center;font-size:9.5px;color:var(--taupe);border:1px solid var(--line)}
+.mstrip span.pk{background:var(--ivory2);color:var(--esp);border-color:var(--ivory2)}
+
+/* checker */
+.chk{position:relative;padding-block:16vh 14vh}
+.cgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6vw;align-items:center}
+.cform{padding:90px 46px 44px}
+.cform h2{font-size:clamp(40px,4.6vw,66px);margin:10px 0 12px}
+.cform>p{margin:0 0 30px;color:var(--ivory2)}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:22px}
+.fld label{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--taupe2)}
+.fld select,.fld input{min-height:48px;width:100%;border:0;border-bottom:1px solid var(--line2);background:transparent;color:var(--ivory);font:inherit;font-size:19px;font-family:'Cormorant Garamond',serif;padding:4px 0;border-radius:0;outline:none;transition:border-color .4s}
+.fld select option{background:#1c1714;color:var(--ivory)}
+.fld select:focus,.fld input:focus{border-color:var(--ivory)}
+.fld input::placeholder{color:var(--taupe)}
+.crow{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.err{min-height:22px;font-size:13.5px;color:#e3a597}
+.cres{padding:30px 30px 26px;border:1px solid var(--line2);background:rgba(18,16,14,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);outline:1px solid var(--line);outline-offset:-8px;opacity:0;transform:translateY(24px);transition:opacity .8s,transform 1s var(--ease)}
+.cres.on{opacity:1;transform:none}
+.cres h3{font-size:34px;line-height:1.05;margin:8px 0 10px}
+.cres p{margin:0;color:var(--ivory2);font-size:15px}
+.cres .ph{margin-top:14px;font-size:13px;color:var(--taupe)}
+.cwait{color:var(--taupe);font-size:14px;border-left:1px solid var(--line2);padding-left:18px}
+
+/* returns */
+.ret{position:relative;padding-block:16vh 12vh;overflow:clip}
+.claim{overflow:clip}
+.rgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:6vw;align-items:center}
+.bigseal{width:min(420px,100%);aspect-ratio:1;margin-inline:auto;opacity:0;transform:scale(1.35) rotate(-30deg)}
+.bigseal.in{animation-name:stampbig;animation-duration:1.1s;animation-timing-function:cubic-bezier(.3,1.5,.5,1);animation-fill-mode:both}
+@keyframes stampbig{0%{opacity:0;transform:scale(1.35) rotate(-30deg)}60%{opacity:1}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
+.bigseal svg{width:100%;height:100%;overflow:visible}
+.bigseal .rg{transform-origin:200px 200px;animation-name:spin;animation-duration:60s;animation-timing-function:linear;animation-iteration-count:infinite}
+.bigseal text{font-family:Jost,sans-serif;fill:var(--ivory2);letter-spacing:5px;font-size:15px;text-transform:uppercase}
+.ret ul{list-style:none;margin:28px 0;padding:0}
+.ret li{display:flex;gap:18px;align-items:baseline;padding-block:16px;border-top:1px solid var(--line);font-size:18px;color:var(--ivory2)}
+.ret li:last-child{border-bottom:1px solid var(--line)}
+.ret li i{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--taupe2);font-size:22px;min-width:30px}
+.ret .ph{color:var(--taupe);font-size:14px}
+
+/* pricing */
+.pri{position:relative;padding-block:12vh 12vh}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:44px}
+.pc{padding:100px 40px 38px;min-height:440px;display:flex;flex-direction:column;transition:transform .7s var(--ease)}
+.pc:hover{transform:translateY(-10px)}
+.pc .rk{position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(240px 240px at var(--mx,50%) var(--my,30%),rgba(241,235,225,.09),transparent 70%);opacity:0;transition:opacity .5s}
+.pc:hover .rk{opacity:1}
+.pc h3{font-size:44px;line-height:1;margin:10px 0 14px}
+.pc p{margin:0 0 18px;color:var(--ivory2)}
+.pc .price{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font-family:'Cormorant Garamond',serif;font-size:26px}
+.pc .price small{display:block;font-family:Jost,sans-serif;font-size:13px;color:var(--taupe)}
+
+/* claim + footer */
+.claim{position:relative;min-height:90vh;display:grid;place-items:center;text-align:center;padding-block:14vh;overflow:hidden}
+.claim h2{font-size:clamp(64px,11vw,180px);line-height:.92}
+.claim p{margin:22px auto 34px;max-width:520px;color:var(--ivory2)}
+.contours{position:absolute;inset:-10%;width:120%;height:120%;pointer-events:none;opacity:.55}
+.contours path{fill:none;stroke:var(--line);stroke-width:1}
+.contours g{transform-origin:50% 50%;animation-name:drift;animation-duration:38s;animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-direction:alternate}
+.contours g+g{animation-duration:52s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(2.5%,-2%) rotate(4deg) scale(1.04)}}
+footer{border-top:1px solid var(--line);background:rgba(18,16,14,.9)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;padding-block:34px 44px;font-size:13px;color:var(--taupe)}
+footer .coords{font-variant-numeric:tabular-nums;letter-spacing:.14em}
+footer .rose2{width:22px;height:22px;vertical-align:-6px;margin-right:10px;animation-name:spin;animation-duration:30s;animation-timing-function:linear;animation-iteration-count:infinite}
+
+
+/* compass-rose menu */
+.rosebtn{display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:0 4px;border:0;background:none;color:var(--ivory);font:inherit;font-size:12px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer}
+.rosebtn .rw{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line2);transition:transform .8s var(--ease),box-shadow .5s}
+.rosebtn svg{width:30px;height:30px;color:var(--ivory)}
+.rosebtn .rs{transform-origin:15px 15px;animation-name:spin;animation-duration:24s;animation-timing-function:linear;animation-iteration-count:infinite}
+.rosebtn:hover .rw,.rosebtn:focus-visible .rw{transform:rotate(90deg);box-shadow:inset 0 0 0 1px var(--ivory),0 0 22px -6px rgba(241,235,225,.45)}
+.rosebtn:focus-visible{outline:none}
+.rmenu{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:max(20px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.rmenu[hidden]{display:none!important}
+.rm-shade{position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 50%,rgba(28,23,20,.9),rgba(12,10,9,.97));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;transition:opacity .6s var(--ease)}
+.rmenu.open .rm-shade{opacity:1}
+.rm-stage{--sz:min(64vh,520px);position:relative;width:calc(var(--sz) + 420px);max-width:100%;height:calc(var(--sz) + 120px);display:grid;place-items:center;transition:transform .7s cubic-bezier(.6,0,.2,1),opacity .6s}
+.rm-rose{width:var(--sz);height:var(--sz);overflow:visible}
+.rm-rose .ln1{fill:none;stroke:rgba(241,235,225,.5);stroke-width:1}
+.rm-rose .ln2{fill:none;stroke:rgba(241,235,225,.18);stroke-width:1}
+.rm-rose .dash{fill:none;stroke:rgba(156,140,126,.5);stroke-width:1;stroke-dasharray:2 7}
+.rm-rose .ring{stroke-dasharray:2000;stroke-dashoffset:2000;transition:stroke-dashoffset 1.6s var(--ease)}
+.rmenu.open .rm-rose .ring{stroke-dashoffset:0}
+.rm-rose .ticks{transform-origin:0 0;transform:rotate(-40deg);opacity:0;transition:transform 1.4s var(--ease),opacity .8s}
+.rmenu.open .rm-rose .ticks{transform:rotate(0);opacity:1}
+.rm-rose .dash{transform-origin:0 0;animation-name:spin;animation-duration:120s;animation-timing-function:linear;animation-iteration-count:infinite}
+.rm-rose .ticks line{stroke:rgba(241,235,225,.35);stroke-width:1}
+.rm-rose .ticks text{fill:var(--taupe);font-family:Jost,sans-serif;font-size:9px;letter-spacing:1px}
+.rm-rose .pt{transform-origin:0 0;transform:scale(0);transition:transform .9s cubic-bezier(.3,1.4,.5,1);transition-delay:calc(var(--k)*60ms + .25s)}
+.rmenu.open .rm-rose .pt{transform:scale(1)}
+.rm-rose .pt .fa{fill:rgba(241,235,225,.82);transition:fill .5s}
+.rm-rose .pt .fb{fill:rgba(18,16,14,.6);stroke:rgba(241,235,225,.55);stroke-width:.8;transition:stroke .5s,fill .5s}
+.rm-rose .pt.on .fa{fill:#c46a5b;filter:drop-shadow(0 0 10px rgba(196,106,91,.8))}
+.rm-rose .pt.on .fb{stroke:#c46a5b;fill:rgba(166,73,59,.18)}
+.rm-rose .ndl{transition:transform 1.1s cubic-bezier(.34,1.56,.64,1)}
+.rm-rose .ndl .n1{fill:#a6493b;filter:drop-shadow(0 0 8px rgba(196,106,91,.7))}
+.rm-rose .ndl .n2{fill:none;stroke:var(--ivory);stroke-width:1.2}
+.rm-rose .hub{fill:var(--esp);stroke:var(--ivory);stroke-width:1.2}
+.rm-sweep{position:absolute;left:50%;top:50%;width:calc(var(--sz)*.93);height:calc(var(--sz)*.93);margin:calc(var(--sz)*-.465) 0 0 calc(var(--sz)*-.465);border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,rgba(241,235,225,.09),transparent 22%,transparent);opacity:0;transition:opacity 1s .4s;animation-name:spin;animation-duration:9s;animation-timing-function:linear;animation-iteration-count:infinite}
+.rmenu.open .rm-sweep{opacity:1}
+.rm-pts{list-style:none;margin:0;padding:0;position:absolute;inset:0}
+.rm-pts li{position:absolute;left:50%;top:50%;transform:translate(var(--x),var(--y))}
+.rm-pts a{position:absolute;display:flex;flex-direction:column;gap:2px;min-width:44px;min-height:44px;padding:8px 10px;text-decoration:none;color:var(--ivory2);white-space:nowrap;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .8s var(--ease),color .4s;transition-delay:calc(var(--k)*70ms + .5s)}
+.rmenu.open .rm-pts a{opacity:1;transform:none}
+.rm-pts a.r{right:0;align-items:flex-end;text-align:right}
+.rm-pts a.l{left:0}
+.rm-pts a.c{left:50%;translate:-50% 0;align-items:center;text-align:center}
+.rm-pts a.t{bottom:0}.rm-pts a.b{top:0}.rm-pts a.m{top:-30px}
+.rm-pts .br{font-size:10.5px;letter-spacing:.32em;color:var(--taupe)}
+.rm-pts b{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;line-height:1;color:inherit;transition:letter-spacing .5s var(--ease)}
+.rm-pts small{font-size:12px;color:var(--taupe)}
+.rm-pts a.on,.rm-pts a:focus-visible{color:var(--ivory);outline:none}
+.rm-pts a.on b{letter-spacing:.02em;text-shadow:0 0 18px rgba(241,235,225,.35)}
+.rm-pts a.on .br{color:#d47b6c}
+.rm-close{position:absolute;top:max(22px,env(safe-area-inset-top,0px));right:max(22px,env(safe-area-inset-right,0px));z-index:2;display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:0 6px;border:0;background:none;color:var(--ivory);font:inherit;font-size:12px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .5s .4s}
+.rmenu.open .rm-close{opacity:1}
+.rm-close i{position:relative;width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line2);transition:transform .6s var(--ease)}
+.rm-close i::before,.rm-close i::after{content:"";position:absolute;left:13px;right:13px;top:21.5px;height:1px;background:var(--ivory);transform:rotate(45deg)}
+.rm-close i::after{transform:rotate(-45deg)}
+.rm-close:hover i,.rm-close:focus-visible i{transform:rotate(90deg)}
+.rm-close:focus-visible{outline:1px solid var(--ivory2);outline-offset:4px}
+.rm-hint{position:absolute;bottom:max(22px,env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;margin:0;font-size:12px;letter-spacing:.18em;color:var(--taupe);opacity:0;transition:opacity .6s 1s}
+.rmenu.open .rm-hint{opacity:1}
+.rmenu.fly .rm-stage{transform:translate(var(--fx),var(--fy)) scale(2.4);opacity:0}
+.rmenu.closing .rm-shade{opacity:0;transition-delay:.25s}
+.rm-list{display:none}
+html.menu-open,html.menu-open body{overflow:hidden}
+@media (max-width:760px){
+  .rm-stage{--sz:min(70vw,300px);width:100%;height:auto;display:flex;flex-direction:column;align-items:center;gap:18px}
+  .rm-pts{display:none}
+  .rm-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 14px;list-style:none;margin:0;padding:0;width:min(100%,420px)}
+  .rm-list a{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;min-height:52px;padding:6px 4px;border-top:1px solid var(--line);text-decoration:none;color:var(--ivory2);opacity:0;transform:translateY(12px);transition:opacity .5s,transform .7s var(--ease),color .3s;transition-delay:calc(var(--k)*50ms + .35s)}
+  .rmenu.open .rm-list a{opacity:1;transform:none}
+  .rm-list a .br{font-size:10px;letter-spacing:.2em;color:var(--taupe)}
+  .rm-list a b{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:21px;line-height:1.1}
+  .rm-list a.on{color:var(--ivory)}.rm-list a.on .br{color:#d47b6c}
+  .rm-hint{display:none}
+  .rm-sweep{top:calc(var(--sz)/2)}
+  .rm-list a:focus-visible{outline:1px solid var(--ivory2);outline-offset:2px}
+}
+@media (max-width:640px){.mast nav{gap:10px}.rosebtn span{display:none}}
+
+@media (max-width:980px){
+  .jgrid,.cgrid,.rgrid{grid-template-columns:minmax(0,1fr)}
+  .legendcol{position:sticky;top:64px;z-index:3}
+  .lcart{padding:16px 18px}
+  .lcart h2,.lcart>p,.lcart .caps{display:none}
+  .stops{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
+  .stops li{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;border-top:0;padding-block:4px;gap:2px}
+  .stops li b{display:none}
+  .stops li .rn{font-size:16px}
+  .steps{gap:16vh;padding-block:8vh 16vh}
+  .fgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .mast nav a.ln{display:none}
+  .cart{padding:30px 24px 28px;bottom:9vh}
+  .cart .acts{gap:18px}
+  .seal{--sz:108px}
+  .legend-box,.rose-big{display:none}
+  .leadc{width:min(320px,calc(100vw - 40px));padding:56px 24px 22px}
+  .stop{padding:70px 24px 28px;min-height:0}
+  .cform{padding:74px 24px 32px}
+  .pgrid{grid-template-columns:minmax(0,1fr)}
+  .pc{padding:84px 26px 30px;min-height:0}
+  .arch{border-radius:999px 999px 18px 18px/150px 150px 18px 18px}
+  .arch::before{border-radius:999px 999px 12px 12px/142px 142px 12px 12px}
+  .stamp{width:84px;height:84px;right:10px;top:8px}
+  .dial{flex-direction:column;align-items:flex-start}
+  .tip{width:220px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0ms!important}
+  .rv,.w{opacity:1;transform:none;filter:none}
+  .arch.rv{clip-path:none}
+  .bigseal{opacity:1;transform:none}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="waxG" cx="38%" cy="34%" r="70%"><stop offset="0" stop-color="#c46a5b"/><stop offset=".55" stop-color="#a6493b"/><stop offset="1" stop-color="#6e2a22"/></radialGradient>
+<symbol id="roseS" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13.5" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M15 1.5l2.2 11.3L15 15l-2.2-2.2z" fill="currentColor"/><path d="M15 28.5l-2.2-11.3L15 15l2.2 2.2z" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M1.5 15l11.3-2.2L15 15l-2.2 2.2z" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M28.5 15l-11.3 2.2L15 15l2.2-2.2z" fill="none" stroke="currentColor" stroke-width=".8"/></symbol>
+</defs></svg>
+
+<canvas id="atlas" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"><i id="veilI"></i></div>
+<div class="compass" id="compass" aria-hidden="true"><svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="21" fill="rgba(18,16,14,.35)" stroke="rgba(241,235,225,.55)" stroke-width="1"/><circle cx="23" cy="23" r="17" fill="none" stroke="rgba(241,235,225,.18)" stroke-width="1" stroke-dasharray="1 3.4"/><g class="ndl" id="ndl"><path d="M23 6l3.2 17h-6.4z" fill="#a6493b"/><path d="M23 40l-3.2-17h6.4z" fill="none" stroke="#f1ebe1" stroke-width="1"/></g><circle cx="23" cy="23" r="1.6" fill="#f1ebe1"/></svg></div>
+
+<header class="mast" id="mast">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="APEX home"><svg aria-hidden="true" style="color:var(--ivory)"><use class="rose" href="#roseS"/></svg><b>APEX</b></a>
+    <nav aria-label="Main">
+      <a class="ln" href="#industries">Industries</a>
+      <a class="ln" href="#journey">How it works</a>
+      <a class="ln" href="#pricing">Pricing</a>
+      <button class="rosebtn" id="roseBtn" type="button" aria-expanded="false" aria-controls="roseMenu" aria-haspopup="dialog"><span>Menu</span><i class="rw"><svg aria-hidden="true"><use class="rs" href="#roseS"/></svg></i></button>
+      <a class="seal sm" href="#checker" data-ring="Get leads · Get leads · " data-label="Get leads"></a>
+    </nav>
+  </div>
+  <span class="rule"></span>
+</header>
+
+<div class="rmenu" id="roseMenu" role="dialog" aria-modal="true" aria-label="Site menu" hidden>
+  <div class="rm-shade" id="rmShade"></div>
+  <button class="rm-close" id="rmClose" type="button"><span>Close</span><i aria-hidden="true"></i></button>
+  <div class="rm-stage" id="rmStage">
+    <div class="rm-sweep" aria-hidden="true"></div>
+    <svg class="rm-rose" id="rmRose" viewBox="-320 -320 640 640" aria-hidden="true"></svg>
+    <ul class="rm-pts" id="rmPts" role="menu" aria-label="Sections"></ul>
+    <ul class="rm-list" id="rmList" role="menu" aria-label="Sections"></ul>
+  </div>
+  <p class="rm-hint">Arrow keys turn the needle · Enter to go · Esc to close</p>
+</div>
+
+<main id="top">
+  <section class="hero" id="hero" data-stage="0" aria-label="Introduction">
+    <div class="hstick">
+      <div class="cart">
+        <svg class="frame" aria-hidden="true" preserveAspectRatio="none"><rect x="0.5" y="0.5" width="99.5%" height="99.5%"/><rect x="9" y="9" width="calc(100% - 18px)" height="calc(100% - 18px)"/></svg>
+        <div class="caps rv" style="--d:300ms">An atlas of customers · 33 industries</div>
+        <h1 data-words style="--d:450ms">Real local customers, <em>sent only to you.</em></h1>
+        <p class="rv" style="--d:1100ms">APEX finds people in your area who are asking for your service, checks they're real, and sends them straight to your phone and CRM. Each industry, in each area, goes to one business.</p>
+        <div class="acts rv" style="--d:1300ms">
+          <a class="seal" href="#checker" data-ring="Check my area · exclusive leads · " data-label="Check my area"></a>
+          <a class="tl" href="#journey">See how it works <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+        </div>
+      </div>
+      <svg class="rose-big" viewBox="0 0 92 92" aria-hidden="true" style="color:var(--taupe2)"><g><use href="#roseS" width="92" height="92"/></g></svg>
+      <div class="legend-box rv" style="--d:1600ms">
+        <div class="caps">Legend · sample activity</div>
+        <div class="row"><span class="pil"></span>Someone asking for a quote</div>
+        <div class="row"><span class="dot"></span>The one business it's sent to</div>
+        <div class="scalebar"><i></i>0 — 500 km</div>
+        <div class="coords" id="coords">— · —</div>
+      </div>
+      <div class="cap1"><div class="caps">Calgary, Alberta · sample</div><h2>One city. <em>People asking for quotes.</em></h2></div>
+      <div class="cap2"><div class="caps">One request</div><h2>Sent to <em>one roofer</em> — no one else.</h2></div>
+      <article class="leadc arch blur" id="leadc" aria-label="Sample lead">
+        <div class="caps">Sample lead</div>
+        <h3>Full roof tear-off</h3>
+        <div class="m">Roofing · Calgary, AB · <span id="lcRange"></span></div>
+        <p class="q">"Need a full tear-off on a 2,400 sq ft house. Hoping to start next month."</p>
+        <ul>
+          <li><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>They agreed to hear from this business — time and wording recorded</li>
+          <li><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>Phone and email checked</li>
+          <li><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>Sent to the roofer's phone and CRM</li>
+        </ul>
+      </article>
+      <div class="scrollcue"><i></i>Scroll</div>
+    </div>
+  </section>
+
+  <section class="journey" id="journey" aria-label="How it works">
+    <div class="wrap jgrid">
+      <aside class="legendcol">
+        <div class="lcart rv">
+          <div class="caps">How it works</div>
+          <h2 data-words>The route <em>of a lead.</em></h2>
+          <p>Six stops between a customer asking for a quote and your phone lighting up.</p>
+          <ol class="stops" id="stops"></ol>
+          <div class="jprog"><i id="jprog"></i></div>
+        </div>
+      </aside>
+      <div class="steps" id="steps">
+        <article class="stop arch rv" data-step="0">
+          <div class="num">Stop I</div>
+          <h3>They ask for a quote.</h3>
+          <p>A homeowner or business in your area fills in a short request on an APEX page for your industry.</p>
+          <div class="viz"><div class="typer" data-type="Need a quote to replace the roof before winter — 2,400 sq ft."></div><div class="field-mock"><span>Name</span><span>Postal / ZIP</span><span>Phone</span></div></div>
+        </article>
+        <article class="stop arch rv" data-step="1">
+          <div class="num">Stop II</div>
+          <h3>They agree to hear from you.</h3>
+          <p>Before sending, they agree to be contacted by your business by name. We save the exact wording and the time.</p>
+          <div class="viz"><p style="margin:0;max-width:330px;font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:var(--ivory)">"I agree to be contacted by [Your Business] about my request by phone, text or email."</p>
+            <svg class="stamp" viewBox="0 0 112 112" aria-hidden="true"><circle cx="56" cy="56" r="50"/><circle cx="56" cy="56" r="42"/><text x="56" y="52" text-anchor="middle">RECORDED</text><text x="56" y="70" text-anchor="middle" id="stampTime">—</text></svg></div>
+        </article>
+        <article class="stop arch rv" data-step="2">
+          <div class="num">Stop III</div>
+          <h3>We check they're real.</h3>
+          <p>Phone and email are checked, and fakes, tests and duplicates are filtered out before you ever see them. [Your verification process]</p>
+          <div class="viz"><ul class="checks"><li>Phone number is real and reachable <em>checking</em></li><li>Email address is valid <em>checking</em></li><li>Not a duplicate or a test <em>checking</em></li></ul></div>
+        </article>
+        <article class="stop arch rv" data-step="3">
+          <div class="num">Stop IV</div>
+          <h3>We find out if they're serious.</h3>
+          <p>A few questions about the job, the timing and the budget. Every lead gets a score, so you know who to call first.</p>
+          <div class="viz dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="tr" cx="60" cy="60" r="48"/><circle class="ar" cx="60" cy="60" r="48"/><text class="sc" x="60" y="72" text-anchor="middle" id="dialN">0</text></svg>
+            <dl><dt>Job</dt><dd>Full replacement</dd><dt>Timing</dt><dd>Within 30 days</dd><dt>Budget</dt><dd>Set aside</dd><dt>Score</dt><dd>Sample</dd></dl></div>
+        </article>
+        <article class="stop arch rv" data-step="4">
+          <div class="num">Stop V</div>
+          <h3>We match it to you.</h3>
+          <p>It goes to the one business that holds that industry in that area — you. Nobody else gets the same lead.</p>
+          <div class="viz terr"><svg viewBox="0 0 420 150" aria-hidden="true"><defs><pattern id="hp" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line class="hatch" x1="0" y1="0" x2="0" y2="8"/></pattern></defs><path d="M40 110 L70 40 L160 22 L250 46 L300 30 L370 70 L340 128 L210 136 L110 128 Z" fill="url(#hp)" opacity=".7"/><path class="edge" d="M40 110 L70 40 L160 22 L250 46 L300 30 L370 70 L340 128 L210 136 L110 128 Z"/><circle class="pinm" cx="205" cy="80" r="6"/><circle cx="205" cy="80" r="14" fill="none" stroke="#a6493b" opacity=".5"/><text x="222" y="84">YOUR AREA · EXCLUSIVE</text></svg></div>
+        </article>
+        <article class="stop arch rv" data-step="5">
+          <div class="num">Stop VI</div>
+          <h3>It lands on your phone.</h3>
+          <p>A text and an email arrive within moments, and the lead appears in your CRM. If it's a bad lead, return it for credit.</p>
+          <div class="viz deliver"><div class="n"><b>Text · New roofing lead</b><small>Full tear-off, 2,400 sq ft. Tap to call.</small></div><div class="n"><b>Email · Full lead details</b><small>Answers, consent record and contact info.</small></div><div class="n"><b>CRM · Added to "New leads"</b><small>Ready to call · return for credit if it's bad.</small></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="ind" id="industries" aria-label="Industries">
+    <div class="wrap">
+      <div class="top">
+        <div><div class="caps rv">Industries</div><h2 data-words>33 industries. <em>Each area goes to one business.</em></h2><p class="rv">From industrial water treatment to the neighbourhood roofer. Hover or tap a tile to see what a lead is worth and when demand peaks.</p></div>
+        <div class="tabs rv" id="tabs" role="group" aria-label="Filter industries"><button type="button" data-f="all" aria-pressed="true">All<span>33</span></button><button type="button" data-f="high" aria-pressed="false">High-ticket<span>12</span></button><button type="button" data-f="std" aria-pressed="false">Trades<span>21</span></button></div>
+      </div>
+      <div class="wallbox" id="wallbox">
+        <canvas id="wall" aria-hidden="true"></canvas>
+        <div class="fgrid" id="fgrid"></div>
+        <article class="tip arch" id="tip" aria-hidden="true"><div class="caps" id="tipCat"></div><h3 id="tipName"></h3><div class="v" id="tipVal"></div><div class="mstrip" id="tipMonths"></div></article>
+      </div>
+      <ul class="sr" id="indList"></ul>
+      <div class="hint rv"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor"/><path d="M8 4v4l3 2" fill="none" stroke="currentColor"/></svg>Click a tile to check that industry in your area.</div>
+    </div>
+  </section>
+
+  <section class="chk" id="checker" aria-label="Check your area">
+    <div class="wrap cgrid">
+      <form class="cform arch blur rv" id="cform" novalidate>
+        <div class="caps">Check your area</div>
+        <h2 data-words>Is your area <em>still open?</em></h2>
+        <p>Pick your industry and enter your postal or ZIP code. We'll drop a pin and confirm whether it's available.</p>
+        <div class="fld"><label for="cInd">Your industry</label><select id="cInd"></select></div>
+        <div class="fld"><label for="cZip">Postal or ZIP code</label><input id="cZip" autocomplete="postal-code" placeholder="T2P 1J9 or 90210" maxlength="10"></div>
+        <div class="err" id="cErr" role="alert"></div>
+        <div class="crow"><button class="seal" type="submit" data-ring="Drop my pin · check my area · " data-label="Check my area"></button><span class="cwait">One business per industry, per area.</span></div>
+      </form>
+      <div class="cres" id="cres" aria-live="polite"><div class="caps">Pin dropped</div><h3 id="cresH"></h3><p id="cresP"></p><p class="ph">[Live availability from your territory list goes here]</p></div>
+    </div>
+  </section>
+
+  <section class="ret" id="returns" aria-label="Return policy">
+    <div class="wrap rgrid">
+      <div class="bigseal" id="bigseal"><svg viewBox="0 0 400 400" aria-hidden="true"><defs><path id="bsP" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/></defs><circle cx="200" cy="200" r="196" fill="none" stroke="rgba(241,235,225,.3)"/><circle cx="200" cy="200" r="184" fill="none" stroke="rgba(241,235,225,.14)" stroke-dasharray="2 6"/><g class="rg"><text><textPath href="#bsP" textLength="990" lengthAdjust="spacing">Bad lead · credited back · bad lead · credited back · </textPath></text></g><circle cx="200" cy="200" r="118" fill="url(#waxG)"/><circle cx="200" cy="200" r="104" fill="none" stroke="rgba(255,235,225,.25)" stroke-width="2" stroke-dasharray="4 5"/><text x="200" y="192" text-anchor="middle" style="font-family:'Cormorant Garamond',serif;font-size:58px;font-style:italic;letter-spacing:0;fill:#f1ebe1;text-transform:none">Credit</text><text x="200" y="232" text-anchor="middle" style="font-size:12px;letter-spacing:4px;fill:#f1ebe1">THE RETURN PROMISE</text></svg></div>
+      <div>
+        <div class="caps rv">Our promise</div>
+        <h2 data-words>If a lead is wrong, <em>you don't pay for it.</em></h2>
+        <ul>
+          <li class="rv"><i>i.</i>Wrong or disconnected phone number</li>
+          <li class="rv" style="--d:120ms"><i>ii.</i>A duplicate of a lead you already received</li>
+          <li class="rv" style="--d:240ms"><i>iii.</i>Fake details, or someone just testing</li>
+        </ul>
+        <p class="ph rv">Return it from your phone within [return window] and the credit is applied to your account. [Final return terms]</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pri" id="pricing" aria-label="Pricing">
+    <div class="wrap">
+      <div class="caps rv">Pricing</div>
+      <h2 data-words>Two simple <em>ways to buy.</em></h2>
+      <div class="pgrid">
+        <article class="pc arch rv"><span class="rk"></span><div class="caps">Local trades</div><h3>Pay per lead</h3><p>Roofers, plumbers, dentists and 18 more. You pay for each exclusive lead in your area — nothing for leads you return.</p><div class="price">[Your price per lead]<small>Varies by industry and area</small></div></article>
+        <article class="pc arch rv" style="--d:150ms"><span class="rk"></span><div class="caps">High-ticket</div><h3>Booked meetings</h3><p>Water treatment, security, automation and 9 more. Qualified appointments or a monthly retainer for six-to-eight-figure contracts.</p><div class="price">[Your appointment or retainer price]<small>Quoted per sector</small></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="claim" id="claim" aria-label="Get started">
+    <svg class="contours" id="contours" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+    <div class="wrap">
+      <div class="caps rv">Get started</div>
+      <h2 data-words>Claim <em>your area.</em></h2>
+      <p class="rv">Each industry, in each area, goes to one business. Check whether yours is still open.</p>
+      <div class="rv" style="display:flex;justify-content:center"><a class="seal" href="#checker" data-ring="Claim my area · one per area · " data-label="Check my area"></a></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <span><svg class="rose2" aria-hidden="true" style="color:var(--taupe2)"><use href="#roseS"/></svg>APEX · Verified, exclusive leads for 33 industries</span>
+    <span class="coords" id="fcoords">51.05° N · 114.07° W</span>
+    <span>Activity shown on this page is sample data.</span>
+  </div>
+</footer>
+
+<script>
+const IND = [
+  ["Executive Recruitment","high",125000,175000,"M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2"],
+  ["Industrial Water Treatment","high",1000000,14000000,"M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0"],
+  ["Commercial Security Systems","high",500000,15000000,"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"],
+  ["Industrial Automation & Manufacturing","high",5300000,53000000,"M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"],
+  ["Commercial Kitchen Equipment","high",50000,355000,"M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12"],
+  ["Specialized Medical Staffing","high",25000,100000,"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8"],
+  ["Commercial HVAC & Refrigeration","high",65000,3000000,"M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2"],
+  ["Custom Contract Manufacturing","high",100000,5000000,"M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2"],
+  ["Commercial Real Estate","high",25000,100000,"M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1"],
+  ["Specialty Medical (Cosmetic/Dental)","high",3000,43000,"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"],
+  ["Commercial Printing & Fulfillment","high",50000,500000,"M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z"],
+  ["Niche Insurance — Cyber Liability","high",30000,100000,"M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2"],
+  ["Roofing","std",500,5000,"M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6"],
+  ["Landscaping","std",300,3000,"M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8"],
+  ["Home Cleaning (Interior)","std",100,1000,"M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6"],
+  ["Home Cleaning (Exterior)","std",150,1500,"M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2"],
+  ["Plumbers","std",200,2000,"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"],
+  ["Electricians","std",300,3000,"M13 2L4 14h7l-1 8 9-12h-7z"],
+  ["HVAC","std",250,2500,"M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0"],
+  ["Dentists","std",150,1500,"M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z"],
+  ["Lawyers","std",500,5000,"M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z"],
+  ["Real Estate Agents","std",300,3000,"M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01"],
+  ["Gyms & Fitness","std",50,500,"M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12"],
+  ["Auto Repair","std",200,2000,"M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Pest Control","std",300,2000,"M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2"],
+  ["Hair Salons & Barbershops","std",50,500,"M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4"],
+  ["Insurance Agents","std",400,3000,"M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1"],
+  ["Healthcare Clinics","std",200,1500,"M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2"],
+  ["Moving Companies","std",400,4000,"M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Personal Trainers","std",100,1000,"M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5"],
+  ["Photographers","std",300,3000,"M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z"],
+  ["Wedding Venues","std",2000,15000,"M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z"],
+  ["Restaurants","std",500,5000,"M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12"]
+].map(([name, cat, min, max, d]) => ({ name, cat, min, max, d, range: money(min) + ' – ' + money(max) }));
+function money(n) {
+  if (n >= 1e6) return '$' + (+(n / 1e6).toFixed(1)) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'k';
+  return '$' + n;
+}
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+[[1,4,10,12],[4,5,6,7,10,11,12],[10,11,12,1,2,3],[4,5,6,7,8,9,10,11,12],[1,2,7,8,9,10],[1,2,3,7,8,9,10,11,12],[1,2,10,11,12],[4,5,6,7,8,9,10,11,12],[1,3,4,5,9,10,11,12],[10,11,12,1],[7,8,9,10,11,12,1,2],[4,5,10,11,12],[3,4,5,9,10,11],[3,4,5,6,7,8,9],[1,2,3,12],[3,4,5,9,10],[1,2,11,12],[3,4,5,9,10,11],[1,2,7,8,11,12],[1,2,3,9],[1,4,7,10],[3,4,5,9,10,11],[1,2,8,9],[3,4,9,10,11],[3,4,5,9,10],[12,1,5,6],[10,11,12,1],[1,2,9],[5,6,7,8,9],[1,2,6,7],[5,6,7,8,9,10,11],[4,5,6,9,10],[5,6,7,8,12]].forEach((p, i) => { IND[i].peak = p; });
+const SAMPLE = [
+  [6, 'Rooftop unit replacement · 3 sites', 420000],
+  [12, 'Full tear-off, 2,400 sq ft', 4800],
+  [1, 'Cooling tower treatment program', 2600000],
+  [19, 'New patient, implant consult', 1200],
+  [2, 'Access control for 8 branches', 1900000],
+  [16, 'Emergency re-pipe, older home', 1800],
+  [0, 'VP Operations search, retained', 150000],
+  [31, 'Spring wedding, 180 guests', 14000],
+  [3, 'Packaging line automation', 8400000],
+  [17, 'Panel upgrade to 200A', 2400],
+  [8, 'Industrial lease, 40k sq ft', 72000],
+  [18, 'Heat pump install, 2 zones', 2200]
+].map(([i, job, v]) => ({ ind: IND[i], job, v }));
+const MONTHS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+(function () {
+  const $ = id => document.getElementById(id);
+  const S = window.APEX = { mode: 'hero', heroP: 0, journeyP: 0, wallP: 0, px: 0, py: 0, nx: 0, ny: 0, pin: null, filter: 'all', anchor: null, ll: null, onTile: null, pickTile: null };
+  const RM = reduceMotion;
+
+  // ---- wax-seal buttons with JS-driven ring speed
+  const seals = [];
+  document.querySelectorAll('.seal').forEach((el, n) => {
+    const id = 'sealP' + n, ring = el.dataset.ring || '';
+    el.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="${id}" d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/></defs><circle class="s-o" cx="60" cy="60" r="58.5"/><circle class="s-i" cx="60" cy="60" r="38"/><g class="s-ring"><text><textPath href="#${id}" textLength="293" lengthAdjust="spacing">${esc(ring)}</textPath></text></g><circle class="s-wax" cx="60" cy="60" r="29"/><circle class="s-lip" cx="60" cy="60" r="24"/><path class="s-arrow" d="M48 60h22M63 53l7 7-7 7"/></svg><span class="sr">${esc(el.dataset.label || ring)}</span>`);
+    seals.push({ g: el.querySelector('.s-ring'), a: n * 47, v: 14, t: 14, el });
+    el.addEventListener('pointerenter', () => { seals[n].t = 120; });
+    el.addEventListener('pointerleave', () => { seals[n].t = 14; });
+    el.addEventListener('focus', () => { seals[n].t = 120; });
+    el.addEventListener('blur', () => { seals[n].t = 14; });
+  });
+
+
+  // ---- compass-rose menu
+  const PTS = [
+    [0, 'N', 'The atlas', 'Home', 'top'], [45, 'NE', 'How it works', 'The route of a lead', 'journey'], [90, 'E', 'Industries', '33 markets', 'industries'],
+    [135, 'SE', 'Check my area', 'Drop a pin', 'checker'], [180, 'S', 'Our promise', 'Returns and credit', 'returns'], [225, 'SW', 'Pricing', 'Two ways to buy', 'pricing'],
+    [270, 'W', 'Get started', 'Claim your area', 'claim'], [315, 'NW', 'Sample lead', 'See one up close', 'sample']];
+  const rmenu = $('roseMenu'), rbtn = $('roseBtn'), rose = $('rmRose');
+  (function drawRose() {
+    let t = '<g class="ticks"><g>';
+    for (let d = 0; d < 360; d += 5) { const a = d * Math.PI / 180, r1 = d % 30 ? 292 : 282, r2 = 300; t += `<line x1="${(Math.sin(a) * r1).toFixed(1)}" y1="${(-Math.cos(a) * r1).toFixed(1)}" x2="${(Math.sin(a) * r2).toFixed(1)}" y2="${(-Math.cos(a) * r2).toFixed(1)}"/>`; if (!(d % 30)) t += `<text x="${(Math.sin(a) * 268).toFixed(1)}" y="${(-Math.cos(a) * 268 + 3).toFixed(1)}" text-anchor="middle">${d}</text>`; }
+    t += '</g></g>';
+    t += '<circle class="ln1 ring" r="306"/><circle class="ln2 ring" r="300"/><circle class="dash" r="214"/><circle class="ln2 ring" r="122"/><circle class="ln1 ring" r="40"/>';
+    PTS.forEach(([b], k) => { const L = b % 90 ? 186 : 262, W = b % 90 ? 22 : 34; t += `<g transform="rotate(${b})"><g class="pt" style="--k:${k}" data-k="${k}"><path class="fa" d="M0 ${-L} L${-W} -${W} L0 0Z"/><path class="fb" d="M0 ${-L} L${W} -${W} L0 0Z"/></g></g>`; });
+    t += '<g class="ndl" id="rmNdl"><path class="n1" d="M0 -232 L12 0 L-12 0Z"/><path class="n2" d="M0 232 L12 0 L-12 0Z"/></g><circle class="hub" r="11"/><circle r="3" fill="#f1ebe1"/>';
+    rose.innerHTML = t;
+  })();
+  const bearingCls = b => { const h = b === 0 || b === 180 ? 'c' : b < 180 ? 'l' : 'r'; const v = b === 90 || b === 270 ? 'm' : (b < 90 || b > 270) ? 't' : 'b'; return h + ' ' + v; };
+  function layoutPts() {
+    const sz = $('rmRose').getBoundingClientRect().width, R0 = sz / 2 + 26;
+    $('rmPts').innerHTML = PTS.map(([b, br, name, sub, id], k) => { const a = b * Math.PI / 180; return `<li role="none" style="--x:${(Math.sin(a) * R0).toFixed(0)}px;--y:${(-Math.cos(a) * R0).toFixed(0)}px"><a role="menuitem" href="#${id === 'sample' ? 'hero' : id}" data-k="${k}" class="${bearingCls(b)}" style="--k:${k}" tabindex="-1"><span class="br">${br}</span><b>${name}</b><small>${sub}</small></a></li>`; }).join('');
+  }
+  $('rmList').innerHTML = PTS.map(([b, br, name, sub, id], k) => `<li role="none"><a role="menuitem" href="#${id === 'sample' ? 'hero' : id}" data-k="${k}" style="--k:${k}" tabindex="-1"><span class="br">${br}</span><b>${name}</b></a></li>`).join('');
+  let rmIdx = 0, rmAng = 0, rmOpen = false;
+  const items = () => [...rmenu.querySelectorAll(getComputedStyle($('rmPts')).display === 'none' ? '#rmList a' : '#rmPts a')];
+  function aim(k, focus) {
+    rmIdx = (k + 8) % 8;
+    const target = PTS[rmIdx][0]; let d = ((target - rmAng) % 360 + 540) % 360 - 180; rmAng += d;
+    $('rmNdl').style.transform = `rotate(${rmAng}deg)`;
+    rose.querySelectorAll('.pt').forEach(p => p.classList.toggle('on', +p.dataset.k === rmIdx));
+    rmenu.querySelectorAll('[role=menuitem]').forEach(a => { const on = +a.dataset.k === rmIdx; a.classList.toggle('on', on); a.tabIndex = on ? 0 : -1; });
+    if (focus) { const el = items()[rmIdx]; if (el) el.focus({ preventScroll: true }); }
+  }
+  const modeIdx = () => ({ hero: S.heroP > .64 ? 7 : 0, journey: 1, industries: 2, checker: 3, returns: 4, pricing: 5, claim: 6 })[S.mode] ?? 0;
+  function openMenu() {
+    if (rmOpen) return; rmOpen = true; S.menuOpen = true;
+    rmenu.hidden = false; rmenu.classList.remove('fly', 'closing'); layoutPts();
+    document.documentElement.classList.add('menu-open'); rbtn.setAttribute('aria-expanded', 'true');
+    rmAng = -360; $('rmNdl').style.transition = 'none'; $('rmNdl').style.transform = 'rotate(-360deg)';
+    void rmenu.offsetWidth; rmenu.classList.add('open'); $('rmNdl').style.transition = ''; void rose.getBoundingClientRect(); aim(modeIdx(), true);
+  }
+  function closeMenu(then) {
+    if (!rmOpen) return; rmOpen = false;
+    rmenu.classList.add('closing'); rmenu.classList.remove('open');
+    setTimeout(() => { rmenu.hidden = true; rmenu.classList.remove('fly', 'closing'); S.menuOpen = false; document.documentElement.classList.remove('menu-open'); rbtn.setAttribute('aria-expanded', 'false'); if (then) then(); else rbtn.focus({ preventScroll: true }); }, RM ? 0 : 650);
+  }
+  function go(k) {
+    const id = PTS[k][4], b = PTS[k][0] * Math.PI / 180;
+    rmenu.style.setProperty('--fx', (-Math.sin(b) * 30).toFixed(1) + 'vw'); rmenu.style.setProperty('--fy', (Math.cos(b) * 30).toFixed(1) + 'vh');
+    rmenu.classList.add('fly');
+    closeMenu(() => {
+      let y;
+      if (id === 'top') y = 0;
+      else if (id === 'sample') { const h = $('hero'); y = h.offsetTop + (h.offsetHeight - innerHeight) * .92; }
+      else y = $(id).getBoundingClientRect().top + scrollY;
+      scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' });
+      const tgt = id === 'top' || id === 'sample' ? document.querySelector('.brand') : $(id);
+      if (tgt && tgt.tabIndex < 0 && tgt.tagName === 'SECTION') tgt.setAttribute('tabindex', '-1');
+      if (tgt) setTimeout(() => tgt.focus({ preventScroll: true }), 50);
+    });
+  }
+  rbtn.addEventListener('click', openMenu);
+  $('rmClose').addEventListener('click', () => closeMenu());
+  $('rmShade').addEventListener('click', () => closeMenu());
+  rmenu.addEventListener('pointerover', e => { const a = e.target.closest('[role=menuitem]'); if (a && +a.dataset.k !== rmIdx) aim(+a.dataset.k, false); });
+  rmenu.addEventListener('focusin', e => { const a = e.target.closest('[role=menuitem]'); if (a && +a.dataset.k !== rmIdx) aim(+a.dataset.k, false); });
+  rmenu.addEventListener('click', e => { const a = e.target.closest('[role=menuitem]'); if (a) { e.preventDefault(); go(+a.dataset.k); } });
+  rmenu.addEventListener('keydown', e => {
+    const k = e.key;
+    if (k === 'Escape') { e.preventDefault(); closeMenu(); return; }
+    if (k === 'ArrowRight' || k === 'ArrowDown') { e.preventDefault(); aim(rmIdx + 1, true); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp') { e.preventDefault(); aim(rmIdx - 1, true); }
+    else if (k === 'Home') { e.preventDefault(); aim(0, true); }
+    else if (k === 'End') { e.preventDefault(); aim(7, true); }
+    else if ((k === ' ' || k === 'Enter') && e.target.closest('[role=menuitem]')) { e.preventDefault(); go(rmIdx); }
+    else if (k === 'Tab') { // keep focus inside: the active point and the close button
+      const a = items()[rmIdx], c = $('rmClose');
+      e.preventDefault(); (document.activeElement === c ? a : c).focus({ preventScroll: true });
+    }
+  });
+  addEventListener('resize', () => { if (rmOpen) layoutPts(), aim(rmIdx, false); });
+
+  // ---- split headings into words
+  function split(el) {
+    let i = 0;
+    const walk = node => {
+      [...node.childNodes].forEach(c => {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach(t => {
+            if (!t) return;
+            if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--i', i++); s.textContent = t; frag.appendChild(s);
+          });
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1) walk(c);
+      });
+    };
+    walk(el);
+  }
+  document.querySelectorAll('[data-words]').forEach(split);
+
+  // ---- reveal on scroll (cached positions; no observers, never re-triggers)
+  let pending = [...document.querySelectorAll('.rv,[data-words],.bigseal')];
+  requestAnimationFrame(() => document.querySelectorAll('.hero .rv,.hero [data-words]').forEach(el => el.classList.add('in')));
+  pending = pending.filter(el => !el.closest('.hero'));
+
+  // ---- journey legend + per-step animations
+  const stopNames = ['They ask', 'They agree', 'We check', 'We qualify', 'We match', 'It lands'];
+  const glyphs = [
+    '<circle cx="11" cy="11" r="4" class="f"/>',
+    '<circle cx="11" cy="11" r="8"/><path d="M11 3a8 8 0 0 1 0 16z" class="f"/>',
+    '<path d="M11 3l8.5 15h-17z" class="f"/>',
+    '<path d="M11 2l9 9-9 9-9-9z" class="f"/>',
+    '<circle cx="11" cy="11" r="8.5"/><circle cx="11" cy="11" r="4" class="f"/>',
+    '<rect x="3" y="3" width="16" height="16" class="f"/><circle cx="11" cy="11" r="2.4" fill="#12100e" stroke="none"/>'
+  ];
+  const ro = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+  $('stops').innerHTML = stopNames.map((n, i) => `<li data-i="${i}"><svg viewBox="0 0 22 22" aria-hidden="true">${glyphs[i]}</svg><span class="rn">${ro[i]}</span><b>${n}</b></li>`).join('');
+  const stopEls = [...document.querySelectorAll('.stop')], legendLis = [...document.querySelectorAll('#stops li')];
+  let curStep = -1;
+  const typer = document.querySelector('.typer');
+  let typeTimer = null;
+  function runType() { clearInterval(typeTimer); const full = typer.dataset.type; let k = 0; typer.textContent = ''; if (RM) { typer.textContent = full; return; } typeTimer = setInterval(() => { typer.textContent = full.slice(0, ++k); if (k >= full.length) clearInterval(typeTimer); }, 34); }
+  function runChecks(el) { const lis = [...el.querySelectorAll('.checks li')]; lis.forEach(l => { l.classList.remove('ok'); l.querySelector('em').textContent = 'checking'; }); lis.forEach((l, i) => setTimeout(() => { l.classList.add('ok'); l.querySelector('em').innerHTML = '&#10003; passed'; }, RM ? 0 : 500 + i * 650)); }
+  function runDial() { const n = $('dialN'), t0 = performance.now(); const go = t => { const k = Math.min(1, (t - t0) / 1800), e = 1 - Math.pow(1 - k, 3); n.textContent = Math.round(86 * e); if (k < 1) requestAnimationFrame(go); }; if (RM) n.textContent = 86; else requestAnimationFrame(go); }
+  function setStep(i) {
+    if (i === curStep) return; curStep = i;
+    stopEls.forEach((s, k) => s.classList.toggle('on', k === i));
+    legendLis.forEach((l, k) => { l.classList.toggle('on', k === i); l.classList.toggle('done', k < i); });
+    if (i === 0) runType();
+    if (i === 1) { const d = new Date(); $('stampTime').textContent = d.toTimeString().slice(0, 5); }
+    if (i === 2) runChecks(stopEls[2]);
+    if (i === 3) runDial();
+  }
+
+  // ---- industries: fallback grid + screen-reader list + tooltip
+  const svgIcon = d => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+  $('fgrid').innerHTML = IND.map((it, i) => `<button type="button" class="ft${it.cat === 'high' ? ' hi' : ''}" data-i="${i}">${svgIcon(it.d)}${esc(it.name)}</button>`).join('');
+  $('indList').innerHTML = IND.map(it => `<li>${esc(it.name)}: lead value ${it.range}</li>`).join('');
+  const tip = $('tip');
+  function showTip(i, x, y) {
+    if (i < 0) { tip.classList.remove('on'); return; }
+    const it = IND[i];
+    $('tipCat').textContent = it.cat === 'high' ? 'High-ticket' : 'Local trade';
+    $('tipName').textContent = it.name;
+    $('tipVal').textContent = 'Typical lead value ' + it.range;
+    $('tipMonths').innerHTML = MONTHS.map((m, k) => `<span class="${it.peak.includes(k + 1) ? 'pk' : ''}">${m}</span>`).join('');
+    const bw = $('wallbox').clientWidth;
+    tip.style.left = Math.max(120, Math.min(bw - 120, x)) + 'px';
+    tip.style.top = Math.max(250, y) + 'px';
+    tip.classList.add('on');
+  }
+  S.onTile = showTip;
+  S.pickTile = i => { $('cInd').value = String(i); document.getElementById('checker').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); };
+  $('fgrid').addEventListener('click', e => { const b = e.target.closest('.ft'); if (b) S.pickTile(+b.dataset.i); });
+  $('tabs').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    S.filter = b.dataset.f;
+    document.querySelectorAll('#tabs button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    document.querySelectorAll('.ft').forEach(t => t.classList.toggle('off', S.filter !== 'all' && IND[+t.dataset.i].cat !== S.filter));
+  });
+
+  // ---- area checker
+  $('cInd').innerHTML = IND.map((it, i) => `<option value="${i}">${esc(it.name)}</option>`).join('');
+  $('cInd').value = '12';
+  const CA = { A: [-52.7, 47.6, 'Newfoundland'], B: [-63.6, 44.7, 'Nova Scotia'], C: [-63.1, 46.2, 'Prince Edward Island'], E: [-66.6, 45.9, 'New Brunswick'], G: [-71.2, 46.8, 'Eastern Quebec'], H: [-73.6, 45.5, 'Montréal'], J: [-72.5, 45.6, 'Western Quebec'], K: [-75.7, 45.4, 'Eastern Ontario'], L: [-79.8, 43.4, 'Central Ontario'], M: [-79.4, 43.7, 'Toronto'], N: [-81.2, 43.0, 'Southwestern Ontario'], P: [-81.0, 46.5, 'Northern Ontario'], R: [-97.1, 49.9, 'Manitoba'], S: [-104.6, 50.4, 'Saskatchewan'], T: [-114.1, 51.0, 'Alberta'], V: [-123.1, 49.3, 'British Columbia'], X: [-114.4, 62.5, 'Northern Canada'], Y: [-135.0, 60.7, 'Yukon'] };
+  const US = [[-71.5, 42.3, 'New England'], [-74.8, 41.2, 'New York & Pennsylvania'], [-77.5, 38.4, 'the Mid-Atlantic'], [-84.4, 32.5, 'the Southeast'], [-85.6, 40.2, 'the Great Lakes'], [-93.2, 44.9, 'the Upper Midwest'], [-93.0, 38.6, 'the Central states'], [-96.8, 32.6, 'Texas & the South Central'], [-108.0, 39.2, 'the Mountain West'], [-120.0, 37.0, 'the Pacific Coast']];
+  $('cform').addEventListener('submit', e => {
+    e.preventDefault();
+    const raw = $('cZip').value.trim().toUpperCase(), it = IND[+$('cInd').value];
+    let loc = null, code = raw;
+    const ca = raw.replace(/\s+/g, '').match(/^([ABCEGHJ-NPRSTVXY])\d[A-Z](\d[A-Z]\d)?$/);
+    const us = raw.match(/^(\d)\d{4}(-\d{4})?$/);
+    if (ca && CA[ca[1]]) { loc = CA[ca[1]]; code = raw.replace(/\s+/g, '').replace(/^(.{3})(.+)$/, '$1 $2'); }
+    else if (us) { loc = US[+us[1]]; }
+    if (!loc) { $('cErr').textContent = 'Enter a Canadian postal code (like T2P 1J9) or a US ZIP code (like 90210).'; $('cres').classList.remove('on'); return; }
+    $('cErr').textContent = '';
+    S.pin = { lon: loc[0] + (Math.random() - .5) * .8, lat: loc[1] + (Math.random() - .5) * .5, t: performance.now() };
+    $('cresH').textContent = it.name + ' in ' + loc[2];
+    $('cresP').textContent = `We'll confirm whether ${it.name.toLowerCase()} is open for ${code}. If it is, it's yours alone — no other ${it.cat === 'high' ? 'firm' : 'business'} in that area gets the same leads.`;
+    $('cres').classList.add('on');
+  });
+
+  // ---- pricing raking light
+  document.querySelectorAll('.pc').forEach(c => c.addEventListener('pointermove', e => { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); }));
+
+  // ---- contour lines for the closing section
+  (function () {
+    let out = '';
+    for (let g = 0; g < 2; g++) {
+      out += '<g>';
+      const cx = g ? 820 : 360, cy = g ? 300 : 520;
+      for (let k = 1; k <= 11; k++) {
+        const R = k * 34 + g * 10; let d = '';
+        for (let a = 0; a <= 64; a++) {
+          const t = a / 64 * Math.PI * 2, wob = 1 + .12 * Math.sin(t * 3 + k * .7 + g) + .06 * Math.sin(t * 7 + k);
+          const x = cx + Math.cos(t) * R * 1.35 * wob, y = cy + Math.sin(t) * R * wob;
+          d += (a ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+        }
+        out += `<path d="${d}Z"/>`;
+      }
+      out += '</g>';
+    }
+    $('contours').innerHTML = out;
+  })();
+
+  // ---- lead card value
+  $('lcRange').textContent = IND[12].range;
+
+  // ---- compass cursor
+  const comp = $('compass'), ndl = $('ndl');
+  let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy, ang = 0;
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches; let lastTgt = null;
+  addEventListener('pointermove', e => {
+    tx = e.clientX; ty = e.clientY; S.px = e.clientX; S.py = e.clientY; S.nx = e.clientX / innerWidth * 2 - 1; S.ny = -(e.clientY / innerHeight) * 2 + 1;
+    if (fine && !RM) document.documentElement.classList.add('compass-on');
+    if (e.target !== lastTgt) { lastTgt = e.target; comp.classList.toggle('hot', !!e.target.closest('a,button,select,input,canvas#wall')); }
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => document.documentElement.classList.remove('compass-on'));
+
+  // ---- scroll state from cached layout (recomputed only on resize / load / font swap)
+  const hero = $('hero'), mast = $('mast'), veilI = $('veilI'), jprog = $('jprog'), leadc = $('leadc'), comp2 = comp;
+  const secIds = ['hero', 'journey', 'industries', 'checker', 'returns', 'pricing', 'claim'];
+  const veilFor = { hero: 0, journey: .18, industries: 1, checker: .25, returns: .72, pricing: .8, claim: .5 };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const L = { vh: innerHeight, vw: innerWidth, sec: [], stops: [], foot: 0 };
+  function measure() {
+    const y = scrollY;
+    L.vh = innerHeight; L.vw = innerWidth;
+    L.sec = secIds.map(id => { const r = $(id).getBoundingClientRect(); return { id, top: r.top + y, h: r.height, cx: r.left + r.width / 2 }; });
+    L.stops = stopEls.map(el => { const r = el.getBoundingClientRect(); return r.top + y + r.height / 2; });
+    L.foot = document.querySelector('footer').getBoundingClientRect().top + y;
+    pending.forEach(el => { el._top = el.getBoundingClientRect().top + y; });
+    lastY = -1;
+  }
+  let lastY = -1, curMode = '', curStage = '', curVeil = -1, curSolid = null;
+  function frameScroll() {
+    const y = scrollY, vh = L.vh;
+    if (y === lastY) return; lastY = y;
+    const H = L.sec[0], J = L.sec[1], W = L.sec[2];
+    S.heroP = clamp((y - H.top) / (H.h - vh), 0, 1);
+    const st = S.heroP < .24 ? '0' : S.heroP < .64 ? '1' : '2';
+    if (st !== curStage) { hero.dataset.stage = st; curStage = st; }
+    S.journeyP = clamp((y + vh * .5 - J.top) / J.h, 0, 1);
+    const mid = y + vh * .5; let mode = 'hero';
+    for (const sc of L.sec) if (sc.top <= mid && sc.top + sc.h > mid) { mode = sc.id; break; }
+    if (mode !== curMode) { curMode = mode; S.mode = mode; }
+    const v = veilFor[mode] ?? .5; if (v !== curVeil) { veilI.style.opacity = v; curVeil = v; }
+    const solid = y > 40; if (solid !== curSolid) { mast.classList.toggle('solid', solid); curSolid = solid; }
+    if (mode === 'journey') {
+      let best = 0, bd = 1e9; L.stops.forEach((c, k) => { const d = Math.abs(c - mid); if (d < bd) { bd = d; best = k; } });
+      if (best !== curStep) { setStep(best); jprog.style.width = ((best + 1) / 6 * 100) + '%'; }
+    }
+    S.wallP = clamp((y + vh - W.top) / (vh + W.h * .4), 0, 1);
+    if (pending.length) { const lim = y + vh * .9; pending = pending.filter(el => { if (el._top < lim) { el.classList.add('in'); return false; } return true; }); }
+  }
+  measure();
+  addEventListener('resize', () => { measure(); frameScroll(); });
+  addEventListener('load', measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  setTimeout(measure, 1500);
+
+  // ---- main loop: seals, compass, lead card anchor, coordinates
+  let last = performance.now(), lastLL = '', lastAX = -1, lastAY = -1;
+  function loop(t) {
+    const dt = Math.max(0, Math.min(.05, (t - last) / 1000)); last = t;
+    frameScroll();
+    if (!RM) seals.forEach(s => { s.v += (s.t - s.v) * Math.min(1, dt * 4); s.a += s.v * dt; s.g.setAttribute('transform', `rotate(${s.a.toFixed(1)} 60 60)`); });
+    if (document.documentElement.classList.contains('compass-on')) {
+      cx += (tx - cx) * Math.min(1, dt * 14); cy += (ty - cy) * Math.min(1, dt * 14);
+      comp2.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0)`;
+      // needle points at the next section heading below the viewport centre
+      const y = scrollY; let target = null;
+      for (const sc of L.sec) if (sc.top - y > L.vh * .55) { target = [sc.cx, sc.top - y]; break; }
+      if (!target && L.foot - y > L.vh * .55) target = [L.vw / 2, L.foot - y];
+      if (target) { const a = Math.atan2(target[1] - cy, target[0] - cx) * 180 / Math.PI + 90; const d = ((a - ang + 540) % 360) - 180; ang += d * Math.min(1, dt * 6); ndl.style.transform = `rotate(${ang.toFixed(1)}deg)`; }
+    }
+    // place the hero lead card next to the projected business pin
+    if (curStage === '2') {
+      const w = leadc.offsetWidth, h = leadc.offsetHeight;
+      let x, yy;
+      if (S.anchor && S.anchor.vis && L.vw > 760) { x = clamp(S.anchor.x + 40, 20, L.vw - w - 20); yy = clamp(S.anchor.y - h * .5, 90, L.vh - h - 20); }
+      else { x = (L.vw - w) / 2; yy = L.vh - h - 24; }
+      x = Math.round(x); yy = Math.round(yy);
+      if (x !== lastAX || yy !== lastAY) { leadc.style.transform = `translate3d(${x}px,${yy}px,0)`; lastAX = x; lastAY = yy; }
+    }
+    if (S.ll) { const txt = `${Math.abs(S.ll[1]).toFixed(2)}° ${S.ll[1] >= 0 ? 'N' : 'S'} · ${Math.abs(S.ll[0]).toFixed(2)}° ${S.ll[0] <= 0 ? 'W' : 'E'}`; if (txt !== lastLL) { $('coords').textContent = txt; $('fcoords').textContent = txt; lastLL = txt; } }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const S = window.APEX;
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const IVORY = new THREE.Color(0xf1ebe1), OXIDE = new THREE.Color(0xa6493b), TAUPE = new THREE.Color(0x9c8c7e);
+
+// ---------- projection (lon/lat -> map plane, z up)
+const P = (lon, lat, z = 0) => new THREE.Vector3((lon + 98) * 0.072, (lat - 45) * 0.1, z);
+const unP = v => [v.x / 0.072 - 98, v.y / 0.1 + 45];
+
+// ---------- coarse North America outlines
+const LAND = [
+ [[-168,65.6],[-163,69],[-156.5,71.3],[-148,70.4],[-141,69.7],[-133,69.4],[-124,69.8],[-115,68],[-105,68],[-96,68.5],[-92,69.5],[-86,68.5],[-82,66.5],[-86,64],[-91,63],[-94.5,60],[-93,58.5],[-89,56.8],[-85,55.3],[-82.3,52.8],[-80,51.3],[-79,54.5],[-77.2,58],[-77.8,61.5],[-73.5,62.3],[-70,61],[-65,60],[-62,57],[-58,54],[-56,51.6],[-60,50.2],[-66.5,49.3],[-64.3,48.8],[-64.8,47.5],[-64,46.2],[-61,45.7],[-63.5,44.5],[-66,43.8],[-68.5,44.3],[-70.6,42.7],[-70,41.7],[-72,41.1],[-74,40.5],[-74.3,39.3],[-75.5,38.5],[-76,37],[-75.6,35.3],[-77.5,34.3],[-79.2,33.2],[-81,31.8],[-81.4,30.2],[-80.6,28.4],[-80.1,26.5],[-80.4,25.2],[-81.1,25.2],[-81.8,26.6],[-82.7,28],[-83.5,29.7],[-85,29.7],[-86.5,30.4],[-88.5,30.3],[-89.4,29.2],[-91,29.2],[-93.8,29.7],[-95,29.2],[-97,27.8],[-97.4,25.9],[-97.7,23.5],[-97.3,21.5],[-96.3,19.3],[-94.6,18.2],[-92,18.6],[-90.5,19.7],[-90.3,21],[-87.5,21.5],[-87.3,20],[-88,18.4],[-88.3,16.2],[-85.5,15.9],[-83.4,15],[-83.6,12.5],[-83.3,10.5],[-81.5,9.1],[-79.5,9.5],[-77.7,8.6],[-80,7.3],[-82,8.3],[-84.8,9.8],[-85.8,11],[-87.5,12.9],[-89.5,13.5],[-91.7,14.3],[-94,16],[-96.5,15.7],[-99,16.6],[-102,17.9],[-104.8,19.3],[-105.7,20.6],[-105.3,22.4],[-107.5,24.8],[-109,26],[-110.8,27.9],[-112.5,30],[-114.7,31.7],[-113.1,29.3],[-112.2,27.5],[-110.5,24.3],[-109.8,23],[-111.4,24.4],[-112.3,26.2],[-114.1,28],[-115.7,30.3],[-117.1,32.6],[-118.5,34],[-120.6,34.6],[-121.9,36.6],[-122.5,37.8],[-123.8,39.5],[-124.3,41.5],[-124.1,44],[-124,46.3],[-124.7,48.3],[-123,48.8],[-125,50.2],[-127.8,51],[-128.6,53.2],[-130.4,54.5],[-132.5,56.2],[-134.5,58],[-136.5,58.5],[-139.5,59.5],[-143,60.1],[-146.5,60.6],[-149.5,60.3],[-151.5,59.4],[-154,57.8],[-156.5,56.4],[-159.5,55.4],[-163,54.8],[-160,56.4],[-157.6,58.4],[-161.8,58.7],[-164.4,60.3],[-165.4,61.8],[-164.8,63.2],[-161.2,64.4],[-164.8,64.6],[-166.8,65.3]],
+ [[-59.4,47.7],[-57.8,51.5],[-55.5,51.6],[-55.6,49.8],[-53.5,49.3],[-52.7,47.6],[-53.7,46.7],[-55.8,47.1],[-58.5,47.2]],
+ [[-123.3,48.4],[-125.3,48.6],[-128.4,50.6],[-127.2,50.9],[-124.7,49.9]],
+ [[-84.9,21.9],[-82.5,22.7],[-80,23.1],[-77,21.5],[-74.2,20.2],[-77.7,19.9],[-80.5,21.7],[-83,21.9]],
+ [[-80,63],[-75,64.5],[-65,62.5],[-62,66.5],[-68,70],[-76,72.5],[-88,73],[-82,69.8],[-78,67],[-74,66]],
+ [[-118,70],[-105,69],[-101,70.5],[-106,73],[-117,72.5],[-119,71]]
+];
+function inPoly(x, y, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c; } return c; }
+const onLand = (lon, lat) => LAND.some(p => inPoly(lon, lat, p));
+function elev(lon, lat) {
+  const rk = Math.exp(-Math.pow(lon + 114 + (lat - 45) * 0.45, 2) / 30) * (lat > 28 && lat < 66 ? 1 : .2) * 0.07;
+  const ap = Math.exp(-Math.pow(lon + 80 - (lat - 37) * 0.8, 2) / 6) * (lat > 33 && lat < 46 ? 1 : 0) * 0.025;
+  const n = (Math.sin(lon * .9) * Math.cos(lat * 1.1) + Math.sin(lon * 2.3 + lat * 1.7) * .5) * 0.006;
+  return Math.max(0, rk + ap + n);
+}
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+function initAtlas() {
+  const canvas = document.getElementById('atlas');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }); }
+  catch (e) { document.documentElement.classList.add('no-gl'); return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setClearColor(0x12100e, 1);
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x12100e, 6, 16);
+  const camera = new THREE.PerspectiveCamera(36, 1, .005, 60);
+  scene.add(new THREE.HemisphereLight(0xf1ebe1, 0x12100e, 1.4));
+  const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-2, -3, 5); scene.add(key);
+
+  // dot field
+  const pos = [], rand = [], size = [];
+  const add = (lon, lat, s) => { if (!onLand(lon, lat)) return; const v = P(lon, lat, elev(lon, lat)); pos.push(v.x, v.y, v.z); rand.push(rnd()); size.push(s); };
+  for (let lat = 7; lat <= 74; lat += .5) for (let lon = -170; lon <= -52; lon += .7) add(lon + (rnd() - .5) * .35, lat + (rnd() - .5) * .25, .013 + rnd() * .006);
+  [[-114.07, 51.05], [-79.38, 43.65]].forEach(([cl, ct]) => { for (let lat = ct - 3.5; lat <= ct + 3.5; lat += .17) for (let lon = cl - 5; lon <= cl + 5; lon += .24) { const d = Math.hypot((lon - cl) / 5, (lat - ct) / 3.5); if (d < 1 && rnd() > d * .55) add(lon + (rnd() - .5) * .12, lat + (rnd() - .5) * .09, .0075 + rnd() * .004); } });
+  const pg = new THREE.BufferGeometry();
+  pg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  pg.setAttribute('aRand', new THREE.Float32BufferAttribute(rand, 1));
+  pg.setAttribute('aSize', new THREE.Float32BufferAttribute(size, 1));
+  const pmat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: { uTime: { value: 0 }, uScale: { value: 500 }, uColor: { value: IVORY }, uFocus: { value: new THREE.Vector3(9, 9, 0) } },
+    vertexShader: `attribute float aRand; attribute float aSize; uniform float uTime; uniform float uScale; uniform vec3 uFocus; varying float vA;
+      void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); gl_Position = projectionMatrix * mv;
+        float tw = .62 + .38 * sin(uTime * 1.2 + aRand * 40.);
+        float f = 1. - smoothstep(0., .9, distance(position.xy, uFocus.xy));
+        vA = tw * (.55 + .45 * f) ;
+        gl_PointSize = clamp(aSize * uScale / -mv.z, 1.1, 14.); }`,
+    fragmentShader: `uniform vec3 uColor; varying float vA; void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5) discard; gl_FragColor = vec4(uColor, smoothstep(.5, .15, d) * vA * .92); }`
+  });
+  scene.add(new THREE.Points(pg, pmat));
+
+  // coastlines + graticule
+  const lineMat = new THREE.LineBasicMaterial({ color: TAUPE, transparent: true, opacity: .32 });
+  LAND.forEach(poly => { const pts = poly.map(([lo, la]) => P(lo, la, .002)); scene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), lineMat)); });
+  const gv = [];
+  for (let lon = -170; lon <= -50; lon += 10) for (let lat = 10; lat < 80; lat += 2) { gv.push(P(lon, lat, -.01), P(lon, lat + 2, -.01)); }
+  for (let lat = 10; lat <= 80; lat += 10) for (let lon = -170; lon < -50; lon += 2) { gv.push(P(lon, lat, -.01), P(lon + 2, lat, -.01)); }
+  scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(gv), new THREE.LineBasicMaterial({ color: TAUPE, transparent: true, opacity: .1 })));
+
+  // ---------- request pillars + arcs
+  const pillarGeo = new THREE.CylinderGeometry(.0032, .0032, 1, 8, 1, true); pillarGeo.translate(0, .5, 0); pillarGeo.rotateX(Math.PI / 2);
+  const mkPillarMat = () => new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uO: { value: 0 } },
+    vertexShader: 'varying float vY; void main(){ vY = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }',
+    fragmentShader: 'uniform float uO; varying float vY; void main(){ gl_FragColor = vec4(.945,.92,.88, (1. - vY) * uO); }' });
+  const ringGeo = new THREE.RingGeometry(.012, .016, 40);
+  const CITIES = [[-123.1, 49.3], [-114.1, 51.0], [-113.5, 53.5], [-97.1, 49.9], [-79.4, 43.7], [-73.6, 45.5], [-63.6, 44.6], [-122.3, 47.6], [-122.4, 37.8], [-118.2, 34.1], [-112.1, 33.4], [-105, 39.7], [-96.8, 32.8], [-95.4, 29.8], [-87.6, 41.9], [-84.4, 33.7], [-80.2, 25.8], [-74, 40.7], [-71.1, 42.4], [-93.3, 45], [-90.2, 38.6], [-86.8, 36.2], [-81.7, 41.5], [-75.2, 39.95]];
+  function makeEvent(thick) {
+    const pillar = new THREE.Mesh(pillarGeo, mkPillarMat()); scene.add(pillar);
+    const arcMat = new THREE.MeshBasicMaterial({ color: IVORY, transparent: true, opacity: 0, depthWrite: false });
+    const arc = new THREE.Mesh(new THREE.BufferGeometry(), arcMat); scene.add(arc);
+    const pin = new THREE.Mesh(new THREE.SphereGeometry(thick ? .009 : .0075, 16, 12), new THREE.MeshStandardMaterial({ color: OXIDE, roughness: .35, metalness: .2, transparent: true, opacity: 0 })); scene.add(pin);
+    const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: OXIDE, transparent: true, opacity: 0, depthWrite: false })); scene.add(ring);
+    return { pillar, arc, pin, ring, thick, t: -1, n: 0 };
+  }
+  function place(ev, R, B) {
+    ev.R = R; ev.B = B;
+    const mid = R.clone().add(B).multiplyScalar(.5); mid.z += R.distanceTo(B) * .7 + .04;
+    const curve = new THREE.QuadraticBezierCurve3(R.clone().setZ(R.z + .002), mid, B.clone().setZ(B.z + .006));
+    ev.arc.geometry.dispose();
+    ev.arc.geometry = new THREE.TubeGeometry(curve, 64, ev.thick ? .0022 : .0013, 6, false);
+    ev.n = ev.arc.geometry.index.count;
+    ev.arc.geometry.setDrawRange(0, 0);
+    ev.pillar.position.copy(R); ev.pin.position.copy(B).setZ(B.z + .008); ev.ring.position.copy(B).setZ(B.z + .003);
+  }
+  function drawEvent(ev, k, fade) {
+    const rise = Math.min(1, k / .25), arcK = THREE.MathUtils.clamp((k - .22) / .3, 0, 1), pinK = THREE.MathUtils.clamp((k - .5) / .12, 0, 1);
+    ev.pillar.scale.set(1, 1, Math.max(.001, .16 * (1 - Math.pow(1 - rise, 3))));
+    ev.pillar.material.uniforms.uO.value = .85 * fade;
+    ev.arc.geometry.setDrawRange(0, Math.floor(ev.n * arcK / 6) * 6);
+    ev.arc.material.opacity = .85 * fade;
+    ev.pin.material.opacity = pinK * fade;
+    const rk = THREE.MathUtils.clamp((k - .5) / .5, 0, 1);
+    ev.ring.scale.setScalar(1 + rk * 3.2); ev.ring.material.opacity = (1 - rk) * .9 * pinK * fade;
+  }
+  const pool = Array.from({ length: 9 }, () => makeEvent(false));
+  let spawnT = 0;
+  const near = (lon, lat, r) => { for (let i = 0; i < 20; i++) { const lo = lon + (rnd() - .5) * r * 2, la = lat + (rnd() - .5) * r * 1.3; if (onLand(lo, la)) return [lo, la]; } return [lon, lat]; };
+  function spawn(focusCalgary) {
+    const ev = pool.find(e => e.t < 0); if (!ev) return;
+    const c = focusCalgary ? [-114.07, 51.05] : CITIES[Math.floor(rnd() * CITIES.length)];
+    const [lo, la] = near(c[0], c[1], focusCalgary ? 1.2 : .9), [bl, bt] = near(lo, la, focusCalgary ? .9 : 1.6);
+    place(ev, P(lo, la, elev(lo, la)), P(bl, bt, elev(bl, bt))); ev.t = 0;
+  }
+  // the one hero lead (Calgary): request -> one roofer
+  const CAL = P(-114.07, 51.05, elev(-114.07, 51.05));
+  const heroEv = makeEvent(true);
+  place(heroEv, P(-114.4, 50.95, elev(-114.4, 50.95)), P(-113.65, 51.18, elev(-113.65, 51.18)));
+
+  // ---------- journey route (near Toronto)
+  const TOR = P(-79.38, 43.65);
+  const stopsV = [[-.36, -.14], [-.22, -.02], [-.09, .09], [.05, .03], [.17, .13], [.3, .05]].map(([dx, dy]) => new THREE.Vector3(TOR.x + dx, TOR.y + dy, .006));
+  const route = new THREE.CatmullRomCurve3(stopsV, false, 'catmullrom', .4);
+  const routeGeo = new THREE.TubeGeometry(route, 240, .0024, 6, false);
+  const routeMesh = new THREE.Mesh(routeGeo, new THREE.MeshBasicMaterial({ color: IVORY, transparent: true, opacity: 0, depthWrite: false })); scene.add(routeMesh);
+  const routeN = routeGeo.index.count;
+  const stopMeshes = stopsV.map(v => { const g = new THREE.Group(); const ring = new THREE.Mesh(new THREE.RingGeometry(.013, .017, 40), new THREE.MeshBasicMaterial({ color: IVORY, transparent: true, opacity: 0 })); const dot = new THREE.Mesh(new THREE.CircleGeometry(.009, 30), new THREE.MeshBasicMaterial({ color: OXIDE, transparent: true, opacity: 0 })); g.add(ring, dot); g.position.copy(v); scene.add(g); return { g, ring, dot }; });
+
+  // ---------- checker pin
+  const pinG = new THREE.Group();
+  const pinMat = new THREE.MeshStandardMaterial({ color: OXIDE, roughness: .3, metalness: .35 });
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(.018, .07, 28), pinMat); cone.rotation.x = -Math.PI / 2; cone.position.z = .035;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.024, 32, 24), pinMat); head.position.z = .08;
+  pinG.add(cone, head); pinG.visible = false; scene.add(pinG);
+  const ripples = [0, 1, 2].map(() => { const m = new THREE.Mesh(new THREE.RingGeometry(.02, .024, 48), new THREE.MeshBasicMaterial({ color: IVORY, transparent: true, opacity: 0, depthWrite: false })); scene.add(m); return m; });
+
+  // ---------- camera choreography
+  const camPos = new THREE.Vector3(0, -6.2, 6), camLook = new THREE.Vector3(0, -.2, 0), tPos = new THREE.Vector3(), tLook = new THREE.Vector3();
+  const lerpV = (a, b, k) => a.clone().lerp(b, k);
+  const ease = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+  let aspect = 1;
+  function continent(m = 1) { return [new THREE.Vector3(-.3, -6.2 * m, 6.1 * m), new THREE.Vector3(-.3, -.15, 0)]; }
+  function targets(t) {
+    const m = aspect < .8 ? 1.75 : aspect < 1.2 ? 1.25 : 1;
+    if (S.mode === 'hero') {
+      const p = S.heroP, [p0, l0] = continent(m);
+      const p1 = CAL.clone().add(new THREE.Vector3(.05, -1.25 * Math.min(m, 1.3), 1.3 * Math.min(m, 1.3))), l1 = CAL.clone().add(new THREE.Vector3(.05, .12, 0));
+      const mid = heroEv.R.clone().add(heroEv.B).multiplyScalar(.5);
+      const p2 = mid.clone().add(new THREE.Vector3(.02, -.62 * Math.min(m, 1.25), .5 * Math.min(m, 1.25))), l2 = mid.clone().add(new THREE.Vector3(.06, .05, .02));
+      if (p < .46) { const k = ease(Math.max(0, p - .04) / .42); tPos.copy(lerpV(p0, p1, k)); tLook.copy(lerpV(l0, l1, k)); }
+      else { const k = ease(Math.min(1, (p - .46) / .32)); tPos.copy(lerpV(p1, p2, k)); tLook.copy(lerpV(l1, l2, k)); }
+      tPos.x += Math.sin(t * .07) * .12 * (1 - p);
+    } else if (S.mode === 'journey') {
+      const u = THREE.MathUtils.clamp(S.journeyP * 1.15 - .04, 0, 1), pt = route.getPointAt(u);
+      tLook.copy(pt); tPos.copy(pt).add(new THREE.Vector3(-.12, -.62 * Math.min(m, 1.3), .55 * Math.min(m, 1.3)));
+    } else if (S.mode === 'checker' && S.pin) {
+      const v = P(S.pin.lon, S.pin.lat); tLook.copy(v); tPos.copy(v).add(new THREE.Vector3(-.3, -1.6 * m, 1.5 * m));
+    } else {
+      const [p0, l0] = continent(m * (S.mode === 'checker' ? 1 : 1.08));
+      tPos.copy(p0); tLook.copy(l0);
+      tPos.x += Math.sin(t * .05) * 1.2; tPos.y += Math.cos(t * .04) * .3;
+      if (S.mode === 'checker' && aspect > 1.1) { tPos.x -= 1.3; tLook.x -= 1.3; }
+    }
+    // pointer parallax scaled by distance
+    const dist = tPos.distanceTo(tLook);
+    tPos.x += S.nx * .06 * dist; tPos.y += S.ny * .04 * dist;
+  }
+
+  // ---------- render loop
+  const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3(), ndc = new THREE.Vector2();
+  function resize() {
+    const w = innerWidth, h = innerHeight; aspect = w / h;
+    renderer.setSize(w, h, false); camera.aspect = aspect; camera.fov = aspect < .8 ? 48 : 36; camera.updateProjectionMatrix();
+    pmat.uniforms.uScale.value = renderer.getDrawingBufferSize(new THREE.Vector2()).y / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
+  }
+  addEventListener('resize', resize); resize();
+  let last = performance.now(), T = 0, skip = 0, indT = 0;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (S.mode === 'industries') { if (!indT) indT = now; } else indT = 0;
+    if (document.hidden || (indT && now - indT > 1100) || S.menuOpen) { last = now; return; }
+    if ((S.mode === 'returns' || S.mode === 'pricing') && (++skip & 1)) return;
+    const dt = Math.max(0, Math.min(.05, (now - last) / 1000)); last = now; T += RM ? 0 : dt;
+    pmat.uniforms.uTime.value = T;
+    targets(T);
+    const k = RM ? 1 : 1 - Math.exp(-dt * 2.6);
+    camPos.lerp(tPos, k); camLook.lerp(tLook, k);
+    camera.position.copy(camPos); camera.up.set(0, 0, 1); camera.lookAt(camLook);
+    pmat.uniforms.uFocus.value.copy(S.mode === 'journey' ? camLook : S.mode === 'hero' && S.heroP > .2 ? CAL : new THREE.Vector3(9, 9, 0));
+
+    // ambient request events
+    const heroZoom = S.mode === 'hero' && S.heroP > .2 && S.heroP < .7;
+    if (!RM) { spawnT -= dt; if (spawnT <= 0) { spawn(heroZoom && rnd() < .8); spawnT = heroZoom ? .35 : .8; } }
+    const evFade = S.mode === 'journey' ? .25 : 1;
+    pool.forEach(ev => { if (ev.t < 0) return; ev.t += dt / 3.4; if (ev.t >= 1) { ev.t = -1; drawEvent(ev, 0, 0); return; } const f = ev.t < .78 ? 1 : 1 - (ev.t - .78) / .22; drawEvent(ev, Math.min(1, ev.t / .78), f * evFade); });
+    // the hero lead
+    const hp = S.mode === 'hero' ? THREE.MathUtils.clamp((S.heroP - .5) / .22, 0, 1) : 0;
+    drawEvent(heroEv, hp, hp > 0 ? 1 : 0);
+    if (hp >= 1 && !RM) { const pr = (T * .6) % 1; heroEv.ring.scale.setScalar(1 + pr * 3.2); heroEv.ring.material.opacity = (1 - pr) * .9; }
+    // journey route
+    const jOn = S.mode === 'journey' ? 1 : 0;
+    routeMesh.material.opacity += (jOn * .95 - routeMesh.material.opacity) * Math.min(1, dt * 5);
+    const ju = THREE.MathUtils.clamp(S.journeyP * 1.15 - .04, 0, 1);
+    routeGeo.setDrawRange(0, Math.floor(routeN * ju / 6) * 6);
+    stopMeshes.forEach((s, i) => { const reached = ju >= i / 5 - .01; s.ring.material.opacity = routeMesh.material.opacity * .9; s.dot.material.opacity = reached ? routeMesh.material.opacity : 0; const pulse = reached && !RM ? 1 + .15 * Math.sin(T * 4 + i) : 1; s.g.scale.setScalar(pulse); });
+    // checker pin drop
+    if (S.pin) {
+      const age = (performance.now() - S.pin.t) / 1000, v = P(S.pin.lon, S.pin.lat, elev(S.pin.lon, S.pin.lat));
+      pinG.visible = true;
+      const drop = RM ? 1 : Math.min(1, age / .7), bounce = drop < 1 ? (1 - drop * drop) * .9 : Math.abs(Math.sin((age - .7) * 9)) * Math.exp(-(age - .7) * 5) * .05;
+      pinG.position.set(v.x, v.y, v.z + bounce);
+      pinG.rotation.z = T * .8;
+      ripples.forEach((r, i) => { r.position.set(v.x, v.y, v.z + .003); const pr = ((age * .55 + i / 3) % 1); r.scale.setScalar(1 + pr * 5); r.material.opacity = age > .7 ? (1 - pr) * .7 : 0; });
+    }
+    renderer.render(scene, camera);
+    // hand the hero business pin's screen position to the page
+    if (S.mode === 'hero') { const sp = heroEv.B.clone().project(camera); S.anchor = { x: (sp.x * .5 + .5) * innerWidth, y: (-sp.y * .5 + .5) * innerHeight, vis: sp.z < 1 }; }
+    // pointer -> lon/lat readout
+    ndc.set(S.nx, S.ny); ray.setFromCamera(ndc, camera);
+    if (ray.ray.intersectPlane(plane, hit)) S.ll = unP(hit);
+  }
+  requestAnimationFrame(frame);
+}
+
+// ---------- glazed ceramic tile wall
+function initWall() {
+  const canvas = document.getElementById('wall'), box = document.getElementById('wallbox');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { return; }
+  document.documentElement.classList.add('gl-wall');
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = .92;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), .04).texture;
+  const keyL = new THREE.DirectionalLight(0xfff6ee, 1.6); keyL.position.set(-3, 4, 6); scene.add(keyL);
+  scene.add(new THREE.HemisphereLight(0xf1ebe1, 0x2a211b, .7));
+  const camera = new THREE.PerspectiveCamera(28, 1, .1, 100);
+  const wall = new THREE.Group(); scene.add(wall);
+  const tileGeo = new RoundedBoxGeometry(1, 1, .26, 5, .16);
+  const decalGeo = new THREE.PlaneGeometry(.86, .86);
+
+  function decalTexture(it, dark) {
+    const c = document.createElement('canvas'); c.width = c.height = 512;
+    const g = c.getContext('2d');
+    const icon = new Path2D(it.d);
+    g.save(); g.translate(256 - 24 * 7.2 / 2, 66); g.scale(7.2, 7.2); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.lineWidth = 1.9; g.strokeStyle = dark ? 'rgba(241,235,225,.22)' : 'rgba(255,255,255,.75)'; g.translate(-.22, -.22); g.stroke(icon);
+    g.translate(.44, .44); g.strokeStyle = dark ? 'rgba(0,0,0,.65)' : 'rgba(80,60,46,.35)'; g.stroke(icon);
+    g.translate(-.22, -.22); g.lineWidth = 1.5; g.strokeStyle = dark ? '#d8cfc2' : '#5a4638'; g.stroke(icon);
+    g.restore();
+    g.fillStyle = dark ? '#d8cfc2' : '#4a3a2f'; g.textAlign = 'center';
+    g.font = '600 46px "Cormorant Garamond", Garamond, "Times New Roman", serif';
+    const words = it.name.replace('Niche Insurance — ', '').split(' '); const lines = []; let line = '';
+    words.forEach(w => { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > 440 && line) { lines.push(line); line = w; } else line = t; }); lines.push(line);
+    lines.slice(0, 3).forEach((l, i) => g.fillText(l, 256, 330 + i * 48 - (Math.min(lines.length, 3) - 1) * 20));
+    g.font = '400 25px Jost, Arial, sans-serif'; g.fillStyle = dark ? 'rgba(216,207,194,.7)' : 'rgba(74,58,47,.7)';
+    g.fillText(it.range, 256, 476);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4; return tex;
+  }
+
+  const tiles = [];
+  function build() {
+    IND.forEach((it, i) => {
+      const dark = it.cat === 'high';
+      const base = dark ? new THREE.Color(0x3b2d24) : new THREE.Color(0xe9e1d3);
+      base.offsetHSL((rnd() - .5) * .01, (rnd() - .5) * .04, (rnd() - .5) * .04);
+      const mat = new THREE.MeshPhysicalMaterial({ color: base, roughness: .5, clearcoat: .55, clearcoatRoughness: .38, envMapIntensity: dark ? .32 : .42, sheen: .25, sheenColor: new THREE.Color(0xf1ebe1) });
+      const mesh = new THREE.Mesh(tileGeo, mat);
+      const dmat = new THREE.MeshStandardMaterial({ map: decalTexture(it, dark), transparent: true, roughness: .7, envMapIntensity: .25, depthWrite: false });
+      const decal = new THREE.Mesh(decalGeo, dmat); decal.position.z = .131;
+      const g = new THREE.Group(); g.add(mesh, decal); g.userData = { i, base: base.clone(), off: 0, hov: 0, enter: 0, jr: (rnd() - .5) * .05, jz: (rnd() - .5) * .03 };
+      mesh.userData.tile = g; decal.userData.tile = g;
+      wall.add(g); tiles.push(g);
+    });
+  }
+  let cols = 6, cell = 1.16, cw = 1, ch = 1;
+  function layout() {
+    const w = box.clientWidth; cols = w < 640 ? 3 : w < 980 ? 4 : 6;
+    const rows = Math.ceil(IND.length / cols);
+    const hpx = Math.round(w / cols * rows * .96);
+    renderer.setSize(w, hpx, false); canvas.style.height = hpx + 'px'; cw = w; ch = hpx;
+    camera.aspect = w / hpx; camera.updateProjectionMatrix();
+    tiles.forEach((g, i) => { const c = i % cols, r = Math.floor(i / cols); g.userData.home = new THREE.Vector3((c - (cols - 1) / 2) * cell, -(r - (rows - 1) / 2) * cell, 0); });
+    const gw = cols * cell, gh = rows * cell;
+    const fitH = gh / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2), fitW = gw / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) / camera.aspect;
+    camera.position.set(0, 0, Math.max(fitH, fitW) * 1.03 + .4); camera.lookAt(0, 0, 0);
+  }
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(-9, -9);
+  let hovered = null, inside = false, visible = false;
+  canvas.addEventListener('pointermove', e => { const r = canvas.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); inside = true; });
+  canvas.addEventListener('pointerleave', () => { inside = false; ndc.set(-9, -9); });
+  canvas.addEventListener('click', e => { const r = canvas.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(wall.children, true)[0]; const g = hit ? hit.object.userData.tile : hovered; if (g) S.pickTile(g.userData.i); });
+  new IntersectionObserver(es => es.forEach(e => { visible = e.isIntersecting; })).observe(box);
+  const doBuild = () => { build(); layout(); addEventListener('resize', layout); requestAnimationFrame(frame); };
+  (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve()).then(doBuild);
+  let last = performance.now(), T = 0;
+  const DIM = new THREE.Color(0x2a211b), TV = new THREE.Vector3(), UP = new THREE.Vector3(0, .5, 0);
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.max(0, Math.min(.05, (now - last) / 1000)); last = now;
+    if (!visible || document.hidden) return;
+    T += RM ? 0 : dt;
+    const wp = S.wallP;
+    wall.rotation.x = THREE.MathUtils.lerp(-.75, -.1, ease3(wp)) + (inside ? -ndc.y * .05 : 0);
+    wall.rotation.y = inside ? ndc.x * .07 : Math.sin(T * .3) * .03;
+    // hover pick
+    ray.setFromCamera(ndc, camera);
+    const hit = inside ? ray.intersectObjects(wall.children, true)[0] : null;
+    const h = hit ? hit.object.userData.tile : null;
+    if (h !== hovered) { hovered = h; canvas.style.cursor = h ? 'pointer' : 'default'; if (!h) S.onTile(-1); }
+    tiles.forEach((g, i) => {
+      const u = g.userData, on = S.filter === 'all' || IND[i].cat === S.filter;
+      u.off += ((on ? 0 : 1) - u.off) * Math.min(1, dt * 5);
+      u.hov += ((g === hovered ? 1 : 0) - u.hov) * Math.min(1, dt * 9);
+      u.enter += ((wp > .04 + (i % cols) * .015 + Math.floor(i / cols) * .02 ? 1 : 0) - u.enter) * Math.min(1, dt * (RM ? 99 : 3.2));
+      const wave = RM ? 0 : Math.sin(T * .9 + (i % cols) * .55 + Math.floor(i / cols) * .4) * .035;
+      g.position.copy(u.home); g.position.z = wave + u.jz + u.hov * .32 - u.off * .4 - (1 - u.enter) * 2.2;
+      g.rotation.set(u.off * .55 + u.hov * -ndc.y * .25, u.hov * ndc.x * .3, u.jr);
+      g.scale.setScalar((1 - u.off * .12 + u.hov * .07) * (.6 + .4 * u.enter));
+      g.children[0].material.color.copy(u.base).lerp(DIM, u.off * .75);
+      g.children[1].material.opacity = (1 - u.off * .7) * u.enter;
+    });
+    renderer.render(scene, camera);
+    if (hovered) { const p = hovered.getWorldPosition(TV).add(UP).project(camera); S.onTile(hovered.userData.i, (p.x * .5 + .5) * cw + canvas.offsetLeft, (-p.y * .5 + .5) * ch + canvas.offsetTop); }
+  }
+}
+const ease3 = k => 1 - Math.pow(1 - THREE.MathUtils.clamp(k, 0, 1), 3);
+
+initAtlas();
+initWall();
+</script>

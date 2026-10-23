@@ -1,0 +1,149 @@
+<title>APEX Obsidian</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#0d0c0a;--fg:#e1e4e8;--muted:#a59d8c;--gold:#c4cad3;--gold2:#eef1f5;--line:rgba(196,202,211,.16);color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.serif{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+a{color:var(--gold2)}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding-block:32px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--fg);font-weight:600;letter-spacing:.32em;font-size:15px}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:32px;font-size:14px}
+nav a{color:#b3b9c3;text-decoration:none}
+.pill{border-radius:999px;text-decoration:none;font-size:15px;padding:16px 32px;display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box}
+.solid{background:var(--gold);color:var(--bg);font-weight:600}.solid:hover{background:var(--gold2);color:var(--bg)}
+.ghost{border:1px solid rgba(225,228,232,.22);color:var(--fg)}.ghost:hover{background:rgba(196,202,211,.1);color:var(--fg)}
+nav .ghost{padding:12px 22px;color:var(--gold2);border-color:rgba(196,202,211,.5)}
+.hero{padding-block:130px 90px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:30px}
+.hero h1{margin:0;max-width:1000px;font-size:clamp(50px,7.2vw,104px);line-height:1;letter-spacing:-.015em;text-wrap:balance}
+.hero h1 em,h2 em{color:var(--gold2)}
+.hero p{margin:0;max-width:640px;font-size:19px;line-height:1.65;color:var(--muted)}
+.feat{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:28px;margin-top:64px;perspective:900px}
+.feat figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:18px;width:150px}
+.feat figcaption{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.tile{display:grid;place-items:center;background:linear-gradient(150deg,#333840 0%,#17191d 45%,#0b0c0e 100%);border:1px solid rgba(196,202,211,.26);box-shadow:inset 0 1px 0 rgba(213,217,222,.28),inset 0 -2px 0 rgba(0,0,0,.7),0 14px 24px -10px rgba(0,0,0,.9)}
+.tile svg{filter:drop-shadow(0 1px 0 rgba(0,0,0,.9)) drop-shadow(0 0 8px rgba(196,202,211,.25))}
+.tile.lg{width:112px;height:112px;border-radius:30px;box-shadow:inset 0 1px 0 rgba(213,217,222,.3),inset 0 -2px 0 rgba(0,0,0,.7),0 30px 50px -18px rgba(0,0,0,.95),0 0 60px -20px rgba(196,202,211,.4)}
+.tile.sm{width:52px;height:52px;border-radius:15px;flex:none;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border-block:1px solid var(--line)}
+.facts div{padding:44px 28px;display:flex;flex-direction:column;gap:10px}
+.facts div+div{border-left:1px solid var(--line)}
+.facts b{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:60px;line-height:1;color:var(--gold2)}
+.facts span{font-size:14px;color:var(--muted)}
+section.block{padding-block:130px 110px;display:flex;flex-direction:column;gap:56px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
+.head h2{margin:12px 0 0;font-size:clamp(40px,4.6vw,64px);line-height:1.05;text-wrap:balance}
+.head p{margin:0;max-width:420px;font-size:16px;line-height:1.65;color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:48px 72px}
+.colhead{display:flex;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid rgba(196,202,211,.3);font-size:12px;letter-spacing:.22em;text-transform:uppercase}
+.colhead span:last-child{color:var(--muted);letter-spacing:.1em}
+.row{display:flex;align-items:center;gap:20px;padding:15px 8px;border-bottom:1px solid rgba(196,202,211,.1);text-decoration:none;color:var(--fg)}
+.row:hover{background:rgba(196,202,211,.05);color:var(--fg)}
+.row:hover .tile{transform:translateY(-3px)}
+.row .nm{flex:1;min-width:0;font-size:17px;font-weight:500}
+.row .val{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:56px}
+.steps div{display:flex;flex-direction:column;gap:16px;padding-top:28px;border-top:1px solid rgba(196,202,211,.3)}
+.steps i{font-family:'Cormorant Garamond',Georgia,serif;font-size:40px;color:var(--gold)}
+.steps h3{margin:0;font-size:20px;font-weight:600}.steps p{margin:0;font-size:16px;line-height:1.7;color:var(--muted)}
+.cta{margin-bottom:110px;padding:84px max(24px,6vw);border:1px solid rgba(196,202,211,.32);border-radius:28px;background:radial-gradient(120% 140% at 50% 0%,#14161a 0%,var(--bg) 70%);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:48px}
+.cta h2{margin:0;font-size:clamp(40px,5vw,68px);line-height:1.02}
+.cta p{margin:16px 0 0;font-size:17px;line-height:1.65;color:var(--muted);max-width:460px}
+form{flex:1 1 360px;display:flex;flex-direction:column;gap:12px}
+label{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.field{display:flex;flex-wrap:wrap;gap:12px}
+input{flex:1 1 220px;min-height:52px;box-sizing:border-box;padding:0 20px;border-radius:999px;border:1px solid rgba(225,228,232,.2);background:rgba(255,255,255,.03);color:var(--fg);font:inherit;font-size:15px}
+button{min-height:52px;padding:0 28px;border-radius:999px;border:0;background:var(--gold);color:var(--bg);font:inherit;font-weight:600;font-size:15px;cursor:pointer}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-block:32px 48px;border-top:1px solid var(--line);font-size:13px;color:#8f8778}
+@media (max-width:640px){.facts div+div{border-left:0;border-top:1px solid var(--line)}}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1d5da"/><stop offset=".45" stop-color="#c4cad3"/><stop offset="1" stop-color="#57606e"/></linearGradient></defs></svg>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M3 24L14 4l11 20M8.5 16h11" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>APEX</a>
+    <nav><a href="#index">Industries</a><a href="#method">Method</a><a href="#contact" class="pill ghost">Request access</a></nav>
+  </header>
+  <section class="hero" id="top">
+    <div class="eyebrow">Lead intelligence · 33 industries</div>
+    <h1 class="serif">Qualified buyers, delivered to the firms that <em>close them.</em></h1>
+    <p>Verified, high-intent leads across 33 industries — from industrial water treatment to the neighborhood roofer — priced by what a client is actually worth to you.</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px"><a class="pill solid" href="#contact">Request your market</a><a class="pill ghost" href="#index">Browse the index</a></div>
+    <div class="feat" id="feat"></div>
+  </section>
+  <section class="facts">
+    <div><b>33</b><span>Industries in the index</span></div>
+    <div><b>12</b><span>High-ticket sectors with six- to eight-figure contracts</span></div>
+    <div><b>$50 – $53M</b><span>Lead value range across the index</span></div>
+  </section>
+  <section class="block" id="index">
+    <div class="head"><div><div class="eyebrow">The Index</div><h2 class="serif">Every market we serve, <em>by value.</em></h2></div><p>Each industry has its own buyer profile, seasonality and lead price. Choose yours to see what a qualified lead looks like.</p></div>
+    <div class="cols" id="cols"></div>
+  </section>
+  <section class="block" id="method" style="border-top:1px solid var(--line);padding-block:110px">
+    <div class="head"><div><div class="eyebrow">Method</div><h2 class="serif">Three steps from market to signed client.</h2></div></div>
+    <div class="steps">
+      <div><i>I.</i><h3>Define your market</h3><p>Industry, territory and deal size. We map it against seasonal demand so volume lands before your peak.</p></div>
+      <div><i>II.</i><h3>We source and verify</h3><p>Every lead is screened for intent, budget and timeline before it reaches you. [Describe your verification process.]</p></div>
+      <div><i>III.</i><h3>Delivered to your desk</h3><p>Leads arrive in your CRM, inbox or calendar the moment they qualify, with context for the first call.</p></div>
+    </div>
+  </section>
+  <section class="cta" id="contact">
+    <div style="flex:1 1 420px"><h2 class="serif">Start with <em>your market.</em></h2><p>Tell us where you sell. We'll come back with expected volume and lead pricing for your territory.</p></div>
+    <form onsubmit="event.preventDefault()"><label for="em">Work email</label><div class="field"><input id="em" type="email" placeholder="you@company.com"><button type="submit">Request access</button></div></form>
+  </section>
+  <footer><span style="letter-spacing:.28em">APEX</span><span>Lead intelligence for 33 industries</span></footer>
+</div>
+<script>
+const IND = [
+  ["Executive Recruitment","high",125000,175000,"M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2"],
+  ["Industrial Water Treatment","high",1000000,14000000,"M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0"],
+  ["Commercial Security Systems","high",500000,15000000,"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"],
+  ["Industrial Automation & Manufacturing","high",5300000,53000000,"M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"],
+  ["Commercial Kitchen Equipment","high",50000,355000,"M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12"],
+  ["Specialized Medical Staffing","high",25000,100000,"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8"],
+  ["Commercial HVAC & Refrigeration","high",65000,3000000,"M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2"],
+  ["Custom Contract Manufacturing","high",100000,5000000,"M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2"],
+  ["Commercial Real Estate","high",25000,100000,"M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1"],
+  ["Specialty Medical (Cosmetic/Dental)","high",3000,43000,"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"],
+  ["Commercial Printing & Fulfillment","high",50000,500000,"M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z"],
+  ["Niche Insurance — Cyber Liability","high",30000,100000,"M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2"],
+  ["Roofing","std",500,5000,"M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6"],
+  ["Landscaping","std",300,3000,"M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8"],
+  ["Home Cleaning (Interior)","std",100,1000,"M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6"],
+  ["Home Cleaning (Exterior)","std",150,1500,"M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2"],
+  ["Plumbers","std",200,2000,"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"],
+  ["Electricians","std",300,3000,"M13 2L4 14h7l-1 8 9-12h-7z"],
+  ["HVAC","std",250,2500,"M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0"],
+  ["Dentists","std",150,1500,"M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z"],
+  ["Lawyers","std",500,5000,"M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z"],
+  ["Real Estate Agents","std",300,3000,"M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01"],
+  ["Gyms & Fitness","std",50,500,"M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12"],
+  ["Auto Repair","std",200,2000,"M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Pest Control","std",300,2000,"M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2"],
+  ["Hair Salons & Barbershops","std",50,500,"M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4"],
+  ["Insurance Agents","std",400,3000,"M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1"],
+  ["Healthcare Clinics","std",200,1500,"M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2"],
+  ["Moving Companies","std",400,4000,"M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Personal Trainers","std",100,1000,"M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5"],
+  ["Photographers","std",300,3000,"M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z"],
+  ["Wedding Venues","std",2000,15000,"M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z"],
+  ["Restaurants","std",500,5000,"M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12"]
+].map(([name, cat, min, max, d]) => ({ name, cat, min, max, d, range: money(min) + ' – ' + money(max) }));
+function money(n) {
+  if (n >= 1e6) return '$' + (+(n / 1e6).toFixed(1)) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'k';
+  return '$' + n;
+}
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+const icon = (d, w, sw) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" aria-hidden="true"><path d="${d}" fill="none" stroke="url(#gold)" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const feat = [[1,'Water treatment',-14,8],[2,'Security',-7,4],[3,'Automation',0,0],[0,'Recruitment',7,4],[8,'Commercial RE',14,8]];
+document.getElementById('feat').innerHTML = feat.map(([i, label, ry, ty]) =>
+  `<figure><div class="tile lg" style="transform:rotateY(${ry}deg) translateY(${ty}px)">${icon(IND[i].d, 44, 1.35)}</div><figcaption>${label}</figcaption></figure>`).join('');
+const group = (title, unit, list) => `<div style="min-width:0"><div class="colhead"><span>${title}</span><span>${list.length} ${unit}</span></div>` +
+  list.map(it => `<a class="row" href="#contact"><div class="tile sm">${icon(it.d, 24, 1.5)}</div><span class="nm">${esc(it.name)}</span><span class="val">${it.range}</span></a>`).join('') + '</div>';
+document.getElementById('cols').innerHTML = group('High-ticket', 'sectors', IND.filter(i => i.cat === 'high')) + group('Trades &amp; services', 'trades', IND.filter(i => i.cat === 'std'));
+</script>

@@ -1,0 +1,366 @@
+<title>APEX Command</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@1,500&display=swap">
+<style>
+:root{--bg:#060912;--bg2:#0a1022;--fg:#e9eefb;--muted:#9aa6bf;--dim:#6e7a93;--blue:#3b6bff;--blue2:#8aa6ff;--gold:#cfd5de;--lime:#d4ff3a;--line:rgba(138,166,255,.16);--glass:rgba(16,24,46,.62);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'Plus Jakarta Sans',system-ui,sans-serif;margin:0;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.gold-i{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:var(--gold);letter-spacing:0}
+a{color:var(--blue2)}
+.wrap{max-width:1300px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.bgfx{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(60% 50% at 80% 10%,rgba(59,107,255,.22),transparent 70%),radial-gradient(40% 40% at 10% 90%,rgba(207,213,222,.08),transparent 70%)}
+main{position:relative;z-index:1}
+header{position:sticky;top:max(12px,env(safe-area-inset-top,0px));z-index:20;margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px 10px 20px;border-radius:999px;background:rgba(10,16,34,.72);border:1px solid var(--line);backdrop-filter:blur(14px);box-shadow:0 18px 40px -26px rgba(0,0,0,.9)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);font-weight:800;font-size:18px;letter-spacing:-.02em}
+.mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(155deg,#5b85ff,#2447d6);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 18px -6px rgba(59,107,255,.9)}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:24px;font-size:14px;font-weight:500}
+nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:14px;border:0;background:var(--blue);color:#fff;font:inherit;font-weight:700;font-size:15px;text-decoration:none;cursor:pointer;box-shadow:0 10px 28px -12px rgba(59,107,255,.9);transition:transform .2s,background .2s}
+.btn:hover{background:#5480ff;color:#fff;transform:translateY(-1px)}
+nav .btn{min-height:42px;border-radius:999px}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:96px 80px}
+.kicker{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;padding:7px 14px 7px 10px;border-radius:999px;background:var(--glass);border:1px solid var(--line);font-size:12px;letter-spacing:.06em;color:#c7d1e8}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(198,244,50,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(198,244,50,0)}100%{box-shadow:0 0 0 0 rgba(198,244,50,0)}}
+.copy{display:flex;flex-direction:column;gap:26px;min-width:0}
+h1{margin:0;font-size:clamp(42px,5.4vw,78px);line-height:1.02;letter-spacing:-.04em;font-weight:800;text-wrap:balance}
+h1 .gold-i{font-size:1.08em}
+.lead{margin:0;max-width:540px;font-size:18px;line-height:1.65;color:var(--muted)}
+.capture{display:flex;flex-wrap:wrap;gap:10px;padding:8px;border-radius:18px;background:var(--glass);border:1px solid var(--line);max-width:540px}
+.capture input{flex:1 1 200px;min-height:48px;padding:0 14px;border:0;background:transparent;color:var(--fg);font:inherit;font-size:16px;outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.stats{display:flex;flex-wrap:wrap;gap:36px;padding-top:6px}
+.stats div{display:flex;flex-direction:column;gap:4px}
+.stats b{font-size:30px;font-weight:800;letter-spacing:-.03em}
+.stats b.g{color:var(--gold)}
+.stats span{font-size:13px;color:var(--muted)}
+.stage{position:relative;height:600px;perspective:1400px;min-width:0}
+.rig{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .25s ease-out}
+.card{position:absolute;border-radius:22px;background:var(--glass);border:1px solid rgba(138,166,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 40px 80px -30px rgba(0,0,0,.95),0 0 60px -30px rgba(59,107,255,.5);backdrop-filter:blur(18px);padding:20px}
+.float1{animation:float 7s ease-in-out infinite}.float2{animation:float 8s ease-in-out -2s infinite}.float3{animation:float 6s ease-in-out -4s infinite}
+@keyframes float{50%{translate:0 -12px}}
+.c-feed{right:0;top:0;width:min(100%,420px);transform:rotateY(-14deg) rotateZ(-2deg)}
+.c-route{left:0;top:300px;width:min(92%,340px);transform:rotateY(12deg) rotateZ(2deg)}
+.c-peak{right:24px;top:410px;width:250px;transform:rotateY(-10deg) rotateZ(2deg) translateZ(-40px)}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ch .tag{padding:4px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);font-size:10px}
+.feed{display:flex;flex-direction:column;gap:10px;height:266px;overflow:hidden}
+.lrow{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(6,9,18,.55);border:1px solid rgba(138,166,255,.1);animation:slidein .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes slidein{from{opacity:0;transform:translateY(-16px) scale(.98)}}
+.lrow .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.lrow b{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow .v{font-size:13px;color:var(--gold);white-space:nowrap}
+.st{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.st.wait{background:rgba(59,107,255,.16);color:var(--blue2)}
+.st.ok{background:#1f2124;color:var(--lime)}
+.spin{width:8px;height:8px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tile{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(155deg,#1d2a52 0%,#121a35 55%,#0b1124 100%);border:1px solid rgba(138,166,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -6px 12px -6px rgba(59,107,255,.5),0 10px 18px -10px rgba(0,0,0,.9)}
+.tile svg{filter:drop-shadow(0 0 4px rgba(91,133,255,.55))}
+.tile.hi{border-color:rgba(207,213,222,.4);background:linear-gradient(155deg,#1e2227 0%,#101215 55%,#090a0c 100%);box-shadow:inset 0 1px 0 rgba(213,217,222,.2),inset 0 -6px 12px -6px rgba(207,213,222,.35),0 10px 18px -10px rgba(0,0,0,.9)}
+.tile.hi svg{filter:drop-shadow(0 0 4px rgba(207,213,222,.5))}
+.route{display:flex;flex-direction:column;gap:14px}
+.track{position:relative;display:flex;justify-content:space-between;padding:0 4px}
+.track::before{content:"";position:absolute;left:14px;right:14px;top:13px;height:2px;background:rgba(138,166,255,.18)}
+.track .fill{position:absolute;left:14px;top:13px;height:2px;background:linear-gradient(90deg,var(--blue),var(--lime));transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;color:var(--dim);width:70px;text-align:center}
+.node i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#0b1124;border:2px solid rgba(138,166,255,.3);transition:all .4s}
+.node.on{color:var(--fg)}.node.on i{border-color:var(--lime);background:rgba(198,244,50,.15);box-shadow:0 0 16px -2px rgba(198,244,50,.6)}
+.routing{font-size:13px;color:var(--muted);min-height:20px}.routing b{color:var(--fg)}
+.bars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:90px}
+.bars span{display:block;border-radius:4px 4px 2px 2px;background:rgba(138,166,255,.2);transition:height .7s cubic-bezier(.2,.8,.2,1),background .5s}
+.bars span.pk{background:linear-gradient(180deg,var(--gold),#6a7688)}
+.mlab{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:6px;font-size:9px;color:var(--dim);text-align:center}
+.peakname{margin-top:10px;font-size:12px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.marquee{position:relative;overflow:hidden;padding-block:14px;border-block:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq{display:flex;gap:12px;width:max-content;animation:mq 60s linear infinite}
+.mq.rev{animation-direction:reverse;margin-top:12px}
+.marquee:hover .mq{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:999px;background:var(--glass);border:1px solid var(--line);font-size:14px;font-weight:600;white-space:nowrap}
+.chip .tile{width:32px;height:32px;border-radius:10px}
+section.block{padding-block:110px 40px;display:flex;flex-direction:column;gap:40px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2)}
+h2{margin:10px 0 0;font-size:clamp(34px,4vw,54px);line-height:1.05;letter-spacing:-.035em;font-weight:800;text-wrap:balance}
+.explorer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px;align-items:start}
+.listpane{border-radius:24px;background:var(--glass);border:1px solid var(--line);padding:12px;display:flex;flex-direction:column;gap:10px}
+.tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(6,9,18,.6)}
+.tabs button{flex:1;min-height:44px;border-radius:10px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--blue);color:#fff}
+.list{display:flex;flex-direction:column;gap:2px;max-height:520px;overflow-y:auto;padding-right:4px}
+.list button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:6px 10px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--fg);font:inherit;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:background .2s}
+.list button:hover{background:rgba(59,107,255,.08)}
+.list button[aria-current=true]{background:rgba(59,107,255,.14);border-color:rgba(138,166,255,.3)}
+.list .tile{width:36px;height:36px;border-radius:10px}
+.list .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list .rg{font-size:11px;color:var(--muted);white-space:nowrap}
+.detail{position:sticky;top:110px;border-radius:28px;background:linear-gradient(160deg,rgba(26,38,74,.75),rgba(10,16,34,.75));border:1px solid rgba(138,166,255,.24);padding:36px;display:flex;flex-direction:column;gap:26px;box-shadow:0 40px 80px -40px rgba(0,0,0,.9);overflow:hidden}
+.detail .glow{position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(59,107,255,.35),transparent 70%);pointer-events:none}
+.dtop{display:flex;align-items:center;gap:20px}
+.dtop .tile{width:84px;height:84px;border-radius:24px}
+.dtop h3{margin:0 0 8px;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.badge{display:inline-flex;padding:5px 10px;border-radius:999px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);color:var(--muted)}
+.badge.hi{border-color:rgba(207,213,222,.5);color:var(--gold)}
+.dval{display:flex;flex-direction:column;gap:12px}
+.dval .num{font-size:clamp(34px,4vw,52px);font-weight:800;letter-spacing:-.03em;color:var(--fg)}
+.scale{position:relative;height:10px;border-radius:999px;background:rgba(138,166,255,.14);overflow:hidden}
+.scale i{position:absolute;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--gold));transition:left .7s cubic-bezier(.2,.8,.2,1),width .7s cubic-bezier(.2,.8,.2,1)}
+.scalel{display:flex;justify-content:space-between;font-size:11px;color:var(--dim)}
+.months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px}
+.months span{display:grid;place-items:center;height:40px;border-radius:10px;font-size:12px;color:var(--dim);background:rgba(6,9,18,.6);border:1px solid rgba(138,166,255,.1);transition:all .4s}
+.months span.pk{color:#0b0d0f;background:var(--gold);border-color:var(--gold);font-weight:600}
+.timeline{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:44px}
+.timeline .line{position:absolute;left:0;right:0;top:12px;height:2px;background:rgba(138,166,255,.16)}
+.timeline .line i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--blue),var(--lime));transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.timeline.in .line i{width:100%}
+.step{position:relative;padding:28px;border-radius:22px;background:var(--glass);border:1px solid var(--line);opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
+.timeline.in .step{opacity:1;transform:none}
+.timeline.in .step:nth-of-type(2){transition-delay:.25s}.timeline.in .step:nth-of-type(3){transition-delay:.5s}
+.step::before{content:"";position:absolute;top:-38px;left:28px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--blue2)}
+.step .n{font-size:12px;color:#d9dee5}
+.step h3{margin:12px 0 10px;font-size:20px;font-weight:700}.step p{margin:0;font-size:15px;line-height:1.65;color:var(--muted)}
+.cta{margin-block:110px 90px;position:relative;overflow:hidden;padding:72px max(24px,6vw);border-radius:32px;background:linear-gradient(140deg,#14224d,#0a1022 60%);border:1px solid rgba(138,166,255,.26);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:40px}
+.cta::after{content:"";position:absolute;right:-120px;bottom:-200px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(59,107,255,.45),transparent 65%);pointer-events:none}
+.cta h2{margin:0}.cta p{margin:14px 0 0;color:var(--muted);font-size:17px;line-height:1.6;max-width:460px}
+.cta form{position:relative;z-index:1;flex:1 1 360px}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-bottom:48px;font-size:13px;color:var(--dim)}
+input::placeholder{color:var(--dim)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}.explorer{grid-template-columns:minmax(0,1fr)}.detail{position:relative;top:0}}
+@media (max-width:640px){
+  nav a:not(.btn){display:none}header{border-radius:22px}
+  .stage{height:auto;perspective:none;display:flex;flex-direction:column;gap:16px}
+  .rig{position:relative;display:flex;flex-direction:column;gap:16px;transform:none!important}
+  .card{position:relative;inset:auto;width:100%!important;transform:none!important}
+  .c-peak{order:3}
+  .timeline{grid-template-columns:minmax(0,1fr);padding-top:0}.timeline .line,.step::before{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal,.step{opacity:1;transform:none}}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="gb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9bdff"/><stop offset="1" stop-color="#3b6bff"/></linearGradient>
+<linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2f4f7"/><stop offset="1" stop-color="#9aa3ae"/></linearGradient>
+</defs></svg>
+<div class="bgfx" aria-hidden="true"></div>
+<main>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L12 4l8 16M8 14h8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Apex</a>
+    <nav><a href="#markets">Markets</a><a href="#explore">Explore</a><a href="#how">How it works</a><a href="#start" class="btn">Get started</a></nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="copy">
+      <span class="kicker mono"><i class="pulse"></i>33 industries · one standard of lead</span>
+      <h1>Leads that are ready to buy — in the industry you're <span class="gold-i">actually in.</span></h1>
+      <p class="lead">Verified buyers for 12 high-ticket sectors and 21 local trades, timed to your peak season and routed straight into your CRM.</p>
+      <form class="capture" onsubmit="event.preventDefault()"><label class="sr" for="e1">Work email</label><input id="e1" type="email" placeholder="Work email"><button class="btn" type="submit">Get a sample lead</button></form>
+      <div class="stats">
+        <div><b data-count="33">0</b><span>Industries</span></div>
+        <div><b data-count="12">0</b><span>High-ticket sectors</span></div>
+        <div><b class="g mono" data-count="53" data-prefix="$" data-suffix="M">$0M</b><span>Top contract value</span></div>
+      </div>
+    </div>
+    <div class="stage" id="stage" aria-label="Sample activity">
+      <div class="rig" id="rig">
+        <div class="card c-peak float3"><div class="ch mono"><span>Peak season</span></div><div class="bars" id="bars"></div><div class="mlab mono" id="mlab"></div><div class="peakname" id="peakname"></div></div>
+        <div class="card c-feed float1"><div class="ch mono"><span><i class="pulse" style="display:inline-block;margin-right:8px;vertical-align:middle"></i>Lead feed</span><span class="tag">Sample data</span></div><div class="feed" id="feed"></div></div>
+        <div class="card c-route float2"><div class="ch mono"><span>Routing</span><span class="tag">Sample</span></div>
+          <div class="route"><div class="track"><span class="fill" id="fill" style="width:0"></span>
+            <div class="node" data-i="0"><i></i>Detected</div><div class="node" data-i="1"><i></i>Qualified</div><div class="node" data-i="2"><i></i>In your CRM</div></div>
+            <div class="routing" id="routing"></div></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="marquee" id="markets" aria-label="All 33 industries"><div class="mq" id="mq1"></div><div class="mq rev" id="mq2"></div></div>
+
+<div class="wrap">
+  <section class="block reveal" id="explore">
+    <div><span class="eyebrow mono">Explore</span><h2>Pick a market. See what a lead is <span class="gold-i">worth.</span></h2></div>
+    <div class="explorer">
+      <div class="listpane">
+        <div class="tabs" role="tablist" aria-label="Filter industries" id="tabs"><button role="tab" type="button" data-f="all" aria-selected="true">All 33</button><button role="tab" type="button" data-f="high" aria-selected="false">High-ticket</button><button role="tab" type="button" data-f="std" aria-selected="false">Trades</button></div>
+        <div class="list" id="list"></div>
+      </div>
+      <div class="detail" id="detail" aria-live="polite"><div class="glow"></div>
+        <div class="dtop"><div class="tile" id="dtile"></div><div><h3 id="dname"></h3><span class="badge" id="dbadge"></span></div></div>
+        <div class="dval"><span class="eyebrow mono" style="color:var(--muted)">Lead value</span><span class="num mono" id="dnum"></span>
+          <div class="scale"><i id="dscale"></i></div><div class="scalel mono"><span>$50</span><span>Across all 33 markets</span><span>$53M</span></div></div>
+        <div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow mono" style="color:var(--muted)">Peak months</span><div class="months mono" id="dmonths"></div></div>
+        <a class="btn" id="dcta" href="#start" style="align-self:flex-start">Get leads</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="reveal"><span class="eyebrow mono">How it works</span><h2>From your market to your calendar.</h2></div>
+    <div class="timeline" id="timeline"><div class="line"><i></i></div>
+      <div class="step"><span class="n mono">01</span><h3>Pick industry and territory</h3><p>Tell us what you sell, where, and the job size you want more of.</p></div>
+      <div class="step"><span class="n mono">02</span><h3>We find and verify buyers</h3><p>Every lead is checked for intent, budget and timing. [Describe your verification process.]</p></div>
+      <div class="step"><span class="n mono">03</span><h3>Leads land where you work</h3><p>Straight into your CRM, inbox or calendar, timed ahead of your peak season.</p></div>
+    </div>
+  </section>
+
+  <section class="cta reveal" id="start">
+    <div style="position:relative;z-index:1;flex:1 1 420px"><h2>See a real lead for <span class="gold-i">your industry.</span></h2><p>We'll send a sample lead and expected monthly volume for your territory.</p></div>
+    <form class="capture" onsubmit="event.preventDefault()"><label class="sr" for="e2">Work email</label><input id="e2" type="email" placeholder="Work email"><button class="btn" type="submit">Get a sample lead</button></form>
+  </section>
+  <footer class="mono"><span>Apex</span><span>Verified leads for 33 industries</span></footer>
+</div>
+</main>
+<script>
+const IND = [
+  ["Executive Recruitment","high",125000,175000,"M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2"],
+  ["Industrial Water Treatment","high",1000000,14000000,"M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0"],
+  ["Commercial Security Systems","high",500000,15000000,"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"],
+  ["Industrial Automation & Manufacturing","high",5300000,53000000,"M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"],
+  ["Commercial Kitchen Equipment","high",50000,355000,"M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12"],
+  ["Specialized Medical Staffing","high",25000,100000,"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8"],
+  ["Commercial HVAC & Refrigeration","high",65000,3000000,"M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2"],
+  ["Custom Contract Manufacturing","high",100000,5000000,"M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2"],
+  ["Commercial Real Estate","high",25000,100000,"M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1"],
+  ["Specialty Medical (Cosmetic/Dental)","high",3000,43000,"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"],
+  ["Commercial Printing & Fulfillment","high",50000,500000,"M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z"],
+  ["Niche Insurance — Cyber Liability","high",30000,100000,"M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2"],
+  ["Roofing","std",500,5000,"M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6"],
+  ["Landscaping","std",300,3000,"M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8"],
+  ["Home Cleaning (Interior)","std",100,1000,"M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6"],
+  ["Home Cleaning (Exterior)","std",150,1500,"M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2"],
+  ["Plumbers","std",200,2000,"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"],
+  ["Electricians","std",300,3000,"M13 2L4 14h7l-1 8 9-12h-7z"],
+  ["HVAC","std",250,2500,"M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0"],
+  ["Dentists","std",150,1500,"M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z"],
+  ["Lawyers","std",500,5000,"M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z"],
+  ["Real Estate Agents","std",300,3000,"M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01"],
+  ["Gyms & Fitness","std",50,500,"M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12"],
+  ["Auto Repair","std",200,2000,"M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Pest Control","std",300,2000,"M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2"],
+  ["Hair Salons & Barbershops","std",50,500,"M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4"],
+  ["Insurance Agents","std",400,3000,"M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1"],
+  ["Healthcare Clinics","std",200,1500,"M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2"],
+  ["Moving Companies","std",400,4000,"M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0"],
+  ["Personal Trainers","std",100,1000,"M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5"],
+  ["Photographers","std",300,3000,"M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z"],
+  ["Wedding Venues","std",2000,15000,"M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z"],
+  ["Restaurants","std",500,5000,"M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12"]
+].map(([name, cat, min, max, d]) => ({ name, cat, min, max, d, range: money(min) + ' – ' + money(max) }));
+function money(n) {
+  if (n >= 1e6) return '$' + (+(n / 1e6).toFixed(1)) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'k';
+  return '$' + n;
+}
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+[[1,4,10,12],[4,5,6,7,10,11,12],[10,11,12,1,2,3],[4,5,6,7,8,9,10,11,12],[1,2,7,8,9,10],[1,2,3,7,8,9,10,11,12],[1,2,10,11,12],[4,5,6,7,8,9,10,11,12],[1,3,4,5,9,10,11,12],[10,11,12,1],[7,8,9,10,11,12,1,2],[4,5,10,11,12],[3,4,5,9,10,11],[3,4,5,6,7,8,9],[1,2,3,12],[3,4,5,9,10],[1,2,11,12],[3,4,5,9,10,11],[1,2,7,8,11,12],[1,2,3,9],[1,4,7,10],[3,4,5,9,10,11],[1,2,8,9],[3,4,9,10,11],[3,4,5,9,10],[12,1,5,6],[10,11,12,1],[1,2,9],[5,6,7,8,9],[1,2,6,7],[5,6,7,8,9,10,11],[4,5,6,9,10],[5,6,7,8,12]].forEach((p, i) => { IND[i].peak = p; });
+const SAMPLE = [
+  [6, 'Rooftop unit replacement · 3 sites', 420000],
+  [12, 'Full tear-off, 2,400 sq ft', 4800],
+  [1, 'Cooling tower treatment program', 2600000],
+  [19, 'New patient, implant consult', 1200],
+  [2, 'Access control for 8 branches', 1900000],
+  [16, 'Emergency re-pipe, older home', 1800],
+  [0, 'VP Operations search, retained', 150000],
+  [31, 'Spring wedding, 180 guests', 14000],
+  [3, 'Packaging line automation', 8400000],
+  [17, 'Panel upgrade to 200A', 2400],
+  [8, 'Industrial lease, 40k sq ft', 72000],
+  [18, 'Heat pump install, 2 zones', 2200]
+].map(([i, job, v]) => ({ ind: IND[i], job, v }));
+const MONTHS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const svg = (it, w) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" aria-hidden="true"><path d="${it.d}" fill="none" stroke="url(#${it.cat === 'high' ? 'gg' : 'gb'})" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const tile = (it, w, cls = '') => `<div class="tile${it.cat === 'high' ? ' hi' : ''} ${cls}">${svg(it, w)}</div>`;
+const $ = id => document.getElementById(id);
+
+// count-up stats
+const counters = [...document.querySelectorAll('[data-count]')];
+function runCounters() {
+  counters.forEach(el => {
+    const end = +el.dataset.count, pre = el.dataset.prefix || '', suf = el.dataset.suffix || '';
+    if (reduceMotion) { el.textContent = pre + end + suf; return; }
+    const t0 = performance.now();
+    const step = t => { const k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); el.textContent = pre + Math.round(end * e) + suf; if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+runCounters();
+
+// hero: lead feed + routing + peak bars
+$('mlab').innerHTML = MONTHS.map(m => `<span>${m}</span>`).join('');
+$('bars').innerHTML = MONTHS.map(() => '<span style="height:20%"></span>').join('');
+const bars = [...$('bars').children], nodes = [...document.querySelectorAll('.node')];
+let fi = 0;
+function showPeak(it) {
+  bars.forEach((b, m) => { const pk = it.peak.includes(m + 1); b.className = pk ? 'pk' : ''; b.style.height = (pk ? 70 + ((m * 37) % 30) : 18 + ((m * 23) % 22)) + '%'; });
+  $('peakname').textContent = it.name;
+}
+function setRoute(stage, s) {
+  nodes.forEach((n, i) => n.classList.toggle('on', i <= stage));
+  $('fill').style.width = `calc(${stage * 50}% - ${stage * 14}px)`;
+  $('routing').innerHTML = stage < 2 ? `Routing <b>${esc(s.ind.name)}</b>…` : `<b>${esc(s.ind.name)}</b> delivered`;
+}
+function pushLead() {
+  const s = SAMPLE[fi % SAMPLE.length]; fi++;
+  const row = document.createElement('div'); row.className = 'lrow';
+  row.innerHTML = `${tile(s.ind, 20)}<div class="txt"><b>${esc(s.ind.name)}</b><small>${esc(s.job)}</small></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="v mono">${money(s.v)}</span><span class="st wait mono"><i class="spin"></i>Verifying</span></div>`;
+  const feed = $('feed'); feed.prepend(row);
+  while (feed.children.length > 4) feed.lastChild.remove();
+  setTimeout(() => { const st = row.querySelector('.st'); st.className = 'st ok mono'; st.textContent = '✓ Verified'; }, 1100);
+  showPeak(s.ind); setRoute(0, s);
+  setTimeout(() => setRoute(1, s), 900); setTimeout(() => setRoute(2, s), 1800);
+}
+for (let i = 0; i < 3; i++) pushLead();
+if (!reduceMotion) setInterval(pushLead, 2800);
+
+// mouse parallax on the card stage
+const stage = $('stage'), rig = $('rig');
+if (!reduceMotion) stage.addEventListener('pointermove', e => {
+  const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+  rig.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 8}deg)`;
+});
+stage.addEventListener('pointerleave', () => { rig.style.transform = ''; });
+
+// marquee (duplicated for a seamless loop)
+const chip = it => `<span class="chip">${tile(it, 16)}${esc(it.name)}</span>`;
+const half = Math.ceil(IND.length / 2);
+const rowA = IND.slice(0, half).map(chip).join(''), rowB = IND.slice(half).map(chip).join('');
+$('mq1').innerHTML = rowA + rowA; $('mq2').innerHTML = rowB + rowB;
+
+// explorer
+const lo = Math.log10(50), hi = Math.log10(53000000);
+let filter = 'all', current = IND[0];
+function renderList() {
+  $('list').innerHTML = IND.filter(i => filter === 'all' || i.cat === filter).map(it =>
+    `<button type="button" data-n="${IND.indexOf(it)}" aria-current="${it === current}">${tile(it, 18)}<span class="nm">${esc(it.name)}</span><span class="rg mono">${it.range}</span></button>`).join('');
+}
+function select(it) {
+  current = it;
+  $('dtile').className = 'tile' + (it.cat === 'high' ? ' hi' : ''); $('dtile').innerHTML = svg(it, 40);
+  $('dname').textContent = it.name;
+  $('dbadge').textContent = it.cat === 'high' ? 'High-ticket' : 'Trade'; $('dbadge').className = 'badge' + (it.cat === 'high' ? ' hi' : '');
+  $('dnum').textContent = it.range;
+  const a = (Math.log10(it.min) - lo) / (hi - lo) * 100, b = (Math.log10(it.max) - lo) / (hi - lo) * 100;
+  $('dscale').style.left = a + '%'; $('dscale').style.width = Math.max(3, b - a) + '%';
+  $('dmonths').innerHTML = MONTHS.map((m, i) => `<span class="${it.peak.includes(i + 1) ? 'pk' : ''}">${m}</span>`).join('');
+  $('dcta').textContent = 'Get ' + it.name + ' leads';
+  document.querySelectorAll('#list button').forEach(b => b.setAttribute('aria-current', b.dataset.n == IND.indexOf(it)));
+}
+$('list').addEventListener('click', e => { const b = e.target.closest('button'); if (b) select(IND[+b.dataset.n]); });
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  filter = b.dataset.f; document.querySelectorAll('#tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  renderList(); const first = IND.find(i => filter === 'all' || i.cat === filter); select(first);
+});
+renderList(); select(current);
+
+// scroll reveals
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+document.querySelectorAll('.reveal, #timeline').forEach(el => io.observe(el));
+</script>
