@@ -467,3 +467,25 @@ table.cmp { width: 100%; border-collapse: collapse; min-width: 560px; font-size:
 }
 /* tile light beams for designed fallbacks */
 .tile .ph::before { content: ""; position: absolute; inset: 0; background: linear-gradient(var(--ang, 120deg), transparent 38%, rgba(215,218,223,.10) 48%, rgba(215,218,223,.02) 56%, transparent 64%); }
+
+.v-head { position: relative; }
+.v-aside { margin: 28px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--line2); width: fit-content; max-width: 100%; }
+.v-aside li { padding: 12px 18px; font-size: .85rem; display: flex; gap: 10px; }
+.v-aside li + li { border-left: 1px solid var(--line2); }
+.v-aside li span { color: var(--steel); }
+.v-aside.call { display: grid; gap: 6px; padding: 20px; background: var(--carbon); }
+.v-aside.call p { margin: 0; }
+.v-aside.call .mono { font-size: .8rem; color: var(--steel); }
+.v-aside.call .num { font-size: 1.6rem; }
+@media (min-width: 1100px) { .v-aside.call { position: absolute; right: var(--gut); bottom: clamp(36px, 5vw, 60px); margin: 0; } .faq-h1-pad { } }
+@media (max-width: 900px) {
+  .i-top { flex-direction: column; gap: 4px; }
+  table.cmp { min-width: 0; }
+  .cmp thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .cmp tbody tr { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); border-bottom: 1px solid var(--line2); }
+  .cmp tbody th { grid-column: 1 / -1; width: auto; padding-bottom: 4px; border-bottom: 0; color: var(--plat); }
+  .cmp tbody td { border-bottom: 0; padding-top: 6px; font-size: .95rem; }
+  .cmp tbody td::before { content: attr(data-label); display: block; font: .8rem var(--mono); color: var(--steel); margin-bottom: 4px; }
+  .cmp tbody td:nth-child(2) { background: rgba(215,218,223,.06); }
+  .tbl-wrap { overflow: visible; }
+}

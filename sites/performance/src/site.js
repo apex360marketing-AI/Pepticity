@@ -92,6 +92,13 @@
   $(".g-a").innerHTML = TILES.slice(0, 7).map(tileHTML).join("");
   $(".g-b").innerHTML = TILES.slice(7).concat(TILES.slice(0, 2)).map((t, i) => tileHTML(t, i + 7)).join("");
 
+  // tables collapse to labelled rows on phones
+  $$("table.cmp").forEach(t => {
+    const heads = $$("thead th", t).map(th => th.textContent.trim());
+    t.style.setProperty("--cols", heads.length - 1);
+    $$("tbody tr", t).forEach(tr => $$("td", tr).forEach((td, i) => td.setAttribute("data-label", heads[i + 1])));
+  });
+
   /* ------------------------------------------------------------ MODE SELECT */
   let mode = MODES[root.dataset.mode] ? root.dataset.mode : "all";
   const modeBtns = $$(".modes-row button");
