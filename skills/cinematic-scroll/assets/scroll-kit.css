@@ -1,0 +1,111 @@
+/* ScrollKit — companion styles for assets/scroll-kit.js. Link this before your
+   own site styles so site-specific overrides (e.g. a different reveal easing)
+   still win on specificity ties. */
+
+.sk-smooth-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+/* -- reveal on scroll ------------------------------------------------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal][data-reveal-style="scale"] {
+  transform: scale(0.92);
+}
+
+[data-reveal][data-reveal-style="fade"] {
+  transform: none;
+}
+
+[data-reveal].sk-reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* -- pinned step sections ----------------------------------------------- */
+
+[data-pin] {
+  position: relative;
+}
+
+.sk-pin-inner {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sk-pin-step {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.sk-pin-step.sk-step-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* -- reduced motion: cut everything to instant state --------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-smooth-wrapper {
+    position: static;
+    transform: none !important;
+  }
+
+  [data-reveal] {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .sk-pin-step {
+    transition: none;
+  }
+
+  [data-parallax] {
+    transform: none !important;
+  }
+}
+
+/* -- mobile: cut the expensive layers, keep reveal ------------------------ */
+
+@media (max-width: 900px) {
+  [data-parallax] {
+    transform: none !important;
+  }
+
+  [data-pin] {
+    min-height: auto !important;
+  }
+
+  .sk-pin-inner {
+    position: static;
+    height: auto;
+  }
+
+  .sk-pin-step {
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

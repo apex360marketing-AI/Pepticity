@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pepticity Pure</title>
+<meta name="description" content="Pepticity Pure: clinician-guided peptide care with a visible process from sequence to your door, plus a small no-consult cosmetic range.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<!-- shared SVG filters: liquid edge for the intro reveal, view ripples and the drop picker -->
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <filter id="liquid-edge" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.011 0.016" numOctaves="2" seed="7" result="n">
+      <animate attributeName="seed" values="7;9;7" dur="3s" repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="liquid-soft" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <linearGradient id="g-drop" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FAF8F5"/><stop offset="1" stop-color="var(--tint, #C2703D)"/>
+  </linearGradient>
+</svg>
+
+<!-- ============ INTRO: drop → ripples → wordmark → liquid reveal ============ -->
+<div id="intro" aria-label="Pepticity Pure intro">
+  <video class="intro-plate" src="media/intro.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+  <canvas class="intro-canvas" aria-hidden="true"></canvas>
+  <div class="intro-chrome">
+    <span>Pepticity Pure</span>
+    <span>One drop. Every step on record.</span>
+  </div>
+  <p class="intro-line">Peptide care, made <em>visible</em>.</p>
+  <button class="skip" type="button">Skip intro <kbd>Esc</kbd></button>
+</div>
+
+<a class="skip-link" href="#main" data-goto="main">Skip to content</a>
+
+<!-- ============ NAV: links left · wordmark centre · plan right ============ -->
+<header class="nav" id="nav">
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="mb-lines" aria-hidden="true"><i></i><i></i></span><span>Menu</span></button>
+  <nav class="nav-left" aria-label="Primary">
+    <a href="#programs" data-nav="programs">Programs</a>
+    <a href="#science" data-nav="science">Science</a>
+    <a href="#faq" data-nav="faq">FAQ</a>
+  </nav>
+  <a href="#home" class="wordmark" aria-label="Pepticity Pure, home"><span class="wm-word">PEPTICITY</span><span class="wm-sub">Pure</span></a>
+  <div class="nav-right">
+    <a class="nav-phone" href="tel:" aria-label="Call us: [phone number]"><span class="np-label">Call</span> [phone number]</a>
+    <button class="size-btn" type="button" aria-pressed="false" aria-label="Larger text">A<span>A</span></button>
+    <button class="plan-btn" type="button" aria-controls="plan-drawer" aria-expanded="false">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4c-4 6-9 11-9 16a9 9 0 0 0 18 0c0-5-5-10-9-16z"/></svg>
+      <span class="pb-label">Plan</span><span class="pb-count" aria-live="polite">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- full-screen menu (mobile) -->
+<div id="menu" class="menu" hidden>
+  <nav aria-label="Menu">
+    <a href="#home"><i>01</i>Home</a>
+    <a href="#programs"><i>02</i>Programs</a>
+    <a href="#science"><i>03</i>Science</a>
+    <a href="#faq"><i>04</i>FAQ &amp; contact</a>
+  </nav>
+  <div class="menu-foot">
+    <p>Talk to a person: <a href="tel:">[phone number]</a></p>
+    <button type="button" class="btn btn-light" data-goto="callback">Call me back</button>
+    <a class="clinic-link" href="#home" data-goto="assess">Start my free clinician review →</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- =================================== HOME =================================== -->
+<section class="view" data-view="home" aria-label="Home">
+
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="kicker"><span class="dot-cu" aria-hidden="true"></span>Clinician-guided peptide care · US &amp; Canada</p>
+      <h1 class="hero-h"><span class="hero-line" data-aud-text="hero">Peptide care you can see all the way through.</span></h1>
+      <p class="lede" data-aud-text="lede">A licensed clinician decides if a plan is right for you. A licensed partner pharmacy prepares it. Every lot is tested, and you can look the results up yourself.</p>
+
+      <div class="picker" role="radiogroup" aria-labelledby="picker-label">
+        <p id="picker-label" class="picker-label">I'm here for…</p>
+        <div class="drops">
+          <button type="button" role="radio" aria-checked="false" class="drop" data-aud="longevity"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C14 13 4 22 4 33a16 16 0 0 0 32 0C36 22 26 13 20 2z"/><ellipse cx="14" cy="32" rx="3" ry="6"/></svg><span>Healthy aging <b>55+</b></span></button>
+          <button type="button" role="radio" aria-checked="false" class="drop" data-aud="energy"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C14 13 4 22 4 33a16 16 0 0 0 32 0C36 22 26 13 20 2z"/><ellipse cx="14" cy="32" rx="3" ry="6"/></svg><span>Feeling like <b>myself</b></span></button>
+          <button type="button" role="radio" aria-checked="false" class="drop" data-aud="women"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C14 13 4 22 4 33a16 16 0 0 0 32 0C36 22 26 13 20 2z"/><ellipse cx="14" cy="32" rx="3" ry="6"/></svg><span>Women <b>40+</b></span></button>
+          <button type="button" role="radio" aria-checked="false" class="drop" data-aud="men"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C14 13 4 22 4 33a16 16 0 0 0 32 0C36 22 26 13 20 2z"/><ellipse cx="14" cy="32" rx="3" ry="6"/></svg><span>Men <b>35+</b></span></button>
+          <button type="button" role="radio" aria-checked="false" class="drop" data-aud="athlete"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C14 13 4 22 4 33a16 16 0 0 0 32 0C36 22 26 13 20 2z"/><ellipse cx="14" cy="32" rx="3" ry="6"/></svg><span>Training &amp; <b>recovery</b></span></button>
+        </div>
+        <div class="surface" aria-hidden="true"></div>
+      </div>
+
+      <div class="cta-row">
+        <button type="button" class="btn" data-goto="assess"><span data-aud-text="cta">Start my free clinician review</span></button>
+        <button type="button" class="btn btn-quiet" data-goto="process">Follow a lot from sequence to door</button>
+      </div>
+    </div>
+
+    <figure class="lens-stage" aria-label="Serum drop on ivory stone. Move your pointer to look through the lens.">
+      <canvas class="lens-canvas" aria-hidden="true"></canvas>
+      <img class="lens-src" data-aud-img src="media/pure-drop.jpg" alt="" onerror="this.remove()">
+      <figcaption class="lens-cap"><span>Look closer</span><span data-aud-text="cap">Pure, on purpose</span></figcaption>
+    </figure>
+  </section>
+
+  <!-- promises ledger (no invented numbers) -->
+  <ul class="ledger" aria-label="Our promises">
+    <li><b>Free</b> clinician review</li>
+    <li><b>Lot code</b> on every order</li>
+    <li><b>Founding-member rate</b> [offer: confirm with Grace]</li>
+    <li><b>A real person</b> at [phone number]</li>
+  </ul>
+
+  <!-- copper-fill statement -->
+  <section class="statement">
+    <p class="fill" data-fill><span class="fill-base">Nothing hidden between the sequence and your door.</span><span class="fill-cu" aria-hidden="true">Nothing hidden between the sequence and your door.</span></p>
+    <div class="statement-aside">
+      <p>Most of the peptide world asks you to trust it. We would rather you check. Each order carries a lot code, and each lot has a certificate of analysis you can open.</p>
+      <button type="button" class="link-cu" data-goto="lot">Try a lot lookup →</button>
+    </div>
+  </section>
+
+  <!-- proof sections: reordered per audience (process always before plan) -->
+  <div class="proof" id="proof">
+
+    <!-- CARE: how clinician care works -->
+    <section class="care band-milk" data-proof="care" id="care">
+      <div class="care-grid">
+        <figure class="ph ph-aud" data-ph="aud">
+          <img data-aud-img2 src="media/aud-longevity.jpg" alt="" onerror="this.remove()" loading="lazy">
+          <figcaption data-aud-text="audcap">Photograph · for illustration</figcaption>
+        </figure>
+        <div class="care-copy">
+          <h2 class="h2">A clinician first.<br><em>Then, maybe, a plan.</em></h2>
+          <p class="objection">“How do I know this is done properly?”</p>
+          <ol class="care-steps">
+            <li><b>You answer a 60-second assessment.</b> Plain questions, including where you live and any prescriptions you take.</li>
+            <li><b>A licensed clinician reviews it, free.</b> A licensed clinician decides if a plan is right for you. Sometimes the answer is no, and that's fine.</li>
+            <li><b>If it fits, a licensed partner pharmacy prepares it.</b> It ships with its lot code and certificate of analysis.</li>
+            <li><b>You keep talking to a human.</b> Messages, check-ins, and a phone line: [phone number].</li>
+          </ol>
+          <button type="button" class="btn" data-goto="assess"><span data-aud-text="cta">Start my free clinician review</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS: pinned horizontal journey -->
+    <section class="process band-espresso" data-proof="process" id="process">
+      <div class="pin-wrap">
+        <div class="vp-head">
+          <p class="vp-label">Visible process</p>
+          <div class="vp-bar" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="vp-track">
+          <article class="vp-intro">
+            <h2 class="h2 light">Follow one lot.<br><em>Sequence to door.</em></h2>
+            <p>Five stages, each with a record you can ask for. This is how a plan gets from a written amino-acid sequence to your doorstep.</p>
+          </article>
+          <article class="vp-panel"><span class="vp-n">01</span><div class="vp-drop" aria-hidden="true"><i></i></div>
+            <h3>Sequence</h3><p class="vp-what">A peptide starts as a written order of amino acids, letter by letter. That sequence is the specification every later test is checked against.</p>
+            <dl><dt>Who</dt><dd>Supplier chemists, per pharmacy specification</dd><dt>Record</dt><dd>Specification sheet [document name]</dd></dl></article>
+          <article class="vp-panel"><span class="vp-n">02</span><div class="vp-drop" aria-hidden="true"><i></i></div>
+            <h3>Synthesis</h3><p class="vp-what">Amino acids are joined one at a time on a solid support, then cleaved, purified and dried to a powder. Each batch is given a batch number.</p>
+            <dl><dt>Who</dt><dd>Registered raw-material supplier [name: confirm]</dd><dt>Record</dt><dd>Supplier batch certificate</dd></dl></article>
+          <article class="vp-panel"><span class="vp-n">03</span><div class="vp-drop" aria-hidden="true"><i></i></div>
+            <h3>Testing</h3><p class="vp-what">An independent lab checks identity (is it the right sequence?), purity, and contaminants. Results are written to a certificate of analysis for that lot.</p>
+            <dl><dt>Who</dt><dd>Independent lab [name: confirm]</dd><dt>Record</dt><dd>Certificate of analysis, per lot</dd></dl></article>
+          <article class="vp-panel"><span class="vp-n">04</span><div class="vp-drop" aria-hidden="true"><i></i></div>
+            <h3>Pharmacy</h3><p class="vp-what">If a licensed clinician writes a prescription, a licensed partner pharmacy prepares your order under its state or provincial licence and labels it with the lot code.</p>
+            <dl><dt>Who</dt><dd>Licensed partner pharmacy</dd><dt>Record</dt><dd>Pharmacy label + lot code</dd></dl></article>
+          <article class="vp-panel"><span class="vp-n">05</span><div class="vp-drop" aria-hidden="true"><i></i></div>
+            <h3>Your door</h3><p class="vp-what">Packed for temperature where needed and shipped with tracking. The lot code on your box opens the same certificate the pharmacy saw.</p>
+            <dl><dt>Who</dt><dd>Pharmacy dispatch, tracked courier</dd><dt>Record</dt><dd>Tracking + your lot lookup</dd></dl></article>
+        </div>
+      </div>
+
+      <!-- lot lookup lives with the process: proof before pricing -->
+      <div class="lot" id="lot">
+        <div class="lot-copy">
+          <h3 class="h3 light">Look up a lot.</h3>
+          <p>Type the code from your box. This preview only knows sample lots: try <b>SAMPLE-A</b>, <b>SAMPLE-B</b> or <b>SAMPLE-C</b>.</p>
+        </div>
+        <form class="lot-form" novalidate>
+          <label for="lot-in">Lot code</label>
+          <div class="lot-row"><input id="lot-in" name="lot" autocomplete="off" placeholder="SAMPLE-A" required><button class="btn btn-light" type="submit">Look up</button></div>
+          <div class="lot-out" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- PLAN: build your plan, Flip-morph tray -->
+    <section class="plan band-porcelain" data-proof="plan" id="plan">
+      <div class="plan-head">
+        <h2 class="h2">Build your plan.</h2>
+        <p>Pick what you want. Tap a card and it drops into your plan; the total updates as you go. Every plan starts with the free clinician review.</p>
+      </div>
+      <div class="build" data-build></div>
+      <label class="founding"><input type="checkbox" data-founding checked> <span>Apply the founding-member rate to membership <em>[offer: confirm with Grace]</em></span></label>
+      <p class="fine">Sample prices and rates shown in brackets are placeholders, to be confirmed with Grace. Membership covers the clinician service; any prescription is priced separately by the pharmacy and only if a clinician prescribes.</p>
+    </section>
+
+    <!-- RANGE: no-consult cosmetic topicals -->
+    <section class="range band-milk" data-proof="range" id="range">
+      <div class="range-head">
+        <p class="range-tag">No consult needed</p>
+        <h2 class="h2">The cosmetic shelf.</h2>
+        <p>Three topical copper-peptide formulas for how skin looks and feels. They're cosmetics: add them to your plan or buy them on their own, with subscribe &amp; save [x]%.</p>
+      </div>
+      <div class="range-grid" data-range></div>
+      <button type="button" class="link-cu" data-href="#programs">See the whole range on Programs →</button>
+    </section>
+  </div>
+
+  <!-- assessment (quiz) -->
+  <section class="assess band-espresso" id="assess">
+    <div class="assess-in">
+      <div class="assess-side">
+        <h2 class="h2 light">Your free clinician review starts here.</h2>
+        <p>About 60 seconds. It's a starting point for a licensed clinician, not a diagnosis.</p>
+        <p class="assess-count" aria-live="polite">Step <b data-step-n>1</b> of <b>5</b></p>
+        <div class="assess-meter" aria-hidden="true"><span></span></div>
+      </div>
+      <form class="quiz" novalidate>
+        <div class="q-step" data-q="1">
+          <h3 class="q-h" tabindex="-1" data-q1-h>What would you like to talk to a clinician about?</h3>
+          <div class="q-opts" data-q1-opts></div>
+        </div>
+        <div class="q-step" data-q="2" hidden>
+          <h3 class="q-h" tabindex="-1">How do you like to be looked after?</h3>
+          <div class="q-opts">
+            <button type="button" class="q-opt" aria-pressed="false" data-v="message">Messages I can answer when I like</button>
+            <button type="button" class="q-opt" aria-pressed="false" data-v="video">A video visit</button>
+            <button type="button" class="q-opt" aria-pressed="false" data-v="phone">A phone call with a real person</button>
+          </div>
+        </div>
+        <div class="q-step" data-q="3" hidden>
+          <h3 class="q-h" tabindex="-1">Where do you live?</h3>
+          <p class="q-note">Clinicians and pharmacies are licensed by state or province, so this decides who can look after you.</p>
+          <label class="q-label" for="q-state">State or province</label>
+          <select id="q-state" class="q-select">
+            <option value="">Choose…</option>
+            <optgroup label="United States"><option>Arizona</option><option>California</option><option>Colorado</option><option>Florida</option><option>Georgia</option><option>Illinois</option><option>New York</option><option>North Carolina</option><option>Texas</option><option>Washington</option><option>Other US state</option></optgroup>
+            <optgroup label="Canada"><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>Nova Scotia</option><option>Ontario</option><option>Quebec</option><option>Saskatchewan</option><option>Other province or territory</option></optgroup>
+          </select>
+          <button type="button" class="btn q-next" data-next>Continue</button>
+        </div>
+        <div class="q-step" data-q="4" hidden>
+          <h3 class="q-h" tabindex="-1">Do you take prescription medications?</h3>
+          <p class="q-note">Your clinician needs to know. You'll list them privately later.</p>
+          <div class="q-opts q-opts-row">
+            <button type="button" class="q-opt" aria-pressed="false" data-v="yes">Yes</button>
+            <button type="button" class="q-opt" aria-pressed="false" data-v="no">No</button>
+            <button type="button" class="q-opt" aria-pressed="false" data-v="unsure">Not sure</button>
+          </div>
+        </div>
+        <div class="q-step" data-q="5" hidden>
+          <h3 class="q-h" tabindex="-1">Here's what happens next.</h3>
+          <ol class="timeline">
+            <li><b>Today</b><span>Your answers go to the clinical team for <em data-q-result>your program</em>.</span></li>
+            <li><b>Within [x] business days</b><span>A licensed clinician reviews them and may ask a few questions.</span></li>
+            <li><b>If a plan is right for you</b><span>You see the price before anything is prepared. No charge until you agree.</span></li>
+            <li><b>If it isn't</b><span>You're told why, plainly, at no cost.</span></li>
+          </ol>
+          <p class="q-note">We need an email so the clinician can reach you with their review.</p>
+          <div class="q-fields">
+            <label for="q-name">First name</label><input id="q-name" autocomplete="given-name">
+            <label for="q-email">Email</label><input id="q-email" type="email" autocomplete="email" required>
+          </div>
+          <button type="submit" class="btn btn-light">Send to a clinician</button>
+          <p class="form-status" role="status"></p>
+        </div>
+        <div class="q-nav"><button type="button" class="q-back" data-back hidden>← Back</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- objection → evidence → CTA, set as a quiet two-column note -->
+  <section class="doubt">
+    <p class="doubt-q">“What if I just want to talk to someone first?”</p>
+    <div class="doubt-a">
+      <p>Then do that. Leave a number and a good time, and a person from our care team calls you back. No script, no pressure, and no clinical advice on that call: just how it all works.</p>
+      <form class="callback" id="callback" novalidate>
+        <label for="cb-name">Name</label><input id="cb-name" autocomplete="name">
+        <label for="cb-phone">Phone</label><input id="cb-phone" type="tel" autocomplete="tel" required>
+        <label for="cb-time">Best time</label>
+        <select id="cb-time"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+        <button class="btn" type="submit">Call me back</button>
+        <p class="form-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- email capture -->
+  <section class="notes band-cocoa">
+    <figure class="ph ph-flat" data-ph="flatlay"><img src="media/pure-flatlay.jpg" alt="Pepticity cosmetic range laid flat on porcelain" onerror="this.remove()" loading="lazy"></figure>
+    <div class="notes-copy">
+      <h2 class="h2 light">Pure notes.</h2>
+      <p>One letter a month: how the process works, new lot certificates as they're published, and founding-member news. No hype, easy to leave.</p>
+      <form class="notes-form" novalidate>
+        <label for="nt-email" class="sr-only">Email</label>
+        <input id="nt-email" type="email" placeholder="you@example.com" required>
+        <button class="btn btn-light" type="submit">Send me notes</button>
+        <p class="form-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+</section>
+
+<!-- =================================== PROGRAMS =================================== -->
+<section class="view" data-view="programs" aria-label="Programs" hidden>
+  <header class="page-head">
+    <h1 class="page-h">Programs</h1>
+    <p>Five clinician-guided programs, one membership, and a small cosmetic shelf. Every program begins with a free clinician review; a licensed clinician decides if a plan is right for you.</p>
+  </header>
+
+  <div class="programs" data-programs></div>
+
+  <section class="membership">
+    <h2 class="h2">What membership covers.</h2>
+    <div class="m-table" role="table" aria-label="Membership comparison">
+      <div role="row" class="m-row m-headrow"><span role="columnheader">Included</span><span role="columnheader">Essential<br><b>$[xx]/mo</b></span><span role="columnheader">Concierge<br><b>$[xx]/mo</b></span></div>
+      <div role="row" class="m-row"><span role="cell">Free first clinician review</span><span role="cell">Yes</span><span role="cell">Yes</span></div>
+      <div role="row" class="m-row"><span role="cell">Clinician messaging</span><span role="cell">Yes</span><span role="cell">Yes, same day [confirm]</span></div>
+      <div role="row" class="m-row"><span role="cell">Scheduled check-ins</span><span role="cell">[x] per year</span><span role="cell">[x] per year</span></div>
+      <div role="row" class="m-row"><span role="cell">Phone line to the care team</span><span role="cell">Yes</span><span role="cell">Named care contact</span></div>
+      <div role="row" class="m-row"><span role="cell">Lot lookup + certificates</span><span role="cell">Yes</span><span role="cell">Yes</span></div>
+      <div role="row" class="m-row"><span role="cell">Founding-member rate</span><span role="cell">[offer]</span><span role="cell">[offer]</span></div>
+    </div>
+    <p class="fine">Prescriptions, if any, are priced separately by the licensed partner pharmacy. Compounded medications are not FDA-approved or Health Canada-authorized products.</p>
+    <button class="btn" type="button" data-goto="assess">Start my free clinician review</button>
+  </section>
+
+  <section class="shelf">
+    <div class="shelf-head">
+      <h2 class="h2">The cosmetic shelf.</h2>
+      <p>No consult needed. Cosmetic claims only: these are about how skin looks and feels.</p>
+      <div class="chips" role="group" aria-label="Filter the range">
+        <button type="button" class="chip" aria-pressed="true" data-filter="all">All</button>
+        <button type="button" class="chip" aria-pressed="false" data-filter="serum">Serum</button>
+        <button type="button" class="chip" aria-pressed="false" data-filter="cream">Cream</button>
+        <button type="button" class="chip" aria-pressed="false" data-filter="eye">Eye</button>
+        <button type="button" class="chip" aria-pressed="false" data-filter="set">Sets</button>
+      </div>
+    </div>
+    <div class="shelf-grid" data-shelf></div>
+  </section>
+</section>
+
+<!-- =================================== SCIENCE =================================== -->
+<section class="view" data-view="science" aria-label="Science" hidden>
+  <header class="sci-head">
+    <figure class="ph ph-swirl" data-ph="swirl"><img src="media/pure-copper.jpg" alt="A copper droplet swirling in clear water" onerror="this.remove()" loading="lazy"></figure>
+    <div class="sci-head-copy">
+      <h1 class="page-h light">The science, <em>plainly.</em></h1>
+      <p>What peptides are, how the two lanes are regulated, and how every lot is tested. No promises, just the process.</p>
+    </div>
+  </header>
+
+  <section class="sci-what">
+    <div class="sci-col">
+      <h2 class="h2">What a peptide is.</h2>
+      <p>A peptide is a short chain of amino acids joined by peptide bonds. Proteins are long chains; peptides are short ones, often two to fifty amino acids. The order of the amino acids is called the sequence, and it defines the molecule.</p>
+      <p>GHK, used in our cosmetic shelf, is a tripeptide: glycine, histidine and lysine (glycyl-L-histidyl-L-lysine), about 340 daltons. It binds copper(II) ions, and the copper complex, listed on labels as <i>Copper Tripeptide-1</i>, gives solutions a faint blue tint. GHK was first described in human plasma in 1973.</p>
+    </div>
+    <figure class="ghk" aria-label="Diagram: glycine, histidine and lysine joined in a chain, with a copper ion bound">
+      <svg viewBox="0 0 420 260">
+        <g class="ghk-bonds"><path d="M70 150 L170 110 L270 150 L350 110"/><path d="M170 110 L210 190 L270 150" class="cu-bond"/></g>
+        <g class="ghk-nodes">
+          <circle cx="70" cy="150" r="34"/><circle cx="170" cy="110" r="38"/><circle cx="270" cy="150" r="38"/>
+          <circle cx="210" cy="196" r="20" class="cu"/>
+        </g>
+        <g class="ghk-labels"><text x="70" y="156">Gly</text><text x="170" y="116">His</text><text x="270" y="156">Lys</text><text x="210" y="202" class="cu-t">Cu</text><text x="350" y="100" class="end">–OH</text></g>
+      </svg>
+      <figcaption>Schematic only, not to scale.</figcaption>
+    </figure>
+  </section>
+
+  <section class="lanes band-porcelain">
+    <h2 class="h2">Two lanes, regulated differently.</h2>
+    <div class="lane-grid">
+      <article class="lane">
+        <h3>Clinician-guided care</h3>
+        <p>Prescription peptides are only available after a licensed clinician decides they're appropriate for you. A licensed partner pharmacy prepares them under its state or provincial licence.</p>
+        <p class="lane-note">Compounded medications are not FDA-approved or Health Canada-authorized products, and they are not equivalent to approved drugs.</p>
+      </article>
+      <article class="lane">
+        <h3>The cosmetic shelf</h3>
+        <p>Our topicals are cosmetics. In the US, cosmetics are regulated by the FDA under the Federal Food, Drug, and Cosmetic Act and the Modernization of Cosmetics Regulation Act of 2022. In Canada, they fall under Health Canada's Cosmetic Regulations.</p>
+        <p class="lane-note">Cosmetics are not drugs. They aren't intended to diagnose, treat or prevent anything, so we only describe how skin looks and feels.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="tests">
+    <div class="tests-copy">
+      <h2 class="h2">How each lot is tested.</h2>
+      <p>Every lot gets a certificate of analysis from an independent lab before it can be released. You can open it with the code on your box.</p>
+    </div>
+    <ol class="test-list">
+      <li><b>Identity</b><span>Mass spectrometry confirms the molecule matches its written sequence. [method: confirm with lab]</span></li>
+      <li><b>Purity</b><span>HPLC measures how much of the sample is the intended peptide. Result printed on the certificate.</span></li>
+      <li><b>Contaminants</b><span>Screens for microbes and heavy metals, and sterility and endotoxin where the pharmacy lane requires it.</span></li>
+      <li><b>Cosmetic safety</b><span>For the shelf: preservative efficacy and stability testing on the finished formula.</span></li>
+      <li><b>Release</b><span>Only lots that pass are released. The certificate is linked to the lot code.</span></li>
+    </ol>
+    <figure class="ph ph-hands" data-ph="hands"><img src="media/lab-glovedvial.jpg" alt="Gloved hands holding a sample vial at a lab bench" onerror="this.remove()" loading="lazy"><figcaption>Lab photograph · for illustration</figcaption></figure>
+  </section>
+
+  <section class="sci-cta band-espresso">
+    <p class="fill fill-light" data-fill><span class="fill-base">Ask for the record. We'll show you.</span><span class="fill-cu" aria-hidden="true">Ask for the record. We'll show you.</span></p>
+    <div class="cta-row"><button class="btn btn-light" type="button" data-goto="lot">Look up a sample lot</button><button class="btn btn-quiet light" type="button" data-goto="assess">Start my free clinician review</button></div>
+  </section>
+</section>
+
+<!-- =================================== FAQ =================================== -->
+<section class="view" data-view="faq" aria-label="FAQ and contact" hidden>
+  <header class="page-head">
+    <h1 class="page-h">Questions, <em>answered.</em></h1>
+    <p>If yours isn't here, call <a href="tel:">[phone number]</a> or ask for a call back.</p>
+  </header>
+  <div class="faq-grid">
+    <div class="faq-list">
+      <details><summary>Who decides whether I get a prescription?</summary><p>A licensed clinician licensed in your state or province. A licensed clinician decides if a plan is right for you, and they can say no.</p></details>
+      <details><summary>What does the free clinician review include?</summary><p>A clinician reads your assessment, may ask follow-up questions, and tells you whether a plan could fit and what it would cost. There's no charge for the review.</p></details>
+      <details><summary>Where is my order prepared?</summary><p>At a licensed partner pharmacy, under its own state or provincial licence. Your label carries a lot code.</p></details>
+      <details><summary>Are compounded peptides the same as approved drugs?</summary><p>No. Compounded medications are not FDA-approved or Health Canada-authorized products, and they are not equivalent to approved drugs. Your clinician can explain the difference.</p></details>
+      <details><summary>What is a lot code, and how do I use it?</summary><p>It identifies the batch your order came from. Enter it in the lot lookup to open that batch's certificate of analysis.</p></details>
+      <details><summary>Do I need a consult for the cosmetic shelf?</summary><p>No. The topical range is cosmetic. You can add it to your plan or buy it on its own, with subscribe &amp; save [x]%.</p></details>
+      <details><summary>Which states and provinces do you serve?</summary><p>[List to be confirmed with Grace.] The assessment asks where you live so we can match you with a clinician licensed there.</p></details>
+      <details><summary>What is the founding-member rate?</summary><p>[offer: confirm with Grace]. It applies to membership, not to pharmacy prescriptions.</p></details>
+      <details><summary>Can I cancel?</summary><p>Membership can be cancelled [terms: confirm with Grace]. Cosmetic subscriptions can be paused or cancelled from your account.</p></details>
+      <details><summary>Can I talk to a person?</summary><p>Yes. Call [phone number] or use "Call me back" and we'll ring you at a time you choose.</p></details>
+    </div>
+    <aside class="contact">
+      <h2 class="h3">Write to us.</h2>
+      <form class="contact-form" novalidate>
+        <label for="c-name">Name</label><input id="c-name" autocomplete="name">
+        <label for="c-email">Email</label><input id="c-email" type="email" autocomplete="email" required>
+        <label for="c-topic">About</label>
+        <select id="c-topic"><option>Clinician-guided programs</option><option>The cosmetic shelf</option><option>An order or lot code</option><option>Something else</option></select>
+        <label for="c-msg">Message</label><textarea id="c-msg" rows="4"></textarea>
+        <p class="fine">Please don't include medical details here; your clinician will ask through a secure channel.</p>
+        <button class="btn" type="submit">Send message</button>
+        <p class="form-status" role="status"></p>
+      </form>
+      <div class="contact-alt">
+        <p>Phone <a href="tel:">[phone number]</a></p>
+        <button type="button" class="btn btn-quiet" data-goto="callback">Prefer a call back?</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-top">
+    <p class="foot-mark">PEPTICITY <span>Pure</span></p>
+    <nav aria-label="Footer"><a href="#programs">Programs</a><a href="#science">Science</a><a href="#faq">FAQ</a><a href="#intro">Replay intro</a></nav>
+    <p>[phone number] · [email address]</p>
+  </div>
+  <p class="disclaimer">Pepticity connects you with independent licensed clinicians and licensed partner pharmacies. Prescription products are available only after a licensed clinician determines they are appropriate. Compounded medications are not FDA-approved or Health Canada-authorized products. Cosmetic products are intended for appearance only and are not drugs. Nothing on this site is medical advice. [Final legal copy to be approved by counsel.]</p>
+  <p class="fine">© 2026 Pepticity</p>
+</footer>
+
+<!-- plan tray: desktop floats when filled; on mobile it is the single sticky CTA -->
+<div class="tray" aria-label="Your plan">
+  <div class="tray-slots" aria-hidden="true"><span class="slot"></span><span class="slot"></span><span class="slot"></span><span class="slot"></span></div>
+  <div class="tray-sum"><span class="tray-k">Your plan</span><b class="tray-total">Free review</b></div>
+  <button type="button" class="btn btn-light tray-go" data-tray-go>Review plan</button>
+</div>
+
+<!-- plan drawer -->
+<aside id="plan-drawer" class="drawer" role="dialog" aria-modal="true" aria-labelledby="pd-h" hidden>
+  <div class="drawer-in">
+    <header class="drawer-head"><h2 id="pd-h" class="h3">Your plan</h2><button type="button" class="x" data-close aria-label="Close">Close</button></header>
+    <div class="pd-lines" data-lines></div>
+    <div class="pd-ship"><p data-ship-msg></p><div class="pd-ship-bar"><span data-ship-bar></span></div></div>
+    <dl class="pd-sum" data-sum></dl>
+    <button type="button" class="btn pd-go" data-checkout>Continue to free clinician review</button>
+    <p class="form-status" role="status"></p>
+    <p class="fine">Preview only. Prices in brackets are placeholders to confirm with Grace.</p>
+  </div>
+</aside>
+
+<!-- quick view -->
+<aside id="qv" class="drawer qv" role="dialog" aria-modal="true" aria-labelledby="qv-h" hidden>
+  <div class="drawer-in">
+    <header class="drawer-head"><h2 id="qv-h" class="h3">Product</h2><button type="button" class="x" data-close aria-label="Close">Close</button></header>
+    <div class="qv-body" data-qv></div>
+  </div>
+</aside>
+
+<div class="ripple-ring" aria-hidden="true"></div>
+<div class="toast" role="status" aria-live="polite"></div>
+
+<script src="../vendor/gsap.min.js"></script>
+<script src="../vendor/ScrollTrigger.min.js"></script>
+<script src="../vendor/SplitText.min.js"></script>
+<script src="../vendor/lenis.min.js"></script>
+<script src="art.js"></script>
+<script src="site.js"></script>
+<script src="intro.js"></script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pepticity Clinic</title>
+<meta name="description" content="Pepticity — clinician-guided peptide care with a traceable certificate of analysis for every lot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div id="stage">
+
+<!-- ============ CINEMATIC ENTRANCE (8.6s, cube-turns into the site) ============ -->
+<div id="intro" aria-label="Pepticity intro">
+  <video class="intro-plate" data-src-synthesis="media/intro.mp4" data-src-film="media/hero.mp4" data-src-vial="media/vial.mp4" muted playsinline preload="auto"></video>
+  <svg class="intro-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 43 L15 27 L15 10 L22 10 L29 11 L34 15 L34 21 L29 25 L22 26 L15 27"/></svg>
+  <canvas></canvas>
+  <div class="scan"></div>
+  <div class="hud mono">
+    <span>PEPTICITY / SYNTHESIS</span>
+    <span class="seq">SEQ 000 / 009</span>
+    <span>LOT LOOKUP ON EVERY VIAL</span>
+  </div>
+  <div class="lockup">
+    <div class="wordmark" aria-label="Pepticity"><span>P</span><span>E</span><span>P</span><span>T</span><span>I</span><span>C</span><span>I</span><span>T</span><span>Y</span></div>
+    <p class="tagline mono">PRECISION, PRESCRIBED.</p>
+  </div>
+  <button class="skip mono" type="button">Skip intro ⏎</button>
+  <span class="intro-name mono"></span>
+</div>
+
+<!-- ============ SITE ============ -->
+<div id="site">
+
+<div class="announce mono"><span>Founding-member pricing is open: [offer: confirm with Grace]</span><a href="#quiz">Claim it →</a></div>
+
+<header class="nav">
+  <a href="#top" class="brand" aria-label="Pepticity home">
+    <svg viewBox="0 0 48 48" class="mark-svg" aria-hidden="true">
+      <path class="bond" d="M15 43 L15 27 L15 10 L22 10 L29 11 L34 15 L34 21 L29 25 L22 26 L15 27"/>
+      <g class="nodes"><circle cx="15" cy="43" r="2.6"/><circle cx="15" cy="27" r="2.6"/><circle cx="15" cy="10" r="2.6"/><circle cx="22" cy="10" r="2.6"/><circle cx="29" cy="11" r="2.6"/><circle cx="34" cy="15" r="2.6"/><circle cx="34" cy="21" r="2.6"/><circle cx="29" cy="25" r="2.6"/><circle cx="22" cy="26" r="2.6"/></g>
+    </svg>
+    <span class="brand-word">PEPTICITY</span>
+  </a>
+  <nav class="links" aria-label="Primary">
+    <a href="#paths">Who it's for</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#verify">Verify a lot</a>
+  </nav>
+  <div class="nav-right">
+    <button class="a11y-toggle mono" type="button" aria-pressed="false" title="Larger text">A<span>A</span></button>
+    <a href="#quiz" class="btn btn-sm magnetic">Find my plan</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-shade" aria-hidden="true"></div>
+  <canvas class="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-copy">
+    <p class="eyebrow mono">Clinician-guided peptide care · US &amp; Canada</p>
+    <h1 class="split">Precision care.<br><em>Prescribed</em> for you.</h1>
+    <p class="lede">Take a 60-second assessment. A licensed clinician reviews it, and if a peptide plan fits, a licensed pharmacy prepares it and tests every lot. Every vial has a lot code you can look up yourself.</p>
+    <div class="cta-row">
+      <a href="#quiz" class="btn btn-lg magnetic">Find my plan · 60 sec</a>
+      <a href="#verify" class="btn btn-ghost magnetic">See the lab proof →</a>
+    </div>
+    <ul class="trust-row mono">
+      <li>✓ Free clinician review</li><li>✓ No hidden fees</li><li>✓ Cancel anytime</li>
+    </ul>
+  </div>
+  <div class="scroll-cue mono">Scroll<span></span></div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="track mono">
+  <span>Licensed clinicians</span><i>◆</i><span>Licensed partner pharmacies</span><i>◆</i><span>Independent lot testing</span><i>◆</i><span>Lot lookup on every vial</span><i>◆</i><span>Real humans on the phone</span><i>◆</i>
+  <span>Licensed clinicians</span><i>◆</i><span>Licensed partner pharmacies</span><i>◆</i><span>Independent lot testing</span><i>◆</i><span>Lot lookup on every vial</span><i>◆</i><span>Real humans on the phone</span><i>◆</i>
+</div></div>
+
+<!-- AUDIENCE PATHS -->
+<section id="paths" class="paths">
+  <div class="sec-head">
+    <p class="eyebrow mono">Who it's for</p>
+    <h2 class="split">What brings you here?</h2>
+    <p class="sub">Pick the one closest to you. We tailor the assessment to your answer.</p>
+  </div>
+  <div class="path-grid">
+    <a href="#quiz" class="path tilt" data-path="longevity"><img onerror="this.remove()" src="media/p-longevity.jpg" alt="Silver-haired man walking a coastal trail at dusk" loading="lazy"><div class="path-body"><span class="mono">55+ · Longevity</span><h3>I want to stay active and independent as I age.</h3><span class="go">Start here →</span></div></a>
+    <a href="#quiz" class="path tilt" data-path="women"><img onerror="this.remove()" src="media/p-women.jpg" alt="Woman in her fifties by a window in morning light" loading="lazy"><div class="path-body"><span class="mono">Women 40+</span><h3>My body is changing, and I want a plan that keeps up.</h3><span class="go">Start here →</span></div></a>
+    <a href="#quiz" class="path tilt" data-path="energy"><img onerror="this.remove()" src="media/p-energy.jpg" alt="Woman stretching in bed in early morning light" loading="lazy"><div class="path-body"><span class="mono">Low energy</span><h3>I'm tired of feeling run-down, and I want real answers.</h3><span class="go">Start here →</span></div></a>
+    <a href="#quiz" class="path tilt" data-path="men"><img onerror="this.remove()" src="media/p-men.jpg" alt="Man running up city stairs at dawn" loading="lazy"><div class="path-body"><span class="mono">Men 35+</span><h3>I want to perform at work, at home and in the gym.</h3><span class="go">Start here →</span></div></a>
+    <a href="#quiz" class="path tilt" data-path="athlete"><img onerror="this.remove()" src="media/p-athlete.jpg" alt="Athlete training in a dark gym" loading="lazy"><div class="path-body"><span class="mono">Training &amp; recovery</span><h3>I train hard and I take my recovery seriously.</h3><span class="go">Start here →</span></div></a>
+  </div>
+</section>
+
+<!-- HOW IT WORKS: pinned four-act story -->
+<section id="how" class="protocol">
+  <div class="pin-wrap">
+    <div class="protocol-visual">
+      <canvas class="protocol-canvas" aria-hidden="true"></canvas>
+      <svg class="chroma" viewBox="0 0 600 260" aria-hidden="true">
+        <path class="axis" d="M30 230 H580 M30 230 V20"/>
+        <path class="trace" d="M30 228 L120 227 L150 224 L170 226 L230 226 L262 210 L276 120 L286 34 L296 120 L310 214 L340 226 L400 225 L420 219 L432 226 L580 227"/>
+        <text x="300" y="28" class="peak mono">99.4%</text>
+        <text x="30" y="252" class="lbl mono">0 min</text><text x="540" y="252" class="lbl mono">30 min</text>
+      </svg>
+    </div>
+    <div class="protocol-steps">
+      <p class="eyebrow mono">How it works</p>
+      <article class="step"><span class="num mono">01</span><h2>Assess</h2><p>Answer a short assessment about your goals, history and current medications. It takes about a minute.</p></article>
+      <article class="step"><span class="num mono">02</span><h2>Review</h2><p>A licensed clinician in your state or province reviews it, and you can book a video call with them. If peptides aren't right for you, they will tell you.</p></article>
+      <article class="step"><span class="num mono">03</span><h2>Verify</h2><p>A licensed partner pharmacy prepares your plan. An independent lab tests every lot, and we publish the actual chromatogram for you to check.</p></article>
+      <article class="step"><span class="num mono">04</span><h2>Deliver</h2><p>It ships discreetly in a cold pack. Scan the lot code and your certificate opens on your phone. You can reach a real person by phone or chat.</p></article>
+      <div class="progress"><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ: primary lead capture -->
+<section id="quiz" class="quiz">
+  <div class="quiz-card glass">
+    <div class="quiz-top mono"><button type="button" class="quiz-back" hidden>← Back</button><span>Assessment</span><span class="quiz-count" aria-live="polite">1 / 6</span></div>
+    <div class="quiz-bar"><span></span></div>
+    <div class="quiz-stage">
+      <fieldset class="q is-active" data-q="goal"><legend>What's your main goal?</legend>
+        <button type="button" data-v="longevity">Healthy aging</button><button type="button" data-v="energy">More energy, day to day</button><button type="button" data-v="women">Women's health, 40+</button><button type="button" data-v="men">Men's health, 35+</button><button type="button" data-v="recovery">Training &amp; recovery</button><button type="button" data-v="skin">Skin &amp; hair (no consult needed)</button>
+      </fieldset>
+      <fieldset class="q" data-q="age"><legend>Your age range?</legend>
+        <button type="button" data-v="18">18–34</button><button type="button" data-v="35">35–49</button><button type="button" data-v="50">50–64</button><button type="button" data-v="65">65+</button>
+      </fieldset>
+      <fieldset class="q" data-q="region"><legend>Where do you live?</legend>
+        <p class="q-note">Clinicians can only care for you where they're licensed.</p>
+        <label class="q-select"><span class="mono">State or province</span><select id="region"><option value="">Choose…</option><optgroup label="United States"><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>California</option><option>Colorado</option><option>Florida</option><option>Georgia</option><option>Illinois</option><option>New York</option><option>Texas</option><option>Washington</option><option>Other US state</option></optgroup><optgroup label="Canada"><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>Ontario</option><option>Quebec</option><option>Saskatchewan</option><option>Other province / territory</option></optgroup></select></label>
+        <button type="button" data-v="next" class="q-next">Continue</button>
+      </fieldset>
+      <fieldset class="q" data-q="meds"><legend>Do you take any prescription medications?</legend>
+        <p class="q-note">Your clinician reviews them as part of your consult.</p>
+        <button type="button" data-v="yes">Yes</button><button type="button" data-v="no">No</button><button type="button" data-v="unsure">Not sure</button>
+      </fieldset>
+      <fieldset class="q" data-q="tried"><legend>Have you worked with a clinician on this before?</legend>
+        <button type="button" data-v="no">No, this is new for me</button><button type="button" data-v="some">Somewhat</button><button type="button" data-v="yes">Yes, I'm looking for a better option</button>
+      </fieldset>
+      <fieldset class="q" data-q="contact"><legend>How would you like to talk to us?</legend>
+        <button type="button" data-v="video">Video call</button><button type="button" data-v="phone">Phone call</button><button type="button" data-v="chat">Text / chat</button>
+      </fieldset>
+      <form class="q quiz-result" data-q="result">
+        <p class="eyebrow mono">Your match</p>
+        <h3 class="result-title">Your plan path is ready.</h3>
+        <p class="result-copy">Enter your email and we'll send your path. Your free clinician review comes with it.</p>
+        <ol class="next-steps mono" aria-label="What happens next"></ol>
+        <div class="lead-row"><input type="email" required placeholder="you@email.com" aria-label="Email"><button class="btn magnetic" type="submit">Send my plan</button></div>
+        <p class="fine mono">Preview build: this form isn't connected to a CRM yet.</p>
+      </form>
+    </div>
+  </div>
+  <div class="quiz-side">
+    <h2 class="split">Sixty seconds.<br>No obligation.</h2>
+    <ul class="ticks">
+      <li>The clinician review is free</li>
+      <li>You see the price before you pay anything</li>
+      <li>If peptides aren't right for you, we'll say so</li>
+    </ul>
+    <p class="call">Prefer to talk? <a href="tel:+10000000000" class="mono">[phone number]</a></p>
+  </div>
+</section>
+
+<!-- VERIFY A LOT -->
+<section id="verify" class="verify">
+  <div class="verify-copy">
+    <p class="eyebrow mono">Lab proof</p>
+    <h2 class="split">Don't trust us.<br>Check us.</h2>
+    <p>Type the lot code printed on the vial. Try <button class="chip mono" data-lot="P-0420">P-0420</button> or <button class="chip mono" data-lot="P-0388">P-0388</button>.</p>
+    <form class="lot-form" autocomplete="off">
+      <label for="lot" class="mono">Lot code</label>
+      <div class="lot-row"><input id="lot" class="mono" placeholder="P-0000" maxlength="8" required><button class="btn magnetic" type="submit">Look up</button></div>
+    </form>
+    <p class="fine mono">Sample data for design preview.</p>
+  </div>
+  <div class="coa glass" aria-live="polite">
+    <div class="coa-empty mono">Waiting for a lot code…</div>
+    <div class="coa-body" hidden>
+      <header><span class="mono coa-id"></span><span class="badge mono">Passed</span></header>
+      <h3 class="coa-name"></h3>
+      <svg viewBox="0 0 400 140" class="coa-chart"><path class="coa-trace" d=""/></svg>
+      <dl class="coa-grid">
+        <div><dt class="mono">HPLC purity</dt><dd class="coa-purity"></dd></div>
+        <div><dt class="mono">Identity (MS)</dt><dd class="coa-mass"></dd></div>
+        <div><dt class="mono">Endotoxin</dt><dd>Pass</dd></div>
+        <div><dt class="mono">Tested</dt><dd class="coa-date"></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing">
+  <div class="sec-head"><p class="eyebrow mono">Pricing</p><h2 class="split">One price. No surprises.</h2><p class="sub">The prices shown include everything. Any medication cost is quoted in full before you are charged.</p></div>
+  <div class="tiers">
+    <article class="tier glass"><span class="mono">Start</span><h3>Free</h3><p>The assessment and your clinician's review.</p><ul><li>60-second assessment</li><li>Licensed clinician review</li><li>Personal plan path</li></ul><a href="#quiz" class="btn btn-ghost magnetic">Start free</a></article>
+    <article class="tier glass featured"><span class="badge mono">Founding rate</span><span class="mono">Member</span><h3>$[xx]<small>/mo</small></h3><p>Ongoing care and check-ins.</p><ul><li>Clinician follow-ups</li><li>Pharmacy-prepared plan</li><li>Lot certificate with every order</li><li>Priority human support</li></ul><a href="#quiz" class="btn magnetic">Become a member</a></article>
+    <article class="tier glass"><span class="mono">Annual</span><h3>$[xx]<small>/yr</small></h3><p>The same care, paid once a year at a lower monthly rate.</p><ul><li>Everything in Member</li><li>[x] months free</li><li>Founding-member rate locked in</li></ul><a href="#quiz" class="btn btn-ghost magnetic">Go annual</a></article>
+  </div>
+  <p class="fine mono center">Sample tiers. Replace the [brackets] with Grace's real pricing and terms.</p>
+  <div class="receipt" aria-label="What you pay today">
+    <p class="mono r-head">PEPTICITY · YOUR FIRST VISIT</p>
+    <ul class="mono">
+      <li><span>60-second assessment</span><b>$0.00</b></li>
+      <li><span>Licensed clinician review</span><b>$0.00</b></li>
+      <li><span>Lab testing fees</span><b>$0.00</b></li>
+      <li><span>Shipping &amp; cold pack</span><b>$0.00</b></li>
+      <li><span>Medication, if prescribed</span><b>quoted first</b></li>
+      <li class="total"><span>Due today</span><b>$0.00</b></li>
+    </ul>
+    <p class="mono r-foot">NO HIDDEN FEES · CANCEL IN 2 CLICKS</p>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="compare">
+  <div class="sec-head"><p class="eyebrow mono">The difference</p><h2 class="split">Not another online peptide shop.</h2></div>
+  <div class="table-wrap glass">
+    <table>
+      <thead><tr><th></th><th>Pepticity</th><th>Typical online seller</th></tr></thead>
+      <tbody>
+        <tr><td>Licensed clinician reviews your case</td><td class="y">✓</td><td class="n">—</td></tr>
+        <tr><td>Licensed pharmacy prepares it</td><td class="y">✓</td><td class="n">—</td></tr>
+        <tr><td>Certificate for <em>your</em> lot</td><td class="y">✓</td><td class="n">Sometimes</td></tr>
+        <tr><td>Full price shown before checkout</td><td class="y">✓</td><td class="n">Rarely</td></tr>
+        <tr><td>A real person answers the phone</td><td class="y">✓</td><td class="n">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SELLER RED-FLAG CHECKER -->
+<section class="redflag" id="check">
+  <div class="sec-head"><p class="eyebrow mono">Before you buy anywhere</p><h2 class="split">Check any peptide seller in 30 seconds.</h2><p class="sub">Answer for the seller you're considering. It can be us.</p></div>
+  <form class="rf glass">
+    <fieldset><legend>Does a licensed clinician review your health history first?</legend><label><input type="radio" name="q1" value="1">Yes</label><label><input type="radio" name="q1" value="0">No</label></fieldset>
+    <fieldset><legend>Is it prepared by a licensed pharmacy?</legend><label><input type="radio" name="q2" value="1">Yes</label><label><input type="radio" name="q2" value="0">No</label></fieldset>
+    <fieldset><legend>Is the lab certificate for <em>your</em> lot, not a generic one?</legend><label><input type="radio" name="q3" value="1">Yes</label><label><input type="radio" name="q3" value="0">No</label></fieldset>
+    <fieldset><legend>Do you see the full price before you pay?</legend><label><input type="radio" name="q4" value="1">Yes</label><label><input type="radio" name="q4" value="0">No</label></fieldset>
+    <fieldset><legend>Is it labelled "research use only" while being sold to you?</legend><label><input type="radio" name="q5" value="0">Yes</label><label><input type="radio" name="q5" value="1">No</label></fieldset>
+    <fieldset><legend>Can you reach a real person by phone?</legend><label><input type="radio" name="q6" value="1">Yes</label><label><input type="radio" name="q6" value="0">No</label></fieldset>
+    <div class="rf-out" aria-live="polite"><span class="rf-score mono">0 / 6 answered</span><p class="rf-verdict">Answer all six to see the verdict.</p></div>
+  </form>
+</section>
+
+<!-- LEAD MAGNET -->
+<section id="library" class="library">
+  <div class="lib-card glass">
+    <img onerror="this.remove()" src="media/vial.jpg" alt="" class="lib-img" loading="lazy">
+    <div class="lib-copy">
+      <p class="eyebrow mono">Free field guide</p>
+      <h2 class="split">Peptides: what's real, what's hype, and what to ask.</h2>
+      <p>A plain-English guide. It covers how peptides are regulated, how to read a certificate of analysis, the warning signs of a bad seller, and the questions to bring to your clinician.</p>
+      <form class="lead-form"><input type="email" placeholder="you@email.com" required aria-label="Email"><button class="btn magnetic" type="submit">Send me the guide</button></form>
+      <p class="fine mono lead-note">Preview build: this form isn't connected to an email service yet.</p>
+    </div>
+  </div>
+</section>
+
+<section class="guarantee">
+  <div class="g-mark mono">✓</div>
+  <h2 class="split">[Satisfaction promise: confirm terms]</h2>
+  <p>If your clinician decides peptides aren't right for you, you pay nothing. You can cancel your membership in two clicks: no phone maze, no retention script.</p>
+</section>
+
+<section class="faq">
+  <h2 class="split">Questions, answered</h2>
+  <details><summary>Is this safe? Who decides what I get?</summary><p>A licensed clinician makes every decision, using your health history. If peptides aren't appropriate for you, they won't be prescribed.</p></details>
+  <details><summary>What is a certificate of analysis?</summary><p>A lab report for one production lot. It confirms identity (mass spectrometry) and purity (HPLC) and screens for contaminants. Yours is linked to the lot code on your vial.</p></details>
+  <details><summary>I'm over 65. Is this for me?</summary><p>Yes. It's built for adults of every age. Choose "phone call" in the assessment and a person will walk you through everything. You can also press the <strong>AA</strong> button at the top of the page for larger text.</p></details>
+  <details><summary>How much does it cost?</summary><p>The assessment and clinician review are free. Membership and any medication are quoted in full before you pay. There are no hidden lab or shipping fees.</p></details>
+  <details><summary>Can I cancel?</summary><p>Yes, anytime, in two clicks from your account.</p></details>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-mark">PEPTICITY</div>
+  <p class="mono disclaimer">Pepticity connects you with independent licensed clinicians and licensed pharmacies. Prescription products are available only after a clinician determines they are appropriate. Compounded medications are not FDA-approved or Health Canada-authorized products. This site does not provide medical advice. [Final legal copy to be approved by counsel.]</p>
+  <p class="mono">© 2026 Pepticity</p>
+</footer>
+
+<!-- intro option switcher (review build only) -->
+<div class="intro-picker mono" role="group" aria-label="Replay intro option">
+  <span>Intro options</span><button type="button" data-mode="synthesis">A · Synthesis</button><button type="button" data-mode="film">B · Film</button><button type="button" data-mode="vial">C · Vial</button>
+</div>
+
+<!-- sticky mobile CTA -->
+<a href="#quiz" class="sticky-cta">Find my plan · 60 sec →</a>
+
+<!-- concierge -->
+<button class="concierge-btn" type="button" aria-expanded="false" aria-controls="concierge"><span class="dot"></span>Ask Pepticity</button>
+<div id="concierge" class="concierge glass" hidden>
+  <header><strong>Pepticity Concierge</strong><button type="button" class="c-close" aria-label="Close">×</button></header>
+  <div class="c-log" aria-live="polite"><p class="c-msg bot">Hi! I can explain how Pepticity works, what it costs, and how lot testing works. I can't give medical advice, but a licensed clinician can.</p></div>
+  <div class="c-quick"><button type="button" data-a="how">How does it work?</button><button type="button" data-a="cost">What does it cost?</button><button type="button" data-a="lab">How is it tested?</button><button type="button" data-a="human">Talk to a person</button></div>
+</div>
+
+<!-- exit intent -->
+<dialog class="exit glass">
+  <button type="button" class="x-close" aria-label="Close">×</button>
+  <p class="eyebrow mono">Before you go</p>
+  <h3>Take the free field guide with you.</h3>
+  <p>It covers what's real, what's hype, and what to ask. One email, no spam.</p>
+  <form class="lead-form" method="dialog"><input type="email" placeholder="you@email.com" required aria-label="Email"><button class="btn" type="submit">Send it</button></form>
+</dialog>
+</div>
+</div>
+
+<script src="../vendor/gsap.min.js"></script>
+<script src="../vendor/ScrollTrigger.min.js"></script>
+<script src="../vendor/SplitText.min.js"></script>
+<script src="../vendor/lenis.min.js"></script>
+<script src="helix.js"></script>
+<script src="intro.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

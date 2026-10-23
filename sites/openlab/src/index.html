@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pepticity Open Lab</title>
+<meta name="description" content="Pepticity Open Lab: clinician-guided peptide care where every lot's full test panel is public. Verify before you buy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..800,0..100,0..1;1,9..144,300..800,0..100,0..1&family=Martian+Mono:wdth,wght@87.5..112.5,300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skiplink" href="#home" data-skip>Skip to content</a>
+
+<!-- ============ INTRO: instrument log → GHK / PEPTICITY → particles pile into an HPLC peak → baseline lifts into the site's top border ============ -->
+<div id="intro" aria-label="Pepticity Open Lab intro">
+  <video class="intro-plate" muted playsinline preload="auto" src="media/intro.mp4" aria-hidden="true"></video>
+  <canvas class="intro-canvas" aria-hidden="true"></canvas>
+  <p class="sr-only">An instrument log types the peptide sequence G H K and the word Pepticity. The letters fall into a baseline and pile into a chromatogram peak labelled 99.4 percent, sample data.</p>
+  <button class="skip mono" type="button">Skip intro <span aria-hidden="true">· Esc</span></button>
+</div>
+
+<!-- the intro's baseline lives on as the site's top border -->
+<div class="topline" aria-hidden="true"><svg viewBox="0 0 60 10" preserveAspectRatio="none"><path d="M0 9 L22 9 C26 9 27 1 30 1 C33 1 34 9 38 9 L60 9"/></svg></div>
+
+<header class="mast" id="top">
+  <div class="strip mono">
+    <span class="issue">Vol. 1 · No. 05</span>
+    <span class="date" data-today>Friday, 23 October 2026</span>
+    <span class="live"><i class="dot" aria-hidden="true"></i><span class="live-t">Lot panels: <a href="#lab" data-target="explorer">8 published</a> · SAMPLE</span></span>
+    <span class="grow"></span>
+    <a class="phone" href="#faq" data-target="callback">Call <b>[phone number]</b></a>
+    <div class="ts" role="group" aria-label="Text size">
+      <span class="ts-l">Text</span>
+      <button type="button" data-ts="1" aria-pressed="true" aria-label="Standard text size">A</button>
+      <button type="button" data-ts="1.14" aria-pressed="false" aria-label="Large text size">A<sup>+</sup></button>
+      <button type="button" data-ts="1.3" aria-pressed="false" aria-label="Largest text size">A<sup>++</sup></button>
+    </div>
+  </div>
+  <div class="masthead">
+    <a class="brand" href="#home" aria-label="Pepticity Open Lab, cover">
+      <span class="brand-w">Pepticity</span>
+      <span class="brand-s mono">Open&nbsp;Lab</span>
+    </a>
+    <nav class="toc" aria-label="Contents">
+      <p class="toc-h mono">Contents</p>
+      <ol>
+        <li><a href="#home" data-nav="home"><span class="n mono">01</span><span class="t">Cover</span><span class="d">Verify before you buy</span></a></li>
+        <li><a href="#shop" data-nav="shop"><span class="n mono">02</span><span class="t">Shop</span><span class="d">Clinician plans &amp; topicals</span></a></li>
+        <li><a href="#lab" data-nav="lab"><span class="n mono">03</span><span class="t">Lab</span><span class="d">Lots, report, methods</span></a></li>
+        <li><a href="#faq" data-nav="faq"><span class="n mono">04</span><span class="t">FAQ</span><span class="d">Questions &amp; contact</span></a></li>
+      </ol>
+    </nav>
+    <button class="contents-btn mono" type="button" aria-expanded="false" aria-controls="sheet">Contents <span aria-hidden="true">01–04</span></button>
+  </div>
+</header>
+
+<!-- slim sticky bar (appears on scroll) -->
+<div class="slim" aria-hidden="true" inert>
+  <a class="slim-b" href="#home"><span>Pepticity</span> <span class="mono">Open Lab · No. 05</span></a>
+  <nav class="slim-toc mono" aria-label="Contents, compact">
+    <a href="#home" data-nav="home">01 Cover</a><a href="#shop" data-nav="shop">02 Shop</a><a href="#lab" data-nav="lab">03 Lab</a><a href="#faq" data-nav="faq">04 FAQ</a>
+  </nav>
+  <span class="slim-sec mono" data-slim-sec>§ Cover</span>
+  <a class="btn btn-solid btn-s" href="#shop" data-target="plan" data-cta-short>Start plan</a>
+  <button class="contents-btn mono" type="button" aria-expanded="false" aria-controls="sheet">Contents</button>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in">
+    <p class="mono sheet-h">Contents · No. 05</p>
+    <ol>
+      <li><a href="#home" data-nav="home"><span class="n mono">01</span> Cover</a></li>
+      <li><a href="#shop" data-nav="shop"><span class="n mono">02</span> Shop</a></li>
+      <li><a href="#lab" data-nav="lab"><span class="n mono">03</span> Lab</a></li>
+      <li><a href="#faq" data-nav="faq"><span class="n mono">04</span> FAQ &amp; contact</a></li>
+    </ol>
+    <a class="sheet-phone" href="#faq" data-target="callback">Call <b>[phone number]</b> or ask us to call you back</a>
+    <button class="sheet-x mono" type="button">Close</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+
+<!-- ======================= 01 · COVER ======================= -->
+<section class="view" data-view="home" aria-label="01 Cover">
+
+  <div class="cover wrap">
+    <div class="cover-copy">
+      <p class="kicker mono"><span>No. 05</span> The open-lab issue</p>
+      <h1 class="display">Verify <em>before</em> you&nbsp;buy.</h1>
+      <p class="aud-line" data-aud-line>“I want care I can check for myself.”</p>
+      <p class="lede">Pepticity is clinician-guided peptide care. A licensed clinician decides if a plan is right for you, a licensed partner pharmacy prepares it, and every lot’s full test panel is public before you pay.</p>
+
+      <div class="chooser">
+        <fieldset class="tray">
+          <legend><span class="step mono">Step 1</span> What brings you here?</legend>
+          <div class="wells">
+            <label class="well"><input type="radio" name="aud" value="longevity"><span class="cup" aria-hidden="true"></span><span class="wid mono">A1</span><span class="wl">55+ aging</span></label>
+            <label class="well"><input type="radio" name="aud" value="energy"><span class="cup" aria-hidden="true"></span><span class="wid mono">A2</span><span class="wl">Low energy</span></label>
+            <label class="well"><input type="radio" name="aud" value="women"><span class="cup" aria-hidden="true"></span><span class="wid mono">A3</span><span class="wl">Women 40+</span></label>
+            <label class="well"><input type="radio" name="aud" value="men"><span class="cup" aria-hidden="true"></span><span class="wid mono">A4</span><span class="wl">Men 35+</span></label>
+            <label class="well"><input type="radio" name="aud" value="athlete"><span class="cup" aria-hidden="true"></span><span class="wid mono">A5</span><span class="wl">Training</span></label>
+          </div>
+          <p class="tray-read mono" aria-live="polite" data-tray-read>Tray ready · load the sample that fits you</p>
+        </fieldset>
+        <div class="step2">
+          <span class="step mono">Step 2</span>
+          <a class="btn btn-solid" href="#shop" data-target="plan" data-cta>Start clinician plan</a>
+          <a class="btn btn-line" href="#shop" data-target="range">Browse no-consult range</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-fig">
+      <figure class="plate plate-hero" data-plate="I">
+        <img data-aud-img src="media/aud-longevity.jpg" alt="" onerror="this.remove()">
+        <figcaption class="mono">Plate I · <span data-aud-label>Who this issue is for</span></figcaption>
+      </figure>
+      <figure class="fig fig1">
+        <figcaption class="fig-head mono"><b>Fig. 1</b> Lot OL-2610-A · Sample peptide A · HPLC-UV 220 nm <span class="tag">SAMPLE</span></figcaption>
+        <canvas class="scope" id="fig1"></canvas>
+        <p class="readout mono" id="fig1r" aria-live="polite"></p>
+        <form class="lookup" data-lookup>
+          <label for="lk1">Verify before you buy. Enter the lot code from any Pepticity box.</label>
+          <div class="lk-row">
+            <input id="lk1" name="lot" list="lotlist" autocomplete="off" placeholder="e.g. OL-2610-A" spellcheck="false">
+            <button class="btn btn-ion" type="submit">Verify</button>
+          </div>
+        </form>
+      </figure>
+    </div>
+  </div>
+
+  <!-- abstract: two-column journal prose with marginalia -->
+  <article class="abstract wrap" id="abstract">
+    <p class="sec-n mono">§1</p>
+    <div class="abs-body">
+      <h2 class="abs-h">Abstract</h2>
+      <p class="dropcap">Most peptide sellers ask you to trust a single certificate. We think you should be able to check every lot yourself, the good ones and the ones we held back. So every lot we sell, and every lot we refuse to sell, gets its full panel published: identity by mass spectrometry, purity by HPLC, endotoxin, heavy metals and microbial counts.</p>
+      <p>The care itself starts with people. You tell us what you want from your health; a licensed clinician reviews it and decides if a plan is right for you. If it is, a licensed partner pharmacy prepares it, and the lot code on your box opens the same panel you can read on this page. Prices are shown in full before checkout, with nothing added at the end.</p>
+      <a class="textlink" href="#lab" data-target="report">Read the transparency report <span aria-hidden="true">→</span></a>
+    </div>
+    <aside class="margin mono" aria-label="Key facts">
+      <dl>
+        <div><dt>Lots published</dt><dd>All of them</dd></div>
+        <div><dt>Tests per lot</dt><dd>5 panels</dd></div>
+        <div><dt>Held lots shown</dt><dd>Yes</dd></div>
+        <div><dt>Who decides</dt><dd>A licensed clinician</dd></div>
+        <div><dt>Price</dt><dd>In full, up front</dd></div>
+      </dl>
+    </aside>
+  </article>
+
+  <!-- the instrument: data IS the interface (pinned on desktop) -->
+  <section class="instrument" id="instrument" aria-labelledby="ins-h">
+    <div class="ins-in wrap">
+      <div class="ins-copy">
+        <p class="sec-n mono">§2</p>
+        <h2 id="ins-h" class="h2">Read a lot <em>like a chemist.</em></h2>
+        <p>Scroll to run the sample, then drag across either trace. Every peak and every ion opens its numbers.</p>
+        <ol class="guide">
+          <li data-g="0"><span class="mono">i</span><b>Retention time.</b> When each substance leaves the column, in minutes.</li>
+          <li data-g="1"><span class="mono">ii</span><b>Area %.</b> How much of the sample is the main peak. Spec here: ≥ 98.0%.</li>
+          <li data-g="2"><span class="mono">iii</span><b>m/z.</b> The mass the spectrometer sees. It confirms the molecule is the one on the label.</li>
+        </ol>
+        <p class="hint mono">Keyboard: focus a trace, then ← → · PgUp/PgDn jumps peaks</p>
+      </div>
+      <div class="ins-figs">
+        <figure class="fig">
+          <figcaption class="fig-head mono"><b>Fig. 2a</b> HPLC chromatogram · OL-2610-A <span class="tag">SAMPLE</span></figcaption>
+          <canvas class="scope scope-l" id="fig2a"></canvas>
+          <p class="readout mono" id="fig2ar" aria-live="polite"></p>
+        </figure>
+        <figure class="fig">
+          <figcaption class="fig-head mono"><b>Fig. 2b</b> Mass spectrum of the hovered peak · ESI+ <span class="tag">SAMPLE</span></figcaption>
+          <canvas class="scope scope-m" id="fig2b"></canvas>
+          <p class="readout mono" id="fig2br" aria-live="polite"></p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- proof blocks: re-ordered by the chosen sample (audience) -->
+  <div class="blocks" data-blocks>
+
+    <section class="block b-proof" data-block="proof" aria-labelledby="bp-h">
+      <div class="wrap b-grid">
+        <blockquote class="objection"><p id="bp-h">“Anyone can post one good certificate.”</p><cite class="mono">Objection, heard often</cite></blockquote>
+        <div class="evidence">
+          <p class="mono ev-k">Evidence · lot ledger <span class="tag">SAMPLE</span></p>
+          <table class="ledger">
+            <caption class="sr-only">Recent lots and their status (SAMPLE data)</caption>
+            <thead><tr><th scope="col">Lot</th><th scope="col">Material</th><th scope="col">Purity</th><th scope="col">Status</th></tr></thead>
+            <tbody data-ledger></tbody>
+          </table>
+          <p class="ev-note">One of these lots failed purity. It never shipped, and its panel stays public. That is the point.</p>
+          <a class="btn btn-solid" href="#lab" data-target="explorer">Open the lot explorer</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block b-price" data-block="price" aria-labelledby="bpr-h">
+      <div class="wrap b-grid b-flip">
+        <div class="receipt" aria-label="Sample receipt">
+          <p class="mono r-h">Pepticity · itemised before checkout</p>
+          <dl>
+            <div><dt>Clinician review</dt><dd>$[xx]</dd></div>
+            <div><dt>Plan, monthly (if prescribed)</dt><dd>$[xx]</dd></div>
+            <div><dt>Shipping, cold-chain</dt><dd>$[xx]</dd></div>
+            <div><dt>Tax estimate</dt><dd>$[xx]</dd></div>
+            <div class="r-tot"><dt>Total you see</dt><dd>$[xx]</dd></div>
+          </dl>
+          <p class="mono r-f">No membership fee · no surprise add-ons · cancel any time</p>
+        </div>
+        <div class="price-copy">
+          <p class="mono ev-k">“What will it actually cost me?”</p>
+          <h2 id="bpr-h" class="h2">The price, <em>shown in full.</em></h2>
+          <p>Every line you will pay appears before you enter a card: the clinician review, the plan if one is prescribed, shipping and tax. If the clinician decides a plan is not right for you, you are not charged for a plan.</p>
+          <a class="btn btn-solid" href="#shop" data-target="plan" data-cta>Start clinician plan</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block b-process" data-block="process" aria-labelledby="bpc-h">
+      <div class="wrap">
+        <div class="proc-head">
+          <p class="mono ev-k">“Who decides what I get?”</p>
+          <h2 id="bpc-h" class="h2">A licensed clinician decides. <em>Not a checkout button.</em></h2>
+        </div>
+        <ol class="protocol">
+          <li><span class="pn mono">2.1</span><h3>Intake</h3><p>Tell us what you want from your health and answer a short medical history online. About [x] minutes.</p></li>
+          <li><span class="pn mono">2.2</span><h3>Clinician review</h3><p>A licensed clinician in your state or province reviews it, by video or phone, and decides if a plan is right for you.</p></li>
+          <li><span class="pn mono">2.3</span><h3>Pharmacy &amp; testing</h3><p>If prescribed, a licensed partner pharmacy prepares your plan. That lot is tested and its panel published.</p></li>
+          <li><span class="pn mono">2.4</span><h3>You verify</h3><p>Enter the lot code from your box to read the panel. Your clinician checks in on a schedule you agree on.</p></li>
+        </ol>
+        <div class="proc-cta">
+          <a class="btn btn-solid" href="#shop" data-target="plan" data-cta>Start clinician plan</a>
+          <a class="textlink" href="#faq" data-target="callback">Prefer to talk first? Ask us to call you <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block b-range" data-block="range" aria-labelledby="brg-h">
+      <div class="wrap range-grid">
+        <div class="specimen">
+          <canvas class="mol" id="mol-home" aria-label="Ball-and-stick molecule. Hover or focus a product to re-form it into that product's peptide."></canvas>
+          <div class="mol-meta" data-mol-meta="home"></div>
+          <ul class="legend mono" aria-label="Atom key"><li><i class="a-c"></i>C</li><li><i class="a-n"></i>N</li><li><i class="a-o"></i>O</li><li><i class="a-s"></i>S</li><li><i class="a-cu"></i>Cu</li><li class="lg-n">Heavy atoms · schematic</li></ul>
+        </div>
+        <div class="range-copy">
+          <p class="mono ev-k">One small category · no consult needed</p>
+          <h2 id="brg-h" class="h2">Topical peptides, <em>with the paperwork.</em></h2>
+          <p>Our no-consult range is a few cosmetic topicals. Hover one to see its peptide take shape.</p>
+          <ul class="specs" data-specs="home"></ul>
+          <a class="btn btn-line" href="#shop" data-target="range">Browse the range</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- back pages: offers in a classifieds layout -->
+  <section class="classifieds wrap" aria-label="Offers">
+    <p class="sec-n mono">§3 · Notices</p>
+    <div class="cl-grid">
+      <article class="cl cl-a">
+        <p class="mono cl-k">Starter set</p>
+        <h3>The Open Lab starter set</h3>
+        <p>All four topicals in travel sizes, each box with its lot panel printed inside. $[xx]. [offer: confirm with Grace]</p>
+        <a class="textlink" href="#shop" data-target="starter">See the set <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="cl cl-b">
+        <p class="mono cl-k">Referral credit</p>
+        <h3>Give $[xx], get $[xx].</h3>
+        <p>Share your link. When a friend completes a first order, you both receive credit. [offer: confirm with Grace]</p>
+        <a class="textlink" href="#shop" data-target="referral">How it works <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="cl cl-c">
+        <p class="mono cl-k">Ask the lab</p>
+        <h3>Questions about a lot?</h3>
+        <p>Send a lot code and your question. A member of the lab team answers in writing.</p>
+        <a class="textlink" href="#faq" data-target="ask">Ask the lab <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Lab Notes subscription -->
+  <section class="notes" aria-labelledby="ln-h">
+    <div class="wrap notes-grid">
+      <figure class="plate" data-plate="II">
+        <img src="media/lab-autosampler.jpg" alt="Autosampler tray loaded with sample vials" loading="lazy" onerror="this.remove()">
+        <figcaption class="mono">Plate II · Autosampler, sample tray</figcaption>
+      </figure>
+      <div class="notes-copy">
+        <p class="mono ev-k">Lab Notes · fortnightly</p>
+        <h2 id="ln-h" class="h2">Every new panel, <em>in your inbox.</em></h2>
+        <p>Short notes from the lab: new lots, held lots, method changes and price changes. No health advice, no hype.</p>
+        <form class="pf notes-form" novalidate>
+          <label for="ln-e">Email address</label>
+          <div class="lk-row"><input id="ln-e" type="email" name="email" required autocomplete="email" placeholder="you@example.com"><button class="btn btn-solid" type="submit">Subscribe</button></div>
+          <p class="pf-note mono" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ======================= 02 · SHOP ======================= -->
+<section class="view" data-view="shop" aria-label="02 Shop" hidden>
+  <header class="vhead wrap">
+    <p class="vnum" aria-hidden="true">02</p>
+    <div>
+      <p class="kicker mono"><span>Shop</span> Prices shown in full</p>
+      <h1 class="display-s">Care plans first. <em>A small topical range second.</em></h1>
+      <p class="lede">Clinician plans are the heart of Pepticity. The no-consult topicals are one small category. Whatever you choose, the lot panel is public and the price you see is the price you pay.</p>
+    </div>
+  </header>
+
+  <section class="plans wrap" id="plan" aria-labelledby="pl-h">
+    <div class="plans-list">
+      <h2 id="pl-h" class="h3x"><span class="mono">2.1</span> Clinician-guided plans</h2>
+      <p class="small">A licensed clinician decides if a plan is right for you. If prescribed, a licensed partner pharmacy prepares it.</p>
+      <ol class="plan-rows" data-plan-rows>
+        <li data-aud="longevity"><span class="mono pw">A1</span><div><h3>Healthy aging 55+</h3><p class="q">“I want to keep doing the things I love, for longer.”</p><p class="inc">Clinician review · plan if prescribed · scheduled check-ins</p></div><p class="pr mono">Review $[xx]<br>Plan $[xx]/mo</p></li>
+        <li data-aud="energy"><span class="mono pw">A2</span><div><h3>Low energy</h3><p class="q">“I want to feel like myself again.”</p><p class="inc">Clinician review · lab work if the clinician orders it · plan if prescribed</p></div><p class="pr mono">Review $[xx]<br>Plan $[xx]/mo</p></li>
+        <li data-aud="women"><span class="mono pw">A3</span><div><h3>Women 40+</h3><p class="q">“I want a plan that keeps up with my changing body.”</p><p class="inc">Clinician review · plan if prescribed · private messaging</p></div><p class="pr mono">Review $[xx]<br>Plan $[xx]/mo</p></li>
+        <li data-aud="men"><span class="mono pw">A4</span><div><h3>Men 35+</h3><p class="q">“I want to perform at work, at home and in the gym.”</p><p class="inc">Clinician review · plan if prescribed · scheduled check-ins</p></div><p class="pr mono">Review $[xx]<br>Plan $[xx]/mo</p></li>
+        <li data-aud="athlete"><span class="mono pw">A5</span><div><h3>Training &amp; recovery</h3><p class="q">“I train hard, and I take my recovery seriously.”</p><p class="inc">Clinician review · plan if prescribed · sport-aware review of your history</p></div><p class="pr mono">Review $[xx]<br>Plan $[xx]/mo</p></li>
+      </ol>
+    </div>
+
+    <!-- intake quiz -->
+    <div class="quiz" id="quiz" aria-labelledby="qz-title">
+      <div class="qz-top">
+        <p class="mono qz-k" id="qz-title">Intake preview</p>
+        <p class="mono qz-count" aria-live="polite" data-qz-count>Step 1 of 5</p>
+      </div>
+      <div class="qz-bar" aria-hidden="true"><i></i></div>
+
+      <div class="qz-step" data-step="1">
+        <h3 tabindex="-1">What brings you here?</h3>
+        <div class="qz-opts" data-q="goal">
+          <button type="button" data-v="longevity" aria-pressed="false">I want to stay active as I age (55+)</button>
+          <button type="button" data-v="energy" aria-pressed="false">I want to feel like myself again</button>
+          <button type="button" data-v="women" aria-pressed="false">I’m a woman 40+ and my body is changing</button>
+          <button type="button" data-v="men" aria-pressed="false">I’m a man 35+ and want to perform</button>
+          <button type="button" data-v="athlete" aria-pressed="false">I train hard and care about recovery</button>
+        </div>
+      </div>
+      <div class="qz-step" data-step="2" hidden>
+        <h3 tabindex="-1">Your age range</h3>
+        <div class="qz-opts qz-grid" data-q="age">
+          <button type="button" data-v="18-34" aria-pressed="false">18–34</button><button type="button" data-v="35-44" aria-pressed="false">35–44</button><button type="button" data-v="45-54" aria-pressed="false">45–54</button><button type="button" data-v="55-64" aria-pressed="false">55–64</button><button type="button" data-v="65+" aria-pressed="false">65+</button>
+        </div>
+      </div>
+      <div class="qz-step" data-step="3" hidden>
+        <h3 tabindex="-1">Where do you live?</h3>
+        <p class="small">Clinicians are licensed by state or province, so this decides who can review your intake.</p>
+        <label for="qz-loc" class="lbl">State or province</label>
+        <select id="qz-loc" data-q="loc">
+          <option value="">Choose…</option>
+          <optgroup label="Canada"><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option><option>Ontario</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option></optgroup>
+          <optgroup label="United States"><option>Arizona</option><option>California</option><option>Colorado</option><option>Florida</option><option>Georgia</option><option>Illinois</option><option>Massachusetts</option><option>New York</option><option>North Carolina</option><option>Texas</option><option>Washington</option><option>Other state [list: confirm with Grace]</option></optgroup>
+        </select>
+        <button class="btn btn-solid qz-next" type="button" data-next>Continue</button>
+      </div>
+      <div class="qz-step" data-step="4" hidden>
+        <h3 tabindex="-1">Do you take prescription medications?</h3>
+        <p class="small">Your clinician will ask for details. This just helps them prepare.</p>
+        <div class="qz-opts qz-grid" data-q="meds">
+          <button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button><button type="button" data-v="unsure" aria-pressed="false">Not sure</button>
+        </div>
+      </div>
+      <div class="qz-step" data-step="5" hidden>
+        <h3 tabindex="-1">What happens next</h3>
+        <ol class="timeline">
+          <li><span class="mono">Day 0</span> You send this intake. We confirm by email.</li>
+          <li><span class="mono">Day 1–2</span> A licensed clinician in <b data-qz-loc>your state or province</b> reviews it and contacts you.</li>
+          <li><span class="mono">Day 2–3</span> They decide if a plan is right for you. If not, you pay nothing for a plan.</li>
+          <li><span class="mono">Day 4+</span> If prescribed, your lot ships with its public panel code.</li>
+        </ol>
+        <form class="pf qz-form" novalidate>
+          <label for="qz-e" class="lbl">Email, so the clinician can reach you</label>
+          <input id="qz-e" type="email" required autocomplete="email" placeholder="you@example.com">
+          <label class="check"><input type="checkbox" name="call"> Call me back instead, at <span class="mono">[phone number]</span> hours</label>
+          <button class="btn btn-solid" type="submit" data-cta>Start clinician plan</button>
+          <p class="pf-note mono" role="status"></p>
+        </form>
+      </div>
+      <div class="qz-nav"><button class="qz-back mono" type="button" data-back disabled>← Back</button><span class="mono qz-sample">Preview only · no medical advice</span></div>
+    </div>
+  </section>
+
+  <section class="range wrap" id="range" aria-labelledby="rg-h">
+    <div class="range-aside">
+      <div class="specimen sticky">
+        <canvas class="mol" id="mol-shop" aria-label="Ball-and-stick molecule. Hover or focus a product to re-form it into that product's peptide."></canvas>
+        <div class="mol-meta" data-mol-meta="shop"></div>
+        <ul class="legend mono" aria-label="Atom key"><li><i class="a-c"></i>C</li><li><i class="a-n"></i>N</li><li><i class="a-o"></i>O</li><li><i class="a-s"></i>S</li><li><i class="a-cu"></i>Cu</li><li class="lg-n">Heavy atoms · schematic</li></ul>
+      </div>
+    </div>
+    <div class="range-main">
+      <h2 id="rg-h" class="h3x"><span class="mono">2.2</span> No-consult range · cosmetic topicals</h2>
+      <p class="small">Cosmetic products for appearance and feel. Not intended to diagnose, treat or prevent any condition.</p>
+      <div class="cards" data-cards></div>
+    </div>
+  </section>
+
+  <section class="shop-notes wrap" aria-label="Offers and promises">
+    <article class="sn" id="starter">
+      <p class="mono cl-k">2.3 · Starter set</p>
+      <h3>Open Lab starter set</h3>
+      <p>All four topicals in travel sizes, lot panels printed inside each box.</p>
+      <p class="pr mono">$[xx] · [offer: confirm with Grace]</p>
+      <button class="btn btn-line" type="button" data-bag>Add starter set</button>
+    </article>
+    <article class="sn" id="referral">
+      <p class="mono cl-k">2.4 · Referral credit</p>
+      <h3>Give $[xx], get $[xx]</h3>
+      <p>After your first order you get a personal link. When a friend completes their first order, you each receive credit.</p>
+      <p class="pr mono">[offer: confirm with Grace]</p>
+    </article>
+    <article class="sn sn-promise">
+      <p class="mono cl-k">2.5 · Price-in-full promise</p>
+      <h3>The number you see is the number you pay.</h3>
+      <p>Clinician review, plan, shipping and tax are itemised before you enter a card. No membership. No add-ons at the last step.</p>
+    </article>
+  </section>
+</section>
+
+<!-- ======================= 03 · LAB ======================= -->
+<section class="view" data-view="lab" aria-label="03 Lab" hidden>
+  <header class="vhead wrap">
+    <p class="vnum" aria-hidden="true">03</p>
+    <div>
+      <p class="kicker mono"><span>Lab</span> Verify before you buy</p>
+      <h1 class="display-s">Every lot. Every test. <em>In public.</em></h1>
+      <p class="lede">Search a lot code, or pick one from the tray. Each certificate shows all five panels, including lots we held back.</p>
+    </div>
+  </header>
+
+  <section class="lx wrap" id="explorer" aria-labelledby="lx-h">
+    <h2 id="lx-h" class="sr-only">Lot certificate explorer</h2>
+    <div class="lx-side">
+      <form class="lookup lx-search" data-lookup="lab" role="search">
+        <label for="lk2">Lot code</label>
+        <div class="lk-row"><input id="lk2" name="lot" list="lotlist" autocomplete="off" placeholder="e.g. OL-2610-A" spellcheck="false"><button class="btn btn-ion" type="submit">Verify</button></div>
+        <p class="lx-msg mono" role="status" aria-live="polite"></p>
+      </form>
+      <div class="lx-filter mono" data-lx-filter></div>
+      <ul class="lx-list" data-lx-list aria-label="Lots"></ul>
+    </div>
+    <article class="cert" data-cert aria-live="polite">
+      <header class="cert-h">
+        <div>
+          <p class="mono cert-k">Certificate of analysis · <span class="tag">SAMPLE</span></p>
+          <h3 data-c="code">—</h3>
+          <p data-c="title"></p>
+        </div>
+        <dl class="cert-meta mono">
+          <div><dt>Lane</dt><dd data-c="lane"></dd></div>
+          <div><dt>Released</dt><dd data-c="date"></dd></div>
+          <div><dt>Status</dt><dd data-c="status"></dd></div>
+          <div><dt>Lab</dt><dd>[third-party lab name]</dd></div>
+        </dl>
+      </header>
+      <p class="held" data-c="held" hidden></p>
+      <div class="panels">
+        <section class="pnl pnl-ms"><header><h4><span class="mono">I</span> Identity · LC-MS</h4><span data-chip="id"></span></header>
+          <canvas class="scope scope-c" id="c-ms"></canvas><p class="readout mono" id="c-msr" aria-live="polite"></p>
+          <table class="kv mono"><tr><th scope="row">Theoretical m/z</th><td data-c="theo"></td></tr><tr><th scope="row">Observed m/z</th><td data-c="obs"></td></tr><tr><th scope="row">Mass error</th><td data-c="ppm"></td></tr></table>
+        </section>
+        <section class="pnl pnl-lc"><header><h4><span class="mono">II</span> Purity · HPLC-UV</h4><span data-chip="pur"></span></header>
+          <canvas class="scope scope-c" id="c-lc"></canvas><p class="readout mono" id="c-lcr" aria-live="polite"></p>
+          <table class="kv mono"><tr><th scope="row">Main peak area</th><td data-c="purity"></td></tr><tr><th scope="row">Specification</th><td data-c="spec"></td></tr></table>
+        </section>
+        <section class="pnl"><header><h4><span class="mono">III</span> Endotoxin · LAL</h4><span data-chip="endo"></span></header>
+          <table class="kv mono"><tr><th scope="row">Result</th><td data-c="endo"></td></tr><tr><th scope="row">Limit</th><td data-c="endoL"></td></tr></table>
+        </section>
+        <section class="pnl"><header><h4><span class="mono">IV</span> Heavy metals · ICP-MS</h4><span data-chip="met"></span></header>
+          <table class="kv mono" data-c="metals"></table>
+        </section>
+        <section class="pnl pnl-w"><header><h4><span class="mono">V</span> Microbial limits</h4><span data-chip="mic"></span></header>
+          <table class="kv mono" data-c="micro"></table>
+        </section>
+      </div>
+      <p class="cert-f mono">PDF certificate: [link to signed COA] · Panel data shown here is SAMPLE data for the template.</p>
+    </article>
+  </section>
+
+  <!-- transparency report -->
+  <section class="report wrap" id="report" aria-labelledby="rp-h">
+    <header class="rp-head">
+      <p class="mono rp-k"><i class="dot" aria-hidden="true"></i> Live · last updated <time data-clock>—</time> <span class="tag">SAMPLE</span></p>
+      <h2 id="rp-h" class="h2">Transparency report <em>Q4 2026, running</em></h2>
+    </header>
+    <div class="rp-grid">
+      <nav class="rp-toc mono" aria-label="Report sections">
+        <a href="#lab" data-target="rp1">1 Lots</a><a href="#lab" data-target="rp2">2 Held lots</a><a href="#lab" data-target="rp3">3 Labs &amp; methods</a><a href="#lab" data-target="rp4">4 Prices</a><a href="#lab" data-target="rp5">5 Corrections</a><a href="#lab" data-target="rp6">6 Not yet known</a>
+      </nav>
+      <div class="rp-body">
+        <div class="rp-board mono" data-board></div>
+        <section id="rp1"><h3><span class="mono">1</span> Lots tested this quarter</h3><p>Every lot that reached our receiving dock was tested before release.<sup><button class="fn" type="button" data-fn="1">1</button></sup> The ledger below updates as panels are published; a lot with any panel still pending stays marked “in testing” and cannot be sold.</p><ul class="rp-log mono" data-log></ul></section>
+        <section id="rp2"><h3><span class="mono">2</span> Held lots</h3><p>Lot RX-2609-3 came in at 96.2% purity against a specification of ≥ 98.0%. It was held, returned and never shipped.<sup><button class="fn" type="button" data-fn="2">2</button></sup> We publish held lots because a ledger with only passes would tell you nothing.</p></section>
+        <section id="rp3"><h3><span class="mono">3</span> Labs and methods</h3><p>Panels are run by an independent laboratory, [third-party lab name], accredited to [accreditation: confirm].<sup><button class="fn" type="button" data-fn="3">3</button></sup> Methods are listed below in full.</p></section>
+        <section id="rp4"><h3><span class="mono">4</span> Price changes</h3><p>No price changes this quarter. When a price changes, the old and new figure appear here with the date. [confirm with Grace]</p></section>
+        <section id="rp5"><h3><span class="mono">5</span> Corrections</h3><p>None yet. If we publish a wrong number, the correction goes here, dated, and the original stays visible with a strike-through.</p></section>
+        <section id="rp6"><h3><span class="mono">6</span> What we don’t know yet</h3><p>Testing tells you what is in a lot. It does not tell you what a product will do for you; for plans, that conversation belongs with your clinician.<sup><button class="fn" type="button" data-fn="4">4</button></sup></p></section>
+        <ol class="footnotes small" aria-label="Footnotes">
+          <li id="fn1">Receiving, quarantine and release steps are documented in our SOP [document reference: confirm].</li>
+          <li id="fn2">Disposition record [reference: confirm]. Figures in this report are SAMPLE data for the template.</li>
+          <li id="fn3">Laboratory name and accreditation scope to be supplied. [confirm with Grace]</li>
+          <li id="fn4">A licensed clinician decides if a plan is right for you. Pepticity does not give medical advice on this site.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="methods wrap" id="methods" aria-labelledby="mt-h">
+    <h2 id="mt-h" class="h3x"><span class="mono">3.3</span> Methods</h2>
+    <div class="mt-grid">
+      <table class="methods-t">
+        <thead><tr><th scope="col">Panel</th><th scope="col">Method</th><th scope="col">Reported as</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Identity</th><td>LC-MS, electrospray positive mode</td><td class="mono">observed m/z, mass error (ppm)</td></tr>
+          <tr><th scope="row">Purity</th><td>Reverse-phase HPLC, UV detection at 220 nm, C18 column</td><td class="mono">main peak area %</td></tr>
+          <tr><th scope="row">Endotoxin</th><td>LAL, kinetic chromogenic</td><td class="mono">EU/mg</td></tr>
+          <tr><th scope="row">Heavy metals</th><td>ICP-MS (Pb, As, Cd, Hg)</td><td class="mono">ppm</td></tr>
+          <tr><th scope="row">Microbial</th><td>Total counts and specified organisms, compendial methods</td><td class="mono">cfu/g · absent/present</td></tr>
+        </tbody>
+      </table>
+      <div class="mt-plates">
+        <figure class="plate" data-plate="III"><img src="media/lab-glovedvial.jpg" alt="Gloved hand holding a sample vial to the light" loading="lazy" onerror="this.remove()"><figcaption class="mono">Plate III · Sample receipt</figcaption></figure>
+        <figure class="plate" data-plate="IV"><img src="media/lab-freezer.jpg" alt="Labelled racks in a laboratory freezer" loading="lazy" onerror="this.remove()"><figcaption class="mono">Plate IV · Retained samples</figcaption></figure>
+      </div>
+    </div>
+    <p class="mt-cta">Have a question about a result? <a class="textlink" href="#faq" data-target="ask">Ask the lab <span aria-hidden="true">→</span></a></p>
+  </section>
+</section>
+
+<!-- ======================= 04 · FAQ & CONTACT ======================= -->
+<section class="view" data-view="faq" aria-label="04 FAQ and contact" hidden>
+  <header class="vhead wrap">
+    <p class="vnum" aria-hidden="true">04</p>
+    <div>
+      <p class="kicker mono"><span>FAQ</span> Questions &amp; contact</p>
+      <h1 class="display-s">Ask anything. <em>We answer in writing.</em></h1>
+    </div>
+  </header>
+
+  <section class="faq wrap" aria-label="Frequently asked questions">
+    <div class="faq-list">
+      <details><summary><span class="mono">Q1</span> What does “verify before you buy” mean?</summary><p>Every lot has a code. Enter it in the lot explorer and you see the full test panel: identity, purity, endotoxin, heavy metals and microbial results. You can do this before you order, and again when your box arrives.</p></details>
+      <details><summary><span class="mono">Q2</span> Who decides whether I get a plan?</summary><p>A licensed clinician decides if a plan is right for you. If they decide it isn’t, you are not charged for a plan. If prescribed, a licensed partner pharmacy prepares it.</p></details>
+      <details><summary><span class="mono">Q3</span> Where do you offer clinician plans?</summary><p>In the states and provinces where our clinicians are licensed. The intake asks where you live first so the right clinician sees it. [service area: confirm with Grace]</p></details>
+      <details><summary><span class="mono">Q4</span> Is the no-consult range a medicine?</summary><p>No. The no-consult range is cosmetic topicals, for the appearance and feel of skin. They are not intended to diagnose, treat or prevent any condition.</p></details>
+      <details><summary><span class="mono">Q5</span> Why do you publish lots that failed?</summary><p>Because a list of only passes proves nothing. Held lots stay in the ledger with their numbers and the reason they were held.</p></details>
+      <details><summary><span class="mono">Q6</span> What is included in the price?</summary><p>The checkout shows every line: clinician review, plan if prescribed, shipping and tax. There is no membership fee and nothing is added at the last step.</p></details>
+      <details><summary><span class="mono">Q7</span> How is it shipped?</summary><p>Plans that need it ship cold-chain in insulated packaging with a temperature indicator. Topicals ship in standard packaging. [shipping details: confirm]</p>
+        <figure class="plate plate-s" data-plate="V"><img src="media/lab-coldchain.jpg" alt="Insulated cold-chain shipping box with temperature indicator" loading="lazy" onerror="this.remove()"><figcaption class="mono">Plate V · Cold-chain pack</figcaption></figure></details>
+      <details><summary><span class="mono">Q8</span> Can I ask about dosing or medical use here?</summary><p>No. We don’t give medical advice on this site or through Ask the lab. Those conversations belong with your clinician inside a plan.</p></details>
+    </div>
+
+    <aside class="contact" aria-label="Contact">
+      <div class="ct-card">
+        <p class="mono ct-k">Talk to a person</p>
+        <p class="ct-phone">[phone number]</p>
+        <p class="small">Mon–Fri, [hours] · [email address]</p>
+        <form class="pf" id="callback" novalidate>
+          <h2 class="h4x">Call me back</h2>
+          <label for="cb-n" class="lbl">Name</label><input id="cb-n" required autocomplete="name">
+          <label for="cb-p" class="lbl">Phone</label><input id="cb-p" type="tel" required autocomplete="tel">
+          <label for="cb-t" class="lbl">Best time</label>
+          <select id="cb-t"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+          <button class="btn btn-solid" type="submit">Request a call</button>
+          <p class="pf-note mono" role="status"></p>
+        </form>
+      </div>
+    </aside>
+  </section>
+
+  <section class="ask wrap" id="ask" aria-labelledby="ask-h">
+    <div class="ask-in">
+      <div>
+        <p class="mono ev-k">Ask the lab</p>
+        <h2 id="ask-h" class="h2">A question about a lot, <em>answered by the lab.</em></h2>
+        <p>Include the lot code if you have one. Answers cover testing, methods and results, not medical use.</p>
+        <figure class="plate plate-s" data-plate="VI"><img src="media/lab-bench.jpg" alt="Laboratory bench with instruments" loading="lazy" onerror="this.remove()"><figcaption class="mono">Plate VI · The bench</figcaption></figure>
+      </div>
+      <form class="pf ask-form" novalidate>
+        <label for="ak-n" class="lbl">Name</label><input id="ak-n" required autocomplete="name">
+        <label for="ak-e" class="lbl">Email</label><input id="ak-e" type="email" required autocomplete="email">
+        <label for="ak-l" class="lbl">Lot code (optional)</label><input id="ak-l" list="lotlist" placeholder="e.g. OL-2610-A">
+        <label for="ak-q" class="lbl">Your question</label><textarea id="ak-q" rows="5" required></textarea>
+        <button class="btn btn-solid" type="submit">Send to the lab</button>
+        <p class="pf-note mono" role="status"></p>
+      </form>
+    </div>
+  </section>
+</section>
+
+</main>
+
+<footer class="colophon">
+  <div class="wrap col-grid">
+    <div>
+      <p class="col-brand">Pepticity <span class="mono">Open Lab</span></p>
+      <p class="small">Clinician-guided peptide care, with every lot’s panel in public. Call <b>[phone number]</b> · [email address]</p>
+    </div>
+    <nav class="col-toc mono" aria-label="Footer contents"><a href="#home">01 Cover</a><a href="#shop">02 Shop</a><a href="#lab">03 Lab</a><a href="#faq">04 FAQ</a><a href="#intro">Replay intro</a></nav>
+    <p class="disclaimer small">Pepticity connects you with independent licensed clinicians who decide if a plan is right for you. Prescribed preparations are dispensed by a licensed partner pharmacy. Compounded preparations are not FDA- or Health Canada-approved and are not equivalent to approved drugs. No-consult topicals are cosmetic products and are not intended to diagnose, treat, cure or prevent any disease. Data panels, lot codes and figures on this template are SAMPLE data. Prices and offers are placeholders. [Final legal copy to be approved by counsel.]</p>
+    <p class="mono col-f">© 2026 Pepticity · Vol. 1 · No. 05 · Set in Fraunces &amp; Martian Mono</p>
+  </div>
+</footer>
+
+<div class="mcta" aria-label="Quick actions">
+  <a class="btn btn-solid" href="#shop" data-target="plan" data-cta-short>Start plan</a>
+  <a class="btn btn-line" href="#lab" data-target="explorer">Verify a lot</a>
+</div>
+<div class="toast mono" role="status" aria-live="polite"></div>
+<datalist id="lotlist"></datalist>
+
+<script src="../vendor/gsap.min.js"></script>
+<script src="../vendor/ScrollTrigger.min.js"></script>
+<script src="../vendor/lenis.min.js"></script>
+<script src="data.js"></script>
+<script src="scope.js"></script>
+<script src="molecule.js"></script>
+<script src="site.js"></script>
+<script src="intro.js"></script>
+</body>
+</html>

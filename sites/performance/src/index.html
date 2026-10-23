@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pepticity Performance</title>
+<meta name="description" content="Pepticity: perform at every age. Labs first, then a licensed clinician decides if a plan is right for you. Licensed partner pharmacy. Every lot tested.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<script>
+/* decide before first paint: play the intro once per session, unless reduced motion; #intro replays */
+(function(){var d=document.documentElement,play=true;
+try{if(sessionStorage.getItem("pp-intro")==="1")play=false;}catch(e){}
+if(location.hash==="#intro")play=true;
+if(matchMedia("(prefers-reduced-motion: reduce)").matches)play=false;
+if(play)d.classList.add("intro-play");
+try{if(localStorage.getItem("pp-text")==="large")d.dataset.text="large";}catch(e){}
+try{var m=localStorage.getItem("pp-mode");if(m)d.dataset.mode=m;}catch(e){}})();
+</script>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skiplink" href="#main">Skip to content</a>
+
+<!-- ================= INTRO: telemetry boot → venetian shutters ================= -->
+<div id="intro" aria-label="Pepticity intro">
+  <video class="i-plate" src="media/intro.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+  <canvas class="i-grid" aria-hidden="true"></canvas>
+  <div class="i-ui">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="i-top mono"><span>PEPTICITY // FEED 04</span><span class="i-tc">00:00:00:00</span></div>
+    <div class="i-scan"></div>
+    <ul class="i-read mono" aria-hidden="true">
+      <li><span class="rk" data-t="HR">&nbsp;</span><span class="rv" data-t="NO DATA">&nbsp;</span></li>
+      <li><span class="rk" data-t="SLEEP">&nbsp;</span><span class="rv" data-t="NO DATA">&nbsp;</span></li>
+      <li><span class="rk" data-t="VO2">&nbsp;</span><span class="rv" data-t="NO DATA">&nbsp;</span></li>
+      <li class="go"><span class="rk" data-t="LABS">&nbsp;</span><span class="rv" data-t="FIRST">&nbsp;</span></li>
+    </ul>
+    <div class="i-right mono" aria-hidden="true"><span>CH 01</span><span>CH 02</span><span>CH 03</span><span>CH 04</span></div>
+    <div class="i-mark">
+      <div class="i-wm display">PEPTICITY</div>
+      <div class="i-sub mono">PERFORM AT EVERY AGE</div>
+    </div>
+    <p class="i-tag mono"><span>Know your numbers before anything is prescribed.</span></p>
+  </div>
+  <button class="i-skip mono" type="button">Skip intro <kbd>Esc</kbd></button>
+</div>
+
+<!-- ================= HUD CHROME ================= -->
+<div class="lane" aria-hidden="true"><span></span></div>
+
+<header class="top">
+  <a class="brand" href="#home" aria-label="Pepticity home">
+    <span class="brand-wm display">PEPTICITY</span>
+    <span class="brand-sub mono">Perform at every age</span>
+  </a>
+  <nav class="views" aria-label="Main">
+    <a href="#home" data-v="home">Home</a>
+    <a href="#programs" data-v="programs">Programs</a>
+    <a href="#science" data-v="science">Science</a>
+    <a href="#faq" data-v="faq">FAQ &amp; contact</a>
+  </nav>
+  <div class="top-r">
+    <p class="phone"><span class="mono">Call us</span> <span class="num">[phone number]</span></p>
+    <button class="textsize" type="button" aria-pressed="false"><span aria-hidden="true">A<b>A</b></span><span class="lbl">Larger text</span></button>
+    <a class="btn btn-labs" href="#home" data-jump="plan"><span class="cta-txt">Get my labs</span></a>
+  </div>
+</header>
+
+<aside class="rail" aria-label="Page index">
+  <div class="rail-mode">
+    <span class="mono k">MODE</span>
+    <button class="rail-mode-btn mono" type="button" data-jump="modes"><span class="rm-code">M?</span><span class="rm-name">ALL</span></button>
+    <span class="plain">your focus</span>
+  </div>
+  <ol class="rail-idx" aria-label="Sections on this page"></ol>
+  <div class="rail-pct">
+    <span class="mono pct" aria-hidden="true">000</span>
+    <span class="plain">% of page</span>
+  </div>
+</aside>
+
+<nav class="dock" aria-label="Main (mobile)">
+  <a href="#home" data-v="home"><i class="mono">01</i>Home</a>
+  <a href="#programs" data-v="programs"><i class="mono">02</i>Programs</a>
+  <a href="#science" data-v="science"><i class="mono">03</i>Science</a>
+  <a href="#faq" data-v="faq"><i class="mono">04</i>FAQ</a>
+  <a class="dock-cta" href="#home" data-jump="plan"><span class="cta-txt">Get my labs</span></a>
+</nav>
+
+<div class="switchfx" aria-hidden="true"><span></span></div>
+
+<main id="main">
+
+<!-- ======================================================= HOME -->
+<section class="view" data-view="home" aria-label="Home">
+
+  <section class="hero" data-sec="Start">
+    <div class="hero-media" aria-hidden="true">
+      <div class="ph ph-hero"><img class="hero-img" src="media/aud-longevity.jpg" alt="" onerror="this.remove()"></div>
+      <canvas class="hero-grid"></canvas>
+    </div>
+    <div class="hero-bug mono" aria-hidden="true"><span class="dot"></span>LIVE <span class="sep">/</span> <span class="hb-mode">ALL MODES</span> <span class="sep">/</span> <span class="hb-tc">00:00:00</span></div>
+    <div class="hero-in">
+      <p class="kicker mono"><span class="chip">Labs first</span> Clinician-guided peptide care</p>
+      <h1 class="display hero-h"><span class="hl1">I want to</span> <span class="hl2">perform at every age.</span></h1>
+      <p class="hero-sub">That's your goal. Our part is the process: <strong>know your numbers first</strong>, then a licensed clinician decides if a plan is right for you. Licensed partner pharmacy. Every lot tested.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#home" data-jump="plan"><span class="cta-txt">Get my labs</span></a>
+        <a class="btn btn-ghost" href="#home" data-jump="quiz">Take the 60-second profile</a>
+      </div>
+    </div>
+
+    <div class="modes" id="modes" data-sec-alias="modes">
+      <div class="modes-head">
+        <p class="mono k">MODE SELECT <span class="plain">Choose who you are here for. The page adjusts.</span></p>
+      </div>
+      <div class="modes-row" role="radiogroup" aria-label="I'm here for">
+        <button type="button" role="radio" aria-checked="false" data-mode="aging"><span class="mono c">M1</span><span class="display n">Aging well</span><span class="p">Healthy aging, 55+</span><span class="st mono">ACTIVE</span></button>
+        <button type="button" role="radio" aria-checked="false" data-mode="energy"><span class="mono c">M2</span><span class="display n">Energy</span><span class="p">Not feeling like yourself</span><span class="st mono">ACTIVE</span></button>
+        <button type="button" role="radio" aria-checked="false" data-mode="women"><span class="mono c">M3</span><span class="display n">Women 40+</span><span class="p">Changes in midlife</span><span class="st mono">ACTIVE</span></button>
+        <button type="button" role="radio" aria-checked="false" data-mode="men"><span class="mono c">M4</span><span class="display n">Men 35+</span><span class="p">Know where you stand</span><span class="st mono">ACTIVE</span></button>
+        <button type="button" role="radio" aria-checked="false" data-mode="training"><span class="mono c">M5</span><span class="display n">Training</span><span class="p">Gym, sport, recovery</span><span class="st mono">ACTIVE</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="crawl mono" aria-hidden="true"><div class="crawl-in">
+    <span>Labs before anything is prescribed</span><span>Licensed partner pharmacy</span><span>Every lot tested</span><span>All-in price in writing: $[xx]</span><span>Call a real person: [phone number]</span>
+    <span>Labs before anything is prescribed</span><span>Licensed partner pharmacy</span><span>Every lot tested</span><span>All-in price in writing: $[xx]</span><span>Call a real person: [phone number]</span>
+  </div></div>
+
+  <!-- LAB PANEL (pinned) -->
+  <section class="labpanel" data-sec="What we test" id="labpanel">
+    <div class="lp-pin">
+      <div class="lp-copy">
+        <p class="seg mono">SEG <span class="segn">01</span> <span>/ What we test</span></p>
+        <h2 class="display">Your numbers come <em>before</em> any plan.</h2>
+        <p>Every program starts with a blood draw at a partner lab [lab network: confirm]. A licensed clinician reads your results with you, in plain language, before anything is discussed.</p>
+        <p class="lp-mode-note"><span class="mono chip-s">Highlighted</span> <span class="lp-mode-txt">Markers a clinician commonly reviews for every adult.</span></p>
+        <a class="btn" href="#home" data-jump="plan"><span class="cta-txt">Get my labs</span></a>
+      </div>
+      <div class="lp-board" role="group" aria-label="Sample lab panel">
+        <div class="lp-head mono">
+          <span>LAB PANEL // <b>SAMPLE</b></span><span class="lp-warn">NOT REAL DATA · NO TARGET VALUES</span>
+        </div>
+        <ul class="lp-rows"></ul>
+        <div class="lp-foot mono"><span><i class="band-key"></i> reference range set by the lab</span><span>Final panel: [confirm with clinical partner]</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOT LOOKUP -->
+  <section class="seg-block lot" data-sec="Lot lookup" id="lot">
+    <div class="sb-l">
+      <p class="seg mono">SEG <span class="segn">09</span> <span>/ Every lot tested</span></p>
+      <p class="objection"><span class="mono">OBJECTION</span> "How do I know what's in it?"</p>
+      <h2 class="display">Look up your lot. <span class="o">Read the certificate.</span></h2>
+      <p>Each lot from our licensed partner pharmacy is tested before release [testing lab: confirm]. The lot number on your label opens its certificate of analysis.</p>
+    </div>
+    <div class="sb-r ticket">
+      <form class="lot-form" data-form="lot">
+        <label for="lot-id">Lot number</label>
+        <input id="lot-id" name="lot" required placeholder="e.g. PP-0000-00" autocomplete="off">
+        <button class="btn btn-full" type="submit">Look up lot</button>
+      </form>
+      <div class="lot-out mono" hidden></div>
+    </div>
+  </section>
+
+  <!-- PROOF GROUP: order changes with the selected mode -->
+  <div class="proof">
+
+    <section class="seg-block plan" data-sec="Labs-first plan" data-proof="plan" id="plan">
+      <div class="sb-l">
+        <p class="seg mono">SEG <span class="segn">02</span> <span>/ Know your numbers</span></p>
+        <p class="objection"><span class="mono">OBJECTION</span> "I just want to get started."</p>
+        <h2 class="display">Start with a blood test. <span class="o">Not a guess.</span></h2>
+        <ul class="ev">
+          <li><b>Lab draw</b> at a partner lab near you [lab network: confirm]</li>
+          <li><b>Clinician review</b>: a licensed clinician goes through every marker with you</li>
+          <li><b>Plain-language summary</b> you keep, whatever you decide</li>
+          <li><b>No obligation.</b> If a plan isn't right for you, the clinician will say so.</li>
+        </ul>
+      </div>
+      <div class="sb-r ticket">
+        <p class="mono t-k">KNOW YOUR NUMBERS · LABS PLAN</p>
+        <p class="price display">$[xx]</p>
+        <p class="mono t-s">one time · [offer: confirm with Grace]</p>
+        <form class="lead" data-form="labs">
+          <label for="lab-email">Email</label>
+          <input id="lab-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          <label for="lab-zip">ZIP / postal code</label>
+          <input id="lab-zip" name="zip" autocomplete="postal-code" required placeholder="e.g. 90210">
+          <button class="btn btn-full" type="submit"><span class="cta-txt">Get my labs</span></button>
+          <p class="fine">Or call <span class="num">[phone number]</span> and we'll book it with you.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="seg-block compare" data-sec="Real pharmacy" data-proof="compare" id="compare">
+      <div class="sb-l wide">
+        <p class="seg mono">SEG <span class="segn">03</span> <span>/ Where it comes from</span></p>
+        <p class="objection"><span class="mono">OBJECTION</span> "I can buy this online for less."</p>
+        <h2 class="display">Real pharmacy. Real prescription. <span class="o">No grey market.</span></h2>
+        <div class="tbl-wrap">
+          <table class="cmp">
+            <caption class="sr">Pepticity compared with online research-chemical sellers</caption>
+            <thead><tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Pepticity</th><th scope="col">Online research-chemical sellers</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Who decides</th><td>A licensed clinician, after your labs</td><td>No one. You order from a cart.</td></tr>
+              <tr><th scope="row">Labs first</th><td>Always</td><td>Not offered</td></tr>
+              <tr><th scope="row">Who prepares it</th><td>A licensed partner pharmacy, with a prescription</td><td>Unknown source, often labelled "not for human use"</td></tr>
+              <tr><th scope="row">Lot testing</th><td>Every lot, and you can look it up</td><td>Rarely published</td></tr>
+              <tr><th scope="row">Someone to call</th><td>Yes: <span class="num">[phone number]</span></td><td>Usually an email form</td></tr>
+              <tr><th scope="row">Price</th><td>All-in, in writing, before you start</td><td>Changes without notice</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fine">Compounded medications are not FDA-approved. A licensed pharmacy prepares them for one patient with a prescription.</p>
+        <a class="btn" href="#science">How regulation works</a>
+      </div>
+    </section>
+
+    <section class="seg-block clinician" data-sec="Talk to a clinician" data-proof="clinician" id="clinician">
+      <div class="sb-l">
+        <p class="seg mono">SEG <span class="segn">04</span> <span>/ People, not a cart</span></p>
+        <p class="objection"><span class="mono">OBJECTION</span> "Will anyone actually listen to me?"</p>
+        <h2 class="display">Talk to a clinician <span class="o clin-who">who works with people like you.</span></h2>
+        <p>Every clinician on our network is licensed in the state where you live. You'll see who you're speaking with, and their licence, before the call. [Clinician focus areas: confirm with clinical partner]</p>
+        <div class="clin-card mono"><span class="cc-k">CLINICIAN PROFILE · SAMPLE</span><span>[Clinician name, credentials, state licence: add verified details]</span></div>
+      </div>
+      <div class="sb-r ticket">
+        <p class="mono t-k">BOOK A CALL · OR CALL ME BACK</p>
+        <form class="lead" data-form="clinician">
+          <label for="cl-name">Your name</label>
+          <input id="cl-name" name="name" autocomplete="name" required>
+          <label for="cl-phone">Phone or email</label>
+          <input id="cl-phone" name="contact" required>
+          <label for="cl-when">Best time to reach you</label>
+          <select id="cl-when" name="when"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+          <label class="check"><input type="checkbox" name="callback" checked> Please call me back instead of booking online</label>
+          <button class="btn btn-full" type="submit">Request my call</button>
+          <p class="fine">Prefer to dial? <span class="num">[phone number]</span></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="seg-block pricelock" data-sec="Price lock" data-proof="pricelock" id="pricelock">
+      <div class="sb-l wide">
+        <p class="seg mono">SEG <span class="segn">05</span> <span>/ No surprises</span></p>
+        <p class="objection"><span class="mono">OBJECTION</span> "The price always goes up after month one."</p>
+        <div class="pl-type display" aria-hidden="true"><span class="out">PRICE</span><span class="fill">LOCKED</span></div>
+        <h2 class="sr">Price-lock guarantee</h2>
+        <p class="pl-copy">Your monthly program price stays at <strong>$[xx]</strong> for <strong>[xx] months</strong> from your first order. [offer: confirm with Grace] The all-in price is in writing before anything is prescribed.</p>
+        <a class="btn" href="#programs">See programs and prices</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- KINETIC OUTLINED TYPE -->
+  <section class="kinetic" data-sec="The process" aria-label="The process">
+    <p class="seg mono">SEG <span class="segn">06</span> <span>/ The process</span></p>
+    <div class="kt"><span class="kt-o display" aria-hidden="true">Test first.</span><span class="kt-f display">Test first.</span></div>
+    <div class="kt"><span class="kt-o display" aria-hidden="true">Then talk.</span><span class="kt-f display">Then talk.</span></div>
+    <div class="kt"><span class="kt-o display" aria-hidden="true">Then decide.</span><span class="kt-f display">Then decide.</span></div>
+    <p class="kt-note">Labs at a partner lab. A clinician reviews them with you. A licensed clinician decides if a plan is right for you, and you decide if you want it.</p>
+  </section>
+
+  <!-- VELOCITY SKEW GALLERY -->
+  <section class="gallery" data-sec="Who it's for" aria-label="Who we work with">
+    <div class="g-head">
+      <p class="seg mono">SEG <span class="segn">07</span> <span>/ Every age, every pace</span></p>
+      <h2 class="display">Built for people who <span class="o">want to keep going.</span></h2>
+      <p class="fine">Photography: [licensed images, SAMPLE]. People shown are models, not customers.</p>
+    </div>
+    <div class="g-track g-a"></div>
+    <div class="g-track g-b"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="quiz" data-sec="60-sec profile" id="quiz">
+    <div class="q-l">
+      <p class="seg mono">SEG <span class="segn">08</span> <span>/ 60-second profile</span></p>
+      <h2 class="display">Six questions. <span class="o">One clear next step.</span></h2>
+      <p>Your answers point you to the right starting plan. Nothing is prescribed from a quiz. A clinician decides after your labs.</p>
+    </div>
+    <div class="q-card" aria-live="polite">
+      <div class="q-top mono"><button type="button" class="q-back" disabled>&larr; Back</button><span class="q-count" aria-live="polite">Question 1 of 6</span><span class="q-clock" aria-hidden="true">00:00</span></div>
+      <div class="q-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <fieldset class="q is-on" data-q="goal"><legend class="display q1-legend" tabindex="-1">What matters most to you right now?</legend><div class="q-opts q1-opts"></div></fieldset>
+      <fieldset class="q" data-q="age"><legend class="display" tabindex="-1">Your age range</legend><div class="q-opts">
+        <button type="button" data-v="u35">Under 35</button><button type="button" data-v="35">35–44</button><button type="button" data-v="45">45–54</button><button type="button" data-v="55">55–64</button><button type="button" data-v="65">65+</button></div></fieldset>
+      <fieldset class="q" data-q="state"><legend class="display" tabindex="-1">Where do you live?</legend><p class="q-why">Clinicians must be licensed where you live, so this decides who can see you.</p><div class="q-sel">
+        <label for="q-state">State or province</label>
+        <select id="q-state"><option value="">Choose one</option><option>Alabama</option><option>Arizona</option><option>California</option><option>Colorado</option><option>Florida</option><option>Georgia</option><option>Illinois</option><option>Massachusetts</option><option>Michigan</option><option>New York</option><option>North Carolina</option><option>Ohio</option><option>Pennsylvania</option><option>Texas</option><option>Washington</option><option>Other US state</option><option>Ontario</option><option>British Columbia</option><option>Alberta</option><option>Quebec</option><option>Other province</option></select>
+        <button type="button" class="btn q-next" data-v="set">Next</button></div></fieldset>
+      <fieldset class="q" data-q="meds"><legend class="display" tabindex="-1">Do you take any prescription medications?</legend><p class="q-why">Your clinician reviews these so nothing in a plan works against what you already take.</p><div class="q-opts">
+        <button type="button" data-v="yes">Yes</button><button type="button" data-v="no">No</button><button type="button" data-v="unsure">Not sure</button></div></fieldset>
+      <fieldset class="q" data-q="labs"><legend class="display" tabindex="-1">Have you had blood work in the last 12 months?</legend><div class="q-opts">
+        <button type="button" data-v="yes">Yes</button><button type="button" data-v="no">No</button><button type="button" data-v="unsure">Not sure</button></div></fieldset>
+      <fieldset class="q" data-q="start"><legend class="display" tabindex="-1">How would you like to start?</legend><div class="q-opts">
+        <button type="button" data-v="labs">Order my labs</button><button type="button" data-v="call">Talk to a clinician</button><button type="button" data-v="callback">Have someone call me back</button></div></fieldset>
+      <div class="q q-res" data-q="result">
+        <p class="mono t-k">YOUR STARTING PATH</p>
+        <p class="display r-title">Labs plan</p>
+        <p class="r-copy">Every path begins with labs.</p>
+        <ol class="next mono"><li><b>Today</b> You get your path summary and lab requisition details.</li><li><b>Within [x] days</b> Lab draw at a partner lab near you.</li><li><b>About [x] days later</b> A clinician licensed in <span class="r-state">your state</span> reviews results with you.</li><li><b>Then</b> You get a written, all-in price before anything is prescribed.</li></ol>
+        <form class="lead" data-form="quiz">
+          <label for="q-email">Email (or phone) for your path summary</label>
+          <input id="q-email" name="contact" required autocomplete="email">
+          <button class="btn btn-full" type="submit">Send my path</button>
+        </form>
+        <button class="q-restart mono" type="button">Start over</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="seg-block partners" data-sec="Coach & gym partners" id="partners">
+    <div class="sb-l">
+      <p class="seg mono">SEG <span class="segn">10</span> <span>/ Coaches, gyms, studios</span></p>
+      <h2 class="display">Partner program <span class="o">for coaches and gyms.</span></h2>
+      <p>Refer members who want to know their numbers. They get the same labs-first process; you get a referral fee of [offer: confirm with Grace] and a partner page.</p>
+      <p class="ftc"><span class="mono">DISCLOSURE</span> Partners are paid for referrals. Under the FTC Endorsement Guides, partners must clearly tell people about that relationship whenever they mention Pepticity. Partners may not make health claims about any product or plan.</p>
+    </div>
+    <div class="sb-r ticket">
+      <form class="lead" data-form="partner">
+        <label for="p-name">Your name</label><input id="p-name" name="name" required autocomplete="name">
+        <label for="p-gym">Gym, team or studio</label><input id="p-gym" name="gym" required>
+        <label for="p-email">Email</label><input id="p-email" name="email" type="email" required autocomplete="email">
+        <button class="btn btn-full" type="submit">Apply to partner</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="news" data-sec="The Numbers" id="news">
+    <p class="seg mono">SEG <span class="segn">11</span> <span>/ Newsletter</span></p>
+    <h2 class="display news-h">The&nbsp;Numbers<span class="mono news-n" aria-hidden="true">ISSUE [00] · MONTHLY</span></h2>
+    <p>One email a month: how lab testing works, what's on a panel, how pharmacies are regulated. No hype.</p>
+    <form class="lead news-form" data-form="news">
+      <label for="n-email" class="sr">Email</label>
+      <input id="n-email" name="email" type="email" required placeholder="Your email" autocomplete="email">
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+  </section>
+</section>
+
+<!-- ======================================================= PROGRAMS -->
+<section class="view" data-view="programs" aria-label="Programs" hidden>
+  <header class="v-head" data-sec="Programs">
+    <p class="seg mono">CH 02 <span>/ Programs</span></p>
+    <h1 class="display">Programs. <span class="o">Every one starts with labs.</span></h1>
+    <p>Programs are clinician consults plus ongoing monitoring. A licensed clinician decides if a plan is right for you. If something is prescribed, a licensed partner pharmacy prepares it.</p>
+  </header>
+  <div class="progs" data-sec="Compare programs">
+    <article class="prog">
+      <p class="mono pk"><span>01</span> LABS</p>
+      <h2 class="display">Labs plan</h2>
+      <p class="pp display">$[xx]<small class="mono"> one time</small></p>
+      <ul><li>Blood draw at a partner lab</li><li>Clinician review of every marker</li><li>Plain-language summary to keep</li><li>No obligation to continue</li></ul>
+      <a class="btn btn-full" href="#home" data-jump="plan"><span class="cta-txt">Get my labs</span></a>
+    </article>
+    <article class="prog">
+      <p class="mono pk"><span>02</span> RECOVERY</p>
+      <h2 class="display">Recovery program</h2>
+      <p class="pp display">$[xx]<small class="mono"> / month</small></p>
+      <ul><li>Everything in Labs</li><li>Clinician consult focused on your training load and recovery habits</li><li>Follow-up labs every [xx] months</li><li>Messaging with your care team</li></ul>
+      <a class="btn btn-full btn-ghost" href="#faq" data-jump="contact">Ask about Recovery</a>
+    </article>
+    <article class="prog">
+      <p class="mono pk"><span>03</span> OPTIMIZATION</p>
+      <h2 class="display">Optimization program</h2>
+      <p class="pp display">$[xx]<small class="mono"> / month</small></p>
+      <ul><li>Everything in Recovery</li><li>Longer clinician consults, scheduled check-ins</li><li>Broader panel options [confirm with clinical partner]</li><li>Priority call-back line</li></ul>
+      <a class="btn btn-full btn-ghost" href="#faq" data-jump="contact">Ask about Optimization</a>
+    </article>
+  </div>
+  <section class="v-sec" data-sec="What's included">
+    <h2 class="display h3">What's included</h2>
+    <div class="tbl-wrap">
+      <table class="cmp inc">
+        <thead><tr><th scope="col"><span class="sr">Feature</span></th><th scope="col">Labs</th><th scope="col">Recovery</th><th scope="col">Optimization</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Lab draw + clinician review</th><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+          <tr><th scope="row">Ongoing clinician consults</th><td>—</td><td>Yes</td><td>Yes, longer</td></tr>
+          <tr><th scope="row">Follow-up labs</th><td>—</td><td>Every [xx] mo</td><td>Every [xx] mo</td></tr>
+          <tr><th scope="row">Licensed partner pharmacy (if prescribed)</th><td>—</td><td>Yes</td><td>Yes</td></tr>
+          <tr><th scope="row">Price lock</th><td>—</td><td>[xx] months</td><td>[xx] months</td></tr>
+          <tr><th scope="row">Call-back line</th><td>Yes</td><td>Yes</td><td>Priority</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="v-sec cosmetic" data-sec="No-consult topicals">
+    <p class="seg mono">ALSO AVAILABLE <span>/ No consult needed</span></p>
+    <h2 class="display h3">Cosmetic topical peptides</h2>
+    <p>A small range of cosmetic peptide skincare, separate from the clinician programs. Cosmetic use only: for skin that looks smoother and feels more hydrated.</p>
+    <div class="cos-row">
+      <div class="cos"><span class="mono">TOPICAL 01</span><b>Peptide serum</b><span>[product name] · $[xx]</span></div>
+      <div class="cos"><span class="mono">TOPICAL 02</span><b>Peptide eye cream</b><span>[product name] · $[xx]</span></div>
+      <div class="cos"><span class="mono">TOPICAL 03</span><b>Peptide night cream</b><span>[product name] · $[xx]</span></div>
+    </div>
+  </section>
+  <section class="v-sec band" data-sec="Price lock">
+    <p class="display bandline">Price locked</p>
+    <p>$[xx] / month, held for [xx] months from your first order. [offer: confirm with Grace]</p>
+    <a class="btn" href="#home" data-jump="quiz">Find my starting plan</a>
+  </section>
+</section>
+
+<!-- ======================================================= SCIENCE -->
+<section class="view" data-view="science" aria-label="Science" hidden>
+  <header class="v-head" data-sec="Science">
+    <p class="seg mono">CH 03 <span>/ Science &amp; standards</span></p>
+    <h1 class="display">How it works. <span class="o">No mystery.</span></h1>
+    <p>Three systems sit behind every Pepticity plan: lab testing for you, lot testing for what's dispensed, and the rules that govern both.</p>
+  </header>
+  <section class="v-sec chapter" data-sec="Lab testing">
+    <p class="seg mono">01 <span>/ Lab testing</span></p>
+    <h2 class="display h3">How your lab testing works</h2>
+    <ol class="steps">
+      <li><span class="mono">STEP 1</span><b>Order</b>We send a requisition to a partner lab near you [lab network: confirm].</li>
+      <li><span class="mono">STEP 2</span><b>Draw</b>A short blood draw at the lab. Some markers need a morning or fasting draw; we'll tell you which.</li>
+      <li><span class="mono">STEP 3</span><b>Results</b>The lab reports each marker with its own reference range.</li>
+      <li><span class="mono">STEP 4</span><b>Review</b>A licensed clinician goes through them with you, then decides if a plan is right for you.</li>
+    </ol>
+  </section>
+  <section class="v-sec chapter" data-sec="Lot testing">
+    <p class="seg mono">02 <span>/ Lot testing</span></p>
+    <h2 class="display h3">How every lot is tested</h2>
+    <div class="tests">
+      <div><span class="mono">IDENTITY</span><p>Confirms the compound is what the label says.</p></div>
+      <div><span class="mono">POTENCY / PURITY</span><p>Measures how much is present and what else is there.</p></div>
+      <div><span class="mono">STERILITY</span><p>Checks for microbial contamination where required.</p></div>
+      <div><span class="mono">ENDOTOXIN</span><p>Checks for bacterial endotoxins where required.</p></div>
+    </div>
+    <p>Testing is done by [testing lab: confirm, with accreditation]. Results are published as a certificate of analysis for each lot number.</p>
+    <a class="btn" href="#home" data-jump="lot">Look up a lot</a>
+  </section>
+  <section class="v-sec chapter" data-sec="Regulation">
+    <p class="seg mono">03 <span>/ Regulation</span></p>
+    <h2 class="display h3">How regulation works</h2>
+    <dl class="regs">
+      <dt>Prescription required</dt><dd>Prescription items are only dispensed after a licensed clinician, licensed in your state, decides a plan is right for you.</dd>
+      <dt>Licensed partner pharmacy</dt><dd>Prescriptions are filled by a state-licensed partner pharmacy. Compounding pharmacies prepare medications for an individual patient with a prescription.</dd>
+      <dt>Not FDA-approved</dt><dd>Compounded medications are not FDA-approved and are not the same as an approved drug.</dd>
+      <dt>Telehealth rules</dt><dd>Consults follow the telehealth rules of the state you live in.</dd>
+      <dt>Canada</dt><dd>[Canadian availability and Health Canada rules: confirm with counsel]</dd>
+    </dl>
+  </section>
+</section>
+
+<!-- ======================================================= FAQ -->
+<section class="view" data-view="faq" aria-label="FAQ and contact" hidden>
+  <header class="v-head" data-sec="FAQ">
+    <p class="seg mono">CH 04 <span>/ Questions &amp; contact</span></p>
+    <h1 class="display">Questions. <span class="o">Straight answers.</span></h1>
+  </header>
+  <section class="v-sec faqs" data-sec="Common questions">
+    <details><summary>Do I need labs before anything else?</summary><p>Yes. Every program starts with labs. A licensed clinician reviews your results with you before any plan is discussed.</p></details>
+    <details><summary>Who decides if a plan is right for me?</summary><p>A licensed clinician, licensed in your state. If a plan isn't right for you, they'll tell you.</p></details>
+    <details><summary>Where are prescriptions prepared?</summary><p>By a licensed partner pharmacy. Compounded medications are not FDA-approved.</p></details>
+    <details><summary>How do I check my lot?</summary><p>Enter the lot number from your label in the lot lookup on the home page to open its certificate of analysis.</p></details>
+    <details><summary>I compete in a tested sport. Anything I should know?</summary><p>Yes. Check your sport's anti-doping rules (for example, your federation's prohibited list) before starting any plan, and tell your clinician that you compete.</p></details>
+    <details><summary>I'm over 65 and not great with websites. Can I do this by phone?</summary><p>Yes. Call <span class="num">[phone number]</span> or use "Call me back" below, and a person will walk you through each step.</p></details>
+    <details><summary>Is the price really locked?</summary><p>Your monthly program price is held for [xx] months from your first order. [offer: confirm with Grace]</p></details>
+    <details><summary>Do the cosmetic topicals need a consult?</summary><p>No. They are cosmetic skincare, sold separately from the clinician programs.</p></details>
+    <details><summary>Can I cancel?</summary><p>[Cancellation terms: confirm with Grace]</p></details>
+  </section>
+  <section class="v-sec contact" data-sec="Contact" id="contact">
+    <div>
+      <h2 class="display h3">Talk to a person</h2>
+      <p class="bigphone"><span class="mono">PHONE</span> <span class="num">[phone number]</span></p>
+      <p>[Hours: confirm] · [support email]</p>
+    </div>
+    <form class="lead ticket" data-form="contact">
+      <label for="c-name">Your name</label><input id="c-name" name="name" required autocomplete="name">
+      <label for="c-contact">Phone or email</label><input id="c-contact" name="contact" required>
+      <label for="c-msg">Your question</label><textarea id="c-msg" name="msg" rows="4"></textarea>
+      <label class="check"><input type="checkbox" name="callback"> Call me back</label>
+      <button class="btn btn-full" type="submit">Send</button>
+    </form>
+  </section>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-top">
+    <p class="display foot-wm">PEPTICITY</p>
+    <nav aria-label="Footer"><a href="#home">Home</a><a href="#programs">Programs</a><a href="#science">Science</a><a href="#faq">FAQ &amp; contact</a><a href="#intro">Replay intro</a></nav>
+    <p class="phone"><span class="mono">Call</span> <span class="num">[phone number]</span></p>
+  </div>
+  <p class="disc">Pepticity connects you with independent licensed clinicians and a licensed partner pharmacy. A licensed clinician decides if a plan is right for you; prescription items require a prescription. Compounded medications are not FDA-approved. Nothing on this site is medical advice, and no product or plan is intended to diagnose, treat, cure or prevent any disease. Competitive athletes should check their sport's rules. Cosmetic topicals are for cosmetic use only. Images are SAMPLE photography of models. Prices and offers are placeholders. [Final legal copy to be approved by counsel.]</p>
+  <p class="mono foot-s">© [year] Pepticity · [legal entity] · <a href="#faq">Privacy</a> · <a href="#faq">Terms</a></p>
+</footer>
+
+<script src="../vendor/gsap.min.js"></script>
+<script src="../vendor/ScrollTrigger.min.js"></script>
+<script src="../vendor/SplitText.min.js"></script>
+<script src="../vendor/lenis.min.js"></script>
+<script src="grid.js"></script>
+<script src="intro.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
