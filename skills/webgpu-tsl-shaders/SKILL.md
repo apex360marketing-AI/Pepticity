@@ -33,9 +33,9 @@ import { Fn, uniform, instancedArray, instanceIndex, hash, vec3, vec4, float, ti
 const canvas = document.querySelector('.hero-gpu');
 const renderer = new THREE.WebGPURenderer({ canvas, antialias: false, alpha: true });  // add forceWebGL:true to test the fallback
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
-try { await renderer.init(); }                       // REQUIRED before compute() or the first render
-catch (e) { showPoster(); return; }                   // no WebGPU and no WebGL2 → poster
-const isWebGPU = renderer.backend.isWebGPUBackend === true;   // tier quality on this
+const ok = await renderer.init().then(() => true, () => false);   // REQUIRED before compute() or the first render
+if (!ok) showPoster();                                // no WebGPU and no WebGL2 → keep the poster, build nothing below
+const isWebGPU = ok && renderer.backend.isWebGPUBackend === true;   // tier quality on this
 ```
 - `WebGPURenderer` picks WebGPU when `navigator.gpu` is available and silently uses its WebGL2 backend otherwise. The same TSL compiles to WGSL or GLSL. Compute on the WebGL2 backend runs through transform feedback and is far slower, so drop the particle count 8–16× when `!isWebGPU`.
 - Use `renderer.setAnimationLoop(loop)`, not your own rAF, and set it to `null` when the canvas is off screen (IntersectionObserver) or the tab is hidden.

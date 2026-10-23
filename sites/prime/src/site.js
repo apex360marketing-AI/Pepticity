@@ -256,7 +256,7 @@
       const day = new Date(form.querySelector(`input[name="day${n}"]:checked`).value);
       const time = form.querySelector(`input[name="time${n}"]:checked`).value;
       const topic = form.elements.topic.value;
-      msg.textContent = `Preview only: nothing was sent. In the live site, a care guide would call ${name} on ${fmt(day)}, in the ${time}${topic ? ", about: " + topic : ""}${form.elements.family.checked ? ", with a family member" : ""}.`;
+      msg.textContent = `Preview only: nothing was sent. In the live site, a care guide would call ${name} on ${fmt(day)}, in the ${time}${topic ? ", about: " + topic : ""}${form.elements.family.checked && !/family/.test(topic) ? ", with a family member" : ""}.`;
     });
     slot.appendChild(frag);
   });

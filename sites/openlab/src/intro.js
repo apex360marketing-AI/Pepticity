@@ -36,10 +36,10 @@
     const mobile = W < 700;
     const base = () => Math.round(H * (mobile ? 0.7 : 0.74));
     const X0 = () => W * (mobile ? 0.06 : 0.08), X1 = () => W * (mobile ? 0.94 : 0.92);
-    const peakX = () => X0() + (X1() - X0()) * 0.56;
+    const peakX = () => X0() + (X1() - X0()) * 0.421;
     const MONO = '"Martian Mono", ui-monospace, monospace';
     const bigFS = mobile ? Math.min(54, W / 7.6) : Math.min(96, W / 13);
-    const T = { seq: 0.3, ghk: 1.0, word: 2.0, drop: 3.35, pen: 3.55, penEnd: 5.6, label: 5.5, lift: 6.35, end: 7.8 };
+    const T = { seq: 0.3, ghk: 1.0, word: 2.0, drop: 3.35, pen: 3.9, penEnd: 5.9, label: 5.85, lift: 6.45, end: 7.9 };
 
     // characters
     const chars = [];
@@ -49,7 +49,7 @@
       const cw = g.measureText("M").width;
       const gapA = cw * 0.9;
       const wA = lineA.length * cw + (lineA.length - 1) * gapA, wB = lineB.length * cw;
-      const yA = H * (mobile ? 0.25 : 0.27), yB = yA + bigFS * 1.25;
+      const yA = H * (mobile ? 0.38 : 0.36), yB = yA + bigFS * 1.25;
       chars.length = 0;
       lineA.forEach((c, i) => chars.push({ c, x: W / 2 - wA / 2 + i * (cw + gapA), y: yA, t: T.ghk + i * 0.3 }));
       lineB.forEach((c, i) => chars.push({ c, x: W / 2 - wB / 2 + i * cw, y: yB, t: T.word + i * 0.135 }));
@@ -86,7 +86,7 @@
     }
     let pile = buildParticles();
     const env = (x) => base() - (pile.pileH + 4) * Math.exp(-((x - peakX()) ** 2) / (2 * pile.sigma * pile.sigma))
-      - 9 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.31)) ** 2) / 50) - 6 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.72)) ** 2) / 40);
+      - 9 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.3)) ** 2) / 50) - 6 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.62)) ** 2) / 40);
     const noise = Array.from({ length: 400 }, () => (Math.random() - 0.5) * 1.6);
 
     const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -96,9 +96,9 @@
       [0.35, "[00:00.3] seq.load    Gly–His–Lys"],
       [1.0, "[00:01.0] seq.code    G H K"],
       [2.0, "[00:02.0] id.label    PEPTICITY"],
-      [3.35, "[00:03.4] inject      sample A1 · C18 · 220 nm"],
-      [5.5, "[00:05.5] peak        RT 8.42 min · area 99.4%"],
-      [6.3, "[00:06.3] report      published · SAMPLE DATA"],
+      [3.35, "[00:03.4] inject      A1 · C18 · 220 nm"],
+      [5.85, "[00:05.9] peak        RT 8.42 · 99.4%"],
+      [6.4, "[00:06.4] report      public · SAMPLE"],
     ];
 
     let t0 = null, done = false, lastT = 0;
@@ -112,7 +112,7 @@
       const gridA = clamp(t / 0.6) * (1 - lift * 0.6);
       // grid paper
       g.globalAlpha = gridA;
-      const x0 = X0(), x1 = X1(), top = H * 0.08;
+      const x0 = X0(), x1 = X1(), top = H * (mobile ? 0.26 : 0.21);
       for (let i = 0; i <= 20; i++) { const x = x0 + (x1 - x0) * (i / 20); g.strokeStyle = i % 5 ? "rgba(138,151,161,.16)" : "rgba(138,151,161,.42)"; g.lineWidth = 1; g.beginPath(); g.moveTo(Math.round(x) + 0.5, top); g.lineTo(Math.round(x) + 0.5, b0); g.stroke(); }
       for (let y = b0 - 40; y > top; y -= 40) { g.strokeStyle = "rgba(138,151,161,.16)"; g.beginPath(); g.moveTo(x0, y + 0.5); g.lineTo(x1, y + 0.5); g.stroke(); }
       g.fillStyle = "#46545F"; g.font = `500 ${mobile ? 10.5 : 12}px ${MONO}`; g.textAlign = "center"; g.textBaseline = "top";
@@ -126,14 +126,14 @@
         if (t < lt) return;
         const n = Math.floor(clamp((t - lt) / 0.5) * s.length);
         g.fillStyle = i === 0 ? "#0F1A22" : "#46545F";
-        g.fillText(s.slice(0, n), x0, (mobile ? 64 : 22) + i * (mobile ? 17 : 20));
+        g.fillText(s.slice(0, n), x0, (mobile ? 80 : 22) + i * (mobile ? 17 : 20));
       });
       // small "Gly–His–Lys" over GHK
       const seqS = "Gly – His – Lys", sn = Math.floor(clamp((t - T.seq) / 0.7) * seqS.length);
       if (t < T.drop + 0.4) {
         g.globalAlpha = 1 - clamp((t - T.drop) / 0.4);
         g.fillStyle = "#46545F"; g.font = `400 italic ${mobile ? 18 : 24}px "Fraunces", Georgia, serif`; g.textAlign = "center";
-        g.fillText(seqS.slice(0, sn), W / 2, chars[0].y - bigFS * 0.7);
+        g.fillText(seqS.slice(0, sn), W / 2, chars[0].y - bigFS * 1.3);
         g.globalAlpha = 1;
       }
       // glyphs: type → fall

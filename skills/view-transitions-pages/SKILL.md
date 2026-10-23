@@ -1,6 +1,6 @@
 ---
 name: view-transitions-pages
-description: Animate between pages and views with the native View Transitions API. Covers same-document `startViewTransition` with transition types, cross-document `@view-transition { navigation: auto }` for multi-page sites, `view-transition-name` shared-element morphs, hash-routed views (#home #shop #science #faq) in single-file artifacts that coexist with Lenis/GSAP, and React `<ViewTransition>` in Next.js. Use when asked for "page transitions", "animate between views", "morph the card into the page", "shared element transition", "route change animation", "make navigation feel cinematic", or when building the multi-view hash router for a template.
+description: Animate between pages and views with the native View Transitions API. Covers same-document `startViewTransition` with transition types, cross-document `@view-transition {navigation:auto}` for multi-page sites, `view-transition-name` shared-element morphs, hash-routed views (home, shop, science, faq) in single-file artifacts that coexist with Lenis/GSAP, and React `<ViewTransition>` in Next.js. Use when asked for "page transitions", "animate between views", "morph the card into the page", "shared element transition", "route change animation", "make navigation feel cinematic", or when building the multi-view hash router for a template.
 ---
 
 # View transitions for pages and views

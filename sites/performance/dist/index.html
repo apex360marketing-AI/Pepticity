@@ -496,8 +496,8 @@ table.cmp { width: 100%; border-collapse: collapse; min-width: 560px; font-size:
 @media (min-width: 1100px) { .v-aside.call { position: absolute; right: var(--gut); bottom: clamp(36px, 5vw, 60px); margin: 0; } .faq-h1-pad { } }
 @media (max-width: 900px) {
   .i-top { flex-direction: column; gap: 4px; }
-  table.cmp { min-width: 0; }
-  .cmp thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.cmp, .cmp tbody { display: block; min-width: 0; width: 100%; }
+  .cmp thead { display: none; }
   .cmp tbody tr { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); border-bottom: 1px solid var(--line2); }
   .cmp tbody th { grid-column: 1 / -1; width: auto; padding-bottom: 4px; border-bottom: 0; color: var(--plat); }
   .cmp tbody td { border-bottom: 0; padding-top: 6px; font-size: .95rem; }

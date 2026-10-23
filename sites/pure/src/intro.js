@@ -51,7 +51,7 @@
   const crown = Array.from({ length: 30 }, (_, i) => { const a = Math.PI * (0.08 + 0.84 * (i / 29)) + (Math.random() - 0.5) * 0.1; const sp = 0.6 + Math.random() * 0.6; return { vx: Math.cos(a) * sp, vy: -Math.sin(a) * sp * 1.4, r: 1.2 + Math.random() * 2.6 }; });
   const ease = { inQuad: t => t * t, outCubic: t => 1 - Math.pow(1 - t, 3), inOut: t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) };
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
-  const geo = () => ({ horizon: H * 0.55, ix: W / 2, iy: H * 0.7, wy: H * 0.42, speed: Math.max(W * 0.17, 150) });
+  const geo = () => ({ horizon: H * 0.6, ix: W / 2, iy: H * 0.76, wy: H * 0.4, speed: Math.max(W * 0.17, 150) });
 
   function background(t, g) {
     if (vReady && video.videoWidth) {
@@ -73,6 +73,7 @@
     for (const [t0, amp] of RINGS) {
       const a = t - t0; if (a <= 0) continue;
       const rx = a * g.speed * (t0 >= IMPACT2 ? 1.8 : 1), ry = rx * 0.26;
+      if (rx < 2) continue;
       const al = amp * Math.exp(-a * 0.55) * clamp(1 - rx / (W * 0.9));
       if (al < 0.01) continue;
       ctx.lineWidth = 2.2; ctx.strokeStyle = `rgba(255,255,255,${al * 0.95})`;
@@ -80,17 +81,17 @@
       ctx.lineWidth = 3; ctx.strokeStyle = `rgba(91,64,51,${al * 0.3})`;
       ctx.beginPath(); ctx.ellipse(g.ix, g.iy + 2.5, rx + 4, ry + 1.6, 0, 0, 7); ctx.stroke();
       ctx.lineWidth = 1; ctx.strokeStyle = `rgba(194,112,61,${al * 0.25})`;
-      ctx.beginPath(); ctx.ellipse(g.ix, g.iy - 1.5, rx - 5, ry - 1.4, 0, 0, 7); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(g.ix, g.iy - 1.5, Math.max(0, rx - 5), Math.max(0, ry - 1.4), 0, 0, 7); ctx.stroke();
     }
   }
   // wordmark crystallises column-by-column as the ripple front passes; strips are displaced by the wave
   function wordmark(t, g, reflect) {
     const a = t - IMPACT1; if (a <= 0.05) return;
-    const front = a * g.speed * 1.05, x0 = g.ix - wordW / 2, y0 = reflect ? g.horizon + (g.horizon - g.wy) * 0.35 : g.wy - wordH * 0.55;
+    const front = a * g.speed * 1.05, x0 = g.ix - wordW / 2, y0 = g.wy - wordH * 0.55;
     const env = Math.exp(-a * 0.95) * 30 + (t > IMPACT2 ? Math.exp(-(t - IMPACT2) * 1.5) * 10 : 0);
     const step = 3;
     ctx.save();
-    if (reflect) { ctx.globalAlpha = 0.16; ctx.translate(0, y0 * 2 + wordH * 0.55); ctx.scale(1, -0.55); }
+    if (reflect) { ctx.translate(0, g.horizon); ctx.scale(1, -0.5); ctx.translate(0, -g.horizon + (g.horizon - y0 - wordH) - 8); }
     for (let x = 0; x < wordW; x += step) {
       const dist = Math.abs(x0 + x - g.ix);
       const al = clamp((front - dist) / (W * 0.1)); if (al <= 0) continue;
@@ -158,6 +159,7 @@
   }
 
   // ---- clock ----
+  window.__introStart = performance.now();
   let start = performance.now(), offset = 0, revealDur = END_REVEAL, revealStarted = false;
   const site = [document.getElementById("main"), document.querySelector(".nav")];
   function beginReveal() {

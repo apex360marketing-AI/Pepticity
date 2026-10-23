@@ -17,7 +17,7 @@ const AUD = {
     hero: 'Tell a licensed clinician what feels off. Start with a free review.',
     cta: 'Talk it through: free review', quizStart: 'feel', order: ['process', 'people', 'safety', 'price', 'testing'] },
   women:     { label: 'Women 40+', img: 'aud-women.jpg', alt: 'Woman in her fifties by a window',
-    hero: 'Peptide care with clinicians who know midlife women's health.',
+    hero: "Peptide care with clinicians who know midlife women's health.",
     cta: 'Start my free review', quizStart: 'stage', order: ['people', 'process', 'safety', 'testing', 'price'] },
   men:       { label: 'Men 35+', img: 'aud-men.jpg', alt: 'Man in his forties running city stairs at dawn',
     hero: 'Know your numbers first. A licensed clinician decides what fits.',

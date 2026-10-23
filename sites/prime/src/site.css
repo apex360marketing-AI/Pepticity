@@ -348,8 +348,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus { b
 .cb-time-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .cb-time-opts span { display: flex; flex-direction: column; justify-content: center; min-height: 72px; padding: 8px 18px; border: 2px solid var(--line-strong); border-radius: 4px; background: #fff; font-weight: 600; }
 .cb-time-opts small { font-weight: 400; font-size: .8rem; color: var(--ink-2); }
-.cb-form input:checked + span { border-color: var(--ox); background: var(--ox); color: #fff; }
-.cb-form input:checked + span i, .cb-form input:checked + span small { color: #F4D9DE; }
+.cb-form input[type="radio"]:checked + span { border-color: var(--ox); background: var(--ox); color: #fff; }
+.cb-form input[type="radio"]:checked + span i, .cb-form input[type="radio"]:checked + span small { color: #F4D9DE; }
 .cb-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1rem; }
 .cb-check { display: flex; align-items: center; gap: 14px; min-height: 52px; cursor: pointer; font-size: 1rem; }
 .cb-check input { width: 28px; height: 28px; accent-color: var(--ox); flex: 0 0 28px; }
@@ -499,3 +499,4 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus { b
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+.dlg-faq { margin-top: 1.4rem; font-size: 1rem; } .dlg-faq a { min-height: 44px; display: inline-flex; align-items: center; }
