@@ -189,12 +189,12 @@
   // shop cards
   $("[data-cards]").innerHTML = PRODUCTS.map((p, i) => `
     <article class="card" data-mol="${p.mol}" tabindex="-1">
-      <figure class="plate" data-plate="${["i", "ii", "iii", "iv"][i]}"><img src="media/${p.plate}.jpg" alt="" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="plate plate-seq" data-plate="${["i", "ii", "iii", "iv"][i]}" data-seq="${MOL[p.mol].alias}"><img src="media/${p.plate}.jpg" alt="" loading="lazy" onerror="this.remove()"></figure>
       <div class="card-b">
         <h3>${p.name}</h3>
         <p class="inci">${MOL[p.mol].name} · ${MOL[p.mol].formula} · MW ${MOL[p.mol].mw}</p>
         <p>${p.note}</p>
-        <a class="lotl" href="#lab" data-target="explorer" data-lot="${p.lot}">Latest lot ${p.lot} · view panel →</a>
+        <a class="lotl" href="#lab" data-target="explorer" data-lot="${p.lot}">Lot ${p.lot} · read panel →</a>
         <div class="row"><span class="price">${p.size} · $[xx]</span><button class="btn btn-line" type="button" data-bag data-mol-btn="${p.mol}">Add to bag</button></div>
       </div>
     </article>`).join("");

@@ -41,9 +41,7 @@ em { font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1; }
 
 /* ---------------- top border (the intro's baseline) ---------------- */
 .topline { position: fixed; inset: 0 0 auto 0; height: 2px; background: var(--slate); z-index: 90; pointer-events: none; }
-.topline svg { position: absolute; left: clamp(16px, 4vw, 56px); top: -8px; width: 60px; height: 10px; overflow: visible; }
-.topline path { fill: none; stroke: var(--ion); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.topline::before { content: ""; position: absolute; left: calc(clamp(16px, 4vw, 56px) + 18px); width: 24px; top: 0; height: 2px; background: var(--ice); }
+.topline i { position: absolute; left: var(--gut); top: 0; width: 34px; height: 2px; background: var(--ion); }
 
 /* ---------------- masthead ---------------- */
 .mast { padding-top: 2px; background: var(--ice); }
@@ -120,7 +118,7 @@ em { font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1; }
 
 .kicker { font-size: .85rem; color: var(--ink2); margin: 0 0 18px; display: flex; gap: 12px; align-items: center; }
 .kicker span { color: var(--slate); border-bottom: 2px solid var(--ion); padding-bottom: 2px; }
-.display { font-size: clamp(3rem, 6.6vw, 6.4rem); line-height: .96; letter-spacing: -.035em; font-weight: 350; margin: 0; font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0; }
+.display { font-size: clamp(3rem, 5.8vw, 5.6rem); line-height: .96; letter-spacing: -.035em; font-weight: 350; margin: 0; font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0; }
 .display em { font-weight: 300; }
 .display-s { font-size: clamp(2.3rem, 4.6vw, 4.2rem); line-height: 1.02; letter-spacing: -.03em; font-weight: 350; margin: 0 0 18px; font-variation-settings: "opsz" 144, "SOFT" 50; max-width: 18ch; }
 .h2 { font-size: clamp(2rem, 3.6vw, 3.2rem); line-height: 1.05; letter-spacing: -.025em; font-weight: 380; margin: 0 0 18px; font-variation-settings: "opsz" 120, "SOFT" 40; }
@@ -153,7 +151,9 @@ em { font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1; }
 .well input:checked ~ .wl { font-weight: 600; }
 .tray-read { font-size: .8rem; color: var(--ink2); margin: 10px 0 0 4px; }
 .tray-read b { color: var(--slate); }
-.step2 { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.step2 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+.step2-h { flex: 1 1 100%; margin: 0; font-size: 1.25rem; }
+.step2 .btn { flex: 1 1 auto; }
 
 .cover-fig { position: relative; padding-bottom: 8px; }
 .plate { position: relative; margin: 0; overflow: hidden; background:
@@ -162,7 +162,12 @@ em { font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1; }
   repeating-linear-gradient(90deg, rgba(138,151,161,.18) 0 1px, transparent 1px 22px),
   linear-gradient(160deg, #e3e9ec, #cfd8dd); border: 1px solid var(--rule); aspect-ratio: 4/3; }
 .plate::before { content: attr(data-plate); position: absolute; right: 18px; top: 6px; font-family: var(--serif); font-style: italic; font-size: 6rem; line-height: 1; color: rgba(15,26,34,.12); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
-.plate::after { content: ""; position: absolute; left: 50%; top: 50%; width: 38%; aspect-ratio: 1; transform: translate(-50%, -58%); border-radius: 50%; border: 1px solid rgba(15,26,34,.18); box-shadow: 0 0 0 18px rgba(255,255,255,.35), 0 0 0 19px rgba(15,26,34,.08); }
+.plate::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: 22%; height: 38%; background:
+  linear-gradient(rgba(15,26,34,.22), rgba(15,26,34,.22)) 0 100% / 100% 1px no-repeat,
+  repeating-linear-gradient(90deg, transparent 0 10px, rgba(255,255,255,.75) 10px 30px, rgba(15,26,34,.14) 30px 31px, transparent 31px 44px);
+  -webkit-mask: linear-gradient(#000 0 0) 0 30% / 100% 70% no-repeat, linear-gradient(#000 0 0); }
+.plate-hero::after { left: 50%; right: auto; bottom: auto; top: 50%; height: auto; width: 38%; aspect-ratio: 1; transform: translate(-50%, -58%); border-radius: 50%; background: none; -webkit-mask: none; border: 1px solid rgba(15,26,34,.18); box-shadow: 0 0 0 18px rgba(255,255,255,.35), 0 0 0 19px rgba(15,26,34,.08); }
+.plate-seq::after { content: attr(data-seq); left: 16px; right: 16px; top: auto; bottom: 34%; height: auto; background: none; -webkit-mask: none; font-family: var(--serif); font-style: italic; font-size: 2rem; line-height: 1; color: rgba(15,26,34,.55); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; border-bottom: 1px solid rgba(15,26,34,.25); padding-bottom: 8px; }
 .plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: opacity .5s; }
 .plate figcaption { position: absolute; left: 0; bottom: 0; z-index: 2; background: var(--white); font-size: .8rem; padding: 6px 10px; border-top: 1px solid var(--rule); border-right: 1px solid var(--rule); }
 .plate-hero { aspect-ratio: 16/10; width: 88%; margin-left: auto; }
@@ -196,6 +201,7 @@ em { font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1; }
 .instrument { background: var(--white); border-top: 1px solid var(--slate); border-bottom: 1px solid var(--slate); }
 .ins-in { display: grid; grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); gap: 48px; padding-top: 64px; padding-bottom: 64px; align-items: center; min-height: 100vh; }
 .guide { list-style: none; padding: 0; margin: 22px 0; counter-reset: g; }
+.guide li p { margin: 0; }
 .guide li { display: grid; grid-template-columns: 34px 1fr; padding: 12px 0; border-top: 1px solid var(--rule); color: var(--ink2); transition: color .3s; }
 .guide li b { color: var(--slate); font-weight: 600; }
 .guide li span { font-size: .85rem; padding-top: 4px; }
@@ -532,6 +538,8 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
   .strip .grow { display: none; }
   .strip .ts { margin-left: auto; }
   .display { font-size: clamp(2.7rem, 13vw, 3.6rem); }
+  .cover-copy { display: flex; flex-direction: column; }
+  .cover-copy .lede { order: 5; margin-top: 22px; }
   .aud-line { font-size: 1.2rem; margin-top: 12px; }
   .cover .lede { font-size: 1.125rem; }
   .wells { border-radius: 28px; padding: 8px 4px; }
@@ -577,7 +585,7 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
 </div>
 
 <!-- the intro's baseline lives on as the site's top border -->
-<div class="topline" aria-hidden="true"><svg viewBox="0 0 60 10" preserveAspectRatio="none"><path d="M0 9 L22 9 C26 9 27 1 30 1 C33 1 34 9 38 9 L60 9"/></svg></div>
+<div class="topline" aria-hidden="true"><i></i></div>
 
 <header class="mast" id="top">
   <div class="strip mono">
@@ -607,7 +615,7 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
         <li><a href="#faq" data-nav="faq"><span class="n mono">04</span><span class="t">FAQ</span><span class="d">Questions &amp; contact</span></a></li>
       </ol>
     </nav>
-    <button class="contents-btn mono" type="button" aria-expanded="false" aria-controls="sheet">Contents <span aria-hidden="true">01–04</span></button>
+    <button class="contents-btn mono" type="button" aria-expanded="false" aria-controls="sheet">Contents</button>
   </div>
 </header>
 
@@ -661,7 +669,7 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
           <p class="tray-read mono" aria-live="polite" data-tray-read>Tray ready · load the sample that fits you</p>
         </fieldset>
         <div class="step2">
-          <span class="step mono">Step 2</span>
+          <p class="step2-h"><span class="step mono">Step 2</span> How would you like to start?</p>
           <a class="btn btn-solid" href="#shop" data-target="plan" data-cta>Start clinician plan</a>
           <a class="btn btn-line" href="#shop" data-target="range">Browse no-consult range</a>
         </div>
@@ -716,9 +724,9 @@ details > p, details > figure { margin: 0 0 18px 44px; max-width: 60ch; }
         <h2 id="ins-h" class="h2">Read a lot <em>like a chemist.</em></h2>
         <p>Scroll to run the sample, then drag across either trace. Every peak and every ion opens its numbers.</p>
         <ol class="guide">
-          <li data-g="0"><span class="mono">i</span><b>Retention time.</b> When each substance leaves the column, in minutes.</li>
-          <li data-g="1"><span class="mono">ii</span><b>Area %.</b> How much of the sample is the main peak. Spec here: ≥ 98.0%.</li>
-          <li data-g="2"><span class="mono">iii</span><b>m/z.</b> The mass the spectrometer sees. It confirms the molecule is the one on the label.</li>
+          <li data-g="0"><span class="mono">i</span><p><b>Retention time.</b> When each substance leaves the column, in minutes.</p></li>
+          <li data-g="1"><span class="mono">ii</span><p><b>Area %.</b> How much of the sample is the main peak. Spec here: ≥ 98.0%.</p></li>
+          <li data-g="2"><span class="mono">iii</span><p><b>m/z.</b> The mass the spectrometer sees. It confirms the molecule is the one on the label.</p></li>
         </ol>
         <p class="hint mono">Keyboard: focus a trace, then ← → · PgUp/PgDn jumps peaks</p>
       </div>
@@ -1857,12 +1865,12 @@ window.OL = (function () {
   // shop cards
   $("[data-cards]").innerHTML = PRODUCTS.map((p, i) => `
     <article class="card" data-mol="${p.mol}" tabindex="-1">
-      <figure class="plate" data-plate="${["i", "ii", "iii", "iv"][i]}"><img src="media/${p.plate}.jpg" alt="" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="plate plate-seq" data-plate="${["i", "ii", "iii", "iv"][i]}" data-seq="${MOL[p.mol].alias}"><img src="media/${p.plate}.jpg" alt="" loading="lazy" onerror="this.remove()"></figure>
       <div class="card-b">
         <h3>${p.name}</h3>
         <p class="inci">${MOL[p.mol].name} · ${MOL[p.mol].formula} · MW ${MOL[p.mol].mw}</p>
         <p>${p.note}</p>
-        <a class="lotl" href="#lab" data-target="explorer" data-lot="${p.lot}">Latest lot ${p.lot} · view panel →</a>
+        <a class="lotl" href="#lab" data-target="explorer" data-lot="${p.lot}">Lot ${p.lot} · read panel →</a>
         <div class="row"><span class="price">${p.size} · $[xx]</span><button class="btn btn-line" type="button" data-bag data-mol-btn="${p.mol}">Add to bag</button></div>
       </div>
     </article>`).join("");
@@ -2056,10 +2064,10 @@ window.OL = (function () {
     const mobile = W < 700;
     const base = () => Math.round(H * (mobile ? 0.7 : 0.74));
     const X0 = () => W * (mobile ? 0.06 : 0.08), X1 = () => W * (mobile ? 0.94 : 0.92);
-    const peakX = () => X0() + (X1() - X0()) * 0.56;
+    const peakX = () => X0() + (X1() - X0()) * 0.421;
     const MONO = '"Martian Mono", ui-monospace, monospace';
     const bigFS = mobile ? Math.min(54, W / 7.6) : Math.min(96, W / 13);
-    const T = { seq: 0.3, ghk: 1.0, word: 2.0, drop: 3.35, pen: 3.55, penEnd: 5.6, label: 5.5, lift: 6.35, end: 7.8 };
+    const T = { seq: 0.3, ghk: 1.0, word: 2.0, drop: 3.35, pen: 3.9, penEnd: 5.9, label: 5.85, lift: 6.45, end: 7.9 };
 
     // characters
     const chars = [];
@@ -2069,7 +2077,7 @@ window.OL = (function () {
       const cw = g.measureText("M").width;
       const gapA = cw * 0.9;
       const wA = lineA.length * cw + (lineA.length - 1) * gapA, wB = lineB.length * cw;
-      const yA = H * (mobile ? 0.25 : 0.27), yB = yA + bigFS * 1.25;
+      const yA = H * (mobile ? 0.38 : 0.36), yB = yA + bigFS * 1.25;
       chars.length = 0;
       lineA.forEach((c, i) => chars.push({ c, x: W / 2 - wA / 2 + i * (cw + gapA), y: yA, t: T.ghk + i * 0.3 }));
       lineB.forEach((c, i) => chars.push({ c, x: W / 2 - wB / 2 + i * cw, y: yB, t: T.word + i * 0.135 }));
@@ -2106,7 +2114,7 @@ window.OL = (function () {
     }
     let pile = buildParticles();
     const env = (x) => base() - (pile.pileH + 4) * Math.exp(-((x - peakX()) ** 2) / (2 * pile.sigma * pile.sigma))
-      - 9 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.31)) ** 2) / 50) - 6 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.72)) ** 2) / 40);
+      - 9 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.3)) ** 2) / 50) - 6 * Math.exp(-((x - (X0() + (X1() - X0()) * 0.62)) ** 2) / 40);
     const noise = Array.from({ length: 400 }, () => (Math.random() - 0.5) * 1.6);
 
     const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -2116,9 +2124,9 @@ window.OL = (function () {
       [0.35, "[00:00.3] seq.load    Gly–His–Lys"],
       [1.0, "[00:01.0] seq.code    G H K"],
       [2.0, "[00:02.0] id.label    PEPTICITY"],
-      [3.35, "[00:03.4] inject      sample A1 · C18 · 220 nm"],
-      [5.5, "[00:05.5] peak        RT 8.42 min · area 99.4%"],
-      [6.3, "[00:06.3] report      published · SAMPLE DATA"],
+      [3.35, "[00:03.4] inject      A1 · C18 · 220 nm"],
+      [5.85, "[00:05.9] peak        RT 8.42 · 99.4%"],
+      [6.4, "[00:06.4] report      public · SAMPLE"],
     ];
 
     let t0 = null, done = false, lastT = 0;
@@ -2132,7 +2140,7 @@ window.OL = (function () {
       const gridA = clamp(t / 0.6) * (1 - lift * 0.6);
       // grid paper
       g.globalAlpha = gridA;
-      const x0 = X0(), x1 = X1(), top = H * 0.08;
+      const x0 = X0(), x1 = X1(), top = H * (mobile ? 0.26 : 0.21);
       for (let i = 0; i <= 20; i++) { const x = x0 + (x1 - x0) * (i / 20); g.strokeStyle = i % 5 ? "rgba(138,151,161,.16)" : "rgba(138,151,161,.42)"; g.lineWidth = 1; g.beginPath(); g.moveTo(Math.round(x) + 0.5, top); g.lineTo(Math.round(x) + 0.5, b0); g.stroke(); }
       for (let y = b0 - 40; y > top; y -= 40) { g.strokeStyle = "rgba(138,151,161,.16)"; g.beginPath(); g.moveTo(x0, y + 0.5); g.lineTo(x1, y + 0.5); g.stroke(); }
       g.fillStyle = "#46545F"; g.font = `500 ${mobile ? 10.5 : 12}px ${MONO}`; g.textAlign = "center"; g.textBaseline = "top";
@@ -2146,14 +2154,14 @@ window.OL = (function () {
         if (t < lt) return;
         const n = Math.floor(clamp((t - lt) / 0.5) * s.length);
         g.fillStyle = i === 0 ? "#0F1A22" : "#46545F";
-        g.fillText(s.slice(0, n), x0, (mobile ? 64 : 22) + i * (mobile ? 17 : 20));
+        g.fillText(s.slice(0, n), x0, (mobile ? 80 : 22) + i * (mobile ? 17 : 20));
       });
       // small "Gly–His–Lys" over GHK
       const seqS = "Gly – His – Lys", sn = Math.floor(clamp((t - T.seq) / 0.7) * seqS.length);
       if (t < T.drop + 0.4) {
         g.globalAlpha = 1 - clamp((t - T.drop) / 0.4);
         g.fillStyle = "#46545F"; g.font = `400 italic ${mobile ? 18 : 24}px "Fraunces", Georgia, serif`; g.textAlign = "center";
-        g.fillText(seqS.slice(0, sn), W / 2, chars[0].y - bigFS * 0.7);
+        g.fillText(seqS.slice(0, sn), W / 2, chars[0].y - bigFS * 1.3);
         g.globalAlpha = 1;
       }
       // glyphs: type → fall

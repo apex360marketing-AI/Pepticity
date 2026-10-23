@@ -128,9 +128,9 @@
     ctx.save(); ctx.globalAlpha = 0.5; ctx.filter = "blur(40px)"; ctx.fillStyle = "#fff";
     ctx.beginPath(); ctx.moveTo(w * 0.1, 0); ctx.lineTo(w * 0.42, 0); ctx.lineTo(w * 0.95, h * 0.7); ctx.lineTo(w * 0.62, h * 0.72); ctx.closePath(); ctx.fill(); ctx.restore();
     // micro-type INCI lines (the lens magnifies these)
-    ctx.save(); ctx.fillStyle = "rgba(91,64,51,.30)"; ctx.font = `600 ${Math.round(w * 0.0115)}px ${SANS}`;
+    ctx.save(); ctx.fillStyle = "rgba(91,64,51,.17)"; ctx.font = `600 ${Math.round(w * 0.0115)}px ${SANS}`;
     const line = "SEQUENCE · SYNTHESIS · IDENTITY · PURITY · CONTAMINANTS · PHARMACY · LOT · CERTIFICATE · YOUR DOOR · ";
-    for (let i = 0; i < 26; i++) ctx.fillText(line + line, -((i * 37) % 300), h * 0.06 + i * w * 0.021);
+    for (let i = 0; i < 26; i++) if (i % 2 === 0 || (i > 6 && i < 18)) ctx.fillText(line + line, -((i * 37) % 300), h * 0.06 + i * w * 0.021);
     ctx.restore();
     // audience word, huge outline serif
     ctx.save(); ctx.font = `${Math.round(w * 0.3)}px ${SERIF}`; ctx.textAlign = "center";

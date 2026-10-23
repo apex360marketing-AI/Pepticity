@@ -46,7 +46,7 @@ em { font-style: italic; }
 .h2.light, .h3.light, .page-h.light { color: var(--por); }
 .h2.light em { color: var(--cu); }
 .h3 { font-family: var(--serif); font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.08; margin-bottom: .4em; }
-.page-h { font-family: var(--serif); font-size: clamp(3rem, 8vw, 8rem); line-height: .95; letter-spacing: -.02em; }
+.page-h { font-family: var(--serif); font-size: clamp(3rem, 8vw, 8rem); line-height: .98; letter-spacing: -.02em; margin-bottom: .25em; }
 .page-h em { color: var(--cu); }
 .fine { font-size: .875rem; color: var(--cocoa); line-height: 1.5; }
 .band-espresso .fine, .band-cocoa .fine { color: rgba(238, 234, 228, .78); }
@@ -111,7 +111,7 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
 .ripple-ring { position: fixed; z-index: 58; pointer-events: none; border-radius: 50%; border: 2px solid var(--cu); box-shadow: 0 0 0 6px rgba(250, 248, 245, .5), inset 0 0 0 1px rgba(255, 255, 255, .8); transform: translate(-50%, -50%); opacity: 0; filter: url(#liquid-soft); width: 0; height: 0; left: 0; top: 0; }
 
 /* ---------- hero ---------- */
-.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: calc(100svh - var(--nav-h)); background: color-mix(in oklab, var(--milk) 94%, var(--tint)); transition: background .8s; }
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: calc(100svh - var(--nav-h)); background: color-mix(in oklab, color-mix(in oklab, var(--milk) 60%, var(--por)) 96%, var(--tint)); transition: background .8s; }
 .hero-copy { padding: clamp(32px, 6vh, 72px) var(--gut) 48px; display: flex; flex-direction: column; justify-content: center; }
 .kicker { font-size: .875rem; font-weight: 600; letter-spacing: .02em; display: flex; align-items: center; gap: 10px; color: var(--cocoa); margin-bottom: 28px; }
 .dot-cu { width: 10px; height: 10px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--tint); transition: background .6s; }
@@ -534,6 +534,9 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
   .lot-row { flex-direction: column; }
   .size-btn { padding: 0 8px; }
   .ledger b { font-size: 1.25rem; }
+  .menu-btn > span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .wm-word { font-size: 1.3rem; letter-spacing: .04em; }
+  .nav { padding: 0 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
@@ -548,7 +551,7 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
     <feTurbulence type="fractalNoise" baseFrequency="0.011 0.016" numOctaves="2" seed="7" result="n">
       <animate attributeName="seed" values="7;9;7" dur="3s" repeatCount="indefinite"/>
     </feTurbulence>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="22" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
   <filter id="liquid-soft" x="-10%" y="-10%" width="120%" height="120%">
     <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="3" result="n"/>
@@ -1211,9 +1214,9 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
     ctx.save(); ctx.globalAlpha = 0.5; ctx.filter = "blur(40px)"; ctx.fillStyle = "#fff";
     ctx.beginPath(); ctx.moveTo(w * 0.1, 0); ctx.lineTo(w * 0.42, 0); ctx.lineTo(w * 0.95, h * 0.7); ctx.lineTo(w * 0.62, h * 0.72); ctx.closePath(); ctx.fill(); ctx.restore();
     // micro-type INCI lines (the lens magnifies these)
-    ctx.save(); ctx.fillStyle = "rgba(91,64,51,.30)"; ctx.font = `600 ${Math.round(w * 0.0115)}px ${SANS}`;
+    ctx.save(); ctx.fillStyle = "rgba(91,64,51,.17)"; ctx.font = `600 ${Math.round(w * 0.0115)}px ${SANS}`;
     const line = "SEQUENCE · SYNTHESIS · IDENTITY · PURITY · CONTAMINANTS · PHARMACY · LOT · CERTIFICATE · YOUR DOOR · ";
-    for (let i = 0; i < 26; i++) ctx.fillText(line + line, -((i * 37) % 300), h * 0.06 + i * w * 0.021);
+    for (let i = 0; i < 26; i++) if (i % 2 === 0 || (i > 6 && i < 18)) ctx.fillText(line + line, -((i * 37) % 300), h * 0.06 + i * w * 0.021);
     ctx.restore();
     // audience word, huge outline serif
     ctx.save(); ctx.font = `${Math.round(w * 0.3)}px ${SERIF}`; ctx.textAlign = "center";
@@ -1352,7 +1355,7 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
 
   // ======================= RENDER CARDS =======================
   function artImg(kind, alt) { return `<img class="art-img" src="${PepArt.product(kind)}" alt="${alt || ""}">`; }
-  const svcArt = { review: "Rx-free<br>review", mem: "Ess.", mem2: "Con.", visit: "Visit" };
+  const svcArt = { review: "Free<br>review", mem: "Ess.", mem2: "Con.", visit: "Visit" };
   function renderBuild() {
     $("[data-build]").innerHTML = BUILD.map(b => `
       <article class="b-card" data-id="${b.id}" data-kind="${b.kind}">
@@ -1739,7 +1742,7 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
       fills.forEach(f => { if (!v.contains(f.el)) return; f.level = 0;
         gsap.to(f, { level: 1, ease: "none", scrollTrigger: { trigger: f.el, start: "top 88%", end: "bottom 40%", scrub: 1 } }); });
       if (!reduce) $$(".h2, .page-h, .rv, .objection, .prog, .s-card, .b-card, .test-list li, .care-steps li", v).forEach(el => {
-        gsap.from(el, { y: 34, opacity: 0.25, duration: 1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
+        gsap.from(el, { y: 34, opacity: 0.6, duration: 1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
       });
       if (name === "home") {
         const mm = gsap.matchMedia();

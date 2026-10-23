@@ -71,7 +71,7 @@
 
   // ======================= RENDER CARDS =======================
   function artImg(kind, alt) { return `<img class="art-img" src="${PepArt.product(kind)}" alt="${alt || ""}">`; }
-  const svcArt = { review: "Rx-free<br>review", mem: "Ess.", mem2: "Con.", visit: "Visit" };
+  const svcArt = { review: "Free<br>review", mem: "Ess.", mem2: "Con.", visit: "Visit" };
   function renderBuild() {
     $("[data-build]").innerHTML = BUILD.map(b => `
       <article class="b-card" data-id="${b.id}" data-kind="${b.kind}">
@@ -458,7 +458,7 @@
       fills.forEach(f => { if (!v.contains(f.el)) return; f.level = 0;
         gsap.to(f, { level: 1, ease: "none", scrollTrigger: { trigger: f.el, start: "top 88%", end: "bottom 40%", scrub: 1 } }); });
       if (!reduce) $$(".h2, .page-h, .rv, .objection, .prog, .s-card, .b-card, .test-list li, .care-steps li", v).forEach(el => {
-        gsap.from(el, { y: 34, opacity: 0.25, duration: 1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
+        gsap.from(el, { y: 34, opacity: 0.6, duration: 1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
       });
       if (name === "home") {
         const mm = gsap.matchMedia();

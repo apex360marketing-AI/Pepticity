@@ -40,7 +40,7 @@ em { font-style: italic; }
 .h2.light, .h3.light, .page-h.light { color: var(--por); }
 .h2.light em { color: var(--cu); }
 .h3 { font-family: var(--serif); font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.08; margin-bottom: .4em; }
-.page-h { font-family: var(--serif); font-size: clamp(3rem, 8vw, 8rem); line-height: .95; letter-spacing: -.02em; }
+.page-h { font-family: var(--serif); font-size: clamp(3rem, 8vw, 8rem); line-height: .98; letter-spacing: -.02em; margin-bottom: .25em; }
 .page-h em { color: var(--cu); }
 .fine { font-size: .875rem; color: var(--cocoa); line-height: 1.5; }
 .band-espresso .fine, .band-cocoa .fine { color: rgba(238, 234, 228, .78); }
@@ -105,7 +105,7 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
 .ripple-ring { position: fixed; z-index: 58; pointer-events: none; border-radius: 50%; border: 2px solid var(--cu); box-shadow: 0 0 0 6px rgba(250, 248, 245, .5), inset 0 0 0 1px rgba(255, 255, 255, .8); transform: translate(-50%, -50%); opacity: 0; filter: url(#liquid-soft); width: 0; height: 0; left: 0; top: 0; }
 
 /* ---------- hero ---------- */
-.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: calc(100svh - var(--nav-h)); background: color-mix(in oklab, var(--milk) 94%, var(--tint)); transition: background .8s; }
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: calc(100svh - var(--nav-h)); background: color-mix(in oklab, color-mix(in oklab, var(--milk) 60%, var(--por)) 96%, var(--tint)); transition: background .8s; }
 .hero-copy { padding: clamp(32px, 6vh, 72px) var(--gut) 48px; display: flex; flex-direction: column; justify-content: center; }
 .kicker { font-size: .875rem; font-weight: 600; letter-spacing: .02em; display: flex; align-items: center; gap: 10px; color: var(--cocoa); margin-bottom: 28px; }
 .dot-cu { width: 10px; height: 10px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--tint); transition: background .6s; }
@@ -528,6 +528,9 @@ main { padding-top: var(--nav-h); transform-origin: 50% 70%; }
   .lot-row { flex-direction: column; }
   .size-btn { padding: 0 8px; }
   .ledger b { font-size: 1.25rem; }
+  .menu-btn > span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .wm-word { font-size: 1.3rem; letter-spacing: .04em; }
+  .nav { padding: 0 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
