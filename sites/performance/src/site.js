@@ -43,7 +43,7 @@
     women: { code: "M3", label: "WOMEN 40+", short: "Women 40+", hl: "understand what's changing.", img: "media/aud-women.jpg", cta: "Get my women's panel",
       note: "Markers a clinician commonly reviews for women in midlife.", markers: ["e2", "tsh", "fer", "vd", "lip", "a1c"],
       order: ["clinician", "plan", "compare", "pricelock"], who: "who focuses on midlife.",
-      q1: ["What's on your mind?", [["cycle", "Changes in my cycle or midlife"], ["mood", "Sleep and mood feel different"], ["strong", "Staying strong and active"], ["hormones", "Understanding my hormones"]]],
+      q1: ["What's on your mind?", [["peri", "Perimenopause or midlife changes"], ["mood", "Sleep and mood feel different"], ["strong", "Staying strong and active"], ["hormones", "Understanding my hormones"]]],
       path: ["Women 40+ panel + consult", "A panel chosen for women in midlife, reviewed with a clinician who focuses on this stage of life."] },
     men: { code: "M4", label: "MEN 35+", short: "Men 35+", hl: "know my numbers.", img: "media/aud-men.jpg", cta: "Know my numbers",
       note: "Markers a clinician commonly reviews for men 35 and over.", markers: ["tt", "ft", "e2", "lip", "a1c", "cbc"],
