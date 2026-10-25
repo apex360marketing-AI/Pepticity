@@ -71,9 +71,9 @@ def reflect(res, layer, ink, strength=0.2):
     reg[:] = reg * (1 - ra[..., None]) + ink[src - ys[0]] * ra[..., None]
 
 
-def render(key):
+def render(key, fr='V1'):
     base = np.asarray(Image.open(PH / 'b2.jpg').convert('RGB')).astype(np.float32) / 255
-    front = trim(ART / 'V1.png')
+    front = trim(ART / f'{fr}.png')
     back = trim(ART / f'back-{key}.png')
     # one type size for the whole range: fit the widest panel, use that scale for all
     widest = max((trim(ART / f'back-{k}.png') for k in KEYS), key=lambda im: im.width)
@@ -88,12 +88,14 @@ def render(key):
         ink = put(res, L, 0.95)
         reflect(res, L, ink)
         res += (rng.standard_normal(res.shape[:2])[..., None] * 0.006).astype(np.float32)
-        Image.fromarray((np.clip(res, 0, 1) * 255).astype(np.uint8)).save(OUT / f'{view}-{key}.jpg', quality=88, optimize=True, progressive=True)
-        print(OUT / f'{view}-{key}.jpg')
+        Image.fromarray((np.clip(res, 0, 1) * 255).astype(np.uint8)).save(OUT / f'{view}-{key}{"" if fr == "V1" else "-" + fr}.jpg', quality=88, optimize=True, progressive=True)
+        print(view, key, fr)
 
 
 KEYS = ('AOD', 'NAD', 'EPI', 'GHK')
 
 if __name__ == '__main__':
-    for k in KEYS:
-        render(k)
+    import sys
+    fr = sys.argv[1] if len(sys.argv) > 1 else 'V1'
+    for k in (sys.argv[2:] or KEYS):
+        render(k, fr)
