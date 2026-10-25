@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pepticity Garnet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Pepticity: clinician-guided peptide care, prepared by a licensed partner pharmacy, with a lot certificate you can look up for every vial.">
+<script>try{var a=new URLSearchParams(location.search).get('for')||localStorage.getItem('pep-aud');if(a)document.documentElement.setAttribute('data-aud',a);if(localStorage.getItem('pep-text')==='large')document.documentElement.setAttribute('data-text','large')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vial-fallback" aria-hidden="true"><i class="vf-cap"></i><i class="vf-glass"><b></b></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ INTRO ============ -->
+<div id="intro" class="intro" hidden>
+  <div class="in-line" aria-hidden="true"></div>
+  <p class="in-kicker mono" aria-hidden="true"><span>Lot</span> <span class="in-lot">PX-2611-A</span></p>
+  <h2 class="in-word" aria-label="Pepticity"><span>P</span><span>e</span><span>p</span><span>t</span><span>i</span><span>c</span><span>i</span><span>t</span><span>y</span></h2>
+  <p class="in-tag" aria-hidden="true">Peptide care you can verify.</p>
+  <button class="intro-skip mono" type="button">Skip intro <span aria-hidden="true">Esc</span></button>
+</div>
+
+<!-- ============ HEADER ============ -->
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="top">
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="curtain"><span class="mb-lines" aria-hidden="true"><i></i><i></i></span><span class="mb-t">Menu</span></button>
+  <a class="brand" href="#home" data-nav-home aria-label="Pepticity home">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M13 35V7h10.5a8.5 8.5 0 0 1 0 17H13"/><circle cx="13" cy="35" r="2.2"/><circle cx="13" cy="24" r="2.2"/><circle cx="23.5" cy="7" r="2.2"/><circle cx="32" cy="15.5" r="2.2"/></svg>
+    <span class="brand-word">Pepticity</span>
+  </a>
+  <div class="top-r">
+    <span class="top-phone mono">[phone number]</span>
+    <button class="textsize" type="button" data-textsize aria-pressed="false" title="Larger text">A<span>A</span><span class="sr">Larger text</span></button>
+    <button class="btn-br btn-sm" type="button" data-quiz><span>Start assessment</span></button>
+  </div>
+</header>
+
+<nav id="curtain" class="curtain" aria-label="Main" hidden>
+  <ol class="cur-list">
+    <li><a href="#home" data-nav="home"><span class="cur-n mono">01</span><span class="cur-t">Home</span></a></li>
+    <li><a href="#shop" data-nav="shop"><span class="cur-n mono">02</span><span class="cur-t">Membership</span></a></li>
+    <li><a href="#science" data-nav="science"><span class="cur-n mono">03</span><span class="cur-t">The science</span></a></li>
+    <li><a href="#faq" data-nav="faq"><span class="cur-n mono">04</span><span class="cur-t">Questions</span></a></li>
+  </ol>
+  <div class="cur-side">
+    <p class="cur-lab mono">I'm here for</p>
+    <div class="aud-group aud-list" data-aud-group aria-label="I'm here for (menu)"></div>
+    <p class="cur-lab mono">Talk to a person</p>
+    <p class="cur-phone">[phone number]</p>
+    <a class="cur-replay mono" href="#intro">Replay the intro</a>
+  </div>
+</nav>
+
+<main id="main">
+<!-- ======================= HOME ======================= -->
+<section data-view="home" class="view v-home" aria-labelledby="h-home">
+  <div class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow mono"><span class="dot" aria-hidden="true"></span>Clinician-led. Lab-proven.</p>
+      <h1 id="h-home" class="hero-h" data-aud-text="hero">Peptide care you can verify.</h1>
+      <p class="hero-sub" data-aud-text="sub">A licensed clinician decides if a plan is right for you. A licensed partner pharmacy prepares it. Every vial carries a lot code you can look up.</p>
+      <div class="hero-acts">
+        <button class="btn-br btn-solid" type="button" data-quiz><span data-aud-text="cta">Start the 60-second assessment</span></button>
+        <button class="btn-link" type="button" data-scroll="#ledger">Look up a lot <span aria-hidden="true">&#8594;</span></button>
+      </div>
+      <div class="hero-aud">
+        <p class="aud-lab mono">I'm here for</p>
+        <div class="aud-group aud-inline" data-aud-group></div>
+      </div>
+    </div>
+    <div class="hero-spec mono" aria-hidden="true">
+      <span>Specimen</span><span class="hs-lot">PX-2611-A</span>
+      <span>Prepared</span><span>Licensed partner pharmacy</span>
+      <span>Status</span><span class="hs-ok">Certificate on file</span>
+    </div>
+    <p class="hero-scroll mono" aria-hidden="true">Scroll to open the label</p>
+  </div>
+
+  <section class="peel" aria-labelledby="h-peel">
+    <div class="peel-in">
+      <p class="eyebrow mono">Under the label</p>
+      <h2 id="h-peel" class="h2">Three things on every vial. <em>All of them checkable.</em></h2>
+      <ol class="peel-list">
+        <li><span class="pl-n mono">i.</span><div><h3>A lot code</h3><p>Type it into the lot lookup to see that lot's certificate of analysis.</p></div></li>
+        <li><span class="pl-n mono">ii.</span><div><h3>The pharmacy</h3><p>The licensed partner pharmacy that prepared it, by name, with a licence you can check.</p></div></li>
+        <li><span class="pl-n mono">iii.</span><div><h3>A cold-chain seal</h3><p>Shipped cold to your door, with the seal intact when it arrives.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="how" class="how" aria-labelledby="h-how">
+    <div class="how-head">
+      <p class="eyebrow mono">How it works</p>
+      <h2 id="h-how" class="h2">Six steps. <em>A person at every one.</em></h2>
+    </div>
+    <div class="thread">
+      <svg class="thread-svg" viewBox="0 0 10 1000" preserveAspectRatio="none" aria-hidden="true"><path class="thread-base" d="M5 0V1000"/><path class="thread-line" d="M5 0V1000" pathLength="1"/></svg>
+      <ol class="steps" data-fill-steps></ol>
+    </div>
+    <div class="band">
+      <p class="band-q">Not sure where to start?</p>
+      <button class="btn-br btn-solid" type="button" data-quiz><span>Take the 60-second assessment</span></button>
+    </div>
+  </section>
+
+  <section id="ledger" class="ledger" aria-labelledby="h-ledger">
+    <div class="led-copy">
+      <p class="eyebrow mono">The lot ledger</p>
+      <h2 id="h-ledger" class="h2">Don't trust us. <em>Check us.</em></h2>
+      <p class="lede">Every lot is tested before it is released. Enter the code on your vial and see its certificate. Drag across the chart to read it.</p>
+      <div class="lot" id="lot">
+        <form class="lot-form" role="search" aria-label="Lot lookup">
+          <label class="lot-lab" for="lot-in">Lot code</label>
+          <div class="lot-row"><input id="lot-in" class="lot-in mono" name="lot" autocomplete="off" spellcheck="false" placeholder="PX-2611-A"><button class="btn-br btn-sm" type="submit"><span>Look up</span></button></div>
+          <p class="lot-try mono">Try: <button type="button" data-lot="PX-2611-A">PX-2611-A</button> <button type="button" data-lot="PX-2610-C">PX-2610-C</button> <button type="button" data-lot="PX-2609-B">PX-2609-B</button></p>
+        </form>
+        <div class="lot-out" aria-live="polite"></div>
+      </div>
+    </div>
+    <figure class="led-fig">
+      <canvas class="chroma" id="chroma"></canvas>
+      <figcaption class="mono">Illustrative chromatogram. Sample data, not a real lot.</figcaption>
+    </figure>
+  </section>
+
+  <section class="people" aria-labelledby="h-people">
+    <div class="ppl-head">
+      <p class="eyebrow mono">The clinicians</p>
+      <h2 id="h-people" class="h2">Real people, <em>with licences you can look up.</em></h2>
+    </div>
+    <ul class="ppl" data-fill-clin></ul>
+    <p class="fine">Clinician details are placeholders until Grace confirms her clinical partner.</p>
+  </section>
+
+  <section class="cmp" aria-labelledby="h-cmp">
+    <div class="cmp-head">
+      <p class="eyebrow mono">Not another online peptide shop</p>
+      <h2 id="h-cmp" class="h2">The difference, <em>line by line.</em></h2>
+    </div>
+    <div class="cmp-wrap">
+      <table class="cmp-t">
+        <caption class="sr">Pepticity compared with a typical "research use only" seller</caption>
+        <thead><tr><th scope="col"><span class="sr">Topic</span></th><th scope="col">Pepticity</th><th scope="col">A typical "research use only" seller</th></tr></thead>
+        <tbody data-fill="compare"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="price" aria-labelledby="h-price">
+    <div class="pr-copy">
+      <p class="eyebrow mono">All-in pricing</p>
+      <h2 id="h-price" class="h2">One price. <em>No surprises at checkout.</em></h2>
+      <p class="lede">You see the full price before you pay. Cancel in two clicks. If peptides aren't right for you, you pay nothing. [Confirm policy with Grace]</p>
+      <div class="pr-acts"><button class="btn-br btn-solid" type="button" data-quiz><span>Start my free review</span></button><a class="btn-link" href="#shop">See membership <span aria-hidden="true">&#8594;</span></a></div>
+    </div>
+    <div class="receipt" id="receipt">
+      <p class="rc-top mono"><span>Pepticity</span><span>Your first month</span></p>
+      <ol class="rc-lines"></ol>
+      <p class="rc-total"><span>Due today</span><b>$0.00</b></p>
+      <p class="rc-foot mono">Membership $[xx] a month, only if a clinician prescribes a plan. [Confirm pricing with Grace]</p>
+    </div>
+  </section>
+
+  <section class="closer" aria-labelledby="h-close">
+    <h2 id="h-close" class="closer-h">Precision, <em>prescribed.</em></h2>
+    <button class="btn-br btn-solid" type="button" data-quiz><span>Start the 60-second assessment</span></button>
+    <p class="closer-p">Prefer a person? Call <span class="mono">[phone number]</span></p>
+  </section>
+</section>
+
+<!-- ======================= SHOP ======================= -->
+<section data-view="shop" class="view v-shop" aria-labelledby="h-shop" hidden>
+  <header class="vhead">
+    <p class="eyebrow mono">Membership</p>
+    <h1 id="h-shop" class="vh">Start free. <em>Pay only if a plan is right.</em></h1>
+    <p class="lede">Every plan begins with a free review by a licensed clinician. Prices stay in brackets until Grace confirms them.</p>
+  </header>
+  <div class="plans" data-fill-plans></div>
+  <section class="paths" aria-labelledby="h-paths">
+    <h2 id="h-paths" class="h2">Five paths. <em>One standard of care.</em></h2>
+    <ol class="path-list" data-fill-paths></ol>
+  </section>
+  <section class="price price-shop" aria-label="What you pay">
+    <div class="pr-copy">
+      <h2 class="h2">What you pay, <em>itemised.</em></h2>
+      <p class="lede">No hidden fees. The receipt below is the whole story. [Confirm pricing with Grace]</p>
+    </div>
+    <div class="receipt" id="receipt2">
+      <p class="rc-top mono"><span>Pepticity</span><span>Your first month</span></p>
+      <ol class="rc-lines"></ol>
+      <p class="rc-total"><span>Due today</span><b>$0.00</b></p>
+      <p class="rc-foot mono">Membership $[xx] a month, only if a clinician prescribes a plan.</p>
+    </div>
+  </section>
+</section>
+
+<!-- ======================= SCIENCE ======================= -->
+<section data-view="science" class="view v-sci" aria-labelledby="h-sci" hidden>
+  <header class="vhead">
+    <p class="eyebrow mono">The science</p>
+    <h1 id="h-sci" class="vh">Built on proof, <em>not promises.</em></h1>
+    <p class="lede">This page explains how a plan is decided, who prepares it and how each lot is tested. It does not tell you what any peptide will do for you. Only your clinician can talk about that.</p>
+  </header>
+  <div class="sci-grid">
+    <article class="sci-c"><span class="sci-n mono">01</span><h2>The clinician decides</h2><p>A licensed clinician reviews your answers, your medicines and, when needed, your labs. They decide if a plan is right for you. Nothing is sold without that review.</p></article>
+    <article class="sci-c"><span class="sci-n mono">02</span><h2>A licensed pharmacy prepares it</h2><p>Plans are filled by a licensed partner pharmacy [name and licence: confirm with Grace]. A compounded medicine is not the same as an FDA-approved one, and we never say it is.</p></article>
+    <article class="sci-c"><span class="sci-n mono">03</span><h2>An independent lab tests each lot</h2><p>Each lot is tested for identity, purity, sterility and endotoxin by [independent lab: confirm with Grace] before release.</p></article>
+    <article class="sci-c"><span class="sci-n mono">04</span><h2>You can check all of it</h2><p>The lot code on your vial opens that lot's certificate. The pharmacy and clinician licences link to the boards that issued them.</p></article>
+  </div>
+  <section class="ledger ledger-sci" aria-labelledby="h-led2">
+    <div class="led-copy">
+      <h2 id="h-led2" class="h2">Read a certificate <em>yourself.</em></h2>
+      <p class="lede">Drag across the chart. The tall peak is the main compound; the small ones are everything else. This one is illustrative sample data.</p>
+    </div>
+    <figure class="led-fig"><canvas class="chroma" id="chroma2"></canvas><figcaption class="mono">Illustrative chromatogram. Sample data, not a real lot.</figcaption></figure>
+  </section>
+  <section id="flags" class="flags" aria-labelledby="h-flags">
+    <div class="fl-head">
+      <p class="eyebrow mono">Seller red-flag checker</p>
+      <h2 id="h-flags" class="h2">Eight questions to ask <em>any peptide seller.</em></h2>
+      <p class="lede">Answer them about a site you are looking at, ours included.</p>
+    </div>
+    <div class="rf" id="rf"><div class="rf-meter" aria-hidden="true"><i></i></div><div class="rf-list"></div><p class="rf-out" aria-live="polite"></p></div>
+  </section>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section data-view="faq" class="view v-faq" aria-labelledby="h-faq" hidden>
+  <header class="vhead">
+    <p class="eyebrow mono">Questions</p>
+    <h1 id="h-faq" class="vh">Plain answers, <em>in plain English.</em></h1>
+  </header>
+  <div class="faq-grid">
+    <div class="faq" data-fill="faq"></div>
+    <aside class="contact" aria-labelledby="h-contact">
+      <h2 id="h-contact" class="h3">Talk to a person</h2>
+      <p class="contact-phone">[phone number]</p>
+      <p class="fine">[Hours: confirm with Grace]</p>
+      <form class="cform" data-preview novalidate>
+        <label for="cf-name">Your name</label><input id="cf-name" name="name" autocomplete="name" required>
+        <label for="cf-phone">Phone number</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+        <label for="cf-when">Best time to call</label>
+        <select id="cf-when" name="when"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+        <button class="btn-br btn-solid" type="submit"><span>Call me back</span></button>
+        <p class="form-msg" aria-live="polite"></p>
+      </form>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="foot-top">
+    <p class="foot-word">Pepticity</p>
+    <nav class="foot-nav" aria-label="Footer"><a href="#home" data-nav="home">Home</a><a href="#shop" data-nav="shop">Membership</a><a href="#science" data-nav="science">The science</a><a href="#faq" data-nav="faq">Questions</a></nav>
+  </div>
+  <p class="disclaimer">Pepticity is a care service. A licensed clinician decides if a plan is right for you, and plans are prepared by a licensed partner pharmacy. Compounded medicines are not FDA-approved. Nothing on this site is medical advice, and no result is promised. Lot data shown here is sample data. [Final legal copy to be approved by counsel.]</p>
+  <p class="fine mono">&copy; 2026 Pepticity. Design preview.</p>
+</footer>
+
+<div class="sticky-cta"><button class="btn-br btn-solid" type="button" data-quiz><span>Start the free assessment</span></button></div>
+
+<dialog id="pep-quiz" class="pq" aria-labelledby="pq-title">
+  <div class="pq-in">
+    <div class="pq-top"><p id="pq-title" class="pq-title mono">The 60-second assessment</p><button class="pq-close" type="button" aria-label="Close the assessment">&#215;</button></div>
+    <div class="pq-bar" aria-hidden="true"><i></i></div>
+    <p class="pq-step mono" aria-live="polite"></p>
+    <div class="pq-body"></div>
+  </div>
+</dialog>
+
+<script src="../vendor/gsap.min.js"></script>
+<script src="../vendor/ScrollTrigger.min.js"></script>
+<script src="../vendor/lenis.min.js"></script>
+<script src="../../../shared/pep-core.js"></script>
+<script src="site.js"></script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>
