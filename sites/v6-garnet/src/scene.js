@@ -6,7 +6,8 @@ const S = window.PEPSTATE || (window.PEPSTATE = { intro: 1, peel: 0, view: 'home
 const canvas = document.getElementById('gl');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-try { start(); } catch (e) { console.warn('3D unavailable', e); }
+function ready() { if (!S.ready) { S.ready = true; dispatchEvent(new Event('pep-gl-ready')); } }
+try { start(); } catch (e) { console.warn('3D unavailable', e); ready(); }
 
 function start() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -29,6 +30,9 @@ function start() {
 
   const vial = new THREE.Group(); scene.add(vial);
   const spin = new THREE.Group(); vial.add(spin);
+  // part groups, so the anatomy section can pull the vial apart (ANA-01)
+  const glassG = new THREE.Group(), liqG = new THREE.Group(), labelG = new THREE.Group(), capG = new THREE.Group();
+  spin.add(glassG, liqG, labelG, capG);
 
   // ---- glass body (lathe) ----
   const R = 0.62, H = 2.15;
@@ -43,27 +47,27 @@ function start() {
   prof.push(new THREE.Vector2(0.4, H / 2 + 0.1));
   const glassGeo = new THREE.LatheGeometry(prof, 96);
   const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.04, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, transparent: true, opacity: 0.13, envMapIntensity: 2.4, side: THREE.DoubleSide, depthWrite: false });
-  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 3; spin.add(glass);
+  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 3; glassG.add(glass);
 
   // ---- liquid ----
   const LH = 1.18;
   const liqGeo = new THREE.CylinderGeometry(R - 0.05, R - 0.05, LH, 96, 1, false);
   liqGeo.translate(0, -H / 2 + 0.06 + LH / 2, 0);
   const liqMat = new THREE.MeshPhysicalMaterial({ color: 0x5e0c1c, roughness: 0.1, metalness: 0, clearcoat: 1, emissive: 0x3a0711, emissiveIntensity: 0.5, envMapIntensity: 1.2, transparent: true, opacity: 0.94 });
-  const liquid = new THREE.Mesh(liqGeo, liqMat); liquid.renderOrder = 1; spin.add(liquid);
+  const liquid = new THREE.Mesh(liqGeo, liqMat); liquid.renderOrder = 1; liqG.add(liquid);
   const men = new THREE.Mesh(new THREE.CircleGeometry(R - 0.05, 96), new THREE.MeshPhysicalMaterial({ color: 0x8e1b30, roughness: 0.05, clearcoat: 1, emissive: 0x4a0a16, emissiveIntensity: 0.5, transparent: true, opacity: 0.9 }));
-  men.rotation.x = -Math.PI / 2; men.position.y = -H / 2 + 0.06 + LH; spin.add(men);
+  men.rotation.x = -Math.PI / 2; men.position.y = -H / 2 + 0.06 + LH; liqG.add(men);
 
   // ---- chrome crimp cap + stopper ----
   const chrome = new THREE.MeshStandardMaterial({ color: 0xe6e9ed, metalness: 1, roughness: 0.12, envMapIntensity: 2.6 });
   const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.47, 0.47, 0.42, 96, 1, false), chrome);
-  cap.position.y = H / 2 + 0.26; spin.add(cap);
-  const capTop = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.05, 24, 96), chrome); capTop.rotation.x = Math.PI / 2; capTop.position.y = H / 2 + 0.47; spin.add(capTop);
+  cap.position.y = H / 2 + 0.26; capG.add(cap);
+  const capTop = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.05, 24, 96), chrome); capTop.rotation.x = Math.PI / 2; capTop.position.y = H / 2 + 0.47; capG.add(capTop);
   const stop = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.06, 64), new THREE.MeshStandardMaterial({ color: 0x2a1015, roughness: 0.6, metalness: 0.1 }));
-  stop.position.y = H / 2 + 0.48; spin.add(stop);
+  stop.position.y = H / 2 + 0.48; capG.add(stop);
   for (let i = 0; i < 40; i++) { // crimp ridges
     const r = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.36, 0.03), chrome);
-    const a = i / 40 * Math.PI * 2; r.position.set(Math.cos(a) * 0.475, H / 2 + 0.24, Math.sin(a) * 0.475); r.rotation.y = -a; spin.add(r);
+    const a = i / 40 * Math.PI * 2; r.position.set(Math.cos(a) * 0.475, H / 2 + 0.24, Math.sin(a) * 0.475); r.rotation.y = -a; capG.add(r);
   }
 
   // ---- labels (canvas textures) ----
@@ -101,9 +105,9 @@ function start() {
   const innerMat = new THREE.MeshStandardMaterial({ map: innerTex, roughness: 0.55, metalness: 0, side: THREE.DoubleSide });
   const outerMat = new THREE.MeshStandardMaterial({ map: outerTex, roughness: 0.42, metalness: 0, side: THREE.DoubleSide });
   const inner = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.004, R + 0.004, LBL_H, 128, 1, true, -Math.PI * 0.55, Math.PI * 1.1), innerMat);
-  inner.position.y = LBL_Y; spin.add(inner);
-  const outer = new THREE.Mesh(new THREE.BufferGeometry(), outerMat); outer.position.y = LBL_Y; spin.add(outer);
-  const FULL = Math.PI * 1.86;
+  inner.position.y = LBL_Y; labelG.add(inner);
+  const outer = new THREE.Mesh(new THREE.BufferGeometry(), outerMat); outer.position.y = LBL_Y; labelG.add(outer);
+  const FULL = Math.PI * 2 - 0.004; // full wrap: no seam gap turning into view
   let lastPeel = -1;
   function buildOuter(p) {
     // the label unwinds from one edge and lifts off the glass as it peels
@@ -143,10 +147,32 @@ function start() {
 
   // ---- dust motes ----
   const N = 260, dp = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) { dp[i * 3] = (Math.random() - 0.5) * 12; dp[i * 3 + 1] = (Math.random() - 0.5) * 8; dp[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1; }
+  for (let i = 0; i < N; i++) { dp[i * 3] = (Math.random() - 0.5) * 12; dp[i * 3 + 1] = Math.random() * 15 - 4; dp[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1; }
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
   const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xee8b9b, size: 0.025, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending }));
   scene.add(dust);
+  // streaks that whip past the lens during the dive (INT-04)
+  const SN = 150, sp = new Float32Array(SN * 6);
+  for (let i = 0; i < SN; i++) {
+    const a = Math.random() * Math.PI * 2, r = 1.3 + Math.random() * 4, y = Math.random() * 13 - 2, l = 0.35 + Math.random() * 0.6;
+    const x = Math.cos(a) * r, z = Math.sin(a) * r * 0.6 + 1;
+    sp.set([x, y, z, x, y + l, z], i * 6);
+  }
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+  const streaks = new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ color: 0xf2c7cf, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+  scene.add(streaks);
+
+  // ---- anatomy parts: exploded offsets (vial space) and tag anchors ----
+  const PARTS = [
+    { g: capG,   off: new THREE.Vector3(0.38, 0.98, 0),    at: new THREE.Vector3(0.5, H / 2 + 0.28, 0),     id: 'seal' },
+    { g: labelG, off: new THREE.Vector3(0.8, 0.08, 0.55),  at: new THREE.Vector3(R + 0.03, LBL_Y + 0.2, 0), id: 'label' },
+    { g: liqG,   off: new THREE.Vector3(-0.48, -0.78, 0),  at: new THREE.Vector3(-(R - 0.03), -0.42, 0),   id: 'liquid' },
+    { g: glassG, off: new THREE.Vector3(0, 0, 0),          at: new THREE.Vector3(-(R + 0.01), -0.12, 0),    id: 'glass' },
+  ];
+  PARTS.forEach(p => { p.tag = document.querySelector('.anat-tag[data-part="' + p.id + '"]'); });
+  const pin = document.querySelector('.anat-pin');
+  const tv = new THREE.Vector3(), lookT = new THREE.Vector3();
+  let tagsShown = false;
 
   // ---- layout ----
   let mobile = false;
@@ -157,7 +183,7 @@ function start() {
   addEventListener('resize', resize); resize();
 
   // ---- loop ----
-  let rx = 0, ry = 0, t0 = performance.now(), visible = true, peelS = 0;
+  let rx = 0, ry = 0, t0 = performance.now(), visible = true, peelS = 0, exS = 0;
   document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) requestAnimationFrame(frame); });
   document.documentElement.classList.add('gl-on');
   const ease = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -172,10 +198,16 @@ function start() {
     if (!onHome && intro >= 1 && (Math.floor(t * 60) % 3)) return; // idle softly behind other views
 
     // placement: right of the copy on desktop, above it on phones
-    const baseX = mobile ? 0 : 1.75, baseY = mobile ? 1.15 : 0.05, sc = mobile ? 0.78 : 1;
-    const introX = mobile ? 0 : THREE.MathUtils.lerp(0, baseX, ie);
-    vial.position.set(introX, THREE.MathUtils.lerp(-3.6, baseY, ie) + (reduce ? 0 : Math.sin(t * 0.8) * 0.04) + (1 - hero) * (mobile ? 0.9 : 0.4), 0);
-    vial.scale.setScalar(sc * THREE.MathUtils.lerp(1.25, 1, ie));
+    const L = THREE.MathUtils.lerp;
+    exS += ((onHome ? S.explode || 0 : 0) - exS) * 0.09;
+    const pres = Math.min(1, exS / 0.35), pe = ease(pres); // anatomy takes the vial centre stage
+    const baseX = mobile ? 0 : 1.75, baseY = mobile ? 0.9 : 0.05, sc = mobile ? 0.68 : 1;
+    // during the intro the vial holds centre stage above the wordmark, then glides into the hero
+    const lift = S.lift == null ? 1 : S.lift, le = ease(Math.min(1, Math.max(0, lift)));
+    const introX = mobile ? 0 : L(0, baseX, le);
+    const restY = L(-0.7, mobile ? baseY : L(0.65, baseY, le), ie) + (reduce ? 0 : Math.sin(t * 0.8) * 0.04) + (1 - hero) * (mobile ? 0.9 : 0.4);
+    vial.position.set(L(introX, mobile ? 0 : 0.3, pe), L(restY, mobile ? 0.55 : 0.02, pe), 0);
+    vial.scale.setScalar(L(sc * L(1.12, 1, ie) * (mobile ? 1 : L(0.85, 1, le)), mobile ? 0.56 : 0.8, pe));
     renderer.toneMappingExposure = THREE.MathUtils.lerp(0.15, 1.05, Math.min(1, intro * 1.4));
     key.position.x = THREE.MathUtils.lerp(-5, 3, ie);
     rim.intensity = 40 + Math.sin(t * 1.3) * 6;
@@ -189,12 +221,39 @@ function start() {
     const idle = reduce ? 0 : t * 0.18 * (1 - peelS);
     const base = idle + (1 - ie) * -2.4 + (1 - hero) * 1.3 + ry;
     const face = Math.round(base / (Math.PI * 2)) * Math.PI * 2 + ry * 0.3; // lot label square to the viewer
-    spin.rotation.y = base + (face - base) * Math.min(1, peelS * 1.4);
+    const turned = base + (face - base) * Math.min(1, peelS * 1.4);
+    spin.rotation.y = L(turned, face - 0.32 + ry * 0.2, pe);
+    // pull the parts apart one after another
+    const th = spin.rotation.y, cs = Math.cos(th), sn = Math.sin(th);
+    PARTS.forEach((p, i) => {
+      const k = p.k = ease(Math.min(1, Math.max(0, exS * 1.5 - i * 0.14)));
+      const ox = p.off.x * k, oy = p.off.y * k, oz = p.off.z * k;
+      p.g.position.set(ox * cs - oz * sn, oy, ox * sn + oz * cs);
+    });
+    glassMat.opacity = 0.13 + pe * 0.1;
     vial.rotation.x = rx + 0.04; vial.rotation.z = (1 - ie) * 0.08;
     halo.material.opacity = 0.35 + ie * 0.65;
     dust.rotation.y = t * 0.02; dust.position.y = Math.sin(t * 0.2) * 0.2;
-    cam.position.z = THREE.MathUtils.lerp(7.2, 9, ie);
+    // the Descent: dive from high above the vial and level out in front of it
+    const dv = reduce ? 1 : ie;
+    cam.position.set(0, L(10.5, 0.2, dv), L(2.6, 9, dv));
+    lookT.set(L(vial.position.x, 0, dv), L(vial.position.y, 0.2, dv), 0); cam.lookAt(lookT);
+    streaks.material.opacity = reduce ? 0 : Math.max(0, 4 * dv * (1 - dv)) * 0.5;
     renderer.render(scene, cam);
+    if (!S.ready) ready();
+    // tags follow their parts (desktop only; phones read the list)
+    const wantTags = !mobile && onHome && pres > 0.02 && pin;
+    if (wantTags) {
+      vial.updateMatrixWorld();
+      const top = pin.getBoundingClientRect().top;
+      PARTS.forEach(p => {
+        if (!p.tag) return;
+        tv.copy(p.at).add(p.off.clone().multiplyScalar(p.k)).applyMatrix4(vial.matrixWorld).project(cam);
+        p.tag.style.transform = 'translate3d(' + ((tv.x * 0.5 + 0.5) * innerWidth).toFixed(1) + 'px,' + ((-tv.y * 0.5 + 0.5) * innerHeight - top).toFixed(1) + 'px,0)';
+        p.tag.style.opacity = Math.min(1, Math.max(0, (p.k - 0.45) / 0.35)).toFixed(3);
+      });
+      tagsShown = true;
+    } else if (tagsShown) { PARTS.forEach(p => { if (p.tag) { p.tag.style.opacity = ''; p.tag.style.transform = ''; } }); tagsShown = false; }
   }
   requestAnimationFrame(frame);
 }

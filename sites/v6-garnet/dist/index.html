@@ -52,7 +52,7 @@ html.intro-on main,html.intro-on .top,html.intro-on .foot,html.intro-on .sticky-
 html.intro-done main,html.intro-done .top{transition:opacity 1s var(--ease)}
 html.intro-on .intro{background:radial-gradient(60% 50% at 50% 55%,rgba(142,27,48,.14),transparent 70%),transparent}
 .in-line{position:absolute;left:50%;top:18%;bottom:18%;width:1px;background:linear-gradient(transparent,var(--garnet-hi),transparent);transform:scaleY(0);transform-origin:50% 50%;box-shadow:0 0 18px var(--garnet-hi)}
-.in-kicker{position:absolute;top:calc(16% + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);opacity:0}
+.in-kicker{position:absolute;top:calc(6.5% + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);opacity:0}
 .in-lot{color:var(--garnet-ink)}
 .in-word{position:absolute;left:0;right:0;bottom:22%;margin:0;text-align:center;font:400 clamp(3rem,1.5rem + 8vw,8.5rem)/1 var(--f-d);letter-spacing:.06em;display:flex;justify-content:center}
 .in-word span{display:inline-block;opacity:0;transform:translateY(.4em);filter:blur(8px)}
@@ -148,6 +148,27 @@ main{position:relative;z-index:2}
 .peel-list li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding-top:20px;border-top:1px solid var(--line)}
 .peel-list h3{font:400 1.6rem/1.1 var(--f-d);margin:0 0 6px}
 .peel-list p{margin:0;color:var(--muted)}
+
+/* ---------- anatomy: the vial comes apart (ANA-01) ---------- */
+.anat{position:relative;height:340vh}
+.anat-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.anat-head{position:absolute;z-index:2;left:var(--gut);top:calc(var(--top-h) + 5vh);max-width:430px}
+.anat-hint{margin:18px 0 0;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.anat-list{list-style:none;margin:0;padding:0}
+.anat-tag{position:absolute;left:0;top:0;width:0;height:0;opacity:0;will-change:transform,opacity}
+.anat-tag::before{content:"";position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--garnet-ink);box-shadow:0 0 0 4px rgba(200,52,77,.18),0 0 16px rgba(238,139,155,.85)}
+.anat-tag::after{content:"";position:absolute;top:0;width:76px;height:1px}
+.anat-tag[data-side="r"]::after{left:8px;background:linear-gradient(90deg,var(--garnet-ink),rgba(239,235,231,.3))}
+.anat-tag[data-side="l"]::after{right:8px;background:linear-gradient(270deg,var(--garnet-ink),rgba(239,235,231,.3))}
+.at-card{position:absolute;top:-30px;width:290px;display:grid;grid-template-columns:34px minmax(0,1fr);gap:2px;padding:16px 18px 18px;
+  background:radial-gradient(120% 90% at 0% 0%,rgba(200,52,77,.16),transparent 60%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.015)),rgba(18,13,14,.55);
+  backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 50px -26px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.16)}
+.anat-tag[data-side="r"] .at-card{left:86px}
+.anat-tag[data-side="l"] .at-card{right:86px}
+.at-n{color:var(--garnet-ink);font-size:.72rem;letter-spacing:.14em;padding-top:5px}
+.at-c h3{font:400 1.32rem/1.1 var(--f-d);margin:0 0 6px}
+.at-c p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.45}
 .pl-n{color:var(--garnet-ink);font-size:.9rem;padding-top:6px}
 
 /* ---------- how / thread ---------- */
@@ -183,6 +204,10 @@ main{position:relative;z-index:2}
 .lot-try button{min-height:36px;background:none;border:0;border-bottom:1px dotted var(--line2);color:var(--muted);font:inherit;cursor:pointer;margin-right:8px}
 .lot-try button:hover{color:var(--garnet-ink)}
 .lot-out{margin-top:22px;min-height:40px}
+.lot-out:has(.lot-h){padding:22px 24px 14px;border:1px solid rgba(255,255,255,.14);
+  background:radial-gradient(120% 90% at 0% 0%,rgba(200,52,77,.2),transparent 55%),linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.012));
+  backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.95),0 0 60px -30px rgba(200,52,77,.55),inset 0 1px 0 rgba(255,255,255,.16)}
 .lot-h{display:flex;gap:12px;align-items:center;margin:0 0 12px}
 .lot-code{font:500 1.15rem var(--f-m);letter-spacing:.12em}
 .lot-tag{font:500 .68rem var(--f-m);letter-spacing:.2em;padding:4px 8px;border:1px solid var(--garnet-hi);color:var(--garnet-ink)}
@@ -243,11 +268,19 @@ main{position:relative;z-index:2}
 .v-shop,.v-sci,.v-faq{background:rgba(12,10,11,.9);min-height:100vh;padding-top:calc(var(--top-h) + 10vh)}
 .vhead{max-width:900px;padding:0 var(--gutr) 8vh var(--gut)}
 .vh{font:400 clamp(2.8rem,1.6rem + 4.6vw,6rem)/1 var(--f-d);margin:0 0 22px}
-.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0 var(--gutr) 12vh var(--gut);border:1px solid var(--line)}
-.plan{display:flex;flex-direction:column;padding:34px 30px 30px;border-right:1px solid var(--line);min-width:0;position:relative}
-.plan:last-child{border-right:0}
-.plan.is-star{background:linear-gradient(180deg,rgba(142,27,48,.2),transparent 70%)}
-.plan.is-star::before{content:"Most chosen path";position:absolute;top:0;left:30px;transform:translateY(-50%);background:var(--bg);padding:2px 10px;font:500 .66rem var(--f-m);letter-spacing:.18em;text-transform:uppercase;color:var(--garnet-ink);border:1px solid var(--garnet-hi)}
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0 var(--gutr) 12vh var(--gut);position:relative;isolation:isolate}
+.plans::before{content:"";position:absolute;z-index:-1;inset:-6% 8%;background:radial-gradient(40% 55% at 50% 50%,rgba(142,27,48,.55),transparent 70%),radial-gradient(25% 40% at 12% 70%,rgba(207,211,216,.12),transparent 70%),radial-gradient(25% 40% at 90% 25%,rgba(200,52,77,.3),transparent 70%);filter:blur(30px);pointer-events:none}
+.plan{display:flex;flex-direction:column;padding:34px 30px 30px;min-width:0;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.13);
+  background:linear-gradient(150deg,rgba(255,255,255,.075),rgba(255,255,255,.012) 60%);
+  backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.15);
+  transition:transform .6s var(--ease),box-shadow .6s,border-color .6s}
+.plan::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.09) 50%,transparent 65%);transform:translateX(-110%);transition:transform 1.2s var(--ease);pointer-events:none}
+.plan:hover{transform:translateY(-6px);border-color:rgba(238,139,155,.4);box-shadow:0 40px 70px -30px rgba(0,0,0,.95),0 24px 60px -30px rgba(200,52,77,.65),inset 0 1px 0 rgba(255,255,255,.22)}
+.plan:hover::after{transform:translateX(110%)}
+.plan.is-star{background:radial-gradient(120% 70% at 50% 0%,rgba(142,27,48,.32),transparent 70%),linear-gradient(150deg,rgba(255,255,255,.08),rgba(255,255,255,.015) 60%);border-color:rgba(238,139,155,.3)}
+.plan.is-star::before{content:"Most chosen path";position:absolute;top:16px;right:16px;padding:3px 10px;font:500 .64rem var(--f-m);letter-spacing:.18em;text-transform:uppercase;color:var(--garnet-ink);border:1px solid rgba(238,139,155,.45);background:rgba(12,10,11,.4)}
 .plan h2{font:400 1.7rem var(--f-d);margin:0 0 18px}
 .plan-p{font:400 3.2rem/1 var(--f-d);margin:0 0 24px}
 .plan-p small{font:400 .9rem var(--f-b);color:var(--muted);margin-left:6px}
@@ -317,8 +350,12 @@ main{position:relative;z-index:2}
 .vt b{font:italic 400 clamp(2.4rem,1.6rem + 4vw,5rem) var(--f-d);color:var(--ink);opacity:0}
 
 /* ---------- assessment dialog ---------- */
-.pq{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--line2);background:#100d0e;color:var(--ink)}
-.pq::backdrop{background:rgba(5,4,4,.82);backdrop-filter:blur(8px)}
+.pq{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;color:var(--ink);
+  border:1px solid rgba(255,255,255,.15);
+  background:radial-gradient(90% 60% at 100% 0%,rgba(142,27,48,.3),transparent 60%),linear-gradient(150deg,rgba(40,30,32,.62),rgba(16,12,13,.72));
+  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 50px 120px -40px rgba(0,0,0,.95),0 0 90px -40px rgba(200,52,77,.6),inset 0 1px 0 rgba(255,255,255,.16)}
+.pq::backdrop{background:rgba(5,4,4,.55);backdrop-filter:blur(6px)}
 .pq-in{padding:28px 30px 34px}
 .pq-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .pq-title{margin:0;font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
@@ -349,7 +386,6 @@ main{position:relative;z-index:2}
 @media (max-width:1000px){
   .ppl{grid-template-columns:repeat(2,minmax(0,1fr))}
   .plans{grid-template-columns:minmax(0,1fr)}
-  .plan{border-right:0;border-bottom:1px solid var(--line)}
 }
 @media (max-width:900px){
   :root{--top-h:64px}
@@ -361,6 +397,14 @@ main{position:relative;z-index:2}
   .peel{min-height:auto;background:rgba(12,10,11,.94)}.peel-in{position:static;padding:8vh 0}
   .btn-br{letter-spacing:.12em;padding:0 20px}
   .sticky-cta.is-hero{display:none}
+  .anat{height:auto;padding:0 var(--gutr) 10vh var(--gut)}
+  .anat-pin{position:static;height:auto;overflow:visible;padding-top:64svh}
+  .anat-head{position:static;max-width:none}
+  .anat-hint{display:none}
+  .anat-list{display:grid;gap:12px;margin-top:26px}
+  .anat-tag{position:static;width:auto;height:auto;opacity:1!important;transform:none!important}
+  .anat-tag::before,.anat-tag::after{display:none}
+  .at-card{position:static;width:auto;background:radial-gradient(120% 90% at 0% 0%,rgba(200,52,77,.16),transparent 60%),linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.012)),rgba(16,12,13,.84)}
   .steps{gap:44px}
   .thread-svg{left:31px}
   .step{grid-template-columns:64px minmax(0,1fr);gap:18px}
@@ -386,6 +430,16 @@ main{position:relative;z-index:2}
   .grain{display:none}
 }
 @supports not (backdrop-filter:blur(4px)){.top.is-solid{background:#0c0a0b}}
+/* no WebGL: the anatomy reads as a plain list of glass cards */
+html:not(.gl-on) .anat{height:auto;padding:12vh var(--gutr) 10vh var(--gut)}
+html:not(.gl-on) .anat-pin{position:static;height:auto;overflow:visible}
+html:not(.gl-on) .anat-head{position:static}
+html:not(.gl-on) .anat-hint{display:none}
+html:not(.gl-on) .anat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px;margin-top:30px}
+html:not(.gl-on) .anat-tag{position:static;width:auto;height:auto;opacity:1!important;transform:none!important}
+html:not(.gl-on) .anat-tag::before,html:not(.gl-on) .anat-tag::after{display:none}
+html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
+@supports not (backdrop-filter:blur(4px)){.plan,.at-card,.lot-out:has(.lot-h){background:#1a1416}.pq{background:#140f10}}
 
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -466,6 +520,22 @@ main{position:relative;z-index:2}
         <li><span class="pl-n mono">i.</span><div><h3>A lot code</h3><p>Type it into the lot lookup to see that lot's certificate of analysis.</p></div></li>
         <li><span class="pl-n mono">ii.</span><div><h3>The pharmacy</h3><p>The licensed partner pharmacy that prepared it, by name, with a licence you can check.</p></div></li>
         <li><span class="pl-n mono">iii.</span><div><h3>A cold-chain seal</h3><p>Shipped cold to your door, with the seal intact when it arrives.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="anatomy" class="anat" aria-labelledby="h-anat">
+    <div class="anat-pin">
+      <div class="anat-head">
+        <p class="eyebrow mono">Anatomy of a vial</p>
+        <h2 id="h-anat" class="h2">Four layers. <em>Each one inspected.</em></h2>
+        <p class="anat-hint mono" aria-hidden="true">Keep scrolling to take it apart</p>
+      </div>
+      <ol class="anat-list">
+        <li class="anat-tag" data-part="seal" data-side="r"><div class="at-card"><span class="at-n mono">01</span><div class="at-c"><h3>Chrome crimp seal</h3><p>Tamper-evident. It should reach you intact. If it doesn't, tell your care team.</p></div></div></li>
+        <li class="anat-tag" data-part="label" data-side="r"><div class="at-card"><span class="at-n mono">02</span><div class="at-c"><h3>Lot label</h3><p>The lot code, the pharmacy and its licence number, printed where you can check all three.</p></div></div></li>
+        <li class="anat-tag" data-part="liquid" data-side="l"><div class="at-card"><span class="at-n mono">03</span><div class="at-c"><h3>Contents</h3><p>Prepared to your prescription by a licensed partner pharmacy, and tested before the lot is released.</p></div></div></li>
+        <li class="anat-tag" data-part="glass" data-side="l"><div class="at-card"><span class="at-n mono">04</span><div class="at-c"><h3>Clear glass vial</h3><p>Clear so the contents can be inspected. [Glass type to be confirmed by the pharmacy]</p></div></div></li>
       </ol>
     </div>
   </section>
@@ -1178,7 +1248,7 @@ main{position:relative;z-index:2}
 (function () {
   'use strict';
   var P = window.PEP, C = P.C, $ = P.$, $$ = P.$$, el = P.el, W = window, D = document;
-  var S = W.PEPSTATE = W.PEPSTATE || { intro: 1, peel: 0, view: 'home', px: 0, py: 0, scroll: 0, hero: 1 };
+  var S = W.PEPSTATE = W.PEPSTATE || { intro: 1, lift: 1, peel: 0, view: 'home', px: 0, py: 0, scroll: 0, hero: 1 };
   var G = W.gsap, ST = W.ScrollTrigger;
 
   /* ---------- fill content ---------- */
@@ -1258,6 +1328,11 @@ main{position:relative;z-index:2}
     var mob = W.matchMedia('(max-width: 900px)');
     ST.create({ trigger: '.v-home .hero', start: 'top top', end: 'bottom 30%', onUpdate: function (s) { if (mob.matches) S.peel = s.progress; } });
     ST.create({ trigger: '.peel', start: 'top 85%', end: 'bottom 40%', scrub: 1, onUpdate: function (s) { if (!mob.matches) S.peel = s.progress; } });
+    // anatomy: the vial comes apart, holds, then snaps back together (S.explode 0..1)
+    var hint = $('.anat-hint');
+    function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
+    ST.create({ trigger: '.anat', start: 'top top', end: 'bottom bottom', onUpdate: function (s) { if (!mob.matches) { S.explode = shape(s.progress, 0.06, 0.5, 0.84, 1); hint.style.opacity = Math.max(0, 1 - s.progress * 6).toFixed(2); } }, onLeave: function () { if (!mob.matches) S.explode = 0; }, onLeaveBack: function () { if (!mob.matches) S.explode = 0; } });
+    ST.create({ trigger: '.anat', start: 'top bottom', end: 'bottom top', onUpdate: function (s) { if (mob.matches) S.explode = shape(s.progress, 0.05, 0.3, 0.62, 0.85) * 0.85; }, onLeave: function () { if (mob.matches) S.explode = 0; }, onLeaveBack: function () { if (mob.matches) S.explode = 0; } });
     ST.create({ trigger: '.how', start: 'top 55%', endTrigger: '.foot', end: 'bottom bottom', toggleClass: { targets: D.documentElement, className: 'gl-dim' } });
     ST.create({ trigger: '.thread', start: 'top 70%', end: 'bottom 60%', scrub: 1, onUpdate: function (s) { $('.thread').style.setProperty('--thread', (1 - s.progress).toFixed(4)); } });
     $$('.step').forEach(function (li) { ST.create({ trigger: li, start: 'top 62%', end: 'bottom 30%', toggleClass: { targets: li, className: 'is-on' } }); });
@@ -1300,24 +1375,30 @@ main{position:relative;z-index:2}
   P.intro({
     id: 'v6', root: intro,
     play: function (done) {
-      S.intro = 0;
+      S.intro = 0; S.lift = 0;
       if (!G) { S.intro = 1; setTimeout(done, 300); return function () {}; }
-      var o = { t: 0 };
-      var tl = G.timeline({ onComplete: done });
-      tl.to('.in-line', { scaleY: 1, duration: 1.3, ease: 'power3.inOut' }, .2)
+      // wait for the vial's first frame, or a slow device would finish the dive before it is drawn
+      var o = { t: 0 }, tl = null, started = false;
+      function go() {
+        if (started) return; started = true;
+        tl = G.timeline({ onComplete: done });
+        tl.to('.in-line', { scaleY: 1, duration: 1.3, ease: 'power3.inOut' }, .2)
         .to('.in-kicker', { opacity: 1, duration: .8 }, 1.0)
         .to(o, { t: 1, duration: 4.4, ease: 'power2.inOut', onUpdate: function () { S.intro = o.t; } }, .9)
         .to('.in-line', { opacity: 0, duration: 1 }, 2.6)
         .to('.in-word span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: .07, ease: 'power3.out' }, 3.3)
         .to('.in-tag', { opacity: 1, duration: .9 }, 4.8)
         .to({}, { duration: .9 });
-      return function () { tl.kill(); S.intro = 1; };
+      }
+      if (S.ready) go(); else { W.addEventListener('pep-gl-ready', go, { once: true }); setTimeout(go, 3500); }
+      return function () { started = true; if (tl) tl.kill(); S.intro = 1; };
     },
     handoff: function (end) {
       intro.classList.add('is-lift');
+      if (G) G.to(S, { lift: 1, duration: 1.3, ease: 'power3.inOut' }); else S.lift = 1;
       setTimeout(function () { intro.classList.remove('is-lift'); end(); }, 1150);
     },
-    onDone: function () { S.intro = 1; onScroll(); if (ST) ST.refresh(); }
+    onDone: function () { S.intro = 1; S.lift = 1; onScroll(); if (ST) ST.refresh(); }
   });
 })();
 
@@ -1331,7 +1412,8 @@ const S = window.PEPSTATE || (window.PEPSTATE = { intro: 1, peel: 0, view: 'home
 const canvas = document.getElementById('gl');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-try { start(); } catch (e) { console.warn('3D unavailable', e); }
+function ready() { if (!S.ready) { S.ready = true; dispatchEvent(new Event('pep-gl-ready')); } }
+try { start(); } catch (e) { console.warn('3D unavailable', e); ready(); }
 
 function start() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -1354,6 +1436,9 @@ function start() {
 
   const vial = new THREE.Group(); scene.add(vial);
   const spin = new THREE.Group(); vial.add(spin);
+  // part groups, so the anatomy section can pull the vial apart (ANA-01)
+  const glassG = new THREE.Group(), liqG = new THREE.Group(), labelG = new THREE.Group(), capG = new THREE.Group();
+  spin.add(glassG, liqG, labelG, capG);
 
   // ---- glass body (lathe) ----
   const R = 0.62, H = 2.15;
@@ -1368,27 +1453,27 @@ function start() {
   prof.push(new THREE.Vector2(0.4, H / 2 + 0.1));
   const glassGeo = new THREE.LatheGeometry(prof, 96);
   const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.04, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, transparent: true, opacity: 0.13, envMapIntensity: 2.4, side: THREE.DoubleSide, depthWrite: false });
-  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 3; spin.add(glass);
+  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 3; glassG.add(glass);
 
   // ---- liquid ----
   const LH = 1.18;
   const liqGeo = new THREE.CylinderGeometry(R - 0.05, R - 0.05, LH, 96, 1, false);
   liqGeo.translate(0, -H / 2 + 0.06 + LH / 2, 0);
   const liqMat = new THREE.MeshPhysicalMaterial({ color: 0x5e0c1c, roughness: 0.1, metalness: 0, clearcoat: 1, emissive: 0x3a0711, emissiveIntensity: 0.5, envMapIntensity: 1.2, transparent: true, opacity: 0.94 });
-  const liquid = new THREE.Mesh(liqGeo, liqMat); liquid.renderOrder = 1; spin.add(liquid);
+  const liquid = new THREE.Mesh(liqGeo, liqMat); liquid.renderOrder = 1; liqG.add(liquid);
   const men = new THREE.Mesh(new THREE.CircleGeometry(R - 0.05, 96), new THREE.MeshPhysicalMaterial({ color: 0x8e1b30, roughness: 0.05, clearcoat: 1, emissive: 0x4a0a16, emissiveIntensity: 0.5, transparent: true, opacity: 0.9 }));
-  men.rotation.x = -Math.PI / 2; men.position.y = -H / 2 + 0.06 + LH; spin.add(men);
+  men.rotation.x = -Math.PI / 2; men.position.y = -H / 2 + 0.06 + LH; liqG.add(men);
 
   // ---- chrome crimp cap + stopper ----
   const chrome = new THREE.MeshStandardMaterial({ color: 0xe6e9ed, metalness: 1, roughness: 0.12, envMapIntensity: 2.6 });
   const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.47, 0.47, 0.42, 96, 1, false), chrome);
-  cap.position.y = H / 2 + 0.26; spin.add(cap);
-  const capTop = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.05, 24, 96), chrome); capTop.rotation.x = Math.PI / 2; capTop.position.y = H / 2 + 0.47; spin.add(capTop);
+  cap.position.y = H / 2 + 0.26; capG.add(cap);
+  const capTop = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.05, 24, 96), chrome); capTop.rotation.x = Math.PI / 2; capTop.position.y = H / 2 + 0.47; capG.add(capTop);
   const stop = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.06, 64), new THREE.MeshStandardMaterial({ color: 0x2a1015, roughness: 0.6, metalness: 0.1 }));
-  stop.position.y = H / 2 + 0.48; spin.add(stop);
+  stop.position.y = H / 2 + 0.48; capG.add(stop);
   for (let i = 0; i < 40; i++) { // crimp ridges
     const r = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.36, 0.03), chrome);
-    const a = i / 40 * Math.PI * 2; r.position.set(Math.cos(a) * 0.475, H / 2 + 0.24, Math.sin(a) * 0.475); r.rotation.y = -a; spin.add(r);
+    const a = i / 40 * Math.PI * 2; r.position.set(Math.cos(a) * 0.475, H / 2 + 0.24, Math.sin(a) * 0.475); r.rotation.y = -a; capG.add(r);
   }
 
   // ---- labels (canvas textures) ----
@@ -1426,9 +1511,9 @@ function start() {
   const innerMat = new THREE.MeshStandardMaterial({ map: innerTex, roughness: 0.55, metalness: 0, side: THREE.DoubleSide });
   const outerMat = new THREE.MeshStandardMaterial({ map: outerTex, roughness: 0.42, metalness: 0, side: THREE.DoubleSide });
   const inner = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.004, R + 0.004, LBL_H, 128, 1, true, -Math.PI * 0.55, Math.PI * 1.1), innerMat);
-  inner.position.y = LBL_Y; spin.add(inner);
-  const outer = new THREE.Mesh(new THREE.BufferGeometry(), outerMat); outer.position.y = LBL_Y; spin.add(outer);
-  const FULL = Math.PI * 1.86;
+  inner.position.y = LBL_Y; labelG.add(inner);
+  const outer = new THREE.Mesh(new THREE.BufferGeometry(), outerMat); outer.position.y = LBL_Y; labelG.add(outer);
+  const FULL = Math.PI * 2 - 0.004; // full wrap: no seam gap turning into view
   let lastPeel = -1;
   function buildOuter(p) {
     // the label unwinds from one edge and lifts off the glass as it peels
@@ -1468,10 +1553,32 @@ function start() {
 
   // ---- dust motes ----
   const N = 260, dp = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) { dp[i * 3] = (Math.random() - 0.5) * 12; dp[i * 3 + 1] = (Math.random() - 0.5) * 8; dp[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1; }
+  for (let i = 0; i < N; i++) { dp[i * 3] = (Math.random() - 0.5) * 12; dp[i * 3 + 1] = Math.random() * 15 - 4; dp[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1; }
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
   const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xee8b9b, size: 0.025, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending }));
   scene.add(dust);
+  // streaks that whip past the lens during the dive (INT-04)
+  const SN = 150, sp = new Float32Array(SN * 6);
+  for (let i = 0; i < SN; i++) {
+    const a = Math.random() * Math.PI * 2, r = 1.3 + Math.random() * 4, y = Math.random() * 13 - 2, l = 0.35 + Math.random() * 0.6;
+    const x = Math.cos(a) * r, z = Math.sin(a) * r * 0.6 + 1;
+    sp.set([x, y, z, x, y + l, z], i * 6);
+  }
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+  const streaks = new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ color: 0xf2c7cf, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+  scene.add(streaks);
+
+  // ---- anatomy parts: exploded offsets (vial space) and tag anchors ----
+  const PARTS = [
+    { g: capG,   off: new THREE.Vector3(0.38, 0.98, 0),    at: new THREE.Vector3(0.5, H / 2 + 0.28, 0),     id: 'seal' },
+    { g: labelG, off: new THREE.Vector3(0.8, 0.08, 0.55),  at: new THREE.Vector3(R + 0.03, LBL_Y + 0.2, 0), id: 'label' },
+    { g: liqG,   off: new THREE.Vector3(-0.48, -0.78, 0),  at: new THREE.Vector3(-(R - 0.03), -0.42, 0),   id: 'liquid' },
+    { g: glassG, off: new THREE.Vector3(0, 0, 0),          at: new THREE.Vector3(-(R + 0.01), -0.12, 0),    id: 'glass' },
+  ];
+  PARTS.forEach(p => { p.tag = document.querySelector('.anat-tag[data-part="' + p.id + '"]'); });
+  const pin = document.querySelector('.anat-pin');
+  const tv = new THREE.Vector3(), lookT = new THREE.Vector3();
+  let tagsShown = false;
 
   // ---- layout ----
   let mobile = false;
@@ -1482,7 +1589,7 @@ function start() {
   addEventListener('resize', resize); resize();
 
   // ---- loop ----
-  let rx = 0, ry = 0, t0 = performance.now(), visible = true, peelS = 0;
+  let rx = 0, ry = 0, t0 = performance.now(), visible = true, peelS = 0, exS = 0;
   document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) requestAnimationFrame(frame); });
   document.documentElement.classList.add('gl-on');
   const ease = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -1497,10 +1604,16 @@ function start() {
     if (!onHome && intro >= 1 && (Math.floor(t * 60) % 3)) return; // idle softly behind other views
 
     // placement: right of the copy on desktop, above it on phones
-    const baseX = mobile ? 0 : 1.75, baseY = mobile ? 1.15 : 0.05, sc = mobile ? 0.78 : 1;
-    const introX = mobile ? 0 : THREE.MathUtils.lerp(0, baseX, ie);
-    vial.position.set(introX, THREE.MathUtils.lerp(-3.6, baseY, ie) + (reduce ? 0 : Math.sin(t * 0.8) * 0.04) + (1 - hero) * (mobile ? 0.9 : 0.4), 0);
-    vial.scale.setScalar(sc * THREE.MathUtils.lerp(1.25, 1, ie));
+    const L = THREE.MathUtils.lerp;
+    exS += ((onHome ? S.explode || 0 : 0) - exS) * 0.09;
+    const pres = Math.min(1, exS / 0.35), pe = ease(pres); // anatomy takes the vial centre stage
+    const baseX = mobile ? 0 : 1.75, baseY = mobile ? 0.9 : 0.05, sc = mobile ? 0.68 : 1;
+    // during the intro the vial holds centre stage above the wordmark, then glides into the hero
+    const lift = S.lift == null ? 1 : S.lift, le = ease(Math.min(1, Math.max(0, lift)));
+    const introX = mobile ? 0 : L(0, baseX, le);
+    const restY = L(-0.7, mobile ? baseY : L(0.65, baseY, le), ie) + (reduce ? 0 : Math.sin(t * 0.8) * 0.04) + (1 - hero) * (mobile ? 0.9 : 0.4);
+    vial.position.set(L(introX, mobile ? 0 : 0.3, pe), L(restY, mobile ? 0.55 : 0.02, pe), 0);
+    vial.scale.setScalar(L(sc * L(1.12, 1, ie) * (mobile ? 1 : L(0.85, 1, le)), mobile ? 0.56 : 0.8, pe));
     renderer.toneMappingExposure = THREE.MathUtils.lerp(0.15, 1.05, Math.min(1, intro * 1.4));
     key.position.x = THREE.MathUtils.lerp(-5, 3, ie);
     rim.intensity = 40 + Math.sin(t * 1.3) * 6;
@@ -1514,12 +1627,39 @@ function start() {
     const idle = reduce ? 0 : t * 0.18 * (1 - peelS);
     const base = idle + (1 - ie) * -2.4 + (1 - hero) * 1.3 + ry;
     const face = Math.round(base / (Math.PI * 2)) * Math.PI * 2 + ry * 0.3; // lot label square to the viewer
-    spin.rotation.y = base + (face - base) * Math.min(1, peelS * 1.4);
+    const turned = base + (face - base) * Math.min(1, peelS * 1.4);
+    spin.rotation.y = L(turned, face - 0.32 + ry * 0.2, pe);
+    // pull the parts apart one after another
+    const th = spin.rotation.y, cs = Math.cos(th), sn = Math.sin(th);
+    PARTS.forEach((p, i) => {
+      const k = p.k = ease(Math.min(1, Math.max(0, exS * 1.5 - i * 0.14)));
+      const ox = p.off.x * k, oy = p.off.y * k, oz = p.off.z * k;
+      p.g.position.set(ox * cs - oz * sn, oy, ox * sn + oz * cs);
+    });
+    glassMat.opacity = 0.13 + pe * 0.1;
     vial.rotation.x = rx + 0.04; vial.rotation.z = (1 - ie) * 0.08;
     halo.material.opacity = 0.35 + ie * 0.65;
     dust.rotation.y = t * 0.02; dust.position.y = Math.sin(t * 0.2) * 0.2;
-    cam.position.z = THREE.MathUtils.lerp(7.2, 9, ie);
+    // the Descent: dive from high above the vial and level out in front of it
+    const dv = reduce ? 1 : ie;
+    cam.position.set(0, L(10.5, 0.2, dv), L(2.6, 9, dv));
+    lookT.set(L(vial.position.x, 0, dv), L(vial.position.y, 0.2, dv), 0); cam.lookAt(lookT);
+    streaks.material.opacity = reduce ? 0 : Math.max(0, 4 * dv * (1 - dv)) * 0.5;
     renderer.render(scene, cam);
+    if (!S.ready) ready();
+    // tags follow their parts (desktop only; phones read the list)
+    const wantTags = !mobile && onHome && pres > 0.02 && pin;
+    if (wantTags) {
+      vial.updateMatrixWorld();
+      const top = pin.getBoundingClientRect().top;
+      PARTS.forEach(p => {
+        if (!p.tag) return;
+        tv.copy(p.at).add(p.off.clone().multiplyScalar(p.k)).applyMatrix4(vial.matrixWorld).project(cam);
+        p.tag.style.transform = 'translate3d(' + ((tv.x * 0.5 + 0.5) * innerWidth).toFixed(1) + 'px,' + ((-tv.y * 0.5 + 0.5) * innerHeight - top).toFixed(1) + 'px,0)';
+        p.tag.style.opacity = Math.min(1, Math.max(0, (p.k - 0.45) / 0.35)).toFixed(3);
+      });
+      tagsShown = true;
+    } else if (tagsShown) { PARTS.forEach(p => { if (p.tag) { p.tag.style.opacity = ''; p.tag.style.transform = ''; } }); tagsShown = false; }
   }
   requestAnimationFrame(frame);
 }

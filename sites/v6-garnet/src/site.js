@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var P = window.PEP, C = P.C, $ = P.$, $$ = P.$$, el = P.el, W = window, D = document;
-  var S = W.PEPSTATE = W.PEPSTATE || { intro: 1, peel: 0, view: 'home', px: 0, py: 0, scroll: 0, hero: 1 };
+  var S = W.PEPSTATE = W.PEPSTATE || { intro: 1, lift: 1, peel: 0, view: 'home', px: 0, py: 0, scroll: 0, hero: 1 };
   var G = W.gsap, ST = W.ScrollTrigger;
 
   /* ---------- fill content ---------- */
@@ -82,6 +82,11 @@
     var mob = W.matchMedia('(max-width: 900px)');
     ST.create({ trigger: '.v-home .hero', start: 'top top', end: 'bottom 30%', onUpdate: function (s) { if (mob.matches) S.peel = s.progress; } });
     ST.create({ trigger: '.peel', start: 'top 85%', end: 'bottom 40%', scrub: 1, onUpdate: function (s) { if (!mob.matches) S.peel = s.progress; } });
+    // anatomy: the vial comes apart, holds, then snaps back together (S.explode 0..1)
+    var hint = $('.anat-hint');
+    function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
+    ST.create({ trigger: '.anat', start: 'top top', end: 'bottom bottom', onUpdate: function (s) { if (!mob.matches) { S.explode = shape(s.progress, 0.06, 0.5, 0.84, 1); hint.style.opacity = Math.max(0, 1 - s.progress * 6).toFixed(2); } }, onLeave: function () { if (!mob.matches) S.explode = 0; }, onLeaveBack: function () { if (!mob.matches) S.explode = 0; } });
+    ST.create({ trigger: '.anat', start: 'top bottom', end: 'bottom top', onUpdate: function (s) { if (mob.matches) S.explode = shape(s.progress, 0.05, 0.3, 0.62, 0.85) * 0.85; }, onLeave: function () { if (mob.matches) S.explode = 0; }, onLeaveBack: function () { if (mob.matches) S.explode = 0; } });
     ST.create({ trigger: '.how', start: 'top 55%', endTrigger: '.foot', end: 'bottom bottom', toggleClass: { targets: D.documentElement, className: 'gl-dim' } });
     ST.create({ trigger: '.thread', start: 'top 70%', end: 'bottom 60%', scrub: 1, onUpdate: function (s) { $('.thread').style.setProperty('--thread', (1 - s.progress).toFixed(4)); } });
     $$('.step').forEach(function (li) { ST.create({ trigger: li, start: 'top 62%', end: 'bottom 30%', toggleClass: { targets: li, className: 'is-on' } }); });
@@ -124,23 +129,29 @@
   P.intro({
     id: 'v6', root: intro,
     play: function (done) {
-      S.intro = 0;
+      S.intro = 0; S.lift = 0;
       if (!G) { S.intro = 1; setTimeout(done, 300); return function () {}; }
-      var o = { t: 0 };
-      var tl = G.timeline({ onComplete: done });
-      tl.to('.in-line', { scaleY: 1, duration: 1.3, ease: 'power3.inOut' }, .2)
+      // wait for the vial's first frame, or a slow device would finish the dive before it is drawn
+      var o = { t: 0 }, tl = null, started = false;
+      function go() {
+        if (started) return; started = true;
+        tl = G.timeline({ onComplete: done });
+        tl.to('.in-line', { scaleY: 1, duration: 1.3, ease: 'power3.inOut' }, .2)
         .to('.in-kicker', { opacity: 1, duration: .8 }, 1.0)
         .to(o, { t: 1, duration: 4.4, ease: 'power2.inOut', onUpdate: function () { S.intro = o.t; } }, .9)
         .to('.in-line', { opacity: 0, duration: 1 }, 2.6)
         .to('.in-word span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: .07, ease: 'power3.out' }, 3.3)
         .to('.in-tag', { opacity: 1, duration: .9 }, 4.8)
         .to({}, { duration: .9 });
-      return function () { tl.kill(); S.intro = 1; };
+      }
+      if (S.ready) go(); else { W.addEventListener('pep-gl-ready', go, { once: true }); setTimeout(go, 3500); }
+      return function () { started = true; if (tl) tl.kill(); S.intro = 1; };
     },
     handoff: function (end) {
       intro.classList.add('is-lift');
+      if (G) G.to(S, { lift: 1, duration: 1.3, ease: 'power3.inOut' }); else S.lift = 1;
       setTimeout(function () { intro.classList.remove('is-lift'); end(); }, 1150);
     },
-    onDone: function () { S.intro = 1; onScroll(); if (ST) ST.refresh(); }
+    onDone: function () { S.intro = 1; S.lift = 1; onScroll(); if (ST) ST.refresh(); }
   });
 })();
