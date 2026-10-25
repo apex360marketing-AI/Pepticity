@@ -65,7 +65,7 @@
       mark: S('<path d="M50 20V80M20 50H80" stroke-width="5"/>' + [[50, 16], [50, 84], [16, 50], [84, 50]].map(function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="11" stroke-width="5"/>'; }).join('') + '<circle cx="50" cy="50" r="13" fill="currentColor" stroke="none"/>') }
   ];
 
-  var FONTS = 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@125,800&family=Big+Shoulders+Display:wght@900&family=Bodoni+Moda:wght@500&family=Cormorant+Garamond:wght@600&family=DM+Serif+Display&family=Familjen+Grotesk:wght@700&family=Gloock&family=IBM+Plex+Mono:wght@500;600&family=Instrument+Serif&family=Krona+One&family=Lexend+Zetta:wght@600&family=Michroma&family=Outfit:wght@800&family=Red+Hat+Display:wght@900&family=Sora:wght@700&family=Space+Grotesk:wght@700&family=Syne:wght@800&family=Tenor+Sans&family=Unbounded:wght@700&display=swap';
+  var FONTS = 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@125,800&family=Barlow+Semi+Condensed:wght@600&family=Big+Shoulders+Display:wght@900&family=Bodoni+Moda:wght@500&family=Cormorant+Garamond:wght@600&family=DM+Serif+Display&family=Familjen+Grotesk:wght@700&family=Gloock&family=IBM+Plex+Mono:wght@500;600&family=Instrument+Serif&family=Krona+One&family=Lexend+Zetta:wght@600&family=Michroma&family=Outfit:wght@800&family=Red+Hat+Display:wght@900&family=Sora:wght@700&family=Space+Grotesk:wght@700&family=Syne:wght@800&family=Tenor+Sans&family=Unbounded:wght@700&display=swap';
 
   function word(d, cls, text) {
     var st = 'font-family:' + d.font + ';font-weight:' + d.w + ';letter-spacing:' + d.ls + (d.stretch ? ';font-stretch:' + d.stretch + '%' : '');
@@ -118,5 +118,12 @@
     '.lk-under .lot,.lk .lot{display:block;font:500 .34em "IBM Plex Mono",monospace;letter-spacing:.22em;opacity:.8;margin-top:.9em}'
   ].join('\n');
 
-  W.PEPLOGOS = { D: D, lockup: lockup, ink: ink, FONTS: FONTS, CSS: CSS };
+
+  // extras for round 2 (her current bottle): V1 = H3 ASCENT rebuilt as vector
+  var X = [
+    { id: 'V1', name: 'ASCENT', base: 'b2', ink: '#ffffff', font: "'Barlow Semi Condensed'", w: 600, ls: '.14em', lock: 'vertical',
+      note: 'Higgsfield H3 rebuilt as a print-ready vector: clean vertical capitals and a framed P.',
+      mark: S('<rect x="6" y="6" width="88" height="88" stroke-width="6"/><path d="M38 76V26h15a12.5 12.5 0 0 1 0 25H38" stroke-width="8"/>') }
+  ];
+  W.PEPLOGOS = { D: D, X: X, lockup: lockup, ink: ink, FONTS: FONTS, CSS: CSS };
 })(window);

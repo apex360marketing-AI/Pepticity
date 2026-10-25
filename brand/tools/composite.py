@@ -39,7 +39,7 @@ def composite(did):
     cx, r = B['cx'], B['r']
     body_h = B['bot'] - B['top']
 
-    art = load_art(did)
+    art = load_art(d.get('art', did))
     # size: arc width limit and height limit
     max_arc = r * d.get('wfrac', 1.42)
     max_h = body_h * d.get('hfrac', 0.66)
@@ -114,7 +114,7 @@ def composite(did):
             reg[:] = reg * (1 - ra[..., None]) + rimg * ra[..., None]
 
     # a whisper of grain so the print sits in the photo
-    rng = np.random.default_rng(int(did[1:]))
+    rng = np.random.default_rng(sum(map(ord, did)))
     res += (rng.standard_normal(res.shape[:2])[..., None] * 0.006).astype(np.float32)
     img = Image.fromarray((np.clip(res, 0, 1) * 255).astype(np.uint8))
     img.save(OUT / f'{did}.jpg', quality=86, optimize=True, progressive=True)

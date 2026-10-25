@@ -14,7 +14,7 @@
 var q=new URLSearchParams(location.search), L=PEPLOGOS;
 if(q.get('art')){ // print artwork for the bottle
   document.getElementById('g').remove(); document.body.style.background='transparent';
-  var d=L.D.filter(function(x){return x.id===q.get('art')})[0], a=document.getElementById('art');
+  var d=L.D.concat(L.X||[]).filter(function(x){return x.id===q.get('art')})[0], a=document.getElementById('art');
   a.style.color=q.get('c')||'#fff'; a.innerHTML=L.lockup(d,'print'); a.id='art';
 } else {
   var g=document.getElementById('g');
