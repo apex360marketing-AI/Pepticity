@@ -1,0 +1,215 @@
+<title>PEPTICITY Brand Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@125,800&family=Big+Shoulders+Display:wght@900&family=Bodoni+Moda:wght@500&family=Cormorant+Garamond:wght@600&family=DM+Serif+Display&family=Familjen+Grotesk:wght@700&family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Instrument+Serif&family=Krona+One&family=Lexend+Zetta:wght@600&family=Michroma&family=Outfit:wght@800&family=Red+Hat+Display:wght@900&family=Sora:wght@700&family=Space+Grotesk:wght@700&family=Syne:wght@800&family=Tenor+Sans&family=Unbounded:wght@700&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0b0909;--bg2:#121010;--card:#141112;--ink:#f1ede8;--muted:#b6aeac;--dim:#857d7b;
+  --line:rgba(241,237,232,.12);--line2:rgba(241,237,232,.24);
+  --garnet:#8e1b30;--garnet-hi:#c8344d;--garnet-ink:#ee8b9b;--bone:#efebe5;--silver:#d9dde2;
+  --f-b:"Hanken Grotesk",system-ui,sans-serif;--f-m:"IBM Plex Mono",ui-monospace,monospace;
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 var(--f-b);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1440px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3,.cap{text-transform:uppercase;letter-spacing:.08em}
+.mono{font-family:var(--f-m)}
+/* masthead */
+.mast{padding-block:9vh 6vh;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:5vw;align-items:end;border-bottom:1px solid var(--line)}
+.kick{font:500 .74rem var(--f-m);letter-spacing:.24em;color:var(--garnet-ink);margin:0 0 18px;display:flex;align-items:center;gap:10px}
+.kick::before{content:"";width:28px;height:1px;background:var(--garnet-hi)}
+h1{font:500 clamp(2.4rem,1.2rem + 4.6vw,5.4rem)/.95 "Bodoni Moda",Didot,Georgia,serif;letter-spacing:.06em;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--garnet-ink)}
+.lede{color:var(--muted);max-width:52ch;margin:0;font-size:1.06rem}
+.how{display:grid;gap:10px;margin:22px 0 0;padding:0;list-style:none;counter-reset:s}
+.how li{display:flex;gap:12px;color:var(--muted);font-size:.95rem}
+.how li::before{counter-increment:s;content:"0" counter(s);font:500 .72rem var(--f-m);color:var(--garnet-ink);padding-top:4px;letter-spacing:.14em}
+/* section heads */
+.sec{padding-block:9vh 2vh}
+.sec-h{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 30px;margin-bottom:34px}
+h2{font:500 clamp(1.6rem,1rem + 2vw,2.6rem)/1 "Bodoni Moda",Georgia,serif;letter-spacing:.08em;margin:0}
+.sec-h p{margin:0;color:var(--dim);font:500 .74rem var(--f-m);letter-spacing:.2em;text-transform:uppercase}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:22px}
+.card{position:relative;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0;transition:border-color .5s var(--ease),transform .6s var(--ease),box-shadow .6s var(--ease)}
+.card:hover{border-color:rgba(238,139,155,.35);transform:translateY(-4px);box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 20px 50px -34px rgba(200,52,77,.55)}
+.card.is-pick{border-color:var(--garnet-hi);box-shadow:0 0 0 1px var(--garnet-hi),0 24px 60px -30px rgba(200,52,77,.7)}
+.ph{position:relative;display:block;width:100%;aspect-ratio:4/5;overflow:hidden;border:0;padding:0;background:#0d0b0b;cursor:zoom-in}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.02);transition:transform 1.2s var(--ease)}
+.card:hover .ph img{transform:scale(1.06)}
+.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.07) 50%,transparent 60%);transform:translateX(-120%);transition:transform 1.4s var(--ease);pointer-events:none}
+.card:hover .ph::after{transform:translateX(120%)}
+.num{position:absolute;left:12px;top:12px;z-index:2;font:500 .7rem var(--f-m);letter-spacing:.2em;padding:6px 9px;background:rgba(11,9,9,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14)}
+.src{position:absolute;right:12px;top:12px;z-index:2;font:500 .62rem var(--f-m);letter-spacing:.18em;padding:6px 9px;color:var(--muted);background:rgba(11,9,9,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1)}
+.logos{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.lg{height:96px;display:grid;place-items:center;font-size:13px;overflow:hidden;padding:8px}
+.lg.d{background:#0e0c0c}
+.lg.l{background:var(--bone);color:#1b1416}
+.meta{padding:16px 18px 18px;display:grid;gap:8px;flex:1}
+.meta h3{margin:0;font:600 1rem var(--f-b);letter-spacing:.16em;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.meta h3 span{font:500 .66rem var(--f-m);color:var(--dim);letter-spacing:.16em}
+.meta p{margin:0;color:var(--muted);font-size:.92rem}
+.pick{margin-top:6px;justify-self:start;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--ink);border:1px solid var(--line2);font:600 .72rem var(--f-b);letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s}
+.pick::before{content:"";width:10px;height:10px;border:1px solid currentColor;transform:rotate(45deg);transition:background .3s}
+.pick:hover{border-color:var(--garnet-ink)}
+.pick[aria-pressed="true"]{background:linear-gradient(180deg,#a5243b,var(--garnet));border-color:var(--garnet-hi)}
+.pick[aria-pressed="true"]::before{background:#fff;border-color:#fff}
+.pick:focus-visible,.ph:focus-visible,.bar button:focus-visible,.lb button:focus-visible{outline:2px solid var(--garnet-ink);outline-offset:3px}
+/* logo lockups (shared with the bottle prints) */
+.lk{display:flex;align-items:center;justify-content:center;color:inherit;line-height:1}
+.lk .wm{display:block;white-space:nowrap;text-transform:uppercase}
+.lk-stack{flex-direction:column;gap:.55em}.lk-stack .mkw{width:2.6em;height:2.6em}
+.lk-inline{gap:.6em}.lk-inline .mkw{width:1.55em;height:1.55em}
+.mkw{display:block;flex:none}.mkw .mk,.mkw svg{width:100%;height:100%;display:block;overflow:visible}
+.lk-vert{flex-direction:column;gap:.7em}.lk-vert .rot{writing-mode:vertical-rl;transform:rotate(180deg);font-size:2.3em}.lk-vert .mkw{width:1.3em;height:1.3em}
+.lk-split{flex-direction:column;gap:.18em}.lk-split .big{font-size:1.9em;letter-spacing:.06em}.lk-split .bar{display:block;width:100%;height:.12em}
+.lk-splitbar{gap:.32em}.lk-splitbar .vbar{display:block;width:.14em;height:1.05em}
+.wdot{display:flex;align-items:flex-end;gap:.18em}.wdot b{display:block;width:.26em;height:.26em;border-radius:50%;margin-bottom:.08em}
+.lk-ruled{flex-direction:column;gap:.6em}.lk-ruled .rule{display:block;width:100%;height:1px;background:currentColor;opacity:.85}
+.lk .hair{display:block;width:3.2em;height:2px}
+/* picks bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px max(20px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;background:rgba(11,9,9,.78);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .6s var(--ease)}
+.bar.is-on{transform:none}
+.bar-t{font:500 .78rem var(--f-m);letter-spacing:.16em;text-transform:uppercase;min-width:0}
+.bar-t b{color:var(--garnet-ink)}
+.bar-acts{display:flex;gap:10px;flex-wrap:wrap}
+.bar button{min-height:44px;padding:0 20px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 .72rem var(--f-b);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.bar .go{background:linear-gradient(180deg,#a5243b,var(--garnet));border-color:var(--garnet-hi)}
+.copied{font:500 .72rem var(--f-m);color:var(--muted);letter-spacing:.12em}
+/* lightbox */
+.lb{width:min(1180px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid rgba(255,255,255,.14);color:var(--ink);background:linear-gradient(150deg,rgba(32,25,27,.86),rgba(12,10,11,.92));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 50px 120px -40px #000}
+.lb::backdrop{background:rgba(5,4,4,.7);backdrop-filter:blur(6px)}
+.lb-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.lb-img{background:#0d0b0b}.lb-img img{display:block;width:100%;height:auto;max-height:calc(100dvh - 26px);object-fit:contain}
+.lb-side{padding:28px 30px;display:flex;flex-direction:column;gap:18px;min-width:0;overflow:auto}
+.lb-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lb-top h3{margin:0;font:600 1.1rem var(--f-b);letter-spacing:.18em}
+.lb-x{width:44px;height:44px;border:1px solid var(--line2);background:none;color:var(--ink);font-size:1.4rem;cursor:pointer}
+.lb-logo{height:170px;display:grid;place-items:center;font-size:24px;border:1px solid var(--line)}
+.lb-logo.l{background:var(--bone);color:#1b1416}
+.lb-nav{display:flex;gap:10px;margin-top:auto}
+.lb-nav button{min-height:44px;padding:0 16px;border:1px solid var(--line2);background:none;color:var(--ink);font:600 .7rem var(--f-b);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.foot{padding-block:8vh 16vh;color:var(--dim);font-size:.85rem;border-top:1px solid var(--line);margin-top:8vh}
+@media (max-width:860px){.mast{grid-template-columns:minmax(0,1fr)}.lb-in{grid-template-columns:minmax(0,1fr)}.lb-img img{max-height:56dvh}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="wrap mast">
+  <div>
+    <p class="kick">PEPTICITY &#183; REBRAND &#183; ROUND 1</p>
+    <h1>25 LOGOS. <em>25 BOTTLES.</em> PICK YOUR FAVOURITES.</h1>
+  </div>
+  <div>
+    <p class="lede">Each direction pairs a logo with its own bottle finish, photographed in the studio you liked. The first five were designed by Higgsfield. The other twenty are my vector logos, printed onto photographed bottles.</p>
+    <ol class="how">
+      <li>Tap a bottle to see it large, with the logo on dark and on light.</li>
+      <li>Press PICK on every one you like (as many as you want).</li>
+      <li>Press COPY MY PICKS and paste the list into our chat.</li>
+    </ol>
+  </div>
+</header>
+
+<main>
+  <section class="wrap sec" aria-labelledby="h-hf">
+    <div class="sec-h"><h2 id="h-hf">MADE IN HIGGSFIELD</h2><p>H1 &#8211; H5 &#183; photoreal concepts</p></div>
+    <div class="grid" id="g-h"></div>
+  </section>
+  <section class="wrap sec" aria-labelledby="h-cl">
+    <div class="sec-h"><h2 id="h-cl">DESIGNED BY CLAUDE</h2><p>D01 &#8211; D20 &#183; vector logos, printed on photographed bottles</p></div>
+    <div class="grid" id="g-d"></div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>Design preview for PEPTICITY. Bottle finishes and printing are concepts for packaging direction; final artwork, regulatory label text and pharmacy requirements to be confirmed before production.</p>
+</footer>
+
+<div class="bar" id="bar" role="region" aria-label="Your picks">
+  <p class="bar-t" aria-live="polite"><b id="bar-n">0</b> PICKED <span id="bar-list" class="mono"></span></p>
+  <div class="bar-acts"><span class="copied" id="copied" aria-live="polite"></span><button type="button" id="clear">CLEAR</button><button type="button" class="go" id="copy">COPY MY PICKS</button></div>
+</div>
+
+<dialog class="lb" id="lb" aria-labelledby="lb-t">
+  <div class="lb-in">
+    <div class="lb-img"><img id="lb-img" alt=""></div>
+    <div class="lb-side">
+      <div class="lb-top"><h3 id="lb-t"></h3><button class="lb-x" type="button" id="lb-x" aria-label="Close">&#215;</button></div>
+      <p id="lb-note" style="margin:0;color:var(--muted)"></p>
+      <div class="lb-logo" id="lb-d"></div>
+      <div class="lb-logo l" id="lb-l"></div>
+      <button class="pick" type="button" id="lb-pick" aria-pressed="false">PICK</button>
+      <div class="lb-nav"><button type="button" id="lb-prev">PREVIOUS</button><button type="button" id="lb-next">NEXT</button></div>
+    </div>
+  </div>
+</dialog>
+
+<script src="logos.js"></script>
+<script>
+(function(){
+  'use strict';
+  var L = window.PEPLOGOS, $ = function(s,r){return (r||document).querySelector(s)};
+  var H = [
+    {id:'H1',name:'CIRCUIT P',note:'Matte black vial, mirror-chrome cap, a P whose bowl closes on a bonded node. White print, no sticker.'},
+    {id:'H2',name:'TRINITY',note:'Frosted satin glass with a three-ring crest, didone capitals and a garnet hairline. Matching black carton.'},
+    {id:'H3',name:'ASCENT',note:'Heavy clear glass with the name climbing the side in tall white capitals, signed with a square P.'},
+    {id:'H4',name:'CHAIN',note:'Porcelain-white vial with a garnet cap and a hexagon peptide-chain emblem in deep garnet.'},
+    {id:'H5',name:'MERIDIAN',note:'Clear glass wrapped in a brushed-silver band with a debossed angular P. Watch-brand precision.'}
+  ];
+  var ALL = H.map(function(h){return {id:h.id,name:h.name,note:h.note,src:'HIGGSFIELD'}})
+    .concat(L.D.map(function(d){return {id:d.id,name:d.name,note:d.note,src:'CLAUDE',d:d}}));
+  var picks = [];
+  try { picks = JSON.parse(localStorage.getItem('pep-brand-picks')||'[]') } catch(e) {}
+
+  function inkOn(d,dark){ if(dark) return d.ink==='silver'?'var(--silver)':(d.base==='b4'?'#f1ede8':d.ink); return d.base==='b4'?d.ink:'#1b1416'; }
+  function card(o,i){
+    var a = document.createElement('article'); a.className='card'; a.dataset.id=o.id;
+    var logos = o.d ? '<div class="logos"><div class="lg d" style="color:'+inkOn(o.d,1)+'">'+L.lockup(o.d,'flat')+'</div><div class="lg l" style="color:'+inkOn(o.d,0)+'">'+L.lockup(o.d,'flat')+'</div></div>' : '';
+    a.innerHTML = '<button class="ph" type="button" aria-label="View '+o.id+' '+o.name+' large"><img src="img/'+o.id+'.jpg" alt="'+o.name+' bottle concept, '+o.id+'" loading="'+(i<6?'eager':'lazy')+'" width="1040" height="1300"><span class="num">'+o.id+'</span><span class="src">'+o.src+'</span></button>'
+      + logos
+      + '<div class="meta"><h3>'+o.name+' <span>'+o.id+'</span></h3><p>'+o.note+'</p><button class="pick" type="button" aria-pressed="false">PICK</button></div>';
+    return a;
+  }
+  ALL.forEach(function(o,i){ (o.src==='HIGGSFIELD'?$('#g-h'):$('#g-d')).appendChild(card(o,i)); });
+
+  function sync(){
+    document.querySelectorAll('.card').forEach(function(c){ var on=picks.indexOf(c.dataset.id)>=0; c.classList.toggle('is-pick',on); $('.pick',c).setAttribute('aria-pressed',on?'true':'false'); $('.pick',c).textContent=on?'PICKED':'PICK'; });
+    $('#bar-n').textContent=picks.length; $('#bar-list').textContent=picks.length?' \u00b7 '+picks.join(', '):'';
+    $('#bar').classList.toggle('is-on',picks.length>0);
+    if(cur){ var on=picks.indexOf(cur.id)>=0; $('#lb-pick').setAttribute('aria-pressed',on?'true':'false'); $('#lb-pick').textContent=on?'PICKED':'PICK'; }
+    try { localStorage.setItem('pep-brand-picks',JSON.stringify(picks)) } catch(e) {}
+  }
+  function toggle(id){ var i=picks.indexOf(id); if(i>=0) picks.splice(i,1); else picks.push(id); picks.sort(function(a,b){return ALL.findIndex(function(o){return o.id===a})-ALL.findIndex(function(o){return o.id===b})}); sync(); }
+
+  var lb=$('#lb'), cur=null;
+  function open(id){
+    cur = ALL.filter(function(o){return o.id===id})[0]; if(!cur) return;
+    $('#lb-img').src='img/'+cur.id+'.jpg'; $('#lb-img').alt=cur.name+' bottle concept';
+    $('#lb-t').textContent=cur.id+' \u00b7 '+cur.name; $('#lb-note').textContent=cur.note;
+    var dk=$('#lb-d'), lt=$('#lb-l');
+    if(cur.d){ dk.hidden=lt.hidden=false; dk.style.color=inkOn(cur.d,1); lt.style.color=inkOn(cur.d,0); dk.innerHTML=lt.innerHTML=L.lockup(cur.d,'flat'); }
+    else { dk.hidden=lt.hidden=true; }
+    sync(); if(!lb.open) lb.showModal();
+  }
+  function step(n){ var i=ALL.indexOf(cur); open(ALL[(i+n+ALL.length)%ALL.length].id); }
+  document.addEventListener('click',function(e){
+    var c=e.target.closest('.card'); if(!c) return;
+    if(e.target.closest('.pick')) toggle(c.dataset.id); else if(e.target.closest('.ph')) open(c.dataset.id);
+  });
+  $('#lb-x').onclick=function(){lb.close()};
+  lb.addEventListener('click',function(e){ if(e.target===lb) lb.close(); });
+  $('#lb-pick').onclick=function(){ toggle(cur.id) };
+  $('#lb-prev').onclick=function(){ step(-1) }; $('#lb-next').onclick=function(){ step(1) };
+  lb.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') step(1); if(e.key==='ArrowLeft') step(-1); });
+  $('#clear').onclick=function(){ picks=[]; sync(); };
+  $('#copy').onclick=function(){
+    var txt='PEPTICITY picks: '+picks.map(function(id){var o=ALL.filter(function(x){return x.id===id})[0];return id+' '+o.name}).join(', ');
+    var done=function(m){ $('#copied').textContent=m; setTimeout(function(){ $('#copied').textContent=''; },4000); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){done('COPIED. PASTE IT IN CHAT.')},function(){done(txt)}); } else done(txt);
+  };
+  sync();
+})();
+</script>

@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><title>proof</title>
+<script src="logos.js"></script>
+<script>document.write('<link rel="stylesheet" href="'+(location.hostname==='127.0.0.1'?'../fonts/g.css':PEPLOGOS.FONTS)+'"><style>'+PEPLOGOS.CSS+'</style>')</script>
+<style>body{margin:0;background:#0c0a0b;color:#f4f1ec;font-family:sans-serif}
+.g{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#2a2426}
+.c{background:#0f0c0d;height:260px;display:grid;place-items:center;position:relative;font-size:26px}
+.c.l{background:#efebe5;color:#1b1416}
+.c small{position:absolute;left:10px;top:8px;font:11px monospace;opacity:.6}
+#art{position:absolute;left:0;top:0;display:grid;place-items:center;font-size:40px;padding:20px}
+#art .lk-stack .mkw{width:3.5em;height:3.5em}#art .lk-vert .mkw{width:1.6em;height:1.6em}
+</style></head><body>
+<div class="g" id="g"></div><div id="art"></div>
+<script>
+var q=new URLSearchParams(location.search), L=PEPLOGOS;
+if(q.get('art')){ // print artwork for the bottle
+  document.getElementById('g').remove(); document.body.style.background='transparent';
+  var d=L.D.filter(function(x){return x.id===q.get('art')})[0], a=document.getElementById('art');
+  a.style.color=q.get('c')||'#fff'; a.innerHTML=L.lockup(d,'print'); a.id='art';
+} else {
+  var g=document.getElementById('g');
+  L.D.forEach(function(d){ ['','l'].forEach(function(t){ var c=document.createElement('div'); c.className='c '+t; if(!t) c.style.color=d.ink==='silver'?'#d9dde2':(d.base==='b4'?'#f4f1ec':d.ink); else c.style.color=(d.base==='b4'?d.ink:'#1b1416');
+    c.innerHTML='<small>'+d.id+' '+d.name+'</small>'+L.lockup(d,'flat'); g.appendChild(c); }); });
+}
+</script></body></html>
