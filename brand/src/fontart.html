@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta charset="utf-8"><title>fontart</title>
+<script src="fonts.js"></script>
+<script>document.write('<link rel="stylesheet" href="'+(location.hostname==='127.0.0.1'?'../fonts/f.css':PEPFONTS.URL)+'">')</script>
+<style>body{margin:0;background:transparent}
+#art{position:absolute;left:0;top:0;padding:20px;color:#fff;font-size:40px;line-height:1}
+.fr{display:flex;flex-direction:column;align-items:center;gap:.6em}
+.fr .wm{writing-mode:vertical-rl;transform:rotate(180deg);font-size:2.3em;white-space:nowrap}
+.fr svg{width:1.6em;height:1.6em;display:block}
+.bk{display:flex;flex-direction:column;align-items:center;text-align:center}
+.bk .n{font-size:2.1em;white-space:nowrap}
+.bk .mg{font-size:1.05em;margin-top:.45em}
+.bk i{display:block;width:2.2em;height:4px;background:#fff;opacity:.8;margin:.9em 0 .8em}
+.bk .s{font:500 .36em 'IBM Plex Mono',monospace;letter-spacing:.2em;opacity:.85;margin-top:.55em;line-height:1.5}
+</style></head><body><div id="art"></div>
+<script>
+var q=new URLSearchParams(location.search), f=PEPFONTS.F.filter(function(x){return x.id===q.get('f')})[0], a=document.getElementById('art'), st=PEPFONTS.style(f);
+var P='<svg viewBox="0 0 100 100" fill="none" stroke="#fff"><rect x="7" y="7" width="86" height="86" stroke-width="10"/><path d="M38 76V26h15a12.5 12.5 0 0 1 0 25H38" stroke-width="12"/></svg>';
+if(q.get('side')==='front') a.innerHTML='<div class="fr"><span class="wm" style="'+st+'">PEPTICITY</span>'+P+'</div>';
+else a.innerHTML='<div class="bk"><span class="n" style="'+st+'">AOD-9604</span><span class="mg" style="'+st+'">5 MG</span><i></i><span class="s">Rx ONLY</span><span class="s">PREPARED BY A LICENSED<br>PARTNER PHARMACY</span><span class="s" style="opacity:.7;margin-top:1.2em">LOT PX-2611-A</span></div>';
+</script></body></html>
