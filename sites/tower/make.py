@@ -138,7 +138,12 @@ h1,h2,h3,.h2,.hero h1,.step h2,.price h3,.wtip .t,.wordmark{text-transform:upper
 .disc{margin:22px 0 0;max-width:90ch;font-size:12px;line-height:1.7;color:var(--muted)}
 @media (max-width:980px){.facade{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:640px){.facade{grid-template-columns:repeat(3,minmax(0,1fr))}.vialshot{background:var(--ink)}.vialshot img{top:56px;bottom:auto;height:58vh;object-position:%(mpos)s}.vialshot::after{opacity:1;background:linear-gradient(var(--ink),transparent 14%%,transparent 52%%,var(--ink) 66%%)}}
+/* mobile fit: filter chips scroll, top bar fits 390px */
+@media (max-width:640px){.filters{max-width:100%%;overflow-x:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}}
+@media (max-width:420px){.bar-in{gap:10px;padding-left:16px;padding-right:16px}.bar-right{gap:8px}.floors-btn{padding:0 10px}}
 ''' % v
+    if key == 'light':
+        css += '/* light variant: text on the charcoal chips (floor counter, chosen filter) stays readable */\n.floor b,.floor em,.filters button[aria-pressed=true]{color:#f2f1ee}\n'
     s = sub(s, '</style>', css + '</style>')
     s = s.replace('tear-off', 'x')  # nothing of the old sample data should remain
     # keep the page pure ASCII so it never shows garbled characters, whatever the server's charset
