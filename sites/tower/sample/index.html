@@ -1,0 +1,89 @@
+<title>PEPTICITY Peptide Light</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Syne:wght@400..800&display=swap">
+<style>
+/* SHF-01 · Peptide Light shelf: every vial is clear glass; only the one you choose is lit, in its own colour. */
+:root{--b0:#0e0d0d;--b1:#151313;--bone:#ece6df;--mute:#9a938c;--dim:#6b655f;--rule:rgba(236,230,223,.12);
+  --disp:"Syne","Archivo","Helvetica Neue",Arial,sans-serif;--text:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --pep:236,230,223;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--b0);color:var(--bone);font:400 17px/1.6 var(--text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-block:clamp(48px,8vh,96px) 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.kick{display:flex;align-items:center;gap:12px;font:600 11px/1 var(--text);letter-spacing:.26em;text-transform:uppercase;color:var(--mute)}
+.kick::before{content:"";width:22px;height:1px;background:currentColor}
+h1{margin:18px 0 14px;font:800 clamp(34px,5.4vw,76px)/.92 var(--disp);letter-spacing:-.01em;text-transform:uppercase;max-width:14ch;text-wrap:balance}
+h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1.2px var(--bone)}
+.lede{max-width:58ch;color:var(--mute);margin:0}
+.shelf{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,2vw,22px);margin-top:clamp(36px,6vh,64px)}
+.vial{position:relative;display:block;padding:0;border:0;background:#0b0a0a;cursor:pointer;aspect-ratio:9/16;overflow:hidden;border-radius:2px;
+  box-shadow:inset 0 0 0 1px var(--rule);transition:transform .8s cubic-bezier(.16,1,.3,1),opacity .6s,box-shadow .6s;font:inherit;color:inherit;text-align:left;min-width:0}
+.vial img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .9s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1)}
+.vial .lit{opacity:0}
+.vial .nm{position:absolute;left:14px;right:14px;bottom:12px;font:700 12px/1.2 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--bone);text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.vial .nm small{display:block;margin-top:4px;font:500 10px/1 var(--text);letter-spacing:.2em;color:var(--mute)}
+.shelf.has-on .vial:not(.on){opacity:.42}
+.vial.on{transform:translateY(-6px);box-shadow:inset 0 0 0 1px rgba(var(--c),.55),0 30px 60px -30px rgba(var(--c),.55)}
+.vial.on .lit{opacity:1}
+.vial.on img{transform:scale(1.03)}
+.vial:focus-visible{outline:2px solid var(--bone);outline-offset:4px}
+.card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px 40px;align-items:start;margin-top:30px;padding:28px 0 0;border-top:1px solid var(--rule);min-height:170px}
+.card h2{margin:0;font:800 clamp(26px,3.2vw,44px)/1 var(--disp);letter-spacing:.01em;text-transform:uppercase;color:var(--bone);transition:color .6s}
+.card .sz{margin:10px 0 0;font:600 12px/1.4 var(--text);letter-spacing:.18em;text-transform:uppercase;color:rgb(var(--pep));transition:color .6s}
+.card p{margin:0 0 10px;color:var(--mute)}
+.card .what{color:var(--bone)}
+.card .hand{font-style:italic}
+.note{margin-top:46px;padding:22px 24px;border:1px solid var(--rule);color:var(--mute);font-size:15px;max-width:80ch}
+.note b{color:var(--bone);font-weight:600}
+.auto{margin-top:18px;display:flex;align-items:center;gap:10px;font:600 11px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.auto button{min-height:36px;padding:0 14px;border:1px solid var(--rule);background:transparent;color:var(--mute);font:inherit;letter-spacing:inherit;cursor:pointer}
+.auto button:hover{color:var(--bone)}
+@media (max-width:760px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}.card{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){.vial,.vial img{transition:none}}
+</style>
+
+<main class="wrap">
+  <p class="kick">Sample · the peptide list</p>
+  <h1>One colour per peptide. <em>One at a time.</em></h1>
+  <p class="lede">Every vial on the page is clear glass, in black and white. Point at one, or tap it, and only that one lights up in its own colour. Move on, and it goes back to clear glass.</p>
+
+  <div class="shelf" id="shelf" role="group" aria-label="Peptides"></div>
+  <div class="card" id="card" aria-live="polite">
+    <div><h2 id="cName">Choose a vial</h2><p class="sz" id="cSize">Point at one, or tap it</p></div>
+    <div><p class="what" id="cWhat">Each peptide has its own colour. Only the one you choose lights up.</p><p id="cStatus"></p><p class="hand" id="cHand"></p></div>
+  </div>
+  <div class="auto"><span id="autoTxt">Showing each one in turn</span><button type="button" id="autoBtn" aria-pressed="true">Pause</button></div>
+
+  <p class="note"><b>In the full Your Area site:</b> all 28 peptides on Grace&rsquo;s list appear like this, every one clear glass until you choose it. The vial at the end of the map dive takes the colour of the peptide being featured. Product facts come from the vetted list; what a peptide does, and whether it is right for you, is always a question for a licensed clinician.</p>
+</main>
+
+<script>
+const P = [
+  { k: 'AOD', name: 'AOD-9604', sizes: '5 mg', c: '200,16,46', what: 'A lab-made fragment of human growth hormone.', status: 'Not approved as a medicine in Canada or the US.' },
+  { k: 'NAD', name: 'NAD+', sizes: '1000 mg', c: '212,255,58', what: 'A coenzyme found in every living cell. It is not a peptide.', status: 'A licensed clinician decides if it is right for you.' },
+  { k: 'EPI', name: 'Epitalon', sizes: '10 mg · 50 mg', c: '214,36,110', what: 'A lab-made peptide made of four amino acids.', status: 'Not approved as a medicine in Canada or the US.' },
+  { k: 'GHK', name: 'GHK-Cu', sizes: '50 mg · 100 mg', c: '232,96,120', what: 'A copper-bound peptide of three amino acids, widely used in cosmetic skin products.', status: 'A licensed clinician decides if an injectable plan is right for you.' }
+];
+const HAND = 'What it does, how it is used and whether it is right for you are questions for a licensed clinician.';
+const shelf = document.getElementById('shelf'), card = document.getElementById('card');
+shelf.innerHTML = P.map((p, i) => `<button class="vial" type="button" data-i="${i}" style="--c:${p.c}" aria-pressed="false"><img class="clear" src="media/${p.k}-clear.jpg" alt=""><img class="lit" src="media/${p.k}-lit.jpg" alt=""><span class="nm">${p.name}<small>${p.sizes}</small></span></button>`).join('');
+const vials = [...shelf.querySelectorAll('.vial')];
+let cur = -1, auto = !matchMedia('(prefers-reduced-motion: reduce)').matches, timer = null, k = 0;
+function show(i) {
+  cur = i; shelf.classList.toggle('has-on', i >= 0);
+  vials.forEach((v, j) => { v.classList.toggle('on', j === i); v.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+  const p = P[i]; if (!p) return;
+  document.documentElement.style.setProperty('--pep', p.c);
+  document.getElementById('cName').textContent = p.name; document.getElementById('cSize').textContent = 'Listed sizes: ' + p.sizes;
+  document.getElementById('cWhat').textContent = p.what; document.getElementById('cStatus').textContent = p.status; document.getElementById('cHand').textContent = HAND;
+}
+function stopAuto() { auto = false; clearInterval(timer); document.getElementById('autoBtn').textContent = 'Play'; document.getElementById('autoBtn').setAttribute('aria-pressed', 'false'); document.getElementById('autoTxt').textContent = 'Your choice'; }
+function startAuto() { auto = true; clearInterval(timer); document.getElementById('autoBtn').textContent = 'Pause'; document.getElementById('autoBtn').setAttribute('aria-pressed', 'true'); document.getElementById('autoTxt').textContent = 'Showing each one in turn'; show(k % P.length); timer = setInterval(() => { k++; show(k % P.length); }, 3400); }
+vials.forEach((v, i) => {
+  v.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { stopAuto(); show(i); } });
+  v.addEventListener('focus', () => { stopAuto(); show(i); });
+  v.addEventListener('click', () => { stopAuto(); show(i); });
+});
+document.getElementById('autoBtn').addEventListener('click', () => auto ? stopAuto() : startAuto());
+if (auto) startAuto();
+</script>
