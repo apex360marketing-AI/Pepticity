@@ -85,9 +85,9 @@
   }
 
   /* ---------- patterns (tested in tools/brain-test.js) ---------- */
-  var EMERG = /(chest pain|can'?t breathe|cannot breathe|trouble breathing|short of breath|suicid|kill myself|end my life|want to die|self.?harm|hurt myself|overdos|seizure|unconscious|passed out|emergency|anaphyla|throat (is )?(closing|swelling)|severe (allergic|reaction))/;
+  var EMERG = /(chest pain|can'?t breathe|cannot breathe|trouble breathing|short of breath|suicid|kill (my ?self|me)|end (my life|it all)|want to die|wanna die|don'?t want to (live|be here)|no reason to live|self.?harm|harm(ing)? my ?self|hurt(ing)? my ?self|cut(ting)? my ?self|overdos|took too (many|much)|seizure|unconscious|passed out|emergency|anaphyla|throat (is )?(closing|swelling)|severe (allergic|reaction))/;
   var INJECT = /(ignore (all |your |the )?(previous|prior|above)|disregard (your|the) (rules|instructions)|system prompt|you are now|pretend (to be|you)|act as (a|an|my)|jailbreak|developer mode|dan mode|role.?play as|new instructions|override)/;
-  var MINOR = /(\b(1[0-7]|[1-9]) ?(years? old|yrs? old|yo|y\/o)\b|\bi'?m (a )?(teen|minor|1[0-7])\b|\bunder 18\b|\bhigh school(er)?\b|\bmy (son|daughter) is (1[0-7]|[1-9])\b)/;
+  var MINOR = /(\b(1[0-7]|[1-9]) ?(years? old|yrs? old|yo|y\/o)\b|\bi'?m (a )?(teen|teenager|minor|1[0-7])\b|\bi am (a )?(teen|teenager|minor|1[0-7])\b|\b(age|aged) 1[0-7]\b|\bi'?m only 1[0-7]\b|\bunder 18\b|\bhigh school(er)?\b|\bmy (son|daughter) is (1[0-7]|[1-9])\b)/;
   var MED = new RegExp([
     'dos(e|es|age|ing)', 'how much (should|do i|to|can i)', 'how much .{1,30}(take|use|inject|run)\\b', 'how many (mg|mcg|iu|units|times)', '\\b\\d+ ?(mg|mcg|iu|ml|units?)\\b',
     'inject', 'needle', 'syringe', 'pin(ning)?\\b', 'subq', 'sub-?q', 'intramuscular', '\\bim\\b shot', 'reconstitut', 'bac(teriostatic)? water ratio', '\\bmix(ing)?\\b',
@@ -114,7 +114,7 @@
     ['compound', ['compounded', 'compounding', 'same as', 'generic', 'fda approved', 'approved']],
     ['lot', ['lot', 'certificate', 'coa', 'tested', 'testing', 'purity', 'what is in my vial', 'fake', 'counterfeit', 'third party']],
     ['cost', ['cost', 'price', 'how much is', 'how much does', 'expensive', 'pay', 'fee', 'afford', 'discount', 'coupon', 'promo']],
-    ['ship', ['ship', 'shipping', 'deliver', 'delivery', 'canada', 'province', 'state', 'usa', 'cold pack']],
+    ['ship', ['ship', 'shipping', 'deliver', 'delivery', 'ship to canada', 'which provinces', 'my province', 'which states', 'usa', 'cold pack']],
     ['cancel', ['cancel', 'stop membership', 'quit', 'pause']],
     ['refund', ['refund', 'money back', 'charged', 'charge back', 'billing']],
     ['who', ['clinician', 'doctor', 'nurse', 'who reviews', 'licensed', 'licence', 'license']],
@@ -127,7 +127,7 @@
     ['damaged', ['damaged', 'broken', 'warm', 'leak', 'melted', 'arrived', 'seal broken', 'wrong item', 'missing']],
     ['store', ['store it', 'storage', 'fridge', 'refrigerat', 'freeze', 'room temperature', 'travel with']],
     ['insurance', ['insurance', 'hsa', 'fsa', 'benefits', 'covered', 'receipt for']],
-    ['legal', ['legal', 'allowed', 'regulated', 'law', 'health canada']],
+    ['legal', ['is it legal', 'legal in', 'legal', 'allowed', 'regulated', 'the law', 'health canada', 'is this legit']],
     ['about', ['who are you', 'who owns', 'about you', 'company', 'real company', 'based', 'located', 'where are you']],
     ['family', ['partner', 'husband', 'wife', 'family', 'spouse', 'friend', 'both of us']],
     ['age', ['age limit', 'too old', 'senior', 'retired', 'over 70', 'over 80']],
@@ -149,7 +149,8 @@
   }
   function faqOf(n) {
     var best = null, score = 0;
-    FAQK.forEach(function (f) { var sc = 0; f[1].forEach(function (k) { if (n.indexOf(k) >= 0) sc += k.length; }); if (sc > score) { score = sc; best = f[0]; } });
+    // whole words only: 'fee' must not match inside 'feel'
+    FAQK.forEach(function (f) { var sc = 0; f[1].forEach(function (k) { var i = n.indexOf(k); while (i >= 0) { if (!/[a-z0-9]/.test(n.charAt(i - 1)) && !/[a-z0-9]/.test(n.charAt(i + k.length))) { sc += k.length; break; } i = n.indexOf(k, i + 1); } }); if (sc > score) { score = sc; best = f[0]; } });
     return best;
   }
 
