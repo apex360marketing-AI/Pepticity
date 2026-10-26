@@ -1,0 +1,339 @@
+<title>PEPTICITY Next Level</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Syne:wght@500..800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--b0:#0b0a0a;--b1:#141212;--b2:#1b1918;--bone:#ece6df;--ivory:#f4efe6;--mute:#a59e96;--dim:#746d66;--rule:rgba(236,230,223,.11);--rule2:rgba(236,230,223,.22);
+  --keep:212,255,58;--maybe:236,230,223;--drop:255,92,122;--acc:212,255,58;
+  --disp:"Syne","Archivo","Helvetica Neue",Arial,sans-serif;--text:"Instrument Sans","Helvetica Neue",Arial,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--b0);color:var(--bone);font:400 16px/1.6 var(--text);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(50% 40% at 85% 0%,rgba(var(--acc),.06),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(255,92,122,.04),transparent 70%)}
+a{color:var(--ivory)}
+:focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:22px;border-bottom:1px solid var(--rule)}
+.mark{display:flex;align-items:center;gap:10px;font:700 14px/1 var(--disp);letter-spacing:.32em}
+.mark i{display:grid;place-items:center;width:24px;height:24px;border:1.5px solid currentColor;font:700 12px/1 var(--disp);font-style:normal;letter-spacing:0}
+.save{font:500 11px/1.3 var(--mono);letter-spacing:.08em;color:var(--dim);text-align:right}
+.save b{color:rgb(var(--keep));font-weight:500}
+h1{margin:clamp(28px,5vw,56px) 0 12px;font:800 clamp(38px,6vw,82px)/.94 var(--disp);letter-spacing:.005em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1.2px var(--ivory)}
+.lede{max-width:66ch;color:var(--mute);margin:0 0 26px;font-size:17px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-block:12px;background:linear-gradient(var(--b0) 78%,transparent)}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--rule2);border-radius:3px;text-decoration:none;color:var(--bone);font:700 11px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;background:rgba(255,255,255,.02)}
+nav.tabs a span{font:500 11px/1 var(--mono);letter-spacing:0;color:var(--dim)}
+nav.tabs a:hover,nav.tabs a.on{border-color:var(--ivory);background:rgba(255,255,255,.06)}
+section{padding-block:40px 20px;border-bottom:1px solid var(--rule)}
+section > h2{margin:0 0 6px;font:800 clamp(28px,3.6vw,46px)/1 var(--disp);letter-spacing:.02em;text-transform:uppercase}
+.sub{margin:0 0 22px;color:var(--mute);max-width:70ch}
+.kick{display:flex;align-items:center;gap:12px;margin:0 0 12px;font:600 11px/1 var(--text);letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.kick::before{content:"";width:22px;height:1px;background:currentColor}
+
+/* tilt-lift glass cards (house hover) */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
+.card{position:relative;min-width:0;padding:18px;border:1px solid var(--rule2);border-radius:3px;background:linear-gradient(150deg,rgba(255,255,255,.05),rgba(255,255,255,.012));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0));transition:transform .5s var(--ease),border-color .3s,box-shadow .4s;overflow:hidden}
+.card::after{content:"";position:absolute;top:-40%;bottom:-40%;left:-60%;width:40%;transform:skewX(-14deg);background:linear-gradient(100deg,transparent,rgba(255,255,255,.07),transparent);opacity:0;transition:left 1s var(--ease),opacity .3s;pointer-events:none}
+.card:hover{--ty:-6px;border-color:rgba(255,255,255,.4);box-shadow:0 28px 50px -30px #000,inset 0 1px 0 rgba(255,255,255,.12)}
+.card:hover::after{left:130%;opacity:1}
+.card h3{margin:0 0 6px;font:800 17px/1.15 var(--disp);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
+.card p{margin:0;color:var(--mute);font-size:14.5px}
+.n{display:inline-block;margin-bottom:10px;font:500 12px/1 var(--mono);color:rgb(var(--acc));background:#1f2124;padding:4px 8px;border-radius:2px}
+
+/* status */
+.bar{position:relative;height:6px;margin:12px 0 8px;background:rgba(255,255,255,.07);border-radius:1px;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;width:var(--p);background:rgb(var(--acc));box-shadow:0 0 12px rgba(var(--acc),.6)}
+.pct{display:flex;justify-content:space-between;gap:10px;font:500 12px/1.3 var(--mono);color:var(--dim)}
+.pct b{color:var(--ivory);font-weight:500}
+.chip{display:inline-block;padding:3px 8px;border:1px solid var(--rule2);border-radius:2px;font:600 10px/1.4 var(--text);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px}
+table{width:100%;border-collapse:collapse;min-width:640px;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:600 10px/1.3 var(--text);letter-spacing:.2em;text-transform:uppercase;color:var(--dim);position:sticky;top:0;background:var(--b1)}
+td small{display:block;color:var(--dim);font-size:12.5px}
+td .p{font:500 12px var(--mono);color:var(--ivory);white-space:nowrap}
+details{margin-top:14px;border:1px solid var(--rule);border-radius:3px}
+details > summary{cursor:pointer;padding:14px 16px;font:700 12px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;color:var(--bone);list-style:none}
+details > summary::-webkit-details-marker{display:none}
+details > summary::after{content:"+";float:right;color:var(--dim)}
+details[open] > summary::after{content:"\2212"}
+details > div{padding:0 16px 16px}
+.focus{counter-reset:f;list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.focus li{counter-increment:f;display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border:1px solid var(--rule2);border-radius:3px;background:rgba(255,255,255,.02)}
+.focus li::before{content:counter(f,decimal-leading-zero);font:500 13px/1.6 var(--mono);color:rgb(var(--acc))}
+
+/* decision rows */
+.tally{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
+.tally span{font:500 12px/1 var(--mono);padding:8px 10px;border:1px solid var(--rule);border-radius:2px;color:var(--mute)}
+.tally b{font-weight:500;color:var(--ivory)}
+.tally button,.addf button{min-height:38px;padding:0 12px;border:1px solid var(--rule2);border-radius:2px;background:none;color:var(--bone);font:600 11px/1 var(--text);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.tally button:hover,.addf button:hover{border-color:var(--ivory)}
+.rows{display:grid;gap:12px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 20px;align-items:start}
+.row.st-approve{border-color:rgba(var(--keep),.55);box-shadow:inset 3px 0 0 rgb(var(--keep))}
+.row.st-reject{opacity:.55}
+.row.st-reject h3{text-decoration:line-through;text-decoration-thickness:1px}
+.row.st-maybe{box-shadow:inset 3px 0 0 rgba(var(--maybe),.6)}
+.row .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.row .meta a{font-size:12.5px;color:var(--mute)}
+.row .more{grid-column:1/-1;font-size:13.5px;color:var(--mute)}
+.row .more b{color:var(--bone);font-weight:600}
+.row .more p{margin:6px 0 0}
+.rec-badge{display:inline-block;margin-left:8px;padding:2px 6px;border:1px solid rgba(var(--keep),.6);border-radius:2px;font:600 9px/1.4 var(--text);letter-spacing:.16em;color:rgb(var(--keep));vertical-align:middle}
+.dec{display:flex;gap:6px}
+.dec button{min-width:44px;min-height:40px;padding:0 10px;border:1px solid var(--rule2);border-radius:2px;background:none;color:var(--mute);font:700 10px/1 var(--text);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.dec button:hover{color:var(--ivory);border-color:var(--ivory)}
+.dec button[aria-pressed=true][data-s=approve]{background:rgb(var(--keep));border-color:rgb(var(--keep));color:#0b0a0a;box-shadow:0 0 18px -4px rgba(var(--keep),.8)}
+.dec button[aria-pressed=true][data-s=maybe]{background:var(--bone);border-color:var(--bone);color:#0b0a0a}
+.dec button[aria-pressed=true][data-s=reject]{background:rgb(var(--drop));border-color:rgb(var(--drop));color:#0b0a0a}
+.note{grid-column:1/-1}
+.note textarea{width:100%;min-height:42px;resize:vertical;padding:10px 12px;border:1px solid var(--rule);border-radius:2px;background:rgba(255,255,255,.02);color:var(--bone);font:inherit;font-size:14px}
+.note textarea:focus{outline:none;border-color:rgb(var(--acc))}
+.addf{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.addf input{flex:1 1 280px;min-width:0;min-height:44px;padding:0 12px;border:1px solid var(--rule2);border-radius:2px;background:rgba(255,255,255,.03);color:var(--bone);font:inherit;font-size:16px}
+
+/* plan timeline */
+.plan{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.plan li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px}
+.plan .ph{font:800 15px/1 var(--disp);letter-spacing:.06em;color:rgb(var(--acc));padding-top:18px}
+.gate{margin-top:10px}
+
+/* prompt */
+.prompt{padding:clamp(18px,3vw,36px);border:1px solid var(--rule2);border-radius:3px;background:rgba(255,255,255,.02)}
+.prompt h2{font:800 clamp(24px,3vw,36px)/1.05 var(--disp);text-transform:uppercase;letter-spacing:.02em;margin:0 0 10px}
+.prompt h3{font:800 18px/1.2 var(--disp);text-transform:uppercase;letter-spacing:.08em;margin:30px 0 8px;color:var(--ivory)}
+.prompt h4{font:700 13px/1.3 var(--text);text-transform:uppercase;letter-spacing:.16em;margin:22px 0 6px;color:rgb(var(--acc))}
+.prompt p,.prompt li{color:#d6cfc7;max-width:78ch}
+.prompt li{margin:4px 0}
+.prompt code{font:500 .86em var(--mono);color:var(--ivory);background:#1f2124;padding:1px 5px;border-radius:2px}
+.prompt blockquote{margin:0 0 16px;padding:10px 14px;border-left:2px solid rgb(var(--acc));color:var(--mute);font-style:italic}
+.prompt hr{border:0;border-top:1px solid var(--rule);margin:24px 0}
+.prompt ul.chk{list-style:none;padding-left:0}
+.prompt ul.chk li::before{content:"\25A1  ";color:var(--dim)}
+.copybar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.copybar button{min-height:44px;padding:0 18px;border:1px solid rgb(var(--acc));border-radius:2px;background:rgb(var(--acc));color:#0b0a0a;font:700 11px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.copybar span{font-size:13px;color:var(--mute)}
+#rawprompt{position:absolute;left:-9999px;width:1px;height:1px}
+footer{padding-block:30px 60px;color:var(--dim);font-size:13px}
+@media (max-width:640px){.row{grid-template-columns:minmax(0,1fr)}.plan li{grid-template-columns:minmax(0,1fr)}.plan .ph{padding-top:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}.card:hover{--ty:0}}
+@supports not (backdrop-filter:blur(2px)){.card{background:#161414}}
+</style>
+
+<div class="wrap">
+<header class="top"><span class="mark"><i>P</i>PEPTICITY</span><span class="save" id="saveState">Loading your choices&hellip;</span></header>
+<h1>Next level. <em>Last and final.</em></h1>
+<p class="lede">Everything in one place, before anything is built: where every project stands, the hooks to turn the site into a lead magnet, recommendations to take it to award level, the game plan, and the master prompt. Tick <b>KEEP</b>, <b>MAYBE</b> or <b>REMOVE</b> on any hook or recommendation, add notes, or add your own. Your choices save automatically, and I read them back before building.</p>
+<nav class="tabs" aria-label="Sections"><a href="#stand">Where we stand</a><a href="#hooks">Hooks <span id="tH"></span></a><a href="#recs">Recommendations <span id="tR"></span></a><a href="#plan">Game plan</a><a href="#prompt">The prompt</a></nav>
+
+<section id="stand"><p class="kick">01</p><h2>Where we stand</h2><p class="sub" id="standSub"></p>
+  <div class="grid" id="projects"></div>
+  <h3 class="kick" style="margin-top:34px">PEPTICITY, in detail</h3>
+  <div class="tablewrap"><table><thead><tr><th>Item</th><th>Status</th><th>Done</th><th>What's left</th></tr></thead><tbody id="pepRows"></tbody></table></div>
+  <h3 class="kick" style="margin-top:34px">Focus next</h3>
+  <ol class="focus" id="focus"></ol>
+  <details><summary>All sites and pages (<span id="nSites"></span>)</summary><div><div class="tablewrap"><table><thead><tr><th>Site</th><th>Project</th><th>Status</th><th>Done</th></tr></thead><tbody id="siteRows"></tbody></table></div></div></details>
+  <details><summary>All skills (<span id="nSkills"></span>)</summary><div><div class="tablewrap"><table><thead><tr><th>Skill</th><th>What it does</th><th>Where</th></tr></thead><tbody id="skillRows"></tbody></table></div></div></details>
+  <details><summary>All tools (<span id="nTools"></span>)</summary><div><div class="tablewrap"><table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody id="toolRows"></tbody></table></div></div></details>
+</section>
+
+<section id="hooks"><p class="kick">02</p><h2>Hooks</h2><p class="sub">Ways to win visitors' details, researched on real peptide, telehealth and premium wellness sites, and adapted for PEPTICITY's Canadian rules. <span style="color:rgb(var(--keep))">Recommended</span> ones are marked.</p>
+  <div class="tally" id="tallyH"></div><div class="rows" id="rowsH"></div>
+  <form class="addf" data-kind="hook"><label class="kick" for="addH" style="flex-basis:100%;margin:0">Add your own hook</label><input id="addH" maxlength="240" placeholder="e.g. A members-only early access list"><button type="submit">Add</button></form>
+</section>
+
+<section id="recs"><p class="kick">03</p><h2>Recommendations</h2><p class="sub">How we take PEPTICITY to award level. Keep what you like, remove what you don't.</p>
+  <div class="tally" id="tallyR"></div><div class="rows" id="rowsR"></div>
+  <form class="addf" data-kind="rec"><label class="kick" for="addR" style="flex-basis:100%;margin:0">Add your own idea</label><input id="addR" maxlength="240" placeholder="e.g. A night-mode version of the lab"><button type="submit">Add</button></form>
+</section>
+
+<section id="plan"><p class="kick">04</p><h2>Game plan</h2><p class="sub">Sample first, every step. Nothing moves to the next phase without your approval.</p><ol class="plan" id="planList"></ol></section>
+
+<section id="prompt"><p class="kick">05</p><h2>The prompt</h2><p class="sub">The master prompt every build session starts with. Read it, add notes in the box at the end, and approve it. Nothing gets built until you do.</p>
+  <div class="copybar"><button type="button" id="copyBtn">Copy the prompt</button><span id="copyMsg" role="status"></span></div>
+  <article class="prompt">__PROMPT_HTML__</article>
+  <div class="note" style="margin-top:14px"><label class="kick" for="promptNote">Your notes on the prompt</label><textarea id="promptNote" data-id="PROMPT" rows="3" placeholder="Anything to add, change or remove"></textarea></div>
+  <div class="dec" style="margin-top:12px" data-id="PROMPT" role="group" aria-label="Approve the prompt"><button type="button" data-s="approve" aria-pressed="false">Approve the prompt</button><button type="button" data-s="maybe" aria-pressed="false">Needs changes</button></div>
+  <textarea id="rawprompt" aria-hidden="true" tabindex="-1"></textarea>
+</section>
+<footer>PEPTICITY &middot; internal planning page for the owner. Not for Grace or the public until approved.</footer>
+</div>
+
+<script>
+(function () {
+'use strict';
+var D = __DATA__;
+function $(id) { return document.getElementById(id); }
+function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+var S = {};        // decisions: id -> {status, note, kind, title, custom}
+var db = null, coll = null, LS = 'pep-nl-decisions';
+function lsLoad() { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) { return {}; } }
+function lsSave() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
+S = lsLoad();
+
+/* ---------- where we stand ---------- */
+var st = D.status || {};
+$('standSub').textContent = st.summary || '';
+(st.projects || []).forEach(function (p) {
+  var c = el('article', 'card');
+  c.innerHTML = '<span class="chip"></span><h3 style="margin-top:10px"></h3><div class="bar"><i></i></div><div class="pct"><b></b><span></span></div><p style="margin-top:8px"></p>';
+  c.querySelector('.chip').textContent = p.status || '';
+  c.querySelector('h3').textContent = p.name;
+  c.querySelector('.bar i').style.setProperty('--p', (p.pct || 0) + '%');
+  c.querySelector('.pct b').textContent = (p.pct || 0) + '% done';
+  c.querySelector('.pct span').textContent = p.count || '';
+  c.querySelector('p').textContent = p.line || '';
+  $('projects').appendChild(c);
+});
+function cell(tr, txt, small, link) {
+  var td = el('td');
+  if (link) { var a = el('a', null, txt); a.href = link; a.target = '_blank'; a.rel = 'noopener'; td.appendChild(a); } else td.appendChild(document.createTextNode(txt || ''));
+  if (small) td.appendChild(el('small', null, small));
+  tr.appendChild(td); return td;
+}
+(st.pepticity || []).forEach(function (r) { var tr = el('tr'); cell(tr, r.item, r.note, r.url); cell(tr, r.status); var td = cell(tr, ''); td.appendChild(el('span', 'p', (r.pct || 0) + '%')); cell(tr, r.left); $('pepRows').appendChild(tr); });
+(st.focus || []).forEach(function (f) { $('focus').appendChild(el('li', null, f)); });
+(st.sites || []).forEach(function (r) { var tr = el('tr'); cell(tr, r.name, r.line, r.url); cell(tr, r.project); cell(tr, r.status); var td = cell(tr, ''); td.appendChild(el('span', 'p', (r.pct == null ? '' : r.pct + '%'))); $('siteRows').appendChild(tr); });
+(st.skills || []).forEach(function (r) { var tr = el('tr'); cell(tr, r.name); cell(tr, r.what); cell(tr, r.where); $('skillRows').appendChild(tr); });
+(st.tools || []).forEach(function (r) { var tr = el('tr'); cell(tr, r.name); cell(tr, r.what); $('toolRows').appendChild(tr); });
+$('nSites').textContent = (st.sites || []).length; $('nSkills').textContent = (st.skills || []).length; $('nTools').textContent = (st.tools || []).length;
+
+/* ---------- decision rows ---------- */
+function decBtns(id) {
+  var g = el('div', 'dec'); g.dataset.id = id; g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Decision');
+  [['approve', 'Keep'], ['maybe', 'Maybe'], ['reject', 'Remove']].forEach(function (b) { var x = el('button', null, b[1]); x.type = 'button'; x.dataset.s = b[0]; x.setAttribute('aria-pressed', 'false'); g.appendChild(x); });
+  return g;
+}
+function rowFor(item, kind) {
+  var r = el('article', 'card row'); r.dataset.id = item.id;
+  var left = el('div');
+  left.appendChild(el('span', 'n', item.id));
+  var h = el('h3', null, item.t); if (item.rec) { var bdg = el('span', 'rec-badge', 'RECOMMENDED'); h.appendChild(bdg); } left.appendChild(h);
+  left.appendChild(el('p', null, item.b || ''));
+  if (item.ex && item.ex.length) { var m = el('div', 'meta'); item.ex.slice(0, 4).forEach(function (x) { if (x.url) { var a = el('a', null, x.name || x.url); a.href = x.url; a.target = '_blank'; a.rel = 'noopener'; m.appendChild(a); } else m.appendChild(el('span', 'chip', x.name)); }); left.appendChild(m); }
+  r.appendChild(left); r.appendChild(decBtns(item.id));
+  if (item.how || item.risk || item.why) {
+    var d = el('details', 'more'); d.appendChild(el('summary', null, 'Details'));
+    var w = el('div');
+    [['Why it converts', item.why], ['For PEPTICITY', item.how], ['Rules to respect', item.risk]].forEach(function (x) { if (x[1]) { var p = el('p'); p.appendChild(el('b', null, x[0] + ': ')); p.appendChild(document.createTextNode(x[1])); w.appendChild(p); } });
+    d.appendChild(w); r.appendChild(d);
+  }
+  var n = el('div', 'note'); var ta = el('textarea'); ta.rows = 1; ta.placeholder = 'Note or change (optional)'; ta.dataset.id = item.id; ta.setAttribute('aria-label', 'Note for ' + item.t); n.appendChild(ta); r.appendChild(n);
+  return r;
+}
+function renderRows() {
+  var H = D.hooks || [], R = D.recs || [];
+  var ch = Object.keys(S).filter(function (k) { return S[k] && S[k].custom; }).map(function (k) { return { id: k, t: S[k].title || '(your idea)', b: 'Added by you.', kind: S[k].kind }; });
+  $('rowsH').innerHTML = ''; $('rowsR').innerHTML = '';
+  H.concat(ch.filter(function (c) { return c.kind === 'hook'; })).forEach(function (i) { $('rowsH').appendChild(rowFor(i, 'hook')); });
+  R.concat(ch.filter(function (c) { return c.kind === 'rec'; })).forEach(function (i) { $('rowsR').appendChild(rowFor(i, 'rec')); });
+  paint();
+}
+function paint() {
+  [].forEach.call(document.querySelectorAll('.dec'), function (g) {
+    var s = S[g.dataset.id] && S[g.dataset.id].status;
+    [].forEach.call(g.children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.s === s)); });
+    var row = g.closest('.row'); if (row) row.className = 'card row' + (s ? ' st-' + s : '');
+  });
+  [].forEach.call(document.querySelectorAll('textarea[data-id]'), function (t) { if (document.activeElement !== t) t.value = (S[t.dataset.id] && S[t.dataset.id].note) || ''; });
+  tally('H', D.hooks || [], 'hook'); tally('R', D.recs || [], 'rec');
+}
+function tally(k, list, kind) {
+  var ids = list.map(function (x) { return x.id; }).concat(Object.keys(S).filter(function (i) { return S[i] && S[i].custom && S[i].kind === kind; }));
+  var c = { approve: 0, maybe: 0, reject: 0 }; ids.forEach(function (i) { var s = S[i] && S[i].status; if (c[s] != null) c[s]++; });
+  var und = ids.length - c.approve - c.maybe - c.reject;
+  $('tally' + k).innerHTML = '';
+  [['Kept', c.approve], ['Maybe', c.maybe], ['Removed', c.reject], ['Undecided', und]].forEach(function (x) { var s = el('span'); s.appendChild(document.createTextNode(x[0] + ' ')); s.appendChild(el('b', null, String(x[1]))); $('tally' + k).appendChild(s); });
+  if (k === 'H') { var b = el('button', null, 'Keep all recommended'); b.type = 'button'; b.onclick = function () { list.filter(function (x) { return x.rec; }).forEach(function (x) { if (!(S[x.id] && S[x.id].status)) setDec(x.id, { status: 'approve', kind: kind }); }); paint(); }; $('tally' + k).appendChild(b); }
+  $('t' + k).textContent = c.approve + '/' + ids.length;
+}
+
+/* ---------- saving ---------- */
+var pending = {};
+function setDec(id, patch) {
+  S[id] = Object.assign({}, S[id] || {}, patch, { updatedAt: Date.now() }); lsSave();
+  if (!coll) return;
+  var data = S[id];
+  (pending[id] = (pending[id] || Promise.resolve()).then(function () { return coll.doc(id).set(data); }).catch(function (e) { $('saveState').textContent = 'Could not save to the shared board (' + ((e && e.code) || 'error') + '). Saved on this device.'; }));
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('.dec button'); if (!b) return;
+  var id = b.parentNode.dataset.id, cur = S[id] && S[id].status;
+  setDec(id, { status: cur === b.dataset.s ? null : b.dataset.s, kind: id === 'PROMPT' ? 'prompt' : id.charAt(0) === 'H' ? 'hook' : id.charAt(0) === 'R' ? 'rec' : (S[id] && S[id].kind) });
+  paint();
+});
+var noteT = {};
+document.addEventListener('input', function (e) {
+  var t = e.target; if (!t.matches || !t.matches('textarea[data-id]')) return;
+  clearTimeout(noteT[t.dataset.id]);
+  noteT[t.dataset.id] = setTimeout(function () { setDec(t.dataset.id, { note: t.value.slice(0, 2000) }); }, 700);
+});
+[].forEach.call(document.querySelectorAll('form.addf'), function (f) {
+  f.addEventListener('submit', function (e) {
+    e.preventDefault(); var inp = f.querySelector('input'), v = inp.value.trim(); if (!v) return;
+    var id = 'C' + Date.now().toString(36);
+    setDec(id, { custom: true, kind: f.dataset.kind, title: v.slice(0, 240), status: 'approve' });
+    inp.value = ''; renderRows();
+  });
+});
+
+/* ---------- plan + prompt ---------- */
+(D.plan || []).forEach(function (p) {
+  var li = el('li'); li.appendChild(el('span', 'ph', p.id));
+  var c = el('article', 'card'); c.appendChild(el('h3', null, p.t)); c.appendChild(el('p', null, p.b));
+  var g = el('div', 'gate'); g.appendChild(el('span', 'chip', 'Gate: ' + p.gate)); c.appendChild(g);
+  li.appendChild(c); $('planList').appendChild(li);
+});
+$('rawprompt').value = D.promptText || '';
+$('copyBtn').onclick = function () {
+  var txt = D.promptText || '';
+  var ok = function () { $('copyMsg').textContent = 'Copied.'; };
+  var fall = function () { var t = $('rawprompt'); t.style.left = '0'; t.select(); try { document.execCommand('copy'); ok(); } catch (e) { $('copyMsg').textContent = 'Select the text below and copy it.'; } t.style.left = '-9999px'; };
+  try { navigator.clipboard.writeText(txt).then(ok, fall); } catch (e) { fall(); }
+};
+
+/* tilt-lift: the card follows the pointer, up or down */
+if (matchMedia('(hover:hover) and (prefers-reduced-motion:no-preference)').matches) {
+  document.addEventListener('pointermove', function (e) {
+    var c = e.target.closest && e.target.closest('.card'); if (!c) return;
+    var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    c.style.setProperty('--rx', (-y * 5).toFixed(2) + 'deg'); c.style.setProperty('--ry', (x * 6).toFixed(2) + 'deg');
+  }, { passive: true });
+  document.addEventListener('pointerout', function (e) { var c = e.target.closest && e.target.closest('.card'); if (c && !c.contains(e.relatedTarget)) { c.style.removeProperty('--rx'); c.style.removeProperty('--ry'); } });
+}
+/* active tab */
+var secs = ['stand', 'hooks', 'recs', 'plan', 'prompt'].map($);
+var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) [].forEach.call(document.querySelectorAll('nav.tabs a'), function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id); }); }); }, { rootMargin: '-40% 0px -55% 0px' });
+secs.forEach(function (s) { io.observe(s); });
+
+renderRows();
+$('saveState').textContent = 'Saved on this device';
+
+/* shared board: Claude reads these choices back */
+if (window.claude && window.claude.use) {
+  window.claude.use('db').then(function (d) {
+    if (!d) { $('saveState').textContent = 'Saved on this device only (sign in to share with Claude)'; return; }
+    db = d; coll = db.collection('decisions');
+    var first = true, lastSig = null;
+    coll.onSnapshot(function (snap) {
+      var remote = {};
+      (snap.docs || []).forEach(function (doc) { remote[doc.id] = doc.data(); });
+      if (first) {
+        first = false;
+        // push any choices made on this device before the board connected
+        Object.keys(S).forEach(function (k) { if (!remote[k] || (S[k].updatedAt || 0) > (remote[k].updatedAt || 0)) { var data = S[k]; coll.doc(k).set(data).catch(function () {}); } });
+      }
+      Object.keys(remote).forEach(function (k) { if (!S[k] || (remote[k].updatedAt || 0) >= (S[k].updatedAt || 0)) S[k] = remote[k]; });
+      lsSave();
+      var sig = Object.keys(S).filter(function (k) { return S[k] && S[k].custom; }).sort().join(',');
+      if (sig !== lastSig) { lastSig = sig; renderRows(); } else paint();
+      $('saveState').innerHTML = ''; $('saveState').appendChild(document.createTextNode('Choices '));
+      $('saveState').appendChild(el('b', null, 'saved for Claude'));
+    }, function () { $('saveState').textContent = 'Saved on this device only'; });
+  }, function () {});
+}
+})();
+</script>
