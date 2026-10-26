@@ -1,0 +1,908 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body><title>PEPTICITY Tower</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{--ink:#070708;--graphite:#111214;--steel:#1c1d20;--rule:rgba(214,218,224,.16);--silver:#c9ccd1;--pearl:#eceae6;--muted:#9a9da3;--warm:#f3ece2;--lime:#d4ff3a;--lime-glow:rgba(212,255,58,.42);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--pearl);font-family:Geist,"Helvetica Neue",Arial,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ink)}
+.mono{font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+.serif{font-family:Italiana,"Didot","Bodoni 72",Georgia,serif;font-weight:400}
+a{color:var(--pearl)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* fixed 3D stage */
+#scene{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0}
+.fallback{position:fixed;inset:0;z-index:0;display:none;background:
+  radial-gradient(80% 50% at 50% 100%,rgba(243,236,226,.10),transparent 70%),
+  linear-gradient(180deg,#0a0b0d 0%,#070708 60%,#0c0c0e 100%)}
+html.nogl .fallback{display:block}
+html.nogl #scene{display:none}
+.fallback svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:46vh;opacity:.9}
+.scrim{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,7,8,.55),rgba(7,7,8,.78));opacity:0;will-change:opacity}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.72) 100%)}
+.grain{position:fixed;inset:-50%;z-index:2;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  animation:grain 1.2s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+main,header,footer{position:relative;z-index:3}
+
+/* header \2014  elevator panel */
+header.bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;pointer-events:none}
+header.bar::before{content:"";position:absolute;left:0;right:0;top:calc(-1 * env(safe-area-inset-top,0px));bottom:-34px;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(7,7,8,.92),rgba(7,7,8,.6) 60%,rgba(7,7,8,0))}
+.bar-in{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px;pointer-events:auto}
+.wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:Italiana,Georgia,serif;font-size:26px;letter-spacing:.42em;color:var(--pearl)}
+.wordmark i{display:block;width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(212,255,58,.12),0 0 14px var(--lime-glow);animation:beacon 2.6s ease-in-out infinite}
+@keyframes beacon{50%{box-shadow:0 0 0 6px rgba(212,255,58,0),0 0 6px rgba(212,255,58,.2);opacity:.65}}
+.navlinks{display:flex;gap:30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.navlinks a{position:relative;color:var(--silver);text-decoration:none;padding-block:10px}
+.navlinks a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:var(--pearl);transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.navlinks a:hover{color:var(--pearl)}.navlinks a:hover::after{transform:scaleX(1);transform-origin:left}
+.bar-right{display:flex;align-items:center;gap:14px}
+.floor{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;border:1px solid var(--rule);background:rgba(10,10,11,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-family:"Geist Mono",monospace;font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.floor b{min-width:2.2ch;text-align:right;font-weight:500;font-size:17px;letter-spacing:.05em;color:var(--lime);text-shadow:0 0 12px var(--lime-glow)}
+.floor em{font-style:normal;color:var(--lime);font-size:10px;transition:transform .4s}
+.floor em.up{transform:rotate(180deg)}
+
+/* elevator-plate buttons */
+.plate{position:relative;display:inline-flex;align-items:center;gap:14px;min-height:48px;padding:0 22px 0 16px;text-decoration:none;cursor:pointer;border:0;font:500 12px/1 "Geist Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--pearl);
+  background:linear-gradient(180deg,#2a2b2f 0%,#17181b 55%,#121315 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.7),0 10px 24px -14px rgba(0,0,0,.9);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));overflow:hidden;transition:transform .35s cubic-bezier(.16,1,.3,1),filter .35s}
+.plate::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);pointer-events:none}
+.plate::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.16),transparent);transform:skewX(-18deg);transition:left .7s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.plate:hover::after{left:120%}
+.plate .ring{position:relative;flex:none;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3a3b40,#0d0d0f);box-shadow:inset 0 1px 1px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.09)}
+.plate .ring::after{content:"";position:absolute;inset:5px;border-radius:50%;border:1.5px solid rgba(212,255,58,.35);transition:border-color .3s,box-shadow .3s}
+.plate:hover .ring::after,.plate:focus-visible .ring::after{border-color:var(--lime);box-shadow:0 0 10px var(--lime-glow),inset 0 0 6px var(--lime-glow)}
+.plate:active{transform:translateY(1px) scale(.99);filter:brightness(.92)}
+.plate:focus-visible{outline:1px solid var(--lime);outline-offset:3px}
+.plate.big{min-height:58px;padding:0 30px 0 20px;font-size:13px}
+.textlink{position:relative;display:inline-flex;align-items:center;gap:10px;min-height:44px;color:var(--silver);text-decoration:none;font-size:14px;letter-spacing:.04em}
+.textlink::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:1px;background:currentColor;opacity:.5;transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.textlink:hover{color:var(--pearl)}.textlink:hover::after{transform:scaleX(.4)}
+
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:140px 72px}
+.kicker{margin:0 0 22px;font:500 11px/1.4 "Geist Mono",monospace;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+.kicker b{color:var(--lime);font-weight:500;text-shadow:0 0 10px var(--lime-glow)}
+.hero h1{margin:0;max-width:15ch;font-family:Italiana,"Didot",Georgia,serif;font-weight:400;font-size:clamp(46px,8.4vw,128px);line-height:.98;letter-spacing:-.005em;text-wrap:balance}
+.hero h1 .line{overflow:hidden}
+.hero .sub{margin:30px 0 0;max-width:560px;font-size:18px;line-height:1.7;color:var(--silver);font-weight:300}
+.hero .sub strong{color:var(--pearl);font-weight:500}
+.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:26px;margin-top:38px}
+.cue{position:absolute;right:max(20px,env(safe-area-inset-right,0px));bottom:72px;display:flex;flex-direction:column;align-items:center;gap:14px;font:500 10px/1 "Geist Mono",monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl}
+.cue i{display:block;width:1px;height:72px;background:linear-gradient(180deg,transparent,var(--pearl));animation:drop 2.2s cubic-bezier(.6,0,.3,1) infinite;transform-origin:top}
+@keyframes drop{0%{transform:scaleY(0);opacity:1}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+/* journey \2014  sticky stage, scroll-scrubbed */
+.journey{position:relative;height:760vh}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.stepcard{position:absolute;left:max(20px,env(safe-area-inset-left,0px));bottom:12vh;width:min(470px,calc(100% - 40px));min-height:300px;padding:34px 34px 30px;
+  background:linear-gradient(160deg,rgba(24,25,28,.62),rgba(10,10,11,.5));backdrop-filter:blur(9px) saturate(120%);-webkit-backdrop-filter:blur(9px) saturate(120%);
+  clip-path:polygon(0 18px,18px 0,100% 0,100% 100%,0 100%);opacity:0;transform:translateY(30px);will-change:transform,opacity}
+.stepcard::before{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid var(--rule);clip-path:inherit}
+.stepcard::after{content:"";position:absolute;left:0;top:18px;width:2px;height:46px;background:var(--lime);box-shadow:0 0 14px var(--lime-glow)}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.stepcard{background:rgba(14,14,16,.94)}}
+.step{position:absolute;left:34px;right:34px;top:34px;opacity:0;visibility:hidden}
+.step .snum{margin:0 0 18px;font:500 11px/1 "Geist Mono",monospace;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.step .snum b{color:var(--lime);font-weight:500}
+.step h2{margin:0;font-family:Italiana,Georgia,serif;font-weight:400;font-size:clamp(34px,3.6vw,50px);line-height:1.02;letter-spacing:0}
+.step h2 .w{display:inline-block;will-change:transform}
+.step .sbody{margin:18px 0 0;font-size:16px;line-height:1.7;color:var(--silver);font-weight:300}
+.step .sbody b{color:var(--pearl);font-weight:500}
+.rail{position:absolute;right:max(24px,env(safe-area-inset-right,0px));top:50%;height:42vh;width:1px;transform:translateY(-50%);background:var(--rule)}
+.rail i{position:absolute;left:-.5px;top:0;width:2px;height:100%;background:var(--lime);box-shadow:0 0 12px var(--lime-glow);transform:scaleY(0);transform-origin:top}
+.rail span{position:absolute;right:14px;text-align:right;transform:translateY(-50%);font:500 10px/1 "Geist Mono",monospace;letter-spacing:.2em;color:var(--muted);white-space:nowrap;transition:color .4s}
+.rail span.on{color:var(--pearl)}
+.depth{position:absolute;right:max(24px,env(safe-area-inset-right,0px));bottom:6vh;font:500 10px/1.5 "Geist Mono",monospace;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);text-align:right}
+.depth b{display:block;font-size:22px;letter-spacing:.04em;color:var(--pearl);font-weight:400}
+
+/* sections after the descent */
+section.block{position:relative;padding-block:150px 110px}
+.h2{margin:0;font-family:Italiana,Georgia,serif;font-weight:400;font-size:clamp(40px,5.6vw,84px);line-height:1;letter-spacing:0;max-width:16ch;text-wrap:balance}
+.lede{margin:24px 0 0;max-width:560px;font-size:17px;line-height:1.7;color:var(--silver);font-weight:300}
+.skyline-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px}
+.line-mask{padding-bottom:.16em;margin-bottom:-.16em}
+.filters{display:flex;gap:2px;padding:3px;border:1px solid var(--rule);background:rgba(10,10,11,.6)}
+.filters button{min-height:44px;padding:0 16px;border:0;background:transparent;color:var(--muted);font:500 11px/1 "Geist Mono",monospace;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:color .3s,background .3s}
+.filters button:hover{color:var(--pearl)}
+.filters button[aria-pressed=true]{background:#1f2124;color:var(--lime);box-shadow:inset 0 0 0 1px rgba(212,255,58,.35)}
+.facade{position:relative;margin-top:56px;padding:34px 28px 28px;background:linear-gradient(180deg,rgba(18,19,21,.86),rgba(9,9,10,.9));border:1px solid var(--rule);
+  display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:14px 12px}
+.facade::before{content:"";position:absolute;left:-1px;right:-1px;top:-12px;height:12px;background:linear-gradient(180deg,#1b1c1f,#121315);border:1px solid var(--rule);border-bottom:0}
+.win{position:relative;display:block;width:100%;aspect-ratio:3/4;min-width:0;border:0;padding:0;cursor:pointer;background:#0b0b0c;outline-offset:3px;
+  box-shadow:inset 0 0 0 2px #1d1e21,inset 0 0 0 3px #0a0a0b}
+.win .pane{position:absolute;inset:6px;background:linear-gradient(180deg,#141416,#0c0c0d);transition:background .6s,box-shadow .6s}
+.win .pane::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:#1d1e21}
+.win .pane::after{content:"";position:absolute;left:0;right:0;top:42%;height:2px;background:#1d1e21}
+.win.lit .pane{background:radial-gradient(120% 90% at 50% 70%,rgba(243,236,226,.92),rgba(243,236,226,.55) 55%,rgba(200,196,188,.25) 100%);box-shadow:0 0 22px -2px rgba(243,236,226,.45)}
+.win.lit.hi .pane{background:radial-gradient(120% 90% at 50% 70%,rgba(236,240,246,.95),rgba(205,212,222,.55) 55%,rgba(160,170,184,.25) 100%);box-shadow:0 0 22px -2px rgba(214,224,236,.45)}
+.win.flick .pane{animation:flick .9s steps(2) 1}
+@keyframes flick{0%,100%{opacity:1}30%{opacity:.35}60%{opacity:.85}}
+.win.dim{opacity:.18;pointer-events:none}
+.facade .win:hover .pane,.facade .win:focus-visible .pane,.facade .win.sel .pane{background:radial-gradient(110% 85% at 50% 72%,rgba(232,255,170,.78),rgba(212,255,58,.32) 50%,rgba(20,22,16,.6) 100%);box-shadow:0 0 26px 0 var(--lime-glow)}
+.win:focus-visible{outline:1px solid var(--lime)}
+.wlabel{display:block;margin-top:8px;font:500 9px/1.3 "Geist Mono",monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wcell{min-width:0}
+.wtip{position:absolute;z-index:4;width:260px;padding:18px 18px 16px;background:rgba(12,12,13,.94);border:1px solid var(--rule);pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .25s,transform .35s cubic-bezier(.16,1,.3,1)}
+.wtip.on{opacity:1;transform:none}
+.wtip .t{margin:0 0 6px;font-family:Italiana,Georgia,serif;font-size:24px;line-height:1.1}
+.wtip .c{margin:0 0 12px;font:500 10px/1 "Geist Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.wtip .v{margin:0 0 12px;font:500 15px/1 "Geist Mono",monospace;color:var(--lime);text-shadow:0 0 10px var(--lime-glow)}
+.wtip .m{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.wtip .m span{height:18px;display:grid;place-items:center;font:500 8px/1 "Geist Mono",monospace;color:var(--muted);background:#141416}
+.wtip .m span.pk{background:#2a2c30;color:var(--pearl);box-shadow:inset 0 -2px 0 var(--lime)}
+
+.promise-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
+.plaque{position:relative;padding:44px 40px;background:linear-gradient(160deg,#1b1c1f,#0e0e10);border:1px solid var(--rule);clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+.plaque .screw{position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#5b5d63,#141416);box-shadow:inset 0 0 0 1px rgba(0,0,0,.6)}
+.plaque ol{margin:0;padding:0;list-style:none;display:grid;gap:18px;counter-reset:r}
+.plaque li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:baseline;font-size:15px;line-height:1.6;color:var(--silver)}
+.plaque li::before{counter-increment:r;content:"0" counter(r);font:500 11px/1 "Geist Mono",monospace;letter-spacing:.16em;color:var(--lime)}
+.plaque li b{color:var(--pearl);font-weight:500}
+
+.prices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;margin-top:56px;border:1px solid var(--rule);background:var(--rule)}
+.price{position:relative;padding:40px 36px;background:linear-gradient(180deg,rgba(17,18,20,.95),rgba(9,9,10,.95));min-width:0}
+.price h3{margin:0 0 6px;font-family:Italiana,Georgia,serif;font-weight:400;font-size:34px}
+.price .for{margin:0 0 26px;font:500 11px/1.5 "Geist Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.price .amt{margin:0 0 22px;font:400 22px/1.2 "Geist Mono",monospace;color:var(--pearl)}
+.price ul{margin:0;padding:0;list-style:none;display:grid;gap:12px;font-size:15px;color:var(--silver)}
+.price li{display:flex;gap:12px}.price li::before{content:"\2014 ";color:var(--lime)}
+
+.area-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:56px;align-items:end}
+form.check{display:grid;gap:18px;padding:36px;background:rgba(12,12,13,.82);border:1px solid var(--rule);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.field{display:grid;gap:8px}
+.field label{font:500 10px/1 "Geist Mono",monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+.field:focus-within label{color:var(--lime)}
+.field select,.field input{min-height:50px;width:100%;padding:0 14px;border:0;border-bottom:1px solid var(--rule);background:transparent;color:var(--pearl);font:400 16px/1 Geist,sans-serif;border-radius:0;transition:border-color .3s,background .3s}
+.field select option{background:#111214}
+.field select:focus,.field input:focus{outline:none;border-bottom-color:var(--lime);background:rgba(212,255,58,.04)}
+.reply{margin:0;min-height:1.6em;font-size:14px;line-height:1.6;color:var(--silver)}
+.reply b{color:var(--lime);font-weight:500}
+footer{padding-block:80px 40px;border-top:1px solid var(--rule);background:rgba(7,7,8,.9)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;font:500 11px/1.6 "Geist Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.footsky{width:100%;height:90px;margin-bottom:40px}
+.footsky path{fill:none;stroke:var(--silver);stroke-width:1;opacity:.5}
+.footsky circle{fill:var(--lime);opacity:0}
+.footsky.in circle{animation:blink 3.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:0}40%,60%{opacity:.9}}
+
+/* elevator-panel menu */
+.floors-btn{gap:12px}
+.floors-btn .bars{display:grid;grid-template-columns:repeat(2,4px);gap:3px}
+.floors-btn .bars i{width:4px;height:4px;border-radius:50%;background:#7c7f85;transition:background .3s,box-shadow .3s}
+.floors-btn[aria-expanded=true] .bars i,.floors-btn:hover .bars i{background:var(--lime);box-shadow:0 0 6px var(--lime-glow)}
+.epanel{position:fixed;z-index:80;top:calc(env(safe-area-inset-top,0px) + 86px);right:max(20px,env(safe-area-inset-right,0px));width:392px;max-height:calc(100vh - 110px);overflow:auto;
+  background:linear-gradient(160deg,#25262a 0%,#16171a 48%,#101113 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 0 1px rgba(0,0,0,.8),0 40px 80px -30px rgba(0,0,0,.95);
+  clip-path:inset(0 50% 0 50%);opacity:0;transition:clip-path .7s cubic-bezier(.77,0,.18,1),opacity .4s}
+.epanel.open{clip-path:inset(0 0 0 0);opacity:1}
+.epanel::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 3px)}
+.ep-in{position:relative;padding:22px 22px 18px}
+.ep-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.ep-head p{margin:0;font:500 10px/1.4 "Geist Mono",monospace;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.ep-disp{display:flex;align-items:baseline;gap:8px;padding:8px 14px;background:#0a0a0b;box-shadow:inset 0 1px 3px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.05)}
+.ep-disp b{font:500 24px/1 "Geist Mono",monospace;color:var(--lime);text-shadow:0 0 12px var(--lime-glow);min-width:2.2ch;text-align:right}
+.ep-disp em{font-style:normal;font:500 11px/1 "Geist Mono",monospace;color:var(--lime);transition:transform .4s}
+.ep-disp em.up{transform:rotate(180deg)}
+.ep-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.fbtn{display:flex;align-items:center;gap:12px;min-height:52px;padding:6px 10px 6px 6px;border:0;background:transparent;color:var(--silver);cursor:pointer;text-align:left;font:400 13px/1.25 Geist,sans-serif}
+.fbtn .key{position:relative;flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font:500 12px/1 "Geist Mono",monospace;color:var(--pearl);
+  background:radial-gradient(circle at 38% 30%,#45474d 0%,#26272b 45%,#141518 100%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.22),inset 0 -2px 3px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.85),0 0 0 4px #1b1c1f,0 0 0 5px rgba(255,255,255,.06),0 4px 10px rgba(0,0,0,.6);transition:transform .2s,box-shadow .35s}
+.fbtn .key::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1.5px solid transparent;transition:border-color .35s,box-shadow .35s}
+.fbtn:hover{color:var(--pearl)}
+.fbtn:hover .key::after{border-color:rgba(212,255,58,.35)}
+.fbtn:focus-visible{outline:none}.fbtn:focus-visible .key::after{border-color:var(--lime)}
+.fbtn.here{color:var(--pearl)}
+.fbtn.here .key::after,.fbtn.pressed .key::after{border-color:var(--lime);box-shadow:0 0 14px var(--lime-glow),inset 0 0 8px var(--lime-glow)}
+.fbtn.pressed .key{transform:scale(.94);box-shadow:inset 0 2px 4px rgba(0,0,0,.7),0 0 0 1px rgba(0,0,0,.85),0 0 0 4px #1b1c1f,0 0 0 5px rgba(255,255,255,.06)}
+.fbtn small{display:block;font:500 9px/1.3 "Geist Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.ep-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font:500 10px/1 "Geist Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.ep-close{min-height:44px;padding:0 4px;border:0;background:transparent;color:var(--silver);font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+.ep-close:hover,.ep-close:focus-visible{color:var(--lime);outline:none}
+@media (max-width:640px){
+  .epanel{left:0;right:0;top:auto;bottom:0;width:auto;max-height:78vh;padding-bottom:env(safe-area-inset-bottom,0px);clip-path:inset(100% 0 0 0)}
+  .epanel.open{clip-path:inset(0 0 0 0)}
+  .ep-in{padding:20px max(18px,env(safe-area-inset-left,0px)) 16px}
+}
+@media (prefers-reduced-motion:reduce){.epanel{transition:opacity .2s}}
+
+/* cursor */
+.cur{position:fixed;left:0;top:0;z-index:70;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:1px solid rgba(236,234,230,.5);pointer-events:none;opacity:0;transition:width .35s cubic-bezier(.16,1,.3,1),height .35s cubic-bezier(.16,1,.3,1),margin .35s cubic-bezier(.16,1,.3,1),border-color .35s,opacity .3s}
+.cur::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime-glow)}
+.cur.on{opacity:1}.cur.big{width:56px;height:56px;margin:-28px 0 0 -28px;border-color:rgba(212,255,58,.6)}
+@media (hover:none){.cur{display:none}}
+
+.rv{opacity:0;transform:translateY(40px)}
+@media (max-width:980px){
+  .navlinks{display:none}.facade{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .promise-in,.area-in{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .wordmark{font-size:21px;letter-spacing:.3em}.floor{padding:0 10px}.floor span{display:none}
+  .bar-right .getleads{display:none}.floors-btn{padding:0 14px 0 12px}
+  .hero{padding-block:120px 64px}.cue{display:none}
+  .journey{height:620vh}
+  .stepcard{left:16px;right:16px;width:auto;bottom:16px;min-height:270px;padding:26px 24px}
+  .step{left:24px;right:24px;top:26px}.rail{display:none}.depth{top:90px;bottom:auto}
+  .facade{grid-template-columns:repeat(3,minmax(0,1fr));padding:24px 16px}
+  .prices{grid-template-columns:minmax(0,1fr)}
+  form.check{padding:24px}.plaque{padding:32px 24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .grain,.wordmark i,.cue i,.footsky circle{animation:none!important}
+  .rv{opacity:1;transform:none}
+}
+
+/* ===== PEPTICITY TOWER: monochrome chrome, the peptide is the only colour ===== */
+:root{--lime:#f2f1ee;--lime-glow:rgba(242,241,238,.32);--lime-ink:#f2f1ee;--pep:#d4ff3a;--pep-glow:rgba(212,255,58,.55)}
+h1,h2,h3,.h2,.hero h1,.step h2,.price h3,.wtip .t,.wordmark{text-transform:uppercase}
+.hero h1{letter-spacing:.02em;font-size:clamp(42px,7.4vw,112px);max-width:16ch}
+.h2{letter-spacing:.02em;max-width:18ch}.step h2{letter-spacing:.03em;font-size:clamp(30px,3.2vw,44px)}
+.wordmark{letter-spacing:.32em}
+.vialshot{position:fixed;inset:0;z-index:1;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none}
+.vialshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 50%;transform-origin:68% 55%;will-change:transform}
+.vialshot::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ink) 0%,transparent 46%),linear-gradient(transparent 70%,var(--ink));opacity:.55}
+.facade{grid-template-columns:repeat(7,minmax(0,1fr))}
+.facade .win:hover .pane,.facade .win:focus-visible .pane,.facade .win.sel .pane{background:radial-gradient(110% 85% at 50% 72%,rgba(212,255,58,.85),rgba(212,255,58,.35) 50%,rgba(0,0,0,.35) 100%);box-shadow:0 0 26px 0 var(--pep-glow)}
+.wtip .v{color:var(--pearl);text-shadow:none;font-size:13px;letter-spacing:.06em}
+.wtip .w{margin:0;font-size:14px;line-height:1.55;color:var(--silver)}
+.wtip{width:300px}
+.disc{margin:22px 0 0;max-width:90ch;font-size:12px;line-height:1.7;color:var(--muted)}
+@media (max-width:980px){.facade{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:640px){.facade{grid-template-columns:repeat(3,minmax(0,1fr))}.vialshot{background:var(--ink)}.vialshot img{top:56px;bottom:auto;height:58vh;object-position:67% 50%}.vialshot::after{opacity:1;background:linear-gradient(var(--ink),transparent 14%,transparent 52%,var(--ink) 66%)}}
+</style>
+
+<div class="fallback" aria-hidden="true"><svg viewBox="0 0 1200 300" preserveAspectRatio="none"><path d="M0 300V210h60v-60h40v80h50V120h70v110h40V90h60v140h50V160h80v70h40V60h70v170h60V140h50v90h70V110h60v120h40V180h80v50h60V100h70v130h50v70z" fill="#0d0e10" stroke="rgba(214,218,224,.2)"/></svg></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="vialshot" id="vialshot" aria-hidden="true"><img src="media/t1.jpg" alt="" decoding="async"></div>
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cur" id="cur" aria-hidden="true"></div>
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="wordmark" href="#top" data-link><i aria-hidden="true"></i>PEPTICITY</a>
+    <nav class="navlinks" aria-label="Main"><a href="#journey" data-link>How it works</a><a href="#skyline" data-link>The list</a><a href="#promise" data-link>Lot testing</a><a href="#pricing" data-link>Membership</a></nav>
+    <div class="bar-right">
+      <div class="floor" aria-hidden="true"><span>Floor</span><b id="floorNum">33</b><em id="floorArrow">&#9660;</em></div>
+      <a class="plate getleads" href="#area" data-link><span class="ring" aria-hidden="true"></span>Start</a>
+      <button class="plate floors-btn" id="floorsBtn" type="button" aria-expanded="false" aria-controls="epanel"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Floors</button>
+    </div>
+  </div>
+</header>
+<div class="epanel" id="epanel" role="dialog" aria-label="Floors &#8212; jump to a section" hidden>
+  <div class="ep-in">
+    <div class="ep-head"><p>Select<br>a floor</p><div class="ep-disp" aria-hidden="true"><b id="epNum">33</b><em id="epArrow">&#9660;</em></div></div>
+    <div class="ep-grid" id="epGrid"></div>
+    <div class="ep-foot"><span>Esc to close</span><button class="ep-close" id="epClose" type="button">Close</button></div>
+  </div>
+</div>
+
+<main>
+  <section class="wrap hero" id="top">
+    <p class="kicker rv-hero">Clinician-led &middot; pharmacy-prepared &middot; <b>lot-tested</b></p>
+    <h1 id="heroTitle">Follow one vial from the skyline to your door.</h1>
+    <p class="sub rv-hero"><strong>PEPTICITY is clinician-guided peptide care.</strong> A licensed clinician decides if a plan is right for you, a licensed partner pharmacy prepares it, and every vial carries a lot code you can look up. Scroll, and follow one vial down.</p>
+    <div class="hero-cta rv-hero"><a class="plate big" href="#area" data-link><span class="ring" aria-hidden="true"></span>Start my free assessment</a><a class="textlink" href="#journey" data-link>Follow the vial &darr;</a></div>
+    <div class="cue" aria-hidden="true">Scroll to descend<i></i></div>
+  </section>
+
+  <section class="journey" id="journey" aria-label="How a vial reaches you">
+    <div class="stage">
+      <div class="stepcard" id="stepcard">
+        <article class="step"><p class="snum"><b>01</b> / 06 &middot; Assess</p><h2>You take the free assessment.</h2><p class="sbody">Your goals, your age range and the medicines you take. <b>No payment, no commitment.</b> One window in the skyline lights up.</p></article><article class="step"><p class="snum"><b>02</b> / 06 &middot; Review</p><h2>A licensed clinician reads it.</h2><p class="sbody">A real clinician <b>reviews your answers</b>, may ask for labs, and decides if a plan is right for you.</p></article><article class="step"><p class="snum"><b>03</b> / 06 &middot; Decide</p><h2>A clear yes or no.</h2><p class="sbody">You get the reasons either way. If peptides aren&rsquo;t right for you, <b>you pay nothing</b>. [Confirm policy with Grace]</p></article><article class="step"><p class="snum"><b>04</b> / 06 &middot; Prepare</p><h2>A licensed pharmacy prepares it.</h2><p class="sbody">Filled to your prescription by a <b>licensed partner pharmacy</b>, never a research-chemical supplier.</p></article><article class="step"><p class="snum"><b>05</b> / 06 &middot; Test</p><h2>Every lot is tested.</h2><p class="sbody">Each lot gets a certificate of analysis. <b>The lot code on your vial</b> opens it.</p></article><article class="step"><p class="snum"><b>06</b> / 06 &middot; Deliver</p><h2>It arrives cold, at your door.</h2><p class="sbody">Sealed, insulated and shipped cold, with <b>a person to call</b> at [phone number].</p></article>
+      </div>
+      <div class="rail" aria-hidden="true" id="rail"><i id="railFill"></i></div>
+      <div class="depth" aria-hidden="true">Altitude<b id="alt">280 m</b></div>
+    </div>
+  </section>
+
+  <section class="block" id="skyline">
+    <div class="wrap" style="position:relative">
+      <div class="skyline-head">
+        <div><p class="kicker rv">The list</p><h2 class="h2 rv">Every peptide is a lit window.</h2><p class="lede rv">Point at a window to see what each one is and the sizes on the list. What it does and whether it is right for you is a question for a licensed clinician.</p></div>
+        <div class="filters rv" role="group" aria-label="Filter the list" id="filters"><button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="recovery" aria-pressed="false">Recovery</button><button type="button" data-f="longevity" aria-pressed="false">Longevity</button><button type="button" data-f="metabolic" aria-pressed="false">Metabolic</button></div>
+      </div>
+      <div class="facade" id="facade"></div>
+      <div class="wtip" id="wtip" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="block" id="promise">
+    <div class="wrap promise-in">
+      <div><p class="kicker rv">Lot testing</p><h2 class="h2 rv">Don&rsquo;t trust us. Check us.</h2><p class="lede rv">Every lot is tested before it is released. The code printed on your vial opens that lot&rsquo;s certificate.</p></div>
+      <div class="plaque rv"><span class="screw" style="left:14px;top:14px"></span><span class="screw" style="right:14px;bottom:14px"></span>
+        <ol><li><span><b>Find the lot code</b> printed on the back of your vial.</span></li><li><span><b>Enter it</b> in the lot lookup on our site.</span></li><li><span><b>Read the certificate:</b> identity, purity, sterility and endotoxin. [Sample data in this preview]</span></li></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <p class="kicker rv">Membership</p><h2 class="h2 rv">Start free. Pay only if a plan is right.</h2>
+      <div class="prices rv">
+        <div class="price"><h3>Free review</h3><p class="for">Every plan starts here</p><p class="amt">$0</p><ul><li>The free assessment</li><li>A licensed clinician reviews it</li><li>A clear yes or no, with reasons</li></ul></div>
+        <div class="price"><h3>Membership</h3><p class="for">Only if a plan is prescribed</p><p class="amt">$[xx] / month</p><ul><li>Clinician care and follow-ups</li><li>Pharmacy-prepared, lot-tested, shipped cold</li><li>Cancel in two clicks</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="area">
+    <div class="wrap area-in">
+      <div><p class="kicker rv">Start</p><h2 class="h2 rv">What are you looking into peptides for?</h2><p class="lede rv">Pick one and tell us where you live. You don&rsquo;t need a workout routine to start, and a licensed clinician decides if a plan is right for you.</p></div>
+      <form class="check rv" id="check" novalidate>
+        <div class="field"><label for="ind">I&rsquo;m looking into peptides for</label><select id="ind" required><option value="fitness">Fitness, training and recovery</option><option value="health">Overall health and wellbeing</option><option value="unsure">I&rsquo;m not sure yet</option></select></div>
+        <div class="field"><label for="zip">Postal or ZIP code</label><input id="zip" autocomplete="postal-code" placeholder="e.g. V8W 1P6 or 90210" required></div>
+        <button class="plate big" type="submit"><span class="ring" aria-hidden="true"></span>Start my free assessment</button>
+        <p class="reply" id="reply" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <svg class="footsky" id="footsky" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+      <path id="footpath" d="M0 89H70V52H96V70H130V30H172V70H204V44H240V89H290V20H330V60H372V36H410V89H470V48H500V64H540V12H580V64H610V40H660V89H720V56H760V26H800V70H840V44H880V89H940V34H980V62H1020V50H1060V89H1120V40H1160V89H1200"/>
+      <circle cx="152" cy="40" r="2"/><circle cx="560" cy="22" r="2" style="animation-delay:1.1s"/><circle cx="780" cy="36" r="2" style="animation-delay:2.2s"/><circle cx="960" cy="44" r="2" style="animation-delay:.6s"/>
+    </svg>
+    <div class="foot"><span>PEPTICITY &middot; clinician-guided peptide care</span><span>Preview &middot; [Final legal copy to be approved by counsel.]</span></div><p class="disc">PEPTICITY is a care service. A licensed clinician decides if a plan is right for you, and plans are prepared by a licensed partner pharmacy. Compounded medicines are not FDA-approved. Nothing on this site is medical advice, and no result is promised. Lot data shown is sample data. [Final legal copy to be approved by counsel.]</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script>
+/* PEPTICITY vetted inventory (DRAFT for Grace + counsel).
+   Source: Grace's live store, northernpeptides.st (WooCommerce Store API), pulled 2026-10-26: 36 listings.
+   Only facts are kept: the product name, the sizes she lists and what the substance IS.
+   Nothing about what a product does, dosing or cycles: those questions go to a licensed clinician.
+   storeCAD is her current research-store price, kept for internal reference only and never shown.
+   pageIssue notes problems on her current store page for Grace to fix. */
+(function (W) {
+  'use strict';
+  var NA = 'Not approved as a medicine in Canada or the US.';
+  var P = [
+    { k: 'tirzepatide', name: 'Tirzepatide', sizes: ['15 mg', '30 mg'], group: 'metabolic', aka: ['tirz', 'mounjaro', 'zepbound', 'glp-1', 'glp1', 'glp'],
+      what: 'The active ingredient in the FDA-approved prescription medicines Mounjaro and Zepbound.',
+      status: 'A compounded version is not the same as an FDA-approved medicine.', storeCAD: [150, 275], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'retatrutide', name: 'Retatrutide', sizes: ['10 mg', '15 mg', '20 mg'], group: 'metabolic', aka: ['reta', 'retatrutid'],
+      what: 'An investigational medicine that is still being tested in clinical trials.',
+      status: 'Not approved in Canada or the US. [Confirm current status before launch]', storeCAD: [135, 165, 190], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'tesamorelin', name: 'Tesamorelin', sizes: ['10 mg'], group: 'gh', aka: ['egrifta', 'tesa'],
+      what: 'The active ingredient in the FDA-approved prescription medicine Egrifta.',
+      status: 'A compounded version is not the same as an FDA-approved medicine.', storeCAD: [160] },
+    { k: 'aod9604', name: 'AOD-9604', sizes: ['5 mg'], group: 'metabolic', aka: ['aod', 'aod 9604', 'aod9604'],
+      what: 'A lab-made fragment of human growth hormone.', status: NA, storeCAD: [65], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: '5amino1mq', name: '5-Amino-1MQ', sizes: ['10 mg'], group: 'metabolic', aka: ['5-amino', '5 amino', '1mq', '5amino'],
+      what: 'A small molecule, not a peptide.', status: NA, storeCAD: [100] },
+    { k: 'klow', name: 'KLOW blend', sizes: ['80 mg'], group: 'recovery', aka: ['klow'],
+      what: 'A blend of peptides. [Exact contents: confirm with Grace. Her store page does not list them.]', status: NA, storeCAD: [170], pageIssue: 'Page has empty dosage and cycle fields and placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'bpc157', name: 'BPC-157', sizes: ['10 mg'], group: 'recovery', aka: ['bpc', 'bpc 157', 'bpc157'],
+      what: 'A lab-made peptide based on a fragment of a protein found in the stomach.', status: NA, storeCAD: [80] },
+    { k: 'tb500', name: 'TB-500', sizes: ['10 mg'], group: 'recovery', aka: ['tb500', 'tb 500', 'tb-500', 'thymosin beta'],
+      what: 'A lab-made peptide based on part of thymosin beta-4, a protein the body makes.', status: NA, storeCAD: [90] },
+    { k: 'wolverine', name: 'Wolverine blend', sizes: ['10 mg', '20 mg'], group: 'recovery', aka: ['wolverine', 'bpc tb', 'bpc + tb'],
+      what: 'A blend of BPC-157 and TB-500.', status: NA, storeCAD: [100, 195] },
+    { k: 'glow', name: 'GLOW blend', sizes: ['70 mg'], group: 'skin', aka: ['glow', 'bpc tb ghk'],
+      what: 'A blend of BPC-157, TB-500 and GHK-Cu.', status: NA, storeCAD: [150] },
+    { k: 'kpv', name: 'KPV', sizes: ['10 mg'], group: 'recovery', aka: ['kpv'],
+      what: 'A three-amino-acid fragment of a hormone called alpha-MSH.', status: NA, storeCAD: [90] },
+    { k: 'thymosina1', name: 'Thymosin Alpha-1', sizes: ['10 mg'], group: 'recovery', aka: ['thymosin alpha', 'ta1', 'ta-1', 'thymalfasin', 'zadaxin'],
+      what: 'Also called thymalfasin. It is approved as a medicine in some countries.', status: 'Not approved in the US. [Confirm Canadian status]', storeCAD: [90], pageIssue: 'Page shows the TB-500 description by mistake.' },
+    { k: 'hgh', name: 'HGH (human growth hormone)', sizes: ['100 iu [store page also says 1000 iu: confirm]'], group: 'gh', aka: ['hgh', 'growth hormone', 'somatropin'],
+      what: 'Human growth hormone (somatropin). A prescription-only medicine for specific diagnosed conditions.', status: 'A licensed clinician decides if it is ever appropriate.', storeCAD: [200], pageIssue: 'Title says 100 iu, description says 1000 iu.' },
+    { k: 'cjc', name: 'CJC-1295', sizes: ['with DAC 5 mg', 'without DAC 10 mg'], group: 'gh', aka: ['cjc', 'cjc-1295', 'cjc 1295', 'mod grf', 'dac'],
+      what: 'Lab-made versions of growth-hormone-releasing hormone. "DAC" is an add-on that makes it last longer in the body.', status: NA, storeCAD: [100, 100] },
+    { k: 'ipamorelin', name: 'Ipamorelin', sizes: ['10 mg'], group: 'gh', aka: ['ipa', 'ipamorelin', 'ipamoreline'],
+      what: 'A lab-made peptide in the growth-hormone secretagogue family.', status: NA, storeCAD: [110] },
+    { k: 'igf1lr3', name: 'IGF-1 LR3', sizes: ['[size not listed on store page]'], group: 'gh', aka: ['igf', 'igf-1', 'igf1', 'lr3'],
+      what: 'A lab-made, longer-lasting version of insulin-like growth factor 1.', status: NA, storeCAD: [110], pageIssue: 'No vial size listed.' },
+    { k: 'epitalon', name: 'Epitalon', sizes: ['10 mg', '50 mg'], group: 'longevity', aka: ['epitalon', 'epithalon', 'epithalamin'],
+      what: 'A lab-made peptide made of four amino acids.', status: NA, storeCAD: [60, 200] },
+    { k: 'motsc', name: 'MOTS-c', sizes: ['10 mg', '40 mg'], group: 'longevity', aka: ['mots', 'mots-c', 'motsc'],
+      what: 'A peptide the body makes in its mitochondria, the parts of cells that make energy.', status: NA, storeCAD: [75, 125] },
+    { k: 'ss31', name: 'SS-31', sizes: ['10 mg'], group: 'longevity', aka: ['ss31', 'ss-31', 'elamipretide'],
+      what: 'Also called elamipretide.', status: '[Regulatory status: confirm before launch]', storeCAD: [75] },
+    { k: 'nad', name: 'NAD+', sizes: ['1000 mg'], group: 'longevity', aka: ['nad', 'nad+', 'nicotinamide'],
+      what: 'A coenzyme found in every living cell. It is not a peptide.', status: 'A licensed clinician decides if it is right for you.', storeCAD: [190] },
+    { k: 'glutathione', name: 'Glutathione', sizes: ['1500 mg'], group: 'longevity', aka: ['glutathione', 'gsh'],
+      what: 'A small peptide of three amino acids that the body makes naturally.', status: 'A licensed clinician decides if it is right for you.', storeCAD: [85] },
+    { k: 'semax', name: 'Semax', sizes: ['10 mg'], group: 'mind', aka: ['semax'],
+      what: 'A lab-made peptide developed in Russia, where it is registered as a medicine.', status: NA, storeCAD: [75] },
+    { k: 'selank', name: 'Selank', sizes: ['10 mg'], group: 'mind', aka: ['selank'],
+      what: 'A lab-made peptide developed in Russia, where it is registered as a medicine.', status: NA, storeCAD: [75] },
+    { k: 'oxytocin', name: 'Oxytocin', sizes: ['2 mg'], group: 'mind', aka: ['oxytocin', 'pitocin'],
+      what: 'A hormone the body makes. It is also a prescription medicine used in hospitals.', status: 'A licensed clinician decides if it is ever appropriate.', storeCAD: [80] },
+    { k: 'ghkcu', name: 'GHK-Cu', sizes: ['50 mg', '100 mg'], group: 'skin', aka: ['ghk', 'ghk-cu', 'ghkcu', 'copper peptide'],
+      what: 'A copper-bound peptide of three amino acids. It is widely used in cosmetic skin products.', status: 'A licensed clinician decides if an injectable plan is right for you.', storeCAD: [50, 100], pageIssue: 'The 50 mg page shows the Ipamorelin summary by mistake.' },
+    { k: 'pt141', name: 'PT-141', sizes: ['10 mg'], group: 'intimacy', aka: ['pt141', 'pt-141', 'pt 141', 'bremelanotide', 'vyleesi'],
+      what: 'Also called bremelanotide, the active ingredient in the FDA-approved prescription medicine Vyleesi.', status: 'A compounded version is not the same as an FDA-approved medicine.', storeCAD: [50] },
+    { k: 'melanotan2', name: 'Melanotan II', sizes: ['10 mg'], group: 'skin', aka: ['melanotan', 'mt2', 'mt-2', 'mt ii', 'tanning'],
+      what: 'A lab-made version of a hormone involved in skin colour.', status: 'Not approved as a medicine. Health regulators have warned the public about it. [Confirm before PEPTICITY lists it]', storeCAD: [50], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'bacwater', name: 'Bacteriostatic water (Pfizer)', sizes: ['30 ml'], group: 'supplies', aka: ['bac water', 'bacteriostatic', 'water'],
+      what: 'Sterile water with a preservative, used by pharmacies and clinicians.', status: 'How any product is prepared and used comes from your clinician and pharmacy.', storeCAD: [30] }
+  ];
+  var GROUPS = [
+    ['metabolic', 'Metabolic and weight'], ['recovery', 'Recovery and repair'], ['gh', 'Growth hormone family'],
+    ['longevity', 'Longevity and cellular health'], ['mind', 'Focus and mood'], ['skin', 'Skin'], ['intimacy', 'Intimacy'], ['supplies', 'Supplies']
+  ];
+  W.PEPINV = { products: P, groups: GROUPS, source: 'northernpeptides.st', pulled: '2026-10-26', listings: 36,
+    // since the 29 Sept read: SLU-PP-332 (10 mg) is no longer listed on her store
+    removed: ['SLU-PP-332'] };
+  if (typeof module === 'object' && module.exports) module.exports = W.PEPINV;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+const GROUPN = Object.fromEntries(PEPINV.groups);
+const IND = PEPINV.products.map(p => ({ name: p.name, cat: p.group, group: GROUPN[p.group] || '', range: p.sizes.join(' \u00b7 '), what: p.what, peak: [] }));
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+const SAMPLE = [];
+const MONTHS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+(function () {
+  const $ = id => document.getElementById(id);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const ease = x => x * x * (3 - 2 * x);
+  const hasGsap = typeof gsap !== 'undefined';
+  const mobile = window.matchMedia('(max-width: 640px)').matches;
+  const D = window.__descent = { t: 0, v: 0, step: -1, reduce: reduceMotion, mobile };
+
+  // smooth scroll (Lenis) synced to GSAP's ticker
+  let lenis = null;
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger, SplitText);
+  if (!reduceMotion && typeof Lenis !== 'undefined' && hasGsap) {
+    lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+  D.lenis = lenis;
+  document.querySelectorAll('[data-link]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); const el = id && document.querySelector(id); if (!el) return;
+    e.preventDefault(); if (lenis) lenis.scrollTo(el, { duration: 2.2, easing: t => 1 - Math.pow(1 - t, 4) }); else el.scrollIntoView();
+  }));
+
+  // cached geometry (measured on load/resize only \u2014 never inside scroll handlers)
+  let geo = {};
+  function measure() {
+    const j = $('journey'), s = $('skyline');
+    const top = j.getBoundingClientRect().top + window.scrollY;
+    geo = { vh: window.innerHeight, jTop: top, jEnd: top + j.offsetHeight - window.innerHeight, sEnd: s.getBoundingClientRect().top + window.scrollY + s.offsetHeight - window.innerHeight * .4 };
+  }
+  measure(); window.addEventListener('resize', () => { measure(); if (hasGsap) ScrollTrigger.refresh(); }, { passive: true });
+
+  const STEPS = [...document.querySelectorAll('.step')];
+  const NSTEP = STEPS.length;
+  // scroll-scrubbed word reveal: split headings once
+  const words = STEPS.map(st => {
+    const h = st.querySelector('h2');
+    if (hasGsap) { const sp = new SplitText(h, { type: 'words', wordsClass: 'w' }); return sp.words; }
+    return [];
+  });
+  const card = $('stepcard'), railFill = $('railFill'), rail = $('rail');
+  rail.insertAdjacentHTML('beforeend', ['Assess', 'Review', 'Decide', 'Prepare', 'Test', 'Deliver'].map((n, i) => `<span style="top:${(i + .5) / 6 * 100}%">0${i + 1} ${n}</span>`).join(''));
+  const railLabels = [...rail.querySelectorAll('span')];
+  const floorNum = $('floorNum'), floorArrow = $('floorArrow'), alt = $('alt');
+  const epNum = $('epNum'), epArrow = $('epArrow'), scrim = $('scrim');
+  let lastScrim = -1, vsLast = -1; const vs = $('vialshot'), vsImg = vs.querySelector('img');
+  let lastFloor = '', lastAlt = '', lastHere = -1;
+
+  // elevator-panel menu: one brushed-metal button per floor (scene), flies the camera there
+  const FLOORS = [
+    { k: '33', l: 'Rooftop', s: 'Start' },
+    { k: '30', l: 'Your assessment', s: '01 \u00b7 Assess', step: 0 }, { k: '25', l: 'The clinician', s: '02 \u00b7 Review', step: 1 },
+    { k: '19', l: 'Yes or no', s: '03 \u00b7 Decide', step: 2 }, { k: '14', l: 'The pharmacy', s: '04 \u00b7 Prepare', step: 3 },
+    { k: '08', l: 'The lot test', s: '05 \u00b7 Test', step: 4 }, { k: 'G', l: 'Your door', s: '06 \u00b7 Deliver', step: 5 },
+    { k: 'PL', l: 'The list', s: 'All peptides', sel: '#skyline' }, { k: 'LT', l: 'Lot testing', s: 'Check us', sel: '#promise' },
+    { k: '$', l: 'Membership', s: 'One price', sel: '#pricing' }, { k: 'GO', l: 'Start', s: 'Free assessment', sel: '#area' },
+  ];
+  const SECT = FLOORS.filter(f => f.sel).map(f => ({ sel: f.sel, top: 0 }));
+  const measureSect = () => SECT.forEach(s => { s.top = document.querySelector(s.sel).getBoundingClientRect().top + window.scrollY; });
+  measureSect(); window.addEventListener('resize', measureSect, { passive: true });
+  const epGrid = $('epGrid'), panel = $('epanel'), fBtn = $('floorsBtn');
+  epGrid.innerHTML = FLOORS.map((f, i) => `<button class="fbtn" type="button" data-i="${i}"><span class="key" aria-hidden="true">${f.k}</span><span>${esc(f.l)}<small>${esc(f.s)}</small></span></button>`).join('');
+  const fbtns = [...epGrid.querySelectorAll('.fbtn')];
+  function goFloor(f) {
+    let y;
+    if (f.step !== undefined) y = geo.jTop + (f.step + .5) / NSTEP * (geo.jEnd - geo.jTop);
+    else if (f.sel) y = document.querySelector(f.sel).getBoundingClientRect().top + window.scrollY;
+    else y = 0;
+    const dist = Math.abs(y - (lenis ? lenis.animatedScroll : window.scrollY));
+    if (lenis) lenis.scrollTo(y, { duration: Math.min(3.2, 1.2 + dist / 4000), easing: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 });
+    else window.scrollTo(0, y);
+  }
+  let openState = false;
+  function openPanel() {
+    if (openState) return; openState = true; panel.hidden = false; fBtn.setAttribute('aria-expanded', 'true');
+    void panel.offsetWidth; panel.classList.add('open'); // flush styles so the doors animate without waiting on a frame
+    (epGrid.querySelector('.fbtn.here') || fbtns[0]).focus({ preventScroll: true });
+  }
+  function closePanel(returnFocus) {
+    if (!openState) return; openState = false; panel.classList.remove('open'); fBtn.setAttribute('aria-expanded', 'false');
+    setTimeout(() => { if (!openState) panel.hidden = true; }, reduceMotion ? 0 : 700);
+    if (returnFocus) fBtn.focus({ preventScroll: true });
+  }
+  fBtn.addEventListener('click', () => openState ? closePanel(false) : openPanel());
+  $('epClose').addEventListener('click', () => closePanel(true));
+  epGrid.addEventListener('click', e => {
+    const b = e.target.closest('.fbtn'); if (!b) return;
+    fbtns.forEach(x => x.classList.toggle('pressed', x === b));
+    setTimeout(() => b.classList.remove('pressed'), 420);
+    goFloor(FLOORS[+b.dataset.i]);
+    setTimeout(() => closePanel(false), reduceMotion ? 0 : 380);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && openState) { e.preventDefault(); closePanel(true); }
+    if (openState && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      const i = fbtns.indexOf(document.activeElement); if (i < 0) return; e.preventDefault();
+      const d = e.key === 'ArrowDown' ? 2 : e.key === 'ArrowUp' ? -2 : e.key === 'ArrowRight' ? 1 : -1;
+      fbtns[(i + d + fbtns.length) % fbtns.length].focus();
+    }
+    if (openState && e.key === 'Tab') { // keep focus inside the panel while open
+      const f = [...fbtns, $('epClose')], i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+  document.addEventListener('pointerdown', e => { if (openState && !panel.contains(e.target) && !fBtn.contains(e.target)) closePanel(false); });
+
+  const FP = location.search.includes('perf') ? (window.__fperf = { n: 0, ms: 0, max: 0 }) : null;
+  function frame() {
+    const f0 = FP ? performance.now() : 0;
+    const y = lenis ? lenis.animatedScroll : window.scrollY;
+    D.v = lenis ? lenis.velocity : 0;
+    // map scroll to one camera timeline 0..1
+    let t, p = 0;
+    if (y < geo.jTop) t = 0.04 * clamp(y / Math.max(1, geo.jTop), 0, 1);
+    else if (y <= geo.jEnd) { p = (y - geo.jTop) / Math.max(1, geo.jEnd - geo.jTop); t = 0.04 + 0.70 * p; }
+    else { p = 1; t = 0.74 + 0.26 * clamp((y - geo.jEnd) / Math.max(1, geo.sEnd - geo.jEnd), 0, 1); }
+    if (reduceMotion && y >= geo.jTop && y <= geo.jEnd) { const s = Math.min(NSTEP - 1, Math.floor(p * NSTEP)); t = 0.04 + 0.70 * (s + .5) / NSTEP; }
+    D.t = t;
+    { const o = clamp((t - .43) / .07, 0, 1) * (1 - clamp((t - .78) / .07, 0, 1)); if (o !== vsLast) { vs.style.opacity = o.toFixed(3); vs.style.visibility = o > .001 ? 'visible' : 'hidden'; vsLast = o; } vsImg.style.transform = `scale(${(1.1 - .1 * clamp((t - .43) / .3, 0, 1)).toFixed(4)})`; }
+    // step card: visible only inside the descent, each step scrubbed in and out
+    const inJ = y >= geo.jTop - geo.vh * .3 && y <= geo.jEnd + geo.vh * .3;
+    const cardA = inJ ? clamp(Math.min((y - geo.jTop + geo.vh * .3) / (geo.vh * .3), (geo.jEnd + geo.vh * .3 - y) / (geo.vh * .3)), 0, 1) : 0;
+    card.style.opacity = cardA.toFixed(3);
+    card.style.transform = `translate3d(0,${((1 - cardA) * 30).toFixed(1)}px,0)`;
+    const active = y >= geo.jTop && y <= geo.jEnd ? Math.min(NSTEP - 1, Math.floor(p * NSTEP)) : -1;
+    for (let i = 0; i < NSTEP; i++) {
+      const local = p * NSTEP - i; // 0..1 while this step owns the scroll
+      // fades overlap so the card is never empty between steps
+      const vin = i === 0 ? 1 : ease(clamp((local + .1) / .24, 0, 1)), vout = ease(clamp((local - .82) / .24, 0, 1));
+      const show = i === NSTEP - 1 ? vin : vin * (1 - vout);
+      const st = STEPS[i];
+      st.style.visibility = show > .002 ? 'visible' : 'hidden';
+      st.style.opacity = show.toFixed(3);
+      st.style.transform = `translate3d(0,${((1 - vin) * 22 - vout * 22).toFixed(1)}px,0)`;
+      const ws = words[i];
+      for (let k = 0; k < ws.length; k++) {
+        const wk = ease(clamp((local - k * .025) / .2, 0, 1));
+        ws[k].style.transform = `translate3d(0,${((1 - wk) * 0.6).toFixed(3)}em,0)`;
+        ws[k].style.opacity = wk.toFixed(3);
+      }
+    }
+    if (active !== D.step) { D.step = active; railLabels.forEach((l, i) => l.classList.toggle('on', i === active)); }
+    railFill.style.transform = `scaleY(${p.toFixed(4)})`;
+    // after the descent the city stays as a backdrop, dimmed so the sections read cleanly
+    const sc = Math.round(clamp((y - geo.jEnd) / (geo.vh * .7), 0, 1) * 100) / 100;
+    if (sc !== lastScrim) { scrim.style.opacity = sc; lastScrim = sc; }
+    // elevator floor indicator: descends through the journey, rises after
+    let floor, up = false;
+    if (y < geo.jTop) floor = '33'; else if (y <= geo.jEnd) { const f = Math.round(33 - p * 33); floor = f <= 0 ? 'G' : String(f).padStart(2, '0'); } else { up = true; const q = clamp((y - geo.jEnd) / Math.max(1, geo.sEnd - geo.jEnd), 0, 1); const f = Math.round(q * 33); floor = f <= 0 ? 'G' : String(f).padStart(2, '0'); }
+    if (floor !== lastFloor) { floorNum.textContent = floor; floorArrow.classList.toggle('up', up); epNum.textContent = floor; epArrow.classList.toggle('up', up); lastFloor = floor; }
+    // which elevator button is "here"
+    let here;
+    if (y < geo.jTop - geo.vh * .5) here = 0;
+    else if (y <= geo.jEnd) here = 1 + Math.min(NSTEP - 1, Math.floor(p * NSTEP));
+    else { here = 1 + NSTEP; for (let k = SECT.length - 1; k >= 0; k--) if (y >= SECT[k].top - geo.vh * .5) { here = 1 + NSTEP + k; break; } }
+    if (here !== lastHere) { fbtns.forEach((b, k) => { b.classList.toggle('here', k === here); if (k === here) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); }); lastHere = here; }
+    const a = Math.round(280 * Math.pow(1 - clamp(p, 0, 1), 1.6) + 1);
+    const as = y > geo.jEnd ? '\u2014' : a + ' m';
+    if (as !== lastAlt) { alt.textContent = as; lastAlt = as; }
+    if (FP) { const d = performance.now() - f0; FP.n++; FP.ms += d; FP.max = Math.max(FP.max, d); }
+  }
+  if (hasGsap) gsap.ticker.add(frame); else { const loop = () => { frame(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+
+  // hero intro: lines rise out of masks, rest follows
+  if (hasGsap && !reduceMotion) {
+    const sp = new SplitText('#heroTitle', { type: 'lines,words', linesClass: 'line', mask: 'lines' });
+    gsap.set('.rv-hero', { opacity: 0, y: 26 });
+    gsap.timeline({ delay: .25 })
+      .from(sp.words, { yPercent: 115, duration: 1.4, ease: 'expo.out', stagger: .045 })
+      .to('.rv-hero', { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: .12 }, '-=.9');
+    // hero drifts and blurs away as the camera starts to fall
+    gsap.to('.hero', { yPercent: -18, opacity: 0, filter: 'blur(6px)', ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+    // section reveals \u2014 once, no re-triggering
+    gsap.utils.toArray('.rv').forEach(el => gsap.to(el, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
+    gsap.utils.toArray('section.block .h2').forEach(h => {
+      const s = new SplitText(h, { type: 'lines', linesClass: 'line', mask: 'lines' });
+      gsap.from(s.lines, { yPercent: 100, duration: 1.3, ease: 'expo.out', stagger: .1, scrollTrigger: { trigger: h, start: 'top 88%', once: true } });
+    });
+  } else document.querySelectorAll('.rv,.rv-hero').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+
+  // skyline facade: 33 lit windows
+  const fac = $('facade');
+  fac.innerHTML = IND.map((it, i) => `<div class="wcell"><button type="button" class="win" data-i="${i}" aria-label="${esc(it.name)}: ${esc(it.range)}"><span class="pane"></span></button><span class="wlabel">${esc(it.name)}</span></div>`).join('');
+  const wins = [...fac.querySelectorAll('.win')];
+  const lightUp = () => {
+    const order = wins.map((w, i) => i).sort((a, b) => ((a * 7919) % IND.length) - ((b * 7919) % IND.length));
+    order.forEach((i, k) => setTimeout(() => wins[i].classList.add('lit'), reduceMotion ? 0 : 40 * k));
+  };
+  if (hasGsap) ScrollTrigger.create({ trigger: fac, start: 'top 80%', once: true, onEnter: lightUp }); else lightUp();
+  if (!reduceMotion) setInterval(() => { if (document.hidden) return; const w = wins[(Math.random() * wins.length) | 0]; if (!w.classList.contains('lit')) return; w.classList.remove('flick'); void w.offsetWidth; w.classList.add('flick'); }, 1700);
+  const tip = $('wtip');
+  function showTip(w) {
+    const it = IND[+w.dataset.i];
+    tip.innerHTML = `<p class="t">${esc(it.name)}</p><p class="c">${esc(it.group)}</p><p class="v">${esc(it.range)}</p><p class="w">${esc(it.what)}</p>`;
+    const wr = w.getBoundingClientRect(), pr = fac.parentElement.getBoundingClientRect();
+    let left = wr.left - pr.left + wr.width / 2 - 130; left = clamp(left, 0, pr.width - 260);
+    tip.style.left = left + 'px'; tip.style.top = (wr.bottom - pr.top + 14) + 'px';
+    tip.classList.add('on'); wins.forEach(x => x.classList.toggle('sel', x === w));
+  }
+  fac.addEventListener('pointerover', e => { const w = e.target.closest('.win'); if (w) showTip(w); });
+  fac.addEventListener('focusin', e => { const w = e.target.closest('.win'); if (w) showTip(w); });
+  fac.addEventListener('click', e => { const w = e.target.closest('.win'); if (w) showTip(w); });
+  fac.addEventListener('pointerleave', () => { tip.classList.remove('on'); wins.forEach(x => x.classList.remove('sel')); });
+  $('filters').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    wins.forEach(w => { const c = IND[+w.dataset.i].cat; w.classList.toggle('dim', b.dataset.f !== 'all' && c !== b.dataset.f); });
+  });
+
+  // area check
+  
+  $('check').addEventListener('submit', e => {
+    e.preventDefault();
+    const code = $('zip').value.trim();
+    if (!code) { $('reply').textContent = 'Add your postal or ZIP code so we can check that we ship there.'; $('zip').focus(); return; }
+    $('reply').innerHTML = `Preview only: nothing was sent. On the live site this opens your free assessment, already set to <b>${esc($('ind').selectedOptions[0].textContent)}</b>, and checks that we ship to <b>${esc(code.toUpperCase())}</b>. [Availability check connects here]`;
+  });
+
+  // footer skyline draws itself
+  const fp = $('footpath'), fsky = $('footsky');
+  const len = fp.getTotalLength(); fp.style.strokeDasharray = len; fp.style.strokeDashoffset = len;
+  const drawFoot = () => { fp.style.transition = reduceMotion ? 'none' : 'stroke-dashoffset 3.2s cubic-bezier(.6,0,.2,1)'; fp.style.strokeDashoffset = 0; fsky.classList.add('in'); };
+  if (hasGsap) ScrollTrigger.create({ trigger: fsky, start: 'top 95%', once: true, onEnter: drawFoot }); else drawFoot();
+
+  // cursor: ring that grows over anything clickable (desktop only)
+  const cur = $('cur');
+  if (!reduceMotion && window.matchMedia('(hover:hover)').matches) {
+    let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy;
+    window.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; cur.classList.add('on'); D.px = e.clientX / innerWidth - .5; D.py = e.clientY / innerHeight - .5; }, { passive: true });
+    document.addEventListener('pointerover', e => cur.classList.toggle('big', !!e.target.closest('a,button,select,input')));
+    document.addEventListener('pointerleave', () => cur.classList.remove('on'));
+    const loop = () => { cx += (tx - cx) * .18; cy += (ty - cy) * .18; cur.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0)`; requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener('load', () => { measure(); measureSect(); if (hasGsap) ScrollTrigger.refresh(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); measureSect(); if (hasGsap) ScrollTrigger.refresh(); });
+})();
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const D = window.__descent || { t: 0, v: 0, step: -1 };
+const canvas = document.getElementById('scene');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: !D.mobile, powerPreference: 'high-performance' });
+} catch (e) { document.documentElement.classList.add('nogl'); throw e; }
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, D.mobile ? 1.25 : 2));
+renderer.setSize(innerWidth, innerHeight, false);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+const BG = new THREE.Color(0x070708);
+scene.background = BG;
+scene.fog = new THREE.FogExp2(0x070708, D.mobile ? 0.0105 : 0.0085);
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.05, 600);
+
+scene.add(new THREE.HemisphereLight(0xaab2bd, 0x050506, 0.32));
+const moon = new THREE.DirectionalLight(0xdfe4ea, 0.55); moon.position.set(-40, 80, 50); scene.add(moon);
+
+// window texture for the city: warm-white and silver lights on dark glass
+function windowTexture() {
+  const c = document.createElement('canvas'); c.width = 128; c.height = 512;
+  const g = c.getContext('2d'); g.fillStyle = '#050506'; g.fillRect(0, 0, 128, 512);
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let y = 0; y < 32; y++) for (let x = 0; x < 6; x++) {
+    const r = rnd();
+    if (r < .34) { g.fillStyle = r < .06 ? '#c9d2de' : r < .25 ? '#f3ece2' : '#8c8780'; g.globalAlpha = .55 + rnd() * .45; g.fillRect(8 + x * 20, 6 + y * 16, 12, 9); }
+  }
+  g.globalAlpha = 1;
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; t.magFilter = THREE.LinearFilter; return t;
+}
+const winTex = windowTexture();
+const towerMat = new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: .62, metalness: .35, emissive: 0xffffff, emissiveMap: winTex, emissiveIntensity: 1.15 });
+
+// instanced skyline
+const step = D.mobile ? 9 : 6.5;
+const spots = [];
+for (let x = -78; x <= 78; x += step) for (let z = -90; z <= 70; z += step) {
+  if (Math.abs(x) < 6.5 && z > -8) continue;          // the street we fall into
+  if (Math.abs(x) < 8 && Math.abs(z) < 8) continue;    // the focus building's lot
+  spots.push([x + (Math.random() - .5) * 1.2, z + (Math.random() - .5) * 1.2]);
+}
+const towers = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), towerMat, spots.length);
+const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), pos = new THREE.Vector3();
+spots.forEach(([x, z], i) => {
+  const far = THREE.MathUtils.clamp((40 - z) / 130, 0, 1);
+  const h = 6 + Math.pow(Math.random(), 1.6) * (18 + far * 42);
+  const w = step * (.55 + Math.random() * .25);
+  sc.set(w, h, w * (.8 + Math.random() * .4)); pos.set(x, h / 2, z); q.identity();
+  towers.setMatrixAt(i, m4.compose(pos, q, sc));
+});
+scene.add(towers);
+
+// ground + street lanes + street lights
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshStandardMaterial({ color: 0x08090a, roughness: .95 }));
+ground.rotation.x = -Math.PI / 2; scene.add(ground);
+const laneMat = new THREE.MeshBasicMaterial({ color: 0x6a6d72, transparent: true, opacity: .35 });
+[-3.6, 3.6].forEach(x => { const l = new THREE.Mesh(new THREE.PlaneGeometry(.08, 80), laneMat); l.rotation.x = -Math.PI / 2; l.position.set(x, .02, 34); scene.add(l); });
+function glowSprite(color, size) {
+  const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, color); gr.addColorStop(.25, color.replace(/[\d.]+\)$/, '.45)')); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+  const t = new THREE.CanvasTexture(c);
+  return new THREE.SpriteMaterial({ map: t, color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 1, size });
+}
+const lampMat = glowSprite('rgba(243,236,226,1)');
+for (let z = 8; z < 74; z += 5) [-4.4, 4.4].forEach(x => { const s = new THREE.Sprite(lampMat); s.position.set(x, 2.2, z); s.scale.setScalar(1.6); scene.add(s); });
+
+// distant stars
+{
+  const n = D.mobile ? 300 : 900, g = new THREE.BufferGeometry(), a = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { const th = Math.random() * Math.PI * 2, ph = Math.random() * .45, r = 380; a[i * 3] = Math.cos(th) * Math.sin(ph + .9) * r; a[i * 3 + 1] = 60 + Math.cos(ph) * 180; a[i * 3 + 2] = Math.sin(th) * Math.sin(ph + .9) * r - 60; }
+  g.setAttribute('position', new THREE.BufferAttribute(a, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xd9dce0, size: 1.1, sizeAttenuation: false, transparent: true, opacity: .55, fog: false })));
+}
+
+// the focus building, with one room open at the lit window
+const shellMat = towerMat;
+const wallMat = new THREE.MeshStandardMaterial({ color: 0x1a1817, roughness: .9, metalness: .05 });
+const B = new THREE.Group(); scene.add(B);
+const box = (w, h, d, x, y, z, m) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); B.add(o); return o; };
+box(9, 4.6, 9, 0, 2.3, 0, shellMat);                  // lower floors
+box(9, 17.6, 9, 0, 8.4 + 8.8, 0, shellMat);           // upper floors
+box(9, 3.8, .3, 0, 6.5, -4.35, wallMat);              // back wall
+box(.3, 3.8, 9, -4.35, 6.5, 0, wallMat); box(.3, 3.8, 9, 4.35, 6.5, 0, wallMat);
+box(2.5, 3.8, .3, -3.25, 6.5, 4.35, wallMat); box(2.5, 3.8, .3, 3.25, 6.5, 4.35, wallMat);
+box(4, .6, .3, 0, 4.9, 4.35, wallMat); box(4, .4, .3, 0, 8.2, 4.35, wallMat);
+const rimMat = new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xd4ff3a, emissiveIntensity: .15, roughness: .4 });
+[[4.1, .06, 0, 5.2], [4.1, .06, 0, 8.0], [.06, 2.86, -2.02, 6.6], [.06, 2.86, 2.02, 6.6]].forEach(([w, h, x, y]) => { const r = new THREE.Mesh(new THREE.BoxGeometry(w, h, .06), rimMat); r.position.set(x, y, 4.52); B.add(r); });
+const winGlow = new THREE.Sprite(glowSprite('rgba(212,255,58,1)')); winGlow.position.set(0, 6.6, 4.7); winGlow.scale.set(9, 6, 1); winGlow.material.opacity = 0; B.add(winGlow);
+// room
+const floorM = new THREE.Mesh(new THREE.PlaneGeometry(8.4, 8.4), new THREE.MeshStandardMaterial({ color: 0x141211, roughness: .8 })); floorM.rotation.x = -Math.PI / 2; floorM.position.set(0, 4.61, 0); B.add(floorM);
+const deskMat = new THREE.MeshStandardMaterial({ color: 0x2a2522, roughness: .45, metalness: .15 });
+box(3.4, .12, 1.7, 0, 5.62, -1.5, deskMat);
+[[-1.55, -.75], [1.55, -.75], [-1.55, -2.25], [1.55, -2.25]].forEach(([x, z]) => box(.08, .98, .08, x, 5.1, z, new THREE.MeshStandardMaterial({ color: 0x8a8d92, metalness: .9, roughness: .25 })));
+const lamp = new THREE.PointLight(0xf3ece2, 9, 9, 1.6); lamp.position.set(-1.1, 7.2, -1.8); B.add(lamp);
+// desk lamp: steel base + stem, matte black shade, warm glow under it (no bare bulb)
+const steel = new THREE.MeshStandardMaterial({ color: 0x8a8d92, metalness: .9, roughness: .3 });
+const lBase = new THREE.Mesh(new THREE.CylinderGeometry(.22, .26, .05, 24), steel); lBase.position.set(-1.1, 5.705, -1.8); B.add(lBase);
+const lStem = new THREE.Mesh(new THREE.CylinderGeometry(.018, .018, 1.6, 8), steel); lStem.position.set(-1.1, 6.5, -1.8); B.add(lStem);
+const lShade = new THREE.Mesh(new THREE.ConeGeometry(.3, .32, 28, 1, true), new THREE.MeshStandardMaterial({ color: 0x0d0d0e, metalness: .4, roughness: .5, side: THREE.DoubleSide, emissive: 0xf3ece2, emissiveIntensity: .04 })); lShade.position.set(-1.1, 7.36, -1.8); B.add(lShade);
+const lGlow = new THREE.Sprite(glowSprite('rgba(243,236,226,.9)')); lGlow.position.set(-1.1, 7.12, -1.8); lGlow.scale.setScalar(.9); lGlow.material.opacity = .55; B.add(lGlow);
+// phone with a live screen
+const scr = document.createElement('canvas'); scr.width = 512; scr.height = 1024;
+const sg = scr.getContext('2d');
+const scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace; scrTex.anisotropy = 4;
+const phone = new THREE.Group(); phone.position.set(0, 5.69, -1.5); phone.rotation.y = .18; B.add(phone);
+phone.add(new THREE.Mesh(new RoundedBoxGeometry(.92, .07, 1.86, 4, .09), new THREE.MeshStandardMaterial({ color: 0x1c1d20, metalness: .8, roughness: .28 })));
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(.84, 1.76), new THREE.MeshBasicMaterial({ map: scrTex, toneMapped: false }));
+screen.rotation.x = -Math.PI / 2; screen.position.y = .037; phone.add(screen);
+const phoneGlow = new THREE.PointLight(0xd4ff3a, 0, 3, 2); phoneGlow.position.set(0, .6, 0); phone.add(phoneGlow);
+function roundRect(x, y, w, h, r) { sg.beginPath(); sg.moveTo(x + r, y); sg.arcTo(x + w, y, x + w, y + h, r); sg.arcTo(x + w, y + h, x, y + h, r); sg.arcTo(x, y + h, x, y, r); sg.arcTo(x, y, x + w, y, r); sg.closePath(); }
+let lastScreen = '';
+function drawScreen(stage, pulse) {
+  const key = stage + ':' + (stage >= 4 ? Math.round(pulse * 8) : 0);
+  if (key === lastScreen) return; lastScreen = key;
+  sg.fillStyle = '#0a0a0b'; sg.fillRect(0, 0, 512, 1024);
+  const gr = sg.createLinearGradient(0, 0, 0, 1024); gr.addColorStop(0, '#16171a'); gr.addColorStop(1, '#09090a'); sg.fillStyle = gr; sg.fillRect(0, 0, 512, 1024);
+  sg.fillStyle = '#eceae6'; sg.font = '300 128px Geist, Helvetica, Arial'; sg.textAlign = 'center'; sg.fillText('9:41', 256, 250);
+  sg.font = '400 26px Geist, Helvetica, Arial'; sg.fillStyle = '#9a9da3'; sg.fillText('Tuesday', 256, 300);
+  if (stage < 4) { sg.font = '400 24px Geist, Helvetica, Arial'; sg.fillStyle = '#5d6066'; sg.fillText('No new notifications', 256, 560); return; }
+  if (stage === 4) {
+    sg.font = '500 22px "Geist Mono", monospace'; sg.fillStyle = '#9a9da3'; sg.fillText('PREPARING YOUR PLAN', 256, 560);
+    sg.strokeStyle = 'rgba(212,255,58,.85)'; sg.lineWidth = 4; sg.beginPath(); sg.arc(256, 640, 34, pulse * Math.PI * 2, pulse * Math.PI * 2 + 4.2); sg.stroke(); return;
+  }
+  // notification card
+  roundRect(36, 470, 440, 330, 34); sg.fillStyle = 'rgba(40,41,45,.96)'; sg.fill();
+  sg.strokeStyle = 'rgba(212,255,58,.55)'; sg.lineWidth = 2; sg.stroke();
+  sg.textAlign = 'left'; sg.font = '500 22px "Geist Mono", monospace'; sg.fillStyle = '#9a9da3'; sg.fillText('PEPTICITY  \u00b7  NOW', 72, 525);
+  sg.font = '600 38px Geist, Helvetica, Arial'; sg.fillStyle = '#eceae6'; sg.fillText('Your plan has shipped', 72, 590);
+  sg.font = '400 28px Geist, Helvetica, Arial'; sg.fillStyle = '#c9ccd1'; sg.fillText('Cold-packed and sealed', 72, 640); sg.fillText('Lot PX-2611-A', 72, 680);
+  roundRect(72, 712, 188, 52, 26); sg.fillStyle = '#1f2124'; sg.fill(); sg.strokeStyle = '#d4ff3a'; sg.lineWidth = 2; sg.stroke();
+  sg.font = '500 24px "Geist Mono", monospace'; sg.fillStyle = '#d4ff3a'; sg.fillText('LOT TESTED', 92, 747);
+  sg.font = '500 24px "Geist Mono", monospace'; sg.fillStyle = '#d4ff3a'; sg.textAlign = 'right'; sg.fillText('', 440, 747);
+  sg.textAlign = 'center'; sg.font = '400 22px Geist, Helvetica, Arial'; sg.fillStyle = '#6e7177'; sg.fillText('A person to call: [phone number]', 256, 860);
+  scrTex.needsUpdate = true;
+}
+drawScreen(0, 0); scrTex.needsUpdate = true;
+
+// the lead itself: a small light that travels just ahead of the camera
+const orb = new THREE.Sprite(glowSprite('rgba(212,255,58,1)')); orb.scale.setScalar(1.6); orb.material.opacity = 0; scene.add(orb);
+
+// one continuous camera move \u2014 keyframes at the six step centres
+const K = [
+  [0.000, [0, 82, 136], [0, 6, -22]],
+  [0.040, [0, 76, 126], [0, 6, -18]],
+  [0.098, [10, 44, 80], [0, 9, 2]],
+  [0.215, [0, 14.5, 42], [0, 8, 2]],
+  [0.332, [0, 7.6, 18.5], [0, 6.6, 4.5]],
+  [0.448, [0, 6.65, 7.2], [0, 6.4, 0]],
+  [0.565, [.25, 7.05, 2.4], [0, 5.72, -1.45]],
+  [0.682, [.05, 7.55, -.95], [0, 5.7, -1.52]],
+  [0.740, [.02, 7.25, -1.32], [0, 5.7, -1.53]],
+  [0.870, [0, 28, 56], [0, 6, 0]],
+  [1.000, [-16, 66, 120], [0, 5, -16]],
+];
+const camCurve = new THREE.CatmullRomCurve3(K.map(k => new THREE.Vector3(...k[1])), false, 'centripetal');
+const lookCurve = new THREE.CatmullRomCurve3(K.map(k => new THREE.Vector3(...k[2])), false, 'centripetal');
+function uAt(t) { // keyframe times \u2192 curve parameter
+  for (let i = 0; i < K.length - 1; i++) if (t <= K[i + 1][0]) { const f = (t - K[i][0]) / (K[i + 1][0] - K[i][0]); return (i + f) / (K.length - 1); }
+  return 1;
+}
+const camPos = new THREE.Vector3(), look = new THREE.Vector3(), tmp = new THREE.Vector3();
+let curT = 0, px = 0, py = 0, fov = 42, last = performance.now(), visible = true;
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) { last = performance.now(); requestAnimationFrame(tick); } });
+
+function resize() { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); }
+window.addEventListener('resize', resize, { passive: true });
+
+const PERF = location.search.includes('perf') ? (window.__perf = { n: 0, js: 0, gpu: 0, jsMax: 0 }) : null;
+function tick(now) {
+  if (!visible) return;
+  const w0 = performance.now();
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  curT += (D.t - curT) * (D.reduce ? 1 : 1 - Math.exp(-dt * 7));
+  const u = uAt(curT);
+  camCurve.getPoint(u, camPos); lookCurve.getPoint(u, look);
+  // pointer parallax \u2014 gentle, eased; fades out close to the phone
+  const near = THREE.MathUtils.smoothstep(curT, .52, .7);
+  px += ((D.px || 0) - px) * (1 - Math.exp(-dt * 3)); py += ((D.py || 0) - py) * (1 - Math.exp(-dt * 3));
+  const amp = (1 - near) * (curT < .2 ? 3.2 : 1.2);
+  camera.position.set(camPos.x + px * amp, camPos.y - py * amp * .6, camPos.z);
+  camera.lookAt(look);
+  // velocity breathes the lens a little
+  const targetFov = 42 + Math.min(7, Math.abs(D.v || 0) * .18) - near * 6;
+  fov += (targetFov - fov) * (1 - Math.exp(-dt * 4));
+  if (Math.abs(camera.fov - fov) > .01) { camera.fov = fov; camera.updateProjectionMatrix(); }
+  // the window lights up once the request arrives
+  const lit = THREE.MathUtils.smoothstep(curT, .06, .11);
+  rimMat.emissiveIntensity = .15 + lit * (1.6 + Math.sin(now * .003) * .25);
+  winGlow.material.opacity = lit * (1 - THREE.MathUtils.smoothstep(curT, .4, .47)) * .55;
+  // the lead orb travels ahead, then sinks into the phone
+  const lead = THREE.MathUtils.clamp(curT + .035, 0, .74);
+  lookCurve.getPoint(uAt(lead), tmp);
+  orb.position.copy(tmp).lerp(camPos, .12);
+  orb.material.opacity = THREE.MathUtils.smoothstep(curT, .07, .12) * (1 - THREE.MathUtils.smoothstep(curT, .66, .72)) * (.75 + Math.sin(now * .006) * .2);
+  orb.scale.setScalar(THREE.MathUtils.lerp(2.4, .35, near));
+  // phone screen: dark \u2192 matching \u2192 the lead lands
+  const stage = curT < .5 ? 0 : curT < .62 ? 4 : 5;
+  drawScreen(stage, (now / 1200) % 1);
+  phoneGlow.intensity = stage === 5 ? 1.4 + Math.sin(now * .004) * .4 : 0;
+  // subtle window flicker in the city
+  towerMat.emissiveIntensity = 1.12 + Math.sin(now * .0011) * .04;
+  const w1 = performance.now();
+  renderer.render(scene, camera);
+  if (PERF) { const j = w1 - w0; PERF.n++; PERF.js += j; PERF.jsMax = Math.max(PERF.jsMax, j); PERF.gpu += performance.now() - w1; }
+  requestAnimationFrame(tick);
+}
+window.__gl = { camera, getT: () => curT };
+requestAnimationFrame(tick);
+</script>
+</body></html>

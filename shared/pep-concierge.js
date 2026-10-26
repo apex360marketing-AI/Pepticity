@@ -22,21 +22,47 @@
       a: 'No. A compounded medicine is prepared by a pharmacy for one patient. It is not FDA-approved, and we never say it is the same as an approved medicine.' },
     { id: 'lot', q: 'How do I check what is in my vial?', k: ['lot', 'certificate', 'coa', 'tested', 'testing', 'purity', 'lab', 'what is in my vial', 'fake'],
       a: 'Every vial has a lot code. Enter it in the lot lookup on The science page to see that lot\'s certificate of analysis.', go: ['#ledger', 'Open the lot lookup'] },
-    { id: 'cost', q: 'What does it cost?', k: ['cost', 'price', 'how much is', 'expensive', 'pay', 'fee', 'insurance'],
+    { id: 'cost', q: 'What does it cost?', k: ['cost', 'price', 'how much is', 'how much does', 'expensive', 'pay', 'fee', 'afford'],
       a: 'The review is free. Membership is $[xx] a month, all-in, and you see the full price before you pay. If peptides aren\'t right for you, you pay nothing. [Confirm pricing with Grace]', go: ['#shop', 'See membership'] },
     { id: 'ship', q: 'Where do you ship?', k: ['ship', 'shipping', 'deliver', 'delivery', 'canada', 'province', 'state', 'usa', 'cold'],
       a: 'Plans ship cold in an insulated case. [States and provinces at launch: confirm with Grace] If you are outside them, you can join the waitlist.' },
-    { id: 'cancel', q: 'Can I cancel?', k: ['cancel', 'stop membership', 'quit', 'refund'],
-      a: 'Yes, in two clicks from your account. No phone call needed. [Refund policy: confirm with Grace]' },
+    { id: 'cancel', q: 'Can I cancel?', k: ['cancel', 'stop membership', 'quit', 'pause'],
+      a: 'Yes, in two clicks from your account. No phone call needed.' },
     { id: 'who', q: 'Who are the clinicians?', k: ['clinician', 'doctor', 'nurse', 'who reviews', 'licensed', 'licence', 'license'],
       a: '[Clinician network: confirm with Grace]. Each clinician\'s licence can be checked with the board that issued it.' },
     { id: 'pharmacy', q: 'Who prepares it?', k: ['pharmacy', 'who makes', 'made', 'prepared', 'manufactur'],
       a: 'A licensed partner pharmacy: [pharmacy name: confirm with Grace].' },
+    { id: 'refund', q: 'Can I get a refund?', k: ['refund', 'money back', 'charged', 'charge back', 'billing'],
+      a: 'If a licensed clinician decides peptides aren\'t right for you, you pay nothing. For anything else about a payment, a person can help at the number below. [Refund policy: confirm with Grace]' },
+    { id: 'labs', q: 'Do I need blood work?', k: ['blood work', 'bloodwork', 'blood test', 'labs', 'lab work', 'lab test', 'requisition'],
+      a: 'Only if your clinician asks for it. If they do, the care team helps you book it. [Lab partner and cost: confirm with Grace]' },
+    { id: 'next', q: 'What happens after the assessment?', k: ['after the assessment', 'after i apply', 'what happens next', 'how long', 'when will', 'hear back', 'wait'],
+      a: 'A licensed clinician reviews your answers and contacts you by phone, video or secure message, whichever you chose. You get a clear yes or no, with the reasons. [Review time: confirm with Grace]' },
+    { id: 'visit', q: 'Do I have to see someone in person?', k: ['in person', 'office', 'clinic visit', 'appointment', 'video', 'telehealth', 'virtual', 'online'],
+      a: 'No. Reviews happen by phone, video or secure messages, whichever you prefer. Labs, if your clinician asks for them, are done at a nearby lab.' },
+    { id: 'followup', q: 'Do I get follow-ups?', k: ['follow up', 'follow-up', 'check in', 'ongoing', 'support', 'questions later'],
+      a: 'Yes. Membership includes clinician follow-ups and a person to call at the number below. [Follow-up schedule: confirm with Grace]' },
+    { id: 'privacy', q: 'Is my information private?', k: ['private', 'privacy', 'my data', 'information safe', 'confidential', 'hipaa', 'phipa', 'share my'],
+      a: 'Your answers go only to the care team and your clinician, and are never sold. [Privacy policy: confirm with counsel]' },
+    { id: 'damaged', q: 'What if my order arrives damaged or warm?', k: ['damaged', 'broken', 'warm', 'leak', 'melted', 'arrived', 'seal broken', 'wrong item', 'missing'],
+      a: 'Keep it sealed and call the care team at the number below. They will arrange a replacement. [Replacement policy: confirm with Grace]' },
+    { id: 'store', q: 'How do I store it?', k: ['store', 'storage', 'fridge', 'refrigerat', 'freeze', 'room temperature', 'travel with'],
+      a: 'Storage instructions come with your plan from the pharmacy. If anything is unclear, call the care team.' },
+    { id: 'insurance', q: 'Do you take insurance?', k: ['insurance', 'hsa', 'fsa', 'benefits', 'covered', 'receipt for'],
+      a: '[Insurance, HSA and FSA: confirm with Grace] You always get an itemised receipt.' },
+    { id: 'legal', q: 'Is this legal?', k: ['legal', 'allowed', 'regulated', 'law', 'health canada'],
+      a: 'PEPTICITY works only through licensed clinicians and a licensed partner pharmacy, and nothing is sold "for research use". [Jurisdiction wording: confirm with counsel]' },
+    { id: 'about', q: 'Who is behind PEPTICITY?', k: ['who are you', 'who owns', 'about you', 'company', 'real company', 'based', 'located', 'where are you'],
+      a: '[About PEPTICITY and where it is based: confirm with Grace]' },
+    { id: 'family', q: 'Can my partner or family join?', k: ['partner', 'husband', 'wife', 'family', 'spouse', 'friend', 'both of us'],
+      a: 'Each person takes their own assessment, because a clinician reviews everyone separately. [Family offer: confirm with Grace]' },
+    { id: 'list', q: 'What peptides do you have?', k: ['what peptides', 'which peptides do you', 'list of', 'catalog', 'catalogue', 'menu', 'products', 'what do you have', 'what do you carry'],
+      a: '@browse' },
     { id: 'age', q: 'Is there an age limit?', k: ['age limit', 'old', 'senior', 'too old', 'young', 'teen'],
       a: 'The service is for adults 18 and over. There is no upper age limit: a licensed clinician looks at your health and medicines, whatever your age.' }
   ];
   var EMERG = /(chest pain|can'?t breathe|cannot breathe|trouble breathing|suicid|kill myself|end my life|self.?harm|overdos|seizure|unconscious|emergency|anaphyla|throat (is )?closing)/i;
-  var MED = /(dose|dosage|dosing|how much (should i|do i (take|use)|to (take|use))|how many (mg|iu|units)|\bmg\b|\bmcg\b|\biu\b|inject|needle|syringe|side.?effect|reaction|pregnan|breast.?feed|safe (for|to)|is it safe|interact|with my (meds|medication)|cycle|stack|reconstitut|mix(ing)?|results|work for me|lose weight|weight loss|should i (take|use|try)|recommend|best peptide|which peptide|what does .* do|what is .* for|benefit|help (with|my)|cure|treat|symptom|diagnos|my doctor said|blood (sugar|pressure)|diabet|cancer|heart)/i;
+  var MED = /(dose|dosage|dosing|how much (should i|do i (take|use)|to (take|use))|how many (mg|iu|units)|\bmg\b|\bmcg\b|\biu\b|inject|needle|syringe|side.?effect|reaction|pregnan|breast.?feed|safe (for|to)|is it safe|interact|with my (meds|medication)|cycle|stack|reconstitut|mix(ing)?|results|work for me|lose weight|weight loss|should i (take|use|try)|recommend|best peptide|which peptide (should|would|is (best|right)|for)|what does .* do|what is .* for|benefit|help (with|my)|cure|treat|symptom|diagnos|my doctor said|blood (sugar|pressure)|diabet|cancer|heart)/i;
   var HUMAN = /(human|real person|a person|someone|call me|phone|talk to|speak to|agent|representative)/i;
   var log, chips, inp, panel, launch, ann, opened = false, lastFocus = null;
 
@@ -139,6 +165,7 @@
     }
     if (med) return say([el('p', 'cc-hand', HANDOFF)], ['quiz', 'human', 'browse']);
     var f = findFaq(text);
+    if (f && f.a === '@browse') return browse();
     if (f) {
       var nodes = [el('p', '', f.a)];
       if (f.go) { var a = el('a', 'cc-link', f.go[1]); a.href = f.go[0]; a.addEventListener('click', function () { close(); }); nodes.push(a); }

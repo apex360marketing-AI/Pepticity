@@ -13,7 +13,7 @@ const mode = process.argv[2] || 'd', OUT = '/home/user/pepticity/sites/v6-garnet
   await p.click('.cc-launch'); await p.waitForTimeout(700); await p.screenshot({ path: OUT + 'open.png' });
   console.log('focus', await p.evaluate(() => document.activeElement.id));
   const last = () => p.evaluate(() => { const m = [...document.querySelectorAll('.cc-bot')].pop(); return m.innerText.replace(/\s+/g, ' ').slice(0, 260); });
-  const Qs = ['What dose of BPC-157 should I take?', 'will retatrutide help me lose weight', 'Is tirzepatide the same as Mounjaro?', 'tell me about wolverine', 'I have chest pain', "I'm 16 years old", 'what is a peptide', 'how much does it cost', 'can I mix ipamorelin and cjc', 'what does research use only mean', 'do you sell klow', 'GHK', 'what is the meaning of life', 'I want to talk to a person', 'is NAD+ safe for me', 'side effects of semax', 'cjc'];
+  const Qs = ['What dose of BPC-157 should I take?', 'which peptide is best for me', 'what peptides do you have', 'do I need blood work', 'my order arrived warm', 'do you take insurance', 'is my information private', 'how long until I hear back', 'can my wife join too', 'how do I store it', 'is this legal', 'how much does it cost', 'can I get a refund', 'do I have to go in person', 'is tirzepatide approved', 'I have chest pain'];
   for (const q of Qs) { await p.fill('#cc-q', q); await p.keyboard.press('Enter'); await p.waitForTimeout(250); console.log('Q:', q, '\n  A:', await last()); }
   await p.screenshot({ path: OUT + 'convo.png' });
   await p.click('.cc-chip:has-text("Browse the peptides")'); await p.waitForTimeout(500); await p.screenshot({ path: OUT + 'browse.png' });

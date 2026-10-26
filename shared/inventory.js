@@ -72,5 +72,8 @@
     ['metabolic', 'Metabolic and weight'], ['recovery', 'Recovery and repair'], ['gh', 'Growth hormone family'],
     ['longevity', 'Longevity and cellular health'], ['mind', 'Focus and mood'], ['skin', 'Skin'], ['intimacy', 'Intimacy'], ['supplies', 'Supplies']
   ];
-  W.PEPINV = { products: P, groups: GROUPS, source: 'northernpeptides.st', pulled: '2026-10-26', listings: 36 };
-})(window);
+  W.PEPINV = { products: P, groups: GROUPS, source: 'northernpeptides.st', pulled: '2026-10-26', listings: 36,
+    // since the 29 Sept read: SLU-PP-332 (10 mg) is no longer listed on her store
+    removed: ['SLU-PP-332'] };
+  if (typeof module === 'object' && module.exports) module.exports = W.PEPINV;
+})(typeof window !== 'undefined' ? window : globalThis);
