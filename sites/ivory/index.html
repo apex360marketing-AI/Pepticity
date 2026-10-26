@@ -1,0 +1,417 @@
+<title>PEPTICITY Ivory Descent</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Syne:wght@500..800&display=swap">
+<style>
+/* SCN-01 IVORY DESCENT + SCN-02 THE GOLD-CHROME WINDOW (PEPTICITY sample 1) */
+:root{--arch:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 255'%3E%3Cfilter id='f' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='4'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' d='M12 243V62a38 38 0 0 1 76 0v181z' fill='%23fff'/%3E%3C/svg%3E");--ink:#060608;--ink2:#0d0c10;--ivory:#f3ecdf;--bone:#e8e0d2;--mute:#b7aea2;--dim:#7e766c;
+  --crimson:255,30,78;--chart:212,255,58;--violet:138,92,255;--magenta:255,43,214;--ice:125,249,255;
+  --disp:"Syne","Archivo","Helvetica Neue",Arial,sans-serif;--text:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{margin:0;color:var(--ivory);font:400 17px/1.6 var(--text);-webkit-font-smoothing:antialiased;overflow-x:clip;
+  background:radial-gradient(90% 42% at 50% 74%,rgba(243,236,223,.07),transparent 70%),linear-gradient(180deg,#040406 0%,#09080c 40%,#15121a 70%,#201a20 100%) fixed}
+:focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+a{color:inherit}
+
+/* fixed stage */
+#scene,.photo,#flood,.torch,.drops{position:fixed;inset:0;width:100%;height:100%}
+#scene{z-index:1;display:block}
+.photo{z-index:2;opacity:0;overflow:hidden;pointer-events:none}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:49.5% 50%;will-change:transform,filter}
+.drops{z-index:3;pointer-events:none;overflow:hidden;opacity:0}
+.drop{position:absolute;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.95) 0 8%,rgba(255,255,255,.28) 16%,rgba(243,236,223,.06) 46%,rgba(0,0,0,.28) 72%,rgba(255,255,255,.16) 86%,transparent 92%);
+  box-shadow:0 1px 2px rgba(0,0,0,.35);backdrop-filter:brightness(1.18) saturate(1.2);-webkit-backdrop-filter:brightness(1.18) saturate(1.2);will-change:transform}
+#flood{z-index:4;pointer-events:none;opacity:0;background:radial-gradient(circle at 49.5% 50%,#fffdf8 0%,#f7f1e6 34%,#ece3d4 74%,#e3d8c6 100%);-webkit-mask-image:var(--arch);mask-image:var(--arch);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;will-change:mask-size,mask-position}
+.torch{z-index:5;pointer-events:none;mix-blend-mode:screen;opacity:0;transition:opacity .6s;background:radial-gradient(260px 220px at var(--px,50%) var(--py,50%),rgba(243,236,223,.075),transparent 70%)}
+.torch.on{opacity:1}
+html.rm .torch,html.coarse .torch{display:none}
+
+/* entry: the mark draws itself, once per session */
+#boot{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--ink);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+#boot.lift{opacity:0;transform:scale(1.04);pointer-events:none}
+#boot svg{width:min(280px,60vw);height:auto;overflow:visible}
+#boot .stroke{fill:none;stroke:var(--ivory);stroke-width:1.4;stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);animation-name:draw;animation-duration:1.2s;animation-delay:.35s;animation-timing-function:cubic-bezier(.65,0,.35,1);animation-fill-mode:both}
+#boot .word{fill:var(--ivory);opacity:0;animation-name:fadein;animation-duration:.7s;animation-delay:1.25s;animation-fill-mode:both;font:700 20px var(--disp);letter-spacing:.42em}
+#boot .rule{stroke:rgb(var(--violet));stroke-width:1;stroke-dasharray:240;stroke-dashoffset:240;animation-name:draw;animation-duration:.8s;animation-delay:.1s;animation-fill-mode:both;filter:drop-shadow(0 0 6px rgb(var(--violet)))}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{to{opacity:1}}
+
+/* chrome: wordmark, enter the site, chapter rail */
+.top{position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:calc(env(safe-area-inset-top,0px) + 18px) 18px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));transition:color .6s}
+.mark{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 14px/1 var(--disp);letter-spacing:.34em}
+.mark i{display:grid;place-items:center;width:24px;height:24px;border:1.5px solid currentColor;font:700 12px/1 var(--disp);font-style:normal;letter-spacing:0}
+.enter{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid rgba(243,236,223,.35);border-radius:2px;background:rgba(6,6,8,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:inherit;font:700 11px/1 var(--text);letter-spacing:.22em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:border-color .3s,background .3s}
+.enter:hover{border-color:var(--ivory);background:rgba(243,236,223,.08)}
+.enter kbd{font:600 10px/1 var(--text);letter-spacing:.1em;opacity:.6;border:1px solid currentColor;border-radius:2px;padding:3px 5px}
+html.inlab .top{color:#1a1714}
+html.inlab .enter{border-color:rgba(26,23,20,.35);background:rgba(243,236,223,.5)}
+.rail{position:fixed;right:max(18px,env(safe-area-inset-right,0px));top:50%;z-index:20;transform:translateY(-50%);display:grid;gap:18px;justify-items:end}
+.rail span{display:flex;align-items:center;gap:10px;font:600 10px/1 var(--text);letter-spacing:.24em;text-transform:uppercase;color:var(--dim);transition:color .5s}
+.rail span::after{content:"";width:18px;height:1px;background:currentColor;transition:width .5s var(--ease)}
+.rail span.on{color:var(--ivory)}
+.rail span.on::after{width:36px;background:rgb(var(--c,243,236,223));box-shadow:0 0 10px rgb(var(--c,243,236,223))}
+html.inlab .rail span{color:#8b8276}
+html.inlab .rail span.on{color:#1a1714}
+
+/* captions over the dive */
+.cap{position:fixed;left:max(18px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);z-index:10;max-width:min(680px,calc(100vw - 36px));opacity:0;transform:translateY(18px);transition:opacity .9s var(--ease),transform .9s var(--ease);pointer-events:none}
+.cap.on{opacity:1;transform:none}
+.kick{display:flex;align-items:center;gap:12px;margin:0 0 16px;font:600 11px/1 var(--text);letter-spacing:.28em;text-transform:uppercase;color:var(--mute)}
+.kick::before{content:"";width:24px;height:1px;background:currentColor}
+.cap h1,.cap h2{margin:0;font:800 clamp(38px,6.4vw,96px)/.92 var(--disp);letter-spacing:.005em;text-transform:uppercase;text-wrap:balance;text-shadow:0 4px 40px rgba(0,0,0,.6)}
+.cap h1 em,.cap h2 em{font-style:normal;color:transparent;-webkit-text-stroke:1.3px var(--ivory)}
+.cap p{margin:18px 0 0;max-width:46ch;color:var(--bone);text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.hint{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:10;transform:translateX(-50%);display:grid;justify-items:center;gap:8px;font:600 10px/1 var(--text);letter-spacing:.3em;text-transform:uppercase;color:var(--mute);transition:opacity .6s}
+.hint i{width:1px;height:38px;background:linear-gradient(var(--ivory),transparent);transform-origin:top;animation-name:hint;animation-duration:1.8s;animation-iteration-count:infinite;animation-timing-function:var(--ease)}
+@keyframes hint{0%{transform:scaleY(0)}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+/* the lab threshold (end of sample 1) */
+.lab{position:fixed;inset:0;z-index:6;display:grid;place-items:center;padding:0 max(18px,env(safe-area-inset-right,0px)) 0 max(18px,env(safe-area-inset-left,0px));color:#1a1714;opacity:0;pointer-events:none;transition:opacity .8s var(--ease)}
+.lab.on{opacity:1;pointer-events:auto}
+.lab .in{max-width:900px;text-align:center}
+.lab .kick{justify-content:center;color:#7a7065}
+.lab .kick::before{display:none}
+.lab h2{margin:0;font:800 clamp(56px,11vw,170px)/.86 var(--disp);letter-spacing:.01em;text-transform:uppercase}
+.lab h2 em{font-style:normal;color:transparent;-webkit-text-stroke:1.5px #1a1714}
+.lab p{margin:22px auto 0;max-width:52ch;color:#4b443d}
+.lab .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 22px;border:1px solid #1a1714;border-radius:2px;background:#1a1714;color:var(--ivory);font:700 11px/1 var(--text);letter-spacing:.22em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .4s var(--ease),background .3s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:#1a1714}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:26px}
+.chips span{padding:6px 10px;border:1px solid rgba(26,23,20,.2);border-radius:2px;font:600 10px/1.3 var(--text);letter-spacing:.18em;text-transform:uppercase;color:#5d554c}
+.note{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:7;transform:translateX(-50%);width:min(760px,calc(100vw - 36px));font-size:12px;line-height:1.5;color:#6e665c;text-align:center;opacity:0;transition:opacity .8s}
+.lab.on ~ .note{opacity:1}
+
+/* the scroll track (real, readable text lives in the captions; this only gives the page its length) */
+.track{position:relative;z-index:0;height:720vh}
+.track .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* no WebGL: the city becomes a photographic plate; reduced motion: no dive at all */
+html.nogl #scene{display:none}
+html.nogl body{background:radial-gradient(120% 70% at 50% 110%,#2a2124 0%,#0c0b0f 55%,#040406 100%) fixed}
+html.rm #boot{display:none}
+@media (max-width:760px){.rail{display:none}.cap{bottom:calc(env(safe-area-inset-bottom,0px) + 12vh)}.enter kbd{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<div id="boot" aria-hidden="true">
+  <svg viewBox="0 0 280 120" role="presentation">
+    <line class="rule" x1="20" y1="104" x2="260" y2="104"/>
+    <path class="stroke" id="bootP" d="M112 12h56v56h-56z M128 28v26 M128 28h16a8 8 0 0 1 0 16h-16"/>
+    <text class="word" x="140" y="96" text-anchor="middle">PEPTICITY</text>
+  </svg>
+</div>
+
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="photo" id="photo" aria-hidden="true"><picture><source media="(max-width:760px)" srcset="media/window-mobile.jpg"><img id="photoImg" src="media/window-desktop.jpg" alt=""></picture></div>
+<div class="drops" id="drops" aria-hidden="true"></div>
+<div id="flood" aria-hidden="true"></div>
+<div class="torch" id="torch" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="mark" href="#top" aria-label="PEPTICITY"><i>P</i>PEPTICITY</a>
+  <a class="enter" href="#enter" id="enter">Enter the site <kbd>ESC</kbd></a>
+</header>
+<nav class="rail" aria-label="Chapters"><span data-ch="0">The city</span><span data-ch="1">The window</span><span data-ch="2">The lab</span></nav>
+
+<main id="top">
+  <section class="cap" id="cap0" aria-labelledby="h0">
+    <p class="kick">PEPTICITY &middot; Clinician-guided peptide care</p>
+    <h1 id="h0">The city never <em>switches off.</em></h1>
+    <p>Somewhere in it, one light is on for you. Scroll, and follow it down.</p>
+  </section>
+  <section class="cap" id="cap1" aria-labelledby="h1x">
+    <p class="kick">Down through the lights</p>
+    <h2 id="h1x">Past every <em>window</em></h2>
+    <p>Most windows are just windows. One of them is different.</p>
+  </section>
+  <section class="cap" id="cap2" aria-labelledby="h2x">
+    <p class="kick">The window</p>
+    <h2 id="h2x">Step <em>inside.</em></h2>
+    <p>Behind the glass: a licensed partner pharmacy, a clean lab, and every lot tested.</p>
+  </section>
+  <div class="hint" id="hint"><span>Scroll</span><i></i></div>
+  <div class="track" id="track"><p class="sr">The page tells a short story as you scroll: a night city, one arched window, and the lab behind it.</p></div>
+</main>
+
+<section class="lab" id="lab" aria-labelledby="labH">
+  <div class="in">
+    <p class="kick">You&rsquo;re in</p>
+    <h2 id="labH">The <em>lab</em></h2>
+    <p>Next in the journey: the dropper, the mixer, the peptide taking shape and the gyroscope, then a tested, sealed vial that ships cold to your door.</p>
+    <div class="chips"><span>Licensed clinician</span><span>Licensed partner pharmacy</span><span>Every lot tested</span><span>Shipped cold</span></div>
+    <div class="row"><button class="btn" type="button" id="replay">Replay the descent</button><a class="btn ghost" href="#enter" id="enter2">Enter the site</a></div>
+  </div>
+</section>
+<p class="note">Sample 1 of the PEPTICITY journey: the Ivory Descent and the window. The lab is Sample 2. A licensed clinician decides if a plan is right for you. [Final legal copy to be approved by counsel.]</p>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script>
+/* chrome that must work with or without WebGL */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) root.classList.add('rm');
+  if (!matchMedia('(hover:hover)').matches) root.classList.add('coarse');
+  var S = window.__iv = { t: 0, target: 0, px: 0, py: 0, reduce: reduce, mobile: innerWidth < 760 || !matchMedia('(hover:hover)').matches };
+  // entry overlay: once per session, never for reduced motion
+  var boot = document.getElementById('boot'), seen = false;
+  try { seen = sessionStorage.getItem('pep-boot') === '1'; } catch (e) {}
+  if (seen || reduce) boot.remove(); else {
+    var p = document.getElementById('bootP'); try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) {}
+    var lift = function () { if (!boot.isConnected) return; boot.classList.add('lift'); try { sessionStorage.setItem('pep-boot', '1'); } catch (e) {} setTimeout(function () { boot.remove(); }, 700); };
+    var hard = setTimeout(lift, 4200);
+    addEventListener('load', function () { clearTimeout(hard); setTimeout(lift, 2300); });
+  }
+  // scroll progress
+  var track = document.getElementById('track');
+  function measure() { var max = Math.max(1, document.documentElement.scrollHeight - innerHeight); S.target = Math.min(1, Math.max(0, scrollY / max)); }
+  addEventListener('scroll', measure, { passive: true }); addEventListener('resize', measure, { passive: true }); measure();
+  // pointer light
+  var torch = document.getElementById('torch');
+  addEventListener('pointermove', function (e) { S.px = e.clientX / innerWidth - .5; S.py = e.clientY / innerHeight - .5; torch.style.setProperty('--px', e.clientX + 'px'); torch.style.setProperty('--py', e.clientY + 'px'); torch.classList.add('on'); }, { passive: true });
+  document.addEventListener('pointerleave', function () { torch.classList.remove('on'); });
+  // enter the site (skip) and replay
+  function enter(e) { if (e) e.preventDefault(); scrollTo({ top: document.documentElement.scrollHeight, behavior: reduce ? 'auto' : 'smooth' }); }
+  document.getElementById('enter').addEventListener('click', enter);
+  document.getElementById('enter2').addEventListener('click', function (e) { e.preventDefault(); document.getElementById('labH').scrollIntoView(); });
+  document.getElementById('replay').addEventListener('click', function () { scrollTo({ top: 0, behavior: 'auto' }); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') enter(); });
+  // raindrops on the glass (they slide off as the window opens)
+  var drops = document.getElementById('drops'), D = [];
+  var n = S.mobile ? 16 : 26;
+  for (var i = 0; i < n; i++) {
+    var d = document.createElement('i'), s = 6 + Math.pow(Math.random(), 2.2) * (S.mobile ? 18 : 24);
+    d.className = 'drop'; d.style.width = d.style.height = s.toFixed(1) + 'px';
+    var x = 50 + (Math.random() - .5) * (S.mobile ? 30 : 18), y = 14 + Math.random() * 74;
+    d.style.left = x + '%'; d.style.top = y + '%';
+    drops.appendChild(d); D.push({ el: d, v: .6 + Math.random() * 1.6, y: 0 });
+  }
+  // overlay state, driven by the smoothed progress from whichever loop runs (WebGL or not)
+  var photo = document.getElementById('photo'), img = document.getElementById('photoImg'), flood = document.getElementById('flood');
+  var caps = [document.getElementById('cap0'), document.getElementById('cap1'), document.getElementById('cap2')];
+  var lab = document.getElementById('lab'), hint = document.getElementById('hint'), rails = document.querySelectorAll('.rail span');
+  var JEWELS = ['255,30,78', '212,255,58', '138,92,255', '255,43,214', '125,249,255'];
+  function ss(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+  S.overlay = function (t, now) {
+    caps[0].classList.toggle('on', t < .1);
+    caps[1].classList.toggle('on', t > .2 && t < .42);
+    caps[2].classList.toggle('on', t > .6 && t < .78);
+    hint.style.opacity = t < .03 ? 1 : 0;
+    var ph = root.classList.contains('nogl') ? 1 : ss(.47, .56, t);   // the photo takes over from the 3D window
+    photo.style.opacity = ph.toFixed(3);
+    var push = 1 + ss(.5, .9, t) * .6;                                                // slow push-in toward the glass
+    var glow = 1 + ss(.66, .84, t) * .45;
+    img.style.transform = 'scale(' + push.toFixed(4) + ')';
+    img.style.filter = 'brightness(' + glow.toFixed(3) + ')';
+    drops.style.opacity = (ss(.52, .6, t) * (1 - ss(.82, .86, t))).toFixed(3);
+    var slide = ss(.74, .86, t);
+    D.forEach(function (d, i) { d.el.style.transform = 'translate3d(0,' + (slide * d.v * 120 + Math.sin(now * .0006 + i) * 1.2).toFixed(1) + 'vh,0) scale(' + push.toFixed(3) + ')'; });
+    var iris = ss(.76, .94, t);                                                         // the arch itself opens and the light comes through
+    var aw = innerWidth * (S.mobile ? .44 : .2) * push * (1 + Math.pow(iris, 2.2) * 14), ah = aw * 2.55;
+    var cx = innerWidth * .495, cy = innerHeight * (S.mobile ? .52 : .5);
+    var ms = aw.toFixed(1) + 'px ' + ah.toFixed(1) + 'px', mp = (cx - aw / 2).toFixed(1) + 'px ' + (cy - ah / 2).toFixed(1) + 'px';
+    flood.style.webkitMaskSize = flood.style.maskSize = ms; flood.style.webkitMaskPosition = flood.style.maskPosition = mp;
+    flood.style.opacity = Math.min(1, iris * 6).toFixed(3);
+    var inlab = t > .9; lab.classList.toggle('on', inlab); root.classList.toggle('inlab', inlab);
+    var ch = t < .55 ? 0 : t < .9 ? 1 : 2;
+    [].forEach.call(rails, function (r, i) { r.classList.toggle('on', i === ch); r.style.setProperty('--c', JEWELS[[2, 0, 1][ch]]); });
+  };
+  // fallback loop (no WebGL or before it boots)
+  var last = performance.now();
+  function loop(now) {
+    if (window.__ivGL) return;
+    var dt = Math.min(.05, (now - last) / 1000); last = now;
+    S.t += (S.target - S.t) * (reduce ? 1 : 1 - Math.exp(-dt * 6));
+    S.overlay(S.t, now);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+<script type="module">
+/* SCN-01: the ivory city, built in three.js (effects only; the window itself is a photograph) */
+const S = window.__iv;
+let THREE, RoomEnvironment;
+try {
+  THREE = await import('three');
+  ({ RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js'));
+} catch (e) { document.documentElement.classList.add('nogl'); }
+if (THREE) {
+  const canvas = document.getElementById('scene');
+  let renderer = null;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !S.mobile, alpha: true, powerPreference: 'high-performance' }); } catch (e) { document.documentElement.classList.add('nogl'); }
+  if (renderer) start(renderer);
+}
+function start(renderer) {
+  window.__ivGL = true;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, S.mobile ? 1.25 : 1.75));
+  renderer.setSize(innerWidth, innerHeight, false);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x16121a, S.mobile ? .0062 : .005);
+  const camera = new THREE.PerspectiveCamera(44, innerWidth / innerHeight, .1, 900);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+  scene.add(new THREE.HemisphereLight(0xcfc6b8, 0x060608, .28));
+  const moon = new THREE.DirectionalLight(0xf3ecdf, .5); moon.position.set(-60, 110, 80); scene.add(moon);
+
+  /* window textures: ivory lights, a few jewel windows, and a live flicker */
+  const JEWEL = ['#ff1e4e', '#d4ff3a', '#8a5cff', '#ff2bd6', '#7df9ff'];
+  function makeWin(seed) {
+    const c = document.createElement('canvas'); c.width = 128; c.height = 512; const g = c.getContext('2d');
+    let s = seed; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    const cells = [];
+    for (let y = 0; y < 32; y++) for (let x = 0; x < 6; x++) {
+      const r = rnd(); const cell = { x: 8 + x * 20, y: 6 + y * 16, on: r < .44, col: r < .026 ? JEWEL[Math.floor(rnd() * JEWEL.length)] : (r < .2 ? '#f6efe3' : r < .31 ? '#e6dccb' : '#b9ae9f'), a: .55 + rnd() * .45 };
+      cells.push(cell);
+    }
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+    function paint() {
+      g.fillStyle = '#060608'; g.fillRect(0, 0, 128, 512);
+      for (const k of cells) if (k.on) { g.globalAlpha = k.a; g.fillStyle = k.col; g.fillRect(k.x, k.y, 12, 9); }
+      g.globalAlpha = 1; tex.needsUpdate = true;
+    }
+    paint();
+    return { tex, cells, paint, rnd };
+  }
+  const W1 = makeWin(7), W2 = makeWin(911);
+  const mat = w => new THREE.MeshStandardMaterial({ color: 0x0c0c0f, roughness: .55, metalness: .4, emissive: 0xffffff, emissiveMap: w.tex, emissiveIntensity: 1.5 });
+  const M1 = mat(W1), M2 = mat(W2);
+
+  /* the skyline: two instanced sets so the window patterns never repeat in lock-step */
+  const step = S.mobile ? 9 : 6.6, spots = [];
+  for (let x = -96; x <= 96; x += step) for (let z = -130; z <= 80; z += step) {
+    if (Math.abs(x) < 7 && z > -14) continue;      // the avenue we fly down
+    if (Math.abs(x) < 9 && Math.abs(z + 18) < 9) continue; // the arched building's lot
+    spots.push([x + (Math.random() - .5) * 1.4, z + (Math.random() - .5) * 1.4]);
+  }
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const A = spots.filter((_, i) => i % 2 === 0), Bs = spots.filter((_, i) => i % 2 === 1);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), pos = new THREE.Vector3();
+  [[A, M1], [Bs, M2]].forEach(([list, m]) => {
+    const im = new THREE.InstancedMesh(geo, m, list.length);
+    list.forEach(([x, z], i) => {
+      const far = THREE.MathUtils.clamp((50 - z) / 180, 0, 1);
+      const h = 7 + Math.pow(Math.random(), 1.5) * (20 + far * 60);
+      const w = step * (.56 + Math.random() * .24);
+      sc.set(w, h, w * (.8 + Math.random() * .4)); pos.set(x, h / 2, z); q.identity(); im.setMatrixAt(i, m4.compose(pos, q, sc));
+    });
+    scene.add(im);
+  });
+
+  /* ground, avenue lines, street lamps, moving light trails */
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), new THREE.MeshStandardMaterial({ color: 0x0a090c, roughness: .35, metalness: .6 }));
+  ground.rotation.x = -Math.PI / 2; scene.add(ground);
+  function sprite(rgba) {
+    const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, rgba); gr.addColorStop(.28, rgba.replace(/[\d.]+\)$/, '.4)')); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); return t;
+  }
+  const glowTex = sprite('rgba(255,255,255,1)');
+  const lampMat = new THREE.SpriteMaterial({ map: glowTex, color: 0xf3ecdf, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+  for (let z = -6; z < 86; z += 6) [-5.2, 5.2].forEach(x => { const s = new THREE.Sprite(lampMat); s.position.set(x, 2.6, z); s.scale.setScalar(1.8); scene.add(s); });
+  // light trails: ivory headlights coming, crimson tail lights going, one violet taxi now and then
+  const TR = S.mobile ? 60 : 120, tg = new THREE.BufferGeometry(), tp = new Float32Array(TR * 3), tc = new Float32Array(TR * 3), tv = [];
+  for (let i = 0; i < TR; i++) {
+    const dir = i % 2 ? 1 : -1, lane = dir > 0 ? -2.2 : 2.2;
+    tp[i * 3] = lane + (Math.random() - .5) * .6; tp[i * 3 + 1] = .5; tp[i * 3 + 2] = -10 + Math.random() * 100;
+    const col = dir > 0 ? (Math.random() < .08 ? [0.54, 0.36, 1] : [0.95, 0.92, 0.87]) : [1, 0.12, 0.3];
+    tc[i * 3] = col[0]; tc[i * 3 + 1] = col[1]; tc[i * 3 + 2] = col[2]; tv.push(dir * (6 + Math.random() * 8));
+  }
+  tg.setAttribute('position', new THREE.BufferAttribute(tp, 3)); tg.setAttribute('color', new THREE.BufferAttribute(tc, 3));
+  const trails = new THREE.Points(tg, new THREE.PointsMaterial({ size: S.mobile ? 1.2 : 1.0, map: glowTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+  scene.add(trails);
+  // stars
+  { const n = S.mobile ? 260 : 700, g = new THREE.BufferGeometry(), a = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) { const th = Math.random() * Math.PI * 2, r = 520; a[i * 3] = Math.cos(th) * r; a[i * 3 + 1] = 90 + Math.random() * 260; a[i * 3 + 2] = Math.sin(th) * r - 80; }
+    g.setAttribute('position', new THREE.BufferAttribute(a, 3));
+    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xf3ecdf, size: 1.1, sizeAttenuation: false, transparent: true, opacity: .5, fog: false }))); }
+
+  /* the arched building: ivory stone, one tall arched window with a gold-chrome rim */
+  const BZ = -18, WY = 16;           // building z, window centre height
+  const stoneTex = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 512; const g = c.getContext('2d');
+    g.fillStyle = '#8a8172'; g.fillRect(0, 0, 256, 512);
+    for (let i = 0; i < 2600; i++) { g.fillStyle = 'rgba(' + (Math.random() < .5 ? '255,250,240' : '30,26,22') + ',' + (Math.random() * .05) + ')'; g.fillRect(Math.random() * 256, Math.random() * 512, 2, 2); }
+    g.strokeStyle = 'rgba(25,22,18,.55)'; g.lineWidth = 2;
+    for (let y = 0; y <= 512; y += 64) { g.beginPath(); g.moveTo(0, y); g.lineTo(256, y); g.stroke(); }
+    for (let x = 0; x <= 256; x += 128) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 512); g.stroke(); }
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 5); return t; })();
+  const stone = new THREE.MeshStandardMaterial({ color: 0xffffff, map: stoneTex, roughness: .9, metalness: 0 });
+  const bld = new THREE.Mesh(new THREE.BoxGeometry(14, 44, 12), stone); bld.position.set(0, 22, BZ); scene.add(bld);
+  const arch = new THREE.Shape(); const AW = 1.7, AH = 3.6;   // half width, straight height
+  arch.moveTo(-AW, -AH); arch.lineTo(AW, -AH); arch.lineTo(AW, AH - AW); arch.absarc(0, AH - AW, AW, 0, Math.PI, false); arch.lineTo(-AW, -AH);
+  const glass = new THREE.Mesh(new THREE.ShapeGeometry(arch, 48), new THREE.MeshBasicMaterial({ color: 0xfff6e6, toneMapped: false }));
+  glass.position.set(0, WY, BZ + 6.02); scene.add(glass);
+  const rimPath = new THREE.CurvePath();
+  rimPath.add(new THREE.LineCurve3(new THREE.Vector3(-AW, -AH, 0), new THREE.Vector3(AW, -AH, 0)));
+  rimPath.add(new THREE.LineCurve3(new THREE.Vector3(AW, -AH, 0), new THREE.Vector3(AW, AH - AW, 0)));
+  const arc = new THREE.EllipseCurve(0, AH - AW, AW, AW, 0, Math.PI, false); const ap = arc.getPoints(40).map(p => new THREE.Vector3(p.x, p.y, 0));
+  for (let i = 0; i < ap.length - 1; i++) rimPath.add(new THREE.LineCurve3(ap[i], ap[i + 1]));
+  rimPath.add(new THREE.LineCurve3(new THREE.Vector3(-AW, AH - AW, 0), new THREE.Vector3(-AW, -AH, 0)));
+  const chrome = new THREE.MeshStandardMaterial({ color: 0xa4845d, metalness: 1, roughness: .16, envMapIntensity: 1.6 });
+  const rim = new THREE.Mesh(new THREE.TubeGeometry(rimPath, 260, .2, 14, true), chrome); rim.position.copy(glass.position).add(new THREE.Vector3(0, 0, .05)); scene.add(rim);
+  const spill = new THREE.PointLight(0xfff1dc, 22, 18, 1.8); spill.position.set(0, WY, BZ + 8.5); scene.add(spill);
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xfff1dc, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: .55 }));
+  halo.position.set(0, WY, BZ + 6.4); halo.scale.set(11, 14, 1); scene.add(halo);
+  // one jewel light leads you down: it starts violet and settles on the window
+  const lead = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x8a5cff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
+  lead.scale.setScalar(2.4); scene.add(lead);
+
+  /* one continuous camera move: high over the city, down the avenue, level with the window */
+  const K = [
+    [0.00, [0, 74, 190], [0, 34, -80]],
+    [0.12, [14, 66, 150], [0, 26, -50]],
+    [0.30, [-5, 44, 100], [0, 18, -22]],
+    [0.44, [0, 22, 46], [0, WY, BZ]],
+    [0.54, [0, WY + .3, 18], [0, WY, BZ]],
+    [0.62, [0, WY, 12], [0, WY, BZ]],
+    [1.00, [0, WY, 11], [0, WY, BZ]],
+  ];
+  const camCurve = new THREE.CatmullRomCurve3(K.map(k => new THREE.Vector3(...k[1])), false, 'centripetal');
+  const lookCurve = new THREE.CatmullRomCurve3(K.map(k => new THREE.Vector3(...k[2])), false, 'centripetal');
+  const uAt = t => { for (let i = 0; i < K.length - 1; i++) if (t <= K[i + 1][0]) return (i + (t - K[i][0]) / (K[i + 1][0] - K[i][0])) / (K.length - 1); return 1; };
+  const cp = new THREE.Vector3(), lp = new THREE.Vector3(), tmp = new THREE.Vector3();
+  let px = 0, py = 0, last = performance.now(), visible = true, flickAt = 0;
+  document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) { last = performance.now(); requestAnimationFrame(tick); } });
+  addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); }, { passive: true });
+
+  function flicker(W) {
+    // a few windows change state: lights going on and off across the city, jewel ones included
+    for (let n = 0; n < 5; n++) { const k = W.cells[Math.floor(W.rnd() * W.cells.length)]; k.on = !k.on; if (k.on && W.rnd() < .12) k.col = JEWEL[Math.floor(W.rnd() * JEWEL.length)]; }
+    W.paint();
+  }
+  function tick(now) {
+    if (!visible) return;
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    S.t += (S.target - S.t) * (S.reduce ? 1 : 1 - Math.exp(-dt * 5));
+    const t = S.t, u = uAt(Math.min(t, .999));
+    camCurve.getPoint(u, cp); lookCurve.getPoint(u, lp);
+    px += (S.px - px) * (1 - Math.exp(-dt * 3)); py += (S.py - py) * (1 - Math.exp(-dt * 3));
+    const amp = (1 - THREE.MathUtils.smoothstep(t, .4, .55)) * 4;
+    camera.position.set(cp.x + px * amp, cp.y - py * amp * .5, cp.z); camera.lookAt(lp);
+    camera.fov = 44 - THREE.MathUtils.smoothstep(t, .4, .6) * 8; camera.updateProjectionMatrix();
+    // the city breathes: windows flicker every so often
+    if (!S.reduce && now > flickAt) { flicker(Math.random() < .5 ? W1 : W2); flickAt = now + 140 + Math.random() * 260; }
+    M1.emissiveIntensity = 1.5 + Math.sin(now * .0009) * .06; M2.emissiveIntensity = 1.5 + Math.cos(now * .0011) * .06;
+    // traffic
+    const a = tg.attributes.position.array;
+    for (let i = 0; i < TR; i++) { a[i * 3 + 2] += tv[i] * dt; if (a[i * 3 + 2] > 92) a[i * 3 + 2] = -12; if (a[i * 3 + 2] < -12) a[i * 3 + 2] = 92; }
+    tg.attributes.position.needsUpdate = true;
+    // the jewel light leads the camera down, then settles into the window
+    const ahead = Math.min(.6, t + .06); lookCurve.getPoint(uAt(ahead), tmp);
+    lead.position.copy(tmp).lerp(cp, .18);
+    lead.material.opacity = THREE.MathUtils.smoothstep(t, .04, .1) * (1 - THREE.MathUtils.smoothstep(t, .44, .52)) * (.8 + Math.sin(now * .005) * .15);
+    halo.material.opacity = .45 + THREE.MathUtils.smoothstep(t, .3, .55) * .4 + Math.sin(now * .002) * .04;
+    renderer.render(scene, camera);
+    S.overlay(t, now);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+</script>
