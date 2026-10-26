@@ -1,6 +1,6 @@
-<title>Pepticity Garnet</title>
+<title>PEPTICITY Garnet</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Pepticity: clinician-guided peptide care, prepared by a licensed partner pharmacy, with a lot certificate you can look up for every vial.">
+<meta name="description" content="PEPTICITY: clinician-guided peptide care, prepared by a licensed partner pharmacy, with a lot certificate you can look up for every vial.">
 <script>try{var a=new URLSearchParams(location.search).get('for')||localStorage.getItem('pep-aud');if(a)document.documentElement.setAttribute('data-aud',a);if(localStorage.getItem('pep-text')==='large')document.documentElement.setAttribute('data-text','large')}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -430,28 +430,127 @@ main{position:relative;z-index:2}
   .grain{display:none}
 }
 @supports not (backdrop-filter:blur(4px)){.top.is-solid{background:#0c0a0b}}
-/* no WebGL: the anatomy reads as a plain list of glass cards */
-html:not(.gl-on) .anat{height:auto;padding:12vh var(--gutr) 10vh var(--gut)}
-html:not(.gl-on) .anat-pin{position:static;height:auto;overflow:visible}
-html:not(.gl-on) .anat-head{position:static}
-html:not(.gl-on) .anat-hint{display:none}
-html:not(.gl-on) .anat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px;margin-top:30px}
-html:not(.gl-on) .anat-tag{position:static;width:auto;height:auto;opacity:1!important;transform:none!important}
-html:not(.gl-on) .anat-tag::before,html:not(.gl-on) .anat-tag::after{display:none}
-html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 @supports not (backdrop-filter:blur(4px)){.plan,.at-card,.lot-out:has(.lot-h){background:#1a1416}.pq{background:#140f10}}
 
+/* ===================== V6.2 \b7  photographic rebuild ===================== */
+/* every heading in capitals (owner rule) */
+h1,h2,h3,.h2,.vh,.hero-h,.closer-h,.step-c h3,.plan h2,.pq-q,.faq-q,.at-c h3,.sci-c h2,.cur-t,.band-q,.in-tag{text-transform:uppercase}
+.h2,.vh,.hero-h,.closer-h{letter-spacing:.02em}
+.hero-h{font-size:clamp(2.6rem,1.4rem + 4.4vw,5.6rem);line-height:1}
+.step-c h3,.ppl li h3,.plan h2{letter-spacing:.04em}
+.faq-q{letter-spacing:.04em;font-size:1.02em}
+.pq-q{letter-spacing:.03em}
+.in-tag{font-style:normal;letter-spacing:.24em;font-size:clamp(.8rem,.7rem + .5vw,1.05rem)}
+
+/* intro film */
+.intro{background:#060505}
+.in-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:63% 50%;opacity:0;transition:opacity .8s ease}
+.in-film.is-on{opacity:1}
+.in-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,5,5,.75),rgba(6,5,5,.2) 55%,transparent),linear-gradient(transparent 55%,rgba(6,5,5,.85));pointer-events:none}
+.intro .in-word,.intro .in-tag,.intro .in-kicker,.intro .in-line{z-index:2}
+.intro.is-lift{animation:none}
+
+/* hero photograph */
+.hero{isolation:isolate;overflow:hidden}
+.hero-ph{position:absolute;left:0;right:0;top:0;height:100vh;height:100svh;margin:0;z-index:-1;overflow:hidden}
+.hero-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:63% 50%;transform-origin:63% 55%;will-change:transform}
+.hero-ph .hp-label{clip-path:inset(0 0 0 0)}
+html.hp-printing .hero-ph .hp-label{clip-path:inset(100% 0 0 0)}
+html.hp-print .hero-ph .hp-label{clip-path:inset(0 0 0 0);transition:clip-path 1.5s cubic-bezier(.65,0,.2,1)}
+.hp-sweep{position:absolute;left:0;right:0;height:22%;top:100%;background:linear-gradient(transparent,rgba(238,139,155,.0) 30%,rgba(255,236,240,.22) 50%,rgba(238,139,155,0) 70%,transparent);mix-blend-mode:screen;pointer-events:none;opacity:0}
+html.hp-print .hp-sweep{animation-name:hpsweep;animation-duration:1.5s;animation-timing-function:cubic-bezier(.65,0,.2,1);animation-fill-mode:both}
+@keyframes hpsweep{0%{top:100%;opacity:1}90%{opacity:1}100%{top:-22%;opacity:0}}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(12,10,11,.92) 0%,rgba(12,10,11,.7) 34%,rgba(12,10,11,0) 62%),linear-gradient(transparent 70%,var(--bg));pointer-events:none}
+.hero-spec{bottom:auto;top:calc(var(--top-h) + 34px);background:rgba(12,10,11,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:14px 16px;border:1px solid rgba(255,255,255,.1)}
+
+/* the vial rig canvas */
+canvas.rig{display:block;width:100%;height:auto;aspect-ratio:880/1640;opacity:0;transition:opacity 1s var(--ease);-webkit-mask-image:radial-gradient(58% 52% at 50% 56%,#000 62%,transparent 100%);mask-image:radial-gradient(58% 52% at 50% 56%,#000 62%,transparent 100%)}
+canvas.rig.is-ready{opacity:1}
+
+/* turn the vial (VIA-01) */
+.turn{position:relative;height:320vh;background:var(--bg)}
+.turn-pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:4vw;padding:var(--top-h) var(--gutr) 0 var(--gut);overflow:hidden;background:radial-gradient(50% 60% at 72% 55%,rgba(142,27,48,.22),transparent 70%)}
+.turn-copy{max-width:540px}
+.turn-list{list-style:none;margin:6px 0 0;padding:0;display:grid}
+.turn-list li{grid-area:1/1;display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding-top:20px;border-top:1px solid var(--line);opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.turn-list li.is-on{opacity:1;transform:none}
+.turn-list h3{font:400 1.5rem/1.1 var(--f-d);margin:0 0 8px;letter-spacing:.04em}
+.turn-list p{margin:0;color:var(--muted)}
+.turn-meter{display:flex;align-items:center;gap:12px;margin-top:34px;font-size:.68rem;letter-spacing:.24em;color:var(--dim)}
+.turn-meter i{flex:1;max-width:220px;height:1px;background:var(--line2);position:relative}
+.turn-meter b{position:absolute;left:0;top:-1px;height:3px;width:100%;background:var(--garnet-hi);box-shadow:0 0 10px var(--garnet-hi);transform-origin:left;transform:scaleX(var(--turn,0))}
+.turn-stage{justify-self:center;width:min(100%,calc((100svh - var(--top-h)) * .56));position:relative}
+
+/* photo anatomy (ANA-02) */
+.anat{height:330vh}
+.anat-pin{display:grid;place-items:center}
+.anat-stage{position:relative;width:min(40vw,calc(100svh * .55))}
+.anat-tag{top:0;left:0}
+.anat-list{position:absolute;inset:0;pointer-events:none}
+
+/* proof band */
+.proof{padding:14vh var(--gutr) 10vh var(--gut);background:var(--bg)}
+.proof-head{max-width:820px;margin:0 0 6vh}
+.proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.pf{margin:0;min-width:0;display:flex;flex-direction:column;gap:18px}
+.pf:nth-child(2){margin-top:8vh}
+.pf-ph{position:relative;overflow:hidden;aspect-ratio:4/5;border:1px solid var(--line)}
+.pf-ph img{width:100%;height:118%;object-fit:cover;display:block;transform:translateY(var(--py,0%));will-change:transform}
+.pf-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(12,10,11,.55))}
+.pf figcaption{display:grid;grid-template-columns:40px minmax(0,1fr);gap:4px 8px}
+.pf figcaption .mono{grid-row:span 2;color:var(--garnet-ink);font-size:.72rem;letter-spacing:.16em;padding-top:6px}
+.pf h3{margin:0;font:400 1.6rem/1.1 var(--f-d);letter-spacing:.06em}
+.pf p{margin:0;color:var(--muted)}
+
+/* closer over the photograph */
+.closer{position:relative;isolation:isolate;overflow:hidden}
+.closer-ph{position:absolute;inset:0;z-index:-1}
+.closer-ph img{width:100%;height:100%;object-fit:cover;object-position:63% 50%;opacity:.38;filter:saturate(.9)}
+.closer-ph::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 55%,transparent,rgba(12,10,11,.9) 80%),linear-gradient(var(--bg),transparent 25%,transparent 75%,var(--bg))}
+
+@media (max-width:900px){
+  .hero{padding-top:58vh}
+  .hero-ph img{object-position:64% 42%}
+  .hero::before{background:linear-gradient(transparent 22%,rgba(12,10,11,.55) 44%,rgba(12,10,11,.96) 62%,var(--bg))}
+  .turn{height:300vh}
+  .turn-pin{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);align-items:start;gap:0;padding-top:calc(var(--top-h) + 2vh)}
+  .turn-stage{grid-row:1;width:min(64vw,40svh)}
+  .turn-copy{grid-row:2;align-self:start}
+  .turn-copy .h2{font-size:1.7rem;margin-bottom:10px}
+  .turn-copy .eyebrow{margin-bottom:8px}
+  .turn-list h3{font-size:1.2rem}
+  .turn-meter{margin-top:16px}
+  .anat{height:auto}
+  .anat-pin{display:block;padding:10vh 0 6vh}
+  .anat-stage{width:min(72vw,46svh);margin:4vh auto 0}
+  .anat-list{position:static;margin-top:26px;pointer-events:auto}
+  .proof-grid{grid-template-columns:minmax(0,1fr)}
+  .pf:nth-child(2){margin-top:0}
+  .pf-ph{aspect-ratio:4/3}
+}
+@media (prefers-reduced-motion:reduce){.turn-list li{transition:none}html.hp-print .hp-sweep{animation:none}}
+@media (max-width:900px){
+  .in-word{font-size:12.6vw;letter-spacing:.03em}
+  .hero{padding-top:60svh}
+  .hero-ph{height:66svh}
+  .hero-ph img{object-position:66% 46%}
+  .hero::before{background:linear-gradient(transparent 30%,rgba(12,10,11,.5) 46%,rgba(12,10,11,.96) 60%,var(--bg))}
+  .turn-pin{padding-bottom:92px}
+  .turn-stage{width:min(54vw,33svh)}
+  .turn-copy .h2{font-size:1.55rem}
+  .turn-list p{font-size:.95rem}
+}
+
 </style>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
-<canvas id="gl" aria-hidden="true"></canvas>
-<div class="vial-fallback" aria-hidden="true"><i class="vf-cap"></i><i class="vf-glass"><b></b></i></div>
 <div class="grain" aria-hidden="true"></div>
 
 <!-- ============ INTRO ============ -->
 <div id="intro" class="intro" hidden>
+  <video class="in-film" muted playsinline preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1" poster="media/intro-poster.jpg"></video>
+  <div class="in-shade" aria-hidden="true"></div>
   <div class="in-line" aria-hidden="true"></div>
   <p class="in-kicker mono" aria-hidden="true"><span>Lot</span> <span class="in-lot">PX-2611-A</span></p>
-  <h2 class="in-word" aria-label="Pepticity"><span>P</span><span>e</span><span>p</span><span>t</span><span>i</span><span>c</span><span>i</span><span>t</span><span>y</span></h2>
+  <h2 class="in-word" aria-label="PEPTICITY"><span>P</span><span>E</span><span>P</span><span>T</span><span>I</span><span>C</span><span>I</span><span>T</span><span>Y</span></h2>
   <p class="in-tag" aria-hidden="true">Peptide care you can verify.</p>
   <button class="intro-skip mono" type="button">Skip intro <span aria-hidden="true">Esc</span></button>
 </div>
@@ -460,9 +559,9 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="top">
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="curtain"><span class="mb-lines" aria-hidden="true"><i></i><i></i></span><span class="mb-t">Menu</span></button>
-  <a class="brand" href="#home" data-nav-home aria-label="Pepticity home">
+  <a class="brand" href="#home" data-nav-home aria-label="PEPTICITY home">
     <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M13 35V7h10.5a8.5 8.5 0 0 1 0 17H13"/><circle cx="13" cy="35" r="2.2"/><circle cx="13" cy="24" r="2.2"/><circle cx="23.5" cy="7" r="2.2"/><circle cx="32" cy="15.5" r="2.2"/></svg>
-    <span class="brand-word">Pepticity</span>
+    <span class="brand-word">PEPTICITY</span>
   </a>
   <div class="top-r">
     <span class="top-phone mono">[phone number]</span>
@@ -491,6 +590,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 <!-- ======================= HOME ======================= -->
 <section data-view="home" class="view v-home" aria-labelledby="h-home">
   <div class="hero">
+    <figure class="hero-ph" aria-hidden="true"><img class="hp-blank" src="media/hero-blank.jpg" alt="" width="2736" height="1536" fetchpriority="high"><img class="hp-label" src="media/hero.jpg" alt="" width="2736" height="1536"><i class="hp-sweep"></i></figure>
     <div class="hero-copy">
       <p class="eyebrow mono"><span class="dot" aria-hidden="true"></span>Clinician-led. Lab-proven.</p>
       <h1 id="h-home" class="hero-h" data-aud-text="hero">Peptide care you can verify.</h1>
@@ -509,18 +609,22 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
       <span>Prepared</span><span>Licensed partner pharmacy</span>
       <span>Status</span><span class="hs-ok">Certificate on file</span>
     </div>
-    <p class="hero-scroll mono" aria-hidden="true">Scroll to open the label</p>
+    <p class="hero-scroll mono" aria-hidden="true">Scroll to turn the vial</p>
   </div>
 
-  <section class="peel" aria-labelledby="h-peel">
-    <div class="peel-in">
-      <p class="eyebrow mono">Under the label</p>
-      <h2 id="h-peel" class="h2">Three things on every vial. <em>All of them checkable.</em></h2>
-      <ol class="peel-list">
-        <li><span class="pl-n mono">i.</span><div><h3>A lot code</h3><p>Type it into the lot lookup to see that lot's certificate of analysis.</p></div></li>
-        <li><span class="pl-n mono">ii.</span><div><h3>The pharmacy</h3><p>The licensed partner pharmacy that prepared it, by name, with a licence you can check.</p></div></li>
-        <li><span class="pl-n mono">iii.</span><div><h3>A cold-chain seal</h3><p>Shipped cold to your door, with the seal intact when it arrives.</p></div></li>
-      </ol>
+  <section id="turn" class="turn" aria-labelledby="h-turn">
+    <div class="turn-pin">
+      <div class="turn-copy">
+        <p class="eyebrow mono">Turn the vial</p>
+        <h2 id="h-turn" class="h2">The front says who. <em>The back says what.</em></h2>
+        <ol class="turn-list">
+          <li class="is-on"><span class="pl-n mono">i.</span><div><h3>The PEPTICITY mark</h3><p>Printed straight onto the glass. No paper sticker to peel, smudge or swap.</p></div></li>
+          <li><span class="pl-n mono">ii.</span><div><h3>The peptide and its strength</h3><p>On the back panel in plain type, so you always know exactly what is in the vial.</p></div></li>
+          <li><span class="pl-n mono">iii.</span><div><h3>Lot, pharmacy, Rx only</h3><p>The lot code you can look up, the licensed partner pharmacy that prepared it, and Rx only.</p></div></li>
+        </ol>
+        <p class="turn-meter mono" aria-hidden="true"><span>FRONT</span><i><b></b></i><span>BACK</span></p>
+      </div>
+      <div class="turn-stage"><canvas class="rig" id="rig-turn" role="img" aria-label="The PEPTICITY vial turning from the vertical wordmark on the front to the peptide panel on the back"></canvas></div>
     </div>
   </section>
 
@@ -531,12 +635,13 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
         <h2 id="h-anat" class="h2">Four layers. <em>Each one inspected.</em></h2>
         <p class="anat-hint mono" aria-hidden="true">Keep scrolling to take it apart</p>
       </div>
+      <div class="anat-stage"><canvas class="rig" id="rig-anat" role="img" aria-label="The vial separating into its seal, printed label, contents and glass"></canvas>
       <ol class="anat-list">
-        <li class="anat-tag" data-part="seal" data-side="r"><div class="at-card"><span class="at-n mono">01</span><div class="at-c"><h3>Chrome crimp seal</h3><p>Tamper-evident. It should reach you intact. If it doesn't, tell your care team.</p></div></div></li>
-        <li class="anat-tag" data-part="label" data-side="r"><div class="at-card"><span class="at-n mono">02</span><div class="at-c"><h3>Lot label</h3><p>The lot code, the pharmacy and its licence number, printed where you can check all three.</p></div></div></li>
-        <li class="anat-tag" data-part="liquid" data-side="l"><div class="at-card"><span class="at-n mono">03</span><div class="at-c"><h3>Contents</h3><p>Prepared to your prescription by a licensed partner pharmacy, and tested before the lot is released.</p></div></div></li>
-        <li class="anat-tag" data-part="glass" data-side="l"><div class="at-card"><span class="at-n mono">04</span><div class="at-c"><h3>Clear glass vial</h3><p>Clear so the contents can be inspected. [Glass type to be confirmed by the pharmacy]</p></div></div></li>
-      </ol>
+        <li class="anat-tag" data-part="seal" data-side="r"><div class="at-card"><span class="at-n mono">01</span><div class="at-c"><h3>Silver crimp seal</h3><p>Tamper-evident aluminium with a flip-off top. It should reach you intact. If it doesn't, tell your care team.</p></div></div></li>
+        <li class="anat-tag" data-part="glass" data-side="r"><div class="at-card"><span class="at-n mono">02</span><div class="at-c"><h3>Clear glass vial</h3><p>Clear so the contents can be inspected. [Glass type to be confirmed by the pharmacy]</p></div></div></li>
+        <li class="anat-tag" data-part="contents" data-side="r"><div class="at-card"><span class="at-n mono">03</span><div class="at-c"><h3>Contents</h3><p>Prepared to your prescription by a licensed partner pharmacy, and tested before the lot is released.</p></div></div></li>
+        <li class="anat-tag" data-part="print" data-side="l"><div class="at-card"><span class="at-n mono">04</span><div class="at-c"><h3>Printed label</h3><p>PEPTICITY on the front. The peptide, strength, lot and pharmacy on the back.</p></div></div></li>
+      </ol></div>
     </div>
   </section>
 
@@ -552,6 +657,15 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
     <div class="band">
       <p class="band-q">Not sure where to start?</p>
       <button class="btn-br btn-solid" type="button" data-quiz><span>Take the 60-second assessment</span></button>
+    </div>
+  </section>
+
+  <section class="proof" aria-labelledby="h-proof">
+    <div class="proof-head"><p class="eyebrow mono">Behind every vial</p><h2 id="h-proof" class="h2">Reviewed. Tested. <em>Shipped cold.</em></h2></div>
+    <div class="proof-grid">
+      <figure class="pf"><div class="pf-ph"><img src="media/clinician.jpg" alt="A clinician's hands reviewing notes on a tablet beside a stethoscope" width="1600" height="1060" loading="lazy"></div><figcaption><span class="mono">01</span><h3>Reviewed</h3><p>A licensed clinician reads every assessment and decides if a plan is right for you.</p></figcaption></figure>
+      <figure class="pf"><div class="pf-ph"><img src="media/lab.jpg" alt="A gloved hand placing a sample vial into a lab instrument tray" width="1600" height="1060" loading="lazy"></div><figcaption><span class="mono">02</span><h3>Tested</h3><p>Every lot is tested before it is released, and its certificate stays on file.</p></figcaption></figure>
+      <figure class="pf"><div class="pf-ph"><img src="media/cold.jpg" alt="A PEPTICITY vial standing in an insulated shipping case with ice packs" width="2048" height="1360" loading="lazy"></div><figcaption><span class="mono">03</span><h3>Shipped cold</h3><p>Packed in an insulated case with ice packs, and sealed until it reaches your door.</p></figcaption></figure>
     </div>
   </section>
 
@@ -591,8 +705,8 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
     </div>
     <div class="cmp-wrap">
       <table class="cmp-t">
-        <caption class="sr">Pepticity compared with a typical "research use only" seller</caption>
-        <thead><tr><th scope="col"><span class="sr">Topic</span></th><th scope="col">Pepticity</th><th scope="col">A typical "research use only" seller</th></tr></thead>
+        <caption class="sr">PEPTICITY compared with a typical "research use only" seller</caption>
+        <thead><tr><th scope="col"><span class="sr">Topic</span></th><th scope="col">PEPTICITY</th><th scope="col">A typical "research use only" seller</th></tr></thead>
         <tbody data-fill="compare"></tbody>
       </table>
     </div>
@@ -606,7 +720,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
       <div class="pr-acts"><button class="btn-br btn-solid" type="button" data-quiz><span>Start my free review</span></button><a class="btn-link" href="#shop">See membership <span aria-hidden="true">&#8594;</span></a></div>
     </div>
     <div class="receipt" id="receipt">
-      <p class="rc-top mono"><span>Pepticity</span><span>Your first month</span></p>
+      <p class="rc-top mono"><span>PEPTICITY</span><span>Your first month</span></p>
       <ol class="rc-lines"></ol>
       <p class="rc-total"><span>Due today</span><b>$0.00</b></p>
       <p class="rc-foot mono">Membership $[xx] a month, only if a clinician prescribes a plan. [Confirm pricing with Grace]</p>
@@ -614,6 +728,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
   </section>
 
   <section class="closer" aria-labelledby="h-close">
+    <div class="closer-ph" aria-hidden="true"><img src="media/hero.jpg" alt="" width="2736" height="1536" loading="lazy"></div>
     <h2 id="h-close" class="closer-h">Precision, <em>prescribed.</em></h2>
     <button class="btn-br btn-solid" type="button" data-quiz><span>Start the 60-second assessment</span></button>
     <p class="closer-p">Prefer a person? Call <span class="mono">[phone number]</span></p>
@@ -638,7 +753,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
       <p class="lede">No hidden fees. The receipt below is the whole story. [Confirm pricing with Grace]</p>
     </div>
     <div class="receipt" id="receipt2">
-      <p class="rc-top mono"><span>Pepticity</span><span>Your first month</span></p>
+      <p class="rc-top mono"><span>PEPTICITY</span><span>Your first month</span></p>
       <ol class="rc-lines"></ol>
       <p class="rc-total"><span>Due today</span><b>$0.00</b></p>
       <p class="rc-foot mono">Membership $[xx] a month, only if a clinician prescribes a plan.</p>
@@ -703,11 +818,11 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 
 <footer class="foot">
   <div class="foot-top">
-    <p class="foot-word">Pepticity</p>
+    <p class="foot-word">PEPTICITY</p>
     <nav class="foot-nav" aria-label="Footer"><a href="#home" data-nav="home">Home</a><a href="#shop" data-nav="shop">Membership</a><a href="#science" data-nav="science">The science</a><a href="#faq" data-nav="faq">Questions</a></nav>
   </div>
-  <p class="disclaimer">Pepticity is a care service. A licensed clinician decides if a plan is right for you, and plans are prepared by a licensed partner pharmacy. Compounded medicines are not FDA-approved. Nothing on this site is medical advice, and no result is promised. Lot data shown here is sample data. [Final legal copy to be approved by counsel.]</p>
-  <p class="fine mono">&copy; 2026 Pepticity. Design preview.</p>
+  <p class="disclaimer">PEPTICITY is a care service. A licensed clinician decides if a plan is right for you, and plans are prepared by a licensed partner pharmacy. Compounded medicines are not FDA-approved. Nothing on this site is medical advice, and no result is promised. Lot data shown here is sample data. [Final legal copy to be approved by counsel.]</p>
+  <p class="fine mono">&copy; 2026 PEPTICITY. Design preview.</p>
 </footer>
 
 <div class="sticky-cta"><button class="btn-br btn-solid" type="button" data-quiz><span>Start the free assessment</span></button></div>
@@ -754,7 +869,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 //# sourceMappingURL=lenis.min.js.map
 </script>
 <script>
-/* Pepticity shared core (V6\u2013V8).
+/* PEPTICITY shared core (V6\u2013V8).
    Copy, routing, audience switcher, assessment, lot lookup, red-flag checker,
    receipt, text size and smooth scroll. Each site styles the markup its own way.
    Compliance: no dosing, no outcome claims, no reviews or invented numbers.
@@ -830,7 +945,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
       'Is there no phone number with a real person behind it?'
     ],
     faq: [
-      ['What is Pepticity?', 'A clinician-guided peptide care service. You take a short assessment, a licensed clinician reviews it, and if a plan is right for you, a licensed partner pharmacy prepares it.'],
+      ['What is PEPTICITY?', 'A clinician-guided peptide care service. You take a short assessment, a licensed clinician reviews it, and if a plan is right for you, a licensed partner pharmacy prepares it.'],
       ['Do I need a prescription?', 'Yes. Every plan is prescribed by a licensed clinician after a review. Nothing here is sold "for research use".'],
       ['Who are the clinicians?', '[Clinician network: confirm with Grace]. Each clinician\'s licence can be checked with their state or provincial board.'],
       ['Who prepares it?', 'A licensed partner pharmacy: [pharmacy name: confirm with Grace].'],
@@ -1244,6 +1359,122 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 
 </script>
 <script>
+/* PEPTICITY vial rig (VIA-01 \u00b7 Label Turn, ANA-02 \u00b7 Photo Anatomy).
+   Draws the real photographed vial and wraps the flat label artwork around its glass
+   with cylinder maths, lighting from the photo, the far-side print seen through the glass,
+   a slab reflection, a lift-off cap and a print that can peel away flat. */
+(function (W) {
+  'use strict';
+  // geometry in the cropped photo (880 x 1400)
+  var G = { w: 880, h: 1640, cx: 440.5, r: 223.5, top: 780, bot: 1350, contact: 1375, cap: { x: 255, y: 358, w: 368, h: 274 } };
+  function load(src) { return new Promise(function (res, rej) { var i = new Image(); i.decoding = 'async'; i.onload = function () { res(i); }; i.onerror = rej; i.src = src; }); }
+  function cv(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+
+  function create(canvas, src) {
+    var ctx = canvas.getContext('2d'), imgs = null, hl = null, ink = null, far = null, ready = false, raf = 0, want = null;
+    var st = { turn: 0, lift: 0, peel: 0, drift: 0 };
+    var body = G.bot - G.top;
+
+    function prep() {
+      // highlight map: where the photo is brighter than its row median (softbox streaks on the glass)
+      var c = cv(G.w, G.h), x = c.getContext('2d'); x.drawImage(imgs.base, 0, 0);
+      var x0 = Math.floor(G.cx - G.r), ww = Math.ceil(G.r * 2), d;
+      try { d = x.getImageData(x0, G.top - 120, ww, body + 160); } catch (e) { d = null; }
+      hl = cv(G.w, G.h);
+      if (d) {
+        var hx = hl.getContext('2d'), out = hx.createImageData(ww, d.height), p = d.data, o = out.data;
+        for (var y = 0; y < d.height; y++) {
+          var row = [], i;
+          for (i = 0; i < ww; i++) { var k = (y * ww + i) * 4; row.push((p[k] + p[k + 1] + p[k + 2]) / 3); }
+          var med = row.slice().sort(function (a, b) { return a - b; })[ww >> 1];
+          for (i = 0; i < ww; i++) { var a = Math.max(0, Math.min(0.6, (row[i] - med) / 255 * 2.2)); var q = (y * ww + i) * 4; o[q] = o[q + 1] = o[q + 2] = 255; o[q + 3] = a * 255 * 0.55; }
+        }
+        hx.putImageData(out, x0, G.top - 120);
+      }
+      ink = cv(G.w, G.h); far = cv(G.w, G.h);
+      // scales so the print matches the stills (front: 0.95r x 0.86 body, back: 1.3r x 0.62 body)
+      var f = imgs.front, b = imgs.back;
+      imgs.fs = Math.min(G.r * 0.95 / f.width, body * 0.86 / f.height);
+      imgs.bs = Math.min(G.r * 1.3 / b.width, body * 0.62 / b.height);
+    }
+
+    // draw one label wrapped at angle phi (0 = facing camera). near side to ctxN, far side (mirrored) to ctxF
+    function wrapLabel(ctxN, ctxF, img, s, phi, ymid, peel, peelDx) {
+      var aw = img.width * s, ah = img.height * s, y0 = G.top + body * ymid - ah / 2, step = 1.25;
+      for (var a = -aw / 2; a < aw / 2; a += step) {
+        var th = a / G.r + phi, c = Math.cos(th), sx = (a + aw / 2) / s;
+        var xw = G.cx + G.r * Math.sin(th), ww = Math.max(0.4, step * Math.abs(c));
+        if (peel > 0) {           // print lifts off the glass and lies flat beside it
+          var xf = G.cx + peelDx + a; xw += (xf - xw) * peel; ww += (step - ww) * peel; c = c + (1 - c) * peel;
+        }
+        var edge = Math.min(1, Math.max(0, (c - 0.08) / 0.35));
+        if (c > 0 || peel > 0.5) {
+          ctxN.globalAlpha = Math.pow(edge, 0.8) * (0.62 + 0.38 * Math.pow(Math.max(c, 0), 0.7)) * 0.96;
+          ctxN.drawImage(img, sx, 0, step / s + 0.5, img.height, xw - ww / 2, y0, ww + 0.6, ah);
+        } else if (ctxF) {
+          var cf = -c, ef = Math.min(1, Math.max(0, (cf - 0.08) / 0.35));
+          ctxF.globalAlpha = Math.pow(ef, 0.8) * 0.8;
+          ctxF.drawImage(img, sx, 0, step / s + 0.5, img.height, xw - ww / 2, y0, ww + 0.6, ah);
+        }
+      }
+      ctxN.globalAlpha = 1; if (ctxF) ctxF.globalAlpha = 1;
+    }
+
+    function draw() {
+      raf = 0; if (!ready) return;
+      var s = want || st; st = s;
+      var lift = s.lift || 0, peel = s.peel || 0;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var k = canvas.width / G.w; ctx.setTransform(k, 0, 0, k, 0, 0);
+      // base: capped photo, or the capless one while the cap is lifted
+      ctx.drawImage(imgs.base, 0, 0, G.w, G.h);
+      if (lift > 0.001) { ctx.globalAlpha = Math.min(1, lift * 6); ctx.drawImage(imgs.nocap, 0, 0, G.w, G.h); ctx.globalAlpha = 1; }
+      var n = ink.getContext('2d'), f = far.getContext('2d');
+      n.setTransform(1, 0, 0, 1, 0, 0); f.setTransform(1, 0, 0, 1, 0, 0);
+      n.clearRect(0, 0, G.w, G.h); f.clearRect(0, 0, G.w, G.h);
+      var phi = s.turn + (s.drift || 0);
+      wrapLabel(n, f, imgs.front, imgs.fs, phi, 0.5, peel, -G.r * 1.55);
+      wrapLabel(n, f, imgs.back, imgs.bs, phi + Math.PI, 0.47, 0, 0);
+      // far side: soft and dim through glass and liquid
+      ctx.save(); ctx.filter = 'blur(1.4px)'; ctx.globalAlpha = 0.3; ctx.drawImage(far, 0, 0); ctx.restore();
+      // near side: add the photo's highlights onto the ink only, then lay it down
+      n.globalCompositeOperation = 'source-atop'; if (hl) n.drawImage(hl, 0, 0); n.globalCompositeOperation = 'source-over';
+      ctx.drawImage(ink, 0, 0);
+      // reflection of the print in the obsidian slab
+      ctx.save(); ctx.beginPath(); ctx.rect(G.cx - G.r * 2.4, G.contact, G.r * 4.8, body * 0.6); ctx.clip();
+      ctx.translate(0, 2 * G.contact - (G.contact - G.bot) * 2); ctx.scale(1, -1); ctx.globalAlpha = 0.16 * (1 - peel); ctx.drawImage(ink, 0, 0); ctx.restore();
+      // cap rises off the neck
+      if (lift > 0.001) {
+        var dy = -lift * 230, sc = 1 + lift * 0.04, c = G.cap;
+        ctx.save(); ctx.translate(c.x + c.w / 2, c.y + c.h / 2 + dy); ctx.scale(sc, sc);
+        ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 40 * lift; ctx.shadowOffsetY = 20 * lift;
+        ctx.drawImage(imgs.cap, -c.w / 2, -c.h / 2, c.w, c.h); ctx.restore();
+      } else {
+        // cap from the capped photo already sits on top (base image); nothing to draw
+      }
+    }
+
+    function set(next) { want = Object.assign({}, st, next); if (!raf) raf = requestAnimationFrame(draw); }
+    function size() {
+      var r = canvas.getBoundingClientRect(), dpr = Math.min(W.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(2, Math.round(r.width * dpr)); canvas.height = Math.round(canvas.width * G.h / G.w);
+      if (ready) { raf = 0; draw(); }
+    }
+    // screen position (CSS px, relative to the canvas) of a point in photo space
+    function at(x, y) { var r = canvas.getBoundingClientRect(); return { x: x / G.w * r.width, y: y / G.h * r.height }; }
+
+    var p = Promise.all([load(src.base), load(src.nocap), load(src.cap), load(src.front), load(src.back)]).then(function (a) {
+      imgs = { base: a[0], nocap: a[1], cap: a[2], front: a[3], back: a[4] };
+      prep(); ready = true; size(); canvas.classList.add('is-ready');
+    }).catch(function (e) { console.warn('vial rig unavailable', e); canvas.classList.add('is-failed'); });
+    W.addEventListener('resize', function () { size(); });
+    return { set: set, size: size, at: at, ready: p, G: G };
+  }
+  W.PEPRIG = { create: create, G: G };
+})(window);
+
+</script>
+<script>
 /* Pepticity V6 \u00b7 Garnet: page behaviour. 3D lives in scene.js. */
 (function () {
   'use strict';
@@ -1321,24 +1552,66 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
   W.addEventListener('pointermove', function (e) { S.px = e.clientX / innerWidth * 2 - 1; S.py = e.clientY / innerHeight * 2 - 1; }, { passive: true });
 
   /* ---------- scroll choreography ---------- */
-  var mm = G && ST ? G.matchMedia() : null;
+  var SRC = { base: 'media/vial.jpg', nocap: 'media/vial-nocap.jpg', cap: 'media/cap.png', front: 'media/label-front.png', back: 'media/label-back.png' };
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
   function homeScroll() {
     if (!G || !ST) return;
-    ST.create({ trigger: '.v-home .hero', start: 'top top', end: 'bottom top', onUpdate: function (s) { S.hero = 1 - s.progress; } });
     var mob = W.matchMedia('(max-width: 900px)');
-    ST.create({ trigger: '.v-home .hero', start: 'top top', end: 'bottom 30%', onUpdate: function (s) { if (mob.matches) S.peel = s.progress; } });
-    ST.create({ trigger: '.peel', start: 'top 85%', end: 'bottom 40%', scrub: 1, onUpdate: function (s) { if (!mob.matches) S.peel = s.progress; } });
-    // anatomy: the vial comes apart, holds, then snaps back together (S.explode 0..1)
+    // hero: a slow push into the photograph
+    if (!P.reduce) G.to('.hero-ph img', { scale: 1.08, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '.v-home .hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+    // VIA-01 \u00b7 Label Turn: scroll turns the printed label from the front mark to the back panel
+    var turnSec = $('.turn'), items = $$('.turn-list li'), drift = 0, tv = 0;
+    var turn = W.PEPRIG ? W.PEPRIG.create($('#rig-turn'), SRC) : null;
+    ST.create({ trigger: '.turn', start: 'top top', end: 'bottom bottom', onUpdate: function (s) {
+      var e = ease(clamp((s.progress - 0.06) / 0.82)); tv = e * Math.PI;
+      if (turn) turn.set({ turn: tv, drift: drift });
+      turnSec.style.setProperty('--turn', e.toFixed(3));
+      var i = s.progress < 0.36 ? 0 : s.progress < 0.7 ? 1 : 2;
+      items.forEach(function (li, k) { li.classList.toggle('is-on', k === i); });
+    } });
+    var stage = $('.turn-stage');
+    if (!P.reduce && stage) stage.addEventListener('pointermove', function (e) { var r = stage.getBoundingClientRect(); drift = ((e.clientX - r.left) / r.width - 0.5) * 0.4; if (turn) turn.set({ turn: tv, drift: drift }); });
+    if (stage) stage.addEventListener('pointerleave', function () { drift = 0; if (turn) turn.set({ turn: tv, drift: 0 }); });
+
+    // ANA-02 \u00b7 Photo Anatomy: the cap lifts off, the print peels away flat, tags name each layer
+    var anat = W.PEPRIG ? W.PEPRIG.create($('#rig-anat'), SRC) : null, RG = W.PEPRIG ? W.PEPRIG.G : null;
+    var tags = {}; $$('.anat-tag').forEach(function (t) { tags[t.getAttribute('data-part')] = t; });
     var hint = $('.anat-hint');
-    function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
-    ST.create({ trigger: '.anat', start: 'top top', end: 'bottom bottom', onUpdate: function (s) { if (!mob.matches) { S.explode = shape(s.progress, 0.06, 0.5, 0.84, 1); hint.style.opacity = Math.max(0, 1 - s.progress * 6).toFixed(2); } }, onLeave: function () { if (!mob.matches) S.explode = 0; }, onLeaveBack: function () { if (!mob.matches) S.explode = 0; } });
-    ST.create({ trigger: '.anat', start: 'top bottom', end: 'bottom top', onUpdate: function (s) { if (mob.matches) S.explode = shape(s.progress, 0.05, 0.3, 0.62, 0.85) * 0.85; }, onLeave: function () { if (mob.matches) S.explode = 0; }, onLeaveBack: function () { if (mob.matches) S.explode = 0; } });
-    ST.create({ trigger: '.how', start: 'top 55%', endTrigger: '.foot', end: 'bottom bottom', toggleClass: { targets: D.documentElement, className: 'gl-dim' } });
+    function place(e, lift, peel) {
+      if (!anat || !RG || mob.matches) return;
+      var body = RG.bot - RG.top, fw = Math.min(RG.r * 0.95 / 137, body * 0.86 / 1065) * 137 * 0.5;
+      var pts = {
+        seal: [RG.cap.x + RG.cap.w + 6, RG.cap.y + RG.cap.h * 0.42 - lift * 230, clamp((lift - 0.35) / 0.3)],
+        glass: [RG.cx + RG.r * 0.98, RG.top - 30, clamp((e - 0.45) / 0.3)],
+        contents: [RG.cx + RG.r * 0.55, RG.top + body * 0.72, clamp((e - 0.55) / 0.3)],
+        print: [RG.cx - RG.r * 0.1 + (-RG.r * 1.55 - fw - 6 + RG.r * 0.1) * peel, RG.top + body * 0.5, clamp((peel - 0.55) / 0.3)]
+      };
+      Object.keys(pts).forEach(function (k) { var t = tags[k]; if (!t) return; var q = anat.at(pts[k][0], pts[k][1]); t.style.transform = 'translate3d(' + q.x.toFixed(1) + 'px,' + q.y.toFixed(1) + 'px,0)'; t.style.opacity = pts[k][2].toFixed(3); });
+    }
+    function anatSet(e) { var lift = ease(clamp(e * 1.6)), peel = ease(clamp(e * 1.6 - 0.45)); if (anat) anat.set({ lift: lift, peel: peel, turn: 0 }); place(e, lift, peel); }
+    ST.create({ trigger: '.anat', start: 'top top', end: 'bottom bottom', onUpdate: function (s) {
+      if (mob.matches) return;
+      anatSet(shape(s.progress, 0.06, 0.5, 0.84, 1)); if (hint) hint.style.opacity = Math.max(0, 1 - s.progress * 6).toFixed(2);
+    } });
+    // phones: no pin; it comes apart once as you reach it
+    var phoneDone = false;
+    ST.create({ trigger: '.anat-stage', start: 'top 70%', onEnter: function () {
+      if (!mob.matches || phoneDone) return; phoneDone = true;
+      var o = { e: 0 }; G.to(o, { e: 0.85, duration: P.reduce ? 0 : 2.2, ease: 'power2.inOut', onUpdate: function () { anatSet(o.e); } });
+    } });
+    if (anat) anat.ready.then(function () { anatSet(0); });
+
+    // proof band: photographs drift slower than the page
+    if (!P.reduce) $$('.pf-ph img').forEach(function (img) { G.fromTo(img, { yPercent: -10 }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: img.parentNode, start: 'top bottom', end: 'bottom top', scrub: true } }); });
+
     ST.create({ trigger: '.thread', start: 'top 70%', end: 'bottom 60%', scrub: 1, onUpdate: function (s) { $('.thread').style.setProperty('--thread', (1 - s.progress).toFixed(4)); } });
     $$('.step').forEach(function (li) { ST.create({ trigger: li, start: 'top 62%', end: 'bottom 30%', toggleClass: { targets: li, className: 'is-on' } }); });
     if (!P.reduce) {
-      G.from('.peel-list li', { opacity: 0, y: 30, stagger: .14, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.peel-list', start: 'top 80%' }, immediateRender: false });
       $$('.v-home .h2').forEach(function (h) { G.from(h, { opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' }, immediateRender: false }); });
+      G.from('.pf', { opacity: 0, y: 60, stagger: .14, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.proof-grid', start: 'top 82%' }, immediateRender: false });
       G.from('.ppl li', { opacity: 0, y: 50, stagger: .12, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.ppl', start: 'top 85%' }, immediateRender: false });
       G.from('.cmp-t tbody tr', { opacity: 0, x: -24, stagger: .08, duration: .7, ease: 'power2.out', scrollTrigger: { trigger: '.cmp-t', start: 'top 85%' }, immediateRender: false });
     }
@@ -1347,7 +1620,7 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
 
   /* ---------- router with a garnet curtain ---------- */
   var vt = el('div', 'vt'); var vtb = el('b'); vt.appendChild(vtb); vt.setAttribute('aria-hidden', 'true'); D.body.appendChild(vt);
-  var names = { home: 'Pepticity', shop: 'Membership', science: 'The science', faq: 'Questions' };
+  var names = { home: 'PEPTICITY', shop: 'Membership', science: 'The science', faq: 'Questions' };
   P.router({
     onView: function (name) {
       S.view = name; D.documentElement.setAttribute('data-page', name);
@@ -1370,298 +1643,53 @@ html:not(.gl-on) .at-card{position:static;width:auto;height:100%}
     }
   });
 
-  /* ---------- intro: hairline, vial, lot, wordmark, curtain lift ---------- */
-  var intro = $('#intro');
+  /* ---------- intro: the Descent (a film dives onto the vial), then the label prints on ---------- */
+  var intro = $('#intro'), film = $('.in-film', intro), H = D.documentElement;
+  function printLabel(animate) {
+    H.classList.remove('hp-printing');
+    if (animate && !P.reduce) { void H.offsetWidth; H.classList.add('hp-printing'); requestAnimationFrame(function () { requestAnimationFrame(function () { H.classList.remove('hp-printing'); H.classList.add('hp-print'); }); }); }
+  }
   P.intro({
     id: 'v6', root: intro,
     play: function (done) {
-      S.intro = 0; S.lift = 0;
-      if (!G) { S.intro = 1; setTimeout(done, 300); return function () {}; }
-      // wait for the vial's first frame, or a slow device would finish the dive before it is drawn
-      var o = { t: 0 }, tl = null, started = false;
-      function go() {
+      H.classList.add('hp-printing');
+      if (!G) { setTimeout(done, 300); return function () {}; }
+      var tl = null, started = false;
+      function go(withFilm) {
         if (started) return; started = true;
+        film.classList.add('is-on');
+        if (!withFilm) G.fromTo(film, { scale: 1.35, yPercent: -6 }, { scale: 1, yPercent: 0, duration: 8.4, ease: 'power2.inOut' });
         tl = G.timeline({ onComplete: done });
         tl.to('.in-line', { scaleY: 1, duration: 1.3, ease: 'power3.inOut' }, .2)
-        .to('.in-kicker', { opacity: 1, duration: .8 }, 1.0)
-        .to(o, { t: 1, duration: 4.4, ease: 'power2.inOut', onUpdate: function () { S.intro = o.t; } }, .9)
-        .to('.in-line', { opacity: 0, duration: 1 }, 2.6)
-        .to('.in-word span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: .07, ease: 'power3.out' }, 3.3)
-        .to('.in-tag', { opacity: 1, duration: .9 }, 4.8)
-        .to({}, { duration: .9 });
+          .to('.in-kicker', { opacity: 1, duration: .8 }, 1.0)
+          .to('.in-line', { opacity: 0, duration: 1 }, 3.2)
+          .to('.in-word span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: .07, ease: 'power3.out' }, 4.6)
+          .to('.in-tag', { opacity: 1, duration: .9 }, 6.0)
+          .to({}, { duration: 1.4 });
       }
-      if (S.ready) go(); else { W.addEventListener('pep-gl-ready', go, { once: true }); setTimeout(go, 3500); }
-      return function () { started = true; if (tl) tl.kill(); S.intro = 1; };
+      // film: chosen after first paint, never blocks; the still poster carries the dive if it can't play
+      var conn = navigator.connection || {}, skipFilm = P.reduce || conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '');
+      if (!skipFilm && film) {
+        var webm = film.canPlayType('video/webm; codecs="vp9"'), mp4 = film.canPlayType('video/mp4; codecs="avc1.640028"');
+        film.muted = true; film.src = mp4 ? 'media/intro.mp4' : webm ? 'media/intro.webm' : '';
+        if (film.src) {
+          film.addEventListener('playing', function () { go(true); }, { once: true });
+          film.addEventListener('error', function () { go(false); }, { once: true });
+          var pr = film.play(); if (pr && pr.catch) pr.catch(function () { go(false); });
+        }
+      }
+      setTimeout(function () { go(false); }, 1600);
+      return function () { started = true; if (tl) tl.kill(); };
     },
     handoff: function (end) {
-      intro.classList.add('is-lift');
-      if (G) G.to(S, { lift: 1, duration: 1.3, ease: 'power3.inOut' }); else S.lift = 1;
-      setTimeout(function () { intro.classList.remove('is-lift'); end(); }, 1150);
+      G.to(intro, { opacity: 0, duration: .9, ease: 'power2.inOut', onComplete: function () { intro.style.opacity = ''; end(); printLabel(true); } });
     },
-    onDone: function () { S.intro = 1; S.lift = 1; onScroll(); if (ST) ST.refresh(); }
+    onDone: function (skipped) {
+      if (film) { try { film.pause(); film.removeAttribute('src'); film.load(); } catch (e) {} }
+      if (skipped) printLabel(false);
+      onScroll(); if (ST) ST.refresh();
+    }
   });
 })();
-
-</script>
-<script type="module">
-/* Pepticity V6 \u00b7 Garnet: the 3D vial. Reads window.PEPSTATE every frame. */
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-const S = window.PEPSTATE || (window.PEPSTATE = { intro: 1, peel: 0, view: 'home', px: 0, py: 0, hero: 1 });
-const canvas = document.getElementById('gl');
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-function ready() { if (!S.ready) { S.ready = true; dispatchEvent(new Event('pep-gl-ready')); } }
-try { start(); } catch (e) { console.warn('3D unavailable', e); ready(); }
-
-function start() {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.setClearColor(0x000000, 0);
-
-  const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-  const cam = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-  cam.position.set(0, 0.2, 9);
-
-  const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(3, 4, 5); scene.add(key);
-  const rim = new THREE.PointLight(0xc8344d, 40, 12, 2); rim.position.set(-2.2, 1.2, -1.6); scene.add(rim);
-  const fill = new THREE.PointLight(0xffe9ee, 6, 10, 2); fill.position.set(2.4, -1, 3); scene.add(fill);
-  scene.add(new THREE.AmbientLight(0x1a1012, 1));
-
-  const vial = new THREE.Group(); scene.add(vial);
-  const spin = new THREE.Group(); vial.add(spin);
-  // part groups, so the anatomy section can pull the vial apart (ANA-01)
-  const glassG = new THREE.Group(), liqG = new THREE.Group(), labelG = new THREE.Group(), capG = new THREE.Group();
-  spin.add(glassG, liqG, labelG, capG);
-
-  // ---- glass body (lathe) ----
-  const R = 0.62, H = 2.15;
-  const prof = [];
-  prof.push(new THREE.Vector2(0.0, -H / 2));
-  prof.push(new THREE.Vector2(R - 0.06, -H / 2));
-  prof.push(new THREE.Vector2(R, -H / 2 + 0.07));
-  prof.push(new THREE.Vector2(R, H / 2 - 0.42));
-  for (let i = 0; i <= 8; i++) { const t = i / 8; prof.push(new THREE.Vector2(R - (R - 0.34) * Math.sin(t * Math.PI / 2), H / 2 - 0.42 + 0.3 * t)); }
-  prof.push(new THREE.Vector2(0.34, H / 2 - 0.02));
-  prof.push(new THREE.Vector2(0.4, H / 2 + 0.02));
-  prof.push(new THREE.Vector2(0.4, H / 2 + 0.1));
-  const glassGeo = new THREE.LatheGeometry(prof, 96);
-  const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.04, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, transparent: true, opacity: 0.13, envMapIntensity: 2.4, side: THREE.DoubleSide, depthWrite: false });
-  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 3; glassG.add(glass);
-
-  // ---- liquid ----
-  const LH = 1.18;
-  const liqGeo = new THREE.CylinderGeometry(R - 0.05, R - 0.05, LH, 96, 1, false);
-  liqGeo.translate(0, -H / 2 + 0.06 + LH / 2, 0);
-  const liqMat = new THREE.MeshPhysicalMaterial({ color: 0x5e0c1c, roughness: 0.1, metalness: 0, clearcoat: 1, emissive: 0x3a0711, emissiveIntensity: 0.5, envMapIntensity: 1.2, transparent: true, opacity: 0.94 });
-  const liquid = new THREE.Mesh(liqGeo, liqMat); liquid.renderOrder = 1; liqG.add(liquid);
-  const men = new THREE.Mesh(new THREE.CircleGeometry(R - 0.05, 96), new THREE.MeshPhysicalMaterial({ color: 0x8e1b30, roughness: 0.05, clearcoat: 1, emissive: 0x4a0a16, emissiveIntensity: 0.5, transparent: true, opacity: 0.9 }));
-  men.rotation.x = -Math.PI / 2; men.position.y = -H / 2 + 0.06 + LH; liqG.add(men);
-
-  // ---- chrome crimp cap + stopper ----
-  const chrome = new THREE.MeshStandardMaterial({ color: 0xe6e9ed, metalness: 1, roughness: 0.12, envMapIntensity: 2.6 });
-  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.47, 0.47, 0.42, 96, 1, false), chrome);
-  cap.position.y = H / 2 + 0.26; capG.add(cap);
-  const capTop = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.05, 24, 96), chrome); capTop.rotation.x = Math.PI / 2; capTop.position.y = H / 2 + 0.47; capG.add(capTop);
-  const stop = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.06, 64), new THREE.MeshStandardMaterial({ color: 0x2a1015, roughness: 0.6, metalness: 0.1 }));
-  stop.position.y = H / 2 + 0.48; capG.add(stop);
-  for (let i = 0; i < 40; i++) { // crimp ridges
-    const r = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.36, 0.03), chrome);
-    const a = i / 40 * Math.PI * 2; r.position.set(Math.cos(a) * 0.475, H / 2 + 0.24, Math.sin(a) * 0.475); r.rotation.y = -a; capG.add(r);
-  }
-
-  // ---- labels (canvas textures) ----
-  const LBL_H = 1.0, LBL_Y = -0.12;
-  function labelCanvas(kind) {
-    const c = document.createElement('canvas'); c.width = 2048; c.height = 640;
-    const g = c.getContext('2d');
-    if (kind === 'outer') {
-      const grd = g.createLinearGradient(0, 0, 0, 640); grd.addColorStop(0, '#f3efea'); grd.addColorStop(1, '#e4ddd6');
-      g.fillStyle = grd; g.fillRect(0, 0, 2048, 640);
-      g.fillStyle = '#8e1b30'; g.fillRect(0, 0, 2048, 22); g.fillRect(0, 618, 2048, 22);
-      g.fillStyle = '#151112'; g.font = '400 150px "Bodoni Moda", Didot, Georgia, serif'; g.textBaseline = 'middle';
-      g.fillText('PEPTICITY', 120, 250);
-      g.font = 'italic 400 64px "Bodoni Moda", Georgia, serif'; g.fillStyle = '#8e1b30'; g.fillText('Peptide care you can verify.', 126, 380);
-      g.font = '500 34px "Spline Sans Mono", monospace'; g.fillStyle = '#4a3f41';
-      g.fillText('Rx ONLY  \u00b7  CONTENTS PER PRESCRIPTION', 128, 480);
-      g.fillText('Prepared by a licensed partner pharmacy', 128, 530);
-      g.strokeStyle = '#8e1b30'; g.lineWidth = 3; g.strokeRect(1500, 120, 420, 400);
-      g.font = 'italic 400 54px "Bodoni Moda", Georgia, serif'; g.fillStyle = '#151112'; g.fillText('Peel', 1600, 290); g.fillText('to verify', 1560, 360);
-    } else {
-      g.fillStyle = '#efebe7'; g.fillRect(0, 0, 2048, 640);
-      g.fillStyle = '#151112'; g.font = '500 40px "Spline Sans Mono", monospace'; g.textBaseline = 'middle';
-      g.fillText('LOT', 120, 150); g.font = '500 120px "Spline Sans Mono", monospace'; g.fillStyle = '#8e1b30'; g.fillText('PX-2611-A', 120, 250);
-      g.fillStyle = '#151112'; g.font = '500 36px "Spline Sans Mono", monospace';
-      g.fillText('PHARMACY  [licensed partner]', 120, 380);
-      g.fillText('LICENCE   [number]', 120, 430);
-      g.fillText('COLD-CHAIN SEAL  INTACT', 120, 480);
-      g.fillText('CERTIFICATE  pepticity / lot', 120, 530);
-      for (let i = 0; i < 64; i++) { const w = (i * 37 % 7) + 3; g.fillRect(1260 + i * 11, 160, w, 300); }
-      g.font = '500 34px "Spline Sans Mono", monospace'; g.fillText('SAMPLE', 1500, 520);
-    }
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
-  }
-  let outerTex = labelCanvas('outer'), innerTex = labelCanvas('inner');
-  const innerMat = new THREE.MeshStandardMaterial({ map: innerTex, roughness: 0.55, metalness: 0, side: THREE.DoubleSide });
-  const outerMat = new THREE.MeshStandardMaterial({ map: outerTex, roughness: 0.42, metalness: 0, side: THREE.DoubleSide });
-  const inner = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.004, R + 0.004, LBL_H, 128, 1, true, -Math.PI * 0.55, Math.PI * 1.1), innerMat);
-  inner.position.y = LBL_Y; labelG.add(inner);
-  const outer = new THREE.Mesh(new THREE.BufferGeometry(), outerMat); outer.position.y = LBL_Y; labelG.add(outer);
-  const FULL = Math.PI * 2 - 0.004; // full wrap: no seam gap turning into view
-  let lastPeel = -1;
-  function buildOuter(p) {
-    // the label unwinds from one edge and lifts off the glass as it peels
-    const theta = FULL * (1 - 0.86 * p);
-    const segs = 128, rows = 2, pos = [], uv = [], idx = [];
-    const start = -FULL / 2;
-    for (let j = 0; j <= rows; j++) {
-      const v = j / rows, y = (v - 0.5) * LBL_H;
-      for (let i = 0; i <= segs; i++) {
-        const u = i / segs, a = start + u * theta;
-        const lift = p > 0 ? Math.pow(Math.max(0, u - 0.78) / 0.22, 2) * 0.35 * p : 0;
-        const r = R + 0.012 + lift;
-        pos.push(Math.sin(a) * r, y, Math.cos(a) * r);
-        uv.push(u * (theta / FULL), v);
-      }
-    }
-    for (let j = 0; j < rows; j++) for (let i = 0; i < segs; i++) { const a = j * (segs + 1) + i, b = a + segs + 1; idx.push(a, b, a + 1, b, b + 1, a + 1); }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-    g.setIndex(idx); g.computeVertexNormals();
-    outer.geometry.dispose(); outer.geometry = g;
-  }
-  buildOuter(0);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
-    outerTex.dispose(); innerTex.dispose();
-    outerTex = labelCanvas('outer'); innerTex = labelCanvas('inner');
-    outerMat.map = outerTex; innerMat.map = innerTex; outerMat.needsUpdate = innerMat.needsUpdate = true;
-  });
-
-  // ---- garnet halo + contact shadow ----
-  function radial(stops) { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); const r = g.createRadialGradient(128, 128, 0, 128, 128, 128); stops.forEach(s => r.addColorStop(s[0], s[1])); g.fillStyle = r; g.fillRect(0, 0, 256, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
-  const halo = new THREE.Mesh(new THREE.PlaneGeometry(7, 7), new THREE.MeshBasicMaterial({ map: radial([[0, 'rgba(200,52,77,.55)'], [0.35, 'rgba(142,27,48,.22)'], [1, 'rgba(142,27,48,0)']]), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-  halo.position.z = -2; vial.add(halo);
-  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 0.7), new THREE.MeshBasicMaterial({ map: radial([[0, 'rgba(0,0,0,.75)'], [1, 'rgba(0,0,0,0)']]), transparent: true, depthWrite: false }));
-  shadow.rotation.x = -Math.PI / 2; shadow.position.y = -H / 2 - 0.02; vial.add(shadow);
-
-  // ---- dust motes ----
-  const N = 260, dp = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) { dp[i * 3] = (Math.random() - 0.5) * 12; dp[i * 3 + 1] = Math.random() * 15 - 4; dp[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1; }
-  const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
-  const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xee8b9b, size: 0.025, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending }));
-  scene.add(dust);
-  // streaks that whip past the lens during the dive (INT-04)
-  const SN = 150, sp = new Float32Array(SN * 6);
-  for (let i = 0; i < SN; i++) {
-    const a = Math.random() * Math.PI * 2, r = 1.3 + Math.random() * 4, y = Math.random() * 13 - 2, l = 0.35 + Math.random() * 0.6;
-    const x = Math.cos(a) * r, z = Math.sin(a) * r * 0.6 + 1;
-    sp.set([x, y, z, x, y + l, z], i * 6);
-  }
-  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sp, 3));
-  const streaks = new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ color: 0xf2c7cf, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
-  scene.add(streaks);
-
-  // ---- anatomy parts: exploded offsets (vial space) and tag anchors ----
-  const PARTS = [
-    { g: capG,   off: new THREE.Vector3(0.38, 0.98, 0),    at: new THREE.Vector3(0.5, H / 2 + 0.28, 0),     id: 'seal' },
-    { g: labelG, off: new THREE.Vector3(0.8, 0.08, 0.55),  at: new THREE.Vector3(R + 0.03, LBL_Y + 0.2, 0), id: 'label' },
-    { g: liqG,   off: new THREE.Vector3(-0.48, -0.78, 0),  at: new THREE.Vector3(-(R - 0.03), -0.42, 0),   id: 'liquid' },
-    { g: glassG, off: new THREE.Vector3(0, 0, 0),          at: new THREE.Vector3(-(R + 0.01), -0.12, 0),    id: 'glass' },
-  ];
-  PARTS.forEach(p => { p.tag = document.querySelector('.anat-tag[data-part="' + p.id + '"]'); });
-  const pin = document.querySelector('.anat-pin');
-  const tv = new THREE.Vector3(), lookT = new THREE.Vector3();
-  let tagsShown = false;
-
-  // ---- layout ----
-  let mobile = false;
-  function resize() {
-    const w = innerWidth, h = innerHeight; mobile = w < 900;
-    renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
-  }
-  addEventListener('resize', resize); resize();
-
-  // ---- loop ----
-  let rx = 0, ry = 0, t0 = performance.now(), visible = true, peelS = 0, exS = 0;
-  document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) requestAnimationFrame(frame); });
-  document.documentElement.classList.add('gl-on');
-  const ease = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-
-  function frame(now) {
-    if (!visible) return;
-    requestAnimationFrame(frame);
-    const t = (now - t0) / 1000;
-    const onHome = S.view === 'home';
-    const intro = Math.min(1, Math.max(0, S.intro == null ? 1 : S.intro)), ie = ease(intro);
-    const hero = S.hero == null ? 1 : S.hero;
-    if (!onHome && intro >= 1 && (Math.floor(t * 60) % 3)) return; // idle softly behind other views
-
-    // placement: right of the copy on desktop, above it on phones
-    const L = THREE.MathUtils.lerp;
-    exS += ((onHome ? S.explode || 0 : 0) - exS) * 0.09;
-    const pres = Math.min(1, exS / 0.35), pe = ease(pres); // anatomy takes the vial centre stage
-    const baseX = mobile ? 0 : 1.75, baseY = mobile ? 0.9 : 0.05, sc = mobile ? 0.68 : 1;
-    // during the intro the vial holds centre stage above the wordmark, then glides into the hero
-    const lift = S.lift == null ? 1 : S.lift, le = ease(Math.min(1, Math.max(0, lift)));
-    const introX = mobile ? 0 : L(0, baseX, le);
-    const restY = L(-0.7, mobile ? baseY : L(0.65, baseY, le), ie) + (reduce ? 0 : Math.sin(t * 0.8) * 0.04) + (1 - hero) * (mobile ? 0.9 : 0.4);
-    vial.position.set(L(introX, mobile ? 0 : 0.3, pe), L(restY, mobile ? 0.55 : 0.02, pe), 0);
-    vial.scale.setScalar(L(sc * L(1.12, 1, ie) * (mobile ? 1 : L(0.85, 1, le)), mobile ? 0.56 : 0.8, pe));
-    renderer.toneMappingExposure = THREE.MathUtils.lerp(0.15, 1.05, Math.min(1, intro * 1.4));
-    key.position.x = THREE.MathUtils.lerp(-5, 3, ie);
-    rim.intensity = 40 + Math.sin(t * 1.3) * 6;
-
-    // rotation: slow idle, pointer tilt, scroll turn; the peel faces the viewer
-    peelS += ((S.peel || 0) - peelS) * 0.08;
-    const pk = Math.round(peelS * 200) / 200;
-    if (pk !== lastPeel) { buildOuter(pk); lastPeel = pk; }
-    rx += ((reduce ? 0 : S.py * 0.12) - rx) * 0.06;
-    ry += ((reduce ? 0 : S.px * 0.35) - ry) * 0.06;
-    const idle = reduce ? 0 : t * 0.18 * (1 - peelS);
-    const base = idle + (1 - ie) * -2.4 + (1 - hero) * 1.3 + ry;
-    const face = Math.round(base / (Math.PI * 2)) * Math.PI * 2 + ry * 0.3; // lot label square to the viewer
-    const turned = base + (face - base) * Math.min(1, peelS * 1.4);
-    spin.rotation.y = L(turned, face - 0.32 + ry * 0.2, pe);
-    // pull the parts apart one after another
-    const th = spin.rotation.y, cs = Math.cos(th), sn = Math.sin(th);
-    PARTS.forEach((p, i) => {
-      const k = p.k = ease(Math.min(1, Math.max(0, exS * 1.5 - i * 0.14)));
-      const ox = p.off.x * k, oy = p.off.y * k, oz = p.off.z * k;
-      p.g.position.set(ox * cs - oz * sn, oy, ox * sn + oz * cs);
-    });
-    glassMat.opacity = 0.13 + pe * 0.1;
-    vial.rotation.x = rx + 0.04; vial.rotation.z = (1 - ie) * 0.08;
-    halo.material.opacity = 0.35 + ie * 0.65;
-    dust.rotation.y = t * 0.02; dust.position.y = Math.sin(t * 0.2) * 0.2;
-    // the Descent: dive from high above the vial and level out in front of it
-    const dv = reduce ? 1 : ie;
-    cam.position.set(0, L(10.5, 0.2, dv), L(2.6, 9, dv));
-    lookT.set(L(vial.position.x, 0, dv), L(vial.position.y, 0.2, dv), 0); cam.lookAt(lookT);
-    streaks.material.opacity = reduce ? 0 : Math.max(0, 4 * dv * (1 - dv)) * 0.5;
-    renderer.render(scene, cam);
-    if (!S.ready) ready();
-    // tags follow their parts (desktop only; phones read the list)
-    const wantTags = !mobile && onHome && pres > 0.02 && pin;
-    if (wantTags) {
-      vial.updateMatrixWorld();
-      const top = pin.getBoundingClientRect().top;
-      PARTS.forEach(p => {
-        if (!p.tag) return;
-        tv.copy(p.at).add(p.off.clone().multiplyScalar(p.k)).applyMatrix4(vial.matrixWorld).project(cam);
-        p.tag.style.transform = 'translate3d(' + ((tv.x * 0.5 + 0.5) * innerWidth).toFixed(1) + 'px,' + ((-tv.y * 0.5 + 0.5) * innerHeight - top).toFixed(1) + 'px,0)';
-        p.tag.style.opacity = Math.min(1, Math.max(0, (p.k - 0.45) / 0.35)).toFixed(3);
-      });
-      tagsShown = true;
-    } else if (tagsShown) { PARTS.forEach(p => { if (p.tag) { p.tag.style.opacity = ''; p.tag.style.transform = ''; } }); tagsShown = false; }
-  }
-  requestAnimationFrame(frame);
-}
 
 </script>

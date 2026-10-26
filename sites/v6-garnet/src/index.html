@@ -3,26 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pepticity Garnet</title>
+<title>PEPTICITY Garnet</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Pepticity: clinician-guided peptide care, prepared by a licensed partner pharmacy, with a lot certificate you can look up for every vial.">
+<meta name="description" content="PEPTICITY: clinician-guided peptide care, prepared by a licensed partner pharmacy, with a lot certificate you can look up for every vial.">
 <script>try{var a=new URLSearchParams(location.search).get('for')||localStorage.getItem('pep-aud');if(a)document.documentElement.setAttribute('data-aud',a);if(localStorage.getItem('pep-text')==='large')document.documentElement.setAttribute('data-text','large')}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="site.css">
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
-<canvas id="gl" aria-hidden="true"></canvas>
-<div class="vial-fallback" aria-hidden="true"><i class="vf-cap"></i><i class="vf-glass"><b></b></i></div>
 <div class="grain" aria-hidden="true"></div>
 
 <!-- ============ INTRO ============ -->
 <div id="intro" class="intro" hidden>
+  <video class="in-film" muted playsinline preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1" poster="media/intro-poster.jpg"></video>
+  <div class="in-shade" aria-hidden="true"></div>
   <div class="in-line" aria-hidden="true"></div>
   <p class="in-kicker mono" aria-hidden="true"><span>Lot</span> <span class="in-lot">PX-2611-A</span></p>
-  <h2 class="in-word" aria-label="Pepticity"><span>P</span><span>e</span><span>p</span><span>t</span><span>i</span><span>c</span><span>i</span><span>t</span><span>y</span></h2>
+  <h2 class="in-word" aria-label="PEPTICITY"><span>P</span><span>E</span><span>P</span><span>T</span><span>I</span><span>C</span><span>I</span><span>T</span><span>Y</span></h2>
   <p class="in-tag" aria-hidden="true">Peptide care you can verify.</p>
   <button class="intro-skip mono" type="button">Skip intro <span aria-hidden="true">Esc</span></button>
 </div>
@@ -31,9 +30,9 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="top">
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="curtain"><span class="mb-lines" aria-hidden="true"><i></i><i></i></span><span class="mb-t">Menu</span></button>
-  <a class="brand" href="#home" data-nav-home aria-label="Pepticity home">
+  <a class="brand" href="#home" data-nav-home aria-label="PEPTICITY home">
     <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M13 35V7h10.5a8.5 8.5 0 0 1 0 17H13"/><circle cx="13" cy="35" r="2.2"/><circle cx="13" cy="24" r="2.2"/><circle cx="23.5" cy="7" r="2.2"/><circle cx="32" cy="15.5" r="2.2"/></svg>
-    <span class="brand-word">Pepticity</span>
+    <span class="brand-word">PEPTICITY</span>
   </a>
   <div class="top-r">
     <span class="top-phone mono">[phone number]</span>
@@ -62,6 +61,7 @@
 <!-- ======================= HOME ======================= -->
 <section data-view="home" class="view v-home" aria-labelledby="h-home">
   <div class="hero">
+    <figure class="hero-ph" aria-hidden="true"><img class="hp-blank" src="media/hero-blank.jpg" alt="" width="2736" height="1536" fetchpriority="high"><img class="hp-label" src="media/hero.jpg" alt="" width="2736" height="1536"><i class="hp-sweep"></i></figure>
     <div class="hero-copy">
       <p class="eyebrow mono"><span class="dot" aria-hidden="true"></span>Clinician-led. Lab-proven.</p>
       <h1 id="h-home" class="hero-h" data-aud-text="hero">Peptide care you can verify.</h1>
@@ -80,18 +80,22 @@
       <span>Prepared</span><span>Licensed partner pharmacy</span>
       <span>Status</span><span class="hs-ok">Certificate on file</span>
     </div>
-    <p class="hero-scroll mono" aria-hidden="true">Scroll to open the label</p>
+    <p class="hero-scroll mono" aria-hidden="true">Scroll to turn the vial</p>
   </div>
 
-  <section class="peel" aria-labelledby="h-peel">
-    <div class="peel-in">
-      <p class="eyebrow mono">Under the label</p>
-      <h2 id="h-peel" class="h2">Three things on every vial. <em>All of them checkable.</em></h2>
-      <ol class="peel-list">
-        <li><span class="pl-n mono">i.</span><div><h3>A lot code</h3><p>Type it into the lot lookup to see that lot's certificate of analysis.</p></div></li>
-        <li><span class="pl-n mono">ii.</span><div><h3>The pharmacy</h3><p>The licensed partner pharmacy that prepared it, by name, with a licence you can check.</p></div></li>
-        <li><span class="pl-n mono">iii.</span><div><h3>A cold-chain seal</h3><p>Shipped cold to your door, with the seal intact when it arrives.</p></div></li>
-      </ol>
+  <section id="turn" class="turn" aria-labelledby="h-turn">
+    <div class="turn-pin">
+      <div class="turn-copy">
+        <p class="eyebrow mono">Turn the vial</p>
+        <h2 id="h-turn" class="h2">The front says who. <em>The back says what.</em></h2>
+        <ol class="turn-list">
+          <li class="is-on"><span class="pl-n mono">i.</span><div><h3>The PEPTICITY mark</h3><p>Printed straight onto the glass. No paper sticker to peel, smudge or swap.</p></div></li>
+          <li><span class="pl-n mono">ii.</span><div><h3>The peptide and its strength</h3><p>On the back panel in plain type, so you always know exactly what is in the vial.</p></div></li>
+          <li><span class="pl-n mono">iii.</span><div><h3>Lot, pharmacy, Rx only</h3><p>The lot code you can look up, the licensed partner pharmacy that prepared it, and Rx only.</p></div></li>
+        </ol>
+        <p class="turn-meter mono" aria-hidden="true"><span>FRONT</span><i><b></b></i><span>BACK</span></p>
+      </div>
+      <div class="turn-stage"><canvas class="rig" id="rig-turn" role="img" aria-label="The PEPTICITY vial turning from the vertical wordmark on the front to the peptide panel on the back"></canvas></div>
     </div>
   </section>
 
@@ -102,12 +106,13 @@
         <h2 id="h-anat" class="h2">Four layers. <em>Each one inspected.</em></h2>
         <p class="anat-hint mono" aria-hidden="true">Keep scrolling to take it apart</p>
       </div>
+      <div class="anat-stage"><canvas class="rig" id="rig-anat" role="img" aria-label="The vial separating into its seal, printed label, contents and glass"></canvas>
       <ol class="anat-list">
-        <li class="anat-tag" data-part="seal" data-side="r"><div class="at-card"><span class="at-n mono">01</span><div class="at-c"><h3>Chrome crimp seal</h3><p>Tamper-evident. It should reach you intact. If it doesn't, tell your care team.</p></div></div></li>
-        <li class="anat-tag" data-part="label" data-side="r"><div class="at-card"><span class="at-n mono">02</span><div class="at-c"><h3>Lot label</h3><p>The lot code, the pharmacy and its licence number, printed where you can check all three.</p></div></div></li>
-        <li class="anat-tag" data-part="liquid" data-side="l"><div class="at-card"><span class="at-n mono">03</span><div class="at-c"><h3>Contents</h3><p>Prepared to your prescription by a licensed partner pharmacy, and tested before the lot is released.</p></div></div></li>
-        <li class="anat-tag" data-part="glass" data-side="l"><div class="at-card"><span class="at-n mono">04</span><div class="at-c"><h3>Clear glass vial</h3><p>Clear so the contents can be inspected. [Glass type to be confirmed by the pharmacy]</p></div></div></li>
-      </ol>
+        <li class="anat-tag" data-part="seal" data-side="r"><div class="at-card"><span class="at-n mono">01</span><div class="at-c"><h3>Silver crimp seal</h3><p>Tamper-evident aluminium with a flip-off top. It should reach you intact. If it doesn't, tell your care team.</p></div></div></li>
+        <li class="anat-tag" data-part="glass" data-side="r"><div class="at-card"><span class="at-n mono">02</span><div class="at-c"><h3>Clear glass vial</h3><p>Clear so the contents can be inspected. [Glass type to be confirmed by the pharmacy]</p></div></div></li>
+        <li class="anat-tag" data-part="contents" data-side="r"><div class="at-card"><span class="at-n mono">03</span><div class="at-c"><h3>Contents</h3><p>Prepared to your prescription by a licensed partner pharmacy, and tested before the lot is released.</p></div></div></li>
+        <li class="anat-tag" data-part="print" data-side="l"><div class="at-card"><span class="at-n mono">04</span><div class="at-c"><h3>Printed label</h3><p>PEPTICITY on the front. The peptide, strength, lot and pharmacy on the back.</p></div></div></li>
+      </ol></div>
     </div>
   </section>
 
@@ -123,6 +128,15 @@
     <div class="band">
       <p class="band-q">Not sure where to start?</p>
       <button class="btn-br btn-solid" type="button" data-quiz><span>Take the 60-second assessment</span></button>
+    </div>
+  </section>
+
+  <section class="proof" aria-labelledby="h-proof">
+    <div class="proof-head"><p class="eyebrow mono">Behind every vial</p><h2 id="h-proof" class="h2">Reviewed. Tested. <em>Shipped cold.</em></h2></div>
+    <div class="proof-grid">
+      <figure class="pf"><div class="pf-ph"><img src="media/clinician.jpg" alt="A clinician's hands reviewing notes on a tablet beside a stethoscope" width="1600" height="1060" loading="lazy"></div><figcaption><span class="mono">01</span><h3>Reviewed</h3><p>A licensed clinician reads every assessment and decides if a plan is right for you.</p></figcaption></figure>
+      <figure class="pf"><div class="pf-ph"><img src="media/lab.jpg" alt="A gloved hand placing a sample vial into a lab instrument tray" width="1600" height="1060" loading="lazy"></div><figcaption><span class="mono">02</span><h3>Tested</h3><p>Every lot is tested before it is released, and its certificate stays on file.</p></figcaption></figure>
+      <figure class="pf"><div class="pf-ph"><img src="media/cold.jpg" alt="A PEPTICITY vial standing in an insulated shipping case with ice packs" width="2048" height="1360" loading="lazy"></div><figcaption><span class="mono">03</span><h3>Shipped cold</h3><p>Packed in an insulated case with ice packs, and sealed until it reaches your door.</p></figcaption></figure>
     </div>
   </section>
 
@@ -162,8 +176,8 @@
     </div>
     <div class="cmp-wrap">
       <table class="cmp-t">
-        <caption class="sr">Pepticity compared with a typical "research use only" seller</caption>
-        <thead><tr><th scope="col"><span class="sr">Topic</span></th><th scope="col">Pepticity</th><th scope="col">A typical "research use only" seller</th></tr></thead>
+        <caption class="sr">PEPTICITY compared with a typical "research use only" seller</caption>
+        <thead><tr><th scope="col"><span class="sr">Topic</span></th><th scope="col">PEPTICITY</th><th scope="col">A typical "research use only" seller</th></tr></thead>
         <tbody data-fill="compare"></tbody>
       </table>
     </div>
@@ -177,7 +191,7 @@
       <div class="pr-acts"><button class="btn-br btn-solid" type="button" data-quiz><span>Start my free review</span></button><a class="btn-link" href="#shop">See membership <span aria-hidden="true">&#8594;</span></a></div>
     </div>
     <div class="receipt" id="receipt">
-      <p class="rc-top mono"><span>Pepticity</span><span>Your first month</span></p>
+      <p class="rc-top mono"><span>PEPTICITY</span><span>Your first month</span></p>
       <ol class="rc-lines"></ol>
       <p class="rc-total"><span>Due today</span><b>$0.00</b></p>
       <p class="rc-foot mono">Membership $[xx] a month, only if a clinician prescribes a plan. [Confirm pricing with Grace]</p>
@@ -185,6 +199,7 @@
   </section>
 
   <section class="closer" aria-labelledby="h-close">
+    <div class="closer-ph" aria-hidden="true"><img src="media/hero.jpg" alt="" width="2736" height="1536" loading="lazy"></div>
     <h2 id="h-close" class="closer-h">Precision, <em>prescribed.</em></h2>
     <button class="btn-br btn-solid" type="button" data-quiz><span>Start the 60-second assessment</span></button>
     <p class="closer-p">Prefer a person? Call <span class="mono">[phone number]</span></p>
@@ -209,7 +224,7 @@
       <p class="lede">No hidden fees. The receipt below is the whole story. [Confirm pricing with Grace]</p>
     </div>
     <div class="receipt" id="receipt2">
-      <p class="rc-top mono"><span>Pepticity</span><span>Your first month</span></p>
+      <p class="rc-top mono"><span>PEPTICITY</span><span>Your first month</span></p>
       <ol class="rc-lines"></ol>
       <p class="rc-total"><span>Due today</span><b>$0.00</b></p>
       <p class="rc-foot mono">Membership $[xx] a month, only if a clinician prescribes a plan.</p>
@@ -274,11 +289,11 @@
 
 <footer class="foot">
   <div class="foot-top">
-    <p class="foot-word">Pepticity</p>
+    <p class="foot-word">PEPTICITY</p>
     <nav class="foot-nav" aria-label="Footer"><a href="#home" data-nav="home">Home</a><a href="#shop" data-nav="shop">Membership</a><a href="#science" data-nav="science">The science</a><a href="#faq" data-nav="faq">Questions</a></nav>
   </div>
-  <p class="disclaimer">Pepticity is a care service. A licensed clinician decides if a plan is right for you, and plans are prepared by a licensed partner pharmacy. Compounded medicines are not FDA-approved. Nothing on this site is medical advice, and no result is promised. Lot data shown here is sample data. [Final legal copy to be approved by counsel.]</p>
-  <p class="fine mono">&copy; 2026 Pepticity. Design preview.</p>
+  <p class="disclaimer">PEPTICITY is a care service. A licensed clinician decides if a plan is right for you, and plans are prepared by a licensed partner pharmacy. Compounded medicines are not FDA-approved. Nothing on this site is medical advice, and no result is promised. Lot data shown here is sample data. [Final legal copy to be approved by counsel.]</p>
+  <p class="fine mono">&copy; 2026 PEPTICITY. Design preview.</p>
 </footer>
 
 <div class="sticky-cta"><button class="btn-br btn-solid" type="button" data-quiz><span>Start the free assessment</span></button></div>
@@ -296,7 +311,7 @@
 <script src="../vendor/ScrollTrigger.min.js"></script>
 <script src="../vendor/lenis.min.js"></script>
 <script src="../../../shared/pep-core.js"></script>
+<script src="rig.js"></script>
 <script src="site.js"></script>
-<script type="module" src="scene.js"></script>
 </body>
 </html>

@@ -75,24 +75,66 @@
   W.addEventListener('pointermove', function (e) { S.px = e.clientX / innerWidth * 2 - 1; S.py = e.clientY / innerHeight * 2 - 1; }, { passive: true });
 
   /* ---------- scroll choreography ---------- */
-  var mm = G && ST ? G.matchMedia() : null;
+  var SRC = { base: 'media/vial.jpg', nocap: 'media/vial-nocap.jpg', cap: 'media/cap.png', front: 'media/label-front.png', back: 'media/label-back.png' };
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
   function homeScroll() {
     if (!G || !ST) return;
-    ST.create({ trigger: '.v-home .hero', start: 'top top', end: 'bottom top', onUpdate: function (s) { S.hero = 1 - s.progress; } });
     var mob = W.matchMedia('(max-width: 900px)');
-    ST.create({ trigger: '.v-home .hero', start: 'top top', end: 'bottom 30%', onUpdate: function (s) { if (mob.matches) S.peel = s.progress; } });
-    ST.create({ trigger: '.peel', start: 'top 85%', end: 'bottom 40%', scrub: 1, onUpdate: function (s) { if (!mob.matches) S.peel = s.progress; } });
-    // anatomy: the vial comes apart, holds, then snaps back together (S.explode 0..1)
+    // hero: a slow push into the photograph
+    if (!P.reduce) G.to('.hero-ph img', { scale: 1.08, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '.v-home .hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+    // VIA-01 · Label Turn: scroll turns the printed label from the front mark to the back panel
+    var turnSec = $('.turn'), items = $$('.turn-list li'), drift = 0, tv = 0;
+    var turn = W.PEPRIG ? W.PEPRIG.create($('#rig-turn'), SRC) : null;
+    ST.create({ trigger: '.turn', start: 'top top', end: 'bottom bottom', onUpdate: function (s) {
+      var e = ease(clamp((s.progress - 0.06) / 0.82)); tv = e * Math.PI;
+      if (turn) turn.set({ turn: tv, drift: drift });
+      turnSec.style.setProperty('--turn', e.toFixed(3));
+      var i = s.progress < 0.36 ? 0 : s.progress < 0.7 ? 1 : 2;
+      items.forEach(function (li, k) { li.classList.toggle('is-on', k === i); });
+    } });
+    var stage = $('.turn-stage');
+    if (!P.reduce && stage) stage.addEventListener('pointermove', function (e) { var r = stage.getBoundingClientRect(); drift = ((e.clientX - r.left) / r.width - 0.5) * 0.4; if (turn) turn.set({ turn: tv, drift: drift }); });
+    if (stage) stage.addEventListener('pointerleave', function () { drift = 0; if (turn) turn.set({ turn: tv, drift: 0 }); });
+
+    // ANA-02 · Photo Anatomy: the cap lifts off, the print peels away flat, tags name each layer
+    var anat = W.PEPRIG ? W.PEPRIG.create($('#rig-anat'), SRC) : null, RG = W.PEPRIG ? W.PEPRIG.G : null;
+    var tags = {}; $$('.anat-tag').forEach(function (t) { tags[t.getAttribute('data-part')] = t; });
     var hint = $('.anat-hint');
-    function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
-    ST.create({ trigger: '.anat', start: 'top top', end: 'bottom bottom', onUpdate: function (s) { if (!mob.matches) { S.explode = shape(s.progress, 0.06, 0.5, 0.84, 1); hint.style.opacity = Math.max(0, 1 - s.progress * 6).toFixed(2); } }, onLeave: function () { if (!mob.matches) S.explode = 0; }, onLeaveBack: function () { if (!mob.matches) S.explode = 0; } });
-    ST.create({ trigger: '.anat', start: 'top bottom', end: 'bottom top', onUpdate: function (s) { if (mob.matches) S.explode = shape(s.progress, 0.05, 0.3, 0.62, 0.85) * 0.85; }, onLeave: function () { if (mob.matches) S.explode = 0; }, onLeaveBack: function () { if (mob.matches) S.explode = 0; } });
-    ST.create({ trigger: '.how', start: 'top 55%', endTrigger: '.foot', end: 'bottom bottom', toggleClass: { targets: D.documentElement, className: 'gl-dim' } });
+    function place(e, lift, peel) {
+      if (!anat || !RG || mob.matches) return;
+      var body = RG.bot - RG.top, fw = Math.min(RG.r * 0.95 / 137, body * 0.86 / 1065) * 137 * 0.5;
+      var pts = {
+        seal: [RG.cap.x + RG.cap.w + 6, RG.cap.y + RG.cap.h * 0.42 - lift * 230, clamp((lift - 0.35) / 0.3)],
+        glass: [RG.cx + RG.r * 0.98, RG.top - 30, clamp((e - 0.45) / 0.3)],
+        contents: [RG.cx + RG.r * 0.55, RG.top + body * 0.72, clamp((e - 0.55) / 0.3)],
+        print: [RG.cx - RG.r * 0.1 + (-RG.r * 1.55 - fw - 6 + RG.r * 0.1) * peel, RG.top + body * 0.5, clamp((peel - 0.55) / 0.3)]
+      };
+      Object.keys(pts).forEach(function (k) { var t = tags[k]; if (!t) return; var q = anat.at(pts[k][0], pts[k][1]); t.style.transform = 'translate3d(' + q.x.toFixed(1) + 'px,' + q.y.toFixed(1) + 'px,0)'; t.style.opacity = pts[k][2].toFixed(3); });
+    }
+    function anatSet(e) { var lift = ease(clamp(e * 1.6)), peel = ease(clamp(e * 1.6 - 0.45)); if (anat) anat.set({ lift: lift, peel: peel, turn: 0 }); place(e, lift, peel); }
+    ST.create({ trigger: '.anat', start: 'top top', end: 'bottom bottom', onUpdate: function (s) {
+      if (mob.matches) return;
+      anatSet(shape(s.progress, 0.06, 0.5, 0.84, 1)); if (hint) hint.style.opacity = Math.max(0, 1 - s.progress * 6).toFixed(2);
+    } });
+    // phones: no pin; it comes apart once as you reach it
+    var phoneDone = false;
+    ST.create({ trigger: '.anat-stage', start: 'top 70%', onEnter: function () {
+      if (!mob.matches || phoneDone) return; phoneDone = true;
+      var o = { e: 0 }; G.to(o, { e: 0.85, duration: P.reduce ? 0 : 2.2, ease: 'power2.inOut', onUpdate: function () { anatSet(o.e); } });
+    } });
+    if (anat) anat.ready.then(function () { anatSet(0); });
+
+    // proof band: photographs drift slower than the page
+    if (!P.reduce) $$('.pf-ph img').forEach(function (img) { G.fromTo(img, { yPercent: -10 }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: img.parentNode, start: 'top bottom', end: 'bottom top', scrub: true } }); });
+
     ST.create({ trigger: '.thread', start: 'top 70%', end: 'bottom 60%', scrub: 1, onUpdate: function (s) { $('.thread').style.setProperty('--thread', (1 - s.progress).toFixed(4)); } });
     $$('.step').forEach(function (li) { ST.create({ trigger: li, start: 'top 62%', end: 'bottom 30%', toggleClass: { targets: li, className: 'is-on' } }); });
     if (!P.reduce) {
-      G.from('.peel-list li', { opacity: 0, y: 30, stagger: .14, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.peel-list', start: 'top 80%' }, immediateRender: false });
       $$('.v-home .h2').forEach(function (h) { G.from(h, { opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' }, immediateRender: false }); });
+      G.from('.pf', { opacity: 0, y: 60, stagger: .14, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.proof-grid', start: 'top 82%' }, immediateRender: false });
       G.from('.ppl li', { opacity: 0, y: 50, stagger: .12, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.ppl', start: 'top 85%' }, immediateRender: false });
       G.from('.cmp-t tbody tr', { opacity: 0, x: -24, stagger: .08, duration: .7, ease: 'power2.out', scrollTrigger: { trigger: '.cmp-t', start: 'top 85%' }, immediateRender: false });
     }
@@ -101,7 +143,7 @@
 
   /* ---------- router with a garnet curtain ---------- */
   var vt = el('div', 'vt'); var vtb = el('b'); vt.appendChild(vtb); vt.setAttribute('aria-hidden', 'true'); D.body.appendChild(vt);
-  var names = { home: 'Pepticity', shop: 'Membership', science: 'The science', faq: 'Questions' };
+  var names = { home: 'PEPTICITY', shop: 'Membership', science: 'The science', faq: 'Questions' };
   P.router({
     onView: function (name) {
       S.view = name; D.documentElement.setAttribute('data-page', name);
@@ -124,34 +166,51 @@
     }
   });
 
-  /* ---------- intro: hairline, vial, lot, wordmark, curtain lift ---------- */
-  var intro = $('#intro');
+  /* ---------- intro: the Descent (a film dives onto the vial), then the label prints on ---------- */
+  var intro = $('#intro'), film = $('.in-film', intro), H = D.documentElement;
+  function printLabel(animate) {
+    H.classList.remove('hp-printing');
+    if (animate && !P.reduce) { void H.offsetWidth; H.classList.add('hp-printing'); requestAnimationFrame(function () { requestAnimationFrame(function () { H.classList.remove('hp-printing'); H.classList.add('hp-print'); }); }); }
+  }
   P.intro({
     id: 'v6', root: intro,
     play: function (done) {
-      S.intro = 0; S.lift = 0;
-      if (!G) { S.intro = 1; setTimeout(done, 300); return function () {}; }
-      // wait for the vial's first frame, or a slow device would finish the dive before it is drawn
-      var o = { t: 0 }, tl = null, started = false;
-      function go() {
+      H.classList.add('hp-printing');
+      if (!G) { setTimeout(done, 300); return function () {}; }
+      var tl = null, started = false;
+      function go(withFilm) {
         if (started) return; started = true;
+        film.classList.add('is-on');
+        if (!withFilm) G.fromTo(film, { scale: 1.35, yPercent: -6 }, { scale: 1, yPercent: 0, duration: 8.4, ease: 'power2.inOut' });
         tl = G.timeline({ onComplete: done });
         tl.to('.in-line', { scaleY: 1, duration: 1.3, ease: 'power3.inOut' }, .2)
-        .to('.in-kicker', { opacity: 1, duration: .8 }, 1.0)
-        .to(o, { t: 1, duration: 4.4, ease: 'power2.inOut', onUpdate: function () { S.intro = o.t; } }, .9)
-        .to('.in-line', { opacity: 0, duration: 1 }, 2.6)
-        .to('.in-word span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: .07, ease: 'power3.out' }, 3.3)
-        .to('.in-tag', { opacity: 1, duration: .9 }, 4.8)
-        .to({}, { duration: .9 });
+          .to('.in-kicker', { opacity: 1, duration: .8 }, 1.0)
+          .to('.in-line', { opacity: 0, duration: 1 }, 3.2)
+          .to('.in-word span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: .07, ease: 'power3.out' }, 4.6)
+          .to('.in-tag', { opacity: 1, duration: .9 }, 6.0)
+          .to({}, { duration: 1.4 });
       }
-      if (S.ready) go(); else { W.addEventListener('pep-gl-ready', go, { once: true }); setTimeout(go, 3500); }
-      return function () { started = true; if (tl) tl.kill(); S.intro = 1; };
+      // film: chosen after first paint, never blocks; the still poster carries the dive if it can't play
+      var conn = navigator.connection || {}, skipFilm = P.reduce || conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '');
+      if (!skipFilm && film) {
+        var webm = film.canPlayType('video/webm; codecs="vp9"'), mp4 = film.canPlayType('video/mp4; codecs="avc1.640028"');
+        film.muted = true; film.src = mp4 ? 'media/intro.mp4' : webm ? 'media/intro.webm' : '';
+        if (film.src) {
+          film.addEventListener('playing', function () { go(true); }, { once: true });
+          film.addEventListener('error', function () { go(false); }, { once: true });
+          var pr = film.play(); if (pr && pr.catch) pr.catch(function () { go(false); });
+        }
+      }
+      setTimeout(function () { go(false); }, 1600);
+      return function () { started = true; if (tl) tl.kill(); };
     },
     handoff: function (end) {
-      intro.classList.add('is-lift');
-      if (G) G.to(S, { lift: 1, duration: 1.3, ease: 'power3.inOut' }); else S.lift = 1;
-      setTimeout(function () { intro.classList.remove('is-lift'); end(); }, 1150);
+      G.to(intro, { opacity: 0, duration: .9, ease: 'power2.inOut', onComplete: function () { intro.style.opacity = ''; end(); printLabel(true); } });
     },
-    onDone: function () { S.intro = 1; S.lift = 1; onScroll(); if (ST) ST.refresh(); }
+    onDone: function (skipped) {
+      if (film) { try { film.pause(); film.removeAttribute('src'); film.load(); } catch (e) {} }
+      if (skipped) printLabel(false);
+      onScroll(); if (ST) ST.refresh();
+    }
   });
 })();

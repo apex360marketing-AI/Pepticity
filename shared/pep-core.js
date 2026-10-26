@@ -1,4 +1,4 @@
-/* Pepticity shared core (V6–V8).
+/* PEPTICITY shared core (V6–V8).
    Copy, routing, audience switcher, assessment, lot lookup, red-flag checker,
    receipt, text size and smooth scroll. Each site styles the markup its own way.
    Compliance: no dosing, no outcome claims, no reviews or invented numbers.
@@ -74,7 +74,7 @@
       'Is there no phone number with a real person behind it?'
     ],
     faq: [
-      ['What is Pepticity?', 'A clinician-guided peptide care service. You take a short assessment, a licensed clinician reviews it, and if a plan is right for you, a licensed partner pharmacy prepares it.'],
+      ['What is PEPTICITY?', 'A clinician-guided peptide care service. You take a short assessment, a licensed clinician reviews it, and if a plan is right for you, a licensed partner pharmacy prepares it.'],
       ['Do I need a prescription?', 'Yes. Every plan is prescribed by a licensed clinician after a review. Nothing here is sold "for research use".'],
       ['Who are the clinicians?', '[Clinician network: confirm with Grace]. Each clinician\'s licence can be checked with their state or provincial board.'],
       ['Who prepares it?', 'A licensed partner pharmacy: [pharmacy name: confirm with Grace].'],
