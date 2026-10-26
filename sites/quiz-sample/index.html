@@ -1,0 +1,561 @@
+<title>PEPTICITY Find Your Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Syne:wght@500..800&display=swap">
+<style>
+/* QIZ-01 &#183; Find Your Plan: one question at a time, the vial lights in the colour of your focus. */
+:root{--b0:#0b0a0a;--b1:#141212;--bone:#ece6df;--bone2:#f4efe9;--mute:#a59e96;--dim:#746d66;--rule:rgba(236,230,223,.12);--rule2:rgba(236,230,223,.22);
+  --glass1:rgba(255,255,255,.055);--glass2:rgba(255,255,255,.012);--pep:236,230,223;
+  --disp:"Syne","Archivo","Helvetica Neue",Arial,sans-serif;--text:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--b0);color:var(--bone);font:400 16px/1.6 var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(60% 50% at 72% 38%,rgba(var(--pep),.10),transparent 70%),radial-gradient(40% 40% at 12% 90%,rgba(236,230,223,.035),transparent 70%);transition:background 1s var(--ease)}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--bone);outline-offset:3px}
+.skip{position:absolute;left:-999px;top:8px;z-index:50;background:var(--bone);color:var(--b0);padding:8px 12px}
+.skip:focus{left:max(16px,env(safe-area-inset-left,0px))}
+
+/* ---------- top bar ---------- */
+.top{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1280px;margin:0 auto;padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mark{display:flex;align-items:center;gap:10px;font:700 15px/1 var(--disp);letter-spacing:.32em;text-transform:uppercase;text-decoration:none}
+.mark i{display:grid;place-items:center;width:24px;height:24px;border:1.5px solid currentColor;font:700 12px/1 var(--disp);font-style:normal;letter-spacing:0}
+.top .crumb{font:600 11px/1 var(--text);letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+
+/* ---------- layout ---------- */
+.wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(20px,4vw,56px);align-items:start;padding-block:clamp(8px,3vh,40px) 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- the card (real glass over the lit ground) ---------- */
+.card{position:relative;min-width:0;border:1px solid var(--rule2);border-radius:4px;background:linear-gradient(150deg,var(--glass1),var(--glass2));backdrop-filter:blur(12px) saturate(170%);-webkit-backdrop-filter:blur(12px) saturate(170%);box-shadow:0 40px 80px -40px #000,inset 0 1px 0 rgba(255,255,255,.12);padding:clamp(22px,3.4vw,44px);min-height:min(640px,calc(100vh - 140px));display:flex;flex-direction:column}
+@supports not (backdrop-filter:blur(2px)){.card{background:#161414}}
+
+/* stage rail: four named stages, with a head start already lit */
+.rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:clamp(22px,4vh,40px)}
+.rail div{min-width:0}
+.rail b{display:block;height:2px;background:var(--rule2);position:relative;overflow:hidden}
+.rail b::after{content:"";position:absolute;inset:0;transform-origin:left;transform:scaleX(var(--f,0));background:rgb(var(--pep));box-shadow:0 0 12px rgba(var(--pep),.8);transition:transform .7s var(--ease),background .6s}
+.rail span{display:block;margin-top:9px;font:600 10px/1.2 var(--text);letter-spacing:.2em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .4s}
+.rail .on span{color:var(--bone)}
+
+.kick{display:flex;align-items:center;gap:12px;margin:0 0 14px;font:600 11px/1 var(--text);letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.kick::before{content:"";width:22px;height:1px;background:currentColor}
+.q{margin:0 0 10px;font:800 clamp(28px,3.4vw,46px)/1.02 var(--disp);letter-spacing:.01em;text-transform:uppercase;text-wrap:balance;outline:none}
+.qsub{margin:0 0 26px;color:var(--mute);max-width:52ch}
+.bridge{margin:0 0 18px;font-size:14px;color:rgb(var(--pep));min-height:1.6em;transition:color .5s}
+
+/* answers: tall glass rows, a light sweep on hover */
+.opts{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.opts.one{grid-template-columns:minmax(0,1fr)}
+.opt{position:relative;display:flex;align-items:center;gap:14px;min-height:58px;padding:14px 18px;border:1px solid var(--rule2);border-radius:3px;background:rgba(255,255,255,.02);cursor:pointer;text-align:left;overflow:hidden;transition:border-color .3s,background .3s,transform .4s var(--ease)}
+.opt::before{content:"";position:absolute;top:-40%;bottom:-40%;left:-60%;width:40%;transform:skewX(-14deg);background:linear-gradient(100deg,transparent,rgba(var(--c,236,230,223),.16),transparent);opacity:0;transition:left .9s var(--ease),opacity .3s}
+.opt:hover{border-color:rgba(var(--c,236,230,223),.6);background:rgba(var(--c,236,230,223),.05)}
+.opt:hover::before{left:120%;opacity:1}
+.opt:active{transform:scale(.99)}
+.opt .dot{flex:none;width:14px;height:14px;border-radius:50%;border:1.5px solid var(--rule2);transition:background .3s,border-color .3s,box-shadow .3s}
+.opt[aria-pressed=true],.opt[aria-checked=true]{border-color:rgba(var(--c,236,230,223),.85);background:rgba(var(--c,236,230,223),.08)}
+.opt[aria-pressed=true] .dot,.opt[aria-checked=true] .dot{background:rgb(var(--c,236,230,223));border-color:rgb(var(--c,236,230,223));box-shadow:0 0 14px rgba(var(--c,236,230,223),.9)}
+.opt[role=checkbox] .dot{border-radius:2px}
+.opt .lb{min-width:0}
+.opt .lb small{display:block;color:var(--mute);font-size:13px;line-height:1.4;margin-top:2px}
+.prov{grid-template-columns:repeat(4,minmax(0,1fr))}
+.prov .opt{min-height:50px;justify-content:center;padding:10px;font-weight:600;letter-spacing:.06em}
+.prov .opt .dot{display:none}
+
+.note{margin:22px 0 0;font-size:13px;line-height:1.55;color:var(--dim);max-width:60ch}
+.note b{color:var(--mute);font-weight:600}
+.foot{margin-top:auto;padding-top:26px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;border:0;background:none;color:var(--mute);font:600 12px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.back:hover{color:var(--bone)}
+.back[hidden]{display:none}
+.count{font:600 11px/1 var(--text);letter-spacing:.2em;color:var(--dim)}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border:1px solid rgb(var(--pep));border-radius:2px;background:rgb(var(--pep));color:#0b0a0a;font:700 13px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;cursor:pointer;overflow:hidden;box-shadow:0 18px 40px -22px rgba(var(--pep),.9);transition:transform .4s var(--ease),filter .3s,background .6s,border-color .6s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--bone);border-color:var(--rule2);box-shadow:none}
+.btn.ghost:hover{border-color:var(--bone)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ---------- the vial stage ---------- */
+.stage{position:sticky;top:20px;min-width:0;aspect-ratio:900/1161;max-height:calc(100vh - 120px);margin-inline:auto;width:100%;border-radius:4px;overflow:hidden;background:#111;box-shadow:inset 0 0 0 1px var(--rule)}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1s var(--ease),transform 1.6s var(--ease)}
+.stage img.lit{opacity:0}
+.stage img.lit.on{opacity:1}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 62%,rgba(11,10,10,.85));pointer-events:none}
+.stage .cap{position:absolute;left:20px;right:20px;bottom:18px;z-index:2;display:flex;justify-content:space-between;align-items:end;gap:12px}
+.stage .cap b{font:800 clamp(16px,1.6vw,22px)/1.05 var(--disp);letter-spacing:.06em;text-transform:uppercase;color:var(--bone);text-wrap:balance}
+.stage .cap span{font:600 10px/1.3 var(--text);letter-spacing:.22em;text-transform:uppercase;color:rgb(var(--pep));text-align:right;transition:color .6s}
+
+/* building moment */
+.build{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:16px}
+.build li{display:flex;align-items:center;gap:14px;color:var(--dim);transition:color .4s}
+.build li i{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--rule2);position:relative;transition:border-color .4s,background .4s}
+.build li.done{color:var(--bone)}
+.build li.done i{background:rgb(var(--pep));border-color:rgb(var(--pep));box-shadow:0 0 14px rgba(var(--pep),.8)}
+.build li.done i::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #0b0a0a;border-width:0 2px 2px 0;transform:rotate(45deg)}
+
+/* result */
+.told{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+.told button{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border:1px solid var(--rule2);border-radius:2px;background:rgba(255,255,255,.02);color:var(--mute);font-size:13px;cursor:pointer}
+.told button:hover{color:var(--bone);border-color:var(--bone)}
+.told button svg{width:12px;height:12px;opacity:.7}
+.steps{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;counter-reset:s}
+.steps li{min-width:0;padding:16px;border:1px solid var(--rule);border-radius:3px;background:rgba(255,255,255,.015);font-size:14px;color:var(--mute);counter-increment:s}
+.steps li::before{content:"0" counter(s);display:block;margin-bottom:10px;font:700 12px/1 var(--disp);letter-spacing:.14em;color:rgb(var(--pep))}
+.steps li b{display:block;color:var(--bone);font:700 13px/1.25 var(--disp);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.progs{margin:0 0 24px;padding:16px 18px;border:1px dashed var(--rule2);border-radius:3px;font-size:14px;color:var(--mute)}
+.progs h3{margin:0 0 8px;font:700 12px/1.2 var(--text);letter-spacing:.22em;text-transform:uppercase;color:var(--bone)}
+.progs ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.progs li{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-top:6px}
+.progs li span:last-child{color:var(--bone);white-space:nowrap}
+.price{margin:0 0 18px;font-size:14px;color:var(--mute)}
+.price b{color:var(--bone)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.decide{margin:12px 0 0;font-size:13px;color:var(--dim)}
+.linkbtn{margin-top:14px;min-height:40px;padding:0;border:0;background:none;color:var(--mute);font:600 11px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.linkbtn:hover{color:var(--bone)}
+.flag{margin:0 0 18px;padding:12px 14px;border-left:2px solid rgb(var(--pep));background:rgba(var(--pep),.06);font-size:14px;color:var(--bone)}
+
+/* sheets (booking, email) */
+.sheet{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;background:rgba(5,5,5,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.sheet[hidden]{display:none}
+.sheet .panel{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto;border:1px solid var(--rule2);border-radius:4px;background:linear-gradient(150deg,rgba(28,26,25,.92),rgba(18,17,16,.96));box-shadow:0 40px 90px -30px #000;padding:28px}
+.sheet h2{margin:0 0 6px;font:800 26px/1.05 var(--disp);letter-spacing:.02em;text-transform:uppercase}
+.sheet p{margin:0 0 18px;color:var(--mute);font-size:14px}
+.field{display:grid;gap:6px;margin-bottom:14px}
+.field label{font:600 11px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.field input,.field select{min-height:48px;padding:0 14px;border:1px solid var(--rule2);border-radius:2px;background:rgba(255,255,255,.03);color:var(--bone);font:inherit;font-size:16px}
+.field input:focus,.field select:focus{outline:none;border-color:rgb(var(--pep));box-shadow:0 0 0 3px rgba(var(--pep),.25)}
+.field:focus-within label{color:var(--bone)}
+.check{display:flex;gap:12px;align-items:flex-start;margin:6px 0 16px;font-size:13px;line-height:1.5;color:var(--mute);cursor:pointer}
+.check input{flex:none;width:20px;height:20px;margin-top:1px;accent-color:rgb(var(--pep))}
+.err{min-height:1.4em;margin:0 0 10px;font-size:13px;color:#f2b8b5}
+.sent{margin:14px 0 0;font-size:14px;color:var(--bone)}
+.x{float:right;width:40px;height:40px;margin:-10px -10px 0 0;border:0;background:none;color:var(--mute);font-size:22px;cursor:pointer}
+.x:hover{color:var(--bone)}
+
+/* ---------- PEPTICITY GUIDE ---------- */
+.g-launch{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:max(16px,calc(env(safe-area-inset-bottom,0px) + 16px));z-index:30;display:inline-flex;align-items:center;gap:10px;min-height:50px;padding:0 20px 0 16px;border:1px solid var(--rule2);border-radius:999px;background:linear-gradient(150deg,rgba(255,255,255,.08),rgba(255,255,255,.02));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--bone);font:700 12px/1 var(--text);letter-spacing:.2em;text-transform:uppercase;cursor:pointer;box-shadow:0 20px 40px -20px #000}
+.g-launch i{width:8px;height:8px;border-radius:50%;background:rgb(var(--pep));box-shadow:0 0 12px rgba(var(--pep),.9)}
+.g-launch:hover{border-color:var(--bone)}
+.guide{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:max(16px,calc(env(safe-area-inset-bottom,0px) + 16px));z-index:31;width:min(400px,calc(100vw - 32px));height:min(600px,calc(100vh - 32px));display:flex;flex-direction:column;border:1px solid var(--rule2);border-radius:6px;background:linear-gradient(160deg,rgba(30,28,27,.94),rgba(16,15,14,.97));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 90px -30px #000;overflow:hidden}
+.guide[hidden]{display:none}
+.g-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-bottom:1px solid var(--rule)}
+.g-head b{display:block;font:800 14px/1 var(--disp);letter-spacing:.2em;text-transform:uppercase}
+.g-head small{display:block;margin-top:6px;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.g-log{flex:1;overflow:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:11px 14px;border-radius:3px;font-size:14px;line-height:1.5}
+.msg.bot{align-self:flex-start;background:rgba(255,255,255,.045);border:1px solid var(--rule)}
+.msg.me{align-self:flex-end;background:rgba(var(--pep),.14);border:1px solid rgba(var(--pep),.35)}
+.msg.sos{border-color:#f2b8b5;color:var(--bone2)}
+.pcard{align-self:flex-start;max-width:88%;padding:10px 12px;border:1px solid var(--rule2);border-radius:3px;font-size:13px;color:var(--mute)}
+.pcard b{display:block;color:var(--bone);font:700 12px/1.3 var(--disp);letter-spacing:.1em;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 12px}
+.chips button{min-height:34px;padding:0 12px;border:1px solid var(--rule2);border-radius:999px;background:none;color:var(--mute);font-size:12px;cursor:pointer}
+.chips button:hover{color:var(--bone);border-color:var(--bone)}
+.g-form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--rule)}
+.g-form input{flex:1;min-width:0;min-height:44px;padding:0 12px;border:1px solid var(--rule2);border-radius:2px;background:rgba(255,255,255,.03);color:var(--bone);font:inherit;font-size:16px}
+.g-form input:focus{outline:none;border-color:rgb(var(--pep))}
+.g-form button{min-height:44px;padding:0 16px;border:1px solid var(--rule2);border-radius:2px;background:none;color:var(--bone);font:700 11px/1 var(--text);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+
+/* sample control: the lawyer switch, clearly not part of the real site */
+.ctlw{position:relative;z-index:3;max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.ctl{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 8px 12px;border:1px dashed var(--rule2);border-radius:3px;background:rgba(11,10,10,.82);font:600 10px/1.35 var(--text);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.ctl button{flex:none;min-height:32px;padding:0 10px;border:1px solid var(--rule2);border-radius:2px;background:none;color:var(--bone);font:inherit;letter-spacing:.14em;cursor:pointer}
+
+footer{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding-block:26px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-top:1px solid var(--rule);font-size:12px;line-height:1.6;color:var(--dim)}
+footer p{margin:0;max-width:90ch}
+
+@media (max-width:899px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .stage{order:-1;position:relative;top:0;aspect-ratio:auto;height:34vh;max-height:none}
+  .stage img{object-position:50% 46%}
+  .card{min-height:auto}
+  .opts{grid-template-columns:minmax(0,1fr)}
+  .prov{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .top .crumb{display:none}
+  .ctl{font-size:9px}
+  .rail span{visibility:hidden}
+  .rail .cur span{visibility:visible;overflow:visible}
+  .wrap{padding-bottom:90px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}html{scroll-behavior:auto}}
+</style>
+
+<a class="skip" href="#q">Skip to the quiz</a>
+<header class="top">
+  <a class="mark" href="#top" aria-label="PEPTICITY home"><i>P</i>PEPTICITY</a>
+  <span class="crumb">Find your plan &#183; 2 minutes</span>
+</header>
+
+<div class="ctlw"><div class="ctl" id="ctl"><span id="ctlTxt">Sample control &#183; Product names: hidden until counsel clears them</span><button type="button" id="ctlBtn" aria-pressed="false">Show</button></div></div>
+<main class="wrap" id="top">
+  <section class="card" aria-live="polite">
+    <div class="rail" id="rail" aria-hidden="true"></div>
+    <div id="screen"></div>
+    <div class="foot"><button class="back" id="back" type="button" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Back</button><span class="count" id="count"></span></div>
+  </section>
+  <figure class="stage" id="stage" aria-hidden="true">
+    <img class="clear" src="media/cat-clear.jpg" alt="">
+    <div id="lits"></div>
+    <figcaption class="cap"><b id="capName">Your focus</b><span id="capNote">Clear until you choose</span></figcaption>
+  </figure>
+</main>
+
+<footer>
+  <p>PEPTICITY works only through licensed clinicians and a licensed partner pharmacy. This quiz and the PEPTICITY GUIDE are not medical advice and do not replace a clinician. A licensed clinician decides if a plan is right for you. If you feel unwell right now, call 911. [Final legal copy to be approved by counsel.]</p>
+</footer>
+
+<div class="sheet" id="book" hidden role="dialog" aria-modal="true" aria-labelledby="bookH">
+  <form class="panel" id="bookF" novalidate>
+    <button class="x" type="button" data-close aria-label="Close">&times;</button>
+    <h2 id="bookH">Book your consult</h2>
+    <p id="bookP">A licensed clinician in your province reviews your answers and talks it through with you, by the way you chose.</p>
+    <div class="field"><label for="bName">Name</label><input id="bName" autocomplete="name" required></div>
+    <div class="field"><label for="bMail">Email</label><input id="bMail" type="email" autocomplete="email" inputmode="email" required></div>
+    <div class="field"><label for="bTel">Phone (optional)</label><input id="bTel" type="tel" autocomplete="tel" inputmode="tel"></div>
+    <div class="field"><label for="bWhen">Best time</label><select id="bWhen"><option>Mornings</option><option>Afternoons</option><option>Evenings</option></select></div>
+    <label class="check"><input type="checkbox" id="bOk"> <span>I understand this quiz and the PEPTICITY GUIDE aren't medical advice, and that a licensed clinician decides if a plan is right for me. I agree to the <a href="#terms">terms</a> and <a href="#privacy">privacy policy</a>. [Final wording to be approved by counsel.]</span></label>
+    <p class="err" id="bErr" role="alert"></p>
+    <button class="btn" type="submit">Request my consult</button>
+    <p class="sent" id="bSent" role="status"></p>
+  </form>
+</div>
+
+<div class="sheet" id="mail" hidden role="dialog" aria-modal="true" aria-labelledby="mailH">
+  <form class="panel" id="mailF" novalidate>
+    <button class="x" type="button" data-close aria-label="Close">&times;</button>
+    <h2 id="mailH">Email me this summary</h2>
+    <p>Your focus and next steps, so you can come back when you're ready. Your health answers are not included in the email.</p>
+    <div class="field"><label for="mMail">Email</label><input id="mMail" type="email" autocomplete="email" inputmode="email" required></div>
+    <label class="check"><input type="checkbox" id="mNews"> <span>Also send me occasional PEPTICITY updates. You can unsubscribe at any time.</span></label>
+    <p class="err" id="mErr" role="alert"></p>
+    <button class="btn" type="submit">Send my summary</button>
+    <p class="sent" id="mSent" role="status"></p>
+  </form>
+</div>
+
+<button class="g-launch" id="gOpen" type="button" aria-expanded="false" aria-controls="guide"><i></i>Ask the guide</button>
+<section class="guide" id="guide" hidden role="dialog" aria-modal="false" aria-labelledby="gH">
+  <div class="g-head"><div><b id="gH">PEPTICITY GUIDE</b><small>Guide &#183; Not medical advice</small></div><button class="x" type="button" id="gClose" aria-label="Close the guide">&times;</button></div>
+  <div class="g-log" id="gLog" aria-live="polite"></div>
+  <div class="chips" id="gChips"></div>
+  <form class="g-form" id="gForm"><label for="gIn" class="skip">Ask the guide</label><input id="gIn" placeholder="Ask how it works, cost, the consult..." autocomplete="off" maxlength="300"><button type="submit">Send</button></form>
+</section>
+
+
+<script src="inventory.js"></script>
+<script src="pep-brain.js"></script>
+<script>
+(function () {
+'use strict';
+var BRAIN = window.PEPBRAIN, INV = window.PEPINV;
+var NAMES = false; BRAIN.configure({ names: NAMES });
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- focuses: one colour each, only one ever lit ---------- */
+var CAT = {
+  performance: { name: 'Performance & recovery', c: '205,222,235', groups: ['recovery', 'gh'] },
+  weight: { name: 'Weight', c: '200,16,46', groups: ['metabolic'] },
+  energy: { name: 'Energy', c: '212,255,58', groups: ['longevity'] },
+  aging: { name: 'Healthy aging', c: '214,36,110', groups: ['longevity'] },
+  skin: { name: 'Skin & hair', c: '232,96,120', groups: ['skin'] },
+  sleep: { name: 'Sleep', c: '124,92,255', groups: ['mind'] },
+  hormones: { name: 'Hormones & intimacy', c: '226,64,200', groups: ['intimacy'] },
+  general: { name: 'Talk it through', c: '236,230,223', groups: [] }
+};
+$('lits').innerHTML = Object.keys(CAT).filter(function (k) { return k !== 'general'; }).map(function (k) { return '<img class="lit" data-cat="' + k + '" src="media/cat-' + k + '-lit.jpg" alt="">'; }).join('');
+function light(cat, note) {
+  var c = CAT[cat] || CAT.general;
+  document.documentElement.style.setProperty('--pep', c.c);
+  [].forEach.call(document.querySelectorAll('.stage .lit'), function (im) { im.classList.toggle('on', im.dataset.cat === cat); });
+  $('capName').textContent = cat && cat !== 'general' ? c.name : (cat === 'general' ? c.name : 'Your focus');
+  $('capNote').textContent = note || (cat && cat !== 'general' ? 'Lit for your focus' : 'Clear until you choose');
+}
+
+/* ---------- the questions ---------- */
+var PROV = [['AB', 18], ['BC', 19], ['MB', 18], ['NB', 19], ['NL', 19], ['NS', 19], ['NT', 19], ['NU', 19], ['ON', 18], ['PE', 18], ['QC', 18], ['SK', 18], ['YT', 19]];
+var FOLLOW = {
+  performance: { q: 'What matters most right now?', o: [['recover', 'Recovering between sessions'], ['injury', 'Coming back from an injury'], ['strength', 'Building strength and lean mass'], ['endurance', 'Going further for longer']] },
+  weight: { q: 'Where are you starting from?', o: [['w1', 'Under 10 lb to go'], ['w2', '10 to 30 lb'], ['w3', '30 to 60 lb'], ['w4', 'More than 60 lb']] },
+  energy: { q: 'When does your energy dip most?', o: [['am', 'Mornings'], ['pm', 'Afternoons'], ['all', 'Most of the day'], ['train', 'After training']] },
+  aging: { q: "What's most on your mind?", o: [['sharp', 'Staying sharp'], ['active', 'Staying active'], ['look', 'Skin and appearance'], ['long', 'Long-term health']] },
+  skin: { q: 'What would you like help with?', o: [['tone', 'Skin texture and tone'], ['hair', 'Hair'], ['both', 'Both'], ['shop', "Something I can buy today", 'Cosmetic skin care, no consult needed']] },
+  sleep: { q: "What's hardest about sleep?", o: [['fall', 'Falling asleep'], ['stay', 'Staying asleep'], ['rest', 'Waking up rested'], ['unsure', "I'm not sure"]] },
+  hormones: { q: "What's this mostly about?", o: [['drive', 'Energy and drive'], ['intim', 'Intimacy'], ['mood', 'Mood'], ['unsure', "I'm not sure"]] },
+  notsure: { q: 'What would make the biggest difference this year?', o: [['performance', 'Feeling stronger'], ['weight', 'Feeling lighter'], ['energy', 'More energy'], ['aging', 'Looking after the long term']] }
+};
+var STEPS = [
+  { id: 'goal', st: 0, q: 'What brings you here?', sub: 'Pick the one that matters most today. You can talk through everything else in your consult.', o: [['performance', 'Training and recovery'], ['weight', 'Weight'], ['energy', 'Energy'], ['aging', 'Healthy aging'], ['skin', 'Skin and hair'], ['sleep', 'Sleep'], ['hormones', 'Hormones and intimacy'], ['notsure', "I'm not sure yet"]] },
+  { id: 'follow', st: 0 },
+  { id: 'activity', st: 0, q: 'How many days a week do you work out?', sub: 'Any answer is fine, including none.', o: [['0', "I don't work out right now"], ['1', '1 to 2 days'], ['3', '3 to 4 days'], ['5', '5 or more days']] },
+  { id: 'prov', st: 1, q: 'Where do you live?', sub: 'Clinicians are licensed by province, so this decides who you talk to.', prov: true },
+  { id: 'age', st: 1, q: 'How old are you?', sub: '', o: [['u18', 'Under 18'], ['18', '18'], ['19', '19 to 34'], ['35', '35 to 54'], ['55', '55 or older']] },
+  { id: 'desc', st: 1, q: 'Which best describes you?', o: [['new', 'New to this'], ['self', "I've tried things on my own"], ['clinic', "I've worked with a clinic before"]] },
+  { id: 'preg', st: 2, q: 'Are you pregnant, trying to conceive, or breastfeeding?', sub: 'Your answers go only to your clinician. If you feel unwell right now, call 911.', o: [['no', 'No'], ['preg', 'Pregnant'], ['ttc', 'Trying to conceive'], ['bf', 'Breastfeeding'], ['na', 'Not applicable']] },
+  { id: 'cond', st: 2, multi: true, q: 'Have you ever had any of these?', sub: 'Tick all that apply. This is screening only: it helps your clinician, it is not a diagnosis.', o: [['mtc', 'Thyroid cancer (medullary) or MEN 2, you or family'], ['panc', 'Pancreatitis'], ['gall', 'Gallbladder disease'], ['t1d', 'Type 1 diabetes, or I use insulin'], ['cancer', 'Cancer, current or past'], ['ed', 'An eating disorder'], ['kidney', 'Kidney or liver disease'], ['none', 'None of these']] },
+  { id: 'meds', st: 2, q: 'Do you take any prescription medicines?', o: [['none', 'No'], ['some', 'Yes'], ['tell', "I'd rather tell the clinician"]] },
+  { id: 'talk', st: 3, q: 'How would you like to talk with your clinician?', o: [['phone', 'Phone'], ['video', 'Video'], ['msg', 'Secure messages']] },
+  { id: 'when', st: 3, q: 'When would you like to start?', o: [['now', 'As soon as I can'], ['month', 'In the next month'], ['explore', "I'm just exploring"]] }
+];
+var STAGES = ['Goal', 'About you', 'Health', 'Your care'];
+var BRIDGE = {
+  activity: function (a) { var f = a.goal === 'notsure' ? 'Noted.' : CAT[a.goal].name + ', noted.'; return f + ' One more about your routine.'; },
+  prov: function () { return 'Three quick ones about you.'; },
+  preg: function () { return 'Three health questions. Screening only.'; },
+  talk: function () { return 'Last two. Then your next steps.'; }
+};
+
+var A = {}, cur = -1, editing = false, hist = [];
+var KEY = 'pep-quiz-v3';
+function save() { try { localStorage.setItem(KEY, JSON.stringify({ a: A, cur: cur })); } catch (e) {} }
+function load() { try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); return s && s.a ? s : null; } catch (e) { return null; } }
+function clearSave() { try { localStorage.removeItem(KEY); } catch (e) {} }
+
+function minAge() { var p = PROV.filter(function (x) { return x[0] === A.prov; })[0]; return p ? p[1] : 18; }
+function catOf(goal) { return CAT[goal] ? goal : null; }
+function score() {
+  var s = {}; Object.keys(CAT).forEach(function (k) { s[k] = 0; });
+  if (A.goal && A.goal !== 'notsure') { s[A.goal] += 3; if (A.follow) s[A.goal] += 2; }
+  if (A.goal === 'notsure' && A.follow && s[A.follow] !== undefined) s[A.follow] += 2;
+  if (A.activity === '3' || A.activity === '5') s.performance += 1;
+  if (A.age === '55') s.aging += 1;
+  var ks = Object.keys(s).filter(function (k) { return k !== 'general'; }).sort(function (a, b) { return s[b] - s[a]; });
+  if (!s[ks[0]] || s[ks[0]] === s[ks[1]]) return 'general';
+  return ks[0];
+}
+function clinicianFirst() { return (A.cond && A.cond.length && A.cond.indexOf('none') < 0) || (A.meds && A.meds !== 'none'); }
+
+/* ---------- rendering ---------- */
+function rail(stage, within) {
+  $('rail').innerHTML = STAGES.map(function (n, i) {
+    var f = i < stage ? 1 : i === stage ? Math.max(.12, within) : 0;
+    return '<div class="' + (i <= stage ? 'on' : '') + (i === stage ? ' cur' : '') + '"><b style="--f:' + f + '"></b><span>' + n + '</span></div>';
+  }).join('');
+}
+function stageWithin(i) { var st = STEPS[i].st, list = STEPS.filter(function (s) { return s.st === st; }); return (list.indexOf(STEPS[i]) + 1) / (list.length + .4); }
+function setScreen(html, focus) {
+  $('screen').innerHTML = html;
+  var h = $('screen').querySelector('.q'); if (h && focus !== false) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+}
+function optBtn(o, sel, c, multi) {
+  var on = multi ? (sel || []).indexOf(o[0]) >= 0 : sel === o[0];
+  return '<button type="button" class="opt" ' + (multi ? 'role="checkbox" aria-checked="' + on + '"' : 'aria-pressed="' + on + '"') + ' data-v="' + esc(o[0]) + '"' + (c ? ' style="--c:' + c + '"' : '') + '><span class="dot"></span><span class="lb">' + esc(o[1]) + (o[2] ? '<small>' + esc(o[2]) + '</small>' : '') + '</span></button>';
+}
+
+function intro() {
+  cur = -1; rail(0, .08); $('back').hidden = true; $('count').textContent = '';
+  light(null);
+  var s = load(), resume = s && s.cur >= 0 && Object.keys(s.a).length;
+  setScreen('<p class="kick">Find your plan</p><h1 class="q" id="q">The right start, in two minutes</h1>' +
+    '<p class="qsub">Eleven quick questions about your goals, you and your health. At the end you see your focus and your next steps, before we ask for anything.</p>' +
+    '<div class="cta"><button class="btn" type="button" id="go">' + (resume ? 'Pick up where I left off' : 'Start') + '</button>' + (resume ? '<button class="btn ghost" type="button" id="fresh">Start over</button>' : '') + '</div>' +
+    '<p class="note">It isn\u2019t a medical assessment. It helps you and your clinician start in the right place, and a licensed clinician decides if a plan is right for you.</p>', false);
+  $('go').onclick = function () { if (resume) { A = s.a; go(s.cur); } else { A = {}; go(0); } };
+  if (resume) $('fresh').onclick = function () { clearSave(); A = {}; go(0); };
+}
+
+function go(i, back) {
+  if (!back && cur >= 0 && cur !== i) hist.push(cur);
+  cur = i; save();
+  var step = STEPS[i], q = step.q, sub = step.sub || '', opts = step.o, multi = !!step.multi;
+  if (step.id === 'follow') { var F = FOLLOW[A.goal]; q = F.q; opts = F.o; sub = ''; }
+  if (step.id === 'age') sub = A.prov ? 'In ' + A.prov + ', PEPTICITY is for adults ' + minAge() + ' and over.' : '';
+  rail(step.st, stageWithin(i));
+  $('back').hidden = false; $('count').textContent = (i + 1) + ' / ' + STEPS.length;
+  var bridge = BRIDGE[step.id] ? BRIDGE[step.id](A) : '';
+  var cat = catOf(A.goal);
+  var html = '<p class="kick">' + STAGES[step.st] + '</p><p class="bridge">' + esc(bridge) + '</p><h2 class="q" id="q">' + esc(q) + '</h2>' + (sub ? '<p class="qsub">' + esc(sub) + '</p>' : '');
+  if (step.prov) html += '<div class="opts prov" role="group" aria-label="Province or territory">' + PROV.map(function (p) { return optBtn([p[0], p[0]], A.prov); }).join('') + '</div>';
+  else html += '<div class="opts' + (opts.length <= 3 || step.id === 'cond' ? ' one' : '') + '" role="group" aria-label="' + esc(q) + '">' + opts.map(function (o) {
+    var c = step.id === 'goal' ? (CAT[o[0]] ? CAT[o[0]].c : '236,230,223') : (step.id === 'follow' && A.goal === 'notsure' ? CAT[o[0]].c : null);
+    return optBtn(o, step.id === 'follow' ? A.follow : A[step.id], c, multi);
+  }).join('') + '</div>';
+  if (multi) html += '<div class="cta" style="margin-top:18px"><button class="btn" type="button" id="cont">Continue</button></div>';
+  setScreen(html);
+  if (step.id !== 'goal') light(cat === 'notsure' ? null : cat);
+  var btns = [].slice.call($('screen').querySelectorAll('.opt'));
+  btns.forEach(function (b) {
+    if (step.id === 'goal' || (step.id === 'follow' && A.goal === 'notsure')) {
+      b.addEventListener('pointerenter', function () { if (CAT[b.dataset.v]) light(b.dataset.v, 'Preview'); });
+      b.addEventListener('focus', function () { if (CAT[b.dataset.v]) light(b.dataset.v, 'Preview'); });
+    }
+    b.addEventListener('click', function () {
+      var v = b.dataset.v;
+      if (multi) {
+        var cur2 = (A[step.id] || []).slice();
+        if (v === 'none') cur2 = cur2.indexOf('none') >= 0 ? [] : ['none'];
+        else { cur2 = cur2.filter(function (x) { return x !== 'none'; }); var k = cur2.indexOf(v); if (k >= 0) cur2.splice(k, 1); else cur2.push(v); }
+        A[step.id] = cur2; save();
+        btns.forEach(function (x) { x.setAttribute('aria-checked', String(cur2.indexOf(x.dataset.v) >= 0)); });
+        return;
+      }
+      btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      answer(step.id, v);
+    });
+  });
+  if (step.id === 'goal') { $('screen').querySelector('.opts').addEventListener('pointerleave', function () { light(catOf(A.goal) && A.goal !== 'notsure' ? A.goal : null); }); light(A.goal && A.goal !== 'notsure' ? A.goal : null); }
+  if (multi) $('cont').onclick = function () { if (!(A.cond || []).length) { $('cont').textContent = 'Tick at least one, or "None of these"'; return; } next(); };
+}
+
+function answer(id, v) {
+  if (id === 'goal' && A.goal !== v) { delete A.follow; }
+  if (id === 'follow') A.follow = v; else A[id] = v;
+  save();
+  if (id === 'goal') light(v === 'notsure' ? null : v);
+  if (id === 'follow' && A.goal === 'skin' && v === 'shop') return setTimeout(shop, reduce ? 0 : 260);
+  if (id === 'age' && (v === 'u18' || (v === '18' && minAge() > 18))) return setTimeout(function () { stop('age'); }, reduce ? 0 : 260);
+  if (id === 'preg' && (v === 'preg' || v === 'ttc' || v === 'bf')) return setTimeout(function () { stop('preg'); }, reduce ? 0 : 260);
+  setTimeout(next, reduce ? 0 : 260);
+}
+function answered(s) { return s.id === 'follow' ? !!A.follow : s.multi ? !!(A[s.id] && A[s.id].length) : !!A[s.id]; }
+function next() {
+  for (var i = cur + 1; i < STEPS.length; i++) if (!answered(STEPS[i])) return go(i);
+  for (var j = 0; j < STEPS.length; j++) if (!answered(STEPS[j])) return go(j);
+  if (editing) return result();
+  building();
+}
+$('back').onclick = function () {
+  if (cur === -2) { return go(STEPS.length - 1, true); }
+  if (!hist.length) return intro();
+  go(hist.pop(), true);
+};
+
+function building() {
+  cur = -2; rail(3, 1); $('count').textContent = '';
+  var cat = score(); light(cat, 'Building your next steps');
+  var items = ['Matching your focus: ' + CAT[cat].name, 'Noting your province: ' + A.prov + ' [Provinces served: confirm with Grace]', 'Preparing a summary for your clinician'];
+  setScreen('<p class="kick">Your care</p><h2 class="q" id="q">Building your next steps</h2><ul class="build">' + items.map(function (t) { return '<li><i></i>' + esc(t) + '</li>'; }).join('') + '</ul>');
+  var lis = $('screen').querySelectorAll('li'), k = 0;
+  (function tick() { if (k < lis.length) { lis[k++].classList.add('done'); setTimeout(tick, reduce ? 0 : 650); } else setTimeout(result, reduce ? 0 : 500); })();
+}
+
+var LABEL = {
+  goal: function () { return 'Goal: ' + (A.goal === 'notsure' ? 'Not sure yet' : CAT[A.goal].name); },
+  activity: function () { return { '0': 'Not working out right now', '1': '1 to 2 days a week', '3': '3 to 4 days a week', '5': '5+ days a week' }[A.activity]; },
+  prov: function () { return 'Lives in ' + A.prov; },
+  talk: function () { return 'Prefers ' + { phone: 'phone', video: 'video', msg: 'secure messages' }[A.talk]; },
+  when: function () { return { now: 'Start as soon as I can', month: 'Start in the next month', explore: 'Just exploring' }[A.when]; }
+};
+var PEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>';
+function programs(cat) {
+  var g = CAT[cat].groups;
+  if (!NAMES) return '<div class="progs"><h3>Programs</h3>Specific programs are something your clinician goes through with you in your consult. [Product names and prices hidden until counsel clears the catalogue.]</div>';
+  var list = (INV ? INV.products : []).filter(function (p) { return g.indexOf(p.group) >= 0; }).slice(0, 5);
+  if (!list.length) return '<div class="progs"><h3>Programs</h3>Your clinician talks through the options with you.</div>';
+  return '<div class="progs"><h3>Programs your clinician may discuss</h3><ul>' + list.map(function (p) { return '<li><span>' + esc(p.name) + ' \u00b7 ' + esc([].concat(p.sizes || []).join(' / ')) + '</span><span>$[xx] CAD</span></li>'; }).join('') + '</ul></div>';
+}
+function result() {
+  editing = false; cur = -3; rail(3, 1); $('back').hidden = true; $('count').textContent = '';
+  var cat = score(), C = CAT[cat], first = clinicianFirst(), explore = A.when === 'explore';
+  light(cat, cat === 'general' ? 'Clear: we\u2019ll find it together' : 'Your focus');
+  var told = ['goal', 'activity', 'prov', 'talk', 'when'].map(function (k) { return '<button type="button" data-edit="' + k + '">' + esc(LABEL[k]()) + PEN + '<span class="skip">Change</span></button>'; }).join('');
+  var main = first ? 'Book a clinician call first' : explore ? 'Email me this summary' : 'Book your consult';
+  var alt = first ? '' : explore ? 'Book your consult' : 'Email me this summary';
+  setScreen('<p class="kick">Your focus</p><h2 class="q" id="q">' + esc(C.name) + '</h2>' +
+    '<p class="qsub">' + (cat === 'general' ? 'Your answers point a few ways, which is common. Your consult is where a clinician helps you choose a starting point.' : 'In your consult, a licensed clinician goes through your goals, your history and what is realistic, then tells you plainly whether a program fits.') + '</p>' +
+    (first ? '<p class="flag">Because of something you told us, a clinician talks with you before anything else. Nothing is charged until they have.</p>' : '') +
+    '<div class="told" aria-label="What you told us">' + told + '</div>' +
+    '<ol class="steps"><li><b>Consult</b>A clinician licensed in ' + esc(A.prov) + ', by ' + { phone: 'phone', video: 'video', msg: 'secure message' }[A.talk] + '.</li><li><b>Pharmacy</b>If a plan is right for you, a licensed partner pharmacy prepares it.</li><li><b>Delivery</b>Shipped cold to your door, with a person to call.</li></ol>' +
+    programs(cat) +
+    '<p class="price"><b>Consult: $[xx], all-in.</b> You see every cost before you pay, and if a clinician decides a program isn\u2019t right for you, you\u2019re not charged for it. [Pricing: confirm with Grace]</p>' +
+    '<div class="cta"><button class="btn" type="button" id="main">' + main + '</button>' + (alt ? '<button class="btn ghost" type="button" id="alt">' + alt + '</button>' : '') + '</div><p class="decide">A licensed clinician decides if a plan is right for you.</p>' +
+    '<button class="linkbtn" type="button" id="again">Start over</button>' +
+    '');
+  [].forEach.call($('screen').querySelectorAll('[data-edit]'), function (b) { b.onclick = function () { editing = true; var i = STEPS.map(function (s) { return s.id; }).indexOf(b.dataset.edit); hist = []; go(i); }; });
+  $('main').onclick = function () { (explore && !first ? openMail : openBook)(first); };
+  if (alt) $('alt').onclick = function () { (explore ? openBook : openMail)(false); };
+  $('again').onclick = function () { clearSave(); A = {}; hist = []; intro(); };
+}
+function stop(kind) {
+  cur = -4; $('count').textContent = ''; light(null, '');
+  var h = kind === 'age' ? 'PEPTICITY is for adults' : 'Not during pregnancy or breastfeeding';
+  var p = kind === 'age' ? 'In ' + (A.prov || 'your province') + ', the service is for adults ' + minAge() + ' and over. If you have questions, a parent or guardian can call [phone number].' : 'Programs aren\u2019t offered while you are pregnant, trying to conceive or breastfeeding. Your own doctor or midwife is the best person to talk to. If you have questions about PEPTICITY, a person is at [phone number].';
+  setScreen('<p class="kick">Thank you</p><h2 class="q" id="q">' + h + '</h2><p class="qsub">' + p + '</p><div class="cta"><button class="btn ghost" type="button" id="chg">Change my answer</button></div>');
+  $('chg').onclick = function () { go(STEPS.map(function (s) { return s.id; }).indexOf(kind === 'age' ? 'age' : 'preg'), true); };
+}
+function shop() {
+  cur = -5; rail(0, 1); $('count').textContent = ''; light('skin', 'Cosmetic skin care');
+  setScreen('<p class="kick">Skin and hair</p><h2 class="q" id="q">Skin care you can buy today</h2><p class="qsub">PEPTICITY\u2019s cosmetic skin products don\u2019t need a consult. [Cosmetic product list: confirm with Grace]</p>' +
+    '<div class="cta"><button class="btn" type="button" id="shopBtn">Shop skin care</button><button class="btn ghost" type="button" id="shopBack">Take the full quiz instead</button></div><p class="sent" id="shopSent" role="status"></p>' +
+    '<p class="note">Thinking about an injectable plan for skin or hair? That starts with a consult, where a licensed clinician decides if it is right for you.</p>');
+  $('shopBtn').onclick = function () { $('shopSent').textContent = 'Preview only: the shop opens here on the real site.'; };
+  $('shopBack').onclick = function () { delete A.follow; go(1, true); };
+}
+
+/* ---------- sheets ---------- */
+var lastFocus = null;
+function openSheet(id) { lastFocus = document.activeElement; $(id).hidden = false; var f = $(id).querySelector('input'); if (f) f.focus(); }
+function closeSheet(el) { el.hidden = true; if (lastFocus) lastFocus.focus(); }
+[].forEach.call(document.querySelectorAll('.sheet'), function (s) {
+  s.addEventListener('click', function (e) { if (e.target === s || e.target.hasAttribute('data-close')) closeSheet(s); });
+  s.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeSheet(s);
+    if (e.key === 'Tab') { var f = [].slice.call(s.querySelectorAll('button,input,select,a[href]')).filter(function (x) { return !x.disabled && x.offsetParent; }); if (!f.length) return; if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); } }
+  });
+});
+function openBook(first) {
+  $('bookH').textContent = first ? 'Book a clinician call' : 'Book your consult';
+  $('bookP').textContent = first ? 'A licensed clinician in your province talks with you first, before anything else. Nothing is charged until they have.' : 'A licensed clinician in your province reviews your answers and talks it through with you, the way you chose.';
+  $('bSent').textContent = ''; $('bErr').textContent = ''; openSheet('book');
+}
+function openMail() { $('mSent').textContent = ''; $('mErr').textContent = ''; openSheet('mail'); }
+var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+$('bookF').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var err = !$('bName').value.trim() ? 'Please add your name.' : !EMAIL.test($('bMail').value.trim()) ? 'Please add a valid email.' : !$('bOk').checked ? 'Please tick the box to confirm you understand.' : '';
+  $('bErr').textContent = err; if (err) return;
+  $('bSent').textContent = 'Preview only: nothing was sent.';
+});
+$('mailF').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var err = !EMAIL.test($('mMail').value.trim()) ? 'Please add a valid email.' : '';
+  $('mErr').textContent = err; if (err) return;
+  $('mSent').textContent = 'Preview only: nothing was sent.';
+});
+
+/* ---------- PEPTICITY GUIDE ---------- */
+var CHIP = { quiz: 'Take the quiz', book: 'Book a consult', human: 'Talk to a person', how: 'How it works', cost: 'What it costs', browse: 'What you offer', research: '"Research use"?', buy: 'Can I buy it?' };
+var ASK = { how: 'how does it work', cost: 'how much does it cost', browse: 'what peptides do you have', research: 'what does research use mean', buy: 'can I buy it', human: 'talk to a person' };
+function say(cls, text) { var d = document.createElement('div'); d.className = 'msg ' + cls; d.textContent = text; $('gLog').appendChild(d); $('gLog').scrollTop = $('gLog').scrollHeight; }
+function chips(list) {
+  $('gChips').innerHTML = (list || []).filter(function (k) { return CHIP[k]; }).map(function (k) { return '<button type="button" data-k="' + k + '">' + CHIP[k] + '</button>'; }).join('');
+}
+function reply(text) {
+  var r = BRAIN.respond(text);
+  r.lines.forEach(function (l) { say('bot' + (r.kind === 'emergency' ? ' sos' : ''), l); });
+  (r.products || []).forEach(function (p) { var d = document.createElement('div'); d.className = 'pcard'; d.innerHTML = '<b>' + esc(p.name) + '</b>' + esc(p.what); $('gLog').appendChild(d); });
+  chips(r.kind === 'emergency' ? ['human'] : r.follow);
+}
+$('gChips').addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b) return; var k = b.dataset.k;
+  if (k === 'quiz') { closeGuide(); if (cur < 0) { A = A || {}; go(0); } $('q') && $('q').focus(); return; }
+  if (k === 'book') { closeGuide(); openBook(clinicianFirst()); return; }
+  say('me', CHIP[k]); reply(ASK[k] || CHIP[k]);
+});
+$('gForm').addEventListener('submit', function (e) { e.preventDefault(); var v = $('gIn').value.trim(); if (!v) return; $('gIn').value = ''; say('me', v); reply(v); });
+var greeted = false;
+function openGuide() { $('guide').hidden = false; $('gOpen').hidden = true; $('gOpen').setAttribute('aria-expanded', 'true'); if (!greeted) { greeted = true; say('bot', BRAIN.LIB.intro); chips(['how', 'cost', 'quiz', 'human']); } $('gIn').focus(); }
+function closeGuide() { $('guide').hidden = true; $('gOpen').hidden = false; $('gOpen').setAttribute('aria-expanded', 'false'); $('gOpen').focus(); }
+$('gOpen').onclick = openGuide; $('gClose').onclick = closeGuide;
+$('guide').addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGuide(); });
+
+/* ---------- sample control: the lawyer switch ---------- */
+$('ctlBtn').onclick = function () {
+  NAMES = !NAMES; BRAIN.configure({ names: NAMES });
+  $('ctlBtn').textContent = NAMES ? 'Hide' : 'Show'; $('ctlBtn').setAttribute('aria-pressed', String(NAMES));
+  $('ctlTxt').textContent = NAMES ? 'Sample control \u00b7 Product names: shown (counsel cleared)' : 'Sample control \u00b7 Product names: hidden until counsel clears them';
+  if (cur === -3) result();
+};
+
+/* start: a goal can arrive from the site's "I'm here for" switcher as #weight, #sleep, ... */
+var pre = (location.hash || '').slice(1);
+if (CAT[pre] && pre !== 'general') { A = { goal: pre }; light(pre); go(1); } else intro();
+})();
+</script>

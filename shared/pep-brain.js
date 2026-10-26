@@ -1,4 +1,4 @@
-/* PEPTICITY help bot brain (CON-01 · vetted mode). Pure logic, no DOM, so it runs the same in the page
+/* PEPTICITY help bot brain (CON-01 \u00b7 vetted mode). Pure logic, no DOM, so it runs the same in the page
    and in the test suite (tools/brain-test.js).
 
    Rules, in order:
@@ -20,19 +20,23 @@
 
   /* ---------- the reviewed reply library ---------- */
   var LIB = deepFreeze({
-    greet: "Hi. Ask me about any peptide on PEPTICITY's list, or how the service works. For anything about your own health, I'll connect you with a licensed clinician or a person.",
+    intro: "Hi, I'm the PEPTICITY GUIDE. I can explain how PEPTICITY works and help you find the right next step. I'm not a doctor, and this isn't medical advice: anything about your own health goes to a licensed clinician.",
+    greet: "Hi. Ask me how PEPTICITY works, what a consult involves, or what it costs. For anything about your own health, I'll connect you with a licensed clinician or a person.",
     thanks: "You're welcome. Anything else? A person is also at " + PHONE + '.',
     handoff: "That's a question for a licensed clinician. They go through it with you as part of your free assessment, with your health and medicines in mind.",
     handoffProduct: 'What it does, how it is used and whether it is right for you are questions for a licensed clinician, as part of your free assessment.',
-    emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in the US or Canada, call or text 988.',
+    emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in Canada or the US, call or text 9-8-8.',
     emergency2: 'For anything else, a person is at ' + PHONE + '.',
-    minor: 'This service is for adults 18 and over. If you have questions, a parent or guardian can call ' + PHONE + '.',
+    minor: 'This service is for adults: 18 and over, or 19 and over in BC, NB, NL, NS and the territories. If you have questions, a parent or guardian can call ' + PHONE + '.',
     injection: "I can only answer from PEPTICITY's vetted list, and I can't change how I work. Ask about a peptide or the service, or talk to a person at " + PHONE + '.',
     notListed: "That isn't on PEPTICITY's current list. A licensed clinician can talk through options with you as part of your free assessment.",
     many: 'I found more than one. Which did you mean?',
     human: 'A real person can help. Call ' + PHONE + ', or leave your number and the care team will call you back.',
     fallback: "I don't have a vetted answer for that yet, and I won't guess. A person can help at " + PHONE + ', or browse the peptides and common questions.',
     browse: "Here is everything on PEPTICITY's current list. Pick one to see what it is.",
+    outcome: "Nobody can promise a result, and we won't. A licensed clinician looks at your goals and health and tells you honestly what a plan can and can't do.",
+    namesLater: 'Specific programs are something your clinician goes through with you in your consult, with your health and goals in mind. The 2-minute quiz is the quickest way to start.',
+    browseHidden: 'Programs are matched to you in your consult. Start with the 2-minute quiz, or ask me how the consult works.',
     faq: {
       peptide: 'A peptide is a short chain of amino acids, the building blocks of proteins. Your body makes many of its own. Some peptides are also prescription medicines.',
       how: 'You take the free assessment. A licensed clinician reviews it and decides if a plan is right for you. If it is, a licensed partner pharmacy prepares it, every lot is tested, and it ships cold to your door.',
@@ -58,7 +62,7 @@
       legal: 'PEPTICITY works only through licensed clinicians and a licensed partner pharmacy, and nothing is sold "for research use". [Jurisdiction wording: confirm with counsel]',
       about: '[About PEPTICITY and where it is based: confirm with Grace]',
       family: 'Each person takes their own assessment, because a clinician reviews everyone separately. [Family offer: confirm with Grace]',
-      age: 'The service is for adults 18 and over. There is no upper age limit: a licensed clinician looks at your health and medicines, whatever your age.',
+      age: 'The service is for adults: 18 and over, or 19 and over in BC, NB, NL, NS and the territories. There is no upper age limit: a licensed clinician looks at your health and medicines, whatever your age.',
       fitness: "You don't need a workout routine to start. The free assessment asks how active you are, including not at all, and a licensed clinician takes it from there."
     }
   });
@@ -67,9 +71,9 @@
   var LEET = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '@': 'a', '$': 's', '!': 'i' };
   function norm(s) {
     s = String(s == null ? '' : s).slice(0, 500);
-    try { s = s.normalize('NFKD').replace(/[̀-ͯ]/g, ''); } catch (e) {}
-    s = s.replace(/[​-‏⁠﻿]/g, '').toLowerCase();
-    s = s.replace(/[’‘`]/g, "'");
+    try { s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g, ''); } catch (e) {}
+    s = s.replace(/[\u200b-\u200f\u2060\ufeff]/g, '').toLowerCase();
+    s = s.replace(/[\u2019\u2018`]/g, "'");
     return ' ' + s.replace(/\s+/g, ' ').trim() + ' ';
   }
   // a second, harder view: look-alike characters swapped, single letters joined ("d o s e", "b.p.c"), runs squeezed ("dooose")
@@ -85,7 +89,7 @@
   var INJECT = /(ignore (all |your |the )?(previous|prior|above)|disregard (your|the) (rules|instructions)|system prompt|you are now|pretend (to be|you)|act as (a|an|my)|jailbreak|developer mode|dan mode|role.?play as|new instructions|override)/;
   var MINOR = /(\b(1[0-7]|[1-9]) ?(years? old|yrs? old|yo|y\/o)\b|\bi'?m (a )?(teen|minor|1[0-7])\b|\bunder 18\b|\bhigh school(er)?\b|\bmy (son|daughter) is (1[0-7]|[1-9])\b)/;
   var MED = new RegExp([
-    'dos(e|es|age|ing)', 'how much (should|do i|to|can i)', 'how many (mg|mcg|iu|units|times)', '\\b\\d+ ?(mg|mcg|iu|ml|units?)\\b',
+    'dos(e|es|age|ing)', 'how much (should|do i|to|can i)', 'how much .{1,30}(take|use|inject|run)\\b', 'how many (mg|mcg|iu|units|times)', '\\b\\d+ ?(mg|mcg|iu|ml|units?)\\b',
     'inject', 'needle', 'syringe', 'pin(ning)?\\b', 'subq', 'sub-?q', 'intramuscular', '\\bim\\b shot', 'reconstitut', 'bac(teriostatic)? water ratio', '\\bmix(ing)?\\b',
     'side.?effect', 'reaction', 'safe (for|to)', 'is it safe', 'dangerous', 'risk', 'interact', 'with my (meds|medication|pills)', 'blood thinner', 'contraindicat',
     'pregnan', 'breast.?feed', 'nursing', 'trying to conceive',
@@ -94,6 +98,8 @@
     'should i (take|use|try|start)', 'recommend', 'best peptide', 'which peptide (should|would|is (best|right)|for)', 'what (does|do) .{1,30} do\\b', 'what is .{1,30} (for|good for)', 'benefit', 'help (with|my|me)',
     'cure', 'treat', 'heal', 'symptom', 'diagnos', 'my doctor said', 'blood (sugar|pressure)', 'diabet', 'cancer', 'heart', 'thyroid', 'injur', 'tendon', 'joint pain', 'arthritis', 'libido', 'erect', 'anxiety', 'depress', 'insomnia', 'sleep better'
   ].join('|'));
+  var OUTCOME = /(will i lose|lose \d+|\d+ ?(lb|lbs|pounds|kg|kilos)\b|how (much|fast|quickly) (will|can|do) i|how long (until|before|till) (i see|it works|results)|guarantee|before and after|results (in|after))/;
+  var SAME = /((same|equivalent|identical) (as|to)|generic|just like|copy of|knock.?off) .{0,30}(ozempic|wegovy|mounjaro|zepbound|rybelsus|saxenda)|(ozempic|wegovy|mounjaro|zepbound|rybelsus|saxenda) .{0,30}(same|equivalent|generic|identical)/;
   var HUMAN = /(human|real person|a person|someone|call me|phone number|talk to|speak to|agent|representative|customer service)/;
   var GREET = /^ (hi|hey|hello|yo|good (morning|afternoon|evening)|hiya)[ !.]*$/;
   var THANKS = /^ (thanks|thank you|thx|ty|cheers|great|ok|okay|perfect)[ !.]*$/;
@@ -147,7 +153,12 @@
     return best;
   }
 
-  /* respond(text) → { kind, lines: [string], products: [record], follow: [chip ids] } */
+  /* The lawyer switch. names:false = no product names or product cards in any reply (Canada C.01.044 and
+     Health Canada's unauthorized-peptide advisories) until counsel clears the catalogue. Default: hidden. */
+  var CFG = { names: false };
+  function configure(o) { if (o && typeof o.names === 'boolean') CFG.names = o.names; return { names: CFG.names }; }
+
+  /* respond(text) \u2192 { kind, lines: [string], products: [record], follow: [chip ids] } */
   function respond(text) {
     var n = norm(text), s = squash(n), both = n + '|' + s;
     var out = function (kind, lines, extra) {
@@ -160,17 +171,23 @@
     if (INJECT.test(both)) return out('injection', [LIB.injection], { follow: ['browse', 'how', 'human'] });
     if (MINOR.test(both)) return out('minor', [LIB.minor], { follow: ['human'] });
     var prods = findProducts(n, s), med = MED.test(both);
+    if (!CFG.names) prods = prods.length ? ['hidden'] : prods;
+    if (!prods.length && /how (does|do) (it|this|pepticity|the service|the process|a consult|the consult|you|this service) work/.test(n)) return out('faq:how', [LIB.faq.how], { faq: 'how' });
+    if (OUTCOME.test(both)) return out('outcome', [LIB.outcome], { follow: ['quiz', 'book', 'human'] });
+    if (SAME.test(both)) return out('faq:compound', [LIB.faq.compound], { faq: 'compound', follow: ['quiz', 'how', 'human'] });
     if (med) {
+      if (prods.length && !CFG.names) return out('product-medical', [LIB.handoff], { follow: ['quiz', 'book', 'human'] });
       if (prods.length) return out('product-medical', [LIB.handoff], { products: prods.slice(0, 4), follow: ['quiz', 'human'] });
       return out('medical', [LIB.handoff], { follow: ['quiz', 'human', 'browse'] });
     }
+    if (prods.length && !CFG.names) return out('product-hidden', [LIB.namesLater], { follow: ['quiz', 'book', 'human'] });
     if (prods.length === 1) {
       var p = prods[0], lines = [p.what, p.status, LIB.handoffProduct];
       return out('product', lines, { products: [p], follow: ['quiz', 'buy', 'browse', 'human'] });
     }
     if (prods.length > 1) return out('many', [LIB.many], { products: prods.slice(0, 6), follow: ['quiz', 'human'] });
     if (UNLISTED.test(both)) return out('unlisted', [LIB.notListed], { follow: ['quiz', 'browse', 'human'] });
-    if (LIST.some(function (k) { return n.indexOf(k) >= 0; })) return out('browse', [LIB.browse], { follow: ['quiz', 'research', 'human'] });
+    if (LIST.some(function (k) { return n.indexOf(k) >= 0; })) return CFG.names ? out('browse', [LIB.browse], { follow: ['quiz', 'research', 'human'] }) : out('browse-hidden', [LIB.browseHidden], { follow: ['quiz', 'how', 'human'] });
     var f = faqOf(n);
     if (f) return out('faq:' + f, [LIB.faq[f]], { faq: f });
     if (HUMAN.test(n)) return out('human', [LIB.human], { follow: ['quiz', 'how'] });
@@ -184,5 +201,5 @@
   (function walk(o, path) { Object.keys(o).forEach(function (k) { var v = o[k]; if (typeof v === 'string') { if (!emitCheck(v)) libBad.push(path + k); } else walk(v, path + k + '.'); }); })(LIB, '');
   (INV ? INV.products : []).forEach(function (p) { [p.what, p.status].forEach(function (t) { if (!emitCheck(t)) libBad.push('product.' + p.k); }); });
 
-  return { respond: respond, norm: norm, squash: squash, LIB: LIB, emitCheck: emitCheck, libBad: libBad, INV: INV };
+  return { respond: respond, configure: configure, norm: norm, squash: squash, LIB: LIB, emitCheck: emitCheck, libBad: libBad, INV: INV };
 });
