@@ -47,6 +47,7 @@
   P.receipt($('#receipt2'));
   P.textSize();
   P.forms();
+  if (P.concierge) P.concierge();
   var css = getComputedStyle(D.documentElement);
   var chOpts = { line: '#ee8b9b', glow: 'rgba(200,52,77,.8)', dot: '#efebe7', scrub: 'rgba(239,235,231,.4)', grid: 'rgba(239,235,231,.07)', text: 'rgba(239,235,231,.7)', font: '"Spline Sans Mono", monospace' };
   var ch1 = P.chroma($('#chroma'), chOpts);

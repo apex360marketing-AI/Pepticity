@@ -728,6 +728,62 @@ html.menu-on .top-nav,html.menu-on .top-r{opacity:0;pointer-events:none}
 }
 @media (max-width:900px),(hover:none){.idx-t,.idx-d,.idx-n{text-shadow:none}}
 
+/* ===================== CON-01 \b7  Vetted Concierge (help bot) ===================== */
+.cc-launch{position:fixed;z-index:42;right:calc(var(--gutr) + 4px);bottom:calc(24px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:12px;min-height:56px;padding:0 22px 0 18px;color:var(--ink);cursor:pointer;
+  border:1px solid rgba(255,255,255,.16);border-radius:999px;font:600 .74rem var(--f-b);letter-spacing:.16em;text-transform:uppercase;
+  background:linear-gradient(150deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),rgba(18,13,14,.6);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);
+  box-shadow:0 20px 40px -20px rgba(0,0,0,.9),0 0 40px -18px rgba(200,52,77,.7),inset 0 1px 0 rgba(255,255,255,.16);transition:border-color .3s,box-shadow .3s,opacity .4s}
+.cc-launch:hover{border-color:rgba(238,139,155,.5);box-shadow:0 24px 50px -20px rgba(0,0,0,.95),0 0 50px -14px rgba(200,52,77,.9),inset 0 1px 0 rgba(255,255,255,.2)}
+.cc-dot{width:9px;height:9px;border-radius:50%;background:var(--garnet-hi);box-shadow:0 0 12px var(--garnet-hi)}
+html.intro-on .cc-launch,html.menu-on .cc-launch{opacity:0;pointer-events:none}
+.cc{position:fixed;z-index:85;right:calc(var(--gutr) + 4px);bottom:calc(24px + env(safe-area-inset-bottom,0px));width:min(430px,calc(100vw - 32px));height:min(680px,calc(100dvh - 120px));display:flex;flex-direction:column;color:var(--ink);
+  border:1px solid rgba(255,255,255,.15);background:radial-gradient(90% 50% at 100% 0%,rgba(142,27,48,.32),transparent 60%),linear-gradient(150deg,rgba(40,30,32,.86),rgba(14,11,12,.94));
+  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);box-shadow:0 50px 120px -40px rgba(0,0,0,.95),0 0 90px -40px rgba(200,52,77,.6),inset 0 1px 0 rgba(255,255,255,.16);
+  opacity:0;transform:translateY(18px) scale(.98);transform-origin:100% 100%;transition:opacity .35s var(--ease),transform .45s var(--ease)}
+.cc.is-open{opacity:1;transform:none}
+.cc[hidden]{display:none}
+.cc-top{display:flex;justify-content:space-between;gap:14px;padding:20px 20px 14px;border-bottom:1px solid var(--line)}
+.cc-title{margin:0 0 6px;font:400 1.5rem/1 var(--f-d);letter-spacing:.06em;text-transform:uppercase}
+.cc-disc{margin:0;color:var(--muted);font-size:.84rem;line-height:1.45}
+.cc-draft{display:inline-block;margin-top:6px;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--garnet-ink);border:1px solid rgba(238,139,155,.4);padding:2px 7px}
+.cc-close{flex:none;width:44px;height:44px;border:1px solid var(--line2);background:none;color:var(--ink);font-size:1.4rem;cursor:pointer}
+.cc-log{list-style:none;margin:0;padding:16px 20px;flex:1;overflow-y:auto;display:grid;align-content:start;gap:12px;overscroll-behavior:contain}
+.cc-msg{max-width:92%;padding:12px 14px;font-size:.98rem;line-height:1.5;animation-name:pqin;animation-duration:.4s;animation-timing-function:var(--ease);animation-fill-mode:both}
+.cc-msg p{margin:0 0 8px}.cc-msg p:last-child{margin-bottom:0}
+.cc-bot{justify-self:start;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.cc-you{justify-self:end;background:rgba(142,27,48,.35);border:1px solid rgba(238,139,155,.3)}
+.cc-who{display:block;font-size:.6rem;letter-spacing:.2em;color:var(--garnet-ink);margin-bottom:6px}
+.cc-prod{padding:12px 14px;margin:2px 0 10px;border-left:2px solid var(--garnet-hi);background:rgba(12,10,11,.45)}
+.cc-pn{margin:0 0 4px;font:400 1.3rem/1.1 var(--f-d);letter-spacing:.05em;text-transform:uppercase}
+.cc-sz{font-size:.74rem;color:var(--garnet-ink);letter-spacing:.06em}
+.cc-st{color:var(--muted);font-size:.9rem}
+.cc-hand{color:var(--ink);font-style:italic}
+.cc-emerg{font-weight:600;color:#fff}
+.cc-gh{margin:12px 0 6px!important;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.cc-plist{display:flex;flex-wrap:wrap;gap:6px}
+.cc-pbtn,.cc-chip{min-height:40px;padding:6px 12px;border:1px solid var(--line2);background:rgba(12,10,11,.4);color:var(--ink);font:400 .86rem var(--f-b);cursor:pointer;transition:border-color .25s,background .25s}
+.cc-pbtn:hover,.cc-chip:hover,.cc-pbtn:focus-visible,.cc-chip:focus-visible{border-color:var(--garnet-ink);background:rgba(142,27,48,.2)}
+.cc-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 12px}
+.cc-chip{border-radius:999px;min-height:44px;padding:6px 14px}
+.cc-chip.is-cta{background:linear-gradient(180deg,#a5243b,var(--garnet));border-color:transparent;color:#fff}
+.cc-link{display:inline-flex;align-items:center;min-height:40px;color:var(--ink);text-decoration:underline;text-decoration-color:var(--garnet-hi);text-underline-offset:5px}
+.cc-form{display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line)}
+.cc-in{flex:1;min-width:0;min-height:48px;padding:0 14px;background:var(--surf);border:1px solid var(--line2);color:var(--ink);font:400 1rem var(--f-b)}
+.cc-in:focus{outline:none;border-color:var(--garnet-ink);box-shadow:0 0 0 3px rgba(200,52,77,.3)}
+.cc-send{min-height:48px;padding:0 18px;border:0;background:linear-gradient(180deg,#a5243b,var(--garnet));color:#fff;font:600 .74rem var(--f-b);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.cc-foot{margin:0;padding:0 20px 14px;color:var(--dim);font-size:.82rem}
+.cc-inline{margin-top:8px;font-size:.92rem}
+@media (max-width:900px){
+  .cc-launch{bottom:calc(92px + env(safe-area-inset-bottom,0px));min-height:52px;padding:0 16px}
+  .cc{inset:0;width:auto;height:auto;right:0;bottom:0;border:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+@media (max-width:420px){.cc-lt{display:none}.cc-launch{width:52px;padding:0;justify-content:center}.cc-launch::after{content:"?";font:400 1.4rem var(--f-d);letter-spacing:0}.cc-dot{position:absolute;top:10px;right:10px;width:7px;height:7px}}
+@media (prefers-reduced-motion:reduce){.cc,.cc-msg{transition:none;animation:none}}
+@media (max-width:900px){
+  .sticky-cta.is-hero~.cc-launch,.sticky-cta.is-hide~.cc-launch{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+  .cc-disc{font-size:.78rem}.cc-title{font-size:1.3rem}.cc-top{padding:14px 16px 10px}
+}
+
 </style>
 <div class="grain" aria-hidden="true"></div>
 
@@ -1028,10 +1084,11 @@ html.menu-on .top-nav,html.menu-on .top-r{opacity:0;pointer-events:none}
   </header>
   <div class="faq-grid">
     <div class="faq" data-fill="faq"></div>
-    <aside class="contact" aria-labelledby="h-contact">
+    <aside class="contact" id="contact" aria-labelledby="h-contact">
       <h2 id="h-contact" class="h3">Talk to a person</h2>
       <p class="contact-phone">[phone number]</p>
       <p class="fine">[Hours: confirm with Grace]</p>
+      <button class="btn-link cc-inline" type="button" data-ask="">Or ask PEPTICITY about any peptide <span aria-hidden="true">&#8594;</span></button>
       <form class="cform" data-preview novalidate>
         <label for="cf-name">Your name</label><input id="cf-name" name="name" autocomplete="name" required>
         <label for="cf-phone">Phone number</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
@@ -1055,7 +1112,10 @@ html.menu-on .top-nav,html.menu-on .top-r{opacity:0;pointer-events:none}
   <p class="fine mono">&copy; 2026 PEPTICITY. Design preview.</p>
 </footer>
 
+
+
 <div class="sticky-cta"><button class="btn-br btn-solid" type="button" data-quiz><span>Start the free assessment</span></button></div>
+<button class="cc-launch" type="button" aria-label="Questions? Ask PEPTICITY" aria-haspopup="dialog" aria-controls="concierge" aria-expanded="false"><span class="cc-dot" aria-hidden="true"></span><span class="cc-lt">Questions? Ask us</span></button>
 
 <dialog id="pep-quiz" class="pq" aria-labelledby="pq-title">
   <div class="pq-in">
@@ -1675,6 +1735,290 @@ html.menu-on .top-nav,html.menu-on .top-r{opacity:0;pointer-events:none}
 
 </script>
 <script>
+/* PEPTICITY vetted inventory (DRAFT for Grace + counsel).
+   Source: Grace's live store, northernpeptides.st (WooCommerce Store API), pulled 2026-10-26: 36 listings.
+   Only facts are kept: the product name, the sizes she lists and what the substance IS.
+   Nothing about what a product does, dosing or cycles: those questions go to a licensed clinician.
+   storeCAD is her current research-store price, kept for internal reference only and never shown.
+   pageIssue notes problems on her current store page for Grace to fix. */
+(function (W) {
+  'use strict';
+  var NA = 'Not approved as a medicine in Canada or the US.';
+  var P = [
+    { k: 'tirzepatide', name: 'Tirzepatide', sizes: ['15 mg', '30 mg'], group: 'metabolic', aka: ['tirz', 'mounjaro', 'zepbound', 'glp-1', 'glp1', 'glp'],
+      what: 'The active ingredient in the FDA-approved prescription medicines Mounjaro and Zepbound.',
+      status: 'A compounded version is not the same as an FDA-approved medicine.', storeCAD: [150, 275], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'retatrutide', name: 'Retatrutide', sizes: ['10 mg', '15 mg', '20 mg'], group: 'metabolic', aka: ['reta', 'retatrutid'],
+      what: 'An investigational medicine that is still being tested in clinical trials.',
+      status: 'Not approved in Canada or the US. [Confirm current status before launch]', storeCAD: [135, 165, 190], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'tesamorelin', name: 'Tesamorelin', sizes: ['10 mg'], group: 'gh', aka: ['egrifta', 'tesa'],
+      what: 'The active ingredient in the FDA-approved prescription medicine Egrifta.',
+      status: 'A compounded version is not the same as an FDA-approved medicine.', storeCAD: [160] },
+    { k: 'aod9604', name: 'AOD-9604', sizes: ['5 mg'], group: 'metabolic', aka: ['aod', 'aod 9604', 'aod9604'],
+      what: 'A lab-made fragment of human growth hormone.', status: NA, storeCAD: [65], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: '5amino1mq', name: '5-Amino-1MQ', sizes: ['10 mg'], group: 'metabolic', aka: ['5-amino', '5 amino', '1mq', '5amino'],
+      what: 'A small molecule, not a peptide.', status: NA, storeCAD: [100] },
+    { k: 'klow', name: 'KLOW blend', sizes: ['80 mg'], group: 'recovery', aka: ['klow'],
+      what: 'A blend of peptides. [Exact contents: confirm with Grace. Her store page does not list them.]', status: NA, storeCAD: [170], pageIssue: 'Page has empty dosage and cycle fields and placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'bpc157', name: 'BPC-157', sizes: ['10 mg'], group: 'recovery', aka: ['bpc', 'bpc 157', 'bpc157'],
+      what: 'A lab-made peptide based on a fragment of a protein found in the stomach.', status: NA, storeCAD: [80] },
+    { k: 'tb500', name: 'TB-500', sizes: ['10 mg'], group: 'recovery', aka: ['tb500', 'tb 500', 'tb-500', 'thymosin beta'],
+      what: 'A lab-made peptide based on part of thymosin beta-4, a protein the body makes.', status: NA, storeCAD: [90] },
+    { k: 'wolverine', name: 'Wolverine blend', sizes: ['10 mg', '20 mg'], group: 'recovery', aka: ['wolverine', 'bpc tb', 'bpc + tb'],
+      what: 'A blend of BPC-157 and TB-500.', status: NA, storeCAD: [100, 195] },
+    { k: 'glow', name: 'GLOW blend', sizes: ['70 mg'], group: 'skin', aka: ['glow', 'bpc tb ghk'],
+      what: 'A blend of BPC-157, TB-500 and GHK-Cu.', status: NA, storeCAD: [150] },
+    { k: 'kpv', name: 'KPV', sizes: ['10 mg'], group: 'recovery', aka: ['kpv'],
+      what: 'A three-amino-acid fragment of a hormone called alpha-MSH.', status: NA, storeCAD: [90] },
+    { k: 'thymosina1', name: 'Thymosin Alpha-1', sizes: ['10 mg'], group: 'recovery', aka: ['thymosin alpha', 'ta1', 'ta-1', 'thymalfasin', 'zadaxin'],
+      what: 'Also called thymalfasin. It is approved as a medicine in some countries.', status: 'Not approved in the US. [Confirm Canadian status]', storeCAD: [90], pageIssue: 'Page shows the TB-500 description by mistake.' },
+    { k: 'hgh', name: 'HGH (human growth hormone)', sizes: ['100 iu [store page also says 1000 iu: confirm]'], group: 'gh', aka: ['hgh', 'growth hormone', 'somatropin'],
+      what: 'Human growth hormone (somatropin). A prescription-only medicine for specific diagnosed conditions.', status: 'A licensed clinician decides if it is ever appropriate.', storeCAD: [200], pageIssue: 'Title says 100 iu, description says 1000 iu.' },
+    { k: 'cjc', name: 'CJC-1295', sizes: ['with DAC 5 mg', 'without DAC 10 mg'], group: 'gh', aka: ['cjc', 'cjc-1295', 'cjc 1295', 'mod grf', 'dac'],
+      what: 'Lab-made versions of growth-hormone-releasing hormone. "DAC" is an add-on that makes it last longer in the body.', status: NA, storeCAD: [100, 100] },
+    { k: 'ipamorelin', name: 'Ipamorelin', sizes: ['10 mg'], group: 'gh', aka: ['ipa', 'ipamorelin', 'ipamoreline'],
+      what: 'A lab-made peptide in the growth-hormone secretagogue family.', status: NA, storeCAD: [110] },
+    { k: 'igf1lr3', name: 'IGF-1 LR3', sizes: ['[size not listed on store page]'], group: 'gh', aka: ['igf', 'igf-1', 'igf1', 'lr3'],
+      what: 'A lab-made, longer-lasting version of insulin-like growth factor 1.', status: NA, storeCAD: [110], pageIssue: 'No vial size listed.' },
+    { k: 'epitalon', name: 'Epitalon', sizes: ['10 mg', '50 mg'], group: 'longevity', aka: ['epitalon', 'epithalon', 'epithalamin'],
+      what: 'A lab-made peptide made of four amino acids.', status: NA, storeCAD: [60, 200] },
+    { k: 'motsc', name: 'MOTS-c', sizes: ['10 mg', '40 mg'], group: 'longevity', aka: ['mots', 'mots-c', 'motsc'],
+      what: 'A peptide the body makes in its mitochondria, the parts of cells that make energy.', status: NA, storeCAD: [75, 125] },
+    { k: 'ss31', name: 'SS-31', sizes: ['10 mg'], group: 'longevity', aka: ['ss31', 'ss-31', 'elamipretide'],
+      what: 'Also called elamipretide.', status: '[Regulatory status: confirm before launch]', storeCAD: [75] },
+    { k: 'nad', name: 'NAD+', sizes: ['1000 mg'], group: 'longevity', aka: ['nad', 'nad+', 'nicotinamide'],
+      what: 'A coenzyme found in every living cell. It is not a peptide.', status: 'A licensed clinician decides if it is right for you.', storeCAD: [190] },
+    { k: 'glutathione', name: 'Glutathione', sizes: ['1500 mg'], group: 'longevity', aka: ['glutathione', 'gsh'],
+      what: 'A small peptide of three amino acids that the body makes naturally.', status: 'A licensed clinician decides if it is right for you.', storeCAD: [85] },
+    { k: 'semax', name: 'Semax', sizes: ['10 mg'], group: 'mind', aka: ['semax'],
+      what: 'A lab-made peptide developed in Russia, where it is registered as a medicine.', status: NA, storeCAD: [75] },
+    { k: 'selank', name: 'Selank', sizes: ['10 mg'], group: 'mind', aka: ['selank'],
+      what: 'A lab-made peptide developed in Russia, where it is registered as a medicine.', status: NA, storeCAD: [75] },
+    { k: 'oxytocin', name: 'Oxytocin', sizes: ['2 mg'], group: 'mind', aka: ['oxytocin', 'pitocin'],
+      what: 'A hormone the body makes. It is also a prescription medicine used in hospitals.', status: 'A licensed clinician decides if it is ever appropriate.', storeCAD: [80] },
+    { k: 'ghkcu', name: 'GHK-Cu', sizes: ['50 mg', '100 mg'], group: 'skin', aka: ['ghk', 'ghk-cu', 'ghkcu', 'copper peptide'],
+      what: 'A copper-bound peptide of three amino acids. It is widely used in cosmetic skin products.', status: 'A licensed clinician decides if an injectable plan is right for you.', storeCAD: [50, 100], pageIssue: 'The 50 mg page shows the Ipamorelin summary by mistake.' },
+    { k: 'pt141', name: 'PT-141', sizes: ['10 mg'], group: 'intimacy', aka: ['pt141', 'pt-141', 'pt 141', 'bremelanotide', 'vyleesi'],
+      what: 'Also called bremelanotide, the active ingredient in the FDA-approved prescription medicine Vyleesi.', status: 'A compounded version is not the same as an FDA-approved medicine.', storeCAD: [50] },
+    { k: 'melanotan2', name: 'Melanotan II', sizes: ['10 mg'], group: 'skin', aka: ['melanotan', 'mt2', 'mt-2', 'mt ii', 'tanning'],
+      what: 'A lab-made version of a hormone involved in skin colour.', status: 'Not approved as a medicine. Health regulators have warned the public about it. [Confirm before PEPTICITY lists it]', storeCAD: [50], pageIssue: 'Long description is placeholder text (soap ingredients and "lorem ipsum").' },
+    { k: 'bacwater', name: 'Bacteriostatic water (Pfizer)', sizes: ['30 ml'], group: 'supplies', aka: ['bac water', 'bacteriostatic', 'water'],
+      what: 'Sterile water with a preservative, used by pharmacies and clinicians.', status: 'How any product is prepared and used comes from your clinician and pharmacy.', storeCAD: [30] }
+  ];
+  var GROUPS = [
+    ['metabolic', 'Metabolic and weight'], ['recovery', 'Recovery and repair'], ['gh', 'Growth hormone family'],
+    ['longevity', 'Longevity and cellular health'], ['mind', 'Focus and mood'], ['skin', 'Skin'], ['intimacy', 'Intimacy'], ['supplies', 'Supplies']
+  ];
+  W.PEPINV = { products: P, groups: GROUPS, source: 'northernpeptides.st', pulled: '2026-10-26', listings: 36 };
+})(window);
+
+</script>
+<script>
+/* PEPTICITY help bot (CON-01 \u00b7 Vetted Concierge). Vetted mode: every answer comes from the approved
+   lists below or from PEPINV. No AI runs, nothing is invented. Medical questions (dosing, effects, safety,
+   "is it right for me") always go to a licensed clinician or a person. Live AI comes later, behind the
+   same guard rules, once Grace and counsel approve the wording and a monthly cost cap.
+   Needs: window.PEP (pep-core) and window.PEPINV (inventory.js). Markup is built on first open. */
+(function (W, D) {
+  'use strict';
+  var P = W.PEP, INV = W.PEPINV, $ = P.$, $$ = P.$$, el = P.el, C = P.C;
+  var HANDOFF = "That's a question for a licensed clinician. They go through it with you as part of your free assessment, with your health and medicines in mind.";
+  var FAQ = [
+    { id: 'peptide', q: 'What is a peptide?', k: ['what is a peptide', 'what are peptides', 'peptide mean', 'peptides are'],
+      a: 'A peptide is a short chain of amino acids, the building blocks of proteins. Your body makes many of its own. Some peptides are also prescription medicines.' },
+    { id: 'how', q: 'How does PEPTICITY work?', k: ['how does', 'how it works', 'process', 'steps', 'get started', 'start', 'sign up'],
+      a: 'You take the free assessment. A licensed clinician reviews it and decides if a plan is right for you. If it is, a licensed partner pharmacy prepares it, every lot is tested, and it ships cold to your door.' },
+    { id: 'rx', q: 'Do I need a prescription?', k: ['prescription', 'without a doctor', 'rx', 'buy without'],
+      a: 'Yes. Every plan is prescribed by a licensed clinician after a review. Nothing is sold "for research use".' },
+    { id: 'buy', q: 'Can I just buy a peptide?', k: ['can i buy', 'order', 'purchase', 'add to cart', 'sell', 'in stock', 'available', 'do you carry', 'do you have'],
+      a: "PEPTICITY doesn't sell peptides off a shelf. A licensed clinician decides if a plan is right for you, and a licensed partner pharmacy prepares it. [Which peptides PEPTICITY offers: confirm with Grace]" },
+    { id: 'research', q: 'What does "research use only" mean?', k: ['research use', 'research only', 'research purposes', 'not for human', 'research chemical'],
+      a: 'It means a product is sold as a lab chemical, not for people, so nobody checks who it is for. PEPTICITY works the other way: a licensed clinician reviews you, and a licensed partner pharmacy prepares your plan.' },
+    { id: 'compound', q: 'Is compounded the same as approved?', k: ['compounded', 'compounding', 'same as', 'generic', 'fda approved', 'approved'],
+      a: 'No. A compounded medicine is prepared by a pharmacy for one patient. It is not FDA-approved, and we never say it is the same as an approved medicine.' },
+    { id: 'lot', q: 'How do I check what is in my vial?', k: ['lot', 'certificate', 'coa', 'tested', 'testing', 'purity', 'lab', 'what is in my vial', 'fake'],
+      a: 'Every vial has a lot code. Enter it in the lot lookup on The science page to see that lot\'s certificate of analysis.', go: ['#ledger', 'Open the lot lookup'] },
+    { id: 'cost', q: 'What does it cost?', k: ['cost', 'price', 'how much is', 'expensive', 'pay', 'fee', 'insurance'],
+      a: 'The review is free. Membership is $[xx] a month, all-in, and you see the full price before you pay. If peptides aren\'t right for you, you pay nothing. [Confirm pricing with Grace]', go: ['#shop', 'See membership'] },
+    { id: 'ship', q: 'Where do you ship?', k: ['ship', 'shipping', 'deliver', 'delivery', 'canada', 'province', 'state', 'usa', 'cold'],
+      a: 'Plans ship cold in an insulated case. [States and provinces at launch: confirm with Grace] If you are outside them, you can join the waitlist.' },
+    { id: 'cancel', q: 'Can I cancel?', k: ['cancel', 'stop membership', 'quit', 'refund'],
+      a: 'Yes, in two clicks from your account. No phone call needed. [Refund policy: confirm with Grace]' },
+    { id: 'who', q: 'Who are the clinicians?', k: ['clinician', 'doctor', 'nurse', 'who reviews', 'licensed', 'licence', 'license'],
+      a: '[Clinician network: confirm with Grace]. Each clinician\'s licence can be checked with the board that issued it.' },
+    { id: 'pharmacy', q: 'Who prepares it?', k: ['pharmacy', 'who makes', 'made', 'prepared', 'manufactur'],
+      a: 'A licensed partner pharmacy: [pharmacy name: confirm with Grace].' },
+    { id: 'age', q: 'Is there an age limit?', k: ['age limit', 'old', 'senior', 'too old', 'young', 'teen'],
+      a: 'The service is for adults 18 and over. There is no upper age limit: a licensed clinician looks at your health and medicines, whatever your age.' }
+  ];
+  var EMERG = /(chest pain|can'?t breathe|cannot breathe|trouble breathing|suicid|kill myself|end my life|self.?harm|overdos|seizure|unconscious|emergency|anaphyla|throat (is )?closing)/i;
+  var MED = /(dose|dosage|dosing|how much (should i|do i (take|use)|to (take|use))|how many (mg|iu|units)|\bmg\b|\bmcg\b|\biu\b|inject|needle|syringe|side.?effect|reaction|pregnan|breast.?feed|safe (for|to)|is it safe|interact|with my (meds|medication)|cycle|stack|reconstitut|mix(ing)?|results|work for me|lose weight|weight loss|should i (take|use|try)|recommend|best peptide|which peptide|what does .* do|what is .* for|benefit|help (with|my)|cure|treat|symptom|diagnos|my doctor said|blood (sugar|pressure)|diabet|cancer|heart)/i;
+  var HUMAN = /(human|real person|a person|someone|call me|phone|talk to|speak to|agent|representative)/i;
+  var log, chips, inp, panel, launch, ann, opened = false, lastFocus = null;
+
+  function norm(s) { return ' ' + String(s).toLowerCase().replace(/[^a-z0-9+\- ]/g, ' ').replace(/\s+/g, ' ') + ' '; }
+  function findProducts(t) {
+    var n = norm(t), hits = [];
+    INV.products.forEach(function (p) {
+      var names = [p.name].concat(p.aka || []);
+      if (names.some(function (a) { var x = norm(a).trim(); return x.length > 1 && (n.indexOf(' ' + x + ' ') >= 0 || (x.length > 4 && n.indexOf(x) >= 0)); })) hits.push(p);
+    });
+    return hits;
+  }
+  function findFaq(t) {
+    var n = norm(t), best = null, score = 0;
+    FAQ.forEach(function (f) { var s = 0; f.k.forEach(function (k) { if (n.indexOf(k) >= 0) s += k.length; }); if (s > score) { score = s; best = f; } });
+    return best;
+  }
+
+  /* ---------- rendering ---------- */
+  function bubble(who, nodes) {
+    var li = el('li', 'cc-msg cc-' + who);
+    if (who === 'bot') li.appendChild(el('span', 'cc-who mono', 'PEPTICITY'));
+    (Array.isArray(nodes) ? nodes : [nodes]).forEach(function (n) { li.appendChild(typeof n === 'string' ? el('p', '', n) : n); });
+    log.appendChild(li);
+    requestAnimationFrame(function () { log.scrollTop = log.scrollHeight; });
+    return li;
+  }
+  function say(nodes, follow, plain) {
+    var li = bubble('bot', nodes);
+    ann.textContent = ''; setTimeout(function () { ann.textContent = plain || li.textContent.replace(/^PEPTICITY/, ''); }, 60);
+    setChips(follow || ['quiz', 'browse', 'human']);
+  }
+  function product(p) {
+    var card = el('div', 'cc-prod');
+    card.appendChild(el('h3', 'cc-pn', p.name));
+    var sz = el('p', 'cc-sz mono'); sz.textContent = 'Listed sizes: ' + p.sizes.join(' \u00b7 '); card.appendChild(sz);
+    card.appendChild(el('p', '', p.what));
+    card.appendChild(el('p', 'cc-st', p.status));
+    return card;
+  }
+  function answerProduct(p, med) {
+    var nodes = [product(p)];
+    nodes.push(el('p', 'cc-hand', med ? HANDOFF : 'What it does, how it is used and whether it is right for you are questions for a licensed clinician, as part of your free assessment.'));
+    say(nodes, ['quiz', 'buy', 'browse', 'human']);
+  }
+  var CHIP = {
+    quiz: ['Start my free assessment', function () { close(); setTimeout(function () { P.openQuiz(null); }, 260); }],
+    browse: ['Browse the peptides', browse],
+    human: ['Talk to a person', human],
+    how: ['How does it work?', function () { ask('How does PEPTICITY work?'); }],
+    cost: ['What does it cost?', function () { ask('What does it cost?'); }],
+    lot: ['How is each lot tested?', function () { ask('How do I check what is in my vial?'); }],
+    research: ['What does "research use only" mean?', function () { ask('What does "research use only" mean?'); }],
+    buy: ['Can I just buy a peptide?', function () { ask('Can I just buy a peptide?'); }],
+    compound: ['Is compounded the same as approved?', function () { ask('Is compounded the same as approved?'); }]
+  };
+  function setChips(keys) {
+    chips.textContent = '';
+    keys.forEach(function (k) {
+      var c = CHIP[k]; if (!c) return;
+      var b = el('button', 'cc-chip' + (k === 'quiz' ? ' is-cta' : ''), c[0]); b.type = 'button';
+      b.addEventListener('click', function () { if (k !== 'quiz' && k !== 'browse' && k !== 'human') return c[1](); bubble('you', c[0]); c[1](); });
+      chips.appendChild(b);
+    });
+  }
+  function browse() {
+    var wrap = el('div', 'cc-browse');
+    wrap.appendChild(el('p', '', 'Here is everything on Grace\'s current list. Pick one to see what it is.'));
+    INV.groups.forEach(function (g) {
+      var ps = INV.products.filter(function (p) { return p.group === g[0]; }); if (!ps.length) return;
+      wrap.appendChild(el('p', 'cc-gh mono', g[1]));
+      var row = el('div', 'cc-plist');
+      ps.forEach(function (p) { var b = el('button', 'cc-pbtn', p.name); b.type = 'button'; b.addEventListener('click', function () { bubble('you', p.name); answerProduct(p, false); }); row.appendChild(b); });
+      wrap.appendChild(row);
+    });
+    say([wrap], ['quiz', 'research', 'human'], 'A list of peptides by group. Pick one to see what it is.');
+  }
+  function human() {
+    var box = el('div', 'cc-human-box');
+    box.appendChild(el('p', '', 'A real person can help. Call ' + C.phone + ', or leave your number and the care team will call you back.'));
+    var a = el('a', 'cc-link', 'Ask for a call back'); a.href = '#contact'; a.addEventListener('click', function () { close(); });
+    box.appendChild(a);
+    say([box], ['quiz', 'how']);
+  }
+  function emergency() {
+    say([el('p', 'cc-emerg', 'If this is an emergency, call 911 now. For a mental-health crisis in the US or Canada, call or text 988.'), el('p', '', 'For anything else, a person is at ' + C.phone + '.')], ['human']);
+  }
+
+  /* ---------- the answer rules (vetted mode) ---------- */
+  function ask(text) {
+    text = String(text || '').trim().slice(0, 500); if (!text) return;
+    bubble('you', text);
+    if (EMERG.test(text)) return emergency();
+    if (/\b(1[0-7]|[1-9]) ?(years? old|yo|y\/o)\b|\bi'?m (a )?(teen|minor)\b|\bunder 18\b/i.test(text)) return say(['This service is for adults 18 and over. If you have questions, a parent or guardian can call ' + C.phone + '.'], ['human']);
+    var prods = findProducts(text), med = MED.test(text);
+    if (prods.length === 1) return answerProduct(prods[0], med);
+    if (prods.length > 1) {
+      var list = el('div', 'cc-plist'); prods.forEach(function (p) { var b = el('button', 'cc-pbtn', p.name); b.type = 'button'; b.addEventListener('click', function () { bubble('you', p.name); answerProduct(p, med); }); list.appendChild(b); });
+      return say([el('p', '', 'I found more than one. Which did you mean?'), list, med ? el('p', 'cc-hand', HANDOFF) : el('span')], ['quiz', 'human']);
+    }
+    if (med) return say([el('p', 'cc-hand', HANDOFF)], ['quiz', 'human', 'browse']);
+    var f = findFaq(text);
+    if (f) {
+      var nodes = [el('p', '', f.a)];
+      if (f.go) { var a = el('a', 'cc-link', f.go[1]); a.href = f.go[0]; a.addEventListener('click', function () { close(); }); nodes.push(a); }
+      return say(nodes, ['quiz', 'browse', 'human']);
+    }
+    if (HUMAN.test(text)) return human();
+    say(["I don't have a vetted answer for that yet, and I won't guess. A person can help at " + C.phone + ', or browse the peptides and common questions below.'], ['human', 'browse', 'how', 'cost']);
+  }
+
+  /* ---------- panel ---------- */
+  function build() {
+    launch = $('.cc-launch');
+    panel = el('section', 'cc'); panel.id = 'concierge'; panel.hidden = true;
+    panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-labelledby', 'cc-title');
+    panel.innerHTML = '<header class="cc-top"><div><h2 id="cc-title" class="cc-title">Ask PEPTICITY</h2>' +
+      '<p class="cc-disc">Answers come from a vetted list. This assistant can\'t give medical advice: a licensed clinician makes every care decision. <span class="cc-draft mono">Draft answers: Grace + counsel to approve</span></p></div>' +
+      '<button class="cc-close" type="button" aria-label="Close the help panel">&#215;</button></header>' +
+      '<ol class="cc-log" aria-label="Conversation"></ol><p class="sr" aria-live="polite" id="cc-ann"></p>' +
+      '<div class="cc-chips" role="group" aria-label="Suggested questions"></div>' +
+      '<form class="cc-form"><label for="cc-q" class="sr">Your question</label><input id="cc-q" class="cc-in" maxlength="500" autocomplete="off" placeholder="Ask about a peptide or how it works"><button class="cc-send" type="submit">Ask</button></form>' +
+      '<p class="cc-foot">Talk to a person: <span class="mono">' + C.phone + '</span></p>';
+    D.body.appendChild(panel);
+    log = $('.cc-log', panel); chips = $('.cc-chips', panel); inp = $('#cc-q', panel); ann = $('#cc-ann', panel);
+    $('.cc-close', panel).addEventListener('click', close);
+    $('.cc-form', panel).addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value; inp.value = ''; ask(v); });
+    panel.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.stopPropagation(); return close(); }
+      if (e.key !== 'Tab') return;
+      var f = $$('button, a[href], input', panel).filter(function (x) { return !x.disabled && x.offsetParent; }), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && D.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && D.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    say(['Hi. Ask me about any peptide on Grace\'s list, or how PEPTICITY works. For anything about your own health, I\'ll connect you with a licensed clinician or a person.'], ['browse', 'how', 'cost', 'research', 'human'], 'Hi. Ask about any peptide, or how PEPTICITY works.');
+  }
+  var outside = function () { return [$('main'), $('.top'), $('.foot'), $('.sticky-cta'), launch]; };
+  function open() {
+    if (D.documentElement.classList.contains('intro-on')) return;
+    if (!panel) build();
+    lastFocus = D.activeElement; opened = true;
+    panel.hidden = false; requestAnimationFrame(function () { panel.classList.add('is-open'); });
+    launch.setAttribute('aria-expanded', 'true');
+    outside().forEach(function (n) { if (n) n.inert = true; });
+    if (P.lenis) P.lenis.stop();
+    setTimeout(function () { inp.focus(); }, 80);
+  }
+  function close() {
+    if (!panel || panel.hidden) return;
+    panel.classList.remove('is-open'); opened = false;
+    launch.setAttribute('aria-expanded', 'false');
+    outside().forEach(function (n) { if (n) n.inert = false; });
+    if (P.lenis) P.lenis.start();
+    setTimeout(function () { if (!opened) panel.hidden = true; }, 350);
+    (lastFocus && lastFocus.focus ? lastFocus : launch).focus();
+  }
+  function concierge() {
+    launch = $('.cc-launch'); if (!launch || !INV) return;
+    launch.addEventListener('click', function () { if (panel && !panel.hidden) close(); else open(); });
+    D.addEventListener('click', function (e) { var t = e.target.closest('[data-ask]'); if (t) { e.preventDefault(); open(); var q = t.getAttribute('data-ask'); if (q) ask(q); } });
+  }
+  P.concierge = concierge; P.ask = function (q) { open(); ask(q); };
+})(window, document);
+
+</script>
+<script>
 /* PEPTICITY vial rig (VIA-01 \u00b7 Label Turn, ANA-02 \u00b7 Photo Anatomy).
    Draws the real photographed vial and wraps the flat label artwork around its glass
    with cylinder maths, lighting from the photo, the far-side print seen through the glass,
@@ -1840,6 +2184,7 @@ html.menu-on .top-nav,html.menu-on .top-r{opacity:0;pointer-events:none}
   P.receipt($('#receipt2'));
   P.textSize();
   P.forms();
+  if (P.concierge) P.concierge();
   var css = getComputedStyle(D.documentElement);
   var chOpts = { line: '#ee8b9b', glow: 'rgba(200,52,77,.8)', dot: '#efebe7', scrub: 'rgba(239,235,231,.4)', grid: 'rgba(239,235,231,.07)', text: 'rgba(239,235,231,.7)', font: '"Spline Sans Mono", monospace' };
   var ch1 = P.chroma($('#chroma'), chOpts);
