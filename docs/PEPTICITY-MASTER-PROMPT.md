@@ -50,6 +50,17 @@ The journey is one continuous scroll story from the city into the lab, then into
 - It is an overlay that lifts like a focus pull. The page is already there underneath.
 - Reduced motion: no loader at all.
 
+> **OWNER UPDATE, 26 Oct (overrides anything below):**
+> - The city is WHITE. Ivory-white stone towers with GOLD-CHROME edges and PLATINUM/silver chrome crowns that shimmer.
+> - Warm white light only. **NO colour anywhere**: no jewel windows, no red tail lights, no violet lights. The owner said colour "looks cheap".
+> - The arched building must belong to that same white-and-gold city, never a pale box.
+> - Every scene carries a HOOK, starting on the first screen (THE PEPTICITY PRIMER email box, plus Book a consult).
+> - Every line sells the service. No poetic filler like "past every window".
+> - Nothing may feel AI-made: real footage, no buzzwords, Grace's voice.
+> - The lab reuses the owner's existing Higgsfield films, re-toned to white, gold and platinum: dropper machine, droplet, glass-bead chain ring (gyroscope), vial in mist, lab stills.
+> - New films: only the shaker and a slow-turning vial, with the credit cost shown first.
+> - Approved extras: lot lookup in the lab, Grace's signed note at the end of the lab, optional sound (off by default), and a mouse light everywhere.
+
 ### SCENE 1 · THE IVORY DESCENT (rebuild of the owner's favourite, The Descent)
 - **Palette:** a night city in ink black and IVORY / BONE white (warm, expensive white, not grey). It must never feel depressing.
 - **Light:**
