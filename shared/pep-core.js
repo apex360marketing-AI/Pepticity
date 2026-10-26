@@ -107,29 +107,50 @@
     }
   };
 
-  /* ---------------- quiz schema ---------------- */
+  /* ---------------- quiz schema: fork first (fitness or overall health), then about you ---------------- */
+  var STAGES = ['GOAL', 'ABOUT YOU', 'HEALTH', 'YOUR CARE'];
   var Q = {
     questions: [
-      { id: 'goal', title: 'What brings you here today?', help: 'Pick the closest one. You can change it later.', options: [
-        ['longevity', 'I want to stay active as I get older'], ['energy', "I haven't felt like myself lately"],
-        ['women', 'I want care that understands midlife'], ['men', 'I want to know my numbers first'],
-        ['training', 'I train hard and want to recover well'], ['all', "I'm not sure yet. Show me how it works"]],
-        next: function (a) { return a.goal === 'training' ? 'sport' : 'age'; } },
-      { id: 'sport', title: 'How often do you train?', options: [['1', '1 to 2 times a week'], ['3', '3 to 4 times a week'], ['5', '5 or more times a week']], next: function () { return 'age'; } },
-      { id: 'age', title: 'Which age range are you in?', options: [['18', '18 to 34'], ['35', '35 to 44'], ['45', '45 to 54'], ['55', '55 to 64'], ['65', '65 or over'], ['minor', 'Under 18']],
+      { id: 'focus', stage: 0, title: 'What are you looking into peptides for?', help: 'Pick the closest one. It only decides which questions come next.', options: [
+        ['fitness', 'Fitness, training and recovery'], ['health', 'Overall health and wellbeing'], ['unsure', "I'm not sure yet. Show me how it works"]],
+        next: function (a) { return a.focus === 'fitness' ? 'activity' : a.focus === 'health' ? 'health_goal' : 'age'; } },
+      { id: 'activity', stage: 0, title: 'How active are you right now?', help: 'There is no wrong answer. You do not need a routine to start.', options: [
+        ['0', "I don't work out right now"], ['1', '1 to 2 days a week'], ['3', '3 to 4 days a week'], ['5', '5 or more days a week']],
+        next: function () { return 'fit_goal'; } },
+      { id: 'fit_goal', stage: 0, title: 'What would you most like to talk to a clinician about?', options: [
+        ['recover', 'Recovering well between sessions'], ['start', 'Getting started, or getting back into it'], ['aging', 'Staying active as I get older'], ['other', 'Something else']],
+        next: function () { return 'age'; } },
+      { id: 'health_goal', stage: 0, title: 'What would you most like to talk to a clinician about?', options: [
+        ['longevity', 'Healthy aging and staying independent'], ['energy', 'Energy, or not feeling like myself'], ['women', "Women's health in midlife"], ['men', "Men's health and knowing my numbers"], ['all', 'Something else']],
+        next: function () { return 'age'; } },
+      { id: 'age', stage: 1, title: 'Which age range are you in?', options: [['18', '18 to 34'], ['35', '35 to 44'], ['45', '45 to 54'], ['55', '55 to 64'], ['65', '65 to 74'], ['75', '75 or over'], ['minor', 'Under 18']],
         next: function (a) { return a.age === 'minor' ? '@stop' : 'meds'; } },
-      { id: 'meds', title: 'Do you take any prescription medicines?', help: 'A clinician will review this with you. It does not rule you out.', options: [['yes', 'Yes'], ['no', 'No'], ['unsure', 'Not sure']], next: function () { return 'talk'; } },
-      { id: 'talk', title: 'How would you like to talk with a clinician?', options: [['phone', 'A phone call'], ['video', 'A video visit'], ['message', 'Secure messages']], next: function () { return '@result'; } }
+      { id: 'meds', stage: 2, title: 'Do you take any prescription medicines?', help: 'A clinician will review this with you. It does not rule you out.', options: [['yes', 'Yes'], ['no', 'No'], ['unsure', 'Not sure']], next: function () { return 'talk'; } },
+      { id: 'talk', stage: 3, title: 'How would you like to talk with a clinician?', options: [['phone', 'A phone call'], ['video', 'A video visit'], ['message', 'Secure messages']], next: function () { return '@result'; } }
     ],
+    // a short bridge line above the next question, so it feels like being walked through, not filling in a form
+    lead: {
+      activity: function () { return 'Fitness it is. A few quick questions about where you are starting from.'; },
+      health_goal: function () { return 'Overall health it is. Tell us what is on your mind.'; },
+      age: function (a) { return a.activity === '0' ? 'Starting from zero is completely fine. Now a little about you.' : a.focus === 'unsure' ? "No problem. We'll keep it simple." : 'Thanks. Now a little about you.'; },
+      meds: function () { return 'Almost there. Two questions about your health and how you like to talk.'; },
+      talk: function () { return 'Last one.'; }
+    },
     results: {
       longevity: ['Your path: a healthy-aging review', 'A licensed clinician reviews your goals with your current medicines in mind, and decides if a plan is right for you.'],
-      energy: ['Your path: a talk-it-through review', 'Tell a licensed clinician what feels off. They may suggest labs first, then decide if a plan is right for you.'],
+      energy: ['Your path: a talk-it-through review', 'Tell a licensed clinician what feels off. They may ask for labs first, then decide if a plan is right for you.'],
       women: ["Your path: a midlife women's health review", 'A licensed clinician who works with midlife women reviews your answers and decides if a plan is right for you.'],
       men: ['Your path: a labs-first review', 'A licensed clinician reviews your answers and may order labs before deciding if a plan is right for you.'],
       training: ['Your path: a training and recovery review', 'A licensed clinician reviews your training and medicines, and decides if a plan is right for you.'],
+      start: ['Your path: a getting-started review', 'A licensed clinician looks at where you are starting from and the medicines you take, and decides if a plan is right for you.'],
       all: ['Your path: a clinician review', 'A licensed clinician reviews your answers, explains your options in plain English, and decides if a plan is right for you.']
     }
   };
+  function pathOf(a) {
+    if (a.focus === 'fitness') return a.fit_goal === 'aging' ? 'longevity' : a.fit_goal === 'start' ? 'start' : 'training';
+    if (a.focus === 'health') return a.health_goal || 'all';
+    return 'all';
+  }
 
   /* ---------------- smooth scroll ---------------- */
   var lenis = null;
@@ -156,37 +177,52 @@
     else W.scrollTo({ top: t.getBoundingClientRect().top + W.scrollY + off, behavior: reduce ? 'auto' : 'smooth' });
   }
 
-  /* ---------------- router: #home #shop #science #faq ---------------- */
-  var VIEWS = ['home', 'shop', 'science', 'faq'];
-  var cur = null, onView = null, transition = null;
+  /* ---------------- router: one hash per page (#home #how #science #shop #faq), deep links to sections ---------------- */
+  var VIEWS = ['home', 'shop', 'science', 'faq'];   // a site can pass its own list to router({ views })
+  var cur = null, onView = null, transition = null, pend = null;
+  function viewOf(id) { var t = id && D.getElementById(id), v = t && t.closest('[data-view]'); return v ? { el: t, view: v.getAttribute('data-view') } : null; }
+  function flushPend() { var t = pend; pend = null; if (t) setTimeout(function () { scrollToEl(t, -90); }, 80); }
   function show(name, first) {
     if (VIEWS.indexOf(name) < 0) name = 'home';
-    if (name === cur) return;
+    if (name === cur) { flushPend(); return; }
     var prev = cur; cur = name;
     var go = function () {
       $$('[data-view]:not(html)').forEach(function (v) { v.hidden = v.getAttribute('data-view') !== name; });
       $$('[data-nav]').forEach(function (a) { var on = a.getAttribute('data-nav') === name; a.classList.toggle('is-on', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-      if (lenis) lenis.scrollTo(0, { immediate: true }); else W.scrollTo(0, 0);
+      if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); else W.scrollTo(0, 0);
       if (W.ScrollTrigger) W.ScrollTrigger.refresh();
       if (onView) onView(name, prev, !!first);
       var h = $('[data-view="' + name + '"] h1, [data-view="' + name + '"] h2');
-      if (h && !first) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+      if (h && !first && !pend) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+      flushPend();
     };
     if (first || !transition || reduce) go(); else transition(go, name, prev);
   }
+  function route(h) {
+    if (h === 'intro') { introReplay(); return; }
+    if (VIEWS.indexOf(h) >= 0) { show(h); return; }
+    var t = viewOf(h); if (t) { pend = t.el; show(t.view); }
+  }
   function router(opts) {
     onView = opts && opts.onView; transition = opts && opts.transition;
-    W.addEventListener('hashchange', function () {
-      var h = location.hash.slice(1);
-      if (h === 'intro') { introReplay(); return; }
-      if (VIEWS.indexOf(h) >= 0) show(h);
-    });
+    if (opts && opts.views) VIEWS = opts.views;
+    W.addEventListener('hashchange', function () { route(location.hash.slice(1)); });
     D.addEventListener('click', function (e) {
       var s = e.target.closest('[data-scroll]');
-      if (s) { e.preventDefault(); var go = s.getAttribute('data-view-go'); var t = function () { scrollToEl($(s.getAttribute('data-scroll')), -90); }; if (go && go !== cur) { location.hash = go; setTimeout(t, 700); } else t(); }
+      if (s) {
+        e.preventDefault();
+        var t = $(s.getAttribute('data-scroll')), go = s.getAttribute('data-view-go') || (t && t.closest('[data-view]') ? t.closest('[data-view]').getAttribute('data-view') : cur);
+        pend = t; if (go !== cur) location.hash = go; else flushPend();
+        return;
+      }
+      // a link to the page you are already on, or to #intro: act on it instead of doing nothing
+      var a = e.target.closest('a[href^="#"]'), h = a && a.getAttribute('href').slice(1);
+      if (h === 'intro') { e.preventDefault(); introReplay(); }
+      else if (h && h === cur) { e.preventDefault(); if (lenis) lenis.scrollTo(0, { duration: 1.1 }); else W.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); }
     });
-    var h = location.hash.slice(1);
-    show(VIEWS.indexOf(h) >= 0 ? h : 'home', true);
+    var h = location.hash.slice(1), t = VIEWS.indexOf(h) < 0 && viewOf(h);
+    if (t) pend = t.el;
+    show(VIEWS.indexOf(h) >= 0 ? h : t ? t.view : 'home', true);
   }
 
   /* ---------------- audience switcher ---------------- */
@@ -224,8 +260,8 @@
     setAud(q && C.aud[q] ? q : (store.get('pep-aud') || 'all'));
   }
 
-  /* ---------------- assessment (dialog) ---------------- */
-  var dlg = null;
+  /* ---------------- assessment (dialog): guided, branching, resumable ---------------- */
+  var dlg = null, openQuiz = function () {};
   function nextDays(n) {
     var out = [], d = new Date(); d.setHours(12, 0, 0, 0);
     while (out.length < n) { d.setDate(d.getDate() + 1); var w = d.getDay(); if (w !== 0 && w !== 6) out.push(new Date(d)); }
@@ -235,82 +271,131 @@
     dlg = $('#pep-quiz');
     if (!dlg) return;
     var body = $('.pq-body', dlg), bar = $('.pq-bar i', dlg), step = $('.pq-step', dlg);
-    var answers = {}, hist = [];
+    var KEY = 'pep-quiz-v2', answers = {}, hist = [], byId = {};
+    Q.questions.forEach(function (q) { byId[q.id] = q; });
+    function save() { store.set(KEY, JSON.stringify({ a: answers, h: hist, t: Date.now() })); }
+    function load() { try { var s = JSON.parse(store.get(KEY) || 'null'); return s && s.h && s.h.length && Date.now() - s.t < 7 * 864e5 ? s : null; } catch (e) { return null; } }
+    function clearSaved() { store.set(KEY, ''); }
+    function label(qid, v) { var q = byId[qid], o = q && q.options.filter(function (x) { return x[0] === v; })[0]; return o ? o[1] : String(v); }
+    function total() { var n = 0, id = 'focus', g = 0, a = Object.assign({ focus: 'health' }, answers); while (id && id.charAt(0) !== '@' && g++ < 12) { n++; id = byId[id].next(a); } return n; }
     function close() { if (dlg.open) dlg.close(); if (lenis) lenis.start(); }
+    function enter() { body.classList.remove('is-in'); void body.offsetWidth; body.classList.add('is-in'); }
+    function header(stage) {
+      var st = el('ol', 'pq-stages'); st.setAttribute('aria-label', 'Steps');
+      STAGES.forEach(function (s, i) { var li = el('li', i < stage ? 'is-done' : i === stage ? 'is-on' : '', s); if (i === stage) li.setAttribute('aria-current', 'step'); st.appendChild(li); });
+      body.appendChild(st);
+      if (hist.length) {
+        var tr = el('div', 'pq-trail'); tr.setAttribute('role', 'group'); tr.setAttribute('aria-label', 'Your answers so far. Select one to change it.');
+        hist.forEach(function (qid) { var b = el('button', 'pq-crumb', label(qid, answers[qid])); b.type = 'button'; b.title = 'Change this answer'; b.onclick = function () { hist = hist.slice(0, hist.indexOf(qid)); save(); render(qid); }; tr.appendChild(b); });
+        body.appendChild(tr);
+      }
+    }
     function render(id) {
-      body.textContent = '';
+      body.textContent = ''; enter();
       if (id === '@stop') {
-        step.textContent = '';
-        body.appendChild(el('h3', 'pq-q', 'This service is for adults 18 and over.'));
+        step.textContent = ''; bar.style.transform = 'scaleX(1)';
+        var hs = el('h3', 'pq-q', 'This service is for adults 18 and over.'); hs.tabIndex = -1; body.appendChild(hs);
         body.appendChild(el('p', 'pq-help', 'If you have questions, call ' + C.phone + '.'));
-        var b = el('button', 'pq-btn', 'Close'); b.type = 'button'; b.onclick = close; body.appendChild(b); return;
+        var b = el('button', 'pq-btn', 'Close'); b.type = 'button'; b.onclick = function () { clearSaved(); close(); }; body.appendChild(b);
+        setTimeout(function () { hs.focus(); }, 30); return;
       }
       if (id === '@result') return result();
-      var q = Q.questions.filter(function (x) { return x.id === id; })[0];
-      var total = answers.goal === 'training' ? 5 : 4, idx = hist.length + 1;
-      step.textContent = 'Question ' + Math.min(idx, total) + ' of ' + total;
-      bar.style.transform = 'scaleX(' + (idx - 1) / total + ')';
+      var q = byId[id], idx = hist.length + 1, tot = Math.max(idx, total());
+      step.textContent = 'Question ' + idx + ' of ' + tot;
+      bar.style.transform = 'scaleX(' + ((idx - 1) / tot).toFixed(3) + ')';
+      header(q.stage);
+      var ld = hist.length && Q.lead[id] ? Q.lead[id](answers) : ''; if (ld) body.appendChild(el('p', 'pq-lead', ld));
       var h = el('h3', 'pq-q', q.title); h.id = 'pq-q-' + q.id; h.tabIndex = -1; body.appendChild(h);
       if (q.help) body.appendChild(el('p', 'pq-help', q.help));
       var list = el('div', 'pq-opts'); list.setAttribute('role', 'group'); list.setAttribute('aria-labelledby', h.id);
+      var busy = false;
       q.options.forEach(function (o) {
         var b = el('button', 'pq-opt'); b.type = 'button'; b.appendChild(el('span', 'pq-opt-t', o[1]));
         if (answers[q.id] === o[0]) b.classList.add('is-on');
-        b.onclick = function () { answers[q.id] = o[0]; if (q.id === 'goal' && o[0] !== 'all') setAud(o[0], true); hist.push(q.id); render(q.next(answers)); };
+        b.onclick = function () {
+          if (busy) return; busy = true;
+          $$('.pq-opt', list).forEach(function (x) { x.classList.toggle('is-on', x === b); });
+          answers[q.id] = o[0]; hist.push(q.id); save();
+          setTimeout(function () { render(q.next(answers)); }, reduce ? 0 : 260);   // see the tick, then move on
+        };
         list.appendChild(b);
       });
       body.appendChild(list);
-      if (hist.length) { var back = el('button', 'pq-back', 'Back'); back.type = 'button'; back.onclick = function () { render(hist.pop()); }; body.appendChild(back); }
+      if (hist.length) { var back = el('button', 'pq-back', 'Back'); back.type = 'button'; back.onclick = function () { var last = hist.pop(); save(); render(last); }; body.appendChild(back); }
       setTimeout(function () { h.focus(); }, 30);
     }
     function result() {
+      var path = pathOf(answers), r = Q.results[path] || Q.results.all;
+      setAud(path === 'start' ? 'training' : path, true);
       bar.style.transform = 'scaleX(1)'; step.textContent = 'Your result';
-      var r = Q.results[answers.goal] || Q.results.all;
+      header(4);
+      body.appendChild(el('p', 'pq-lead', 'Thanks. Here is where we would take you.'));
       var h = el('h3', 'pq-q', r[0]); h.tabIndex = -1; body.appendChild(h);
       body.appendChild(el('p', 'pq-help', r[1]));
+      var how = { phone: 'by phone', video: 'by video', message: 'by secure message' }[answers.talk] || 'in the way you prefer';
+      var nx = el('ol', 'pq-next');
+      [['A free review with a licensed clinician, ' + how + '.'], ['Labs, only if your clinician asks for them.'], ['A clear yes or no, with the reasons. If it is a no, you pay nothing. [Confirm policy with Grace]']].forEach(function (t) { nx.appendChild(el('li', '', t[0])); });
+      var nh = el('p', 'pq-sub', 'What happens next'); body.appendChild(nh); body.appendChild(nx);
       var f = el('form', 'pq-form'); f.noValidate = true;
-      var lab = el('label', 'pq-label'); lab.appendChild(el('span', '', 'Email for your result'));
+      var lab = el('label', 'pq-label'); lab.appendChild(el('span', '', 'Email me my path'));
       var inp = el('input', 'pq-input'); inp.type = 'email'; inp.name = 'email'; inp.autocomplete = 'email'; inp.required = true; inp.placeholder = 'you@example.com';
       lab.appendChild(inp); f.appendChild(lab);
       var err = el('p', 'pq-err'); err.setAttribute('role', 'alert'); f.appendChild(err);
-      f.appendChild(el('p', 'pq-sub', 'Pick a time for a free call with the care team (optional)'));
-      var days = el('div', 'pq-days'), times = el('div', 'pq-times'), pick = { d: null, t: null };
-      nextDays(5).forEach(function (d) {
-        var b = el('button', 'pq-chip'); b.type = 'button';
-        b.textContent = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-        b.setAttribute('aria-pressed', 'false');
-        b.onclick = function () { pick.d = b.textContent; $$('.pq-days .pq-chip', f).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); };
-        days.appendChild(b);
-      });
-      ['9:30 am', '11:00 am', '1:30 pm', '3:00 pm', '4:30 pm'].forEach(function (t) {
-        var b = el('button', 'pq-chip', t); b.type = 'button'; b.setAttribute('aria-pressed', 'false');
-        b.onclick = function () { pick.t = t; $$('.pq-times .pq-chip', f).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); };
-        times.appendChild(b);
-      });
-      f.appendChild(days); f.appendChild(times);
-      var sb = el('button', 'pq-btn', 'Send me my result'); sb.type = 'submit'; f.appendChild(sb);
-      f.appendChild(el('p', 'pq-fine', 'A licensed clinician decides if a plan is right for you. This is not medical advice.'));
+      var pick = { d: null, t: null };
+      if (answers.talk !== 'message') {
+        f.appendChild(el('p', 'pq-sub', 'Pick a time for your free call (optional)'));
+        var days = el('div', 'pq-days'), times = el('div', 'pq-times');
+        nextDays(5).forEach(function (d) {
+          var b = el('button', 'pq-chip'); b.type = 'button'; b.textContent = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); b.setAttribute('aria-pressed', 'false');
+          b.onclick = function () { pick.d = b.textContent; $$('.pq-days .pq-chip', f).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); };
+          days.appendChild(b);
+        });
+        ['9:30 am', '11:00 am', '1:30 pm', '3:00 pm', '4:30 pm'].forEach(function (t) {
+          var b = el('button', 'pq-chip', t); b.type = 'button'; b.setAttribute('aria-pressed', 'false');
+          b.onclick = function () { pick.t = t; $$('.pq-times .pq-chip', f).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); };
+          times.appendChild(b);
+        });
+        f.appendChild(days); f.appendChild(times);
+      }
+      var cl = el('label', 'pq-consent'); var cb = el('input'); cb.type = 'checkbox'; cb.name = 'updates'; cl.appendChild(cb); cl.appendChild(el('span', '', 'Also send me occasional updates from PEPTICITY (optional)')); f.appendChild(cl);
+      var sb = el('button', 'pq-btn', 'Email me my path'); sb.type = 'submit'; f.appendChild(sb);
+      f.appendChild(el('p', 'pq-fine', 'A licensed clinician decides if a plan is right for you. This is not medical advice. Prefer to talk? Call ' + C.phone + '.'));
       f.addEventListener('submit', function (e) {
         e.preventDefault();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())) { err.textContent = 'Please enter an email address like name@example.com.'; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
-        inp.removeAttribute('aria-invalid');
-        body.textContent = '';
+        inp.removeAttribute('aria-invalid'); clearSaved();
+        body.textContent = ''; enter();
         var ok = el('h3', 'pq-q', 'Preview only: nothing was sent.'); ok.tabIndex = -1; body.appendChild(ok);
-        body.appendChild(el('p', 'pq-help', 'On the live site, your result goes to ' + inp.value.trim() + (pick.d && pick.t ? ', and the care team calls you ' + pick.d + ' at ' + pick.t + '.' : '.')));
+        body.appendChild(el('p', 'pq-help', 'On the live site, your path goes to ' + inp.value.trim() + (pick.d && pick.t ? ', and the care team calls you ' + pick.d + ' at ' + pick.t + '.' : '.')));
         var c = el('button', 'pq-btn', 'Close'); c.type = 'button'; c.onclick = close; body.appendChild(c);
         setTimeout(function () { ok.focus(); }, 30);
       });
       body.appendChild(f);
       setTimeout(function () { h.focus(); }, 30);
     }
-    function open(start) {
-      answers = {}; hist = [];
-      if (aud !== 'all') { answers.goal = aud; hist.push('goal'); }
-      if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
-      if (lenis) lenis.stop();
-      render(start || (answers.goal ? (answers.goal === 'training' ? 'sport' : 'age') : 'goal'));
+    function resume(s) {
+      body.textContent = ''; enter(); step.textContent = ''; bar.style.transform = 'scaleX(0)';
+      var h = el('h3', 'pq-q', 'Pick up where you left off?'); h.tabIndex = -1; body.appendChild(h);
+      body.appendChild(el('p', 'pq-help', 'Your answers are saved on this device only.'));
+      var row = el('div', 'pq-opts');
+      var r = el('button', 'pq-opt is-on'); r.type = 'button'; r.appendChild(el('span', 'pq-opt-t', 'Resume'));
+      r.onclick = function () { answers = s.a || {}; hist = s.h || []; var last = byId[hist[hist.length - 1]]; render(last ? last.next(answers) : 'focus'); };
+      var n = el('button', 'pq-opt'); n.type = 'button'; n.appendChild(el('span', 'pq-opt-t', 'Start over'));
+      n.onclick = function () { clearSaved(); answers = {}; hist = []; render('focus'); };
+      row.appendChild(r); row.appendChild(n); body.appendChild(row);
+      setTimeout(function () { h.focus(); }, 30);
     }
-    D.addEventListener('click', function (e) { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
+    openQuiz = function (start) {
+      answers = {}; hist = [];
+      if (typeof dlg.showModal === 'function') { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
+      if (lenis) lenis.stop();
+      if (start === 'fitness' || start === 'health' || start === 'unsure') { answers.focus = start; hist = ['focus']; save(); return render(byId.focus.next(answers)); }
+      var saved = load(); if (saved) return resume(saved);
+      if (aud === 'training') { answers.focus = 'fitness'; hist = ['focus']; return render('activity'); }
+      if (aud !== 'all' && C.aud[aud]) { answers.focus = 'health'; answers.health_goal = aud; hist = ['focus', 'health_goal']; return render('age'); }
+      render('focus');
+    };
+    D.addEventListener('click', function (e) { var t = e.target.closest('[data-quiz]'); if (t) { e.preventDefault(); openQuiz(t.getAttribute('data-quiz') || null); } });
     $$('.pq-close', dlg).forEach(function (b) { b.addEventListener('click', close); });
     dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
     dlg.addEventListener('close', function () { if (lenis) lenis.start(); });
@@ -446,15 +531,16 @@
   function intro(cfg) {
     introCfg = cfg;
     var root = cfg.root; if (!root) return;
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
     var seen = store.sget('pep-intro-' + cfg.id) === '1';
     var replay = location.hash === '#intro';
-    if (reduce || (seen && !replay)) { root.hidden = true; D.documentElement.classList.add('intro-done'); if (cfg.onDone) cfg.onDone(true); return; }
+    if (reduce || (seen && !replay && !cfg.always)) { root.hidden = true; D.documentElement.classList.add('intro-done'); if (cfg.onDone) cfg.onDone(true); return; }
     run();
   }
   function run() {
     var cfg = introCfg, root = cfg.root, done = false, stop = null;
     root.hidden = false; D.documentElement.classList.remove('intro-done'); D.documentElement.classList.add('intro-on');
-    if (lenis) lenis.stop();
+    if (lenis) { lenis.scrollTo(0, { immediate: true, force: true }); lenis.stop(); } else W.scrollTo(0, 0);
     function finish(skipped) {
       if (done) return; done = true;
       store.sset('pep-intro-' + cfg.id, '1');
@@ -467,7 +553,7 @@
     D.addEventListener('keydown', esc);
     stop = cfg.play(function () { finish(false); });
   }
-  function introReplay() { if (introCfg) run(); }
+  function introReplay() { if (introCfg && !D.documentElement.classList.contains('intro-on')) run(); }
 
   /* ---------------- misc ---------------- */
   function onScreen(node, cb, opts) {
@@ -481,7 +567,7 @@
     smooth: smooth, scrollToEl: scrollToEl, router: router, show: show, view: function () { return cur; },
     audience: audience, setAud: setAud, aud: function () { return aud; },
     quiz: quiz, flags: flags, lots: lots, chroma: chroma, receipt: receipt, textSize: textSize, forms: forms, fill: fill,
-    intro: intro, introReplay: introReplay, onScreen: onScreen,
+    intro: intro, introReplay: introReplay, openQuiz: function (s) { openQuiz(s); }, onScreen: onScreen,
     get lenis() { return lenis; }
   };
 })();

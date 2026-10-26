@@ -1,4 +1,4 @@
-/* Pepticity V6 · Garnet: page behaviour. 3D lives in scene.js. */
+/* PEPTICITY V6 · Garnet: page behaviour. Five pages, the vial rig, the guided assessment. */
 (function () {
   'use strict';
   var P = window.PEP, C = P.C, $ = P.$, $$ = P.$$, el = P.el, W = window, D = document;
@@ -44,23 +44,76 @@
   P.quiz();
   P.flags($('#rf'));
   P.lots($('#lot'), function (code) { S.lot = code; });
-  P.receipt($('#receipt')); P.receipt($('#receipt2'));
+  P.receipt($('#receipt2'));
   P.textSize();
   P.forms();
   var css = getComputedStyle(D.documentElement);
   var chOpts = { line: '#ee8b9b', glow: 'rgba(200,52,77,.8)', dot: '#efebe7', scrub: 'rgba(239,235,231,.4)', grid: 'rgba(239,235,231,.07)', text: 'rgba(239,235,231,.7)', font: '"Spline Sans Mono", monospace' };
-  var ch1 = P.chroma($('#chroma'), chOpts), ch2 = P.chroma($('#chroma2'), chOpts);
+  var ch1 = P.chroma($('#chroma'), chOpts);
 
-  /* ---------- curtain menu ---------- */
-  var mb = $('.menu-btn'), cur = $('#curtain');
+  /* ---------- curtain menu: numbered pages, a photo preview, the page you are on ---------- */
+  var mb = $('.menu-btn'), cur = $('#curtain'), mbt = $('.mb-t'), pvs = $$('.cur-pv img');
+  var outside = [$('main'), $('.foot'), $('.sticky-cta'), $('.top-nav'), $('.brand'), $('.top-r')];
+  function preview(i) { pvs.forEach(function (im, k) { im.classList.toggle('is-on', k === +i); }); }
   function menu(open) {
     mb.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) { cur.hidden = false; requestAnimationFrame(function () { cur.classList.add('is-open'); }); if (P.lenis) P.lenis.stop(); var f = $('a', cur); setTimeout(function () { f && f.focus(); }, 300); }
-    else { cur.classList.remove('is-open'); if (P.lenis) P.lenis.start(); setTimeout(function () { if (mb.getAttribute('aria-expanded') === 'false') cur.hidden = true; }, 800); }
+    mb.setAttribute('aria-label', open ? 'Close the menu' : 'Open the menu');
+    if (mbt) mbt.textContent = open ? 'Close' : 'Menu';
+    outside.forEach(function (n) { if (n) n.inert = !!open; });
+    D.documentElement.classList.toggle('menu-on', !!open);
+    if (open) {
+      var on = $('[data-nav].is-on', cur); preview(on ? on.getAttribute('data-pv') : 0);
+      cur.hidden = false; requestAnimationFrame(function () { cur.classList.add('is-open'); });
+      if (P.lenis) P.lenis.stop();
+      setTimeout(function () { var f = $('[data-nav].is-on', cur) || $('a', cur); if (f) f.focus(); }, 320);
+    } else {
+      cur.classList.remove('is-open'); if (P.lenis) P.lenis.start();
+      setTimeout(function () { if (mb.getAttribute('aria-expanded') === 'false') cur.hidden = true; }, 800);
+    }
   }
   mb.addEventListener('click', function () { menu(mb.getAttribute('aria-expanded') !== 'true'); });
-  cur.addEventListener('click', function (e) { if (e.target.closest('a')) menu(false); });
-  D.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mb.getAttribute('aria-expanded') === 'true') { menu(false); mb.focus(); } });
+  cur.addEventListener('click', function (e) { if (e.target.closest('a, [data-quiz]')) menu(false); });
+  $$('[data-pv]', cur).forEach(function (a) { var f = function () { preview(a.getAttribute('data-pv')); }; a.addEventListener('pointerenter', f); a.addEventListener('focus', f); });
+  D.addEventListener('keydown', function (e) {
+    if (mb.getAttribute('aria-expanded') !== 'true') return;
+    if (e.key === 'Escape') { menu(false); mb.focus(); return; }
+    if (e.key === 'Tab') {   // keep focus inside the open menu (the menu button counts as inside)
+      var f = [mb].concat($$('a, button', cur)), i = f.indexOf(D.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  /* ---------- index list: a photograph follows the pointer over each row ---------- */
+  var idx = $('[data-hover-pv]'), ipv = $('.idx-pv'), ipi = ipv && $('img', ipv), canHover = W.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (idx && ipv && canHover && !P.reduce) {
+    var ix = 0, iy = 0, tx = 0, ty = 0, iraf = 0, sec = idx.closest('.index');
+    var loop = function () { ix += (tx - ix) * 0.14; iy += (ty - iy) * 0.14; ipv.style.transform = 'translate3d(' + ix.toFixed(1) + 'px,' + iy.toFixed(1) + 'px,0) rotate(' + ((tx - ix) * 0.02).toFixed(2) + 'deg)'; iraf = Math.abs(tx - ix) + Math.abs(ty - iy) > 0.5 ? requestAnimationFrame(loop) : 0; };
+    sec.addEventListener('pointermove', function (e) { var r = sec.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; if (!iraf) iraf = requestAnimationFrame(loop); });
+    $$('a', idx).forEach(function (a) { a.addEventListener('pointerenter', function () { var src = a.getAttribute('data-pv-src'); if (ipi.getAttribute('src') !== src) ipi.setAttribute('src', src); ipv.classList.add('is-on'); }); });
+    idx.addEventListener('pointerleave', function () { ipv.classList.remove('is-on'); });
+  }
+
+  /* ---------- tilt + light on cards, magnetic primary buttons ---------- */
+  if (canHover && !P.reduce) {
+    $$('[data-tilt], .plan, .pf, .sci-c').forEach(function (c) {
+      c.classList.add('tilt');
+      c.addEventListener('pointermove', function (e) {
+        var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--mx', (x * 100).toFixed(1) + '%'); c.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        c.style.setProperty('--rx', ((0.5 - y) * 6).toFixed(2) + 'deg'); c.style.setProperty('--ry', ((x - 0.5) * 8).toFixed(2) + 'deg');
+      });
+      c.addEventListener('pointerleave', function () { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+    $$('[data-magnet]').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) { var r = b.getBoundingClientRect(); b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.16).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.22).toFixed(1) + 'px)'; });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+    // hero: the photograph leans away from the pointer
+    var hph = $('.hero-ph'), hx = 0, hy = 0, hraf = 0;
+    var hloop = function () { var gx = -S.px * 14, gy = -S.py * 9; hx += (gx - hx) * 0.06; hy += (gy - hy) * 0.06; if (hph) hph.style.transform = 'translate3d(' + hx.toFixed(2) + 'px,' + hy.toFixed(2) + 'px,0) scale(1.03)'; hraf = Math.abs(gx - hx) + Math.abs(gy - hy) > 0.05 ? requestAnimationFrame(hloop) : 0; };
+    W.addEventListener('pointermove', function () { if (S.view === 'home' && W.scrollY < innerHeight && !hraf) hraf = requestAnimationFrame(hloop); }, { passive: true });
+  }
 
   /* ---------- header + sticky CTA ---------- */
   var top = $('.top'), sticky = $('.sticky-cta');
@@ -79,6 +132,7 @@
   function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
   function shape(p, a, b, c, d) { return p < a ? 0 : p < b ? (p - a) / (b - a) : p < c ? 1 : p < d ? 1 - (p - c) / (d - c) : 0; }
+  var rigs = [];
   function homeScroll() {
     if (!G || !ST) return;
     var mob = W.matchMedia('(max-width: 900px)');
@@ -87,7 +141,7 @@
 
     // VIA-01 · Label Turn: scroll turns the printed label from the front mark to the back panel
     var turnSec = $('.turn'), items = $$('.turn-list li'), drift = 0, tv = 0;
-    var turn = W.PEPRIG ? W.PEPRIG.create($('#rig-turn'), SRC) : null;
+    var turn = W.PEPRIG ? W.PEPRIG.create($('#rig-turn'), SRC) : null; rigs.push(turn);
     ST.create({ trigger: '.turn', start: 'top top', end: 'bottom bottom', onUpdate: function (s) {
       var e = ease(clamp((s.progress - 0.06) / 0.82)); tv = e * Math.PI;
       if (turn) turn.set({ turn: tv, drift: drift });
@@ -100,7 +154,7 @@
     if (stage) stage.addEventListener('pointerleave', function () { drift = 0; if (turn) turn.set({ turn: tv, drift: 0 }); });
 
     // ANA-02 · Photo Anatomy: the cap lifts off, the print peels away flat, tags name each layer
-    var anat = W.PEPRIG ? W.PEPRIG.create($('#rig-anat'), SRC) : null, RG = W.PEPRIG ? W.PEPRIG.G : null;
+    var anat = W.PEPRIG ? W.PEPRIG.create($('#rig-anat'), SRC) : null, RG = W.PEPRIG ? W.PEPRIG.G : null; rigs.push(anat);
     var tags = {}; $$('.anat-tag').forEach(function (t) { tags[t.getAttribute('data-part')] = t; });
     var hint = $('.anat-hint');
     function place(e, lift, peel) {
@@ -133,7 +187,7 @@
     ST.create({ trigger: '.thread', start: 'top 70%', end: 'bottom 60%', scrub: 1, onUpdate: function (s) { $('.thread').style.setProperty('--thread', (1 - s.progress).toFixed(4)); } });
     $$('.step').forEach(function (li) { ST.create({ trigger: li, start: 'top 62%', end: 'bottom 30%', toggleClass: { targets: li, className: 'is-on' } }); });
     if (!P.reduce) {
-      $$('.v-home .h2').forEach(function (h) { G.from(h, { opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' }, immediateRender: false }); });
+      $$('.view .h2').forEach(function (h) { G.from(h, { opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' }, immediateRender: false }); });
       G.from('.pf', { opacity: 0, y: 60, stagger: .14, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.proof-grid', start: 'top 82%' }, immediateRender: false });
       G.from('.ppl li', { opacity: 0, y: 50, stagger: .12, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.ppl', start: 'top 85%' }, immediateRender: false });
       G.from('.cmp-t tbody tr', { opacity: 0, x: -24, stagger: .08, duration: .7, ease: 'power2.out', scrollTrigger: { trigger: '.cmp-t', start: 'top 85%' }, immediateRender: false });
@@ -143,13 +197,15 @@
 
   /* ---------- router with a garnet curtain ---------- */
   var vt = el('div', 'vt'); var vtb = el('b'); vt.appendChild(vtb); vt.setAttribute('aria-hidden', 'true'); D.body.appendChild(vt);
-  var names = { home: 'PEPTICITY', shop: 'Membership', science: 'The science', faq: 'Questions' };
+  var names = { home: 'PEPTICITY', how: 'How it works', science: 'The science', shop: 'Membership', faq: 'Questions' };
   P.router({
+    views: ['home', 'how', 'science', 'shop', 'faq'],
     onView: function (name) {
       S.view = name; D.documentElement.setAttribute('data-page', name);
+      rigs.forEach(function (r) { if (r) r.size(); });
       if (ST) ST.refresh();
-      if (name === 'science' && ch2) ch2.resize();
-      if (name === 'home' && ch1) ch1.resize();
+      if (name === 'science' && ch1) ch1.resize();
+      try { D.title = name === 'home' ? 'PEPTICITY Garnet' : names[name].toUpperCase() + ' · PEPTICITY'; } catch (e) {}
       onScroll();
     },
     transition: function (go, name) {
@@ -173,7 +229,7 @@
     if (animate && !P.reduce) { void H.offsetWidth; H.classList.add('hp-printing'); requestAnimationFrame(function () { requestAnimationFrame(function () { H.classList.remove('hp-printing'); H.classList.add('hp-print'); }); }); }
   }
   P.intro({
-    id: 'v6', root: intro,
+    id: 'v6', root: intro, always: true,   // the owner wants the intro on every load; Skip and Esc stay
     play: function (done) {
       H.classList.add('hp-printing');
       if (!G) { setTimeout(done, 300); return function () {}; }
