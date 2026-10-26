@@ -1,0 +1,164 @@
+<title>PEPTICITY Liquid Glass</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* LGL-01 · Liquid Metal Glass panel. One WebGL shader per panel: polished metal rim (rounded tube), dimpled hex mesh
+   behind glass, molten metal strands with mirror highlights, out-of-focus drops, a smoke wisp and a glass reflection.
+   Palette is a uniform, so the same panel renders in the reference's warm gold or in platinum. */
+:root{--bg:#000;--ink:#ece9e4;--mute:#8d8a86;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "Helvetica Neue",Arial,sans-serif}
+.wrap{padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;gap:28px;justify-content:center}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.col h2{margin:0;font:600 12px/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.frame{position:relative;width:283px;height:703px;overflow:hidden;background:#000}
+.frame img{display:block;width:283px;height:703px}
+.frame canvas{position:absolute;display:block}
+</style>
+<div class="wrap">
+  <div class="col"><h2>Your image</h2><div class="frame"><img src="ref.png" alt="The owner's reference: gold liquid-metal glass panels"></div></div>
+  <div class="col"><h2>Recreated · gold</h2><div class="frame" data-pal="gold"></div></div>
+  <div class="col"><h2>Recreated · platinum</h2><div class="frame" data-pal="platinum"></div></div>
+</div>
+<script>
+const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const FS = `precision highp float;
+uniform vec2 uRes;uniform float uT,uSeed,uDpr;uniform vec3 uMetA,uMetB,uHot;uniform vec4 uBox;uniform vec2 uC[24];uniform float uW[3];
+float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*vn(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}
+float sdRB(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
+vec3 env(vec3 r){
+  float y=r.y,x=r.x;
+  vec3 c=mix(vec3(.02,.015,.01),uMetA*.6,smoothstep(-.7,.15,y+.3*sin(x*4.+uSeed)));
+  c=mix(c,uMetB,smoothstep(.2,.6,y)*.85);
+  c+=uHot*pow(max(0.,1.-abs(y-.66)*6.),3.)*1.5;
+  c+=uHot*pow(max(0.,1.-abs(x+.5+.25*y)*5.),4.)*.9;
+  c*=.5+.5*smoothstep(-1.1,-.15,-abs(x*1.5-y*.5));
+  return c;}
+// cubic bezier through 4 control points, sampled
+vec2 bez(vec2 a,vec2 b,vec2 c,vec2 d,float t){float u=1.-t;return u*u*u*a+3.*u*u*t*b+3.*u*t*t*c+t*t*t*d;}
+// nearest point on ribbon i (two cubic pieces = 8 control points), returns (signed cross / width, along, width)
+vec3 rib(vec2 p,int i,float aspect){
+  float best=1e9,bu=0.,sgn=1.;vec2 prev=vec2(0.);
+  for(int k=0;k<=40;k++){
+    float t=float(k)/40.;vec2 q;
+    if(i==0){q=t<.5?bez(uC[0],uC[1],uC[2],uC[3],t*2.):bez(uC[3],uC[4],uC[5],uC[6],t*2.-1.);}
+    else if(i==1){q=t<.5?bez(uC[8],uC[9],uC[10],uC[11],t*2.):bez(uC[11],uC[12],uC[13],uC[14],t*2.-1.);}
+    else {q=t<.5?bez(uC[16],uC[17],uC[18],uC[19],t*2.):bez(uC[19],uC[20],uC[21],uC[22],t*2.-1.);}
+    if(k>0){vec2 ab=q-prev,ap=p-prev;ab.x*=aspect;ap.x*=aspect;float h=clamp(dot(ap,ab)/dot(ab,ab),0.,1.);vec2 dv=ap-ab*h;float dd=dot(dv,dv);
+      if(dd<best){best=dd;bu=(float(k)-1.+h)/40.;sgn=sign(ab.x*ap.y-ab.y*ap.x);}}
+    prev=q;}
+  float w=(i==0?uW[0]:i==1?uW[1]:uW[2])*(.25+.75*pow(sin(3.14159*clamp(bu*1.05,0.,1.)),.7))*(.7+.6*vn(vec2(bu*9.,float(i)*3.+uSeed)));
+  return vec3(sqrt(best)*sgn/max(w,1e-4),bu,w);}
+float hexD(vec2 p){p=abs(p);return max(dot(p,normalize(vec2(1.,1.732))),p.x);}
+vec3 rimShade(float t,vec2 g){   // hand-tuned polished-tube bands, then the room reflected on top
+  vec3 dk=vec3(.03,.02,.015),wm=uMetA,lt=uMetB,ht=uHot;
+  vec3 c=mix(dk,lt,smoothstep(.0,.12,t));
+  c=mix(c,ht,smoothstep(.1,.18,t)*smoothstep(.3,.2,t));
+  c=mix(c,wm*.9,smoothstep(.26,.36,t));
+  c=mix(c,dk*1.5,smoothstep(.42,.56,t)*smoothstep(.74,.6,t));
+  c=mix(c,lt*1.05,smoothstep(.62,.72,t)*smoothstep(.86,.76,t));
+  c=mix(c,dk,smoothstep(.84,.9,t)*smoothstep(1.,.94,t));
+  c+=ht*pow(max(0.,1.-abs(t-.15)*9.),4.)*.6*smoothstep(.2,.9,-g.y+.3);
+  c*=.75+.35*smoothstep(-.6,.8,-g.y);   // the top bar catches more light
+  return c;}
+void main(){
+  vec2 px=gl_FragCoord.xy;px.y=uRes.y-px.y;
+  vec2 c=(uBox.xy+uBox.zw)*.5,hb=(uBox.zw-uBox.xy)*.5;
+  float R=24.*uDpr;
+  float d=sdRB(px-c,hb,R);
+  vec3 col=vec3(0.);
+  if(d<0.){
+    vec2 e=vec2(1.,0.);
+    vec2 g=normalize(vec2(sdRB(px-c+e.xy,hb,R)-sdRB(px-c-e.xy,hb,R),sdRB(px-c+e.yx,hb,R)-sdRB(px-c-e.yx,hb,R))+1e-6);
+    float RW=mix(mix(9.,15.,smoothstep(0.,1.,-g.y)),13.,smoothstep(0.,1.,g.y))*uDpr;   // fat top and bottom bars, slimmer sides
+    float t=-d/RW;
+    if(t<1.){ col=rimShade(t,g); }
+    else {
+      vec2 uv=(px-uBox.xy)/(uBox.zw-uBox.xy);float aspect=(uBox.z-uBox.x)/(uBox.w-uBox.y);
+      float cs=7.*uDpr;vec2 s=vec2(1.,1.732);vec2 p=px/cs;
+      vec4 hc=floor(vec4(p,p-vec2(.5,1.))/s.xyxy)+.5;vec4 hh=vec4(p-hc.xy*s,p-(hc.zw+.5)*s);
+      vec2 hp=dot(hh.xy,hh.xy)<dot(hh.zw,hh.zw)?hh.xy:hh.zw;
+      float hd=hexD(hp);float edge=smoothstep(.36,.46,hd);
+      float lit=.6+.4*dot(normalize(vec3(hp*1.8,1.)),normalize(vec3(-.45,.55,.7)));
+      vec2 lc=(uv-vec2(.42,.5))*vec2(1.,.75);float big=.5+.5*exp(-dot(lc,lc)*2.2);
+      float mesh=mix(.30*lit,.11,edge)*big+.03*smoothstep(.46,.5,hd);
+      col=vec3(mesh)*vec3(.97,.99,1.04);
+      col*=.3+.7*smoothstep(0.,26.*uDpr,-d-RW);
+      float diag=smoothstep(-.05,.2,uv.x*.9-uv.y+.25)*smoothstep(1.3,.7,uv.x+uv.y*.3);
+      col+=vec3(.10,.10,.11)*diag;
+      col+=vec3(.07)*smoothstep(.16,.0,uv.y);
+      // soft, out-of-focus metal behind the glass
+      float bl=fbm(uv*vec2(5.,6.)+uSeed*3.);col+=uMetA*.22*smoothstep(.62,.8,bl)*smoothstep(.55,.15,uv.x);
+      // molten ribbons: a flat sheet that twists as it flows, so it flashes light-dark-light
+      for(int i=0;i<3;i++){
+        if(uW[i]<=0.)continue;
+        vec2 wp=uv+.012*vec2(fbm(uv*14.+uT*.12+float(i)),fbm(uv*14.+7.3-uT*.1));
+        vec3 r=rib(wp,i,aspect);float v=r.x;
+        if(abs(v)<1.){
+          float tw=r.y*11.+3.*fbm(vec2(r.y*6.,float(i)+uSeed))+uT*.25;
+          float cv=v*cos(tw);
+          vec3 n=normalize(vec3(cv*.95,-v*sin(tw)*.6+.15,sqrt(max(0.,1.-cv*cv*.9))));
+          vec3 rr=reflect(vec3(0.,0.,-1.),n);
+          vec3 m=env(vec3(rr.x,-rr.y,rr.z))*1.2;
+          m+=uHot*pow(max(0.,dot(n,normalize(vec3(-.35,.5,.8)))),36.)*1.8;
+          m*=.8+.2*fbm(wp*40.);
+          float cov=smoothstep(1.,.86,abs(v));
+          col=mix(col,m,cov);
+          col+=uMetB*.15*smoothstep(1.4,1.,abs(v))*(1.-cov);
+        }
+      }
+      // smoke: fine curling wisps, pale, a touch warm and cool
+      vec2 sp=(uv-vec2(.55,.15))*vec2(3.2,3.6)+vec2(uSeed,-uT*.06);
+      vec2 sw=sp+1.4*vec2(fbm(sp*1.1+uT*.05),fbm(sp*1.1+3.1-uT*.04));
+      float sf=fbm(sw*1.8);
+      float wisp=exp(-abs(sf-.5)*70.)*.9+exp(-abs(sf-.56)*90.)*.5;
+      float sz=smoothstep(.42,.62,uv.x)*smoothstep(.0,.2,uv.y)*smoothstep(.85,.5,uv.y);
+      wisp*=sz*(.4+.6*fbm(sw*4.));
+      col+=mix(vec3(.62,.72,.78),vec3(.85,.72,.6),fbm(sw*3.))*wisp*.55;
+    }
+  } else {
+    float sh=exp(-d/(12.*uDpr));col+=uMetA*.05*sh;
+  }
+  gl_FragColor=vec4(col,1.);
+}`;
+const PAL = { gold: { a: [0.72, 0.48, 0.26], b: [0.98, 0.80, 0.55], hot: [1.0, 0.97, 0.92] }, platinum: { a: [0.50, 0.52, 0.55], b: [0.90, 0.92, 0.95], hot: [1.0, 1.0, 1.0] } };
+// panel layout matched to the reference (283 x 703 crop of a column of panels)
+const PANELS = [
+  { x: 27, y: 13, w: 300, h: 210, seed: 1.3, w3: [0.07, 0.03, 0.0], C: [
+    [0.10, 0.78], [0.02, 0.55], [0.12, 0.35], [0.30, 0.30], [0.48, 0.25], [0.55, 0.06], [0.82, 0.02], [0, 0],
+    [0.14, 0.70], [0.20, 0.82], [0.30, 0.84], [0.40, 0.80], [0.52, 0.76], [0.62, 0.74], [0.70, 0.73], [0, 0],
+    [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]] },
+  { x: 25, y: 256, w: 302, h: 382, seed: 4.7, w3: [0.08, 0.025, 0.03], C: [
+    [0.04, 0.10], [-0.04, 0.32], [0.06, 0.52], [0.26, 0.66], [0.46, 0.80], [0.56, 0.86], [0.66, 0.84], [0, 0],
+    [0.62, 0.86], [0.70, 0.78], [0.74, 0.62], [0.80, 0.40], [0.84, 0.28], [0.88, 0.22], [0.92, 0.18], [0, 0],
+    [0.02, 0.90], [0.12, 0.96], [0.26, 0.97], [0.40, 0.95], [0.50, 0.93], [0.58, 0.95], [0.66, 0.96], [0, 0]] },
+  { x: 27, y: 641, w: 300, h: 200, seed: 8.1, w3: [0.06, 0.0, 0.0], C: [
+    [0.06, 0.70], [0.20, 0.30], [0.40, 0.12], [0.58, 0.10], [0.70, 0.08], [0.80, 0.05], [0.95, 0.02], [0, 0],
+    [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]] }];
+function mk(frame, pal) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), list = [];
+  PANELS.forEach(P => {
+    const pad = 14, cv = document.createElement('canvas');
+    const W = P.w + pad * 2, H = P.h + pad * 2;
+    cv.style.left = (P.x - pad) + 'px'; cv.style.top = (P.y - pad) + 'px'; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    cv.width = W * dpr; cv.height = H * dpr; frame.appendChild(cv);
+    const gl = cv.getContext('webgl', { antialias: false, premultipliedAlpha: false }); if (!gl) return;
+    const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(o)); return o; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+    const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = n => gl.getUniformLocation(pr, n), C = PAL[pal];
+    gl.uniform2f(U('uRes'), cv.width, cv.height); gl.uniform1f(U('uSeed'), P.seed); gl.uniform1f(U('uDpr'), dpr);
+    gl.uniform3fv(U('uMetA'), C.a); gl.uniform3fv(U('uMetB'), C.b); gl.uniform3fv(U('uHot'), C.hot);
+    gl.uniform4f(U('uBox'), pad * dpr, pad * dpr, (pad + P.w) * dpr, (pad + P.h) * dpr);
+    gl.uniform2fv(U('uC'), new Float32Array(P.C.flat())); gl.uniform1fv(U('uW'), new Float32Array(P.w3));
+    list.push({ gl, uT: U('uT') });
+  });
+  return list;
+}
+const all = [...document.querySelectorAll('.frame[data-pal]')].flatMap(f => mk(f, f.dataset.pal));
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches; let t0 = performance.now();
+function draw(now) { const t = (now - t0) / 1000; all.forEach(o => { o.gl.uniform1f(o.uT, t); o.gl.drawArrays(o.gl.TRIANGLES, 0, 3); }); if (!still) requestAnimationFrame(draw); }
+requestAnimationFrame(draw);
+</script>
