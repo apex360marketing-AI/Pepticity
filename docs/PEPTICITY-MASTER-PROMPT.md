@@ -37,6 +37,9 @@ You are four people at once, and each of them has a veto:
   - a chat bubble that looks like a template
   - a three.js drawing of a bottle
 - **Artifact type:** landing site (multi-view), published as an Artifact for review, then deployed.
+- **Business model: DECISION 0, confirm before building.** This prompt assumes **A, clinician-guided**: a licensed clinician and a licensed pharmacy, and the site sells the consult.
+  - If Grace picks **B** (launch the brand and the list first): every "Book your consult" becomes "Join the first-access list", and the cosmetic range is the only shop.
+  - A research-use-only store (**C**) is not built. Health Canada treats it as selling unauthorized drugs.
 
 ## 4. THE JOURNEY (scene by scene)
 
@@ -117,6 +120,17 @@ The captions follow the real path: a licensed clinician reviews, a licensed part
   - lot lookup
   - an exit-intent "before you go"
   - a slim sticky bar on mobile
+- **Placement (from the research's recommended stack):**
+  - announcement bar (H08) at the top
+  - the guided tour as the hero (H16), with THE PRIMER (H09) second
+  - the clinician prep sheet (H12) after "How it works"
+  - people, lot lookup and the privacy pledge (H22, H13, H25) in Trust
+  - the price card, estimator, "pay nothing if it isn't right" and the deposit (H23, H17, H24, H31) in Pricing
+  - summary email, province waitlist and next opening (H16, H03, H26) on the tour result
+  - GRACE'S LETTER and the call-back request (H18, H32) in the footer
+  - one slide-in per session (H07), never over the tour or booking
+  - a slim sticky bar on mobile
+- **Hard rule from the research:** no discounts, points, referral rewards, free trials or gifts tied to a prescription or the pharmacy fill. Seven provinces ban these inducements. Lead with knowledge, service and honest proof, never price.
 - Every capture is CASL-clean: express, unticked opt-in, a clear purpose and an easy unsubscribe.
 - Forms are short, one field where possible, and say "Preview only: nothing was sent." until the real CRM is connected.
 

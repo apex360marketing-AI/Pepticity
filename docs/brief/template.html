@@ -10,7 +10,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
 body{margin:0;background:var(--b0);color:var(--bone);font:400 16px/1.6 var(--text);-webkit-font-smoothing:antialiased;overflow-x:clip}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(50% 40% at 85% 0%,rgba(var(--acc),.06),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(255,92,122,.04),transparent 70%)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(50% 40% at 85% 0%,rgba(236,230,223,.05),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(255,92,122,.035),transparent 70%)}
 a{color:var(--ivory)}
 :focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -39,6 +39,9 @@ section > h2{margin:0 0 6px;font:800 clamp(28px,3.6vw,46px)/1 var(--disp);letter
 .card::after{content:"";position:absolute;top:-40%;bottom:-40%;left:-60%;width:40%;transform:skewX(-14deg);background:linear-gradient(100deg,transparent,rgba(255,255,255,.07),transparent);opacity:0;transition:left 1s var(--ease),opacity .3s;pointer-events:none}
 .card:hover{--ty:-6px;border-color:rgba(255,255,255,.4);box-shadow:0 28px 50px -30px #000,inset 0 1px 0 rgba(255,255,255,.12)}
 .card:hover::after{left:130%;opacity:1}
+.decision{border-color:rgba(255,92,122,.55);box-shadow:inset 3px 0 0 rgb(255,92,122)}
+.decision > .n{color:#0b0a0a;background:rgb(255,92,122)}
+.decision .row{grid-template-columns:minmax(0,1fr)}
 .card h3{margin:0 0 6px;font:800 17px/1.15 var(--disp);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
 .card p{margin:0;color:var(--mute);font-size:14.5px}
 .n{display:inline-block;margin-bottom:10px;font:500 12px/1 var(--mono);color:rgb(var(--acc));background:#1f2124;padding:4px 8px;border-radius:2px}
@@ -82,6 +85,10 @@ details > div{padding:0 16px 16px}
 .row .more{grid-column:1/-1;font-size:13.5px;color:var(--mute)}
 .row .more b{color:var(--bone);font-weight:600}
 .row .more p{margin:6px 0 0}
+.lvl{display:inline-block;margin-left:8px;padding:2px 6px;border-radius:2px;font:600 9px/1.4 var(--text);letter-spacing:.16em;vertical-align:middle;border:1px solid}
+.lvl-safe{color:rgb(var(--keep));border-color:rgba(var(--keep),.5)}
+.lvl-caution{color:var(--bone);border-color:var(--rule2)}
+.lvl-stop{color:rgb(var(--drop));border-color:rgba(var(--drop),.6)}
 .rec-badge{display:inline-block;margin-left:8px;padding:2px 6px;border:1px solid rgba(var(--keep),.6);border-radius:2px;font:600 9px/1.4 var(--text);letter-spacing:.16em;color:rgb(var(--keep));vertical-align:middle}
 .dec{display:flex;gap:6px}
 .dec button{min-width:44px;min-height:40px;padding:0 10px;border:1px solid var(--rule2);border-radius:2px;background:none;color:var(--mute);font:700 10px/1 var(--text);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
@@ -130,7 +137,8 @@ footer{padding-block:30px 60px;color:var(--dim);font-size:13px}
 <nav class="tabs" aria-label="Sections"><a href="#stand">Where we stand</a><a href="#hooks">Hooks <span id="tH"></span></a><a href="#recs">Recommendations <span id="tR"></span></a><a href="#plan">Game plan</a><a href="#prompt">The prompt</a></nav>
 
 <section id="stand"><p class="kick">01</p><h2>Where we stand</h2><p class="sub" id="standSub"></p>
-  <div class="grid" id="projects"></div>
+  <div class="card decision" id="decision"></div>
+  <div class="grid" id="projects" style="margin-top:14px"></div>
   <h3 class="kick" style="margin-top:34px">PEPTICITY, in detail</h3>
   <div class="tablewrap"><table><thead><tr><th>Item</th><th>Status</th><th>Done</th><th>What's left</th></tr></thead><tbody id="pepRows"></tbody></table></div>
   <h3 class="kick" style="margin-top:34px">Focus next</h3>
@@ -140,7 +148,7 @@ footer{padding-block:30px 60px;color:var(--dim);font-size:13px}
   <details><summary>All tools (<span id="nTools"></span>)</summary><div><div class="tablewrap"><table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody id="toolRows"></tbody></table></div></div></details>
 </section>
 
-<section id="hooks"><p class="kick">02</p><h2>Hooks</h2><p class="sub">Ways to win visitors' details, researched on real peptide, telehealth and premium wellness sites, and adapted for PEPTICITY's Canadian rules. <span style="color:rgb(var(--keep))">Recommended</span> ones are marked.</p>
+<section id="hooks"><p class="kick">02</p><h2>Hooks</h2><p class="sub">Ways to win visitors' details, researched on real peptide, telehealth and premium wellness sites, and adapted for PEPTICITY's Canadian rules. Each one is rated <b>SAFE</b> (do it now), <b>CAUTION</b> (needs guardrails and a lawyer's read) or <b>STOP</b> (not allowed as researched; the compliant alternative is in its details). <span style="color:rgb(var(--keep))">Recommended</span> ones are marked. Full research with sources: <code>pepticity/docs/research/lead-magnet-hooks.md</code>.</p>
   <div class="tally" id="tallyH"></div><div class="rows" id="rowsH"></div>
   <form class="addf" data-kind="hook"><label class="kick" for="addH" style="flex-basis:100%;margin:0">Add your own hook</label><input id="addH" maxlength="240" placeholder="e.g. A members-only early access list"><button type="submit">Add</button></form>
 </section>
@@ -177,6 +185,12 @@ S = lsLoad();
 /* ---------- where we stand ---------- */
 var st = D.status || {};
 $('standSub').textContent = st.summary || '';
+if (st.decision) {
+  var dc = $('decision'); dc.appendChild(el('span', 'n', 'BLOCKS LAUNCH')); dc.appendChild(el('h3', null, st.decision.t)); dc.appendChild(el('p', null, st.decision.b));
+  var og = el('div', 'grid'); og.style.marginTop = '14px';
+  st.decision.opts.forEach(function (o) { var c = el('article', 'card row opt'); c.dataset.id = 'D0' + o.k; var l = el('div'); l.appendChild(el('span', 'n', o.k)); l.appendChild(el('h3', null, o.t)); l.appendChild(el('p', null, o.b)); c.appendChild(l); c.appendChild(decBtns('D0' + o.k)); og.appendChild(c); });
+  dc.appendChild(og);
+}
 (st.projects || []).forEach(function (p) {
   var c = el('article', 'card');
   c.innerHTML = '<span class="chip"></span><h3 style="margin-top:10px"></h3><div class="bar"><i></i></div><div class="pct"><b></b><span></span></div><p style="margin-top:8px"></p>';
@@ -211,7 +225,7 @@ function rowFor(item, kind) {
   var r = el('article', 'card row'); r.dataset.id = item.id;
   var left = el('div');
   left.appendChild(el('span', 'n', item.id));
-  var h = el('h3', null, item.t); if (item.rec) { var bdg = el('span', 'rec-badge', 'RECOMMENDED'); h.appendChild(bdg); } left.appendChild(h);
+  var h = el('h3', null, item.t); if (item.level) { var lv = el('span', 'lvl lvl-' + item.level.toLowerCase(), item.level); h.appendChild(lv); } if (item.rec) { var bdg = el('span', 'rec-badge', 'RECOMMENDED'); h.appendChild(bdg); } left.appendChild(h);
   left.appendChild(el('p', null, item.b || ''));
   if (item.ex && item.ex.length) { var m = el('div', 'meta'); item.ex.slice(0, 4).forEach(function (x) { if (x.url) { var a = el('a', null, x.name || x.url); a.href = x.url; a.target = '_blank'; a.rel = 'noopener'; m.appendChild(a); } else m.appendChild(el('span', 'chip', x.name)); }); left.appendChild(m); }
   r.appendChild(left); r.appendChild(decBtns(item.id));
@@ -262,7 +276,7 @@ function setDec(id, patch) {
 document.addEventListener('click', function (e) {
   var b = e.target.closest('.dec button'); if (!b) return;
   var id = b.parentNode.dataset.id, cur = S[id] && S[id].status;
-  setDec(id, { status: cur === b.dataset.s ? null : b.dataset.s, kind: id === 'PROMPT' ? 'prompt' : id.charAt(0) === 'H' ? 'hook' : id.charAt(0) === 'R' ? 'rec' : (S[id] && S[id].kind) });
+  setDec(id, { status: cur === b.dataset.s ? null : b.dataset.s, kind: id === 'PROMPT' ? 'prompt' : id.slice(0, 2) === 'D0' ? 'decision' : id.charAt(0) === 'H' ? 'hook' : id.charAt(0) === 'R' ? 'rec' : (S[id] && S[id].kind) });
   paint();
 });
 var noteT = {};
