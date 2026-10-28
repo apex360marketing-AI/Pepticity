@@ -3,6 +3,9 @@ name: pepticity-lead-engine
 description: The PEPTICITY lead machine. Use whenever a PEPTICITY page needs a form, quiz email gate, booking, call-back, SMS opt-in, newsletter, waitlist, lot lookup, exit slide-in or any other way of collecting a name, email or phone; when tagging leads by hook; when writing CASL/TCPA consent text; or when drafting the email and text sequences. Pairs with guided-quiz-funnel, peptide-regulatory and peptide-copy-and-guide.
 ---
 
+> **CURRENT STATE (owner, 2026-10-28):** PEPTICITY has NO physician, clinician or pharmacy partner yet. Never show or imply consults, prescriptions, clinicians, pharmacies, lot testing or delivery. The site builds the brand and the founding list first; those sections are switched on only when they really exist.
+
+
 # PEPTICITY lead engine
 
 The site is a selling machine: every visitor should leave a way to reach them, and the list sells afterwards. Everything here stays inside the rules in `peptide-regulatory`.
