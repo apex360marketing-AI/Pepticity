@@ -171,17 +171,17 @@ def build_front():
 
 def build_back():
     c = new_canvas()
-    left = arc_to_cx(-0.50 * R)
-    n1, n2 = text_mask('THYMOSIN', 50 * SS, 0.08), text_mask('ALPHA-1', 50 * SS, 0.08)
-    amt = text_mask(AMOUNT, 50 * SS, 0.10)
-    y = int(LH * SS * 0.50)
-    place(c, n1, left, y, 0); y += n1.shape[0] + 22 * SS
-    place(c, n2, left, y, 0); y += n2.shape[0] + 40 * SS
-    # hairline rule between name and amount
-    rule_w = int(0.62 * R * SS)
-    r = np.zeros((int(1.4 * SS) + 2, rule_w), np.float32); r[1:-1] = 1
-    r *= np.linspace(1, 0, rule_w)[None, :] ** 0.6
-    place(c, r * 0.8, left + 4 * SS, y - 20 * SS, 0)
+    left = arc_to_cx(-0.60 * R)
+    n1, n2 = text_mask('THYMOSIN', 40 * SS, 0.10), text_mask('ALPHA-1', 40 * SS, 0.10)
+    amt = text_mask(AMOUNT, 40 * SS, 0.12)
+    y = int(LH * SS * 0.52)
+    place(c, n1, left, y, 0); y += n1.shape[0] + 18 * SS
+    place(c, n2, left, y, 0); y += n2.shape[0] + 30 * SS
+    # platinum hairline between name and amount, fading to the right
+    rule_w = int(0.55 * R * SS)
+    r = np.zeros((int(2.2 * SS) + 2, rule_w), np.float32); r[1:-1] = 1
+    r *= np.linspace(1, 0, rule_w)[None, :] ** 0.7
+    place(c, r, left + 4 * SS, y, 1); y += r.shape[0] + 30 * SS
     place(c, amt, left, y, 0)
     return downsample(c)
 
@@ -213,7 +213,7 @@ def compose(face_flat, ghost_flat, out_name):
     hp = (lum - gblur(lum, 14)).clip(0, None)                  # glass highlights / edges
     # 1) dark smoked see-through glass (neutral, a whisper cool)
     smoke = np.array([0.80, 0.82, 0.86], np.float32)
-    dark = rgb * 0.50 * smoke + hp[..., None] * 0.55
+    dark = rgb * 0.40 * smoke + hp[..., None] * 0.55
     rgb = rgb * (1 - glass[..., None]) + dark * glass[..., None]
 
     # 2) under-light: cool white rising from the base through the liquid
@@ -230,13 +230,13 @@ def compose(face_flat, ghost_flat, out_name):
     # 3) ghost: the far side of the label seen through liquid, reversed + lens-stretched, soft
     if ghost_flat is not None:
         g = warp(ghost_flat, mirror=True)
-        ga = gblur(g[..., 3], 2.2) * 0.16 * glass
+        ga = gblur(g[..., 3], 3.0) * 0.10 * glass
         rgb = rgb + ga[..., None] * 150
 
     # 4) frosted smoke label: transparent, the liquid and back glass still read through it
     frost = gblur(rgb, 7)
     tint = np.array([16, 17, 20], np.float32)
-    lab = frost * 0.55 + tint * 0.45
+    lab = frost * 0.48 + tint * 0.52
     rng = np.random.default_rng(11)
     lab += rng.normal(0, 2.4, (H, W, 1)).astype(np.float32)
     sheen = np.exp(-((xs - (XC - 0.56 * R)) / 22.0) ** 2) * 30 + np.exp(-((xs - (XC + 0.70 * R)) / 10.0) ** 2) * 14
@@ -246,7 +246,7 @@ def compose(face_flat, ghost_flat, out_name):
     lab = lab * (1 - 0.0) + up[..., None] * np.array([26, 28, 31], np.float32)
     rgb = rgb * (1 - band[..., None]) + lab * band[..., None]
     # cut edges of the label catch the under-light
-    for yE, k in ((Y0, 70), (Y1, 120)):
+    for yE, k in ((Y0, 95), (Y1, 140)):
         e = np.exp(-((yy - (yE + CURVE * COSU[None, :])) / 1.1) ** 2) * inside[None, :]
         rgb += e[..., None] * k * (0.35 + 0.65 * COSU[None, :, None])
 
