@@ -842,7 +842,7 @@
     return id.toUpperCase();
   }
   function chip(id) {
-    var b = btn(chipLabel(id), 'pc-btn--sm pb-chip', { 'data-chip': id });
+    var b = btn(chipLabel(id), 'pc-btn--sm pb-chip' + (/^p:/.test(id) ? ' pb-chip--p' : ''), { 'data-chip': id });
     return b;
   }
 
@@ -874,6 +874,7 @@
     var m = el('div', 'pb-msg pb-msg--you');
     m.appendChild(el('p', 'pb-p', label));
     UI.log.appendChild(m); scrollLog();
+    requestAnimationFrame(function () { m.classList.add('is-in'); });
     HISTORY.push({ who: 'visitor', text: label });
     var reply = respond(input);
     if (reply.kind === 'empty') return;

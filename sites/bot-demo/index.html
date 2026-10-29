@@ -12,7 +12,7 @@
 @font-face{font-family:"PepticityBlack";src:url("../../brand/font/PepticityBlack.woff2") format("woff2");font-display:swap}
 :root{--ink:#eef1f5;--mute:rgba(222,227,234,.68);--faint:rgba(222,227,234,.42);--hair:rgba(226,231,238,.14);
   --h:"PepticityBlack","Arial Black",Arial,sans-serif;--b:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --ease:cubic-bezier(.16,1,.3,1);--ease-io:cubic-bezier(.65,0,.35,1)}
+  --ease:cubic-bezier(.16,1,.3,1);--ease-io:cubic-bezier(.65,0,.35,1);--pc-font:var(--h)}
 *{box-sizing:border-box}
 html,body{margin:0;background:#0b0b0c;color:var(--ink);font:400 16px/1.6 var(--b);-webkit-font-smoothing:antialiased}
 body{min-height:100vh;overflow-x:hidden}
@@ -67,7 +67,7 @@ section.blk{margin-top:64px}
 .does .n{grid-row:span 2;font:400 20px/1 var(--h);letter-spacing:.06em;padding-top:2px;
   background:linear-gradient(180deg,#fff,#aeb4bb 55%,#6b7077);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;transition:filter .4s ease}
 .does li:hover .n{filter:drop-shadow(0 0 10px rgba(240,245,252,.7))}
-.does h3{margin:0;font:400 12px/1.45 var(--h);letter-spacing:.13em;text-transform:uppercase;font-synthesis:none;color:#fff}
+.does h3{margin:0;font:400 12px/1.5 var(--h);letter-spacing:.13em;text-transform:uppercase;font-synthesis:none;color:#fff}
 .does p{margin:0;font-size:14.5px;line-height:1.55;color:var(--mute)}
 .does .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .does .chips span{font:600 9px/1 var(--b);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);padding:6px 8px;
@@ -76,7 +76,7 @@ section.blk{margin-top:64px}
 
 /* try asking */
 .asks{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-.asks .pc-btn{--fs:9.5px}
+.asks .pc-btn{--fs:10px;--pc-font:var(--b);font-weight:600;font-synthesis:none}
 
 /* the line */
 .line{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;margin-top:22px;background:var(--hair)}

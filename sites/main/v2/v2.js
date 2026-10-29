@@ -290,7 +290,22 @@
     }, 1050);
     loadAll();
   }
+  function runLoader() {
+    introDone = false; introLive = true;
+    intro.classList.add('mode-loader'); D.classList.add('intro-on'); intro.classList.remove('lift');
+    stopScroll(); jump(0);
+    var t0 = performance.now();
+    (function wait() {   /* hold the words ~3.4 s once the 3D is up (or the flat fallback after 2.5 s) */
+      var ready = window.__gl && (window.__gl.ok !== undefined);
+      if (ready || performance.now() - t0 > 2500) introTimers.push(setTimeout(liftIntro, 3400));
+      else introTimers.push(setTimeout(wait, 120));
+    })();
+    introTimers.push(setTimeout(liftIntro, 9000));
+    setTimeout(loadAll, 1500);
+  }
   function runIntro() {
+    if ((CFG.intro || 'loader') === 'loader') return runLoader();
+    intro.classList.remove('mode-loader');
     introDone = false; engraved = false; introLive = true;
     D.classList.add('intro-on'); intro.classList.remove('lift');
     gsap.set(film, { scale: 1 }); $('#engRect').setAttribute('width', 0); gsap.set('.eng-glow', { opacity: 0 }); gsap.set('#engShine', { opacity: 0 });

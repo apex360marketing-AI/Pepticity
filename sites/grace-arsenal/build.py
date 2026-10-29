@@ -25,6 +25,8 @@ def fontface():
     faces = [("PB", "brand/font/PepticityBlack.woff2"), ("PBC", "brand/font/PepticityBlackCondensed.woff2"),
              ("PBS", "brand/font/PepticityBlackSplit.woff2")]
     out = [f'@font-face{{font-family:"{n}";src:url({b64(p)}) format("woff2");font-weight:400;font-style:normal;font-display:block}}' for n, p in faces]
+    out.append(f'@font-face{{font-family:"Geist";src:url({b64("sites/grace-arsenal/assets/geist.woff2")}) format("woff2");font-weight:300 700;font-display:swap}}')
+    out.append(f'@font-face{{font-family:"Geist Mono";src:url({b64("sites/grace-arsenal/assets/geistmono.woff2")}) format("woff2");font-weight:500;font-display:swap}}')
     out.append(f'@font-face{{font-family:"HG";src:url({b64("brand/fonts/b8f117656b5c.woff2")}) format("woff2");font-weight:300 700;font-style:normal;font-display:swap}}')
     return "\n".join(out)
 
@@ -55,13 +57,29 @@ CHAT = """<div class="chatline" id="chatline">
             <div class="bub gl me"><em>VISITOR · SAMPLE</em>Yes please.</div>
           </div>"""
 BOT_JS, BOT_CSS = ROOT / "shared/bot/pep-bot.js", ROOT / "shared/bot/pep-bot.css"
+TRY = """<div style="display:grid;gap:14px;align-content:start">
+            <h3 style="font:400 clamp(18px,2vw,26px)/1.15 var(--f-d);letter-spacing:.06em" class="h2s">TRY IT NOW</h3>
+            <p style="margin:0;color:var(--muted)">Your concierge is live on this page: it is the bar in the bottom corner. Open it, or tap a question and watch it answer.</p>
+            <div><button class="pc-btn pc-btn--lg" type="button" data-bot="open"><span class="pc-btn__face"><span class="pc-btn__label">OPEN THE CONCIERGE</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button></div>
+            <p class="eyebrow" style="margin-top:6px"><span>OR ASK ONE OF THESE</span></p>
+            <div class="try-row">
+              <button class="pc-btn pc-btn--sm" type="button" data-ask="What is on the shelf?"><span class="pc-btn__face"><span class="pc-btn__label">WHAT IS ON THE SHELF</span></span></button>
+              <button class="pc-btn pc-btn--sm" type="button" data-ask="Do you ship across Canada?"><span class="pc-btn__face"><span class="pc-btn__label">DO YOU SHIP IN CANADA</span></span></button>
+              <button class="pc-btn pc-btn--sm" type="button" data-ask="How do I get 15% off?"><span class="pc-btn__face"><span class="pc-btn__label">HOW DO I GET 15% OFF</span></span></button>
+              <button class="pc-btn pc-btn--sm" type="button" data-ask="Tell me when GHK-Cu is back"><span class="pc-btn__face"><span class="pc-btn__label">TELL ME WHEN IT IS BACK</span></span></button>
+            </div>
+          </div>"""
 if BOT_JS.exists() and BOT_CSS.exists():
-    state = "LIVE BELOW"
-    block = CHAT + '\n<div class="slotb" id="pepBotMount"></div><style>' + BOT_CSS.read_text() + '</style><script>' + BOT_JS.read_text() + '</script>'
+    state = "LIVE ON THIS PAGE"
+    block = TRY + '<p class="fine">Answers come only from the approved answer library. Prices are from your catalogue. Sign-ups here are previews and send nothing.</p>'
+    bot = ('<link rel="stylesheet" data-pepbot="1" href="data:text/css,">\n<style>' + BOT_CSS.read_text() + '</style>\n'
+           '<script>window.PEPBOT_CONFIG={greetDelay:25000};</script>\n<script>' + BOT_JS.read_text() + '</script>')
 else:
     state = "DEMO ARRIVING"
     block = CHAT + """
-          <div class="slotb"><div><b>[CONCIERGE DEMO SLOT]</b><p>The working concierge is being finished. It drops into this space when it is ready, and you will be able to talk to it right here.</p></div></div>"""
+          <div class="slotb"><div><b>[CONCIERGE DEMO SLOT]</b><p>The working concierge is being finished. It drops into this space when it is ready.</p></div></div>"""
+    bot = ""
+src = src.replace("@BOT@", bot)
 src = src.replace("@CONCIERGE_STATE@", state).replace("@CONCIERGE@", block)
 print("concierge:", state)
 (SITE / "index.html").write_text(src)

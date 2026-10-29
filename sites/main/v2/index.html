@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PEPTICITY</title>
-<meta name="description" content="PEPTICITY grand opening. Join the PEPTICITY Team: 15% off your first order, the monthly health letter and first word on restocks.">
+<meta name="description" content="PEPTICITY grand opening. Join the PEPTICITY Team: 15% off your first order, the monthly PEPTICITY letter and first word on restocks.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap">
 <link rel="preload" href="brand/font/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
@@ -17,6 +17,9 @@ window.PC_CONFIG = {
   /* the counsel switch (hook-architecture): 15% offer + restock alerts show only while true */
   counselCleared: { offer: true },
   /* SWAP POINT: chest film. A new film drops in as media/chest-<white|black>.mp4/.webm (+ -poster.jpg) */
+  /* intro: 'loader' = the PEPTICITY STUDIO 3D word on the dark wall (default; the old chest film's bottle shows the old font).
+     'chest' = the chest film. SWAP POINT for the new chest film (media/chest2/white.mp4 is in progress): set intro:'chest' and chest.base */
+  intro: 'loader',
   chest: { base: 'media/chest-', engraveAt: 8.35 },
   /* SWAP POINT: city + lab frame atlases (v1). New lab footage (media/city2/) gets its own entry here */
   frames: { dir: 'media/frames/' },
@@ -61,7 +64,13 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 <canvas id="gl-back" aria-hidden="true"></canvas>
 
 <!-- ENTRANCE: chest film, then PEPTICITY engraves itself across the case front -->
-<div id="intro" role="region" aria-label="Entrance film">
+<div id="intro" role="region" aria-label="Entrance">
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="w3d w3d-load" data-word3d="PEPTICITY" data-funky="1" data-fill=".84" data-aspect="3.1"></div>
+    <div class="w3d w3d-load2" data-word3d="STUDIO" data-funky=".8" data-fill=".6" data-aspect="3.6"></div>
+    <p class="load-fb x3d">PEPTICITY</p>
+    <p class="load-cap">GRAND OPENING</p>
+  </div>
   <div class="film" id="film" aria-hidden="true">
     <video id="chest" muted playsinline preload="auto"></video>
     <svg class="engrave" id="engrave" viewBox="0 0 1912 1080" preserveAspectRatio="none">
@@ -122,7 +131,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <h1 class="h1 x3d" id="heroTitle">JOIN THE PEPTICITY TEAM</h1>
       <ul class="perks">
         <li><b>15%</b><span>OFF YOUR FIRST ORDER</span></li>
-        <li><b>MONTHLY</b><span>HEALTH LETTER</span></li>
+        <li><b>MONTHLY</b><span>PEPTICITY LETTER</span></li>
         <li><b>FIRST</b><span>WORD ON RESTOCKS</span></li>
       </ul>
       <form class="cap-form hero-form" data-hook="H01" data-effect="FRM-103" data-offer novalidate>
@@ -130,7 +139,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
           <label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com"></label>
           <button class="pc-btn pc-btn--lg morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">CLAIM MY 15% OFF</span></span></button>
         </div>
-        <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me the founding offer, the monthly health letter, restock alerts and occasional news. I can unsubscribe any time.</span></label>
+        <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me the founding offer, the monthly PEPTICITY letter, restock alerts and occasional news. I can unsubscribe any time.</span></label>
         <p class="err" role="alert"></p>
         <p class="ok" role="status" aria-live="polite"></p>
         <p class="fine">Your details never go to ad platforms. Unsubscribe in one click.</p>
