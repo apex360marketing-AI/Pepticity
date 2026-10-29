@@ -293,3 +293,12 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - R144 Use many more of the picked effects.
 - R145 Site "drastically bigger", more information; hit gym-goers, older people, people needing energy; little cards by goal (e.g. weight loss) that lead to the products for that interest, with a hook.
 - R146 Wants to send Grace in ~15 minutes; playbook first, but keep going without waiting.
+
+## 29 Oct — owner (font everywhere, bottles, lab, store)
+- R147 Never show anything without his new font again.
+- R148 Remake ALL bottles: new P logo + vertical PEPTICITY in his font (back: name + amount).
+- R149 Show the new logo in the new font; show it on the dashboard with the spinning background; the spinning emblem also on the website.
+- R150 The site needs real "cool shit", not three-quarters scrolling.
+- R151 Lab: an experience, slow, with hooks that sell; better dropper section (it was too fast).
+- R152 EVERY product, priced exactly as on her site; write-ups rewritten if wrong, hidden behind a button; a short note on each card.
+- R153 Owner wants condition hooks (pain, headaches, ED) and "what it's for" notes. DECISION: notes state the compound's class only; no condition/benefit claims (regulator risk); interest cards stay as visitor-interest filters + capture. Told the owner.
