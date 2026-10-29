@@ -321,9 +321,13 @@
     vid.ontimeupdate = function () { if (vid.currentTime >= at) dive(); };
     vid.onended = function () { dive(); };
     if (/[?&]holdintro/.test(location.search)) { vid.ontimeupdate = vid.onended = null; }   /* review aid: keep the film on screen */
-    var pr = vid.play(); if (pr && pr.catch) pr.catch(function () { if (!started) introTimers.push(setTimeout(dive, 1200)); });
-    introTimers.push(setTimeout(function () { if (!started && !/[?&]holdintro/.test(location.search)) dive(); }, 4000));
-    if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(dive, 15000));
+    /* never skip the film because it loads slowly: the closed-chest poster holds until it can play.
+       If the browser blocks autoplay (e.g. iPhone low-power mode), show TAP TO OPEN instead of skipping. */
+    var tap = $('#introTap');
+    function tryPlay() { var pr = vid.play(); if (pr && pr.catch) pr.catch(function () { if (!started && tap) tap.hidden = false; }); }
+    if (tap) tap.onclick = function () { tap.hidden = true; tryPlay(); };
+    if (vid.readyState >= 3) tryPlay(); else { vid.oncanplay = function () { vid.oncanplay = null; tryPlay(); }; vid.load(); }
+    if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(function () { if (!started) dive(); }, 30000));
     setTimeout(loadAll, 2500);
   }
   $('#skipIntro').addEventListener('click', liftIntro);
