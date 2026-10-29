@@ -152,6 +152,22 @@ def arc_to_cx(a):          # arc px (0 = facing centre) -> canvas x at SS
     return int(round((a + LW / 2) * SS))
 
 
+
+def swirl_mask(height, width):
+    """Peptide swirl: two thin intertwined strands with small beads (amino acids), vertical, clean."""
+    import math
+    im = Image.new('L', (width, height), 0); d = ImageDraw.Draw(im)
+    lw = max(2, int(2.2 * SS)); turns = 2.5; n = 400
+    for ph in (0, math.pi):
+        pts = [(width / 2 + (width / 2 - 6 * SS) * math.sin(2 * math.pi * turns * i / n + ph), 4 * SS + (height - 8 * SS) * i / n) for i in range(n + 1)]
+        d.line(pts, fill=255, width=lw, joint='curve')
+    for k in range(11):
+        t = k / 10; ph = 0 if k % 2 == 0 else math.pi
+        x = width / 2 + (width / 2 - 6 * SS) * math.sin(2 * math.pi * turns * t + ph); y = 4 * SS + (height - 8 * SS) * t
+        r = 4.5 * SS
+        d.ellipse([x - r, y - r, x + r, y + r], fill=255)
+    return np.array(im).astype(np.float32) / 255
+
 def build_front():
     c = new_canvas()
     cap = 66 * SS
@@ -166,6 +182,8 @@ def build_front():
     cx = arc_to_cx(col)
     place(c, mk, cx - mk.shape[1] // 2, top, 0)
     place(c, word, cx - ww // 2, top + mk.shape[0] + gap, 1)
+    sw = swirl_mask(wh, int(30 * SS))
+    place(c, sw, cx + ww // 2 + 22 * SS, top + mk.shape[0] + gap, 1)
     return downsample(c)
 
 
