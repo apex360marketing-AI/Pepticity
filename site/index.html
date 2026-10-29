@@ -32,7 +32,7 @@ window.PC_CONFIG = {
 };
 (function(){var d=document.documentElement,v='black',seen=false;
 try{v=localStorage.getItem('pc-version')||'black'}catch(e){}
-try{seen=sessionStorage.getItem('pc-intro')==='1'}catch(e){}
+/* the chest film plays on every visit (owner, 29 Oct); SKIP INTRO is always there */
 if(/[?&]v=black/.test(location.search))v='black';if(/[?&]v=white/.test(location.search))v='white';
 if(/[?&]nointro/.test(location.search))seen=true;
 if(v!=='white')v='black';d.setAttribute('data-version',v);
@@ -70,6 +70,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
     <video id="chest" muted playsinline preload="auto"></video>
   </div>
   <div class="intro-bloom" id="introBloom" aria-hidden="true"></div>
+  <button class="pc-btn intro-tap" id="introTap" type="button" hidden><span class="pc-btn__face"><span class="pc-btn__label">TAP TO OPEN</span></span></button>
   <div class="intro-skip"><button class="pc-btn pc-btn--sm" id="skipIntro" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SKIP INTRO</span></span></button></div>
 </div>
 
