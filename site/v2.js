@@ -90,9 +90,15 @@
     this.rect = { x: dx, y: dy, w: dw, h: dh }; this.last = f;
   };
   var pW = new Painter($('#cvWeave'), 'weave'), pL = new Painter($('#cvLab'), 'lab');
+  var doorSign = $('#doorSign');
+  /* [u = frame/(n-1), x, y, width] of the film's door sign, in full-frame fractions */
+  var SIGN = {
+    black: [[0.6, 0.49, 0.615, 0.12], [0.649, 0.494, 0.514, 0.137], [0.702, 0.496, 0.42, 0.16], [0.751, 0.498, 0.337, 0.19], [0.8, 0.5, 0.27, 0.21], [0.853, 0.502, 0.2, 0.238], [0.902, 0.502, 0.15, 0.27], [0.951, 0.5, 0.12, 0.283], [1, 0.502, 0.108, 0.29]],
+    white: [[0.745, 0.504, 0.434, 0.105], [0.8, 0.5, 0.337, 0.19], [0.846, 0.502, 0.264, 0.215], [0.897, 0.502, 0.194, 0.254], [0.949, 0.5, 0.135, 0.281], [1, 0.502, 0.108, 0.293]]
+  };
   want(seq('weave'), [0, 1], true);
   var doorbox = $('#doorbox');
-  function layoutDoors() { var r = pW.rect, c = CROP[kind]; if (!r.w) return; var fw = r.w / c.w, fx = r.x - c.x * fw; doorbox.style.left = fx + 'px'; doorbox.style.top = r.y + 'px'; doorbox.style.width = fw + 'px'; doorbox.style.height = r.h + 'px'; var ds = $('.door-sign'); if (ds) ds.style.fontSize = (fw * 0.021) + 'px'; }
+  function layoutDoors() { var r = pW.rect, c = CROP[kind]; if (!r.w) return; var fw = r.w / c.w, fx = r.x - c.x * fw; doorbox.style.left = fx + 'px'; doorbox.style.top = r.y + 'px'; doorbox.style.width = fw + 'px'; doorbox.style.height = r.h + 'px'; }
 
   /* ================= smooth scroll ================= */
   var lenis = null;
@@ -117,8 +123,8 @@
   function weaveFrame(p) {
     var n = seq('weave').m.n - 1; if (RM) return p < 0.5 ? 0 : n;
     var q = clamp((p - W_IN) / (W_OUT - W_IN), 0, 1);
-    var e = 1 - Math.pow(1 - q, 2.2);            /* ease-out: the last stretch to the doors slows right down */
-    return (0.3 * ss(0, 1, q) + 0.7 * e) * n;
+    var e = 1 - Math.pow(1 - q, 1.6);            /* ease-out: the last stretch to the doors slows down and glides to a stop */
+    return (0.55 * ss(0, 1, q) + 0.45 * e) * n;
   }
   /* lab: 5 stations, each = short move + long hold */
   var ST = [
@@ -162,7 +168,15 @@
       portal.style.visibility = pp >= 1 ? 'hidden' : 'visible';
     }
     doorbox.style.visibility = (busy || opened || p >= W_OUT - 0.004 || (RM && p >= 0.5)) ? 'visible' : 'hidden';
-    doorbox.classList.toggle('sign', busy || opened || p >= W_OUT - 0.004 || (RM && p >= 0.5));
+    /* the door sign in the film is in an old serif: our illuminated plaque tracks it frame by frame (measured on both films) */
+    var u = (busy || opened) ? 1 : weaveFrame(p) / (seq('weave').m.n - 1), T = SIGN[version], ds = doorSign;
+    if (u >= T[0][0] && pW.rect.w) {
+      var k = 1; while (k < T.length - 1 && T[k][0] < u) k++;
+      var A = T[k - 1], B = T[k], t = clamp((u - A[0]) / (B[0] - A[0]), 0, 1), L2 = function (i) { return A[i] + (B[i] - A[i]) * t; };
+      var c = CROP[kind], fw = pW.rect.w / c.w, fx = pW.rect.x - c.x * fw, w = L2(3) * fw * 1.08;
+      ds.style.left = (fx + L2(1) * fw) + 'px'; ds.style.top = (pW.rect.y + L2(2) * pW.rect.h) + 'px';
+      ds.style.width = w + 'px'; ds.style.height = (w * 0.27) + 'px'; ds.style.fontSize = (w * 0.068) + 'px'; ds.style.opacity = 1;
+    } else ds.style.opacity = 0;
 
     hooks.forEach(function (h) {
       var a = +h.dataset.at, d = Math.abs(p - a), o = RM ? 0 : 1 - ss(0.035, 0.06, d);
@@ -747,7 +761,7 @@
     $('#intGrid').innerHTML = INTERESTS.map(function (i) {
       return '<li><button class="int-card glass" type="button" data-int="' + i.k + '">' +
         '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + '◆' + '</span></span>' +
-        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF · SEND ME THE SHELF + 15%</span></span></button></li>';
+        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF + 15%</span></span></button></li>';
     }).join('');
     document.dispatchEvent(new Event('pc-slots'));
   }
@@ -833,7 +847,7 @@
     function check() {
       var d = ctx.getImageData(0, 0, cv.width, cv.height).data, clear = 0, tot = 0;
       for (var i = 3; i < d.length; i += 16) { tot++; if (d[i] === 0) clear++; }
-      if (clear / tot > 0.45) reveal();
+      if (clear / tot > 0.35) reveal();
     }
     cv.addEventListener('pointerdown', function (e) { drawing = true; cv.setPointerCapture(e.pointerId); track('hook_interact'); wipe(e); });
     cv.addEventListener('pointermove', wipe);
