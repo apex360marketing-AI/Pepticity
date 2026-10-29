@@ -233,3 +233,11 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - 10 researched next-level options + playbook for the dashboards (trust, hooks, sales).
 - Show the bottle currently used (sent).
 - After main page + both dashboards: audit and harden.
+
+## Added 29 Oct (bottles, archive look, main page)
+- Bottles shown individually with NO background (float on the site background), light underneath, illuminate on hover.
+- Create 20 different vial/bottle designs from the northernpeptides.st inventory on Grace's real vial, with our own see-through glassmorphic label (her current label comes off).
+- Use the "APEX Master Archive" background (moving smoke, subtler) in the dashboards and the website; copy its chipped-corner card shape.
+- Work the site and dashboards in parallel; send a site update to review.
+- Every update: point-form notes of what will be built, plus recommendations. Always.
+- The dashboard next-level options (10) were sent; owner hasn't picked yet.
