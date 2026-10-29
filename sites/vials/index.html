@@ -1,0 +1,242 @@
+<title>PEPTICITY Vial Lab</title>
+<style>
+:root{--bg:#07070a;--ink:#ecedf0;--mute:#8d9099;--line:rgba(220,224,232,.14);--chrome:#d9dce2;--uv:#14101c;--accent:#d4ff3a;--yes:#e9ecf2;--no:#5a5d66;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07070a;--ink:#ecedf0}}
+:root[data-theme="dark"]{--bg:#07070a;--ink:#ecedf0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:"Chakra Petch",system-ui,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:radial-gradient(120% 80% at 50% -10%,#151320 0%,#09090d 45%,#050507 100%)}
+.smoke{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(70px);opacity:.30}
+.s1{background:radial-gradient(circle,#3a3550 0%,transparent 62%);left:-20vmax;top:-10vmax;animation:drift1 38s ease-in-out infinite alternate}
+.s2{background:radial-gradient(circle,#2b2c33 0%,transparent 60%);right:-25vmax;top:20vh;animation:drift2 46s ease-in-out infinite alternate}
+.s3{background:radial-gradient(circle,#231d33 0%,transparent 60%);left:20vw;bottom:-35vmax;animation:drift3 52s ease-in-out infinite alternate}
+.s4{background:radial-gradient(circle,#3c3e46 0%,transparent 55%);left:40vw;top:-30vmax;opacity:.16;animation:drift2 60s ease-in-out infinite alternate-reverse}
+@keyframes drift1{to{transform:translate(25vw,30vh) scale(1.25)}}
+@keyframes drift2{to{transform:translate(-30vw,-15vh) scale(1.15)}}
+@keyframes drift3{to{transform:translate(-15vw,-25vh) scale(1.3)}}
+.grain{position:absolute;inset:-50%;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1.2s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+.wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:56px 32px 96px}
+header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;padding-bottom:28px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.kick{font-family:"Michroma",sans-serif;font-size:11px;letter-spacing:.32em;color:var(--mute);text-transform:uppercase;margin-bottom:14px}
+h1{font-family:"Michroma",sans-serif;font-weight:400;font-size:clamp(30px,5.4vw,72px);letter-spacing:.08em;line-height:1;text-transform:uppercase;background:linear-gradient(180deg,#fff 0%,#c9ccd3 45%,#7c808a 52%,#e6e8ec 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:16px;color:var(--mute);font-size:15px;max-width:58ch;line-height:1.55}
+.tally{display:flex;gap:18px;font-family:"Michroma",sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+.tally b{display:block;font-size:26px;color:var(--ink);letter-spacing:.04em;font-weight:400;margin-bottom:4px}
+.tally .y b{color:var(--accent);text-shadow:0 0 18px rgba(212,255,58,.35)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.filters button{font:inherit;font-family:"Michroma",sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);background:rgba(255,255,255,.03);border:1px solid var(--line);padding:10px 14px;border-radius:2px;cursor:pointer;backdrop-filter:blur(8px)}
+.filters button[aria-pressed="true"]{color:var(--ink);border-color:rgba(230,232,238,.5);background:rgba(255,255,255,.08)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px 28px}
+.v{position:relative;text-align:center}
+.v.hide{display:none}
+.stage{position:relative;aspect-ratio:680/1024;display:flex;align-items:flex-end;justify-content:center}
+.pool{position:absolute;left:12%;right:12%;bottom:5%;height:14%;border-radius:50%;background:radial-gradient(50% 50% at 50% 50%,rgba(225,228,240,.30) 0%,rgba(170,165,210,.10) 45%,transparent 72%);filter:blur(6px);transition:opacity .5s,transform .5s;opacity:.65}
+.stage::after{content:"";position:absolute;left:28%;right:28%;bottom:7.5%;height:2.4%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.75),transparent);transition:transform .5s,opacity .5s}
+.v img{position:relative;z-index:1;display:block;width:100%;height:auto;animation:bob 6s ease-in-out infinite;animation-delay:calc(var(--d) * -1);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -8px}}
+.v:hover img,.v:focus-within img{transform:translateY(-16px) scale(1.03)}
+.v:hover .pool,.v:focus-within .pool{opacity:1;transform:scale(1.18)}
+.v:hover .stage::after{transform:scale(.8);opacity:.55}
+.meta{margin-top:6px}
+.num{font-family:"Michroma",sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mute)}
+.v h3{font-family:"Michroma",sans-serif;font-weight:400;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:6px 0 4px;color:var(--chrome)}
+.prod{font-size:12px;letter-spacing:.12em;color:var(--mute)}
+.pick{display:inline-flex;margin-top:14px;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:rgba(255,255,255,.035);backdrop-filter:blur(10px)}
+.pick button{font:inherit;font-family:"Michroma",sans-serif;font-size:9.5px;letter-spacing:.2em;color:var(--mute);background:none;border:0;padding:11px 12px;min-width:58px;cursor:pointer;transition:background .25s,color .25s}
+.pick button+button{border-left:1px solid var(--line)}
+.pick button:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+.pick button:focus-visible,.filters button:focus-visible{outline:1px solid var(--chrome);outline-offset:-1px}
+.pick button[aria-pressed="true"][data-v="yes"]{color:var(--accent);background:#1f2124;text-shadow:0 0 12px rgba(212,255,58,.45)}
+.pick button[aria-pressed="true"][data-v="maybe"]{color:var(--ink);background:rgba(230,232,238,.14)}
+.pick button[aria-pressed="true"][data-v="no"]{color:#c4c6cc;background:rgba(0,0,0,.5);text-decoration:line-through}
+.v[data-pick="no"] img{opacity:.45}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--mute);font-size:12px;letter-spacing:.06em;line-height:1.6}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.wrap{padding:36px 16px 72px}header{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px}.pick button{min-width:0;padding:10px 8px;font-size:8.5px;letter-spacing:.12em}.v h3{font-size:10.5px;letter-spacing:.1em}.prod{font-size:10.5px}}
+@media (prefers-reduced-motion:reduce){.smoke,.grain,.v img{animation:none}}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500&family=Michroma&display=swap" rel="stylesheet">
+<div class="bg" aria-hidden="true"><div class="smoke s1"></div><div class="smoke s2"></div><div class="smoke s3"></div><div class="smoke s4"></div><div class="grain"></div></div>
+<main class="wrap">
+<header>
+  <div><p class="kick">PEPTICITY · LABEL STUDY 01</p><h1>PEPTICITY VIAL LAB</h1>
+  <p class="sub">Twenty label ideas on the real vial: clear glass, silver crimp, black flip-top. Each one wears a different product from the range. Pick YES, MAYBE or NO under each.</p></div>
+  <div class="tally" aria-live="polite"><div class="y"><b id="cy">0</b>YES</div><div><b id="cm">0</b>MAYBE</div><div><b id="cn">0</b>NO</div></div>
+</header>
+<div class="filters" role="group" aria-label="Show">
+  <button type="button" data-f="all" aria-pressed="true">ALL 20</button><button type="button" data-f="yes" aria-pressed="false">YES</button><button type="button" data-f="maybe" aria-pressed="false">MAYBE</button><button type="button" data-f="open" aria-pressed="false">NOT PICKED</button>
+</div>
+<section class="grid">
+<article class="v" data-id="01" style="--d:0.6s">
+  <div class="stage"><div class="pool"></div><img src="vials/01-frosted-wrap-band.png" alt="PEPTICITY vial, frosted wrap band label, BPC-157 10 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">01</span><h3>FROSTED WRAP BAND</h3><p class="prod">BPC-157 · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 01">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="02" style="--d:1.2s">
+  <div class="stage"><div class="pool"></div><img src="vials/02-mirror-chrome-strip.png" alt="PEPTICITY vial, mirror chrome strip label, NAD+ 1000 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">02</span><h3>MIRROR CHROME STRIP</h3><p class="prod">NAD+ · 1000 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 02">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="03" style="--d:1.8s">
+  <div class="stage"><div class="pool"></div><img src="vials/03-laser-etched-glass.png" alt="PEPTICITY vial, laser-etched glass label, GHK-Cu 50 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">03</span><h3>LASER-ETCHED GLASS</h3><p class="prod">GHK-Cu · 50 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 03">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="04" style="--d:2.4s">
+  <div class="stage"><div class="pool"></div><img src="vials/04-smoked-glass-panel.png" alt="PEPTICITY vial, smoked glass panel label, TB-500 10 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">04</span><h3>SMOKED GLASS PANEL</h3><p class="prod">TB-500 · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 04">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="05" style="--d:0.0s">
+  <div class="stage"><div class="pool"></div><img src="vials/05-uv-black-chrome.png" alt="PEPTICITY vial, uv black frost label, TIRZEPATIDE 15 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">05</span><h3>UV BLACK FROST</h3><p class="prod">TIRZEPATIDE · 15 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 05">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="06" style="--d:0.6s">
+  <div class="stage"><div class="pool"></div><img src="vials/06-floating-clear-sleeve.png" alt="PEPTICITY vial, floating clear sleeve label, RETATRUTIDE 10 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">06</span><h3>FLOATING CLEAR SLEEVE</h3><p class="prod">RETATRUTIDE · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 06">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="07" style="--d:1.2s">
+  <div class="stage"><div class="pool"></div><img src="vials/07-vertical-chrome-spine.png" alt="PEPTICITY vial, vertical chrome spine label, EPITALON 50 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">07</span><h3>VERTICAL CHROME SPINE</h3><p class="prod">EPITALON · 50 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 07">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="08" style="--d:1.8s">
+  <div class="stage"><div class="pool"></div><img src="vials/08-liquid-glass-lens.png" alt="PEPTICITY vial, liquid glass lens label, MOTS-C 40 MG" width="680" height="1024" loading="eager" decoding="async"></div>
+  <div class="meta"><span class="num">08</span><h3>LIQUID GLASS LENS</h3><p class="prod">MOTS-C · 40 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 08">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="09" style="--d:2.4s">
+  <div class="stage"><div class="pool"></div><img src="vials/09-white-frost-window.png" alt="PEPTICITY vial, white frost window label, IPAMORELIN 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">09</span><h3>WHITE FROST WINDOW</h3><p class="prod">IPAMORELIN · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 09">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="10" style="--d:0.0s">
+  <div class="stage"><div class="pool"></div><img src="vials/10-gold-chrome-hairline.png" alt="PEPTICITY vial, gold-chrome hairline label, TESAMORELIN 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">10</span><h3>GOLD-CHROME HAIRLINE</h3><p class="prod">TESAMORELIN · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 10">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="11" style="--d:0.6s">
+  <div class="stage"><div class="pool"></div><img src="vials/11-matte-black-half.png" alt="PEPTICITY vial, matte black half-wrap label, SEMAX 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">11</span><h3>MATTE BLACK HALF-WRAP</h3><p class="prod">SEMAX · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 11">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="12" style="--d:1.2s">
+  <div class="stage"><div class="pool"></div><img src="vials/12-prism-edge-acrylic.png" alt="PEPTICITY vial, prism edge acrylic label, SELANK 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">12</span><h3>PRISM EDGE ACRYLIC</h3><p class="prod">SELANK · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 12">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="13" style="--d:1.8s">
+  <div class="stage"><div class="pool"></div><img src="vials/13-micro-grid-etch.png" alt="PEPTICITY vial, micro-grid etch label, KPV 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">13</span><h3>MICRO-GRID ETCH</h3><p class="prod">KPV · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 13">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="14" style="--d:2.4s">
+  <div class="stage"><div class="pool"></div><img src="vials/14-chrome-frost-split.png" alt="PEPTICITY vial, chrome and frost split label, SS-31 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">14</span><h3>CHROME AND FROST SPLIT</h3><p class="prod">SS-31 · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 14">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="15" style="--d:0.0s">
+  <div class="stage"><div class="pool"></div><img src="vials/15-twin-frost-bands.png" alt="PEPTICITY vial, twin frost bands label, GLUTATHIONE 1500 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">15</span><h3>TWIN FROST BANDS</h3><p class="prod">GLUTATHIONE · 1500 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 15">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="16" style="--d:0.6s">
+  <div class="stage"><div class="pool"></div><img src="vials/16-black-glass-shield.png" alt="PEPTICITY vial, black glass shield label, AOD-9604 5 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">16</span><h3>BLACK GLASS SHIELD</h3><p class="prod">AOD-9604 · 5 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 16">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="17" style="--d:1.2s">
+  <div class="stage"><div class="pool"></div><img src="vials/17-diagonal-frost-slash.png" alt="PEPTICITY vial, diagonal frost slash label, 5-AMINO-1MQ 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">17</span><h3>DIAGONAL FROST SLASH</h3><p class="prod">5-AMINO-1MQ · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 17">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="18" style="--d:1.8s">
+  <div class="stage"><div class="pool"></div><img src="vials/18-embossed-clear-type.png" alt="PEPTICITY vial, embossed clear type label, THYMOSIN ALPHA-1 10 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">18</span><h3>EMBOSSED CLEAR TYPE</h3><p class="prod">THYMOSIN ALPHA-1 · 10 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 18">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="19" style="--d:2.4s">
+  <div class="stage"><div class="pool"></div><img src="vials/19-smoked-sleeve-chrome.png" alt="PEPTICITY vial, smoked full sleeve label, CJC-1295 DAC 5 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">19</span><h3>SMOKED FULL SLEEVE</h3><p class="prod">CJC-1295 DAC · 5 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 19">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+<article class="v" data-id="20" style="--d:0.0s">
+  <div class="stage"><div class="pool"></div><img src="vials/20-pale-gold-chrome-foil.png" alt="PEPTICITY vial, pale gold-chrome foil label, GLOW BLEND 70 MG" width="680" height="1024" loading="lazy" decoding="async"></div>
+  <div class="meta"><span class="num">20</span><h3>PALE GOLD-CHROME FOIL</h3><p class="prod">GLOW BLEND · 70 MG</p></div>
+  <div class="pick" role="group" aria-label="Pick for design 20">
+    <button type="button" data-v="yes">YES</button><button type="button" data-v="maybe">MAYBE</button><button type="button" data-v="no">NO</button>
+  </div>
+</article>
+</section>
+<footer>Concept renders for review only. Labels show product name and strength only. Picks stay in this browser.</footer>
+</main>
+<script>
+(function(){
+  var KEY='pepticity-vial-lab-picks', picks={};
+  try{picks=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){picks={};}
+  var cards=[].slice.call(document.querySelectorAll('.v')), filter='all';
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(picks));}catch(e){}}
+  function render(){
+    var c={yes:0,maybe:0,no:0};
+    cards.forEach(function(el){
+      var p=picks[el.dataset.id]||'';
+      if(p)c[p]++;
+      el.dataset.pick=p;
+      el.querySelectorAll('.pick button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===p?'true':'false');});
+      var show=filter==='all'||(filter==='open'?!p:p===filter);
+      el.classList.toggle('hide',!show);
+    });
+    document.getElementById('cy').textContent=c.yes;document.getElementById('cm').textContent=c.maybe;document.getElementById('cn').textContent=c.no;
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.pick button');
+    if(b){var id=b.closest('.v').dataset.id;picks[id]=picks[id]===b.dataset.v?'':b.dataset.v;if(!picks[id])delete picks[id];save();render();return;}
+    var f=e.target.closest('.filters button');
+    if(f){filter=f.dataset.f;document.querySelectorAll('.filters button').forEach(function(x){x.setAttribute('aria-pressed',x===f?'true':'false');});render();}
+  });
+  render();
+})();
+</script>
