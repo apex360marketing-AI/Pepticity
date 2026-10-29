@@ -241,3 +241,13 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - Work the site and dashboards in parallel; send a site update to review.
 - Every update: point-form notes of what will be built, plus recommendations. Always.
 - The dashboard next-level options (10) were sent; owner hasn't picked yet.
+
+## Added 29 Oct (vials round 2, font)
+- Don't design all bottles fully yet (font pending).
+- The owner's font = the 3D "BLACK" lettering image (design/references/pepticity/3d-metal-type-BLACK.png); use it for PEPTICITY Studio, the P, the logo, everything; the spinning centre emblem gets raised 3D lettering in it. Audit that it's right. Plus 2 extra similar 3D fonts: UV mixed with matte, a very small amount of luminescence; on scroll it spins and "does a little funky junky".
+- No pills: the top dashboard switch must match the other buttons.
+- Hover light sweep: left to right, one at a time, slow, classy, smooth.
+- Vial 09: move the centre clear window under the vertical PEPTICITY, PEPTICITY over it, smaller, nothing on the cap.
+- 5 remixes of 09/07/02/14: vertical off-centre PEPTICITY; front = posh branding, back = name + mg.
+- 5 more with PEPTICITY on an angle; very clean.
+- Font questions sent (is the picture the font; draw missing letters; 3D finish) — awaiting answers.
