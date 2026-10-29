@@ -73,7 +73,7 @@ if BOT_JS.exists() and BOT_CSS.exists():
     state = "LIVE ON THIS PAGE"
     block = TRY + '<p class="fine">Answers come only from the approved answer library. Prices are from your catalogue. Sign-ups here are previews and send nothing.</p>'
     bot = ('<link rel="stylesheet" data-pepbot="1" href="data:text/css,">\n<style>' + BOT_CSS.read_text() + '</style>\n'
-           '<script>window.PEPBOT_CONFIG={greetDelay:25000};</script>\n<script>' + BOT_JS.read_text() + '</script>')
+           '<script>window.PEPBOT_CONFIG={greetDelay:25000};</script>\n<script>' + BOT_JS.read_text().replace('</script', '<\\/script') + '</script>')
 else:
     state = "DEMO ARRIVING"
     block = CHAT + """

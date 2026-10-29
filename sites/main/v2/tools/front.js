@@ -11,7 +11,7 @@ const OUT = __dirname + '/../shots/';
     p.on('pageerror', e => errs.push('PE ' + e.message)); p.on('console', m => { if (m.type() === 'error') errs.push('CE ' + m.text().slice(0, 160)); });
     const tag = (mob ? 'mob' : 'desk') + '-' + V;
     await p.goto('http://127.0.0.1:8799/index.html?v=' + V);
-    await p.waitForTimeout(4200); await p.screenshot({ path: OUT + tag + '-00-loader.png', timeout: 120000 });
+    await p.waitForFunction(() => window.__type3d && window.__type3d.frames > 3, null, { timeout: 30000 }).catch(() => {}); await p.waitForTimeout(1500); await p.screenshot({ path: OUT + tag + '-00-loader.png', timeout: 120000 });
     await p.waitForFunction(() => !document.documentElement.classList.contains('intro-on'), null, { timeout: 30000 });
     await p.waitForTimeout(2600); await p.screenshot({ path: OUT + tag + '-01-hero.png', timeout: 120000 });
     const sw = await p.evaluate(() => document.documentElement.scrollWidth);

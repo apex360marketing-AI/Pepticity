@@ -117,7 +117,12 @@ async function main() {
     };
     front.addSlot(el, slot);
   }
-  document.querySelectorAll('[data-word3d]').forEach(wordPanel);
+  /* the loader words mount first so the entrance shows them at once; the rest follow after the first frames */
+  const loaderOn = D.classList.contains('intro-on');
+  document.querySelectorAll('.loader [data-word3d]').forEach(wordPanel);
+  const rest = () => document.querySelectorAll('[data-word3d]').forEach(el => { if (!el.closest('.loader')) wordPanel(el); });
+  if (loaderOn) await new Promise(res => { const t0 = performance.now(); (function w() { if ((window.__type3d && window.__type3d.frames > 2) || performance.now() - t0 > 4000) res(); else setTimeout(w, 80); })(); });
+  rest();
 
   /* interest icons */
   function shapeMesh(shapes, depth = 0.16, bevel = 0.02) {

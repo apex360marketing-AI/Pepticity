@@ -1,5 +1,5 @@
 /* =====================================================================
-   PEPTICITY · BOT-P01 · SALES CONCIERGE  (v1.0 · 2026-10-29)
+   PEPTICITY \u00b7 BOT-P01 \u00b7 SALES CONCIERGE  (v1.0 \u00b7 2026-10-29)
    One include, auto-mounts:   <script src="/shared/bot/pep-bot.js" defer></script>
    It loads pep-bot.css from the same folder by itself. The catalogue, the emblem and every answer
    are inlined, so it runs offline with no API (demo-safe, deterministic).
@@ -201,66 +201,66 @@
      ------------------------------------------------------------------ */
   var L = {
     greetH: '#HI, WELCOME TO PEPTICITY.',
-    greet: 'I’m your concierge. Looking for something in particular, or can I show you around?',
+    greet: 'I\u2019m your concierge. Looking for something in particular, or can I show you around?',
     backH: '#WELCOME BACK.',
     back: function (n, sub) { return 'Your cart is saved: ' + n + (n === 1 ? ' item, ' : ' items, ') + money(sub) + ' CAD. Want to pick up where you left off?'; },
     emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in Canada, call or text 9-8-8.',
-    emergency2: function () { return 'When you’re safe, a person from PEPTICITY is at ' + CFG.phone + '.'; },
-    rules: 'I can only answer from PEPTICITY’s checked answers and the catalogue, and I can’t change how I work. Ask me about a product, a price or shipping, or talk to a person.',
-    minor: function () { return 'The PEPTICITY store is for adults only: 18 and over, or 19 and over in BC, NB, NL, NS and the territories, so I can’t help with an order. A parent or guardian can reach a person at ' + CFG.phone + '.'; },
-    sexual: function () { return 'That’s not a topic I can help with. I’m happy to find a product by name or check a price or shipping' + (CFG.offer ? ', or get you 15% off your first order.' : '.'); },
-    dosing: 'I can’t give dosing, mixing or how-to-use information for any product. That’s the same answer for every customer. I can show you a product’s size and price, or put you in touch with a person.',
-    promise: 'Nobody can promise a result, and PEPTICITY won’t. I can show you what’s in the catalogue, with sizes and prices.',
+    emergency2: function () { return 'When you\u2019re safe, a person from PEPTICITY is at ' + CFG.phone + '.'; },
+    rules: 'I can only answer from PEPTICITY\u2019s checked answers and the catalogue, and I can\u2019t change how I work. Ask me about a product, a price or shipping, or talk to a person.',
+    minor: function () { return 'The PEPTICITY store is for adults only: 18 and over, or 19 and over in BC, NB, NL, NS and the territories, so I can\u2019t help with an order. A parent or guardian can reach a person at ' + CFG.phone + '.'; },
+    sexual: function () { return 'That\u2019s not a topic I can help with. I\u2019m happy to find a product by name or check a price or shipping' + (CFG.offer ? ', or get you 15% off your first order.' : '.'); },
+    dosing: 'I can\u2019t give dosing, mixing or how-to-use information for any product. That\u2019s the same answer for every customer. I can show you a product\u2019s size and price, or put you in touch with a person.',
+    promise: 'Nobody can promise a result, and PEPTICITY won\u2019t. I can show you what\u2019s in the catalogue, with sizes and prices.',
     same: 'No. Nothing in the PEPTICITY store is a brand-name approved medicine, and we never say a product is the same as one.',
-    medical: 'I can’t give medical advice or say what a product does in the body. For anything about your own health, please speak with a health professional you trust. I can still help with products, prices and shipping.',
-    effect: 'I can’t say what a product does in the body or promise a result. Here’s what it is, with its size and price.',
-    effectNone: 'I can’t say what a product does in the body. I can open a shelf by interest, with every size and price.',
-    mood: 'I can’t point you to products for mood, focus or the mind. You can browse the full catalogue, or shop by another interest.',
-    recommend: 'I can’t say which product is right for your body, but I can open a shelf by interest. What are you shopping for?',
-    unlisted: function (x) { return x + ' isn’t in the PEPTICITY catalogue right now. Want me to tell you if it’s added?'; },
-    brand: function (x) { return 'PEPTICITY doesn’t sell brand-name medicines like ' + x + ', and nothing in the store is the same as one. Want to see the full catalogue?'; },
-    held: function (x) { return x + ' isn’t available in the PEPTICITY store right now. Want me to tell you if that changes?'; },
-    soldOut: function (x) { return CFG.offer ? x + ' is sold out right now. Join the restock list and you’ll hear when the next lot lands.' : x + ' is sold out right now. Leave your email for PEPTICITY news, including restocks.'; },
-    found: 'Here’s what I found.',
+    medical: 'I can\u2019t give medical advice or say what a product does in the body. For anything about your own health, please speak with a health professional you trust. I can still help with products, prices and shipping.',
+    effect: 'I can\u2019t say what a product does in the body or promise a result. Here\u2019s what it is, with its size and price.',
+    effectNone: 'I can\u2019t say what a product does in the body. I can open a shelf by interest, with every size and price.',
+    mood: 'I can\u2019t point you to products for mood, focus or the mind. You can browse the full catalogue, or shop by another interest.',
+    recommend: 'I can\u2019t say which product is right for your body, but I can open a shelf by interest. What are you shopping for?',
+    unlisted: function (x) { return x + ' isn\u2019t in the PEPTICITY catalogue right now. Want me to tell you if it\u2019s added?'; },
+    brand: function (x) { return 'PEPTICITY doesn\u2019t sell brand-name medicines like ' + x + ', and nothing in the store is the same as one. Want to see the full catalogue?'; },
+    held: function (x) { return x + ' isn\u2019t available in the PEPTICITY store right now. Want me to tell you if that changes?'; },
+    soldOut: function (x) { return CFG.offer ? x + ' is sold out right now. Join the restock list and you\u2019ll hear when the next lot lands.' : x + ' is sold out right now. Leave your email for PEPTICITY news, including restocks.'; },
+    found: 'Here\u2019s what I found.',
     identity: function (n, w) { return n + ': ' + w; },
     tailOffer: 'Join the PEPTICITY team and your first order is 15% off.',
     tailJoined: 'Your 15% team discount applies at checkout.',
     prices: function () { var r = priceRange(); return 'Every price is in Canadian dollars, exactly as listed in the store. The catalogue runs from ' + money(r[0]) + ' to ' + money(r[1]) + ' a vial. Tell me a product name, or browse the full list.'; },
-    ship: 'Shipping details are being finalised: [ship-to provinces, delivery times, shipping cost and free-shipping threshold: Grace to confirm]. You’ll always see the full price, shipping included, before you pay.',
+    ship: 'Shipping details are being finalised: [ship-to provinces, delivery times, shipping cost and free-shipping threshold: Grace to confirm]. You\u2019ll always see the full price, shipping included, before you pay.',
     offerH: '#GRAND OPENING: 15% OFF YOUR FIRST ORDER.',
-    offer: 'Join the PEPTICITY team with your email and the 15% applies to your first order. Tick the box if you’d also like Grace’s monthly letter and first word on restocks.',
-    offerJoined: function () { return 'You’re on the PEPTICITY team. Your 15% applies to your first order at checkout. Your code: ' + CFG.code + '.'; },
+    offer: 'Join the PEPTICITY team with your email and the 15% applies to your first order. Tick the box if you\u2019d also like Grace\u2019s monthly letter and first word on restocks.',
+    offerJoined: function () { return 'You\u2019re on the PEPTICITY team. Your 15% applies to your first order at checkout. Your code: ' + CFG.code + '.'; },
     joinOffH: '#JOIN THE PEPTICITY TEAM.',
-    joinOff: 'Join for Grace’s monthly letter and first word on new lots.',
+    joinOff: 'Join for Grace\u2019s monthly letter and first word on new lots.',
     person: function () { return 'Happy to connect you with a person. Call ' + CFG.phone + ' or email ' + CFG.email + ', or leave your details below and someone from PEPTICITY will get back to you. [Hours: Grace to confirm]'; },
-    who: 'I’m the PEPTICITY concierge, an automated assistant. I’m not a health professional and I can’t give medical advice. I can help with products, prices, shipping and your 15%.',
+    who: 'I\u2019m the PEPTICITY concierge, an automated assistant. I\u2019m not a health professional and I can\u2019t give medical advice. I can help with products, prices, shipping and your 15%.',
     peptide: 'A peptide is a short chain of amino acids, the building blocks of proteins. The body makes many of its own.',
-    legal: 'Products in the PEPTICITY store are not approved as medicines by Health Canada or the US FDA, and I can’t give legal advice. [Final wording: confirm with counsel]',
-    research: 'I can tell you what a product is, its size and its price. I can’t say how anyone uses it.',
-    testing: 'Lot certificates will appear on each product once they’re available. [Certificates: Grace to confirm]',
+    legal: 'Products in the PEPTICITY store are not approved as medicines by Health Canada or the US FDA, and I can\u2019t give legal advice. [Final wording: confirm with counsel]',
+    research: 'I can tell you what a product is, its size and its price. I can\u2019t say how anyone uses it.',
+    testing: 'Lot certificates will appear on each product once they\u2019re available. [Certificates: Grace to confirm]',
     order: function () { return 'Order lookup arrives with the store. [Order tracking: connects at launch] For now, a person can help at ' + CFG.email + '.'; },
-    payment: '[Payment methods: Grace to confirm]. You’ll always see the full price before you pay.',
+    payment: '[Payment methods: Grace to confirm]. You\u2019ll always see the full price before you pay.',
     returns: function () { return '[Returns and damaged-parcel policy: Grace to confirm]. A person can help at ' + CFG.email + '.'; },
     discreet: '[Packaging: Grace to confirm]. Your details are never sold. [Privacy policy: confirm with counsel]',
     age: 'The PEPTICITY store is for adults: 18 and over, or 19 and over in BC, NB, NL, NS and the territories. Age is confirmed at checkout.',
-    thanks: 'You’re welcome. Anything else I can find for you?',
-    fallback: 'I don’t have a checked answer for that yet, and I won’t guess. I can help with products, prices, shipping or your 15%, or put you in touch with a person.',
-    find: 'Type a product name or a nickname, like BPC, TB-500, NAD or MOTS-C, and I’ll show you the size and price.',
-    interestAsk: 'What are you shopping for? Pick an interest and I’ll open that shelf.',
-    catalogue: 'Here’s the full PEPTICITY catalogue, A to Z, in Canadian dollars. Tap ADD to put one in your cart.',
-    shelf1: function (I) { return 'Here’s the ' + I.t + ' shelf: products researched in the context of ' + I.area + '.'; },
-    shelf2: 'I can’t say what any product does for you, but every size and price is below.',
-    weightClosed: 'WEIGHT GOALS covers products researched in the context of metabolism. That shelf isn’t open yet. Leave your email and you’ll hear first when it is.',
+    thanks: 'You\u2019re welcome. Anything else I can find for you?',
+    fallback: 'I don\u2019t have a checked answer for that yet, and I won\u2019t guess. I can help with products, prices, shipping or your 15%, or put you in touch with a person.',
+    find: 'Type a product name or a nickname, like BPC, TB-500, NAD or MOTS-C, and I\u2019ll show you the size and price.',
+    interestAsk: 'What are you shopping for? Pick an interest and I\u2019ll open that shelf.',
+    catalogue: 'Here\u2019s the full PEPTICITY catalogue, A to Z, in Canadian dollars. Tap ADD to put one in your cart.',
+    shelf1: function (I) { return 'Here\u2019s the ' + I.t + ' shelf: products researched in the context of ' + I.area + '.'; },
+    shelf2: 'I can\u2019t say what any product does for you, but every size and price is below.',
+    weightClosed: 'WEIGHT GOALS covers products researched in the context of metabolism. That shelf isn\u2019t open yet. Leave your email and you\u2019ll hear first when it is.',
     sleepThin: 'SLEEP covers products researched in the context of the body clock (circadian rhythm). Right now the catalogue has one: EPITALON. Leave your email for SLEEP news as the shelf grows.',
     cartEmpty: 'Your cart is empty. Want me to open a shelf for you?',
     checkout: 'Checkout opens in the PEPTICITY store: guest checkout, with the full price shown before you pay. [Demo: checkout connects at launch]',
-    added: function (r, q) { var n = cartCount(); return 'Added ' + (q > 1 ? q + ' × ' : '') + rowName(r) + ' ' + r[3] + '. Your cart: ' + n + (n === 1 ? ' item, ' : ' items, ') + money(cartSubtotal()) + ' CAD.'; },
+    added: function (r, q) { var n = cartCount(); return 'Added ' + (q > 1 ? q + ' \u00d7 ' : '') + rowName(r) + ' ' + r[3] + '. Your cart: ' + n + (n === 1 ? ' item, ' : ' items, ') + money(cartSubtotal()) + ' CAD.'; },
     preview: 'Preview only: nothing was sent.'
   };
 
   /* consent wording (CASL: one box per purpose, never pre-ticked) */
   var CONSENT = {
-    email: 'Yes, PEPTICITY may email me news, offers and Grace’s monthly letter. I can unsubscribe any time.',
+    email: 'Yes, PEPTICITY may email me news, offers and Grace\u2019s monthly letter. I can unsubscribe any time.',
     sms: 'Yes, PEPTICITY may text me news and offers. Message and data rates may apply. Reply STOP to stop.',
     shelf: function (area) { return 'Yes, PEPTICITY may email me the ' + area + ' shelf and occasional news. I can unsubscribe any time.'; },
     restock: function (x) { return 'Yes, PEPTICITY may email me when ' + x + ' is back, plus occasional news. I can unsubscribe any time.'; },
@@ -274,8 +274,8 @@
   var LEET = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't' };
   function norm(t) {
     t = String(t == null ? '' : t).slice(0, 400);
-    try { t = t.normalize('NFKD').replace(/[̀-ͯ]/g, ''); } catch (e) {}
-    t = t.replace(/[​-‏⁠﻿]/g, '').toLowerCase().replace(/[‘’`´]/g, "'");
+    try { t = t.normalize('NFKD').replace(/[\u0300-\u036f]/g, ''); } catch (e) {}
+    t = t.replace(/[\u200b-\u200f\u2060\ufeff]/g, '').toLowerCase().replace(/[\u2018\u2019`\u00b4]/g, "'");
     t = t.replace(/\+/g, ' plus ').replace(/%/g, ' percent ').replace(/\$/g, ' dollars ');
     t = t.replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
     return ' ' + t + ' ';
@@ -485,9 +485,9 @@
       case 'checkout': return cartCount() ? R('checkout', [L.checkout], { checkout: true, chips: CFG.offer && !STATE.joined ? ['offer', 'cart'] : ['cart'] }) : cartReply();
       case 'i': return shelfReply(a) || menuReply(false);
       case 'p': { var r = BY_SLUG[a]; if (!r || !visibleRow(r)) return menuReply(false); return productReply([r[1]], ' ' + r[3].toLowerCase().replace(' ', '') + ' ' + (r[2] ? r[2].toLowerCase() : '') + ' ', 'identity'); }
-      case 'mail': { var I = INTEREST[a]; return I ? R('mail', ['Leave your email and I’ll send you the ' + I.t + ' shelf.'], { form: { type: 'interest', interest: a }, chips: [] }) : menuReply(false); }
+      case 'mail': { var I = INTEREST[a]; return I ? R('mail', ['Leave your email and I\u2019ll send you the ' + I.t + ' shelf.'], { form: { type: 'interest', interest: a }, chips: [] }) : menuReply(false); }
       case 'restock': { var rr = BY_SLUG[a]; return rr ? R('restock', [L.soldOut(rowName(rr))], { form: { type: 'restock', slug: a }, chips: ['catalogue'] }) : menuReply(false); }
-      case 'notify': return R('notify', ['Leave your email and I’ll tell you if ' + a + ' is added.'], { form: { type: 'request', name: a }, chips: ['catalogue'] });
+      case 'notify': return R('notify', ['Leave your email and I\u2019ll tell you if ' + a + ' is added.'], { form: { type: 'request', name: a }, chips: ['catalogue'] });
     }
     return menuReply(false);
   }
@@ -719,7 +719,7 @@
     head.appendChild(emblem(46));
     var ht = el('div', 'pb-head__text');
     ht.appendChild(el('div', 'pb-head__word', 'PEPTICITY'));
-    var st = el('div', 'pb-head__status'); st.appendChild(el('i', 'pb-dot')); st.appendChild(D.createTextNode('CONCIERGE · HERE 24/7'));
+    var st = el('div', 'pb-head__status'); st.appendChild(el('i', 'pb-dot')); st.appendChild(D.createTextNode('CONCIERGE \u00b7 HERE 24/7'));
     ht.appendChild(st); head.appendChild(ht);
     UI.cartBtn = el('button', 'pb-iconbtn pb-cartbtn', null, { type: 'button', 'aria-label': 'View cart' });
     UI.cartBtn.appendChild(el('span', 'pb-cartbtn__l', 'CART'));
@@ -743,7 +743,7 @@
     var send = btn('SEND', 'pc-btn--sm pb-send', { type: 'submit' });
     form.appendChild(send);
     base.appendChild(form);
-    base.appendChild(el('div', 'pb-fine', 'Automated concierge · Not medical advice · Prices in CAD'));
+    base.appendChild(el('div', 'pb-fine', 'Automated \u00b7 Not medical advice \u00b7 Prices in CAD'));
     panel.appendChild(base);
     edge(panel, 16);
 
@@ -837,8 +837,8 @@
     if (k === 'i') return INTEREST[a] ? INTEREST[a].t : a;
     if (k === 'p') return BY_SLUG[a] ? 'SEE ' + FAM[BY_SLUG[a][1]][0] : a;
     if (k === 'mail') return 'EMAIL ME THIS SHELF';
-    if (k === 'restock') return CFG.offer ? 'TELL ME WHEN IT’S BACK' : 'SEND ME PEPTICITY NEWS';
-    if (k === 'notify') return 'TELL ME IF IT’S ADDED';
+    if (k === 'restock') return CFG.offer ? 'TELL ME WHEN IT\u2019S BACK' : 'SEND ME PEPTICITY NEWS';
+    if (k === 'notify') return 'TELL ME IF IT\u2019S ADDED';
     return id.toUpperCase();
   }
   function chip(id) {
@@ -906,7 +906,7 @@
       var wrap = el('div', r.cards.length > 2 ? 'pb-cards pb-cards--rail' : 'pb-cards');
       r.cards.forEach(function (s, i) { var c = card(s, r.showWhat && r.cards.length <= 2); if (c) { c.style.setProperty('--i', i); wrap.appendChild(c); } });
       m.appendChild(wrap);
-      if (r.cards.length > 2) m.appendChild(el('div', 'pb-railhint', 'SWIPE FOR MORE →'));
+      if (r.cards.length > 2) m.appendChild(el('div', 'pb-railhint', 'SWIPE FOR MORE \u2192'));
     }
     if (r.list) m.appendChild(list(r.list));
     if (r.cart) m.appendChild(cartView());
@@ -933,18 +933,18 @@
     top.appendChild(el('h4', 'pb-card__name', f[0]));
     if (sold) top.appendChild(el('span', 'pb-sold', 'SOLD OUT'));
     c.appendChild(top);
-    c.appendChild(el('div', 'pb-card__size', (r[2] ? r[2] + ' · ' : '') + r[3]));
+    c.appendChild(el('div', 'pb-card__size', (r[2] ? r[2] + ' \u00b7 ' : '') + r[3]));
     var pr = el('div', 'pb-card__price'); pr.appendChild(D.createTextNode(money(r[4]))); pr.appendChild(el('span', null, ' CAD'));
     c.appendChild(pr);
     var what = el('p', 'pb-card__what'); richText(what, f[2]); c.appendChild(what);
     var acts = el('div', 'pb-card__acts');
-    if (sold) acts.appendChild(btn(CFG.offer ? 'TELL ME WHEN IT’S BACK' : 'SEND ME NEWS', 'pc-btn--sm pc-btn--block', { 'data-chip': 'restock:' + slug }));
+    if (sold) acts.appendChild(btn(CFG.offer ? 'TELL ME WHEN IT\u2019S BACK' : 'SEND ME NEWS', 'pc-btn--sm pc-btn--block', { 'data-chip': 'restock:' + slug }));
     else acts.appendChild(btn('ADD TO CART', 'pc-btn--sm pb-add', { 'data-add': slug, 'aria-label': 'Add ' + f[0] + ' ' + r[3] + ' to cart' }));
     acts.appendChild(el('button', 'pb-what', 'WHAT IT IS', { type: 'button', 'data-what': '1', 'aria-expanded': whatOpen ? 'true' : 'false' }));
     c.appendChild(acts);
     if (CFG.offer && !sold) {
       var qb = el('div', 'pb-card__qb');
-      richText(qb, '3 OF THE SAME VIAL · SAVE [X]%');
+      qb.appendChild(richText(el('span'), '3 OF THE SAME VIAL \u00b7 SAVE [X%]'));
       var a3 = el('button', 'pb-add3', 'ADD 3', { type: 'button', 'data-add': slug, 'data-n': '3', 'aria-label': 'Add 3 of ' + f[0] + ' ' + r[3] });
       qb.appendChild(a3); c.appendChild(qb);
     }
@@ -955,7 +955,7 @@
     slugs.forEach(function (s) {
       var r = BY_SLUG[s], sold = isSoldOut(s), li = el('li', 'pb-list__row');
       var nm = el('button', 'pb-list__name', null, { type: 'button', 'data-chip': 'p:' + s });
-      nm.appendChild(el('b', null, FAM[r[1]][0])); nm.appendChild(el('span', null, (r[2] && r[1] === 'cjc' ? r[2] + ' · ' : '') + r[3]));
+      nm.appendChild(el('b', null, FAM[r[1]][0])); nm.appendChild(el('span', null, (r[2] && r[1] === 'cjc' ? r[2] + ' \u00b7 ' : '') + r[3]));
       li.appendChild(nm);
       li.appendChild(el('span', 'pb-list__price', money(r[4])));
       if (sold) li.appendChild(el('button', 'pb-list__add is-sold', 'SOLD OUT', { type: 'button', 'data-chip': 'restock:' + s }));
@@ -977,10 +977,10 @@
     if (!lines.length) { box.appendChild(el('p', 'pb-p', L.cartEmpty)); return; }
     lines.forEach(function (l) {
       var row = el('div', 'pb-cart__row');
-      var nm = el('div', 'pb-cart__name'); nm.appendChild(el('b', null, rowName(l.row))); nm.appendChild(el('span', null, l.row[3] + ' · ' + money(l.row[4])));
+      var nm = el('div', 'pb-cart__name'); nm.appendChild(el('b', null, rowName(l.row))); nm.appendChild(el('span', null, l.row[3] + ' \u00b7 ' + money(l.row[4])));
       row.appendChild(nm);
       var q = el('div', 'pb-qty');
-      q.appendChild(el('button', null, '−', { type: 'button', 'data-qty': l.row[0], 'data-d': '-1', 'aria-label': 'One fewer' }));
+      q.appendChild(el('button', null, '\u2212', { type: 'button', 'data-qty': l.row[0], 'data-d': '-1', 'aria-label': 'One fewer' }));
       q.appendChild(el('span', null, String(l.qty)));
       q.appendChild(el('button', null, '+', { type: 'button', 'data-qty': l.row[0], 'data-d': '1', 'aria-label': 'One more' }));
       row.appendChild(q);
@@ -991,7 +991,7 @@
     var tot = el('div', 'pb-cart__tot');
     function line(a, b, cls) { var d = el('div', 'pb-cart__line ' + (cls || '')); d.appendChild(el('span', null, a)); var v = el('span'); richText(v, b); d.appendChild(v); tot.appendChild(d); }
     line('SUBTOTAL', money(sub) + ' CAD');
-    if (CFG.offer && STATE.joined) line('PEPTICITY TEAM · 15% OFF FIRST ORDER', '−' + money(Math.round(sub * 15) / 100), 'is-disc');
+    if (CFG.offer && STATE.joined) line('PEPTICITY TEAM \u00b7 15% OFF FIRST ORDER', '\u2212' + money(Math.round(sub * 15) / 100), 'is-disc');
     line('SHIPPING', '$[X]');
     line('TAX EST.', '$[X]');
     line('TOTAL', money(CFG.offer && STATE.joined ? Math.round(sub * 85) / 100 : sub) + ' + shipping and tax', 'is-total');
@@ -1048,8 +1048,8 @@
     var cfg = {
       join: { t: CFG.offer ? 'JOIN THE PEPTICITY TEAM' : 'JOIN THE PEPTICITY TEAM', b: CFG.offer ? 'GET MY 15%' : 'JOIN THE TEAM', box: CONSENT.email, phone: true, need: false },
       interest: { t: I ? (I.gated || I.thin ? 'SEND ME ' + I.t + ' NEWS' : 'SEND ME THE ' + I.t + ' SHELF') : '', b: I && (I.gated || I.thin) ? 'SEND ME ' + I.t + ' NEWS' : 'SEND ME THE SHELF', box: I ? CONSENT.shelf(I.t.toLowerCase().replace('55+ and ', '55+ and ')) : '', need: true },
-      restock: { t: CFG.offer ? 'TELL ME WHEN IT’S BACK' : 'PEPTICITY NEWS', b: CFG.offer ? 'ADD ME TO THE LIST' : 'SEND ME NEWS', box: r ? (CFG.offer ? CONSENT.restock(rowName(r)) : CONSENT.email) : '', need: true },
-      request: { t: 'TELL ME IF IT’S ADDED', b: 'TELL ME', box: CONSENT.request(f.name || 'it'), need: true },
+      restock: { t: CFG.offer ? 'TELL ME WHEN IT\u2019S BACK' : 'PEPTICITY NEWS', b: CFG.offer ? 'ADD ME TO THE LIST' : 'SEND ME NEWS', box: r ? (CFG.offer ? CONSENT.restock(rowName(r)) : CONSENT.email) : '', need: true },
+      request: { t: 'TELL ME IF IT\u2019S ADDED', b: 'TELL ME', box: CONSENT.request(f.name || 'it'), need: true },
       person: { t: 'ASK A PERSON TO GET BACK TO ME', b: 'REQUEST A REPLY', box: CONSENT.person, phone: true, need: false, either: true }
     }[f.type];
     var form = el('form', 'pb-form', null, { novalidate: 'novalidate' });
@@ -1082,9 +1082,9 @@
       e.preventDefault();
       var email = em.value.trim(), phone = ph ? ph.value.trim() : '';
       var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email), okPhone = /^[+()\d\s.-]{7,}$/.test(phone);
-      if (cfg.either ? !(okEmail || okPhone) : !okEmail) { err.textContent = cfg.either ? 'Add an email or a phone number so we can reach you.' : 'That email doesn’t look right. Check it and try again.'; (okEmail ? ph : em).focus(); return; }
+      if (cfg.either ? !(okEmail || okPhone) : !okEmail) { err.textContent = cfg.either ? 'Add an email or a phone number so we can reach you.' : 'That email doesn\u2019t look right. Check it and try again.'; (okEmail ? ph : em).focus(); return; }
       if (cfg.need && !b1.cb.checked) { err.textContent = 'Tick the box so PEPTICITY is allowed to email you.'; b1.cb.focus(); return; }
-      if (phone && !okPhone) { err.textContent = 'That phone number doesn’t look right.'; ph.focus(); return; }
+      if (phone && !okPhone) { err.textContent = 'That phone number doesn\u2019t look right.'; ph.focus(); return; }
       err.textContent = '';
       var now = new Date().toISOString();
       var payload = {
@@ -1110,15 +1110,15 @@
           var code = el('div', 'pb-code'); code.appendChild(el('span', null, 'YOUR 15% CODE')); code.appendChild(el('b', null, CFG.code)); done.appendChild(code);
           done.appendChild(richText(el('p', 'pb-p'), 'It applies to your first order at checkout. [Demo code: Grace sets the real one and its end date]'));
         } else done.appendChild(el('div', 'pb-form__t', 'WELCOME TO THE PEPTICITY TEAM.'));
-        if (!b1.cb.checked) done.appendChild(el('p', 'pb-p pb-mute', 'You didn’t tick the box, so we won’t send you news.'));
+        if (!b1.cb.checked) done.appendChild(el('p', 'pb-p pb-mute', 'You didn\u2019t tick the box, so we won\u2019t send you news.'));
       } else if (f.type === 'restock') {
-        done.appendChild(el('div', 'pb-form__t', 'YOU’RE ON THE LIST.'));
-        done.appendChild(richText(el('p', 'pb-p'), 'We’ll email you when ' + rowName(r) + ' is back. [Your real place in line shows here once the store is live]'));
+        done.appendChild(el('div', 'pb-form__t', 'YOU\u2019RE ON THE LIST.'));
+        done.appendChild(richText(el('p', 'pb-p'), 'We\u2019ll email you when ' + rowName(r) + ' is back. [Your real place in line shows here once the store is live]'));
       } else if (f.type === 'person') {
         done.appendChild(el('div', 'pb-form__t', 'THANK YOU.'));
         done.appendChild(richText(el('p', 'pb-p'), 'Someone from PEPTICITY will get back to you. [Reply time: Grace to confirm]'));
       } else {
-        done.appendChild(el('div', 'pb-form__t', 'YOU’RE ON THE LIST.'));
+        done.appendChild(el('div', 'pb-form__t', 'YOU\u2019RE ON THE LIST.'));
         done.appendChild(el('p', 'pb-p', 'Thank you. Watch your inbox.'));
       }
       done.appendChild(el('p', 'pb-form__fine', L.preview));

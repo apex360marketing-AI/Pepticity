@@ -296,11 +296,12 @@
     stopScroll(); jump(0);
     var t0 = performance.now();
     (function wait() {   /* hold the words ~3.4 s once the 3D is up (or the flat fallback after 2.5 s) */
-      var ready = window.__gl && (window.__gl.ok !== undefined);
-      if (ready || performance.now() - t0 > 2500) introTimers.push(setTimeout(liftIntro, 3400));
+      var g = window.__gl, ready = g && (g.ok === false || (window.__type3d && window.__type3d.frames > 3));
+      if (/[?&]holdintro/.test(location.search)) return;   /* review aid: keep the loader on screen */
+      if (ready || performance.now() - t0 > 7000) introTimers.push(setTimeout(liftIntro, 3400));
       else introTimers.push(setTimeout(wait, 120));
     })();
-    introTimers.push(setTimeout(liftIntro, 9000));
+    if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(liftIntro, 14000));
     setTimeout(loadAll, 1500);
   }
   function runIntro() {
