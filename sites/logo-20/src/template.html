@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEPTICITY · 20 3D LOGO CHOICES</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url(data:font/woff2;base64,/*WOFF*/) format("woff2");font-display:block}
+:root{--bg:#0b0b0c;--ink:#e9ebee;--mute:#8d9198;--line:rgba(220,226,234,.16);--chrome:linear-gradient(180deg,#ffffff 0%,#c9ced5 38%,#6f747b 52%,#d7dbe0 70%,#9aa0a8 100%);
+  --cut:18px;--ease:cubic-bezier(.65,0,.35,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{color:var(--ink);font:400 15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden;min-height:100vh}
+/* living ground: near-black with a faint cool drift and a trace of UV black */
+.ground{position:fixed;inset:-20%;z-index:0;pointer-events:none;
+  background:radial-gradient(40% 35% at 30% 30%,rgba(190,198,210,.07),transparent 70%),radial-gradient(35% 30% at 72% 68%,rgba(28,22,44,.55),transparent 70%),var(--bg);
+  animation:drift 26s ease-in-out infinite alternate}
+.ground::after{content:"";position:absolute;inset:0;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes drift{to{transform:translate3d(4%,-3%,0) scale(1.06)}}
+#gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:3;pointer-events:none;display:block}
+main{position:relative;z-index:1}
+.w{width:min(1320px,92vw);margin:0 auto}
+.disp{font-family:"PEPTICITY BLACK",ui-sans-serif,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;font-weight:400}
+header{display:flex;justify-content:space-between;align-items:center;padding:26px 0}
+header .brand{font-size:15px;letter-spacing:.22em;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+header .tag{font-size:11px;letter-spacing:.26em;color:var(--mute)}
+.hero{padding:6vh 0 4vh;text-align:center}
+.kicker{font-size:11px;letter-spacing:.32em;color:var(--mute)}
+#hero-slot{height:clamp(150px,22vw,300px);margin:2vh auto 0;width:min(1100px,92vw)}
+h1{font-size:clamp(26px,4vw,52px);margin-top:3vh;line-height:1.15}
+h1 span{background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{max-width:620px;margin:18px auto 0;color:#b9bdc4}
+.how{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.how span{font-size:11px;letter-spacing:.22em;color:#cfd3d9;padding:9px 14px;border:1px solid var(--line);background:rgba(255,255,255,.035);backdrop-filter:blur(12px);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;padding:6vh 0 4vh}
+.card{position:relative;opacity:0;transform:translate3d(0,40px,0);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(mod(var(--i),4) * 70ms)}
+.card.in{opacity:1;transform:none}
+.card::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(255,255,255,.05) 40%,rgba(255,255,255,.18));
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.glass{position:relative;margin:1px;padding:14px 18px 20px;background:rgba(18,19,22,.72);backdrop-filter:blur(14px);overflow:hidden;
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.glass::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(235,240,246,.10) 50%,transparent 65%);transform:translateX(-110%)}
+.card:hover .glass::after{transition:transform 1.4s ease-in-out;transform:translateX(110%)}
+.slot{height:250px;margin:0 -8px;background:radial-gradient(60% 55% at 50% 48%,rgba(200,206,214,.08),transparent 72%)}
+.wm{font-family:"PEPTICITY BLACK",sans-serif;font-size:clamp(17px,1.55vw,22px);letter-spacing:.1em;text-align:center;margin-top:4px;
+  background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.meta{display:flex;align-items:baseline;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.code{font-family:"PEPTICITY BLACK",sans-serif;font-size:12px;letter-spacing:.14em;color:#fff}
+h3{font-family:"PEPTICITY BLACK",sans-serif;font-weight:400;font-size:12px;letter-spacing:.16em;color:#c7cbd1;text-transform:uppercase}
+.card p{font-size:13px;color:#9a9ea5;margin-top:6px;line-height:1.5}
+.rv{opacity:0;transform:translate3d(0,24px,0);transition:opacity 1s var(--ease),transform 1s var(--ease)}.rv.in{opacity:1;transform:none}
+footer{padding:4vh 0 10vh;text-align:center}
+footer .disp{font-size:clamp(18px,2.2vw,28px)}
+footer p{color:#9a9ea5;margin-top:10px}
+.nogl{display:none;padding:14px;text-align:center;color:#c7cbd1;border:1px solid var(--line);margin-top:20px}
+@media (max-width:1180px){#grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:900px){#grid{grid-template-columns:repeat(2,1fr);gap:16px}.slot{height:220px}}
+@media (max-width:620px){#grid{grid-template-columns:1fr}.slot{height:260px}header .tag{display:none}.how span{font-size:10px}}
+/* contact sheet mode (?sheet) */
+body.sheet header,body.sheet .hero,body.sheet footer,body.sheet .card p{display:none}
+body.sheet .w{width:1400px}
+body.sheet #grid{grid-template-columns:repeat(5,1fr);gap:12px;padding:14px 0}
+body.sheet .slot{height:172px}body.sheet .meta{margin-top:8px;padding-top:8px}body.sheet .glass{padding:8px 12px 12px}body.sheet .wm{font-size:16px}
+body.sheet .card{opacity:1;transform:none;transition:none}
+@media (prefers-reduced-motion:reduce){.ground{animation:none}.card,.rv{opacity:1;transform:none;transition:none}.card:hover .glass::after{transition:none}}
+</style>
+</head>
+<body>
+<div class="ground"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<main>
+  <div class="w">
+    <header><div class="brand disp">PEPTICITY</div><div class="tag disp">LOGO CHOICES · L01 TO L20</div></header>
+    <section class="hero">
+      <div class="kicker disp rv">CHROME AND BRUSHED GUNMETAL · YOUR FONT</div>
+      <div id="hero-slot" role="img" aria-label="PEPTICITY in 3D chrome letters"></div>
+      <h1 class="disp rv">20 3D MARKS. <span>PICK THE ONE.</span></h1>
+      <p class="lede rv">Each mark sits next to PEPTICITY in your font. Scroll and each one spins and changes. Move your pointer and it tilts toward you. Hover a card and it makes one full turn.</p>
+      <div class="how rv"><span class="disp">SCROLL · SPIN</span><span class="disp">POINTER · TILT</span><span class="disp">HOVER · ONE TURN</span></div>
+      <p class="nogl" id="nogl">3D needs WebGL, which this browser has turned off. The names and notes still show below.</p>
+    </section>
+    <section id="grid" aria-label="20 logo choices"></section>
+    <footer class="rv"><div class="disp">TELL US YOUR PICKS</div><p>Send the codes you like, for example L03 and L11. We refine the winner next.</p></footer>
+  </div>
+</main>
+<script type="application/json" id="glyph-data">/*GLYPHS*/</script>
+<script>if(/[?&]sheet/.test(location.search))document.body.classList.add('sheet');window.type3dFallback=function(){document.getElementById('nogl').style.display='block'};</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
+/*ENGINE*/
+/*MARKS*/
+</script>
+</body>
+</html>
