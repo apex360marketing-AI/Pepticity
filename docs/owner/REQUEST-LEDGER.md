@@ -321,3 +321,4 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - R155 · 29 Oct · Dashboards: "scroll past the bottom … the watermark coin … stops flat … that will be the footer … turns into the coin with the nice 3D". SAMPLE being built (sites/dashboard-sample).
 - R156 · 29 Oct · Members get a daily motivational quote in their dashboard that changes once a day, plus a phone notification ("a reason to keep the app"). SAMPLE being built; real push needs the installed app + a push service.
 - R157 · 29 Oct · Idea: built-in gym playlist ("pump up tunes … or is that too much"). Asked owner how (music licensing).
+- R158 · 29 Oct · "free monthly playlists … every month included in our newsletter … even if you don't sign up with Spotify … use it on YouTube". PULSE becomes a monthly drop (GYM/FOCUS/RECOVERY) with Spotify + YouTube links and a newsletter sign-up. In the dashboard sample.
