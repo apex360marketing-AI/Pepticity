@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Syne:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Barlow+Condensed:wght@600;700&family=Syne:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 
 :root{
   --matte:#0a0a0b; --uv:#0d0b13; --ink:#ecedf1; --ink2:#c3c7cf; --mute:#8c919b; --dim:#5d616a;
@@ -41,8 +41,11 @@ button,input,select,textarea{font:inherit;color:inherit}
   -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0,#000 22%,transparent 48%);mask-image:radial-gradient(circle at 50% 50%,#000 0,#000 22%,transparent 48%)}
 @keyframes drift{to{background-position:168px 582px}}
 .mark{position:absolute;left:50%;top:50%;width:min(86vmin,780px);aspect-ratio:1;margin:calc(min(86vmin,780px)/-2) 0 0 calc(min(86vmin,780px)/-2);
-  opacity:.085;transform:rotate(var(--spin,0deg));will-change:transform;filter:drop-shadow(0 0 30px rgba(146,118,255,.25))}
-.mark svg{width:100%;height:100%;display:block;position:relative}
+  opacity:.13}
+.mark svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mark .mring{transform:rotate(var(--spin,0deg));will-change:transform}
+.mark .mp{filter:drop-shadow(6px 10px 10px rgba(0,0,0,.55))}
+#smoke{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.3;mix-blend-mode:screen}
 /* matte black + UV black inside the watermark: a two-tone disc with a faint violet sheen behind the chrome rings */
 .mark::before{content:"";position:absolute;inset:2%;border-radius:50%;
   background:radial-gradient(60% 50% at 70% 25%,rgba(150,120,255,.55),transparent 70%),linear-gradient(118deg,#1a1a1d 0 49.6%,#1d1530 50.4% 100%);
@@ -370,7 +373,7 @@ textarea.csv{width:100%;min-height:150px;font:12px/1.5 ui-monospace,SFMono-Regul
 .shelf{position:relative;display:flex;gap:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;padding:18px 8px 14px;margin:0 -8px;
   scrollbar-width:thin;scrollbar-color:rgba(222,226,234,.25) transparent;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .shelf::-webkit-scrollbar{height:6px}.shelf::-webkit-scrollbar-thumb{background:rgba(222,226,234,.2);border-radius:3px}
-.btl{--h:150px;--rx:0deg;--ry:0deg;flex:none;position:relative;margin:0;width:calc(var(--h)*.62 + 34px);display:grid;justify-items:center;scroll-snap-align:start;cursor:default}
+.btl{--h:150px;--rx:0deg;--ry:0deg;flex:none;position:relative;margin:0;width:calc(var(--h)*.62 + 34px);display:grid;justify-items:center;align-content:start;scroll-snap-align:start;cursor:default}
 .btl .stage{position:relative;height:calc(var(--h) + 22px);width:100%;display:grid;place-items:end center;perspective:620px}
 .btl .stage::before{content:"";position:absolute;left:0;right:0;bottom:6px;height:1px;background:linear-gradient(90deg,rgba(236,238,242,.10),rgba(236,238,242,.22),rgba(190,176,255,.16),rgba(236,238,242,.10))}
 .btl .stage::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent)}
@@ -438,6 +441,105 @@ html.cc #cur{display:block}
 #cur[data-m="text"]{opacity:0!important}
 #cur.press .lens{width:16px;height:16px;margin:-8px 0 0 -8px}
 
+
+/* ---------- APEX ARCHIVE CHAMFER: chipped-off top-right corner on every card ---------- */
+.card,.order,.prod,.inbox,.plat,.sheet{--c:22px;border-radius:3px!important;clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
+.prod,.plat{--c:16px}
+.card.glass::after,.order.glass::after,.prod.glass::after,.inbox.glass::after,.plat.glass::after,.sheet.glass::after{left:auto;top:0;right:calc(var(--c) * -0.4142);width:calc(var(--c) * 1.4142);height:1px;transform-origin:0 0;transform:rotate(45deg);
+  background:rgba(255,255,255,.34);opacity:1}
+.glass{-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%)}
+
+/* bottles light up on hover */
+.btl .tiltb{transition:transform .5s var(--ease),filter .4s}
+.btl:hover .tiltb{transform:translateY(-7px) rotateX(var(--rx)) rotateY(var(--ry))}
+.btl:hover img{filter:brightness(1.18) drop-shadow(0 12px 14px rgba(0,0,0,.6)) drop-shadow(0 0 18px rgba(225,226,240,.28))}
+.btl:hover .pool{opacity:1;animation-play-state:paused;transform:translateX(-50%) scale(1.22);filter:blur(4px)}
+.btl.out:hover img{filter:grayscale(1) brightness(.85) drop-shadow(0 0 14px rgba(220,220,230,.18))}
+.btl .ov{position:absolute;left:0;right:0;top:50%;display:grid;justify-items:center;gap:2px;pointer-events:none;text-align:center;padding:0 22%}
+.btl .ov b{font:700 calc(var(--h)*.07)/1 'Barlow Condensed',var(--fmetal);letter-spacing:.04em;color:rgba(255,255,255,.92);text-transform:uppercase;overflow-wrap:anywhere}
+.btl .ov i{font:600 calc(var(--h)*.045)/1 var(--fb);font-style:normal;letter-spacing:.14em;color:rgba(255,255,255,.75);text-transform:uppercase}
+.btl.wide{width:210px}
+.btl .eta{display:grid;gap:4px;justify-items:center;font:600 9px/1 var(--fb);letter-spacing:.2em;color:var(--mute);margin-top:4px}
+.btl .eta input{font:600 12px var(--fb);padding:6px 8px;border-radius:6px 2px 6px 2px;width:150px;color-scheme:dark}
+.btl .wlc{font-size:11.5px;color:var(--ink2)}
+.sq{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink2);cursor:pointer;text-align:left;line-height:1.25;margin-top:4px}
+.sq input{position:absolute;opacity:0;pointer-events:none}
+.sq .bx{flex:none;width:16px;height:16px;border:1px solid var(--hair2);border-radius:3px;background:rgba(0,0,0,.4);display:grid;place-items:center;box-shadow:inset 0 1px 2px rgba(0,0,0,.7);transition:all .25s}
+.sq .bx::after{content:"";width:8px;height:4px;border:solid #0b0b0d;border-width:0 0 2px 2px;transform:rotate(-45deg) translateY(-1px);opacity:0}
+.sq input:checked + .bx{background:linear-gradient(180deg,#fff,#c3c7cf);border-color:#fff;box-shadow:0 0 12px -2px rgba(170,150,255,.6)}
+.sq input:checked + .bx::after{opacity:1}
+.sq input:focus-visible + .bx{outline:2px solid var(--chrome);outline-offset:2px}
+.mailnote{font-size:11px;color:var(--chrome);min-height:14px;max-width:200px}
+
+/* quick actions: big, angular, unmistakable */
+.qacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 20px}
+.qa{--c:14px;position:relative;display:flex;align-items:center;gap:16px;text-align:left;cursor:pointer;border:0;padding:18px 20px;color:var(--ink);
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)));
+  background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.02) 50%,rgba(0,0,0,.2)),linear-gradient(110deg,#17171b,#26252f 40%,#121216 70%,#1f1d29);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.6);transition:filter .3s,transform .25s var(--ease)}
+.qa::before{content:"";position:absolute;inset:0;pointer-events:none;clip-path:inherit;border:1px solid rgba(236,238,242,.22)}
+.qa:hover{filter:brightness(1.22)}.qa:active{transform:translateY(1px)}
+.qa .plus{flex:none;width:44px;height:44px;display:grid;place-items:center;font:800 26px/1 var(--fmetal);color:#0b0b0d;
+  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));
+  background:linear-gradient(180deg,#fdfdfe 0%,#d7dae0 40%,#a3a8b2 54%,#e2e4e8 80%,#fafafb 100%);box-shadow:0 0 22px rgba(170,150,255,.35)}
+.qa>span:last-child{font:800 14px/1.15 var(--fmetal);letter-spacing:.14em}
+.qa small{display:block;font:500 11.5px/1.3 var(--fb);letter-spacing:.02em;color:var(--mute);margin-top:5px;text-transform:none}
+
+/* sheet (dialog) */
+.sheet-wrap{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:rgba(4,4,7,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fadein .3s var(--ease)}
+.sheet-wrap[hidden]{display:none}
+@keyframes fadein{from{opacity:0}}
+.sheet{width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:24px;animation:rise .45s var(--ease)}
+.sheet .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sheet .prev{display:flex;gap:16px;align-items:flex-end;grid-column:1/-1;padding:6px 0 0}
+.sheet .prev .btl{--h:130px}
+.sheet .acts{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+.flashb{animation:flashb 1.6s var(--ease)}
+@keyframes flashb{0%,30%{filter:drop-shadow(0 0 22px rgba(255,255,255,.8))}100%{filter:none}}
+
+/* referrals */
+.refer-h::after{white-space:pre-line}
+.refer-h{font-size:clamp(34px,4.6vw,60px);margin:6px 0 16px}
+.linkrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.linkrow .inp{flex:1;min-width:180px;font:600 13px var(--fb);letter-spacing:.04em}
+.rstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.rstrip .sg{height:40px;position:relative;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 50%,calc(100% - 8px) 100%,0 100%,8px 50%);background:rgba(255,255,255,.05);display:grid;place-items:center;font:700 8.5px/1 var(--fb);letter-spacing:.16em;color:var(--dim)}
+.rstrip .sg.ord{background:linear-gradient(180deg,#fff,#b8bdc7);color:#0b0b0d;box-shadow:0 0 18px rgba(255,255,255,.3)}
+.rstrip .sg.join{background:linear-gradient(180deg,rgba(236,238,242,.32),rgba(170,150,255,.18));color:var(--ink)}
+.refs .tr-row{grid-template-columns:1.6fr .9fr .9fr .9fr 1fr}
+.g-site{grid-template-columns:repeat(3,1fr);gap:14px}
+.site-line .s{padding:14px 16px;border:1px solid var(--hair);background:rgba(0,0,0,.18);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.site-line .s span{font:600 10px/1.2 var(--fb);letter-spacing:.24em;color:var(--mute)}
+.site-line .s b{display:block;font:800 clamp(24px,2.6vw,34px)/1.1 var(--fmetal);color:var(--chrome);margin-top:8px;text-shadow:.02em .04em 0 #45484e,.04em .08em 0 #2a2c30,.08em .14em .12em rgba(0,0,0,.6)}
+.site-line .s em{font-style:normal;font-size:12px;color:var(--mute)}
+
+/* marketing platform cards with a swaying 3D chrome tile */
+.g-plat{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.plat{display:grid;gap:12px;padding:18px 18px 16px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;width:100%;border:1px solid var(--hair)}
+.plat[aria-expanded="true"]{border-color:rgba(236,238,242,.5);box-shadow:var(--spec),0 0 30px -10px rgba(170,150,255,.55)}
+.emb{height:118px;display:grid;place-items:center;perspective:520px}
+.tile{position:relative;width:84px;height:84px;transform-style:preserve-3d;animation:sway 7s ease-in-out infinite alternate;animation-delay:calc(var(--k)*-1.7s)}
+@keyframes sway{0%{transform:rotateY(-20deg) rotateX(10deg)}50%{transform:rotateY(4deg) rotateX(-4deg) translateY(-3px)}100%{transform:rotateY(18deg) rotateX(6deg)}}
+.tile .ly{position:absolute;inset:0;border-radius:22px;background:linear-gradient(135deg,#3a3c42,#141518);transform:translateZ(calc(var(--z)*-1px))}
+.tile .face{position:absolute;inset:0;border-radius:22px;display:grid;place-items:center;transform:translateZ(1px);
+  background:radial-gradient(90% 70% at 30% 18%,rgba(255,255,255,.34),transparent 55%),linear-gradient(150deg,rgba(255,255,255,.2),rgba(255,255,255,.03) 55%,rgba(150,124,255,.12)),rgba(14,13,20,.75);
+  border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -8px 16px rgba(0,0,0,.5)}
+.tile .face svg{width:46px;height:46px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
+.tile .shadow{position:absolute;left:8%;right:8%;bottom:-26px;height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.7),transparent);transform:rotateX(90deg) translateZ(-40px)}
+.emb::after{content:"";width:110px;height:16px;border-radius:50%;margin-top:-6px;background:radial-gradient(closest-side,rgba(226,226,240,.35),rgba(150,124,255,.12) 60%,transparent);filter:blur(3px);animation:breathe 5s ease-in-out infinite}
+.plat .pn3{font:800 14px/1 var(--fmetal);letter-spacing:.16em}
+.plat dl{display:grid;grid-template-columns:1fr auto;gap:6px 10px;margin:0;font-size:12.5px}
+.plat dt{color:var(--mute)}.plat dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.plat .spk{height:38px}.plat .spk svg{width:100%;height:100%;display:block;overflow:visible}
+.plat .more{font:700 9.5px/1 var(--fb);letter-spacing:.24em;color:var(--mute)}
+.pd-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px}
+.pd-chart svg{width:100%;height:auto;display:block;overflow:visible}
+
+@media (max-width:1100px){.g-plat{grid-template-columns:repeat(2,minmax(0,1fr))}.pd-grid{grid-template-columns:1fr}}
+@media (max-width:860px){.qacts{grid-template-columns:1fr;gap:10px}.qa{padding:14px 16px}.qa .plus{width:38px;height:38px}.g-site{grid-template-columns:1fr}.refs .tr-row{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.g-plat{grid-template-columns:1fr}.sheet .fgrid{grid-template-columns:1fr}}
+@media (min-width:861px){.tabs{flex-wrap:wrap}.tabs .tab{padding:11px 10px 10px;letter-spacing:.1em;gap:6px;font-size:11px}}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:1100px){
   .g-kpi{grid-template-columns:1fr 1fr}
@@ -501,16 +603,30 @@ html.cc #cur{display:block}
     <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6e8ec" stop-opacity=".22"/><stop offset="1" stop-color="#e6e8ec" stop-opacity="0"/></linearGradient>
     <path id="ringPath" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/>
   </defs>
-  <symbol id="pep-logo" viewBox="0 0 200 200">
+    <!-- ANGULAR P: drawn to match the reference letters (sharp chamfers, flat back). Swap this ONE path when the owner's font arrives. -->
+  <defs>
+    <path id="pep-pshape" fill-rule="evenodd" d="M77 141V59h42l12 12v24l-12 12H95v34zM95 74v18h17l3-3V77l-3-3z"/>
+    <linearGradient id="gMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f5f7"/><stop offset=".3" stop-color="#cdd0d6"/><stop offset=".5" stop-color="#8a8e96"/><stop offset=".62" stop-color="#a4a8b0"/><stop offset="1" stop-color="#e2e4e8"/></linearGradient>
+  </defs>
+  <symbol id="pep-ring" viewBox="0 0 200 200">
     <circle cx="100" cy="100" r="96" fill="none" stroke="url(#gChrome)" stroke-width="2.2"/>
     <circle cx="100" cy="100" r="88" fill="none" stroke="url(#gChrome)" stroke-width=".7" opacity=".7"/>
     <circle cx="100" cy="100" r="60" fill="none" stroke="url(#gChrome)" stroke-width="1.4"/>
-    <text font-family="Syne, sans-serif" font-weight="700" font-size="15.5" letter-spacing="6.4" fill="url(#gChrome)">
+    <text font-family="Orbitron, Syne, sans-serif" font-weight="700" font-size="13.5" letter-spacing="5.6" fill="url(#gChrome)">
       <textPath href="#ringPath" startOffset="0">PEPTICITY · PEPTICITY · PEPTICITY ·</textPath>
     </text>
-    <path d="M84 138V62h22c14 0 23 8 23 20.5S120 103 106 103H96" fill="none" stroke="url(#gChrome)" stroke-width="9" stroke-linecap="square"/>
-    <path d="M78 138h18" stroke="url(#gChrome)" stroke-width="3"/>
   </symbol>
+  <symbol id="pep-p" viewBox="0 0 200 200">
+    <use href="#pep-pshape" transform="translate(4.2 6.3)" fill="#0f1012"/>
+    <use href="#pep-pshape" transform="translate(3.5 5.25)" fill="#1a1b1e"/>
+    <use href="#pep-pshape" transform="translate(2.8 4.2)" fill="#232427"/>
+    <use href="#pep-pshape" transform="translate(2.1 3.15)" fill="#2d2f33"/>
+    <use href="#pep-pshape" transform="translate(1.4 2.1)" fill="#383a3f"/>
+    <use href="#pep-pshape" transform="translate(.7 1.05)" fill="#45484e"/>
+    <use href="#pep-pshape" fill="url(#gMetal)"/>
+    <use href="#pep-pshape" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".6"/>
+  </symbol>
+  <symbol id="pep-logo" viewBox="0 0 200 200"><use href="#pep-ring"/><use href="#pep-p"/></symbol>
   <symbol id="i-tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1112 0v5l1.5 2h-15L6 16zM10 20.5a2 2 0 004 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
@@ -519,9 +635,14 @@ html.cc #cur{display:block}
 </svg>
 
 <div class="bg" aria-hidden="true">
+  <canvas id="smoke"></canvas>
   <div class="lattice"></div>
   <canvas id="nodes"></canvas>
-  <div class="mark" id="mark"><svg viewBox="0 0 200 200"><use href="#pep-logo"/></svg></div>
+  <div class="mark" id="mark">
+    <svg class="mbase" viewBox="0 0 200 200"><g fill="none" stroke="#000" stroke-opacity=".75"><circle cx="103" cy="104.5" r="96" stroke-width="3"/><circle cx="102.4" cy="103.6" r="60" stroke-width="2.2"/></g><g fill="none" stroke="#2a2c31"><circle cx="101.2" cy="101.8" r="96" stroke-width="2.4"/><circle cx="100.8" cy="101.2" r="60" stroke-width="1.6"/></g></svg>
+    <svg class="mring" viewBox="0 0 200 200"><use href="#pep-ring"/></svg>
+    <svg class="mp" viewBox="0 0 200 200"><use href="#pep-p"/></svg>
+  </div>
 </div>
 
 <div class="app">
@@ -548,12 +669,19 @@ html.cc #cur{display:block}
       </div>
       <div class="meta"><b id="todayStr"></b><br>Fiscal year Jan – Dec · CAD</div>
     </div>
+    <div class="qacts" role="group" aria-label="Quick actions">
+      <button class="qa" type="button" data-act="product"><span class="plus" aria-hidden="true">+</span><span>ADD PRODUCT<small>new item, straight onto the shelf</small></span></button>
+      <button class="qa" type="button" data-act="receive"><span class="plus" aria-hidden="true">+</span><span>RECEIVE STOCK<small>log a delivery and its cost</small></span></button>
+      <button class="qa" type="button" data-act="expense"><span class="plus" aria-hidden="true">+</span><span>ADD EXPENSE<small>receipt, amount and tax</small></span></button>
+    </div>
     <div class="tabs glass" role="tablist" aria-label="Owner sections" data-group="owner">
       <button class="tab" role="tab" data-tab="sales"><span class="n">01</span>SALES + BEST SELLERS</button>
       <button class="tab" role="tab" data-tab="stock"><span class="n">02</span>STOCK + WHAT'S SHORT</button>
       <button class="tab" role="tab" data-tab="customers"><span class="n">03</span>CUSTOMERS + SIGN-UPS</button>
-      <button class="tab" role="tab" data-tab="omsg"><span class="n">04</span>MESSAGES</button>
-      <button class="tab" role="tab" data-tab="money"><span class="n">05</span>MONEY + TAXES</button>
+      <button class="tab" role="tab" data-tab="marketing"><span class="n">04</span>MARKETING</button>
+      <button class="tab" role="tab" data-tab="referrals"><span class="n">05</span>REFERRALS</button>
+      <button class="tab" role="tab" data-tab="omsg"><span class="n">06</span>MESSAGES</button>
+      <button class="tab" role="tab" data-tab="money"><span class="n">07</span>MONEY + TAXES</button>
     </div>
 
     <!-- SALES -->
@@ -632,6 +760,26 @@ html.cc #cur{display:block}
       </div>
     </section>
 
+    <!-- MARKETING -->
+    <section class="panel" id="p-marketing" role="tabpanel">
+      <div class="glass card site-line">
+        <div class="card-h"><h2 class="h3d h2">YOUR SITE THIS MONTH</h2><span class="sub">October · month to date · sample numbers</span></div>
+        <div class="grid g-site" id="siteLine"></div>
+      </div>
+      <div class="grid g-plat mt" id="platGrid"></div>
+      <div class="glass card mt" id="platDetail" hidden></div>
+      <p class="note">Sample numbers for the demo. In the live build each card reads from that platform's own reporting once Grace connects her accounts.</p>
+    </section>
+
+    <!-- REFERRALS -->
+    <section class="panel" id="p-referrals" role="tabpanel">
+      <div class="grid g-kpi" id="refKpis"></div>
+      <div class="glass card mt">
+        <div class="card-h"><h2 class="h3d h2">WHO IS REFERRING</h2><span class="sub">give 15%, get 15% · sample list</span></div>
+        <div class="tbl refs" id="refTbl"></div>
+      </div>
+    </section>
+
     <!-- OWNER MESSAGES -->
     <section class="panel" id="p-omsg" role="tabpanel">
       <div class="glass inbox">
@@ -705,7 +853,8 @@ html.cc #cur{display:block}
       <button class="tab" role="tab" data-tab="orders"><span class="n">01</span>ORDERS + TRACKING</button>
       <button class="tab" role="tab" data-tab="reorder"><span class="n">02</span>REORDER + ALERTS</button>
       <button class="tab" role="tab" data-tab="perks"><span class="n">03</span>MEMBER PERKS</button>
-      <button class="tab" role="tab" data-tab="cmsg"><span class="n">04</span>MESSAGES WITH GRACE</button>
+      <button class="tab" role="tab" data-tab="refer"><span class="n">04</span>REFER A FRIEND</button>
+      <button class="tab" role="tab" data-tab="cmsg"><span class="n">05</span>MESSAGES WITH GRACE</button>
     </div>
 
     <section class="panel" id="p-orders" role="tabpanel">
@@ -760,6 +909,26 @@ html.cc #cur{display:block}
       </div>
     </section>
 
+    <section class="panel" id="p-refer" role="tabpanel">
+      <div class="grid g-2b">
+        <div class="glass card refer-hero">
+          <p class="eyebrow">SHARE PEPTICITY</p>
+          <h2 class="h3d refer-h" data-t="GIVE 15%,&#10;GET 15%">GIVE 15%,<br>GET 15%</h2>
+          <p class="muted" style="font-size:14px;max-width:46ch">Share PEPTICITY with a friend. They get 15% off their first order, and you get a 15% credit when they order.</p>
+          <div class="field mt"><label for="refLink">YOUR LINK</label>
+            <div class="linkrow"><input class="inp" id="refLink" readonly value="[your-site]/r/JORDAN-0042"><button class="btn chrome cut" type="button" id="copyLink"><svg><use href="#i-copy"/></svg>COPY LINK</button></div></div>
+          <div class="linkrow mt"><span class="code">JORDAN15<button class="btn sm cut" type="button" id="copyCode">COPY CODE</button></span></div>
+          <p class="note">[Referral terms: who counts as a new client, when the credit can be used, any end date]</p>
+        </div>
+        <div class="glass card">
+          <div class="card-h"><h2 class="h3d h2">YOUR REFERRALS</h2><span class="sub">sample</span></div>
+          <div class="rstrip" id="rStrip"></div>
+          <div class="stat3 mt" id="rStats"></div>
+          <div class="letter mt" id="rList"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="panel" id="p-cmsg" role="tabpanel">
       <div class="glass inbox" style="grid-template-columns:1fr">
         <div class="conv">
@@ -773,6 +942,12 @@ html.cc #cur{display:block}
   </main>
 
   <p class="foot-note">PEPTICITY STUDIO · demo build · every name, order and figure is SAMPLE DATA · logo is a placeholder</p>
+</div>
+<div class="sheet-wrap" id="sheet" hidden>
+  <div class="sheet glass card" role="dialog" aria-modal="true" aria-labelledby="sheetT">
+    <div class="card-h"><h2 class="h3d h2" id="sheetT"></h2><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <div id="sheetBody"></div>
+  </div>
 </div>
 <div id="cur" aria-hidden="true" data-m="bg"><span class="brk"><i></i><i></i><i></i><i></i></span><span class="ctip"><span class="mag"></span><span class="ticks"><i></i><i></i><i></i><i></i></span><span class="lens"></span><span class="dot"></span></span></div>
 <div class="toast glass" id="toast" role="status"><svg><use href="#i-tick"/></svg><span></span></div>
@@ -818,7 +993,7 @@ var P = [
  ['Oxytocin','2 mg',65,21,19,12,4,0],
  ['GHK-Cu','50 mg',75,22,159,38,15,0],
  ['PT-141','10 mg',89,30,52,0,8,9],
- ['Melanotan II','10 mg',69,21,63,20,8,0],
+ ['Melanotan II','10 mg',69,21,63,0,8,0],
  ['Bacteriostatic water (Pfizer)','30 ml',19,7,402,64,40,0]
 ].map(function(a){return {name:a[0],size:a[1],price:a[2],cost:a[3],units:a[4],onHand:a[5],rop:a[6],wl:a[7]}});
 P.forEach(function(p){p.rev=p.price*p.units;p.cogs=p.cost*p.units;p.status=p.onHand===0?'out':(p.onHand<=p.rop?'low':'ok')});
@@ -865,9 +1040,9 @@ var SEED_EXP = [
 
 /* ---------- STATE (in memory, mirrored to localStorage when allowed) ---------- */
 var KEY='pepticity-studio-demo-v1';
-var S = {msgs:JSON.parse(JSON.stringify(SEED_MSGS)), exp:SEED_EXP.slice(), alerts:{}, letter:true, unread:{owner:{jordan:1,elena:1},client:0}, view:'owner', tab:{owner:'sales',client:'orders'}};
-try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); ['msgs','exp','alerts','letter','unread','tab'].forEach(function(k){if(L[k]!==undefined)S[k]=L[k]});}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify({msgs:S.msgs,exp:S.exp.map(function(x){var y=Object.assign({},x);if(y.file)y.file={name:y.file.name,type:y.file.type};return y}),alerts:S.alerts,letter:S.letter,unread:S.unread,tab:S.tab}))}catch(e){}}
+var S = {eta:{'Retatrutide':'2026-11-06','TB-500':'2026-11-04','PT-141':'2026-11-12'},mail:{'Retatrutide':true},msgs:JSON.parse(JSON.stringify(SEED_MSGS)), exp:SEED_EXP.slice(), alerts:{}, letter:true, unread:{owner:{jordan:1,elena:1},client:0}, view:'owner', tab:{owner:'sales',client:'orders'}};
+try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); ['msgs','exp','alerts','letter','unread','tab','eta','mail'].forEach(function(k){if(L[k]!==undefined)S[k]=L[k]});}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({msgs:S.msgs,exp:S.exp.map(function(x){var y=Object.assign({},x);if(y.file)y.file={name:y.file.name,type:y.file.type};return y}),alerts:S.alerts,letter:S.letter,unread:S.unread,tab:S.tab,eta:S.eta,mail:S.mail}))}catch(e){}}
 
 /* ---------- HELPERS ---------- */
 function countUp(el,to,fmt){
@@ -887,7 +1062,7 @@ function morph(btn,thanks,cb){
   setTimeout(function(){lbl.textContent=orig;delete btn.dataset.s;btn.style.width=''},RM?1800:3800);
 }
 function now(){var d=new Date();return d.toLocaleString('en-CA',{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString('en-CA',{hour:'numeric',minute:'2-digit'})}
-function h3dSync(){$$('.h3d').forEach(function(h){h.setAttribute('data-t',h.textContent)})}
+function h3dSync(){$$('.h3d').forEach(function(h){if(!h.hasAttribute('data-t'))h.setAttribute('data-t',h.textContent)})}
 
 /* ---------- ROUTER / VIEW SWITCH ---------- */
 function setView(v,fromHash){
@@ -1131,7 +1306,7 @@ var BUY=[['BPC-157','10 mg',95],['GHK-Cu','50 mg',75],['NAD+','1000 mg',129],['I
 RENDER.reorder=function(){
   $('#buyAgain').innerHTML=BUY.map(function(b,i){return '<div class="glass prod has-btl tilt '+['r-a','r-d','r-b'][i%3]+'">'+bottle(findP(b[0]),{sm:1,owned:1,nocap:1,i:i})+'<div class="pn2">'+esc(b[0])+'<small>'+esc(b[1])+' · last ordered Oct 24</small></div><div class="act"><span class="pr">'+cad.format(b[2])+'</span><button class="btn chrome morph sm" type="button" data-buy="'+i+'"><span class="lbl">REORDER</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>'}).join('');
   var outs=P.filter(function(p){return p.status==='out'});
-  $('#alertsGrid').innerHTML=outs.map(function(p,i){var k=p.name;return '<div class="glass prod has-btl '+['r-c','r-b','r-a','r-d'][i%4]+'">'+bottle(p,{sm:1,nocap:1,i:i})+'<div class="pn2">'+esc(p.name)+'<small>'+esc(p.size)+' · <span class="chip out" style="padding:4px 6px;font-size:8.5px;vertical-align:1px">OUT</span></small></div><div class="act"><span class="muted">Back soon</span><label class="sw"><input type="checkbox" data-alert="'+esc(k)+'"'+(S.alerts[k]?' checked':'')+'><span class="tg"></span><span>'+(S.alerts[k]?'You’ll be notified':'Notify me')+'</span></label></div></div>'}).join('');
+  $('#alertsGrid').innerHTML=outs.map(function(p,i){var k=p.name;return '<div class="glass prod has-btl '+['r-c','r-b','r-a','r-d'][i%4]+'">'+bottle(p,{sm:1,nocap:1,i:i})+'<div class="pn2">'+esc(p.name)+'<small>'+esc(p.size)+' · <span class="chip out" style="padding:4px 6px;font-size:8.5px;vertical-align:1px">OUT</span></small></div><div class="act"><span class="muted">'+(S.eta[p.name]?'Back '+fmtDay(S.eta[p.name]):'Back soon')+'</span><label class="sw"><input type="checkbox" data-alert="'+esc(k)+'"'+(S.alerts[k]?' checked':'')+'><span class="tg"></span><span>'+(S.alerts[k]?'You’ll be notified':'Notify me')+'</span></label></div></div>'}).join('');
   bindTilt();
 };
 $('#buyAgain').addEventListener('click',function(e){var b=e.target.closest('[data-buy]');if(b)morph(b,'ADDED',function(){toast(BUY[+b.dataset.buy][0]+' added to your cart (demo)')})});
@@ -1144,27 +1319,174 @@ $('#codeBtn').addEventListener('click',function(){try{navigator.clipboard.writeT
 
 /* ---------- BOTTLES ---------- */
 var VIALS=window.PEP_VIALS||{};
-['Semax','Selank','KPV','SS-31','Oxytocin'].forEach(function(n){var p=P.find(function(x){return x.name===n});if(p)p.back=true}); // restocked this month (sample)
 function slug(n){return String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
-function shortName(n){return String(n).replace(/\s*\(.*?\)/,'')}
+function shortName(n){return String(n).replace(/\s*\(.*?\)/,'').replace(/^Bacteriostatic water/,'Bac water')}
 function findP(item){var n=item.split(' · ')[0];return P.find(function(p){return p.name===n})||P.find(function(p){return p.name.indexOf(n)===0})}
+function fmtDay(iso){if(!iso)return '';var d=new Date(iso+'T12:00:00');return isNaN(d)?iso:d.toLocaleDateString('en-CA',{month:'short',day:'numeric'})}
 function bottle(p,o){o=o||{};
-  var cls='btl'+(o.sm?' sm':'')+(p.status==='out'&&!o.owned?' out':'')+(p.back&&!o.owned?' back':'');
-  var chipH=o.owned?'':(p.status==='out'?'<span class="chip out">OUT</span>':p.status==='low'?'<span class="chip low">LOW</span>':p.back?'<span class="chip team">RESTOCKED</span>':'');
+  var cls='btl'+(o.sm?' sm':'')+(o.coming?' wide':'')+(p.status==='out'&&!o.owned&&!o.coming?' out':'');
+  var chipH=o.owned?'':(p.status==='out'?(o.coming?'':'<span class="chip out">SOLD OUT</span>'):p.status==='low'?'<span class="chip low">LOW</span>':'');
   var sub=esc(p.size==='[size TBC]'?'Size TBC':p.size)+(o.units?' · '+p.onHand+' units':'');
-  return '<figure class="'+cls+'" style="--i:'+(o.i||0)+'" title="'+esc(p.name)+'"><div class="stage"><span class="pool"></span><div class="tiltb"><img src="'+(VIALS[slug(p.name)]||'')+'" alt="PEPTICITY '+esc(shortName(p.name))+' vial, '+esc(p.size)+'" decoding="async" draggable="false"></div></div>'+(o.nocap?'':'<figcaption><span class="nm">'+esc(shortName(p.name))+'</span><small>'+sub+'</small>'+chipH+'</figcaption>')+'</figure>';
+  var src=p.img||VIALS[slug(p.name)],ov='';
+  if(!src){src=VIALS._blank||'';ov='<span class="ov"><b>'+esc(shortName(p.name))+'</b><i>'+esc(p.size||'')+'</i></span>'}
+  var extra='';
+  if(o.coming){var n=esc(p.name),d=S.eta[p.name]||'',on=!!S.mail[p.name];
+    extra='<label class="eta">BACK ON<input class="inp" type="date" value="'+esc(d)+'" data-eta="'+n+'" aria-label="Expected date for '+n+'"></label>'+
+      '<span class="wlc">'+p.wl+' '+(p.wl===1?'person':'people')+' on the restock list</span>'+
+      '<label class="sq"><input type="checkbox" data-mail="'+n+'"'+(on?' checked':'')+'><span class="bx"></span>Email the waitlist on arrival</label>'+
+      '<span class="mailnote" data-note="'+n+'">'+(on?mailNote(p):'')+'</span>'}
+  return '<figure class="'+cls+'" style="--i:'+(o.i||0)+'" title="'+esc(p.name)+'" data-p="'+esc(p.name)+'"><div class="stage"><span class="pool"></span><div class="tiltb"><img src="'+src+'" alt="PEPTICITY '+esc(shortName(p.name))+' vial, '+esc(p.size)+'" decoding="async" draggable="false">'+ov+'</div></div>'+(o.nocap?'':'<figcaption><span class="nm">'+esc(shortName(p.name))+'</span><small>'+sub+'</small>'+chipH+extra+'</figcaption>')+'</figure>';
 }
+function mailNote(p){return p.wl+' '+(p.wl===1?'person':'people')+' will get an email on '+(fmtDay(S.eta[p.name])||'the arrival date')+' (demo)'}
+function stat(p){p.status=p.onHand<=0?'out':(p.onHand<=p.rop?'low':'ok')}
+function recalc(){REV=P.reduce(function(s,p){return s+p.rev},0);COGS=P.reduce(function(s,p){return s+p.cogs},0)}
 function renderShelves(q){
   var rows=[
-    {k:'in',t:'IN STOCK',s:'ready to ship',list:P.filter(function(p){return p.status!=='out'&&!p.back})},
-    {k:'out',t:'OUT OF STOCK',s:'clients can join the restock list',list:P.filter(function(p){return p.status==='out'})},
-    {k:'back',t:'BACK IN STOCK',s:'restocked this month',list:P.filter(function(p){return p.back&&p.status!=='out'})}
+    {k:'in',t:'IN STOCK',s:'ready to ship',list:P.filter(function(p){return p.status!=='out'})},
+    {k:'sold',t:'SOLD OUT',s:'no delivery booked yet',list:P.filter(function(p){return p.status==='out'&&!S.eta[p.name]})},
+    {k:'back',t:'COMING BACK',s:'delivery booked · restock list waiting',list:P.filter(function(p){return p.status==='out'&&S.eta[p.name]})}
   ].map(function(r){r.list=r.list.filter(function(p){return p.name.toLowerCase().indexOf(q)>-1});return r})
    .sort(function(a,b){return b.list.length-a.list.length});
   $('#shelves').innerHTML=rows.map(function(r,ri){
-    return '<div class="glass card shelf-card '+['r-a','r-b','r-d'][ri]+'"><div class="card-h"><h2 class="h3d h2" data-t="'+r.t+'">'+r.t+'</h2><span style="display:flex;gap:10px;align-items:center"><span class="sub">'+r.s+'</span><span class="count">'+r.list.length+'</span></span></div>'+
-     (r.list.length?'<div class="shelf" role="list" aria-label="'+r.t+'">'+r.list.map(function(p,i){return bottle(p,{units:1,i:i})}).join('')+'</div>':'<p class="muted" style="padding:6px 0 16px">Nothing here'+(q?' for that search':'')+'.</p>')+'</div>'}).join('');
+    return '<div class="glass card shelf-card" data-row="'+r.k+'"><div class="card-h"><h2 class="h3d h2" data-t="'+r.t+'">'+r.t+'</h2><span style="display:flex;gap:10px;align-items:center"><span class="sub">'+r.s+'</span><span class="count">'+r.list.length+'</span></span></div>'+
+     (r.list.length?'<div class="shelf" role="list" aria-label="'+r.t+'">'+r.list.map(function(p,i){return bottle(p,{units:r.k==='in',i:i,coming:r.k==='back'})}).join('')+'</div>':'<p class="muted" style="padding:6px 0 16px">Nothing here'+(q?' for that search':'')+'.</p>')+'</div>'}).join('');
 }
+$('#shelves').addEventListener('change',function(e){
+  var t=e.target,n;
+  if((n=t.dataset.eta)!==undefined){S.eta[n]=t.value;save();var p=P.find(function(x){return x.name===n});var nt=$('[data-note="'+CSS.escape(n)+'"]');if(nt&&S.mail[n])nt.textContent=mailNote(p);toast('Expected date saved · '+shortName(n)+' · '+fmtDay(t.value));}
+  if((n=t.dataset.mail)!==undefined){S.mail[n]=t.checked;save();var p2=P.find(function(x){return x.name===n});var nt2=$('[data-note="'+CSS.escape(n)+'"]');if(nt2)nt2.textContent=t.checked?mailNote(p2):'';toast(t.checked?mailNote(p2):'Waitlist email off · '+shortName(n))}
+});
+
+/* ---------- QUICK ACTIONS: ADD PRODUCT · RECEIVE STOCK · ADD EXPENSE ---------- */
+var sheetRet=null;
+function openSheet(title,html,onOpen){sheetRet=document.activeElement;$('#sheetT').textContent=title;$('#sheetT').setAttribute('data-t',title);$('#sheetBody').innerHTML=html;$('#sheet').hidden=false;
+  var f=$('#sheetBody input,#sheetBody select');if(f)setTimeout(function(){f.focus()},40);onOpen&&onOpen()}
+function closeSheet(){$('#sheet').hidden=true;$('#sheetBody').innerHTML='';if(sheetRet&&sheetRet.focus)sheetRet.focus()}
+$('#sheet').addEventListener('click',function(e){if(e.target===this||e.target.closest('[data-close]'))closeSheet()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#sheet').hidden)closeSheet();
+  if(e.key==='Tab'&&!$('#sheet').hidden){var f=$$('#sheet button,#sheet input,#sheet select').filter(function(x){return !x.disabled&&x.offsetParent});if(!f.length)return;var a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){z.focus();e.preventDefault()}else if(!e.shiftKey&&document.activeElement===z){a.focus();e.preventDefault()}}});
+function num(v){return parseFloat(String(v||'').replace(/[^0-9.]/g,''))}
+function fld(id,label,attrs,w){return '<div class="field'+(w?' w3':'')+'"><label for="'+id+'">'+label+'</label><input class="inp" id="'+id+'" '+(attrs||'')+'></div>'}
+function showNew(name){
+  setTab('owner','stock');
+  requestAnimationFrame(function(){var f=$('#shelves [data-p="'+CSS.escape(name)+'"]');if(!f)return;var sh=f.closest('.shelf');
+    f.closest('.shelf-card').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});if(sh)sh.scrollTo({left:f.offsetLeft-40,behavior:RM?'auto':'smooth'});f.classList.add('flashb')});
+}
+function addProductForm(){
+  var newImg=null;
+  openSheet('ADD PRODUCT','<form id="apForm" class="fgrid" novalidate>'+
+    fld('apName','PRODUCT NAME','required placeholder="e.g. BPC-157" autocomplete="off"')+fld('apSize','STRENGTH','placeholder="e.g. 10 mg"')+
+    '<div class="prev"><div id="apPrev"></div><label class="drop" style="flex:1"><input type="file" id="apImg" accept="image/*"><span class="ic"><svg><use href="#i-up"/></svg></span><span class="t" id="apImgT">Vial picture<small>Optional · uses the matching PEPTICITY bottle if you skip it</small></span></label></div>'+
+    fld('apCost','UNIT COST','inputmode="decimal" placeholder="0.00"')+fld('apPrice','SALE PRICE','inputmode="decimal" placeholder="0.00"')+
+    fld('apOn','UNITS ON HAND','inputmode="numeric" placeholder="0"')+fld('apRop','REORDER POINT','inputmode="numeric" placeholder="e.g. 8"')+
+    '<div class="acts"><span class="muted" id="apErr" role="alert"></span><button class="btn chrome cut" type="submit">ADD TO SHELF</button></div></form>',function(){
+    var prev=function(){var n=$('#apName').value.trim()||'New product',sz=$('#apSize').value.trim();$('#apPrev').innerHTML=bottle({name:n,size:sz,onHand:0,rop:0,status:'ok',img:newImg},{owned:1,nocap:1})};
+    prev();$('#apName').addEventListener('input',prev);$('#apSize').addEventListener('input',prev);
+    $('#apImg').addEventListener('change',function(){var f=this.files[0];if(!f||!/^image\//.test(f.type))return;var rd=new FileReader();rd.onload=function(){newImg=rd.result;$('#apImgT').innerHTML=esc(f.name)+'<small>attached</small>';prev()};rd.readAsDataURL(f)});
+    $('#apForm').addEventListener('submit',function(e){e.preventDefault();
+      var n=$('#apName').value.trim(),sz=$('#apSize').value.trim(),c=num($('#apCost').value),pr=num($('#apPrice').value),on=parseInt($('#apOn').value,10)||0,rp=parseInt($('#apRop').value,10)||0,err=$('#apErr');
+      if(!n){err.textContent='Add the product name.';$('#apName').focus();return}
+      if(P.some(function(x){return x.name.toLowerCase()===n.toLowerCase()})){err.textContent='That product is already on the shelf. Use RECEIVE STOCK.';return}
+      if(!(pr>0)){err.textContent='Add the sale price, e.g. 95';$('#apPrice').focus();return}
+      var np={name:n,size:sz||'—',price:pr,cost:c||0,units:0,onHand:on,rop:rp,wl:0,rev:0,cogs:0,img:newImg};stat(np);P.push(np);
+      closeSheet();showNew(n);toast(shortName(n)+' added · on the '+(np.status==='out'?'SOLD OUT':'IN STOCK')+' shelf');
+    });
+  });
+}
+function receiveForm(pre){
+  var opts=P.map(function(p,i){return '<option value="'+i+'"'+(p.name===pre?' selected':'')+'>'+esc(p.name)+' · '+esc(p.size)+' ('+p.onHand+' on hand)</option>'}).join('');
+  openSheet('RECEIVE STOCK','<form id="rsForm" class="fgrid" novalidate><div class="field w3"><label for="rsP">PRODUCT</label><select class="inp" id="rsP">'+opts+'</select></div>'+
+    '<div class="prev" id="rsPrev"></div>'+fld('rsU','UNITS RECEIVED','inputmode="numeric" placeholder="e.g. 24" required')+fld('rsC','COST PER UNIT','inputmode="decimal"')+
+    '<div class="acts"><span class="muted" id="rsErr" role="alert"></span><button class="btn chrome cut" type="submit">RECEIVE</button></div></form>',function(){
+    var sync=function(){var p=P[+$('#rsP').value];$('#rsC').value=p.cost.toFixed(2);$('#rsPrev').innerHTML=bottle(p,{owned:1})+'<p class="muted" style="margin:0 0 20px">Sells for '+cad2.format(p.price)+' · cost now '+cad2.format(p.cost)+(S.eta[p.name]?'<br>Expected '+fmtDay(S.eta[p.name])+' · '+p.wl+' on the restock list':'')+'</p>'};
+    sync();$('#rsP').addEventListener('change',sync);
+    $('#rsForm').addEventListener('submit',function(e){e.preventDefault();
+      var p=P[+$('#rsP').value],u=parseInt($('#rsU').value,10),c=num($('#rsC').value),err=$('#rsErr');
+      if(!(u>0)){err.textContent='Add how many units arrived.';$('#rsU').focus();return}
+      if(!(c>=0)){c=p.cost}
+      var base=Math.max(p.onHand,0);p.cost=Math.round(((base*p.cost)+(u*c))/(base+u)*100)/100;p.onHand=base+u;p.cogs=p.cost*p.units;stat(p);
+      var waited=S.eta[p.name]?p.wl:0;delete S.eta[p.name];save();recalc();
+      closeSheet();showNew(p.name);toast('Received '+u+' × '+shortName(p.name)+' · cost now '+cad2.format(p.cost)+(waited&&S.mail[p.name]?' · '+waited+' restock emails ready (demo)':''));
+    });
+  });
+}
+$('.qacts').addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;var a=b.dataset.act;
+  if(a==='product')addProductForm();else if(a==='receive')receiveForm();
+  else{setTab('owner','money');requestAnimationFrame(function(){$('#expForm').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});setTimeout(function(){$('#eVendor').focus({preventScroll:true})},RM?0:450)})}});
+
+/* ---------- COPY (clipboard with fallback) ---------- */
+function copyText(v,msg){var done=function(){toast(msg||'Copied')},fb=function(){var t=document.createElement('textarea');t.value=v;t.setAttribute('readonly','');t.style.cssText='position:fixed;opacity:0;left:-9999px';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){toast('Select the text and copy it')}t.remove()};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(done,fb)}else fb()}
+
+/* ---------- CLIENT: REFER A FRIEND ---------- */
+var MYREFS=[['Priya S.','ordered','Oct 22','15% credit added'],['Devon K.','ordered','Oct 12','15% credit added'],['Sam K.','joined','Oct 26','credit lands when Sam orders']];
+RENDER.refer=function(){
+  var segs=MYREFS.map(function(r){return '<span class="sg '+(r[1]==='ordered'?'ord':'join')+'">'+(r[1]==='ordered'?'CREDIT':'JOINED')+'</span>'});
+  while(segs.length<5)segs.push('<span class="sg">OPEN</span>');
+  $('#rStrip').innerHTML=segs.join('');
+  var ord=MYREFS.filter(function(r){return r[1]==='ordered'}).length;
+  $('#rStats').innerHTML='<div class="s"><span>FRIENDS REFERRED</span><b>'+MYREFS.length+'</b></div><div class="s"><span>CREDITS EARNED</span><b>'+ord+' × 15%</b></div><div class="s"><span>WAITING</span><b>'+(MYREFS.length-ord)+'</b></div>';
+  $('#rList').innerHTML=MYREFS.map(function(r){return '<div class="iss"><b>'+esc(r[0])+'</b><span>'+(r[1]==='ordered'?'Ordered ':'Joined ')+r[2]+' · '+r[3]+'</span></div>'}).join('');
+};
+$('#copyLink').addEventListener('click',function(){copyText($('#refLink').value,'Link copied · share PEPTICITY')});
+$('#copyCode').addEventListener('click',function(){copyText('JORDAN15','Code copied')});
+
+/* ---------- OWNER: REFERRALS ---------- */
+var REFS=[['Jordan M.','Toronto, ON',3,2,2,412],['Aaron B.','Hamilton, ON',5,4,4,1046],['Elena R.','Vancouver, BC',4,3,3,688],['Priya S.','Mississauga, ON',2,2,2,371],['Devon K.','Calgary, AB',2,1,1,189],['Nadia F.','Halifax, NS',1,1,1,226]];
+RENDER.referrals=function(){
+  var fr=REFS.reduce(function(s,r){return s+r[2]},0),od=REFS.reduce(function(s,r){return s+r[3]},0),cr=REFS.reduce(function(s,r){return s+r[4]},0),rv=REFS.reduce(function(s,r){return s+r[5]},0);
+  $('#refKpis').innerHTML='<div class="glass card kpi big tilt"><div class="lab">REVENUE FROM REFERRALS</div><div class="val" id="rkRev">$0</div><div class="foot">first orders from referred friends</div></div>'+
+   '<div class="glass card kpi tilt"><div class="lab">FRIENDS BROUGHT IN</div><div class="val" id="rkFr">0</div><div class="foot">'+od+' have ordered</div></div>'+
+   '<div class="glass card kpi tilt"><div class="lab">CREDITS ISSUED</div><div class="val" id="rkCr">0</div><div class="foot">15% each, to the referrer</div></div>'+
+   '<div class="glass card kpi tilt"><div class="lab">CLIENTS REFERRING</div><div class="val" id="rkWho">0</div><div class="foot">shared their link</div></div>';
+  countUp($('#rkRev'),rv,cad.format);countUp($('#rkFr'),fr);countUp($('#rkCr'),cr);countUp($('#rkWho'),REFS.length);
+  $('#refTbl').innerHTML='<div class="tr-row hd"><span>CLIENT</span><span class="num">FRIENDS IN</span><span class="num">ORDERED</span><span class="num">CREDITS</span><span class="num">REVENUE</span></div>'+
+   REFS.slice().sort(function(a,b){return b[5]-a[5]}).map(function(r){return '<div class="tr-row"><span class="pn">'+esc(r[0])+'<small>'+esc(r[1])+'</small></span><span class="num" data-l="Friends in">'+r[2]+'</span><span class="num" data-l="Ordered">'+r[3]+'</span><span class="num" data-l="Credits">'+r[4]+'</span><span class="num" data-l="Revenue" style="color:var(--chrome);font-weight:600">'+cad.format(r[5])+'</span></div>'}).join('');
+  bindTilt();
+};
+
+/* ---------- OWNER: MARKETING ---------- */
+var GLYPH={
+  ig:'<rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="url(#gChrome)" stroke-width="1.9"/><circle cx="12" cy="12" r="3.8" fill="none" stroke="url(#gChrome)" stroke-width="1.9"/><circle cx="16.9" cy="7.1" r="1.1" fill="#f4f5f7"/>',
+  fb:'<path d="M13.4 20v-6.6h2.3l.4-2.8h-2.7V8.9c0-.8.3-1.4 1.4-1.4h1.4V5a17 17 0 0 0-2.1-.1c-2.1 0-3.5 1.3-3.5 3.6v2.1H8.3v2.8h2.3V20z" fill="url(#gChrome)"/>',
+  tt:'<path d="M14 4.5v10a3.6 3.6 0 1 1-3.1-3.56" fill="none" stroke="url(#gChrome)" stroke-width="2" stroke-linecap="round"/><path d="M14 4.5c.5 2.4 2.1 3.9 4.6 4.1" fill="none" stroke="url(#gChrome)" stroke-width="2" stroke-linecap="round"/>',
+  ga:'<path d="M10.2 5.2l-5 8.7" stroke="url(#gChrome)" stroke-width="3.6" stroke-linecap="round"/><path d="M13.8 5.2l5 8.7" stroke="url(#gChrome)" stroke-width="3.6" stroke-linecap="round"/><circle cx="6.3" cy="17.2" r="2.4" fill="#f4f5f7"/>'
+};
+var PLAT=[
+  {k:'ig',t:'INSTAGRAM',reach:48200,clicks:1960,signups:142,sales:6840,spend:420,w:[22,25,24,29,31,30,36,41]},
+  {k:'fb',t:'FACEBOOK',reach:31500,clicks:1180,signups:77,sales:4120,spend:360,w:[30,28,31,29,33,32,34,35]},
+  {k:'tt',t:'TIKTOK',reach:66900,clicks:2410,signups:118,sales:3310,spend:0,w:[10,14,19,17,26,33,38,47]},
+  {k:'ga',t:'GOOGLE ADS',reach:22800,clicks:1540,signups:96,sales:7980,spend:910,w:[26,29,28,32,30,35,37,38]}
+];
+function spark(w,W,H,area){var mx=Math.max.apply(null,w)*1.08,mn=Math.min.apply(null,w)*.8,x=function(i){return i*(W/(w.length-1))},y=function(v){return H-(v-mn)/(mx-mn)*H};
+  var d=w.map(function(v,i){return (i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)}).join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true">'+(area?'<path d="'+d+'L'+W+','+H+'L0,'+H+'Z" fill="url(#gArea)"/>':'')+'<path d="'+d+'" fill="none" stroke="url(#gLine)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><circle cx="'+x(w.length-1)+'" cy="'+y(w[w.length-1])+'" r="3" fill="#fff"/></svg>'}
+var openPlat=null;
+RENDER.marketing=function(){
+  var vis=12840,clk=PLAT.reduce(function(s,p){return s+p.clicks},0),sig=PLAT.reduce(function(s,p){return s+p.signups},0);
+  $('#siteLine').innerHTML='<div class="s"><span>SITE CLICKS</span><b id="mkC">0</b><em>from all four platforms</em></div><div class="s"><span>VISITS</span><b id="mkV">0</b><em>people on the site</em></div><div class="s"><span>SIGN-UPS</span><b id="mkS">0</b><em>email list + team</em></div>';
+  countUp($('#mkC'),clk);countUp($('#mkV'),vis);countUp($('#mkS'),sig);
+  $('#platGrid').innerHTML=PLAT.map(function(p,i){var ly='';for(var z=1;z<=10;z++)ly+='<span class="ly" style="--z:'+(z*1.4)+'"></span>';
+    return '<button type="button" class="glass plat tilt" data-plat="'+i+'" aria-expanded="'+(openPlat===i)+'" aria-controls="platDetail"><div class="emb"><div class="tile" style="--k:'+i+'">'+ly+'<span class="face"><svg viewBox="0 0 24 24">'+GLYPH[p.k]+'</svg></span></div></div>'+
+     '<span class="pn3">'+p.t+'</span><dl><dt>Reach</dt><dd>'+nf.format(p.reach)+'</dd><dt>Clicks</dt><dd>'+nf.format(p.clicks)+'</dd><dt>Click-through</dt><dd>'+(p.clicks/p.reach*100).toFixed(1)+'%</dd><dt>Sign-ups</dt><dd>'+p.signups+'</dd><dt>Sales attributed</dt><dd>'+cad.format(p.sales)+'</dd><dt>Spend</dt><dd>'+(p.spend?cad.format(p.spend):'organic')+'</dd></dl>'+
+     '<div class="spk">'+spark(p.w,200,38)+'</div><span class="more">'+(openPlat===i?'CLOSE DETAIL':'OPEN DETAIL')+' ›</span></button>'}).join('');
+  bindTilt();if(openPlat!==null)platDetail(openPlat);
+};
+function platDetail(i){var p=PLAT[i],el=$('#platDetail');if(i===null){el.hidden=true;return}
+  var last={reach:Math.round(p.reach*.86),clicks:Math.round(p.clicks*.83),signups:Math.round(p.signups*.8),sales:Math.round(p.sales*.79)};
+  var row=function(l,a,b,f){var c=b?((a-b)/b*100):0;return '<div class="tr-row"><span class="pn">'+l+'</span><span class="num" data-l="This month">'+f(a)+'</span><span class="num" data-l="Last month">'+f(b)+'</span><span class="num" data-l="Change">'+(c>=0?'+':'')+c.toFixed(0)+'%</span></div>'};
+  el.innerHTML='<div class="card-h"><h2 class="h3d h2" data-t="'+p.t+' · DETAIL">'+p.t+' · DETAIL</h2><button class="x" type="button" id="pdClose" aria-label="Close detail">×</button></div>'+
+   '<div class="pd-grid"><div><p class="h3" style="margin-bottom:10px">CLICKS TO THE SITE · LAST 8 WEEKS</p><div class="pd-chart">'+spark(p.w,600,170,1)+'</div></div>'+
+   '<div class="tbl" style="grid-template-columns:1fr"><div class="tr-row hd" style="grid-template-columns:1.3fr 1fr 1fr .8fr"><span>METRIC</span><span class="num">OCT</span><span class="num">SEP</span><span class="num">CHANGE</span></div>'+
+   [row('Reach',p.reach,last.reach,nf.format),row('Clicks',p.clicks,last.clicks,nf.format),row('Sign-ups',p.signups,last.signups,nf.format),row('Sales attributed',p.sales,last.sales,cad.format)].join('').replace(/class="tr-row"/g,'class="tr-row" style="grid-template-columns:1.3fr 1fr 1fr .8fr"')+
+   '</div></div><p class="note">'+(p.spend?'Spend this month '+cad.format(p.spend)+' · cost per sign-up '+cad2.format(p.spend/p.signups)+'. ':'Organic posts, no ad spend. ')+'[Top posts and ads appear here once the account is connected]</p>';
+  el.hidden=false;
+}
+$('#platGrid').addEventListener('click',function(e){var b=e.target.closest('[data-plat]');if(!b)return;var i=+b.dataset.plat;openPlat=openPlat===i?null:i;
+  $$('#platGrid .plat').forEach(function(x){var on=+x.dataset.plat===openPlat;x.setAttribute('aria-expanded',String(on));$('.more',x).textContent=(on?'CLOSE DETAIL':'OPEN DETAIL')+' ›'});
+  platDetail(openPlat);if(openPlat!==null)$('#platDetail').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})});
+$('#platDetail').addEventListener('click',function(e){if(e.target.closest('#pdClose')){openPlat=null;platDetail(null);$$('#platGrid .plat').forEach(function(x){x.setAttribute('aria-expanded','false');$('.more',x).textContent='OPEN DETAIL ›'})}});
 
 /* ---------- TILT ---------- */
 var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
@@ -1177,13 +1499,45 @@ function bindTilt(){
 }
 
 
-/* ---------- CURSOR TOOL + BACKGROUND NODE LIGHT (one rAF loop) ---------- */
+/* ---------- ONE SHARED ANIMATION LOOP (cursor, node light, smoke) ---------- */
+var LOOP=[],loopOn=false;
+function addLoop(f){LOOP.push(f);if(!loopOn){loopOn=true;requestAnimationFrame(function run(t){for(var i=0;i<LOOP.length;i++)LOOP[i](t);requestAnimationFrame(run)})}}
+
+/* ---------- SMOKE: the APEX archive's liquid-chrome smoke, much quieter, under the lattice ---------- */
+(function(){
+  var cv=$('#smoke'),gl=cv.getContext('webgl',{antialias:false,alpha:true,premultipliedAlpha:false});if(!gl){cv.remove();return}
+  var vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  var fs='precision mediump float;uniform vec2 r;uniform float t;uniform vec2 m;'+
+   'float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}'+
+   'float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),f.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x),f.y);}'+
+   'float fbm(vec2 p){float v=0.,a=.5;mat2 R=mat2(.8,.6,-.6,.8);for(int i=0;i<4;i++){v+=a*n2(p);p=R*p*2.03;a*=.5;}return v;}'+
+   'float H(vec2 p){vec2 q=p*.9;vec2 w=vec2(fbm(q+vec2(0.,t*.03)),fbm(q+vec2(5.2,-t*.026)));return fbm(q*1.3+w*1.9+vec2(t*.018,0.));}'+
+   'void main(){vec2 p=(gl_FragCoord.xy-.5*r)/r.y;float e=1.6/r.y;float h=H(p);'+
+   'vec3 n=normalize(vec3(-(H(p+vec2(e,0.))-h)/e*.11,-(H(p+vec2(0.,e))-h)/e*.11,1.));vec3 R=reflect(vec3(0.,0.,-1.),n);'+
+   'float band=exp(-pow((R.y-.3)*7.,2.))+.55*exp(-pow((R.y+.12)*10.,2.))+.6*exp(-pow((R.x+.6)*10.,2.))+.4*exp(-pow((R.x-.55)*13.,2.));'+
+   'float d=length(p-m);band+=.25*exp(-d*d*6.);'+
+   'vec3 col=vec3(.80,.80,.90)*band;col=1.-exp(-col*1.1);float a=clamp(col.r*1.1,0.,1.);gl_FragColor=vec4(col,a);}';
+  function sh(type,src){var o=gl.createShader(type);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o}
+  var pr;try{pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);gl.useProgram(pr)}catch(err){cv.remove();return}
+  gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  var loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  var uR=gl.getUniformLocation(pr,'r'),uT=gl.getUniformLocation(pr,'t'),uM=gl.getUniformLocation(pr,'m');
+  var sc=Math.min(devicePixelRatio||1,1.5)*(innerWidth<900?.35:.45),tx=.2,ty=.1,mx=.2,my=.1,t0=performance.now(),last=0;
+  function size(){cv.width=Math.max(2,innerWidth*sc|0);cv.height=Math.max(2,innerHeight*sc|0);gl.viewport(0,0,cv.width,cv.height);gl.uniform2f(uR,cv.width,cv.height)}
+  function draw(now){mx+=(tx-mx)*.04;my+=(ty-my)*.04;gl.uniform1f(uT,RM?12.:(now-t0)/1000);gl.uniform2f(uM,mx,my);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)}
+  size();addEventListener('resize',function(){size();draw(performance.now())});
+  addEventListener('pointermove',function(e){tx=(e.clientX/innerWidth-.5)*innerWidth/innerHeight;ty=.5-e.clientY/innerHeight},{passive:true});
+  cv.addEventListener('webglcontextlost',function(e){e.preventDefault();cv.style.display='none'});
+  if(RM)draw(performance.now());else addLoop(function(now){if(now-last<33)return;last=now;draw(now)});   // ~30 fps is plenty for slow smoke
+})();
+
+/* ---------- CURSOR TOOL + BACKGROUND NODE LIGHT ---------- */
 (function(){
   if(RM||!fine)return;
   document.documentElement.classList.add('cc');
   var cur=$('#cur'),tip=$('.ctip',cur),brk=$('.brk',cur),mag=$('.mag',cur),cv=$('#nodes'),ctx=cv.getContext('2d');
-  var UI='.glass,button,a,input,select,textarea,label,.btl,[role="tab"],.sample,.toast',
-      BTN='button,a,.tab,.th,label.sw,.drop,select,.chart .pt',TXT='input:not([type="checkbox"]):not([type="file"]),textarea,[contenteditable]';
+  var UI='.glass,button,a,input,select,textarea,label,.btl,[role="tab"],.sample,.toast,.sheet-wrap,.qacts',
+      BTN='button,a,.tab,.th,label.sw,label.sq,.drop,select,.chart .pt',TXT='input:not([type="checkbox"]):not([type="file"]),textarea,[contenteditable]';
   var mx=-999,my=-999,cx=-999,cy=-999,inside=false,mode='bg',btnEl=null,btlEl=null,magSrc='',I=0,ripples=[],nodes=[],pairs=[],W=0,H=0,dpr=1,dirty=true;
   var bx=0,by=0,bw=0,bh=0;
   function build(){
@@ -1199,28 +1553,34 @@ function bindTilt(){
   }
   build();addEventListener('resize',build);
   function setMode(m){if(m!==mode){mode=m;cur.dataset.m=m}}
+  var moved=false;
+  function detect(){
+    var t=document.elementFromPoint(mx,my),m='bg',nb=null,be=null;
+    if(t){
+      if(t.closest(TXT))m='text';
+      else if((nb=t.closest('.btl')))m='bottle';
+      else if((be=t.closest(BTN))){m='btn';if(mode!=='btn'||be!==btnEl){var r=be.getBoundingClientRect();if(mode!=='btn'){bx=r.left;by=r.top;bw=r.width;bh=r.height}}}
+      else if(t.closest(UI))m='ui';
+    }
+    btnEl=be;
+    if(btlEl&&btlEl!==nb){btlEl.style.setProperty('--rx','0deg');btlEl.style.setProperty('--ry','0deg')}
+    btlEl=nb;
+    if(btlEl&&moved){var r2=btlEl.getBoundingClientRect(),px=(mx-r2.left)/r2.width-.5,py=(my-r2.top)/r2.height-.5;
+      btlEl.style.setProperty('--ry',(px*26).toFixed(1)+'deg');btlEl.style.setProperty('--rx',(-py*12).toFixed(1)+'deg')}
+    setMode(m);moved=false;
+  }
+  var fc=0;
   addEventListener('pointermove',function(e){
     if(e.pointerType&&e.pointerType!=='mouse'){cur.classList.remove('on');inside=false;return}
     mx=e.clientX;my=e.clientY;if(!inside){cx=mx;cy=my}inside=true;cur.classList.add('on');
-    var t=e.target instanceof Element?e.target:null,m='bg';
-    btnEl=null;var nb=null;
-    if(t){
-      if(t.closest(TXT))m='text';
-      else if((nb=t.closest('.btl'))){m='bottle'}
-      else if((btnEl=t.closest(BTN))){m='btn';if(mode!=='btn'){var r=btnEl.getBoundingClientRect();bx=r.left;by=r.top;bw=r.width;bh=r.height}}
-      else if(t.closest(UI))m='ui';
-    }
-    if(btlEl&&btlEl!==nb){btlEl.style.setProperty('--rx','0deg');btlEl.style.setProperty('--ry','0deg')}
-    btlEl=nb;
-    if(btlEl){var r2=btlEl.getBoundingClientRect(),px=(mx-r2.left)/r2.width-.5,py=(my-r2.top)/r2.height-.5;
-      btlEl.style.setProperty('--ry',(px*26).toFixed(1)+'deg');btlEl.style.setProperty('--rx',(-py*12).toFixed(1)+'deg')}
-    setMode(m);
+    moved=true;
   },{passive:true});
   document.addEventListener('pointerleave',function(){inside=false;cur.classList.remove('on')});
   document.documentElement.addEventListener('mouseleave',function(){inside=false;cur.classList.remove('on')});
   addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')return;cur.classList.add('press');ripples.push({x:e.clientX,y:e.clientY,t0:performance.now()});if(ripples.length>4)ripples.shift()});
   addEventListener('pointerup',function(){cur.classList.remove('press')});
   function frame(now){
+    if(inside&&(moved||(++fc%6===0)))detect();
     // tool position: dot is exact, lens trails slightly for weight
     cx+=(mx-cx)*.32;cy+=(my-cy)*.32;
     tip.style.transform='translate3d('+cx.toFixed(1)+'px,'+cy.toFixed(1)+'px,0)';
@@ -1250,9 +1610,8 @@ function bindTilt(){
         ctx.fillStyle='rgba(170,150,255,'+(n.a*.22).toFixed(3)+')';ctx.beginPath();ctx.arc(n.x,n.y,3+n.a*6,0,6.283);ctx.fill();
         ctx.fillStyle='rgba(244,245,248,'+(n.a*.95).toFixed(3)+')';ctx.beginPath();ctx.arc(n.x,n.y,1+n.a*1.6,0,6.283);ctx.fill()}
     }else if(dirty){ctx.clearRect(0,0,W,H);dirty=false}
-    requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+  addLoop(frame);
   window.__pep_cursor=function(){return {mode:mode,I:I}};
 })();
 
@@ -1270,6 +1629,6 @@ RENDER.cmsg();
 var h=location.hash.slice(1);
 setView(h==='client'?'client':'owner',true);
 if(!location.hash){try{history.replaceState(null,'','#owner')}catch(e){}}
-window.__pep={S:S,setView:setView,setTab:setTab};
+window.__pep={S:S,P:P,setView:setView,setTab:setTab};
 })();
 </script>
