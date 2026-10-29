@@ -584,9 +584,9 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 <script type="module" src="gl3d.js"></script>
 <script>
 /* PEPTICITY concierge bot (BOT-P01, shared/bot/pep-bot.js; it loads its own pep-bot.css). Mounts when the file exists. */
-fetch('shared/bot/pep-bot.js',{method:'HEAD'}).then(function(r){if(!r.ok)return;
+if(!/[?&]nobot/.test(location.search))fetch('shared/bot/pep-bot.js',{method:'HEAD'}).then(function(r){if(!r.ok)return;
   var s=document.createElement('script');s.src='shared/bot/pep-bot.js';s.defer=true;
-  s.dataset.offer=(window.PC_CONFIG.counselCleared.offer?'on':'off');s.dataset.soldOut='epitalon-50,wolverine-20mg,igf-1-lr3';s.dataset.weightShelf='off';
+  s.dataset.offer=(window.PC_CONFIG.counselCleared.offer?'on':'off');s.dataset.soldOut='epitalon-50,wolverine-20mg,igf-1-lr3';s.dataset.weightShelf='off';s.dataset.greetDelay='20000';
   document.body.appendChild(s);}).catch(function(){});
 </script>
 </body>

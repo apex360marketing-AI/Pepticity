@@ -650,7 +650,7 @@
   function closeCart() { $('#cart').hidden = true; $('#scrimx').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
   $('#cartBtn').addEventListener('click', openCart);
   $('#cart').addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeCart(); });
-  $('#cart').addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCart(); trap($('#cart'), e); });
+  $('#cart').addEventListener('keydown', function (e) { trap($('#cart'), e); });
   $('#scrimx').addEventListener('click', closeCart);
   wireForm($('#cartJoin'), function () { renderCart(); });
   $('#checkout').addEventListener('click', function () { closeCart(); openModal('checkout'); });
@@ -711,7 +711,11 @@
   }
   function closeModal() { $('#modal').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
   $('#modal').addEventListener('click', function (e) { if (e.target.closest('[data-close]') || e.target === $('#modal') || e.target.closest('[data-go]')) closeModal(); });
-  $('#modal').addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); trap($('.modal'), e); });
+  $('#modal').addEventListener('keydown', function (e) { trap($('.modal'), e); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!menu.hidden) closeMenu(); else if (!exitEl.hidden) closeExit();
+  });
 
   /* ================= menu ================= */
   var menu = $('#menu');
@@ -719,7 +723,7 @@
   function closeMenu() { if (menu.hidden) return; menu.classList.remove('open'); menu.hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); startScroll(); }
   $('#menuBtn').addEventListener('click', openMenu);
   menu.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) { closeMenu(); if (lastFocus) lastFocus.focus(); } });
-  menu.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); trap(menu, e); });
+  menu.addEventListener('keydown', function (e) { trap(menu, e); });
   $$('.menu-list a').forEach(function (a, k) { a.style.transitionDelay = k * 60 + 'ms'; });
 
   /* ================= interests (cards + 3D icon slots) ================= */

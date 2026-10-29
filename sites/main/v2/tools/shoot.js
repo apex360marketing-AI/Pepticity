@@ -15,14 +15,14 @@ const tag = (M === 'd' ? 'desk' : 'mob') + '-' + V;
   p.on('pageerror', e => errs.push('PE ' + e.message.slice(0, 300)));
   p.on('console', m => { if (m.type() === 'error') errs.push('CE ' + m.text().slice(0, 300)); });
   p.on('requestfailed', r => { if (!/\.mp4|\.webm/.test(r.url())) errs.push('RF ' + r.url().slice(0, 140)); });
-  const shot = async n => { await p.screenshot({ path: OUT + tag + '-' + n + '.png' }); };
+  const shot = async n => { await p.screenshot({ path: OUT + tag + '-' + n + '.png', timeout: 120000 }); };
   const sw = async n => { const w = await p.evaluate(() => document.documentElement.scrollWidth); if (w > vp.width) errs.push('SIDEWAYS ' + n + ' ' + w); };
   const to = async (y, wait = 2200) => { await p.evaluate(y => { const l = window.__pc.lenis; if (l) l.scrollTo(y, { immediate: true, force: true }); window.scrollTo(0, y); }, y); await p.waitForTimeout(wait); };
   const top = sel => p.evaluate(s => { const e = document.querySelector(s); return e.getBoundingClientRect().top + scrollY; }, sel);
   const toEl = async (sel, off = 0, wait) => to((await top(sel)) + off, wait);
   const H = vp.height;
 
-  await p.goto('http://127.0.0.1:8799/index.html?nointro&v=' + V);
+  await p.goto('http://127.0.0.1:8799/index.html?nointro&nobot&v=' + V);
   await p.waitForTimeout(6500);
   await shot('01-hero'); await sw('hero');
   const J = await top('#journey'), JH = await p.evaluate(() => document.getElementById('journey').offsetHeight - innerHeight);
