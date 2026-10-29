@@ -48,7 +48,7 @@ export function createStage(canvas) {
   renderer.setPixelRatio(Math.min(devicePixelRatio, MOBILE ? 1.5 : 2));
   renderer.setClearColor(0, 0); renderer.autoClear = false;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.92;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -62,12 +62,12 @@ export function createStage(canvas) {
 
   const brushed = brushedTexture();
   const MAT = {
-    gunmetal: new THREE.MeshPhysicalMaterial({ color: 0x8d8f93, metalness: 0.92, roughness: 0.4, roughnessMap: brushed, map: brushed,
-      clearcoat: 0.15, clearcoatRoughness: 0.5, envMapIntensity: 0.9 }),
+    gunmetal: new THREE.MeshPhysicalMaterial({ color: 0x7a7b80, metalness: 0.86, roughness: 0.52, roughnessMap: brushed, map: brushed,
+      clearcoat: 0.08, clearcoatRoughness: 0.6, envMapIntensity: 0.62 }),
     platinum: new THREE.MeshPhysicalMaterial({ color: 0xe4e6ea, metalness: 1, roughness: 0.17, roughnessMap: brushed, envMapIntensity: 1.1 }),
     goldchrome: new THREE.MeshPhysicalMaterial({ color: 0xdcceaa, metalness: 1, roughness: 0.2, roughnessMap: brushed, envMapIntensity: 1.05 }),
     chevron: new THREE.MeshPhysicalMaterial({ color: 0x26252a, metalness: 0.85, roughness: 0.38, roughnessMap: brushed, envMapIntensity: 0.55 }),
-    uv: new THREE.MeshPhysicalMaterial({ color: 0x0e0c14, metalness: 0.55, roughness: 0.32, sheen: 1, sheenColor: new THREE.Color(0x6a4fb8),
+    uv: new THREE.MeshPhysicalMaterial({ color: 0x0e0c14, metalness: 0.55, roughness: 0.32, sheen: 1, sheenColor: new THREE.Color(0x4b3b86),
       sheenRoughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.7 }),
     edge: new THREE.LineBasicMaterial({ color: 0xdcd6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }),
   };
@@ -126,7 +126,9 @@ function regroupBevel(g) {
   const side = g.groups.find(q => q.materialIndex === 1), cap = g.groups.find(q => q.materialIndex === 0);
   const tris = (grp, fn) => { for (let i = grp.start; i < grp.start + grp.count; i += 3) fn(i); };
   const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), n = new THREE.Vector3();
-  tris(cap, i => capT.push(i));
+  // caps stay perfectly flat (creased normals must not bleed in from the bevel)
+  tris(cap, i => { capT.push(i); a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
+    n.subVectors(c, b).cross(a.clone().sub(b)).normalize(); for (let v = 0; v < 3; v++) nor.setXYZ(i + v, n.x, n.y, n.z); });
   tris(side, i => {
     a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
     n.subVectors(c, b).cross(a.clone().sub(b)).normalize();
@@ -194,16 +196,16 @@ export function makeWord(stage, text, { cut = 'regular', face = 'gunmetal', dept
 }
 
 // a matte wall with soft cast shadow, the way the reference is lit
-export function wallScene(stage, { light = false, wallZ = -0.16, keyPos = [2.6, 2.4, 3.2], shadowRadius = 5 } = {}) {
+export function wallScene(stage, { light = false, wallZ = -0.24, keyPos = [3.0, 2.1, 2.3], shadowRadius = 7 } = {}) {
   const scene = new THREE.Scene();
-  const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 20), new THREE.MeshStandardMaterial({ map: stage.wallTexture(light), roughness: 0.96, metalness: 0, envMapIntensity: light ? 0.6 : 0.25 }));
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 20), new THREE.MeshStandardMaterial({ map: stage.wallTexture(light), color: 0xffffff, roughness: 0.97, metalness: 0, envMapIntensity: light ? 0.5 : 0.12 }));
   wall.position.z = wallZ; wall.receiveShadow = true; scene.add(wall);
-  const key = new THREE.DirectionalLight(0xffffff, light ? 1.4 : 2.3); key.position.set(...keyPos); key.castShadow = true;
+  const key = new THREE.DirectionalLight(0xffffff, light ? 1.3 : 1.9); key.position.set(...keyPos); key.castShadow = true;
   key.shadow.mapSize.set(MOBILE ? 1024 : 2048, MOBILE ? 1024 : 2048); key.shadow.radius = shadowRadius; key.shadow.bias = -0.0004; key.shadow.normalBias = 0.01;
   const sc = key.shadow.camera; sc.left = -5; sc.right = 5; sc.top = 3; sc.bottom = -3; sc.near = 0.5; sc.far = 20;
   scene.add(key); scene.add(key.target);
-  const fill = new THREE.HemisphereLight(0xe8eaf0, 0x0c0a12, light ? 0.6 : 0.35); scene.add(fill);
-  const rim = new THREE.PointLight(0x7a5cff, light ? 0.0 : 1.4, 6, 2); rim.position.set(-2.2, -0.8, 1.2); scene.add(rim);
+  const fill = new THREE.HemisphereLight(0xe8eaf0, 0x0c0a12, light ? 0.6 : 0.22); scene.add(fill);
+  const rim = new THREE.PointLight(0x7a5cff, light ? 0.0 : 0.45, 6, 2); rim.position.set(-2.2, -0.8, 1.2); scene.add(rim);
   const camera = new THREE.PerspectiveCamera(26, 2, 0.1, 60);
   return { scene, camera, wall, key };
 }

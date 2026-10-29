@@ -246,7 +246,7 @@ if (stage) {{
       }}
     }});
   }}
-  wordSlot('match', 'BLACK', {{ fill: 0.93, lookY: -0.012, tilt: 0.15, wall: {{ keyPos: [2.2, 1.9, 3.0], shadowRadius: 6 }} }});
+  wordSlot('match', 'BLACK', {{ fill: 0.9, lookY: -0.012, tilt: 0.15, wall: {{ keyPos: [3.0, 2.0, 2.2], shadowRadius: 8 }} }});
   wordSlot('pepticity', 'PEPTICITY', {{ fill: 0.84, funky: 1 }});
   wordSlot('studio', 'STUDIO', {{ fill: 0.6, funky: 0.8 }});
   wordSlot('condensed', 'PEPTICITY', {{ fill: 0.8, funky: 1.3, word: {{ cut: 'condensed' }} }});
@@ -270,7 +270,7 @@ def glyph_d(ch, sx, sy, tx, ty, rot=0, cut='regular', cx=None, cy=None):
             for px, py in ring:
                 x, y = (px - cx) * sx, (py - cy) * sy
                 X, Y = tx + x * c - y * s, ty + x * s + y * c
-                pts.append(f'{X:.2f} {-Y:.2f}')
+                pts.append(f'{X:.4f} {-Y:.4f}')
             d += 'M' + ' L'.join(pts) + 'Z'
     return d
 
@@ -300,31 +300,34 @@ RC = RB + LH / 2
 
 
 def emblem_layout():
-    sc = LH / CAP; items = []
-    for i, ch in enumerate(EMB_TEXT):
-        if ch == '*': items.append((ch, 0.12)); continue
-        adv = J['regular'][ch]['adv'] * sc + J['kern'].get(EMB_TEXT[i:i + 2], 0) * sc
-        items.append((ch, adv))
-    total = sum(a for _, a in items); C = 2 * math.pi * RC
-    gap = (C - total) / len(items)
-    out, s = [], 0
-    word = sum(a + gap for _, a in items[:9]) - gap      # centre the first PEPTICITY over the top
-    for ch, a in items:
-        phi = math.pi / 2 + (word / 2 - (s + a / 2)) / RC
-        out.append((ch, phi)); s += a + gap
+    """Top PEPTICITY reads clockwise (letters point out); bottom PEPTICITY reads left to right upright
+    (letters point in), like a minted seal. Diamonds sit at 3 and 9 o'clock. Items: (char, phi, upright_flag)."""
+    sc = LH / CAP
+    word = 'PEPTICITY'
+    advs = [J['regular'][c]['adv'] * sc + J['kern'].get(word[i:i + 2], 0) * sc for i, c in enumerate(word)]
+    track = 0.026
+    span = sum(advs) + track * (len(word) - 1)
+    out = []
+    s = 0
+    for c, a in zip(word, advs):                       # top: clockwise, centred on 12 o'clock
+        out.append((c, math.pi / 2 + (span / 2 - (s + a / 2)) / RC, 0)); s += a + track
+    s = 0
+    for c, a in zip(word, advs):                       # bottom: counter-clockwise, centred on 6 o'clock
+        out.append((c, -math.pi / 2 - (span / 2 - (s + a / 2)) / RC, 1)); s += a + track
+    out += [('*', 0.0, 0), ('*', math.pi, 0)]
     return out, sc
 
 
 def emblem_d():
     lay, sc = emblem_layout(); d = ''
-    for ch, phi in lay:
+    for ch, phi, up in lay:
         X, Y = RC * math.cos(phi), RC * math.sin(phi)
         if ch == '*':
             r = 0.028; rot = phi - math.pi / 2
             pts = [(0, r), (r, 0), (0, -r), (-r, 0)]
-            d += 'M' + ' L'.join(f'{X + x * math.cos(rot) - y * math.sin(rot):.3f} {-(Y + x * math.sin(rot) + y * math.cos(rot)):.3f}' for x, y in pts) + 'Z'
+            d += 'M' + ' L'.join(f'{X + x * math.cos(rot) - y * math.sin(rot):.4f} {-(Y + x * math.sin(rot) + y * math.cos(rot)):.4f}' for x, y in pts) + 'Z'
         else:
-            d += glyph_d(ch, sc, sc, X, Y, phi - math.pi / 2)
+            d += glyph_d(ch, sc, sc, X, Y, phi + math.pi / 2 if up else phi - math.pi / 2)
     return d
 
 
@@ -458,7 +461,7 @@ if (stage) {{
     const rd = 0.035;
     [[0.935, 1.0], [0.62, 0.655]].forEach(([a, b]) => {{ const m = new THREE.Mesh(ringGeo(a, b, rd, 0.008), [M.platinum, M.uv]); m.castShadow = true; f.add(m); }});
     const sc = E.sc;
-    E.layout.forEach(([ch, phi]) => {{
+    E.layout.forEach(([ch, phi, up]) => {{
       const X = E.RC * Math.cos(phi), Y = E.RC * Math.sin(phi);
       let obj;
       if (ch === '*') {{
@@ -470,7 +473,7 @@ if (stage) {{
         geo.parts.forEach(p => {{ const m = new THREE.Mesh(p.g, [M.gunmetal, M.uv]); m.castShadow = true; inner.add(m); inner.add(new THREE.LineSegments(p.lg, M.edge)); }});
         inner.position.set(-geo.adv / 2, -0.35, 0); obj.scale.setScalar(sc * 1000);
       }}
-      obj.position.set(X, Y, 0); obj.rotation.z = phi - Math.PI / 2; f.add(obj);
+      obj.position.set(X, Y, 0); obj.rotation.z = up ? phi + Math.PI / 2 : phi - Math.PI / 2; f.add(obj);
     }});
     const P = pMesh('platinum', 0.74, 0.042, 0.006); P.position.z = 0.025; f.add(P);
     f.position.z = zFront; group.add(f); return f;

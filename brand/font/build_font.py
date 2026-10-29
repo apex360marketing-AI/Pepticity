@@ -29,7 +29,7 @@ CAP = 700
 
 
 # ---------------------------------------------------------------- helpers
-def RP(pts, radii=None, seg=12):
+def RP(pts, radii=None, seg=22):
     """Polygon with per-vertex fillet radii (0 = sharp)."""
     n = len(pts)
     radii = radii or [0] * n
@@ -233,7 +233,7 @@ def make_glyphs(k=1.0, s=130, R=140, r=40):
     return G
 
 
-def split_variant(G, gap=28):
+def split_variant(G, gap=40):
     seam = BOX(-2000, CAP / 2 - gap / 2, 5000, CAP / 2 + gap / 2)
     return {k: (g.difference(seam), w) for k, (g, w) in G.items()}
 
