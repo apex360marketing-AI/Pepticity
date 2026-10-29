@@ -1,6 +1,6 @@
 <title>PEPTICITY Vial Lab</title>
 <style>
-:root{--bg:#07070a;--ink:#ecedf0;--mute:#8d9099;--line:rgba(220,224,232,.14);--chrome:#d9dce2;--uv:#14101c;--accent:#d4ff3a;--yes:#e9ecf2;--no:#5a5d66;color-scheme:dark}
+:root{--bg:#07070a;--ink:#ecedf0;--mute:#8d9099;--line:rgba(220,224,232,.14);--chrome:#d9dce2;--uv:#14101c;--accent:#e9ecf2;--yes:#e9ecf2;--no:#5a5d66;color-scheme:dark}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07070a;--ink:#ecedf0}}
 :root[data-theme="dark"]{--bg:#07070a;--ink:#ecedf0}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -211,14 +211,20 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
   </div>
 </article>
 </section>
-<footer>Concept renders for review only. Labels show product name and strength only. Picks stay in this browser.</footer>
+<footer>Concept renders for review only. Labels show product name and strength only. Your picks save to this page so they can be read back.</footer>
 </main>
 <script>
 (function(){
   var KEY='pepticity-vial-lab-picks', picks={};
   try{picks=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){picks={};}
   var cards=[].slice.call(document.querySelectorAll('.v')), filter='all';
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(picks));}catch(e){}}
+  var db=null;
+  function save(id){try{localStorage.setItem(KEY,JSON.stringify(picks));}catch(e){}
+    if(db&&id){db.doc('picks/v'+id).set({v:picks[id]||''}).catch(function(){});}}
+  (async function(){try{db=await (window.claude&&window.claude.use?window.claude.use('db'):null);}catch(e){db=null}
+    if(!db)return;
+    db.collection('picks').onSnapshot(function(snap){snap.docs.forEach(function(d){var id=d.id.replace(/^v/,'');var v=(d.data()||{}).v;if(v)picks[id]=v;else delete picks[id];});render();},function(){});
+  })();
   function render(){
     var c={yes:0,maybe:0,no:0};
     cards.forEach(function(el){
@@ -233,7 +239,7 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
   }
   document.addEventListener('click',function(e){
     var b=e.target.closest('.pick button');
-    if(b){var id=b.closest('.v').dataset.id;picks[id]=picks[id]===b.dataset.v?'':b.dataset.v;if(!picks[id])delete picks[id];save();render();return;}
+    if(b){var id=b.closest('.v').dataset.id;picks[id]=picks[id]===b.dataset.v?'':b.dataset.v;if(!picks[id])delete picks[id];save(id);render();return;}
     var f=e.target.closest('.filters button');
     if(f){filter=f.dataset.f;document.querySelectorAll('.filters button').forEach(function(x){x.setAttribute('aria-pressed',x===f?'true':'false');});render();}
   });
