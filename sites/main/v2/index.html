@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-version="white" class="js-pending">
+<html lang="en" data-version="black" class="js-pending">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -26,12 +26,12 @@ window.PC_CONFIG = {
   products: 'data/products.json',
   foundingRate: 0.15
 };
-(function(){var d=document.documentElement,v='white',seen=false;
-try{v=localStorage.getItem('pc-version')||'white'}catch(e){}
+(function(){var d=document.documentElement,v='black',seen=false;
+try{v=localStorage.getItem('pc-version')||'black'}catch(e){}
 try{seen=sessionStorage.getItem('pc-intro')==='1'}catch(e){}
 if(/[?&]v=black/.test(location.search))v='black';if(/[?&]v=white/.test(location.search))v='white';
 if(/[?&]nointro/.test(location.search))seen=true;
-if(v!=='black')v='white';d.setAttribute('data-version',v);
+if(v!=='white')v='black';d.setAttribute('data-version',v);
 if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');
 else if(!seen)d.classList.add('intro-on');
 d.classList.add('gated');d.classList.remove('js-pending');})();
@@ -117,7 +117,8 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <span class="hc-light" aria-hidden="true"></span>
       <p class="eyebrow"><i></i><span>GRAND OPENING</span><i></i></p>
       <p class="wback" id="wback" data-hook="H52" hidden><span id="wbackT">WELCOME BACK.</span> <button class="linkish" type="button" id="wbackCart">OPEN MY CART</button> <button class="linkish" type="button" id="wbackClear">NOT YOU?</button></p>
-      <div class="word3d" id="heroWord" data-slot3d="hero-word" aria-hidden="true"><span class="word3d-fb x3d">PEPTICITY</span></div>
+      <div class="w3d w3d-hero" data-word3d="PEPTICITY" data-funky="1" data-fill=".86" aria-hidden="true"></div>
+      <div class="w3d w3d-h1" data-word3d="JOIN THE|PEPTICITY TEAM" data-funky=".5" data-fill=".9" aria-hidden="true"></div>
       <h1 class="h1 x3d" id="heroTitle">JOIN THE PEPTICITY TEAM</h1>
       <ul class="perks">
         <li><b>15%</b><span>OFF YOUR FIRST ORDER</span></li>
@@ -142,7 +143,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
   </section>
 
   <!-- 2 · PORTAL (SCR-17) + CITY WEAVE (SCR-07) + CARD AND DOORS: one pinned stage -->
-  <section class="journey" id="journey" data-stop-id="city" aria-label="The city">
+  <section class="journey photo" id="journey" data-stop-id="city" aria-label="The city">
     <div class="stage" id="jStage">
       <div class="cam" id="cam">
         <canvas id="cvWeave" class="frames tone"></canvas>
@@ -154,6 +155,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
           <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
           <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
           <span class="spill"></span>
+          <span class="door-sign"><svg><use href="#pmark"/></svg><b>PEPTICITY</b></span>
         </div>
       </div>
       <div class="scrim" aria-hidden="true"></div>
@@ -264,10 +266,10 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
   <div class="after-gate" id="afterGate">
 
     <!-- 4 · THE LAB: five stations that hold, with hooks inside (R137 + coordinator) -->
-    <section class="lab" id="lab" data-stop-id="lab" aria-label="Inside the PEPTICITY lab">
+    <section class="lab photo" id="lab" data-stop-id="lab" aria-label="Inside the PEPTICITY lab">
       <div class="stage" id="lStage">
-        <div class="lab-cam" id="labCam"><canvas id="cvLab" class="frames tone"></canvas></div>
-        <div class="lab-plaque" id="labPlaque" aria-hidden="true"><svg class="lp-p"><use href="#pmark"/></svg><span class="x3d">PEPTICITY</span></div>
+        <div class="lab-cam" id="labCam"><canvas id="cvLab" class="frames tone"></canvas>
+          <div class="lab-plaque" id="labPlaque" aria-hidden="true"><svg class="lp-p"><use href="#pmark"/></svg><b>PEPTICITY</b></div></div>
         <div class="lab-fade" aria-hidden="true"></div>
         <ol class="stations" id="stations" aria-label="Stations">
           <li class="st glass" data-st="0"><p class="eyebrow"><span>STATION 01 OF 05</span></p><h2 class="h2s x3d">THE CHAIN IS BUILT</h2><p>Amino acids are joined one at a time, in an exact order, on tiny resin beads: solid-phase synthesis.</p></li>
@@ -306,6 +308,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <div class="wrap">
         <header class="sect-head">
           <p class="eyebrow"><i></i><span>START HERE</span><i></i></p>
+          <div class="w3d" data-word3d="WHAT BRINGS YOU|TO PEPTICITY" aria-hidden="true"></div>
           <h2 class="h2 x3d" id="intT">WHAT BRINGS YOU TO PEPTICITY?</h2>
           <p class="sub" data-hl>Pick what brings you here. We'll open the store on that catalogue shelf and send you the shelf guide.</p>
         </header>
@@ -319,7 +322,8 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
         <div class="wrap ex-wrap">
           <header class="ex-head">
             <p class="eyebrow"><span>THE VIAL, TAKEN APART</span></p>
-            <h2 class="h2 x3d" id="exT">WHAT'S IN EVERY PEPTICITY VIAL</h2>
+            <div class="w3d" data-word3d="INSIDE EVERY|PEPTICITY VIAL" aria-hidden="true"></div>
+          <h2 class="h2 x3d" id="exT">INSIDE EVERY PEPTICITY VIAL</h2>
             <p class="sub">Four parts. Nothing hidden. Scroll to take it apart.</p>
           </header>
           <div class="ex-vial" id="exVial" aria-hidden="true">
@@ -352,6 +356,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <div class="wrap">
         <header class="sect-head">
           <p class="eyebrow"><i></i><span id="storeCount">EVERY PRODUCT</span><i></i></p>
+          <div class="w3d" data-word3d="THE PEPTICITY|STORE" aria-hidden="true"></div>
           <h2 class="h2 x3d" id="storeT">THE PEPTICITY STORE</h2>
           <p class="sub" data-hl>Name, strength and price for every product. Members save 15% on their first order, applied in the cart.</p>
         </header>
@@ -370,6 +375,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <div class="wrap">
         <header class="sect-head">
           <p class="eyebrow"><i></i><span>MEMBERSHIP</span><i></i></p>
+          <div class="w3d" data-word3d="THREE WAYS|TO BELONG" aria-hidden="true"></div>
           <h2 class="h2 x3d" id="tierT">THREE WAYS TO BELONG</h2>
           <p class="sub">Scroll through the stack. The vial fills as you go further in.</p>
         </header>
@@ -392,6 +398,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <div class="wrap">
         <header class="sect-head">
           <p class="eyebrow"><i></i><span>TWO WAYS IN</span><i></i></p>
+          <div class="w3d" data-word3d="YOUR WELCOME|YOUR WAY" aria-hidden="true"></div>
           <h2 class="h2 x3d" id="twoT">YOUR WELCOME, YOUR WAY</h2>
         </header>
         <div class="pair">
@@ -430,7 +437,8 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
         <div class="quiz-card glass" data-effect="FRM-102" data-hook="H49">
           <header class="quiz-head">
             <p class="eyebrow"><span>CATALOGUE FINDER · THREE TAPS</span></p>
-            <h2 class="h2 x3d" id="quizT">FIND YOUR STARTING POINT</h2>
+            <div class="w3d" data-word3d="FIND YOUR|STARTING POINT" aria-hidden="true"></div>
+          <h2 class="h2 x3d" id="quizT">FIND YOUR STARTING POINT</h2>
             <div class="qbar" aria-hidden="true"><i id="qbar"></i></div>
             <p class="stepno" id="qStepNo">STEP 1 OF 4</p>
           </header>
@@ -446,7 +454,8 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
         <div class="wrap net-wrap">
           <div class="net-copy">
             <p class="eyebrow"><span>THE PEPTICITY NETWORK</span></p>
-            <h2 class="h2 x3d" id="netT">ONE TEAM, COAST TO COAST</h2>
+            <div class="w3d" data-word3d="ONE TEAM|COAST TO COAST" aria-hidden="true"></div>
+          <h2 class="h2 x3d" id="netT">ONE TEAM, COAST TO COAST</h2>
             <p class="sub" data-hl>Hover the network. Every node lights the ones it connects to. Join it and we'll tell you first when something lands in your province.</p>
           </div>
           <form class="cap-form net-form glass" data-hook="H45" data-effect="FRM-103" data-offer novalidate>
@@ -573,5 +582,11 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 <script src="brand/ui/button.js"></script>
 <script src="v2.js"></script>
 <script type="module" src="gl3d.js"></script>
+<script>
+/* PEPTICITY concierge bot (shared/bot/pep-bot.js + .css, built separately): loads itself when the files exist */
+fetch('shared/bot/pep-bot.js',{method:'HEAD'}).then(function(r){if(!r.ok)return;
+  var l=document.createElement('link');l.rel='stylesheet';l.href='shared/bot/pep-bot.css';document.head.appendChild(l);
+  var s=document.createElement('script');s.src='shared/bot/pep-bot.js';s.defer=true;document.body.appendChild(s);}).catch(function(){});
+</script>
 </body>
 </html>

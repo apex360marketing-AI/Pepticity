@@ -90,11 +90,11 @@ def make_glyphs(k=1.0, s=140, R=190, r=50, wf=0.8):
     w = W(980); ax = w / 2; top = CAP + 22
     yi = top * (ax - th) / ax
     chev = Polygon([(0, 0), (ax, top), (w, 0), (w - th, 0), (ax, yi), (th, 0)])
-    gap, bw = 16, round(118 * (0.8 + 0.2 * k))
+    gap, bw = 40, round(150 * (0.8 + 0.2 * k))
     # inner bar parallel to the right leg, inside it, split by a hairline
     rl = lambda y, off: (w - th - off) - y * ax / top
-    yb = 358                         # reference: bar top runs from y=315 (left) to y=400 (right)
-    bar = Polygon([(rl(0, gap + bw), 0), (rl(0, gap), 0), (rl(yb + 40, gap), yb + 40), (rl(yb - 40, gap + bw), yb - 40)])
+    yb = 345                         # reference: bar top runs from y=315 (left) to y=400 (right)
+    bar = Polygon([(rl(0, gap + bw), 0), (rl(0, gap), 0), (rl(yb + 55, gap), yb + 55), (rl(yb - 55, gap + bw), yb - 55)])
     G['A'] = (U(chev, bar), w)
 
     # B ---------------------------------------------------------------
@@ -252,12 +252,12 @@ def v2_overrides(G, k, s, R, r, d, W, th):
     G['B'] = (U(b.intersection(BOX(0, M1, 5000, CAP)).intersection(keepT),
                 b.intersection(BOX(0, M0, 5000, M1)).intersection(keepM),
                 b.intersection(BOX(0, 0, 5000, M0)).intersection(keepB)), w)
-    # E: three bars, no left side, mirror-symmetric top to bottom. Left ends carry the C's smooth
-    # outer curve so the missing spine is implied; right ends take the C's 45 degree terminals.
-    w = W(680); wmid = w - W(90); Re = 120
-    top = RP([(0, T0), (w - cut, T0), (w, CAP), (0, CAP)], [0, 0, 0, Re])
-    bot = RP([(0, 0), (w, 0), (w - cut, B1), (0, B1)], [Re, 0, 0, 0])
-    mid = Polygon([(0, M0), (wmid - cut / 2, M0), (wmid, CAP / 2), (wmid - cut / 2, M1), (0, M1)])
+    # E: three bars only, no left side, mirror-symmetric top to bottom
+    w = W(700); im = W(70)
+    top = Polygon([(0, CAP), (w, CAP), (w - cut, T0), (cut, T0)])
+    bot = Polygon([(cut, B1), (w - cut, B1), (w, 0), (0, 0)])
+    hm = s / 2
+    mid = Polygon([(im, CAP / 2), (im + hm, M1), (w - im - hm, M1), (w - im, CAP / 2), (w - im - hm, M0), (im + hm, M0)])
     G['E'] = (U(top, mid, bot), w)
     # P: the bowl of the B with no stem above the middle bar (the missing piece), stem below
     w = W(800)

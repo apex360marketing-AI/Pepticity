@@ -1119,7 +1119,7 @@ html.p3d .mark .mfb{display:none}
 .linkrow .pc-btn,.compose .pc-btn{flex:none}
 .code{padding:6px 6px 6px 16px}
 .owner-line .pc-btn{justify-self:start}
-.exp .tr-row{grid-template-columns:1.6fr .9fr .9fr .8fr 1.4fr 36px}
+@media (min-width:861px){.exp .tr-row{grid-template-columns:1.6fr .9fr .9fr .8fr 1.4fr 36px}}
 
 /* quick actions: the same button, large and two-line */
 .qa.pc-btn{width:100%;--c:14px}
@@ -1203,12 +1203,26 @@ html.t3d .h3d[data-type3d]::after{display:none}
   .pc-seg--sm .pc-seg__opt{padding:0 10px}
   .pick.pc-seg{--fs:8.5px;--ls:.1em}
   #asEvery.pc-seg{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row;height:auto}
-  #asEvery .pc-seg__opt{height:32px}
+  #asEvery .pc-seg__opt{height:44px}
   .wm .h3d{font-size:15px;letter-spacing:.1em}
   .sndbtn .snd-t{display:none}
   .sndbtn.pc-btn{--px:12px}
   .tabs .tab{padding:12px 11px 11px;letter-spacing:.1em}
 }
+
+/* ---------- AUDIT FIXES (29 Oct): stretch toggle options, 44px phone targets, AA contrast for small grey text ---------- */
+.pc-seg{align-items:stretch}
+:root{--mute:#9ba1aa;--dim:#7d828c}
+@media (max-width:480px){
+  .pc-btn,.pc-btn--sm{--h:44px}
+  .x.pc-btn{--h:44px;width:44px}
+  .top .pc-seg.vswitch{--h:54px}
+  .pc-seg--sm{--h:54px}
+  .search{padding:11px 12px}
+  .tabs .tab{min-height:44px}
+  .sw{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){.pc-seg__thumb{transition:none}}
 @media (prefers-reduced-motion:reduce){.tabs .tab::before,.th::after,.tierb::before{animation:none!important}}
 </style>
 
@@ -1651,7 +1665,7 @@ html.t3d .h3d[data-type3d]::after{display:none}
           <div class="glass card r-b">
             <div class="card-h"><h2 class="h3d h2">THE MONTHLY LETTER</h2>
               <label class="sw"><input type="checkbox" id="letterSw" checked><span class="tg"></span><span id="letterLbl">Subscribed</span></label></div>
-            <p class="muted" style="margin:0 0 6px">PEPTICITY's monthly health letter: new arrivals, studio news and member-only offers, once a month.</p>
+            <p class="muted" style="margin:0 0 6px">PEPTICITY's monthly letter: new arrivals, studio news and member-only offers, once a month.</p>
             <div class="letter">
               <div class="iss"><b>OCTOBER · [Issue title]</b><span>Oct 2026</span></div>
               <div class="iss"><b>SEPTEMBER · [Issue title]</b><span>Sep 2026</span></div>
@@ -2143,7 +2157,7 @@ RENDER.stock=function(){
    (rows.length?rows.map(function(p){return '<div class="tr-row"><span class="pn">'+esc(p.name)+'<small>'+esc(p.size)+'</small></span><span data-l="Status">'+chip(p.status)+'</span><span class="num" data-l="On hand">'+p.onHand+'</span><span class="num" data-l="Reorder at">'+p.rop+'</span><span class="num" data-l="Waitlist">'+(p.wl?'<span class="wl">'+bellSvg+p.wl+'</span>':'<span style="color:var(--dim)">—</span>')+'</span><span class="num" data-l="Sold YTD">'+p.units+'</span></div>'}).join(''):'<p class="muted" style="padding:16px 12px">No products match.</p>');
   var short=P.filter(function(p){return p.status!=='ok'}).sort(function(a,b){return (a.status==='out'?0:1)-(b.status==='out'?0:1)||b.wl-a.wl});
   $('#reCount').textContent=short.length+' items';
-  $('#reorderList').innerHTML=short.map(function(p){var sug=Math.max(p.rop*2-p.onHand,p.rop);return '<div class="reorder-item"><div><b>'+esc(p.name)+'</b> <span class="muted" style="font-size:12px">'+esc(p.size)+'</span><div class="why">'+(p.status==='out'?'Out of stock':'Only '+p.onHand+' left')+(p.wl?' · '+p.wl+' waiting':'')+'</div></div><div class="q">'+sug+'<small>ORDER</small></div></div>'}).join('');
+  $('#reorderList').innerHTML=short.map(function(p){var sug=Math.max(p.rop*2-p.onHand,p.rop);return '<div class="reorder-item"><div><b>'+esc(p.name)+'</b> <span class="muted" style="font-size:12px">'+esc(p.size)+'</span><div class="why">'+(p.status==='out'?'Out of stock':'Only '+p.onHand+' left')+(p.wl?' · '+p.wl+' waiting':'')+'</div></div><div class="q">'+sug+'<small>ORDER</small></div></div>'}).join('')||'<p class="muted empty">Nothing is short right now. Items appear here when they reach their reorder point.</p>';
   var wl=P.reduce(function(s,p){return s+p.wl},0)+Object.keys(S.alerts).filter(function(k){return S.alerts[k]}).length;
   countUp($('#wlTotal'),wl);
 };
@@ -2218,10 +2232,10 @@ function totals(){
 }
 function renderExp(flashId){
   var list=S.exp.slice().sort(function(a,b){return b.date<a.date?-1:1});
-  $('#expCount').textContent=list.length+' entries';
+  $('#expCount').textContent=list.length+(list.length===1?' entry':' entries');
   $('#expTbl').innerHTML='<div class="tr-row hd"><span>VENDOR · DATE</span><span>CATEGORY</span><span class="num">AMOUNT</span><span class="num">GST/HST</span><span>RECEIPT</span><span></span></div>'+
    list.map(function(x){var r=x.file?(safeImg(x.file.url)&&/^image\//.test(x.file.type)?'<span class="rcpt"><img class="thumb" src="'+safeImg(x.file.url)+'" alt="Receipt for '+esc(x.vendor)+'"><span>'+esc(x.file.name)+'</span></span>':'<span class="rcpt"><span class="fi">'+(/pdf/.test(x.file.type)?'PDF':'FILE')+'</span><span>'+esc(x.file.name)+'</span></span>'):'<span style="color:var(--dim);font-size:12px">none</span>';
-    return '<div class="tr-row'+(x.id===flashId?' flash':'')+'"><span class="pn">'+esc(x.vendor)+'<small>'+esc(x.date)+(x.note?' · '+esc(x.note):'')+'</small></span><span data-l="Category">'+esc(x.cat)+'</span><span class="num" data-l="Amount">'+cad2.format(x.amt)+'</span><span class="num" data-l="GST/HST">'+cad2.format(x.tax)+'</span><span data-l="Receipt">'+r+'</span><button class="x" type="button" data-del="'+esc(x.id)+'" aria-label="Remove expense from '+esc(x.vendor)+'">×</button></div>'}).join('');
+    return '<div class="tr-row'+(x.id===flashId?' flash':'')+'"><span class="pn">'+esc(x.vendor)+'<small>'+esc(x.date)+(x.note?' · '+esc(x.note):'')+'</small></span><span data-l="Category">'+esc(x.cat)+'</span><span class="num" data-l="Amount">'+cad2.format(x.amt)+'</span><span class="num" data-l="GST/HST">'+cad2.format(x.tax)+'</span><span data-l="Receipt">'+r+'</span><button class="x" type="button" data-del="'+esc(x.id)+'" aria-label="Remove expense from '+esc(x.vendor)+'">×</button></div>'}).join('')+(list.length?'':'<p class="muted empty" style="padding:14px 12px">No expenses yet. Add the first receipt with the form above.</p>');
 }
 $('#expTbl').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(!b)return;var id=+b.dataset.del;S.exp=S.exp.filter(function(x){return x.id!==id});save();renderExp();renderSum(true);toast('Expense removed')});
 function renderSum(flash){
@@ -2305,7 +2319,7 @@ var BUY=[['BPC-157','10 mg',95],['GHK-Cu','50 mg',75],['NAD+','1000 mg',129],['I
 RENDER.reorder=function(){
   $('#buyAgain').innerHTML=BUY.map(function(b,i){return '<div class="glass prod has-btl tilt '+['r-a','r-d','r-b'][i%3]+'">'+bottle(findP(b[0]),{sm:1,owned:1,nocap:1,i:i})+'<div class="pn2">'+esc(b[0])+'<small>'+esc(b[1])+' · last ordered Oct 24</small></div><div class="act"><span class="pr">'+cad.format(b[2])+'</span><button class="btn chrome morph sm" type="button" data-buy="'+i+'"><span class="lbl">REORDER</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>'}).join('');
   var outs=P.filter(function(p){return p.status==='out'});
-  $('#alertsGrid').innerHTML=outs.map(function(p,i){var k=p.name;return '<div class="glass prod has-btl '+['r-c','r-b','r-a','r-d'][i%4]+'">'+bottle(p,{sm:1,nocap:1,i:i})+'<div class="pn2">'+esc(p.name)+'<small>'+esc(p.size)+' · <span class="chip out" style="padding:4px 6px;font-size:8.5px;vertical-align:1px">OUT</span></small></div><div class="act"><span class="muted">'+(S.eta[p.name]?'Back '+fmtDay(S.eta[p.name]):'Back soon')+'</span><label class="sw"><input type="checkbox" data-alert="'+esc(k)+'"'+(S.alerts[k]?' checked':'')+'><span class="tg"></span><span>'+(S.alerts[k]?'You’ll be notified':'Notify me')+'</span></label></div></div>'}).join('');
+  $('#alertsGrid').innerHTML=outs.map(function(p,i){var k=p.name;return '<div class="glass prod has-btl '+['r-c','r-b','r-a','r-d'][i%4]+'">'+bottle(p,{sm:1,nocap:1,i:i})+'<div class="pn2">'+esc(p.name)+'<small>'+esc(p.size)+' · <span class="chip out" style="padding:4px 6px;font-size:8.5px;vertical-align:1px">OUT</span></small></div><div class="act"><span class="muted">'+(S.eta[p.name]?'Back '+fmtDay(S.eta[p.name]):'Back soon')+'</span><label class="sw"><input type="checkbox" data-alert="'+esc(k)+'"'+(S.alerts[k]?' checked':'')+'><span class="tg"></span><span>'+(S.alerts[k]?'You’ll be notified':'Notify me')+'</span></label></div></div>'}).join('')||'<p class="muted empty">Everything is in stock. Restock alerts appear here when an item sells out.</p>';
   bindTilt();
 };
 $('#buyAgain').addEventListener('click',function(e){var b=e.target.closest('[data-buy]');if(b)morph(b,'ADDED',function(){toast(BUY[+b.dataset.buy][0]+' added to your cart (demo)')})});

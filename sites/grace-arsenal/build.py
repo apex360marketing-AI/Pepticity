@@ -41,9 +41,28 @@ def frames():
 
 src = (SITE / "index.src.html").read_text()
 src = re.sub(r"(?:/\*@INLINE:([^@]+)@\*/|//@INLINE:([^@]+)@)", lambda m: (ROOT / (m.group(1) or m.group(2))).read_text().rstrip(), src)
+eng = "\n".join(l for l in (ROOT / "brand/font/type3d-engine.js").read_text().splitlines() if not l.startswith("import "))
+eng = re.sub(r"^export ", "", eng, flags=re.M)
+src = src.replace("@ENGINE@", eng).replace("@GLYPHSJSON@", json.dumps(json.loads((ROOT / "brand/font/glyphs.json").read_text()), separators=(",", ":")))
 src = src.replace("@FONTFACE@", fontface()).replace("@GLYPHS@", glyphs()).replace("@FRAMES@", frames())
 src = re.sub(r"@B64:([^@]+)@", lambda m: b64(m.group(1)), src)
+src = src.replace("@PMARK@", re.search(r'<path[^>]* d="([^"]+)"', (ROOT / "brand/logo/p-mark.svg").read_text()).group(1))
 src = re.sub(r"@SVGJSON:([^@]+)@", lambda m: json.dumps((ROOT / m.group(1)).read_text()), src)
 src = re.sub(r"@SVG:([^@]+)@", lambda m: re.sub(r"<title>.*?</title>", "", (ROOT / m.group(1)).read_text()).strip(), src)
+CHAT = """<div class="chatline" id="chatline">
+            <div class="bub gl me"><em>VISITOR · SAMPLE</em>Is GHK-Cu back in stock?</div>
+            <div class="bub gl"><em>CONCIERGE · SAMPLE</em>Not yet. Leave your email and I will tell you the moment it is back. Want me to show you what is on the shelf today?</div>
+            <div class="bub gl me"><em>VISITOR · SAMPLE</em>Yes please.</div>
+          </div>"""
+BOT_JS, BOT_CSS = ROOT / "shared/bot/pep-bot.js", ROOT / "shared/bot/pep-bot.css"
+if BOT_JS.exists() and BOT_CSS.exists():
+    state = "LIVE BELOW"
+    block = CHAT + '\n<div class="slotb" id="pepBotMount"></div><style>' + BOT_CSS.read_text() + '</style><script>' + BOT_JS.read_text() + '</script>'
+else:
+    state = "DEMO ARRIVING"
+    block = CHAT + """
+          <div class="slotb"><div><b>[CONCIERGE DEMO SLOT]</b><p>The working concierge is being finished. It drops into this space when it is ready, and you will be able to talk to it right here.</p></div></div>"""
+src = src.replace("@CONCIERGE_STATE@", state).replace("@CONCIERGE@", block)
+print("concierge:", state)
 (SITE / "index.html").write_text(src)
 print("built", SITE / "index.html", len(src), "bytes")

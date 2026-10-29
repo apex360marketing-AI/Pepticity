@@ -84,22 +84,39 @@ async function main() {
   let pointer = { x: 0, y: 0 };
   addEventListener('pointermove', e => { pointer.x = e.clientX; pointer.y = e.clientY; }, { passive: true });
 
-  /* hero wordmark */
-  const heroEl = document.getElementById('heroWord');
-  if (heroEl) {
-    const { scene, camera } = litScene(1.2);
-    const w = makeWord(front, 'PEPTICITY', { face: isBlack() ? 'platinum' : 'gunmetal', depth: 0.14, bevel: 0.014, edge: isBlack(), shadows: false });
-    scene.add(w.group);
-    const setFace = () => w.group.traverse(o => { if (o.isMesh && Array.isArray(o.material) && o.material[0] !== M.chevron) o.material[0] = isBlack() ? M.platinum : M.gunmetal; });
-    document.addEventListener('pc-version', () => { setFace(); front.kick(); });
-    const st = { ry: 0, rx: 0 };
-    front.addSlot(heroEl, { scene, camera, fit: a => fitCamera(camera, w.width, w.height, a, 0.94),
-      update(dt, t, prog, p) {
-        st.ry = damp(st.ry, p.x * 0.18, 3, dt); st.rx = damp(st.rx, p.y * 0.12, 3, dt);
-        w.group.rotation.set(st.rx, st.ry, 0);
-        w.letters.forEach((l, i) => { l.rotation.y = REDUCED ? 0 : Math.sin(t * 0.9 - i * 0.55) * 0.12 + (prog - 0.5) * 0.2 * Math.sin(i); });
-      } });
+  /* live 3D word panels: the brand-font page's wordSlot (makeWord + wallScene), one renderer for every slot */
+  const { wallScene } = E;
+  const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
+  function wordPanel(el) {
+    const raw = el.dataset.word3d, phone = innerWidth < 760, funky = +(el.dataset.funky || 0.8), fill = +(el.dataset.fill || 0.82);
+    let lines = raw.split('|');
+    if (!phone && raw.replace('|', ' ').length <= 24) lines = [lines.join(' ')];
+    const group = new THREE.Group(), letters = []; let width = 0;
+    const LH = 0.7, GAP = 0.26, H = lines.length * LH + (lines.length - 1) * GAP;
+    lines.forEach((ln, k) => { const w = makeWord(front, ln, {}); w.group.position.y = H / 2 - LH / 2 - k * (LH + GAP); group.add(w.group); letters.push(...w.letters); width = Math.max(width, w.width); });
+    const ratio = width / H;
+    el.style.aspectRatio = String(clampN(ratio * (lines.length > 1 ? 0.5 : 0.3), phone ? 1.6 : 2.2, el.classList.contains('w3d-hero') ? 3.6 : 7));
+    const make = light => { const ws = wallScene(front, { light }); ws.key.shadow.mapSize.set(1024, 1024); ws.scene.environment = front.envRT.texture; return ws; };
+    const dark = make(false); let light = null;
+    const camera = dark.camera;
+    const slot = { scene: dark.scene, camera };
+    const place = () => { const lt = !isBlack(); if (lt && !light) light = make(true); const ws = lt ? light : dark; ws.scene.add(group); slot.scene = ws.scene; ws.camera = camera; };
+    place(); document.addEventListener('pc-version', () => { place(); front.kick(); });
+    const st = { ry: 0, rx: 0, l: letters.map(() => ({ ry: funky ? 1.2 : 0, z: 0 })) };
+    slot.fit = a => fitCamera(camera, width, H, a, fill, 0);
+    slot.update = (dt, t, prog, p) => {
+      st.ry = damp(st.ry, p.x * 0.16, 3, dt); st.rx = damp(st.rx, p.y * 0.1, 3, dt);
+      group.rotation.set(st.rx, st.ry, 0);
+      if (funky) {
+        const local = clampN((prog - 0.5) * 2.6, -1, 1), n = letters.length;
+        letters.forEach((L, i) => { const s = st.l[i], phase = (i - (n - 1) / 2) / n;
+          s.ry = damp(s.ry, -local * (1.15 + phase * 1.4) * funky + Math.sin(t * 0.7 + i * 0.6) * 0.035, 5, dt);
+          s.z = damp(s.z, Math.abs(local) * 0.07 * Math.sin(i * 1.7 + 1), 5, dt); L.rotation.y = s.ry; L.position.z = s.z; });
+      }
+    };
+    front.addSlot(el, slot);
   }
+  document.querySelectorAll('[data-word3d]').forEach(wordPanel);
 
   /* interest icons */
   function shapeMesh(shapes, depth = 0.16, bevel = 0.02) {
@@ -121,6 +138,7 @@ async function main() {
       const head = new THREE.Shape([V(cx - 0.2, cy + 0.08), V(cx + 0.16, cy + 0.2), V(cx + 0.06, cy - 0.2)]); return shapeMesh([s, head]); },
     drop: () => { const s = new THREE.Shape(); s.moveTo(0, 0.82); s.bezierCurveTo(0.2, 0.5, 0.56, 0.12, 0.56, -0.2); s.absarc(0, -0.2, 0.56, 0, Math.PI, true); s.bezierCurveTo(-0.56, 0.12, -0.2, 0.5, 0, 0.82); return shapeMesh([s]); },
     moon: () => { const s = new THREE.Shape(); s.absarc(0, 0, 0.72, Math.PI * 0.32, Math.PI * 1.68, false); s.absarc(0.3, 0, 0.6, Math.PI * 1.42, Math.PI * 0.58, true); return shapeMesh([s]); },
+    hourglass: () => shapeMesh([rect(-0.5, 0.64, 1.0, 0.14), rect(-0.5, -0.78, 1.0, 0.14), new THREE.Shape([V(-0.4, 0.6), V(0.4, 0.6), V(0.07, 0), V(0.4, -0.6), V(-0.4, -0.6), V(-0.07, 0)])]),
     '55': () => { const w = makeWord(front, '55', { face: 'platinum', depth: 0.12, bevel: 0.012, edge: false, shadows: false }); const g = new THREE.Group(); g.add(w.group); g.scale.setScalar(1.3 / Math.max(w.width, 0.7)); return g; }
   };
   const iconSlots = new Set();

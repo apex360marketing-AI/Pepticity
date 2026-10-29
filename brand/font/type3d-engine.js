@@ -29,7 +29,7 @@ function wallTexture(light) {
   const x = c.getContext('2d');
   const g = x.createRadialGradient(640, 170, 40, 560, 260, 720);
   if (light) { g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#e9ebee'); }
-  else { g.addColorStop(0, '#3d3d3c'); g.addColorStop(0.55, '#323232'); g.addColorStop(1, '#2a2a2a'); }
+  else { g.addColorStop(0, '#5a595b'); g.addColorStop(0.55, '#3b3a3c'); g.addColorStop(1, '#232224'); }
   x.fillStyle = g; x.fillRect(0, 0, 1024, 512);
   const id = x.getImageData(0, 0, 1024, 512), d = id.data;
   for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - 0.5) * (light ? 5 : 9); d[i] += n; d[i + 1] += n; d[i + 2] += n; }
@@ -62,14 +62,14 @@ export function createStage(canvas) {
 
   const brushed = brushedTexture();
   const MAT = {
-    gunmetal: new THREE.MeshPhysicalMaterial({ color: 0x8e8d86, metalness: 0.62, roughness: 0.5, roughnessMap: brushed, map: brushed,
-      clearcoat: 0.04, clearcoatRoughness: 0.7, envMapIntensity: 0.5 }),
+    gunmetal: new THREE.MeshPhysicalMaterial({ color: 0x7a7b80, metalness: 0.86, roughness: 0.52, roughnessMap: brushed, map: brushed,
+      clearcoat: 0.08, clearcoatRoughness: 0.6, envMapIntensity: 0.62 }),
     platinum: new THREE.MeshPhysicalMaterial({ color: 0xe4e6ea, metalness: 1, roughness: 0.17, roughnessMap: brushed, envMapIntensity: 1.1 }),
     goldchrome: new THREE.MeshPhysicalMaterial({ color: 0xdcceaa, metalness: 1, roughness: 0.2, roughnessMap: brushed, envMapIntensity: 1.05 }),
-    chevron: new THREE.MeshPhysicalMaterial({ color: 0x26252a, metalness: 0.85, roughness: 0.38, roughnessMap: brushed, envMapIntensity: 0.55 }),
+    chevron: new THREE.MeshPhysicalMaterial({ color: 0x55544f, metalness: 0.6, roughness: 0.48, roughnessMap: brushed, map: brushed, envMapIntensity: 0.5 }),
     uv: new THREE.MeshPhysicalMaterial({ color: 0x0e0c14, metalness: 0.55, roughness: 0.32, sheen: 1, sheenColor: new THREE.Color(0x4b3b86),
       sheenRoughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.7 }),
-    edge: new THREE.LineBasicMaterial({ color: 0xdcd6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }),
+    edge: new THREE.LineBasicMaterial({ color: 0xdcd6ff, transparent: true, opacity: 0.68, blending: THREE.AdditiveBlending, depthWrite: false }),
   };
   for (const k of ['gunmetal', 'platinum', 'goldchrome', 'chevron', 'uv']) {
     MAT[k].polygonOffset = true; MAT[k].polygonOffsetFactor = 1; MAT[k].polygonOffsetUnits = 1;
@@ -170,7 +170,7 @@ export function glyphGeometries(cut, ch, opt) {
 }
 
 // a word as a group of letter pivots (each letter can spin about its own centre)
-export function makeWord(stage, text, { cut = 'regular', face = 'gunmetal', depth = 0.1, bevel = 0.012, edge = false, darkA = false, track = 0, shadows = true } = {}) {
+export function makeWord(stage, text, { cut = 'regular', face = 'gunmetal', depth = 0.1, bevel = 0.012, edge = true, darkA = true, track = 0, shadows = true } = {}) {
   const group = new THREE.Group(), letters = [];
   const kern = GLYPHS.kern || {};
   let x = 0; const cap = 0.7;
@@ -204,8 +204,8 @@ export function wallScene(stage, { light = false, wallZ = -0.24, keyPos = [3.0, 
   key.shadow.mapSize.set(MOBILE ? 1024 : 2048, MOBILE ? 1024 : 2048); key.shadow.radius = shadowRadius; key.shadow.bias = -0.0004; key.shadow.normalBias = 0.01;
   const sc = key.shadow.camera; sc.left = -5; sc.right = 5; sc.top = 3; sc.bottom = -3; sc.near = 0.5; sc.far = 20;
   scene.add(key); scene.add(key.target);
-  const fill = new THREE.HemisphereLight(0xeeeeea, 0x0b0b0b, light ? 0.6 : 0.22); scene.add(fill);
-  const rim = new THREE.PointLight(0xffffff, 0.0, 6, 2); rim.position.set(-2.2, -0.8, 1.2); scene.add(rim);
+  const fill = new THREE.HemisphereLight(0xe8eaf0, 0x0c0a12, light ? 0.6 : 0.22); scene.add(fill);
+  const rim = new THREE.PointLight(0x7a5cff, light ? 0.0 : 0.45, 6, 2); rim.position.set(-2.2, -0.8, 1.2); scene.add(rim);
   const camera = new THREE.PerspectiveCamera(26, 2, 0.1, 60);
   return { scene, camera, wall, key };
 }

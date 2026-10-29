@@ -92,7 +92,7 @@
   var pW = new Painter($('#cvWeave'), 'weave'), pL = new Painter($('#cvLab'), 'lab');
   want(seq('weave'), [0, 1], true);
   var doorbox = $('#doorbox');
-  function layoutDoors() { var r = pW.rect, c = CROP[kind]; if (!r.w) return; var fw = r.w / c.w, fx = r.x - c.x * fw; doorbox.style.left = fx + 'px'; doorbox.style.top = r.y + 'px'; doorbox.style.width = fw + 'px'; doorbox.style.height = r.h + 'px'; }
+  function layoutDoors() { var r = pW.rect, c = CROP[kind]; if (!r.w) return; var fw = r.w / c.w, fx = r.x - c.x * fw; doorbox.style.left = fx + 'px'; doorbox.style.top = r.y + 'px'; doorbox.style.width = fw + 'px'; doorbox.style.height = r.h + 'px'; var ds = $('.door-sign'); if (ds) ds.style.fontSize = (fw * 0.021) + 'px'; }
 
   /* ================= smooth scroll ================= */
   var lenis = null;
@@ -162,6 +162,7 @@
       portal.style.visibility = pp >= 1 ? 'hidden' : 'visible';
     }
     doorbox.style.visibility = (busy || opened || p >= W_OUT - 0.004 || (RM && p >= 0.5)) ? 'visible' : 'hidden';
+    doorbox.classList.toggle('sign', busy || opened || p >= W_OUT - 0.004 || (RM && p >= 0.5));
 
     hooks.forEach(function (h) {
       var a = +h.dataset.at, d = Math.abs(p - a), o = RM ? 0 : 1 - ss(0.035, 0.06, d);
@@ -185,11 +186,12 @@
       var tx = clamp(0.5 - ls.x, -m, m) * 100, ty = clamp(0.5 - ls.y, -m, m) * 100;
       labCam.style.transform = 'scale(' + ls.s.toFixed(4) + ') translate(' + tx.toFixed(3) + '%,' + ty.toFixed(3) + '%)';
       var r = pL.rect;
-      if (r.w) {   /* the illuminated plaque sits on the back-wall sign in frame space */
-        plaque.style.left = (r.x + r.w * 0.494) + 'px'; plaque.style.top = (r.y + r.h * 0.372) + 'px';
-        plaque.style.fontSize = (r.w / 1600) + 'em';
+      if (r.w) {   /* the illuminated plaque covers the back-wall sign, in frame space inside the lab camera */
+        var fw = r.w / CROP[kind].w, fx = r.x - CROP[kind].x * fw;
+        plaque.style.left = (fx + fw * (0.494 + ls.f * 0.00012)) + 'px'; plaque.style.top = (r.y + r.h * 0.372) + 'px';
+        plaque.style.fontSize = (fw * 0.0168) + 'px';
       }
-      plaque.style.opacity = 0.35 + 0.65 * ss(0, 0.04, L.p);
+      plaque.style.opacity = 1;
       stations.forEach(function (s, k) {
         var on = k === ls.i, o = on ? ss(0.12, 0.32, ls.t) * (k === ST.length - 1 ? 1 : 1 - ss(0.94, 1, ls.t)) : 0;
         s.style.opacity = o; s.style.visibility = o < 0.02 ? 'hidden' : 'visible'; s.classList.toggle('on', o > 0.5);
@@ -201,7 +203,7 @@
     /* SCR-16 exploded vial */
     if (!RM) {
       var e = ss(0.08, 0.7, X.p);
-      exLayers.cap.style.transform = 'translate3d(0,' + (-e * 42) + '%,0) rotateY(' + (e * 18) + 'deg)';
+      exLayers.cap.style.transform = 'translate3d(0,' + (-e * 24) + '%,0) rotateY(' + (e * 18) + 'deg)';
       exLayers.neck.style.transform = 'translate3d(0,' + (-e * 18) + '%,0)';
       exLayers.label.style.transform = 'translate3d(' + (e * 46) + '%,' + (-e * 2) + '%,' + (e * 80) + 'px) rotateY(' + (-e * 28) + 'deg)';
       exLayers.body.style.transform = 'translate3d(0,' + (e * 12) + '%,0) rotateY(' + (-e * 8) + 'deg)';
@@ -512,7 +514,7 @@
   /* interest entry cards (interest-entry-hooks + docs/owner/SALES-PLAYBOOK.md section 3): the visitor's interest + a research area, never a result */
   var INTERESTS = [
     { k: 'gym', t: 'GYM AND PERFORMANCE', area: 'growth-hormone biology', keys: ['cjc_dac', 'cjc_nodac', 'ipamorelin', 'tesamorelin', 'igf1lr3', 'hgh'], icon: 'dumbbell' },
-    { k: 'age', t: '55+ AND LONGEVITY', area: 'ageing biology', keys: ['epitalon', 'motsc', 'ss31', 'nad', 'glutathione', 'thymosina1'], icon: '55' },
+    { k: 'age', t: '55+ AND LONGEVITY', area: 'ageing biology', keys: ['epitalon', 'motsc', 'ss31', 'nad', 'glutathione', 'thymosina1'], icon: 'hourglass' },
     { k: 'energy', t: 'ENERGY', area: 'cellular energy (mitochondria)', keys: ['nad', 'motsc', 'ss31', '5amino1mq'], icon: 'bolt' },
     { k: 'weight', t: 'WEIGHT GOALS', area: 'metabolism', keys: ['tirzepatide', 'retatrutide', 'aod9604', '5amino1mq', 'klow'], icon: 'gauge', counsel: true },
     { k: 'recovery', t: 'RECOVERY', area: 'connective-tissue biology', keys: ['bpc157', 'tb500', 'wolverine', 'kpv', 'klow'], icon: 'ring' },
@@ -540,9 +542,7 @@
     var act = p.inStock
       ? '<button class="pc-btn pc-btn--sm" type="button" data-add="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button>'
       : '<span class="soldout">SOLD OUT</span><button class="pc-btn pc-btn--sm" type="button" data-rs="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">TELL ME WHEN IT\'S BACK</span></span></button>';
-    var rs = p.inStock ? '' : '<form class="cap-form rs" data-hook="H50" data-pid="' + p.id + '" novalidate><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>' +
-      '<label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me when ' + esc(p.name + ' ' + p.strength) + ' is back and occasional news. I can unsubscribe any time.</span></label>' +
-      '<p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p><button class="pc-btn pc-btn--sm morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE QUEUE</span></span></button></form>';
+    var rs = '';
     return '<li class="prod glass" data-id="' + p.id + '">' + bottle(p) +
       '<div><h3 class="h3">' + esc(p.name) + '</h3><p class="strength">' + esc(p.strength) + (p.demoStock ? ' · SAMPLE STOCK STATE' : '') + '</p></div>' +
       '<p class="note">' + esc(p.note) + '</p>' +
@@ -559,7 +559,6 @@
     $('#storeCount').textContent = 'EVERY PRODUCT · ' + vis.length + ' LISTINGS';
     var fl = $('#filters');
     fl.innerHTML = '<button class="chip" type="button" data-f="all" aria-pressed="true">ALL</button>' + INTERESTS.map(function (i) { return '<button class="chip" type="button" data-f="' + i.k + '" aria-pressed="false">' + i.t + '</button>'; }).join('');
-    $$('form.rs').forEach(function (f) { wireForm(f, function () { var ok = $('.ok', f); ok.textContent = 'You\'re in the queue: #[REAL POSITION] in line for the next lot. ' + ok.textContent; }); });
     observeProds();
     fillMini();
   }
@@ -578,7 +577,7 @@
   document.addEventListener('click', function (e) {
     var a = e.target.closest('[data-add]'); if (a) { addToCart(+a.dataset.add, a); return; }
     var m = e.target.closest('[data-more]'); if (m) { var li = m.closest('.prod'); var o = li.classList.toggle('open'); m.setAttribute('aria-expanded', String(o)); m.textContent = o ? 'SHOW LESS' : 'READ MORE'; return; }
-    var r = e.target.closest('[data-rs]'); if (r) { var l2 = r.closest('.prod'); l2.classList.add('rs-open'); var i = $('form.rs input[type=email]', l2); if (i) i.focus(); }
+    var r = e.target.closest('[data-rs]'); if (r) openModal('restock', BY[+r.dataset.rs]);
   });
   var pio = null;
   function observeProds() {
@@ -587,7 +586,7 @@
     $$('.prod:not(.in)').forEach(function (el, k) { el.style.transitionDelay = (k % 4) * 70 + 'ms'; pio.observe(el); });
   }
   function miniCard(p) {
-    return '<div class="mini-prod">' + '<div class="mp-v"><img src="' + CFG.bottle + '" alt=""></div><div><b>' + esc(p.name) + ' · ' + esc(p.strength) + '</b><span>' + money(p.price) + ' CAD · ' + esc(p.note) + '</span></div>' +
+    return '<div class="mini-prod">' + '<div class="mp-v"><img src="' + CFG.bottle + '" alt=""></div><div><b>' + esc(p.name) + ' · ' + esc(p.strength) + '</b><span>' + money(p.price) + ' CAD</span><em>' + esc(p.note) + '</em></div>' +
       '<button class="pc-btn pc-btn--sm" type="button" data-add="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">ADD</span></span></button></div>';
   }
   function byKey(k, strength) { return PRODUCTS.find(function (p) { return p.key === k && p.inStock && (!strength || p.strength === strength); }); }
@@ -678,6 +677,11 @@
         '<p class="mini-t">SEND ME THE ' + esc(I.t) + ' SHELF · PLUS 15% OFF</p>' + capForm('H42', 'SEND ME THE SHELF', 'the ' + I.t.toLowerCase() + ' shelf, the founding offer') +
         (list.length ? '<button class="pc-btn pc-btn--sm" type="button" data-go="store"><span class="pc-btn__face"><span class="pc-btn__label">OPEN THE SHELF IN THE STORE</span></span></button>' : '');
     }
+    if (kind === 'restock') {
+      var P = arg;
+      html = '<p class="eyebrow"><span>SOLD OUT · RESTOCK QUEUE</span></p><h2 class="h2s x3d" id="modalT">' + esc(P.name + ' ' + P.strength) + '</h2><p>Join the queue and we\'ll email you the moment the next lot lands, before the shelf goes public.</p>' +
+        capForm('H50', 'JOIN THE QUEUE', 'when ' + P.name + ' ' + P.strength + ' is back');
+    }
     if (kind === 'checkout') {
       var T = totals();
       html = '<p class="eyebrow"><span>CHECKOUT · GUEST</span></p><h2 class="h2s x3d" id="modalT">NO ACCOUNT NEEDED</h2>' +
@@ -698,7 +702,8 @@
     if (!html) return;
     lastFocus = document.activeElement;
     b.innerHTML = html; $$('.x3d', b).forEach(function (el) { el.dataset.text = el.textContent; });
-    $$('.cap-form', b).forEach(function (f) { if (f.id === 'acctForm') return; wireForm(f); });
+    $$('.cap-form', b).forEach(function (f) { if (f.id === 'acctForm') return;
+      wireForm(f, f.dataset.hook === 'H50' ? function () { var ok = $('.ok', f); ok.textContent = 'You\'re in the queue: #[REAL POSITION] in line for the next lot. ' + ok.textContent; } : null); });
     var po = $('#placeOrder', b); if (po) po.addEventListener('click', function () { cart = []; saveCart(); openModal('thanks'); });
     var af = $('#acctForm', b); if (af) af.addEventListener('submit', function (e) { e.preventDefault(); $('.ok', af).textContent = 'Saved. Preview only: nothing was sent.'; });
     $('#modal').hidden = false; stopScroll(); track('form_view');
@@ -721,7 +726,7 @@
   function renderInterests() {
     $('#intGrid').innerHTML = INTERESTS.map(function (i) {
       return '<li><button class="int-card glass" type="button" data-int="' + i.k + '">' +
-        '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + (i.icon === '55' ? '55' : '◆') + '</span></span>' +
+        '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + '◆' + '</span></span>' +
         '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF · SEND ME THE SHELF + 15%</span></span></button></li>';
     }).join('');
     document.dispatchEvent(new Event('pc-slots'));
