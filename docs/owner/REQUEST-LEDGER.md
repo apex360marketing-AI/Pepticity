@@ -318,3 +318,6 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 
 ## Added 29 Oct (sharing)
 - R154 · 29 Oct · "Get me a link that I can actually give to her, where she doesn't need to sign into my Claude." Anything for Grace goes out as a PUBLIC no-login link (GitHub Pages: https://apex360marketing-ai.github.io/Pepticity/), never a private Artifact link. DONE for both dashboards.
+- R155 · 29 Oct · Dashboards: "scroll past the bottom … the watermark coin … stops flat … that will be the footer … turns into the coin with the nice 3D". SAMPLE being built (sites/dashboard-sample).
+- R156 · 29 Oct · Members get a daily motivational quote in their dashboard that changes once a day, plus a phone notification ("a reason to keep the app"). SAMPLE being built; real push needs the installed app + a push service.
+- R157 · 29 Oct · Idea: built-in gym playlist ("pump up tunes … or is that too much"). Asked owner how (music licensing).
