@@ -123,8 +123,8 @@
   function weaveFrame(p) {
     var n = seq('weave').m.n - 1; if (RM) return p < 0.5 ? 0 : n;
     var q = clamp((p - W_IN) / (W_OUT - W_IN), 0, 1);
-    var e = 1 - Math.pow(1 - q, 2.2);            /* ease-out: the last stretch to the doors slows right down */
-    return (0.3 * ss(0, 1, q) + 0.7 * e) * n;
+    var e = 1 - Math.pow(1 - q, 1.6);            /* ease-out: the last stretch to the doors slows down and glides to a stop */
+    return (0.55 * ss(0, 1, q) + 0.45 * e) * n;
   }
   /* lab: 5 stations, each = short move + long hold */
   var ST = [
@@ -847,7 +847,7 @@
     function check() {
       var d = ctx.getImageData(0, 0, cv.width, cv.height).data, clear = 0, tot = 0;
       for (var i = 3; i < d.length; i += 16) { tot++; if (d[i] === 0) clear++; }
-      if (clear / tot > 0.45) reveal();
+      if (clear / tot > 0.35) reveal();
     }
     cv.addEventListener('pointerdown', function (e) { drawing = true; cv.setPointerCapture(e.pointerId); track('hook_interact'); wipe(e); });
     cv.addEventListener('pointermove', wipe);

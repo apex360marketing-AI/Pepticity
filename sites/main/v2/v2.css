@@ -529,12 +529,12 @@ html.gl-front-on .int-ico .fb{visibility:hidden}
 /* HOV-17 network (elongated) */
 .network{position:relative;height:180vh}
 .net-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;align-items:center}
-.earth{position:absolute;left:50%;top:50%;width:min(120vh,1100px);aspect-ratio:1;transform:translate(-62%,-50%)}
+.earth{position:relative;width:100%;max-width:min(560px,70vh);aspect-ratio:1;margin:auto}
 .earth-fb{position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e6e9ed,#6b7077 60%,#2a2d31);opacity:.5}
 html.gl-front-on .earth-fb{display:none}
-.net-wrap{position:relative;z-index:21;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:var(--gap);align-items:center;pointer-events:none}
+.net-wrap{position:relative;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr) minmax(0,380px);gap:var(--gap);align-items:center}
 .net-wrap>*{pointer-events:auto}
-.net-copy{pointer-events:none;align-self:start;padding-top:12vh}
+.net-copy{align-self:center}
 .net-copy .eyebrow{margin-bottom:16px}
 .net-form{--c:20px;padding:clamp(20px,2.6vw,30px);position:relative}
 .seal{position:absolute;right:18px;top:16px;width:58px;height:58px;display:grid;place-items:center;transform:scale(2.4) rotate(-20deg);opacity:0;pointer-events:none;
@@ -545,7 +545,7 @@ html.gl-front-on .earth-fb{display:none}
 @media (max-width:900px){
   .network{height:auto}
   .net-stage{position:relative;height:auto;display:block;padding:var(--sect) 0}
-  .earth{position:relative;left:auto;top:auto;transform:none;width:min(92vw,520px);margin:0 auto -8px}
+  .earth{width:min(92vw,520px);margin:0 auto -8px}
   .net-wrap{grid-template-columns:1fr;padding-bottom:16px}
   .net-copy{padding-top:0}.net-copy .sub{font-size:15px}
 }

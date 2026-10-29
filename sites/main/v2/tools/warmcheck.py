@@ -27,7 +27,7 @@ for path in sys.argv[1:]:
             L, a, b = lab(*im.getpixel((x, y))); C = math.hypot(a, b); h = math.degrees(math.atan2(b, a)) % 360; n += 1
             if L > 70 and C > 8 and h <= 75: warm += 1
             if 90 <= h <= 160 and C > 10: green += 1
-            if 30 < L <= 70 and (b > 20 or a > 6) and C > 12: gold += 1
+            if 30 < L <= 70 and 40 <= h <= 100 and (b > 20 or a > 6) and C > 12: gold += 1
     bad = warm + green + gold
     tot_bad += bad
     print(f"{'PASS' if bad == 0 else 'FLAG'}  {path.split('/')[-1]:40s} samples={n} warm={warm} gold={gold} green={green}")

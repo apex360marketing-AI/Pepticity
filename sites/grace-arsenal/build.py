@@ -42,7 +42,11 @@ def frames():
 
 
 src = (SITE / "index.src.html").read_text()
-src = re.sub(r"(?:/\*@INLINE:([^@]+)@\*/|//@INLINE:([^@]+)@)", lambda m: (ROOT / (m.group(1) or m.group(2))).read_text().rstrip(), src)
+def _inl(m):
+    path = m.group(1) or m.group(2)
+    t = (ROOT / path).read_text().rstrip()
+    return re.sub(r"/\*.*?\*/", "", t, flags=re.S) if path.endswith(".css") else t
+src = re.sub(r"(?:/\*@INLINE:([^@]+)@\*/|//@INLINE:([^@]+)@)", _inl, src)
 eng = "\n".join(l for l in (ROOT / "brand/font/type3d-engine.js").read_text().splitlines() if not l.startswith("import "))
 eng = re.sub(r"^export ", "", eng, flags=re.M)
 src = src.replace("@ENGINE@", eng).replace("@GLYPHSJSON@", json.dumps(json.loads((ROOT / "brand/font/glyphs.json").read_text()), separators=(",", ":")))

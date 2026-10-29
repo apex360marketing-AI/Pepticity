@@ -158,7 +158,7 @@ Demo settings: `data-sold-out="igf-1-lr3"` (to show the restock queue), offer sw
 ## FLOWS AND INTERACTIONS
 
 - Proactive greeting: appeared on its own after the delay (true), quick replies: SHOP BY INTEREST · FIND A PRODUCT · PRICES · SHIPPING · 15% OFF · TALK TO A PERSON.
-- Ambient motion over 4.5 s: emblem ring turned true, edge light moved true, bar hint changed true ("FIND A PRODUCT OR A PRICE" -> "15% OFF YOUR FIRST ORDER").
+- Ambient motion over 4.5 s: emblem ring turned true, edge light moved true, bar hint changed true ("15% OFF YOUR FIRST ORDER" -> "SHOP BY INTEREST").
 - Hover (desktop): bar light sweep `pb-sweep`; ADD TO CART sweep `pc-sweep`. Touch (390): tapping the bar opened the panel (open).
 - ADD TO CART: fired `pep:add-to-cart` {"slug":"bpc-157","name":"BPC-157","size":"10 MG","price":80,"currency":"CAD","qty":1,"source":"concierge"}; button showed "ADDED"; cart count 1.
 - Salesman follow-up after adding: "Added BPC-157 10 MG. Your cart: 1 item, $80 CAD. Join the PEPTICITY team before you check out and this order is 15% off. Anything else I can find for you?"
@@ -177,6 +177,7 @@ Demo settings: `data-sold-out="igf-1-lr3"` (to show the restock queue), offer sw
 - Returning visitor with a saved cart: greeting reads "WELCOME BACK. Your cart is saved: 3 items, $350 CAD. Want to pick up where you left off?", bar shows "CART 3".
 - Live-AI hook (`PEPBOT.setBackend`), test backend: unknown question -> "backend | Live answer for: tell me something odd | cards bpc-157" (held HGH card stripped); backend line with a claim -> rejected, vetted fallback shown ("fallback"); dosing question never reaches the backend ("dosing").
 - Library self-check (every fixed line passes the claim scan): clean. Console/page errors in these extra runs: 0.
+- Single include on a plain white host page (only the script tag): stylesheet loaded itself, PEPTICITY font loaded, glass switched to the deeper light-page tint, 0 errors (`shots/1440x900-white-host-page.png`).
 
 ## SCREENSHOTS
 
@@ -194,6 +195,7 @@ Demo settings: `data-sold-out="igf-1-lr3"` (to show the restock queue), offer sw
 - `sites/bot-demo/shots/1440x900-40-does.png`
 - `sites/bot-demo/shots/1440x900-41-try.png`
 - `sites/bot-demo/shots/1440x900-reduced-motion.png`
+- `sites/bot-demo/shots/1440x900-white-host-page.png`
 - `sites/bot-demo/shots/390x844-01-peek.png`
 - `sites/bot-demo/shots/390x844-04-bpc.png`
 - `sites/bot-demo/shots/390x844-05-energy.png`

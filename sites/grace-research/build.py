@@ -32,6 +32,7 @@ CLEAN = [
     (r"\bR\d{3}\b", ""),
     (r"Read from `shared/inventory\.js` / backend\.", "Read from the store inventory."),
     (r"`shared/inventory\.js`", "the store inventory"),
+    (r"The peptide-expert skill notes that ", "Note: "),
 ]
 
 
@@ -57,8 +58,7 @@ for i, p in enumerate(files, 1):
     h1 = re.search(r"^# (.+)$", md, re.M)
     title = (h1.group(1) if h1 else p.stem.replace("-", " ")).strip()
     md = re.sub(r"^# .+\n", "", md, count=1, flags=re.M)
-    brand, _, short = title.partition(":")
-    short = (short or brand).strip().upper()
+    short = re.sub(r"^PEPTICITY\s*", "", title.upper()).replace(":", "").strip() or title.upper()
     slug = f"c{i:02d}"
     body = markdown.markdown(md, extensions=["tables", "sane_lists", "toc"], extension_configs={"toc": {"slugify": lambda v, s: re.sub(r"[^a-z0-9]+", "-", v.lower()).strip("-")}})
     body = re.sub(r'id="([^"]+)"', lambda m: f'id="{slug}-{m.group(1)}"', body)
@@ -97,7 +97,11 @@ fonts = "\n".join([
     f'@font-face{{font-family:"PB";src:url({b64("brand/font/PepticityBlack.woff2", "font/woff2")}) format("woff2");font-display:block}}',
     f'@font-face{{font-family:"Geist";src:url({b64("sites/grace-arsenal/assets/geist.woff2", "font/woff2")}) format("woff2");font-weight:300 700;font-display:swap}}',
     f'@font-face{{font-family:"Geist Mono";src:url({b64("sites/grace-arsenal/assets/geistmono.woff2", "font/woff2")}) format("woff2");font-weight:500;font-display:swap}}'])
-src = re.sub(r"(?:/\*@INLINE:([^@]+)@\*/|//@INLINE:([^@]+)@)", lambda m: (ROOT / (m.group(1) or m.group(2))).read_text().rstrip(), src)
+def _inl(m):
+    path = m.group(1) or m.group(2)
+    t = (ROOT / path).read_text().rstrip()
+    return re.sub(r"/\*.*?\*/", "", t, flags=re.S) if path.endswith(".css") else t
+src = re.sub(r"(?:/\*@INLINE:([^@]+)@\*/|//@INLINE:([^@]+)@)", _inl, src)
 src = (src.replace("@FONTFACE@", fonts).replace("@TOC@", toc_html).replace("@CHAPTERS@", "\n".join(chapters))
           .replace("@COUNT@", str(len(files))).replace("@ICON@", b64("brand/logo/p-mark.svg", "image/svg+xml")))
 (SITE / "index.html").write_text(src)

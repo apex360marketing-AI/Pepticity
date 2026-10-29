@@ -109,7 +109,7 @@ async function main() {
       st.ry = damp(st.ry, p.x * 0.16, 3, dt); st.rx = damp(st.rx, p.y * 0.1, 3, dt);
       group.rotation.set(st.rx, st.ry, 0);
       if (funky) {
-        const local = clampN((prog - 0.5) * 2.6, -1, 1), n = letters.length;
+        const local = clampN((prog - 0.62) * 2.6, -1, 0), n = letters.length;   /* letters turn into place as the panel rises, then stay facing you */
         letters.forEach((L, i) => { const s = st.l[i], phase = (i - (n - 1) / 2) / n;
           s.ry = damp(s.ry, -local * (1.15 + phase * 1.4) * funky + Math.sin(t * 0.7 + i * 0.6) * 0.035, 5, dt);
           s.z = damp(s.z, Math.abs(local) * 0.07 * Math.sin(i * 1.7 + 1), 5, dt); L.rotation.y = s.ry; L.position.z = s.z; });
@@ -173,8 +173,8 @@ async function main() {
     const land = tl.load('assets/earth-land.webp'), lights = tl.load('assets/earth-lights.webp'), bump = tl.load('assets/earth-bump.webp');
     land.colorSpace = THREE.SRGBColorSpace; lights.colorSpace = THREE.SRGBColorSpace;
     const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(28, 1, 0.1, 50);
-    const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(-3, 2, 4); scene.add(key);
-    scene.add(new THREE.AmbientLight(0xdfe4ee, 0.35));
+    const key = new THREE.DirectionalLight(0xffffff, 3.2); key.position.set(-3, 2, 4); scene.add(key);
+    scene.add(new THREE.AmbientLight(0xdfe4ee, 0.6));
     const world = new THREE.Group(); world.rotation.z = 0.36; scene.add(world);
     const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), new THREE.MeshStandardMaterial({
       map: land, bumpMap: bump, bumpScale: 2.2, roughness: 0.78, metalness: 0.12, color: 0xd9dee6,
@@ -184,7 +184,7 @@ async function main() {
       transparent: true, side: THREE.BackSide, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: { c: { value: new THREE.Color(0xdfe5ff) }, s: { value: 1 } },
       vertexShader: 'varying vec3 vN;varying vec3 vP;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vP=mv.xyz;gl_Position=projectionMatrix*mv;}',
-      fragmentShader: 'uniform vec3 c;uniform float s;varying vec3 vN;varying vec3 vP;void main(){float f=pow(clamp(.62-dot(vN,normalize(-vP)),0.,1.),3.)*s;gl_FragColor=vec4(c*f*1.1,f);}' }));
+      fragmentShader: 'uniform vec3 c;uniform float s;varying vec3 vN;varying vec3 vP;void main(){float f=pow(clamp(.6-dot(vN,normalize(-vP)),0.,1.),3.4)*s*.5;gl_FragColor=vec4(c*f,f);}' }));
     scene.add(atmo);
     /* the network: nodes on an outer shell, each joined to its nearest neighbours */
     const net = new THREE.Group(); world.add(net);
