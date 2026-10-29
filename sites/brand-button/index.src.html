@@ -1,0 +1,119 @@
+<title>PEPTICITY ONE BUTTON</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+/*@INLINE:brand/ui/button.css@*/
+
+/* PEPTICITY · BTN-P01 review board (R129). Every state, every size, on the BLACK and WHITE grounds (BG-P01). */
+:root{--f-disp:"Syncopate","Arial Black",Arial,sans-serif;--f-body:"Hanken Grotesk",system-ui,sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#0b0b0c;color:#eceff3;font:15px/1.55 var(--f-body);overflow-x:clip}
+
+.stage{--ink:#eceff3;--muted:#959ca6;--line:rgba(200,207,216,.18);--wm:#ffffff;--wm-o:.055;
+  --chrome:linear-gradient(100deg,#9aa4af 0%,#f5f8fb 18%,#ffffff 24%,#8e98a3 38%,#eef2f6 54%,#4a525c 66%,#e6ebf0 82%,#a9b2bc 100%);
+  position:relative;overflow:hidden;isolation:isolate;color:var(--ink);background:#0b0b0c}
+.stage[data-pc-surface="light"]{--ink:#111214;--muted:#5f656d;--line:rgba(42,45,49,.16);--wm:#2a2d31;--wm-o:.065;
+  --chrome:linear-gradient(100deg,#2a2d31 0%,#5b6067 18%,#8a9098 26%,#2a2d31 40%,#6b7077 56%,#1a1c1f 66%,#8a9098 82%,#3a3e44 100%);
+  background:#f7f8fa;color-scheme:light}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:-2}
+.stage .wm{position:absolute;left:50%;top:50%;width:300vmax;height:300vmax;margin:-150vmax 0 0 -150vmax;z-index:-1;pointer-events:none;
+  transform:rotate(-30deg);background:var(--wm);opacity:var(--wm-o);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='96' viewBox='0 0 168 96'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linejoin='miter'%3E%3Cpath d='M12 40 L30 14 L48 40'/%3E%3Cpath d='M96 88 L114 62 L132 88'/%3E%3Cpath d='M60 27 H80 M144 75 H164'/%3E%3C/g%3E%3Cg fill='%23000'%3E%3Cpath d='M84 24 l3 3 l-3 3 l-3 -3z M0 72 l3 3 l-3 3 l-3 -3z M168 72 l3 3 l-3 3 l-3 -3z'/%3E%3C/g%3E%3C/svg%3E") 0 0/168px 96px repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='96' viewBox='0 0 168 96'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linejoin='miter'%3E%3Cpath d='M12 40 L30 14 L48 40'/%3E%3Cpath d='M96 88 L114 62 L132 88'/%3E%3Cpath d='M60 27 H80 M144 75 H164'/%3E%3C/g%3E%3Cg fill='%23000'%3E%3Cpath d='M84 24 l3 3 l-3 3 l-3 -3z M0 72 l3 3 l-3 3 l-3 -3z M168 72 l3 3 l-3 3 l-3 -3z'/%3E%3C/g%3E%3C/svg%3E") 0 0/168px 96px repeat}
+
+.wrap{max-width:1280px;margin:0 auto;padding:clamp(28px,5vh,56px) clamp(16px,3.4vw,48px)}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.mark{font:700 clamp(15px,1.5vw,19px)/1 var(--f-disp);letter-spacing:.34em;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1,h2{margin:0;font:700 clamp(22px,3vw,40px)/1.05 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;background:var(--chrome);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{margin-top:14px}
+.note{margin:0;max-width:52ch;color:var(--muted);font-size:14px}
+.note b{color:var(--ink);font-weight:600}
+
+.group{display:grid;grid-template-columns:170px minmax(0,1fr);gap:18px 28px;align-items:start;padding:30px 0;border-bottom:1px solid var(--line)}
+.group:last-child{border-bottom:0}
+.gl{font:500 10.5px/1.7 var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);padding-top:12px}
+.gl b{display:block;font:700 12px var(--f-disp);letter-spacing:.2em;color:var(--ink)}
+.items{display:flex;flex-wrap:wrap;gap:30px 34px;align-items:flex-end}
+.item{display:grid;justify-items:start;gap:12px;min-width:0;max-width:100%}
+.cap{font:500 9.5px/1.4 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.cap i{font-style:normal;color:var(--ink)}
+
+@media (max-width:760px){
+  .group{grid-template-columns:minmax(0,1fr);gap:14px}
+  .gl{padding-top:0}
+  .items{gap:22px 18px}
+  .item.wide{width:100%}
+  .item.wide .pc-btn{width:100%}
+}
+</style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<section class="stage" id="sBlack" aria-labelledby="hB">
+  <canvas aria-hidden="true"></canvas><div class="wm" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="top">
+      <div><div class="mark">PEPTICITY</div><h1 id="hB">THE ONE BUTTON</h1></div>
+      <p class="note"><b>BTN-P01.</b> One button for the whole site: see-through glass, chamfered corners, a chrome hairline edge and one slow light sweep from left to right on hover. Hover any live button to see it. Below: on the BLACK ground.</p>
+    </div>
+    <div class="group"><div class="gl"><b>SIZES</b>ON BLACK</div>
+      <div class="items">
+        <div class="item wide"><a class="pc-btn pc-btn--lg" href="#sBlack"><span class="pc-btn__face"><span class="pc-btn__label">ENTER PEPTICITY</span><i class="pc-btn__icon" aria-hidden="true"></i></span></a><span class="cap"><i>LARGE CTA</i> · 62PX · CUT 15</span></div>
+        <div class="item"><button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span></span></button><span class="cap"><i>REGULAR</i> · 50PX · CUT 11</span></div>
+        <div class="item"><button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SIGN IN</span></span></button><span class="cap"><i>SMALL / NAV</i> · 38PX · CUT 8</span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>STATES</b>ON BLACK</div>
+      <div class="items">
+        <div class="item"><button class="pc-btn" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DEFAULT</i></span></div>
+        <div class="item"><button class="pc-btn is-hover" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>HOVER</i> · SWEEP 1.5 S</span></div>
+        <div class="item"><button class="pc-btn is-active" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>PRESSED</i></span></div>
+        <div class="item"><button class="pc-btn is-focus" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>FOCUS</i> · KEYBOARD</span></div>
+        <div class="item"><button class="pc-btn" type="button" disabled><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DISABLED</i></span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>TOGGLE</b>ON BLACK</div>
+      <div class="items">
+        <div class="item"><div class="pc-seg" role="radiogroup" aria-label="Site version"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · REGULAR</span></div>
+        <div class="item"><div class="pc-seg pc-seg--sm" role="radiogroup" aria-label="Site version, small"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · SMALL / NAV</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="sWhite" data-pc-surface="light" aria-labelledby="hW">
+  <canvas aria-hidden="true"></canvas><div class="wm" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="top"><div><div class="mark">PEPTICITY</div><h2 id="hW">ON WHITE</h2></div>
+      <p class="note">The same button on the WHITE ground. Only the tokens change: darker chrome edge, white light sweep, ink label.</p></div>
+    <div class="group"><div class="gl"><b>SIZES</b>ON WHITE</div>
+      <div class="items">
+        <div class="item wide"><a class="pc-btn pc-btn--lg" href="#sWhite"><span class="pc-btn__face"><span class="pc-btn__label">ENTER PEPTICITY</span><i class="pc-btn__icon" aria-hidden="true"></i></span></a><span class="cap"><i>LARGE CTA</i> · 62PX · CUT 15</span></div>
+        <div class="item"><button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span></span></button><span class="cap"><i>REGULAR</i> · 50PX · CUT 11</span></div>
+        <div class="item"><button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SIGN IN</span></span></button><span class="cap"><i>SMALL / NAV</i> · 38PX · CUT 8</span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>STATES</b>ON WHITE</div>
+      <div class="items">
+        <div class="item"><button class="pc-btn" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DEFAULT</i></span></div>
+        <div class="item"><button class="pc-btn is-hover" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>HOVER</i> · SWEEP 1.5 S</span></div>
+        <div class="item"><button class="pc-btn is-active" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>PRESSED</i></span></div>
+        <div class="item"><button class="pc-btn is-focus" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>FOCUS</i> · KEYBOARD</span></div>
+        <div class="item"><button class="pc-btn" type="button" disabled><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DISABLED</i></span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>TOGGLE</b>ON WHITE</div>
+      <div class="items">
+        <div class="item"><div class="pc-seg" role="radiogroup" aria-label="Site version on white"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · REGULAR</span></div>
+        <div class="item"><div class="pc-seg pc-seg--sm" role="radiogroup" aria-label="Site version on white, small"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · SMALL / NAV</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+//@INLINE:brand/ui/smoke-bg.js@
+//@INLINE:brand/ui/button.js@
+PCSmoke(document.querySelector('#sBlack canvas'),{mode:'black',offset:8});
+PCSmoke(document.querySelector('#sWhite canvas'),{mode:'white',offset:20});
+document.querySelectorAll('a.pc-btn').forEach(a=>a.addEventListener('click',e=>e.preventDefault()));
+</script>

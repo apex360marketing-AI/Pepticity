@@ -1,0 +1,460 @@
+<title>PEPTICITY ONE BUTTON</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+/* =====================================================================
+   PEPTICITY · BTN-P01 · THE ONE BUTTON  (R129: "only one throughout the whole entire thing")
+   See-through chamfered glass, chrome hairline edge, ALL CAPS label, one slow light sweep
+   left to right on hover (1.5 s), soft illumination, press, focus and disabled states.
+   Sizes: .pc-btn--lg (large CTA) · default (regular) · .pc-btn--sm (small / nav).
+   Segmented toggle (.pc-seg) uses the same glass, hairline and sweep.
+
+   Markup
+     <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span></span></button>
+     <a class="pc-btn pc-btn--lg" href="#">…same inner spans…<i class="pc-btn__icon" aria-hidden="true"></i></a>
+     <div class="pc-seg" role="radiogroup" aria-label="Theme">
+       <span class="pc-seg__thumb" aria-hidden="true"></span>
+       <button class="pc-seg__opt" type="button" role="radio" aria-checked="true">WHITE</button>
+       <button class="pc-seg__opt" type="button" role="radio" aria-checked="false">BLACK</button>
+     </div>   (behaviour: brand/ui/button.js)
+
+   Surface: dark grounds by default. Put the button inside [data-pc-surface="light"] (or .pc-light)
+   on white grounds. Fonts: Syncopate 700 (Google Fonts) until the owner's BLACK font ships (R128).
+   No pills, no gold except the thin pale chrome-gold tick on the toggle thumb.
+   ===================================================================== */
+:root{
+  --pc-dur-1:120ms; --pc-dur-2:200ms; --pc-dur-3:320ms; --pc-dur-4:560ms; --pc-dur-sweep:1500ms;
+  --pc-ease-out:cubic-bezier(.16,1,.3,1); --pc-ease-in:cubic-bezier(.7,0,.84,0); --pc-ease-inout:cubic-bezier(.65,0,.35,1);
+  --pc-motion:1;
+  --pc-font:"Syncopate","Arial Black",Arial,sans-serif;
+}
+
+/* ---- tokens: dark surface (default) ---- */
+.pc-btn,.pc-seg{
+  --pc-ink:#eef1f5;
+  --pc-fill-a:rgba(255,255,255,.07); --pc-fill-b:rgba(255,255,255,.012);
+  --pc-sheen:rgba(255,255,255,.10);
+  --pc-rim-hot:#ffffff; --pc-rim-t:rgba(236,240,245,.70); --pc-rim-s:rgba(200,207,216,.40); --pc-rim-b:rgba(120,127,137,.42);
+  --pc-sweep:rgba(255,255,255,.50); --pc-sweep-soft:rgba(225,232,242,.12);
+  --pc-thumb:rgba(255,255,255,.10);
+  --pc-glow:rgba(226,234,244,.20); --pc-label-glow:rgba(235,241,250,.55);
+  --pc-ring:#e9eef4;
+  --pc-press:rgba(0,0,0,.18);
+}
+/* ---- tokens: light surface ---- */
+[data-pc-surface="light"] .pc-btn,[data-pc-surface="light"] .pc-seg,.pc-light .pc-btn,.pc-light .pc-seg,
+.pc-btn[data-pc-surface="light"],.pc-seg[data-pc-surface="light"]{
+  --pc-ink:#131518;
+  --pc-fill-a:rgba(255,255,255,.24); --pc-fill-b:rgba(214,220,228,.08);
+  --pc-sheen:rgba(255,255,255,.55);
+  --pc-rim-hot:#ffffff; --pc-rim-t:rgba(92,99,108,.62); --pc-rim-s:rgba(150,157,166,.60); --pc-rim-b:rgba(42,45,49,.62);
+  --pc-sweep:rgba(255,255,255,1); --pc-sweep-soft:rgba(110,118,128,.40);
+  --pc-thumb:rgba(30,33,37,.07);
+  --pc-glow:rgba(255,255,255,.70); --pc-label-glow:rgba(255,255,255,.95);
+  --pc-ring:#2a2d31;
+  --pc-press:rgba(42,45,49,.10);
+}
+
+/* ---- the button ---- */
+.pc-btn{
+  --c:11px; --h:50px; --px:32px; --fs:11px; --ls:.26em;
+  position:relative; display:inline-flex; vertical-align:middle; height:var(--h); max-width:100%;
+  margin:0; padding:0; border:0; background:none; color:var(--pc-ink);
+  font:700 var(--fs)/1 var(--pc-font); letter-spacing:var(--ls); text-transform:uppercase; text-decoration:none; white-space:nowrap;
+  cursor:pointer; -webkit-tap-highlight-color:transparent; isolation:isolate; user-select:none;
+}
+.pc-btn--lg{--c:15px; --h:62px; --px:44px; --fs:12.5px; --ls:.28em}
+.pc-btn--sm{--c:8px; --h:38px; --px:20px; --fs:9.5px; --ls:.22em}
+.pc-btn--block{display:flex; width:100%}
+
+/* glass face: chamfered top-left + bottom-right, hairline drawn as background layers so it follows the cut */
+.pc-btn__face,.pc-seg{
+  position:relative; display:flex; align-items:center; justify-content:center; gap:.9em; width:100%; height:100%;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(10px) saturate(160%); backdrop-filter:blur(10px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),var(--pc-rim-t) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),var(--pc-rim-b) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,var(--pc-rim-s),var(--pc-rim-t) 30%,var(--pc-rim-hot) 52%,var(--pc-rim-t) 70%,var(--pc-rim-s)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,var(--pc-rim-b),var(--pc-rim-s) 45%,var(--pc-rim-b)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(var(--pc-rim-t),var(--pc-rim-b)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(var(--pc-rim-s),var(--pc-rim-b)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,var(--pc-sheen),transparent 46%),
+    linear-gradient(145deg,var(--pc-fill-a),var(--pc-fill-b));
+  transition:transform var(--pc-dur-1) var(--pc-ease-out);
+}
+.pc-btn__face{padding:0 var(--px)}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
+  .pc-btn__face,.pc-seg{background-color:rgba(20,22,26,.86)}
+  [data-pc-surface="light"] .pc-btn__face,[data-pc-surface="light"] .pc-seg,.pc-light .pc-btn__face,.pc-light .pc-seg{background-color:rgba(246,247,249,.9)}
+}
+
+/* the light sweep: one slow pass, left to right */
+.pc-btn__face::before,.pc-seg__opt::before{
+  content:""; position:absolute; top:-30%; bottom:-30%; left:0; width:46%; pointer-events:none; z-index:0; opacity:0;
+  background:linear-gradient(100deg,transparent 0%,var(--pc-sweep-soft) 30%,var(--pc-sweep) 50%,var(--pc-sweep-soft) 70%,transparent 100%);
+  transform:translateX(-120%) skewX(-18deg);
+}
+@keyframes pc-sweep{
+  0%{transform:translateX(-120%) skewX(-18deg); opacity:0}
+  14%{opacity:1}
+  84%{opacity:1}
+  100%{transform:translateX(260%) skewX(-18deg); opacity:0}
+}
+.pc-btn:hover .pc-btn__face::before,.pc-btn:focus-visible .pc-btn__face::before,
+.pc-seg__opt:hover::before,.pc-seg__opt:focus-visible::before{
+  animation-name:pc-sweep; animation-duration:calc(var(--pc-dur-sweep) * var(--pc-motion));
+  animation-timing-function:var(--pc-ease-inout); animation-iteration-count:1; animation-fill-mode:both;
+}
+
+/* soft illumination: in over dur-3, out over dur-4 (slower release) */
+.pc-btn__face::after{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0;
+  background:radial-gradient(70% 120% at 50% 0%,var(--pc-glow),transparent 70%),radial-gradient(60% 80% at 50% 120%,var(--pc-glow),transparent 70%);
+  transition:opacity var(--pc-dur-4) var(--pc-ease-out);
+}
+.pc-btn:hover .pc-btn__face::after,.pc-btn:focus-visible .pc-btn__face::after{opacity:1; transition-duration:var(--pc-dur-3)}
+.pc-btn__label,.pc-btn__icon{position:relative; z-index:1}
+.pc-btn__label{transition:text-shadow var(--pc-dur-4) var(--pc-ease-out)}
+.pc-btn:hover .pc-btn__label,.pc-btn:focus-visible .pc-btn__label{text-shadow:0 0 14px var(--pc-label-glow); transition-duration:var(--pc-dur-3)}
+.pc-btn:hover .pc-btn__face,.pc-btn:focus-visible .pc-btn__face{--pc-rim-t:var(--pc-rim-hot)}
+
+/* optional trailing chevron, drawn with two hairlines */
+.pc-btn__icon{display:inline-block; width:.95em; height:.95em; flex:none; margin-right:-.2em;
+  background:linear-gradient(currentColor,currentColor) 50% 50%/100% 1.5px no-repeat;
+  transition:transform var(--pc-dur-4) var(--pc-ease-out)}
+.pc-btn__icon::after{content:""; position:absolute; right:0; top:50%; width:.5em; height:.5em; border-top:1.5px solid currentColor; border-right:1.5px solid currentColor; transform:translate(-1px,-50%) rotate(45deg)}
+.pc-btn:hover .pc-btn__icon,.pc-btn:focus-visible .pc-btn__icon{transform:translateX(4px)}
+
+/* press: answers inside dur-1 */
+.pc-btn:active .pc-btn__face{transform:translateY(1px) scale(.985); --pc-fill-a:var(--pc-press); transition-duration:var(--pc-dur-1)}
+
+/* focus: a second chamfered hairline 5px outside the face (outline would be clipped by the cut) */
+.pc-btn::after,.pc-seg__opt::after{
+  --o:5px; --c2:calc(var(--c) + 3px);
+  content:""; position:absolute; inset:calc(var(--o) * -1); pointer-events:none; opacity:0;
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - 1px),var(--pc-ring) 50%,transparent calc(50% + 1px)) 0 0/var(--c2) var(--c2) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1px),var(--pc-ring) 50%,transparent calc(50% + 1px)) 100% 100%/var(--c2) var(--c2) no-repeat,
+    linear-gradient(var(--pc-ring),var(--pc-ring)) 100% 0/calc(100% - var(--c2)) 2px no-repeat,
+    linear-gradient(var(--pc-ring),var(--pc-ring)) 0 100%/calc(100% - var(--c2)) 2px no-repeat,
+    linear-gradient(var(--pc-ring),var(--pc-ring)) 0 100%/2px calc(100% - var(--c2)) no-repeat,
+    linear-gradient(var(--pc-ring),var(--pc-ring)) 100% 0/2px calc(100% - var(--c2)) no-repeat;
+  transition:opacity var(--pc-dur-2) var(--pc-ease-out);
+}
+.pc-btn:focus{outline:none}
+.pc-btn:focus-visible::after{opacity:1}
+
+/* disabled */
+.pc-btn:disabled,.pc-btn[aria-disabled="true"]{cursor:not-allowed; opacity:.38; filter:saturate(0)}
+.pc-btn:disabled .pc-btn__face::before,.pc-btn[aria-disabled="true"] .pc-btn__face::before{animation:none!important}
+.pc-btn:disabled .pc-btn__face::after,.pc-btn[aria-disabled="true"] .pc-btn__face::after{opacity:0!important}
+.pc-btn:disabled .pc-btn__label,.pc-btn[aria-disabled="true"] .pc-btn__label{text-shadow:none!important}
+.pc-btn:disabled .pc-btn__face,.pc-btn[aria-disabled="true"] .pc-btn__face{transform:none!important}
+
+/* ---- segmented toggle: same glass, same hairline, a glass thumb slides between options ---- */
+.pc-seg{
+  --c:11px; --h:50px; --n:2; --i:0; --fs:11px; --ls:.26em;
+  display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:auto; height:var(--h); padding:5px; gap:0;
+  color:var(--pc-ink); font:700 var(--fs)/1 var(--pc-font); letter-spacing:var(--ls); text-transform:uppercase; isolation:isolate;
+}
+.pc-seg--sm{--c:8px; --h:38px; --fs:9.5px; --ls:.22em}
+.pc-seg__thumb{
+  --tc:calc(var(--c) - 3px);
+  position:absolute; top:5px; bottom:5px; left:5px; width:calc((100% - 10px) / var(--n)); z-index:0; pointer-events:none;
+  transform:translateX(calc(var(--i) * 100%));
+  transition:transform calc(var(--pc-dur-4) * var(--pc-motion)) var(--pc-ease-inout);
+  clip-path:polygon(var(--tc) 0,100% 0,100% calc(100% - var(--tc)),calc(100% - var(--tc)) 100%,0 100%,0 var(--tc));
+  background:
+    linear-gradient(90deg,transparent calc(50% - 10px),#8f7a62 calc(50% - 10px),#f0e6c7 50%,#8f7a62 calc(50% + 10px),transparent calc(50% + 10px)) 50% calc(100% - 4px)/100% 1px no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - .2px),var(--pc-rim-hot) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--tc) var(--tc) no-repeat,
+    linear-gradient(90deg,var(--pc-rim-s),var(--pc-rim-hot) 50%,var(--pc-rim-s)) 100% 0/calc(100% - var(--tc)) 1px no-repeat,
+    linear-gradient(var(--pc-rim-t),var(--pc-rim-b)) 0 100%/1px calc(100% - var(--tc)) no-repeat,
+    radial-gradient(80% 120% at 50% 0%,var(--pc-glow),transparent 75%),
+    linear-gradient(145deg,var(--pc-thumb),var(--pc-fill-b));
+}
+.pc-seg__opt:nth-of-type(2)[aria-checked="true"]~.pc-seg__thumb,.pc-seg:has(.pc-seg__opt:nth-of-type(2)[aria-checked="true"]) .pc-seg__thumb{--i:1}
+.pc-seg:has(.pc-seg__opt:nth-of-type(3)[aria-checked="true"]) .pc-seg__thumb{--i:2}
+.pc-seg__opt{
+  --c:calc(11px - 3px);
+  position:relative; z-index:1; display:flex; align-items:center; justify-content:center; min-width:0; padding:0 22px; margin:0; border:0;
+  background:none; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer; overflow:hidden;
+  opacity:.62; transition:opacity var(--pc-dur-3) var(--pc-ease-out),text-shadow var(--pc-dur-3) var(--pc-ease-out);
+  -webkit-tap-highlight-color:transparent;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+}
+.pc-seg--sm .pc-seg__opt{padding:0 14px}
+.pc-seg__opt::after{--o:-2px; --c2:var(--c)}
+.pc-seg__opt[aria-checked="true"]{opacity:1; text-shadow:0 0 14px var(--pc-label-glow)}
+.pc-seg__opt:hover{opacity:1}
+.pc-seg__opt:active{transform:translateY(1px)}
+.pc-seg__opt:focus{outline:none}
+.pc-seg__opt:focus-visible::after{opacity:1}
+
+/* demo hooks for static state boards (frozen states) */
+.pc-btn.is-hover .pc-btn__face::before{animation:none; opacity:1; transform:translateX(70%) skewX(-18deg)}
+.pc-btn.is-hover .pc-btn__face::after{opacity:1}
+.pc-btn.is-hover .pc-btn__label{text-shadow:0 0 14px var(--pc-label-glow)}
+.pc-btn.is-hover .pc-btn__face{--pc-rim-t:var(--pc-rim-hot)}
+.pc-btn.is-active .pc-btn__face{transform:translateY(1px) scale(.985); --pc-fill-a:var(--pc-press)}
+.pc-btn.is-focus::after{opacity:1}
+
+/* motion off / reduced motion: states stay, travel stops */
+html[data-motion="off"]{--pc-motion:0}
+@media (prefers-reduced-motion:reduce){
+  :root{--pc-motion:0}
+  .pc-btn__face::before,.pc-seg__opt::before{animation:none!important}
+  .pc-btn__icon{transition:none}
+}
+@media (hover:none){.pc-btn:active .pc-btn__face{transform:scale(.97)}}
+
+/* PEPTICITY · BTN-P01 review board (R129). Every state, every size, on the BLACK and WHITE grounds (BG-P01). */
+:root{--f-disp:"Syncopate","Arial Black",Arial,sans-serif;--f-body:"Hanken Grotesk",system-ui,sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#0b0b0c;color:#eceff3;font:15px/1.55 var(--f-body);overflow-x:clip}
+
+.stage{--ink:#eceff3;--muted:#959ca6;--line:rgba(200,207,216,.18);--wm:#ffffff;--wm-o:.055;
+  --chrome:linear-gradient(100deg,#9aa4af 0%,#f5f8fb 18%,#ffffff 24%,#8e98a3 38%,#eef2f6 54%,#4a525c 66%,#e6ebf0 82%,#a9b2bc 100%);
+  position:relative;overflow:hidden;isolation:isolate;color:var(--ink);background:#0b0b0c}
+.stage[data-pc-surface="light"]{--ink:#111214;--muted:#5f656d;--line:rgba(42,45,49,.16);--wm:#2a2d31;--wm-o:.065;
+  --chrome:linear-gradient(100deg,#2a2d31 0%,#5b6067 18%,#8a9098 26%,#2a2d31 40%,#6b7077 56%,#1a1c1f 66%,#8a9098 82%,#3a3e44 100%);
+  background:#f7f8fa;color-scheme:light}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:-2}
+.stage .wm{position:absolute;left:50%;top:50%;width:300vmax;height:300vmax;margin:-150vmax 0 0 -150vmax;z-index:-1;pointer-events:none;
+  transform:rotate(-30deg);background:var(--wm);opacity:var(--wm-o);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='96' viewBox='0 0 168 96'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linejoin='miter'%3E%3Cpath d='M12 40 L30 14 L48 40'/%3E%3Cpath d='M96 88 L114 62 L132 88'/%3E%3Cpath d='M60 27 H80 M144 75 H164'/%3E%3C/g%3E%3Cg fill='%23000'%3E%3Cpath d='M84 24 l3 3 l-3 3 l-3 -3z M0 72 l3 3 l-3 3 l-3 -3z M168 72 l3 3 l-3 3 l-3 -3z'/%3E%3C/g%3E%3C/svg%3E") 0 0/168px 96px repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='96' viewBox='0 0 168 96'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linejoin='miter'%3E%3Cpath d='M12 40 L30 14 L48 40'/%3E%3Cpath d='M96 88 L114 62 L132 88'/%3E%3Cpath d='M60 27 H80 M144 75 H164'/%3E%3C/g%3E%3Cg fill='%23000'%3E%3Cpath d='M84 24 l3 3 l-3 3 l-3 -3z M0 72 l3 3 l-3 3 l-3 -3z M168 72 l3 3 l-3 3 l-3 -3z'/%3E%3C/g%3E%3C/svg%3E") 0 0/168px 96px repeat}
+
+.wrap{max-width:1280px;margin:0 auto;padding:clamp(28px,5vh,56px) clamp(16px,3.4vw,48px)}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.mark{font:700 clamp(15px,1.5vw,19px)/1 var(--f-disp);letter-spacing:.34em;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1,h2{margin:0;font:700 clamp(22px,3vw,40px)/1.05 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;background:var(--chrome);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{margin-top:14px}
+.note{margin:0;max-width:52ch;color:var(--muted);font-size:14px}
+.note b{color:var(--ink);font-weight:600}
+
+.group{display:grid;grid-template-columns:170px minmax(0,1fr);gap:18px 28px;align-items:start;padding:30px 0;border-bottom:1px solid var(--line)}
+.group:last-child{border-bottom:0}
+.gl{font:500 10.5px/1.7 var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);padding-top:12px}
+.gl b{display:block;font:700 12px var(--f-disp);letter-spacing:.2em;color:var(--ink)}
+.items{display:flex;flex-wrap:wrap;gap:30px 34px;align-items:flex-end}
+.item{display:grid;justify-items:start;gap:12px;min-width:0;max-width:100%}
+.cap{font:500 9.5px/1.4 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.cap i{font-style:normal;color:var(--ink)}
+
+@media (max-width:760px){
+  .group{grid-template-columns:minmax(0,1fr);gap:14px}
+  .gl{padding-top:0}
+  .items{gap:22px 18px}
+  .item.wide{width:100%}
+  .item.wide .pc-btn{width:100%}
+}
+</style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<section class="stage" id="sBlack" aria-labelledby="hB">
+  <canvas aria-hidden="true"></canvas><div class="wm" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="top">
+      <div><div class="mark">PEPTICITY</div><h1 id="hB">THE ONE BUTTON</h1></div>
+      <p class="note"><b>BTN-P01.</b> One button for the whole site: see-through glass, chamfered corners, a chrome hairline edge and one slow light sweep from left to right on hover. Hover any live button to see it. Below: on the BLACK ground.</p>
+    </div>
+    <div class="group"><div class="gl"><b>SIZES</b>ON BLACK</div>
+      <div class="items">
+        <div class="item wide"><a class="pc-btn pc-btn--lg" href="#sBlack"><span class="pc-btn__face"><span class="pc-btn__label">ENTER PEPTICITY</span><i class="pc-btn__icon" aria-hidden="true"></i></span></a><span class="cap"><i>LARGE CTA</i> · 62PX · CUT 15</span></div>
+        <div class="item"><button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span></span></button><span class="cap"><i>REGULAR</i> · 50PX · CUT 11</span></div>
+        <div class="item"><button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SIGN IN</span></span></button><span class="cap"><i>SMALL / NAV</i> · 38PX · CUT 8</span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>STATES</b>ON BLACK</div>
+      <div class="items">
+        <div class="item"><button class="pc-btn" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DEFAULT</i></span></div>
+        <div class="item"><button class="pc-btn is-hover" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>HOVER</i> · SWEEP 1.5 S</span></div>
+        <div class="item"><button class="pc-btn is-active" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>PRESSED</i></span></div>
+        <div class="item"><button class="pc-btn is-focus" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>FOCUS</i> · KEYBOARD</span></div>
+        <div class="item"><button class="pc-btn" type="button" disabled><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DISABLED</i></span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>TOGGLE</b>ON BLACK</div>
+      <div class="items">
+        <div class="item"><div class="pc-seg" role="radiogroup" aria-label="Site version"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · REGULAR</span></div>
+        <div class="item"><div class="pc-seg pc-seg--sm" role="radiogroup" aria-label="Site version, small"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · SMALL / NAV</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="sWhite" data-pc-surface="light" aria-labelledby="hW">
+  <canvas aria-hidden="true"></canvas><div class="wm" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="top"><div><div class="mark">PEPTICITY</div><h2 id="hW">ON WHITE</h2></div>
+      <p class="note">The same button on the WHITE ground. Only the tokens change: darker chrome edge, white light sweep, ink label.</p></div>
+    <div class="group"><div class="gl"><b>SIZES</b>ON WHITE</div>
+      <div class="items">
+        <div class="item wide"><a class="pc-btn pc-btn--lg" href="#sWhite"><span class="pc-btn__face"><span class="pc-btn__label">ENTER PEPTICITY</span><i class="pc-btn__icon" aria-hidden="true"></i></span></a><span class="cap"><i>LARGE CTA</i> · 62PX · CUT 15</span></div>
+        <div class="item"><button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span></span></button><span class="cap"><i>REGULAR</i> · 50PX · CUT 11</span></div>
+        <div class="item"><button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SIGN IN</span></span></button><span class="cap"><i>SMALL / NAV</i> · 38PX · CUT 8</span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>STATES</b>ON WHITE</div>
+      <div class="items">
+        <div class="item"><button class="pc-btn" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DEFAULT</i></span></div>
+        <div class="item"><button class="pc-btn is-hover" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>HOVER</i> · SWEEP 1.5 S</span></div>
+        <div class="item"><button class="pc-btn is-active" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>PRESSED</i></span></div>
+        <div class="item"><button class="pc-btn is-focus" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>FOCUS</i> · KEYBOARD</span></div>
+        <div class="item"><button class="pc-btn" type="button" disabled><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button><span class="cap"><i>DISABLED</i></span></div>
+      </div>
+    </div>
+    <div class="group"><div class="gl"><b>TOGGLE</b>ON WHITE</div>
+      <div class="items">
+        <div class="item"><div class="pc-seg" role="radiogroup" aria-label="Site version on white"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · REGULAR</span></div>
+        <div class="item"><div class="pc-seg pc-seg--sm" role="radiogroup" aria-label="Site version on white, small"><span class="pc-seg__thumb" aria-hidden="true"></span><button class="pc-seg__opt" type="button" role="radio" aria-checked="false">WHITE</button><button class="pc-seg__opt" type="button" role="radio" aria-checked="true">BLACK</button></div><span class="cap"><i>SEGMENTED</i> · SMALL / NAV</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* PEPTICITY · BG-P01 · SILVER SMOKE
+   Moving black-and-silver smoke ground in two modes: 'black' (matte + UV black, silver smoke)
+   and 'white' (crisp cool white, soft platinum smoke). Adapted from the liquid-chrome ground in
+   the APEX Arsenal artifact (raw WebGL at low resolution, pointer ripples it).
+   Usage: const bg = PCSmoke(canvasEl, {mode:'black'}); bg.setMode('white');
+   No chartreuse spark, no warm tones: every output colour is neutral or slightly cool. */
+(function () {
+  const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const FS = `precision highp float;
+  uniform vec2 r;uniform float t;uniform vec2 m;uniform float rip;uniform float mode;
+  float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),f.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x),f.y);}
+  float fbm(vec2 p){float v=0.,a=.5;mat2 R=mat2(.8,.6,-.6,.8);for(int i=0;i<4;i++){v+=a*n2(p);p=R*p*2.03;a*=.5;}return v;}
+  float H(vec2 p){
+    vec2 q=p*.9;
+    vec2 w=vec2(fbm(q+vec2(0.,t*.040)),fbm(q+vec2(5.2,-t*.034)));
+    float h=fbm(q*1.3+w*1.9+vec2(t*.022,0.));
+    float d=length(p-m);
+    h+=.05*sin(d*30.-t*3.)*exp(-d*3.4)*rip;
+    h+=.18*exp(-d*d*7.)*rip;
+    return h;
+  }
+  float env(vec3 R){
+    float sky=.10*smoothstep(-.4,1.,R.y);
+    float band=1.0*exp(-pow((R.y-.30)*7.,2.));
+    float band2=.55*exp(-pow((R.y+.12)*10.,2.));
+    float v1=.62*exp(-pow((R.x+.62)*10.,2.));
+    float v2=.45*exp(-pow((R.x-.55)*13.,2.));
+    return .012+sky+band+band2+v1+v2;
+  }
+  void main(){
+    vec2 uv=gl_FragCoord.xy/r;vec2 p=(gl_FragCoord.xy-.5*r)/r.y;
+    float e=1.6/r.y;float h=H(p);
+    vec3 n=normalize(vec3(-(H(p+vec2(e,0.))-h)/e*.11,-(H(p+vec2(0.,e))-h)/e*.11,1.));
+    vec3 R=reflect(vec3(0.,0.,-1.),n);
+    float fres=pow(1.-max(n.z,0.),3.);
+    float E=env(R);
+    float L=E+fres*.35;
+    float d=length(p-m);
+    L+=.28*exp(-d*d*9.)*(.4+.6*smoothstep(.2,1.,E));
+    float spec=pow(max(dot(n,normalize(vec3(.35,.55,1.))),0.),220.);
+    vec2 sp=p*1.2+vec2(t*.016,-t*.011);
+    float sm=fbm(sp+fbm(sp*1.7+vec2(t*.02))*1.4);
+    float wisp=smoothstep(.42,.86,sm);
+    float vig=mix(.40,.80,smoothstep(1.3,0.,length(uv-vec2(.5,.46))));
+    if(mode<.5){
+      vec3 tint=vec3(.86,.885,.92);
+      vec3 col=L*tint+vec3(.9)*spec*.45+tint*wisp*.10;
+      col*=vig;
+      col=1.-exp(-col*1.2);col=pow(col,vec3(1.55))*.66;
+      float lum=dot(col,vec3(.3333));
+      vec3 base=vec3(.043,.043,.047);
+      vec3 uvb=vec3(.070,.058,.100);
+      float uvm=(1.-smoothstep(0.,.16,lum))*smoothstep(.25,.85,sm);
+      col=max(col,mix(base,uvb,uvm*.85));
+      gl_FragColor=vec4(col,1.);
+    }else{
+      float k=L*vig;k=1.-exp(-k*1.2);k=pow(k,1.55)*.70;
+      float s=clamp(k*.78+wisp*.14,0.,1.);
+      vec3 white=vec3(.974,.978,.986);
+      vec3 smoke=vec3(.640,.668,.705);
+      vec3 col=mix(white,smoke,s);
+      col=mix(col,vec3(1.),clamp(spec*.7,0.,1.));
+      gl_FragColor=vec4(col,1.);
+    }
+  }`;
+
+  window.PCSmoke = function (cv, opt) {
+    opt = opt || {};
+    let mode = opt.mode === 'white' ? 1 : 0;
+    const api = { setMode(m) { mode = m === 'white' ? 1 : 0; if (reduce || !running) draw(performance.now()); }, frames: 0 };
+    const gl = cv.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' });
+    if (!gl) { cv.classList.add('pc-nogl'); return api; }
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function sh(type, src) { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; }
+    let pr;
+    try { pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr); }
+    catch (err) { console.warn(err); cv.classList.add('pc-nogl'); return api; }
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = n => gl.getUniformLocation(pr, n);
+    const mobile = matchMedia('(max-width: 900px)').matches;
+    const scale = Math.min(devicePixelRatio || 1, 1.5) * (mobile ? .45 : .6);
+    function size() {
+      const b = cv.getBoundingClientRect();
+      cv.width = Math.max(2, b.width * scale | 0); cv.height = Math.max(2, b.height * scale | 0);
+      gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(U('r'), cv.width, cv.height);
+    }
+    let tx = .25, ty = .1, mx = .25, my = .1, rip = 0, lastMove = 0, raf = 0, running = false, visible = true;
+    const t0 = performance.now() - (opt.offset || 0) * 1000;
+    function draw(now) {
+      mx += (tx - mx) * .07; my += (ty - my) * .07;
+      const ripT = now - lastMove < 900 ? 1 : 0; rip += (ripT - rip) * .04; api.frames++;
+      gl.uniform1f(U('t'), reduce ? 14. : (now - t0) / 1000); gl.uniform2f(U('m'), mx, my);
+      gl.uniform1f(U('rip'), .3 + rip * .6); gl.uniform1f(U('mode'), mode);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    function loop(now) { draw(now); raf = requestAnimationFrame(loop); }
+    function start() { if (running || reduce || !visible || document.hidden) return; running = true; raf = requestAnimationFrame(loop); }
+    function stop() { running = false; cancelAnimationFrame(raf); }
+    size(); draw(performance.now());
+    addEventListener('resize', () => { size(); draw(performance.now()); });
+    addEventListener('pointermove', e => {
+      const b = cv.getBoundingClientRect(); const a = b.width / Math.max(1, b.height);
+      tx = ((e.clientX - b.left) / b.width - .5) * a; ty = .5 - (e.clientY - b.top) / b.height; lastMove = performance.now();
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(cv);
+    cv.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); cv.classList.add('pc-nogl'); });
+    start();
+    return api;
+  };
+})();
+/* PEPTICITY · BTN-P01 · segmented toggle behaviour (click + arrow keys, roving tabindex).
+   Fires a 'pc-change' event on the .pc-seg with detail {index, value}. */
+(function () {
+  function init(seg) {
+    if (seg.__pc) return; seg.__pc = true;
+    const opts = [...seg.querySelectorAll('.pc-seg__opt')];
+    seg.style.setProperty('--n', opts.length);
+    function select(i, focus) {
+      opts.forEach((o, k) => { o.setAttribute('aria-checked', k === i ? 'true' : 'false'); o.tabIndex = k === i ? 0 : -1; });
+      seg.style.setProperty('--i', i);
+      if (focus) opts[i].focus();
+      seg.dispatchEvent(new CustomEvent('pc-change', { detail: { index: i, value: opts[i].dataset.value || opts[i].textContent.trim() } }));
+    }
+    let cur = Math.max(0, opts.findIndex(o => o.getAttribute('aria-checked') === 'true'));
+    opts.forEach((o, k) => { o.tabIndex = k === cur ? 0 : -1; o.addEventListener('click', () => { cur = k; select(k); }); });
+    seg.style.setProperty('--i', cur);
+    seg.addEventListener('keydown', e => {
+      const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      if (!d) return; e.preventDefault(); cur = (cur + d + opts.length) % opts.length; select(cur, true);
+    });
+    seg.pcSelect = i => { cur = i; select(i); };
+  }
+  window.PCButtons = { init: root => (root || document).querySelectorAll('.pc-seg').forEach(init) };
+  if (document.readyState !== 'loading') window.PCButtons.init(); else document.addEventListener('DOMContentLoaded', () => window.PCButtons.init());
+})();
+PCSmoke(document.querySelector('#sBlack canvas'),{mode:'black',offset:8});
+PCSmoke(document.querySelector('#sWhite canvas'),{mode:'white',offset:20});
+document.querySelectorAll('a.pc-btn').forEach(a=>a.addEventListener('click',e=>e.preventDefault()));
+</script>
