@@ -251,3 +251,21 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - 5 remixes of 09/07/02/14: vertical off-centre PEPTICITY; front = posh branding, back = name + mg.
 - 5 more with PEPTICITY on an angle; very clean.
 - Font questions sent (is the picture the font; draw missing letters; 3D finish) — awaiting answers.
+
+## 29 Oct — OWNER REJECTED SAMPLE 1 (fix list, his words condensed)
+- FONT: the 3D "BLACK" lettering is THE font — exact. Use it for the P logo, PEPTICITY brand, dashboards, the spinning emblem (bring the spinning thing back with the new font).
+- COLOUR: bright crisp white + classy chrome gold OR platinum chrome. NO peach, pink, yellow ("piss yellow"), gross gold.
+- CITY: crisp not blurry; slower, smoother, longer; weave more; don't rush to the door.
+- HERO: big hero at the very beginning: grand opening, 15% if you sign up.
+- CARD: unique, see-through glassmorphism, lit up, "pimp"; tap → it spins/moves.
+- DOORS: good; more grandiose; better tap interaction.
+- LAB: not rushed; several stations; big back wall with illuminated logo; grand glass feel, dead clean; dropper; the chain ("curly"); research how peptides are really made, realistic.
+- CHEST: tilt forward; the NEW P LOGO embossed on the top (not the word); PEPTICITY engraves itself across the front, classy.
+- BOTTLES: all ~30 products from northernpeptides.st in OUR vials; logo on the bottle.
+- HOOKS: none were built; need sign-ups/forms/offers everywhere.
+- BUTTONS: ugly; redo.
+- EFFECTS: his picks were mostly not used; use them all.
+- DASHBOARD: must follow the brand.
+- PROCESS: build in stages, show each piece individually, get his OK before building; nothing built until OK.
+- SKILLS: 8 listening/accountability skills + at least 5 hook/lead/retention skills; find GitHub repos that enforce reading instructions 3 times.
+- Higgsfield: stop wasting credits.
