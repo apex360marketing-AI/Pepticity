@@ -1066,7 +1066,7 @@ html{font-synthesis:none}
 .bg::after{background:radial-gradient(120% 90% at 50% 42%,transparent 45%,rgba(2,2,3,.55) 100%)}
 #smoke{opacity:1!important;mix-blend-mode:normal}
 #smoke.pc-nogl{display:none}
-.mark{opacity:.1}
+.mark{opacity:.34}
 .mark::before{display:none}
 .mark .mfb{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.6}
 html.p3d .mark .mfb{display:none}
@@ -3365,20 +3365,20 @@ function startMark() {
     return new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * .8, bevelOffset: -bevel * .8, bevelSegments: 2, curveSegments: 96 }); };
   function face(group, zFront) {
     const f = new THREE.Group(), rd = 0.035;
-    [[0.935, 1.0], [0.62, 0.655]].forEach(([a, b]) => f.add(new THREE.Mesh(ringGeo(a, b, rd, 0.008), [M.platinum, M.uv])));
+    [[0.935, 1.0], [0.62, 0.655]].forEach(([a, b]) => f.add(new THREE.Mesh(ringGeo(a, b, rd, 0.008), [M.gunmetal, M.uv])));
     EMB.layout.forEach(([ch, phi, up]) => {
       const X = EMB.RC * Math.cos(phi), Y = EMB.RC * Math.sin(phi); let obj;
       if (ch === '*') {
         const s = new THREE.Shape([[0, .028], [.028, 0], [0, -.028], [-.028, 0]].map(([x, y]) => new THREE.Vector2(x, y)));
         obj = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: rd, bevelEnabled: false }), [M.platinum, M.uv]);
       } else {
-        const geo = ENGINE.glyphGeometries('regular', ch, { depth: 0.2, bevel: 0.03 }); obj = new THREE.Group(); const inner = new THREE.Group(); obj.add(inner);
+        const geo = ENGINE.glyphGeometries('regular', ch, { depth: 0.5, bevel: 0.04 }); obj = new THREE.Group(); const inner = new THREE.Group(); obj.add(inner);
         geo.parts.forEach(p => { inner.add(new THREE.Mesh(p.g, [M.gunmetal, M.uv])); inner.add(new THREE.LineSegments(p.lg, M.edge)); });
         inner.position.set(-geo.adv / 2, -0.35, 0); obj.scale.setScalar(EMB.sc * 1000);
       }
       obj.position.set(X, Y, 0); obj.rotation.z = up ? phi + Math.PI / 2 : phi - Math.PI / 2; f.add(obj);
     });
-    const P = pMesh(M, 'platinum', 0.74, 0.042, 0.006); P.position.z = 0.025; f.add(P);
+    const P = pMesh(M, 'gunmetal', 0.74, 0.09, 0.01); P.position.z = 0.03; f.add(P);
     f.position.z = zFront; group.add(f); return f;
   }
   const coin = new THREE.Group(), discS = new THREE.Shape(); discS.absarc(0, 0, 0.985, 0, Math.PI * 2, false);
