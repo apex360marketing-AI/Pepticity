@@ -269,3 +269,13 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - PROCESS: build in stages, show each piece individually, get his OK before building; nothing built until OK.
 - SKILLS: 8 listening/accountability skills + at least 5 hook/lead/retention skills; find GitHub repos that enforce reading instructions 3 times.
 - Higgsfield: stop wasting credits.
+
+## 29 Oct — owner: "fix that for me, please. Immediately." (go-ahead for these pieces, each shown separately)
+- R127 "create the logo separate" (the new P, in his BLACK font)
+- R128 "create the writing all the fonts separate" (font sheet: PEPTICITY, STUDIO, alphabet, 3D; + 2 extra similar 3D fonts per earlier ask)
+- R129 "show me what buttons you're going to use, because we're only going to use one throughout the whole entire thing" (current WHITE/BLACK/STORE buttons rejected)
+- R130 store sells only 8: "go get every fucking bottle from Northern Peptides.s[t] and then bring them back"
+- R131 vial: "the vial ... that's got the vertical new pepticity with the fucking new P as the logo. And on the backside ... what it is, how much is in it, and that's all ... clean ... see-through ... follow the brand ... nice and dark"
+- R132 "underneath the actual bottles, they illuminate"
+- R133 "take that background [APEX Arsenal], that moving black and silver ... as a similar background on Pepticity" (artifact https://claude.ai/artifact/G4y1SywdUUEAhTfRgCEhhE)
+- R134 glassmorphism must be truly see-through ("You didn't do anything I asked you to, so it's see-through")
