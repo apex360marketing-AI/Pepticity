@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en" data-version="white" class="js-pending">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEPTICITY</title>
+<meta name="description" content="PEPTICITY grand opening. Join the PEPTICITY Team: 15% off your first order, the monthly health letter and first word on restocks.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23111%22/%3E%3Cpath d=%22M37 74V27H57.5C67 27 72.5 33.5 72.5 41.5S67 56 57.5 56H37%22 fill=%22none%22 stroke=%22%23e8e2d6%22 stroke-width=%227%22/%3E%3C/svg%3E">
+<link rel="stylesheet" href="site.css">
+<script>
+/* before first paint: version, once-per-visit intro, reduced motion */
+(function(){var d=document.documentElement,v='white',seen=false;
+try{v=localStorage.getItem('pc-version')||'white'}catch(e){}
+try{seen=sessionStorage.getItem('pc-intro')==='1'}catch(e){}
+if(v!=='black')v='white';d.setAttribute('data-version',v);
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');
+else if(!seen)d.classList.add('intro-on');
+d.classList.add('gated');d.classList.remove('js-pending');})();
+</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="g-metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" style="stop-color:var(--m1)"/><stop offset=".3" style="stop-color:var(--m3)"/><stop offset=".5" style="stop-color:var(--m2)"/><stop offset=".72" style="stop-color:var(--m4)"/><stop offset="1" style="stop-color:var(--m2)"/>
+    </linearGradient>
+    <symbol id="pmark" viewBox="0 0 100 100">
+      <path d="M16 5H84L95 16V84L84 95H16L5 84V16Z" fill="none" stroke-width="3"/>
+      <path d="M37 74V27H57.5C67 27 72.5 33.5 72.5 41.5S67 56 57.5 56H37" fill="none" stroke-width="7" stroke-linejoin="miter"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- background: subtle smoke, a 30-degree pattern watermark and the big rotating P -->
+<div class="bg" aria-hidden="true">
+  <canvas id="smoke"></canvas>
+  <div class="bg-pattern"></div>
+  <div class="bg-mark" id="bgMark">
+    <svg class="pm l3"><use href="#pmark"/></svg>
+    <svg class="pm l2"><use href="#pmark"/></svg>
+    <svg class="pm l1"><use href="#pmark"/></svg>
+  </div>
+</div>
+
+<!-- ENTRANCE: the chest film, then PEPTICITY engraves itself across the case front -->
+<div id="intro" role="region" aria-label="Entrance film">
+  <div class="film" id="film" aria-hidden="true">
+    <video id="chest" muted playsinline preload="auto"></video>
+    <svg class="engrave" id="engrave" viewBox="0 0 1912 1080" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="g-eng" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" style="stop-color:var(--e1)"/><stop offset=".22" style="stop-color:var(--e2)"/><stop offset=".4" style="stop-color:var(--e1)"/><stop offset=".62" style="stop-color:var(--e3)"/><stop offset=".8" style="stop-color:var(--e1)"/><stop offset="1" style="stop-color:var(--e2)"/>
+        </linearGradient>
+        <clipPath id="engClip"><rect id="engRect" x="0" y="780" width="0" height="140"/></clipPath>
+        <filter id="engGlow" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
+      </defs>
+      <g clip-path="url(#engClip)">
+        <text class="eng-glow" x="956" y="864" text-anchor="middle" textLength="860" lengthAdjust="spacing" filter="url(#engGlow)">PEPTICITY</text>
+        <text class="eng-cut" x="956" y="865.5" text-anchor="middle" textLength="860" lengthAdjust="spacing">PEPTICITY</text>
+        <text class="eng-face" x="956" y="864" text-anchor="middle" textLength="860" lengthAdjust="spacing">PEPTICITY</text>
+      </g>
+      <rect id="engSheen" class="eng-sheen" x="-200" y="820" width="120" height="60" clip-path="url(#engClip)"/>
+    </svg>
+    <span class="cutter" id="cutter"></span>
+    <div class="embers" id="embers"></div>
+  </div>
+  <button class="skip glass-btn" id="skipIntro" type="button"><span>SKIP INTRO</span></button>
+</div>
+
+<header class="nav" id="nav">
+  <a class="wordmark metal" href="#top" aria-label="PEPTICITY, back to the top">PEPTICITY</a>
+  <div class="nav-r">
+    <div class="vtoggle glass" role="group" aria-label="Choose the look">
+      <span class="vt-thumb" aria-hidden="true"></span>
+      <button type="button" data-v="white" aria-pressed="true">WHITE</button>
+      <button type="button" data-v="black" aria-pressed="false">BLACK</button>
+    </div>
+    <button class="nav-link" id="replay" type="button">REPLAY INTRO</button>
+    <button class="nav-link" id="toStore" type="button">STORE</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <!-- HERO + CITY WEAVE + DOORS + SCANNER: one pinned stage, scrubbed by scroll -->
+  <section class="journey" id="top" aria-label="Grand opening">
+    <div class="stage" id="jStage">
+      <div class="cam" id="cam">
+        <canvas id="cvWeave" class="frames"></canvas>
+        <div class="doorbox" id="doorbox" aria-hidden="true">
+          <div class="doorway"><img class="peek" alt="" src="media/white-lab.jpg"><span class="rays"></span></div>
+          <div class="leaf l"><img alt="" src="media/white-doors.jpg"><span class="edge"></span></div>
+          <div class="leaf r"><img alt="" src="media/white-doors.jpg"><span class="edge"></span></div>
+          <span class="seam"></span>
+          <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="d-ring"/><circle cx="50" cy="50" r="38" class="d-ticks"/><path class="d-bolt" d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24" class="d-core"/></svg>
+          <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="d-ring"/><circle cx="50" cy="50" r="38" class="d-ticks"/><path class="d-bolt" d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24" class="d-core"/></svg>
+          <span class="spill"></span>
+        </div>
+      </div>
+      <div class="stage-mark" aria-hidden="true"><svg class="pm"><use href="#pmark"/></svg></div>
+      <div class="scrim" aria-hidden="true"></div>
+
+      <div class="hero" id="hero">
+        <div class="hero-card glass chip">
+          <span class="cut" aria-hidden="true"></span>
+          <p class="eyebrow"><span>GRAND OPENING</span><i aria-hidden="true"></i><span>FOUNDING MEMBERS</span></p>
+          <h1 class="metal tilt3d" data-text="JOIN THE PEPTICITY TEAM">JOIN THE <span>PEPTICITY</span> TEAM</h1>
+          <p class="lede">Become a founding member and receive <b>15% off your first order</b>, the monthly PEPTICITY health letter, and first word whenever a favourite returns to the shelf.</p>
+          <form class="join" id="joinForm" novalidate data-hook="H01">
+            <label class="field"><span class="sr">Email address</span>
+              <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="Your email address" required>
+            </label>
+            <label class="consent"><input type="checkbox" name="consent"><span>Yes, PEPTICITY may email me the founding-member offer, the monthly health letter and restock notices. I can unsubscribe any time.</span></label>
+            <button class="btn sheen" type="submit"><span>CLAIM MY FOUNDING OFFER</span></button>
+            <p class="msg" role="status" aria-live="polite">Preview only: nothing is sent.</p>
+          </form>
+        </div>
+        <p class="cue" aria-hidden="true"><span>SCROLL TO ENTER THE CITY</span><i></i></p>
+      </div>
+
+      <div class="hooks" aria-hidden="true">
+        <div class="hook glass chip" data-at=".22" data-side="r"><span class="cut"></span><b>FOUNDING MEMBERS</b><span>15% off your first order, reserved for the PEPTICITY Team.</span></div>
+        <div class="hook glass chip" data-at=".40" data-side="l"><span class="cut"></span><b>MEMBERS' PRICING</b><span>Opens to the team first, the day we launch.</span></div>
+        <div class="hook glass chip" data-at=".58" data-side="r"><span class="cut"></span><b>FIRST WORD ON RESTOCKS</b><span>Members hear before the shelf goes public.</span></div>
+        <div class="hook glass chip" data-at=".75" data-side="l"><span class="cut"></span><b>THE PEPTICITY HOUSE</b><span>The members' entrance is just ahead.</span></div>
+      </div>
+
+      <!-- THE SCANNER -->
+      <div class="scanner glass chip" id="scanner" data-state="idle">
+        <span class="cut" aria-hidden="true"></span>
+        <p class="eyebrow"><span>MEMBERS' ENTRANCE</span><i aria-hidden="true"></i><span id="scanStatus" class="status">AWAITING CARD</span></p>
+        <h2 class="metal">TAP YOUR CARD</h2>
+        <div class="scan-row">
+          <div class="pad" id="pad" aria-hidden="true">
+            <svg viewBox="0 0 200 200">
+              <circle class="p-ticks" cx="100" cy="100" r="94"/>
+              <circle class="p-ring" cx="100" cy="100" r="80"/>
+              <circle class="p-dash" cx="100" cy="100" r="68"/>
+              <circle class="p-arc" cx="100" cy="100" r="80"/>
+              <circle class="p-glass" cx="100" cy="100" r="54"/>
+              <use href="#pmark" x="76" y="76" width="48" height="48" class="p-mark"/>
+            </svg>
+            <span class="pulse"></span><span class="pulse"></span><span class="pulse"></span>
+          </div>
+          <button class="card" id="card" type="button" aria-describedby="cardHint">
+            <span class="card-in">
+              <span class="c-brush"></span>
+              <span class="c-holo"></span>
+              <span class="c-word">PEPTICITY</span>
+              <span class="c-chip" aria-hidden="true"></span>
+              <span class="c-tier" id="cardTier">YOUR CARD</span>
+              <span class="c-name" id="cardName">NOT ISSUED YET</span>
+              <span class="c-scan" aria-hidden="true"></span>
+            </span>
+          </button>
+        </div>
+        <ol class="locks" aria-label="Door locks"><li>LOCK I</li><li>LOCK II</li><li>LOCK III</li></ol>
+        <p class="hint" id="cardHint">First visit? Get your PEPTICITY card below, then tap it to open the doors.</p>
+        <details class="getcard" id="getCard">
+          <summary>NO CARD YET? GET YOURS</summary>
+          <form class="join compact" id="cardForm" novalidate data-hook="H34">
+            <label class="field"><span class="sr">Email address</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="Your email address" required></label>
+            <label class="consent"><input type="checkbox" name="consent"><span>Yes, PEPTICITY may email me my member card, the founding-member offer and occasional news. I can unsubscribe any time.</span></label>
+            <button class="btn sheen" type="submit"><span>ISSUE MY CARD</span></button>
+            <p class="msg" role="status" aria-live="polite">Preview only: nothing is sent.</p>
+          </form>
+        </details>
+        <button class="guest" id="guest" type="button">Enter as a guest</button>
+      </div>
+      <div class="flood" id="flood" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div class="after-gate" id="afterGate">
+    <!-- THE LAB, scrubbed by scroll -->
+    <section class="lab" id="lab" aria-label="Inside the PEPTICITY house">
+      <div class="stage" id="lStage">
+        <canvas id="cvLab" class="frames"></canvas>
+        <img class="still" alt="Inside the PEPTICITY house: a bright glass lab with the illuminated PEPTICITY logo on the wall" src="media/white-lab.jpg" loading="lazy">
+        <div class="lab-fade" aria-hidden="true"></div>
+        <div class="caps">
+          <div class="cap glass chip" data-at=".01"><span class="cut" aria-hidden="true"></span><p class="eyebrow"><span>INSIDE</span></p><h2 class="metal">WELCOME TO THE HOUSE</h2><p>You're through the doors. Take your time: the store begins just ahead.</p></div>
+          <div class="cap glass chip" data-at=".40"><span class="cut" aria-hidden="true"></span><p class="eyebrow"><span>MEMBERS FIRST</span></p><h2 class="metal">THE TEAM SEES IT FIRST</h2><p>New arrivals and members' pricing open to the PEPTICITY Team before anyone else.</p></div>
+          <div class="cap glass chip" data-at=".70"><span class="cut" aria-hidden="true"></span><p class="eyebrow"><span>NEXT</span></p><h2 class="metal">THE SHELF IS AHEAD</h2><p>Keep scrolling. We'll walk you through it, one stop at a time.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE GUIDED STORE: stop 1 and stop 2 -->
+    <section class="store" id="store" aria-labelledby="shelfTitle">
+      <div class="stop" id="stop1">
+        <header class="stop-head" data-reveal>
+          <p class="eyebrow"><span>STOP 01</span><i aria-hidden="true"></i><span>THE FIRST SHELF</span></p>
+          <h2 class="metal big" id="shelfTitle">THE PEPTICITY COLLECTION</h2>
+          <p class="sub">Name and strength, nothing more. Members' pricing opens at launch, and the team sees it first.</p>
+        </header>
+        <ul class="shelf" id="shelf"></ul>
+        <div class="shelf-glass" aria-hidden="true"></div>
+      </div>
+
+      <p class="walk" id="walk1" aria-hidden="true"><span>KEEP WALKING</span><i></i><span>YOUR RESTOCK LIST IS NEXT</span></p>
+
+      <div class="stop" id="stop2">
+        <div class="restock glass chip" data-reveal>
+          <span class="cut" aria-hidden="true"></span>
+          <div class="rs-copy">
+            <p class="eyebrow"><span>STOP 02</span><i aria-hidden="true"></i><span>RESTOCK ALERTS</span></p>
+            <h2 class="metal big">FIRST WORD ON EVERY RESTOCK</h2>
+            <p class="sub">Small batches go quickly. Choose a favourite and we'll write the moment it's back, before the shelf goes public.</p>
+          </div>
+          <form class="join restock-form" id="restockForm" novalidate data-hook="H05">
+            <label class="field select"><span class="lbl">PRODUCT</span><select name="product" id="rsProduct"></select></label>
+            <label class="field"><span class="sr">Email address</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="Your email address" required></label>
+            <label class="consent"><input type="checkbox" name="consent"><span>Yes, PEPTICITY may email me when this product is back and occasional news. I can unsubscribe any time.</span></label>
+            <button class="btn sheen" type="submit"><span>ALERT ME FIRST</span></button>
+            <p class="msg" role="status" aria-live="polite">Preview only: nothing is sent.</p>
+          </form>
+        </div>
+      </div>
+
+      <p class="walk" id="walk2" aria-hidden="true"><span>NEXT STOP</span><i></i><span>THE FOUNDING TEAM</span></p>
+    </section>
+
+    <footer class="foot">
+      <a class="wordmark metal" href="#top">PEPTICITY</a>
+      <p>Preview build, sample 1. Every form on this page is a preview: nothing is sent.</p>
+      <p class="ph">[Offer terms and final legal copy to be approved by counsel.]</p>
+      <p class="ph">[Mailing address] · [Privacy policy] · [Unsubscribe any time]</p>
+    </footer>
+  </div>
+</main>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

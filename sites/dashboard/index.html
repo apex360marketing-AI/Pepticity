@@ -1,8 +1,11 @@
 <title>PEPTICITY Studio</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Barlow+Condensed:wght@600;700&family=Syne:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Barlow+Condensed:wght@600;700&family=Syne:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 
 :root{
   --matte:#0a0a0b; --uv:#0d0b13; --ink:#ecedf1; --ink2:#c3c7cf; --mute:#8c919b; --dim:#5d616a;
@@ -591,6 +594,315 @@ html.cc #cur{display:block}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .chart .ln{stroke-dashoffset:0}
 }
+
+/* =====================================================================
+   V3 · APEX STANDARD LAYER
+   motion tokens · see-through glass · chamfered silhouettes · no pills
+   ===================================================================== */
+:root{
+  --apx-dur-1:120ms;--apx-dur-2:200ms;--apx-dur-3:320ms;--apx-dur-4:560ms;--apx-dur-5:900ms;
+  --apx-ease-out:cubic-bezier(.16,1,.3,1);--apx-ease-in:cubic-bezier(.7,0,.84,0);--apx-ease-inout:cubic-bezier(.65,0,.35,1);
+  --apx-ease-spring:linear(0,0.079,0.241,0.435,0.624,0.787,0.914,1.002,1.056,1.082,1.088,1.081,1.066,1.049,1.033,1.018,1.007,1,0.995,0.993,0.992,0.993,0.994,0.996,0.997,0.998,0.999,1,1,1.001,1.001,1.001,1);
+  --uvA:rgba(170,150,255,.55);
+  /* thinner tone so the smoke and the P read through every pane */
+  --tone:linear-gradient(118deg,rgba(9,9,10,.22) 0%,rgba(9,9,10,.22) 47%,rgba(17,12,30,.26) 53%,rgba(17,12,30,.26) 100%);
+  --glass:linear-gradient(165deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.015) 42%,rgba(255,255,255,.03) 100%);
+}
+#smoke{opacity:.36}
+:focus-visible{border-radius:2px}
+
+/* GLASS: thin fill, pointer torch inside the pane, 12px blur */
+.glass{background:radial-gradient(260px circle at var(--mx,-600px) var(--my,-600px),rgba(236,234,255,.085),rgba(170,150,255,.03) 45%,transparent 70%),var(--grain),var(--glass),var(--tone);
+  -webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);border-radius:2px!important}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass{background:linear-gradient(165deg,#1b1b1f,#121216 60%,#17131f)}
+  .sheet-wrap{background:rgba(4,4,7,.92)}
+}
+
+/* SILHOUETTES: every pane gets its own cut (assigned in JS, never two alike) */
+.glass[data-sh]{--c:18px}
+.glass[data-sh="0"]{clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
+.glass[data-sh="1"]{clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.glass[data-sh="2"]{clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
+.glass[data-sh="3"]{clip-path:polygon(0 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%)}
+.glass[data-sh="4"]{clip-path:polygon(var(--c) 0,calc(100% - var(--c)) 0,100% var(--c),100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.glass[data-sh]::after{left:auto;right:calc(var(--c) * -0.4142);top:0;width:calc(var(--c) * 1.4142);height:1px;transform-origin:0 0;transform:rotate(45deg);background:rgba(255,255,255,.36);opacity:1}
+.glass[data-sh="1"]::after{right:auto;left:0;top:var(--c);transform:rotate(-45deg)}
+.glass[data-sh="3"]::after{right:auto;left:calc(100% - var(--c));top:calc(100% - 1px);transform:rotate(-45deg)}
+
+/* NO PILLS, NO SOFT ROUNDS: angular controls everywhere */
+button,input,select,textarea,.btn,.inp,.tab,.th,.x,.seg,.seg button,.search,.code,.it,.delta,.drop,.unread,.tip,.toast,.mcard,.tabs,.top,.compose .inp,.quick button,.sw .tg,.btl .eta input{border-radius:2px!important}
+.sw .tg::after{border-radius:1px}
+.chamf,.btn,.seg button[aria-pressed="true"],.quick button,.it,.code,.delta,.drop,.search{--k:8px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.btn.sm{--k:6px}
+.morph[data-s="busy"],.morph[data-s="done"]{border-radius:2px!important}
+.morph .ring{border-radius:50%}
+
+/* VIEW SWITCH: a chamfered rail with a sliding chrome blade */
+.vswitch{border-radius:2px!important;padding:5px;--k:12px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.vswitch button{border-radius:2px!important;overflow:hidden}
+.vswitch .blade{position:absolute;z-index:1;top:5px;bottom:5px;left:5px;width:calc(50% - 5px);transition:transform var(--apx-dur-4) var(--apx-ease-spring);
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  background:linear-gradient(180deg,#fbfbfc 0%,#d6d9df 38%,#9ea3ad 52%,#e4e6ea 78%,#f7f7f9 100%);
+  box-shadow:inset 0 1px 0 #fff,inset 0 -2px 3px rgba(0,0,0,.25)}
+.vswitch .blade::after{content:"";position:absolute;inset:2px 14% auto;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.85),transparent)}
+.vswitch[data-v="client"] .blade{transform:translateX(100%)}
+.vswitch button .dot{border-radius:0;transform:rotate(45deg);width:6px;height:6px}
+
+/* SHEEN SWEEP (TXT-09) on every control, not only .btn */
+.tab,.qa,.seg button,.vswitch button,.quick button,.sndbtn,.th{position:relative;overflow:hidden}
+.tab::after,.qa::after,.seg button::after,.vswitch button::after,.quick button::after,.sndbtn::after,.th::after{content:"";position:absolute;top:-10%;bottom:-10%;width:40%;left:-70%;transform:skewX(-20deg);pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
+.tab:hover::after,.qa:hover::after,.seg button:hover::after,.vswitch button:hover::after,.quick button:hover::after,.sndbtn:hover::after,.th:hover::after,
+.tab:focus-visible::after,.qa:focus-visible::after,.seg button:focus-visible::after,.vswitch button:focus-visible::after,.quick button:focus-visible::after{animation:sheen var(--apx-dur-5) var(--apx-ease-out)}
+
+/* LIFT + PRESS on every interactive thing */
+.btn,.tab,.qa,.seg button,.quick button,.th,.chip,.it,.code,.sndbtn{transition:transform var(--apx-dur-3) var(--apx-ease-out),filter var(--apx-dur-3) var(--apx-ease-out),color var(--apx-dur-3),background var(--apx-dur-3),border-color var(--apx-dur-3)}
+@media (hover:hover){
+  .btn:hover,.qa:hover,.tab:hover,.quick button:hover,.seg button:hover{transform:translateY(-2px)}
+  .chip:hover,.it:hover,.code:hover{transform:translateY(-1px);filter:brightness(1.18)}
+  .btn:hover{filter:brightness(1.08) drop-shadow(0 0 10px rgba(170,150,255,.28))}
+}
+.btn:active,.qa:active,.tab:active,.quick button:active,.seg button:active,.th:active{transform:translateY(1px) scale(.975);transition-duration:var(--apx-dur-1)}
+
+/* CARDS: tilt + lift + lit edge on hover */
+.tilt{transition:transform var(--apx-dur-4) var(--apx-ease-out),filter var(--apx-dur-4) var(--apx-ease-out)}
+.tilt:hover{--ty:-4px;filter:brightness(1.06)}
+.glass.lit::before{background:radial-gradient(120% 60% at 12% -8%,rgba(255,255,255,.18),transparent 46%),radial-gradient(60% 40% at 100% 100%,rgba(170,150,255,.12),transparent 70%)}
+
+/* SOUND TOGGLE (off by default) */
+.top{grid-template-columns:auto 1fr auto auto}
+.sndbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--hair);background:rgba(0,0,0,.28);color:var(--mute);cursor:pointer;padding:10px 12px 9px;font:700 9.5px/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.sndbtn svg{width:14px;height:14px}
+.sndbtn[aria-pressed="true"]{color:var(--ink);border-color:var(--hair2);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02))}
+
+/* ---------- MARKETING: CHROME LIFT 3D PLATFORM MARKS ---------- */
+.plat .emb{position:relative;height:132px;display:block;perspective:none;margin:-4px -6px 0}
+.plat .emb::after{display:none}
+.plat .slot{position:absolute;inset:0}
+.plat .well{position:absolute;left:50%;top:50%;width:118px;height:84px;transform:translate(-50%,-38%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,.18) 60%,transparent);filter:blur(2px)}
+.plat .gap{position:absolute;left:50%;top:50%;width:150px;height:110px;transform:translate(-50%,-46%) scale(.86);pointer-events:none;opacity:.42;
+  background:radial-gradient(closest-side,rgba(236,234,255,.5),rgba(170,150,255,.32) 38%,rgba(120,100,220,.10) 66%,transparent);filter:blur(10px);
+  transition:opacity var(--apx-dur-4) var(--apx-ease-out),transform var(--apx-dur-4) var(--apx-ease-out)}
+.plat .cshadow{position:absolute;left:50%;bottom:10px;width:96px;height:14px;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(0,0,0,.85),rgba(0,0,0,.35) 55%,transparent);transition:transform var(--apx-dur-4) var(--apx-ease-out),opacity var(--apx-dur-4)}
+.plat .sweep{position:absolute;inset:8px 18%;pointer-events:none;overflow:hidden;opacity:0}
+.plat .sweep::before{content:"";position:absolute;top:-20%;bottom:-20%;width:30%;left:-40%;transform:skewX(-18deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}
+.plat:hover .gap,.plat:focus-visible .gap,.plat[aria-expanded="true"] .gap{opacity:1;transform:translate(-50%,-46%) scale(1.12)}
+.plat:hover .cshadow,.plat:focus-visible .cshadow{transform:translateX(-50%) scale(.8);opacity:.7}
+.plat:hover .sweep,.plat:focus-visible .sweep{opacity:1}
+.plat:hover .sweep::before,.plat:focus-visible .sweep::before{animation:sweepx var(--apx-dur-5) var(--apx-ease-out)}
+@keyframes sweepx{to{left:120%}}
+.plat .fb3{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-40px 0 0 -35px;display:none;transform-style:preserve-3d;transition:transform var(--apx-dur-4) var(--apx-ease-out)}
+.plat .fb3 svg{position:absolute;inset:0;width:100%;height:100%}
+.plat .fb3 svg:nth-child(1){transform:translate(3px,4px);opacity:.9}
+.plat .fb3 svg:nth-child(2){transform:translate(1.5px,2px)}
+html.no3d .plat .fb3{display:block}
+html.no3d .plat:hover .fb3{transform:translateY(-6px) scale(1.06)}
+.plat .pn3 small{display:block;font:500 11px/1.3 var(--fb);letter-spacing:.02em;color:var(--mute);margin-top:6px;text-transform:none}
+.plat:active{transform:perspective(900px) translateY(1px) scale(.985)}
+#gl3d{position:fixed;inset:0;width:100%;height:100%;z-index:15;pointer-events:none;display:block}
+html.no3d #gl3d{display:none}
+.pd-head{display:flex;align-items:center;gap:14px;min-width:0}
+.pd-head .slot{position:relative;width:76px;height:64px;flex:none}
+.pd-head .fb3{display:none}
+html.no3d .pd-head .fb3{display:block;position:absolute;inset:6px 12px}
+.pd-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pd-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:4px 0 18px}
+.pd-kpis .s{padding:12px 14px;border:1px solid var(--hair);background:rgba(0,0,0,.2);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+.pd-kpis .s span{font:600 9.5px/1.2 var(--fb);letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
+.pd-kpis .s b{display:block;font:800 20px/1.1 var(--fmetal);color:var(--chrome);margin-top:6px;letter-spacing:.02em}
+.pd-chart{position:relative}
+.pd-chart .xh{stroke:rgba(236,238,242,.35);stroke-dasharray:3 4}
+.pd-chart .hit{fill:transparent;cursor:crosshair}
+.pd-tip{position:absolute;top:0;left:0;pointer-events:none;padding:8px 10px;font-size:12px;opacity:0;transition:opacity var(--apx-dur-2);white-space:nowrap;z-index:3;
+  background:rgba(12,12,16,.86);border:1px solid var(--hair2);clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.pd-tip b{display:block;font:700 14px var(--fh);color:var(--chrome)}
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.post{border:1px dashed var(--hair2);padding:12px;display:grid;gap:10px;background:rgba(0,0,0,.18);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);transition:transform var(--apx-dur-3) var(--apx-ease-out)}
+.post:hover{transform:translateY(-3px)}
+.post .ph{aspect-ratio:4/3;display:grid;place-items:center;text-align:center;font:600 10px/1.4 var(--fb);letter-spacing:.2em;color:var(--dim);
+  background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(170,150,255,.05) 60%,rgba(255,255,255,.02));border:1px solid var(--hair)}
+.post dl{display:grid;grid-template-columns:1fr auto;gap:4px 8px;margin:0;font-size:12px}.post dt{color:var(--mute)}.post dd{margin:0;text-align:right;color:var(--ink2)}
+
+/* ---------- SHARED V3 PIECES ---------- */
+.tag-s{display:inline-flex;align-items:center;font:700 8.5px/1 var(--fb);letter-spacing:.24em;color:var(--chrome);padding:5px 7px 4px;border:1px dashed var(--hair2);background:rgba(0,0,0,.25)}
+.hook{font:800 clamp(22px,2.6vw,34px)/1.05 var(--fmetal);letter-spacing:.06em;text-transform:uppercase;margin:4px 0 14px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:8px 14px;font-size:13px}.kv dt{color:var(--mute)}.kv dd{margin:0;text-align:right;color:var(--ink);font-weight:600}
+.rowline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.stack{display:grid;gap:18px;align-content:start}
+.g-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pick{display:inline-grid;grid-auto-flow:column;gap:4px;padding:4px;background:rgba(0,0,0,.4);border:1px solid var(--hair);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.pick button{border:0;background:none;cursor:pointer;padding:10px 14px 9px;font:700 10.5px/1 var(--fb);letter-spacing:.18em;text-transform:uppercase;color:var(--mute);position:relative;overflow:hidden;transition:color var(--apx-dur-3),background var(--apx-dur-3),transform var(--apx-dur-3) var(--apx-ease-out)}
+.pick button:hover{color:var(--ink);transform:translateY(-1px)}
+.pick button[aria-pressed="true"]{color:#0b0b0d;background:linear-gradient(180deg,#fff,#c9ccd3);clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.big-date{font:800 clamp(26px,3.2vw,40px)/1 var(--fmetal);letter-spacing:.04em;color:var(--chrome);text-shadow:.02em .04em 0 #45484e,.04em .08em 0 #2a2c30,.08em .14em .12em rgba(0,0,0,.6)}
+.acts4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.acts4 .btn{width:100%;padding-left:10px;padding-right:10px}
+.upnext{display:grid;gap:0}
+.upnext .u{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid rgba(222,226,234,.07);font-size:13.5px}
+.upnext .u span:last-child{color:var(--mute);font-size:12px}
+.upnext .u.skip span:first-child{text-decoration:line-through;color:var(--dim)}
+.basket{display:flex;gap:4px;overflow-x:auto;padding:4px 0}
+.terms{font-size:11.5px;color:var(--mute);border-left:1px solid var(--hair2);padding:2px 0 2px 10px;margin-top:12px}
+.statepill{display:inline-flex;gap:8px;align-items:center;font:700 9.5px/1 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:var(--chrome);padding:7px 10px 6px;border:1px solid var(--hair2);background:rgba(255,255,255,.04)}
+.statepill i{width:7px;height:7px;background:var(--chrome);transform:rotate(45deg);box-shadow:0 0 10px rgba(236,238,242,.8);animation:pulse 1.8s ease-in-out infinite}
+.statepill.off i{background:var(--dim);box-shadow:none;animation:none}
+
+/* journey: sealed parcel placeholder + live carrier line */
+.parcel{position:relative;display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center;margin:4px 0 18px;padding:14px;border:1px solid var(--hair);background:rgba(0,0,0,.2);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.box3d{position:relative;height:118px;perspective:500px;display:grid;place-items:center}
+.box3d .bx{position:relative;width:92px;height:62px;transform-style:preserve-3d;transform:rotateX(-18deg) rotateY(-32deg);animation:boxsway 8s ease-in-out infinite alternate}
+@keyframes boxsway{to{transform:rotateX(-14deg) rotateY(-10deg)}}
+.box3d .f{position:absolute;inset:0;background:linear-gradient(160deg,#2a2a30,#121215);border:1px solid rgba(255,255,255,.12)}
+.box3d .f.t{height:56px;transform:rotateX(90deg) translateZ(28px);transform-origin:top;top:0;background:linear-gradient(180deg,#34343b,#1b1b20)}
+.box3d .f.s{width:56px;left:auto;right:0;transform:rotateY(90deg) translateZ(28px);transform-origin:right;background:linear-gradient(90deg,#17171b,#0d0d10)}
+.box3d .f.fr{transform:translateZ(28px)}
+.box3d .tape{position:absolute;left:44%;width:12%;top:0;bottom:0;background:linear-gradient(90deg,#9ea3ad,#f4f5f7 50%,#8d929c);opacity:.85}
+.box3d .seal{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;transform:rotate(45deg);background:linear-gradient(135deg,#fff,#8e939c);box-shadow:0 0 14px rgba(170,150,255,.45);display:grid;place-items:center}
+.box3d .seal b{transform:rotate(-45deg);font:900 11px/1 var(--fmetal);color:#0b0b0d}
+.box3d::after{content:"";position:absolute;left:50%;bottom:6px;width:110px;height:14px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(0,0,0,.8),transparent)}
+.parcel .ph{font:600 10.5px/1.5 var(--fb);letter-spacing:.06em;color:var(--mute)}
+.live{display:flex;align-items:center;gap:10px;padding:12px 14px;margin:0 0 16px;border:1px solid var(--hair2);background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(170,150,255,.05),transparent);clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
+.live .pd{width:9px;height:9px;flex:none;background:#fff;transform:rotate(45deg);box-shadow:0 0 0 0 rgba(236,238,242,.7);animation:ping 1.8s var(--apx-ease-out) infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(236,238,242,.6)}100%{box-shadow:0 0 0 12px rgba(236,238,242,0)}}
+.live b{font:700 11px/1.2 var(--fh);letter-spacing:.2em;text-transform:uppercase}
+.live span{font-size:12px;color:var(--mute)}
+.steps.s4 .st .sl{font-size:9px;letter-spacing:.14em}
+
+/* tiers */
+.tierwrap{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.tring{position:relative;width:168px;height:168px}
+.tring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.tring .trk{fill:none;stroke:rgba(222,226,234,.1);stroke-width:9}
+.tring .tbar{fill:none;stroke:url(#gLine);stroke-width:9;stroke-linecap:butt;transition:stroke-dashoffset 1.6s var(--apx-ease-out);filter:drop-shadow(0 0 6px rgba(236,238,242,.45))}
+.tring .tk{stroke:rgba(236,238,242,.5);stroke-width:2}
+.tring .mid{position:absolute;inset:0;display:grid;place-items:center;text-align:center;align-content:center;gap:4px}
+.tring .mid b{font:800 30px/1 var(--fmetal);color:var(--chrome)}
+.tring .mid span{font:600 9px/1.2 var(--fb);letter-spacing:.24em;color:var(--mute)}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:6px}
+.tierb{position:relative;padding:12px 12px 11px;border:1px solid var(--hair);background:rgba(0,0,0,.2);cursor:pointer;text-align:left;color:var(--ink);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:transform var(--apx-dur-3) var(--apx-ease-out),border-color var(--apx-dur-3),background var(--apx-dur-3)}
+.tierb:hover{transform:translateY(-2px);border-color:var(--hair2)}
+.tierb b{display:block;font:800 13px/1 var(--fmetal);letter-spacing:.16em}
+.tierb small{display:block;font-size:11px;color:var(--mute);margin-top:6px}
+.tierb.cur{border-color:rgba(236,238,242,.55);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(170,150,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.tierb.cur::after{content:"YOU";position:absolute;top:8px;right:14px;font:700 8px/1 var(--fb);letter-spacing:.24em;color:var(--chrome)}
+.tierb[aria-pressed="true"]{outline:1px solid rgba(236,238,242,.6);outline-offset:-4px}
+.perks{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:0}
+.perks li{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(222,226,234,.07);font-size:13.5px}
+.perks li::before{content:"";width:7px;height:7px;flex:none;transform:rotate(45deg);border:1px solid var(--plat)}
+.perks li.on::before{background:var(--chrome);box-shadow:0 0 8px rgba(236,238,242,.7)}
+.perks li.lock{color:var(--dim)}
+.hint{margin-top:12px;font-size:12.5px;color:var(--ink2)}
+.hint b{color:var(--chrome)}
+
+/* wallet pass preview (no product names: it shows on the lock screen) */
+.wallet{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:24px;align-items:center}
+.pass{position:relative;aspect-ratio:.66;width:100%;max-width:300px;padding:18px 18px 16px;display:grid;grid-template-rows:auto auto 1fr auto;gap:12px;color:var(--ink);overflow:hidden;
+  background:linear-gradient(160deg,#1f1f24 0%,#0d0d10 55%,#17131f 100%);border:1px solid rgba(240,242,246,.22);clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.pass::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 200deg,transparent,rgba(255,255,255,.07),transparent 25%,rgba(170,150,255,.08),transparent 55%);animation:rot 18s linear infinite;pointer-events:none}
+.pass>*{position:relative}
+.pass .top2{display:flex;justify-content:space-between;align-items:center}
+.pass .top2 svg{width:34px;height:34px}
+.pass .top2 b{font:800 12px/1 var(--fmetal);letter-spacing:.24em}
+.pass .tierline span{font:600 9px/1 var(--fb);letter-spacing:.26em;color:var(--mute)}
+.pass .tierline b{display:block;font:900 30px/1.05 var(--fmetal);letter-spacing:.08em;margin-top:6px;background:linear-gradient(180deg,#fff,#a3a7ae 60%,#e4e6ea);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pass .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-self:end}
+.pass .fields span{font:600 8.5px/1 var(--fb);letter-spacing:.24em;color:var(--mute)}
+.pass .fields b{display:block;font:600 13px var(--fb);letter-spacing:.12em;margin-top:5px}
+.pass .code2{display:grid;justify-items:center;gap:6px;padding:10px;background:#f2f3f5;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+.pass .code2 svg{width:100%;height:46px;display:block}
+.pass .code2 small{font:600 9px/1 var(--fb);letter-spacing:.24em;color:#2a2c30}
+.walletbtns{display:grid;gap:10px;max-width:320px}
+.walletbtns .btn{justify-content:flex-start;width:100%}
+
+/* referral ladder */
+.ladder{display:grid;gap:8px;margin-top:4px}
+.rung{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--hair);background:rgba(0,0,0,.18);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:transform var(--apx-dur-3) var(--apx-ease-out)}
+.rung:hover{transform:translateX(3px)}
+.rung .n{font:800 20px/1 var(--fmetal);color:var(--dim);text-align:center}
+.rung b{font:700 12px/1.25 var(--fh);letter-spacing:.14em;text-transform:uppercase}
+.rung small{display:block;color:var(--mute);font-size:11.5px;margin-top:3px}
+.rung.done{border-color:rgba(236,238,242,.4);background:linear-gradient(90deg,rgba(255,255,255,.08),transparent)}
+.rung.done .n{color:var(--chrome)}
+.rung.next{border-style:dashed;border-color:var(--hair2)}
+.rung .meter{width:90px;height:4px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
+.rung .meter i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#8d929c,#fff);width:0;transition:width 1.2s var(--apx-ease-out)}
+
+/* drops */
+.drop-card{display:grid;grid-template-columns:auto 1fr;gap:12px 16px;align-items:center;padding:20px}
+.drop-card .when{font:600 9.5px/1.2 var(--fb);letter-spacing:.24em;color:var(--mute);text-transform:uppercase}
+.cd{display:flex;gap:6px;margin:8px 0 2px}
+.cd span{display:grid;justify-items:center;min-width:46px;padding:8px 6px 6px;border:1px solid var(--hair2);background:rgba(0,0,0,.35);clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%)}
+.cd b{font:800 20px/1 var(--fmetal);color:var(--chrome);font-variant-numeric:tabular-nums}
+.cd i{font:600 8px/1 var(--fb);font-style:normal;letter-spacing:.2em;color:var(--mute);margin-top:4px}
+.drop-card .act{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.drop-card .pn2{font:700 15px/1.2 var(--fb)}.drop-card .pn2 small{display:block;font-weight:400;color:var(--mute);font-size:12px;margin-top:3px}
+
+/* lots */
+.lot-card{display:grid;grid-template-columns:auto 1fr;gap:12px 16px;padding:18px}
+.lot-card .lotno{font:800 15px/1 var(--fmetal);letter-spacing:.12em;color:var(--chrome)}
+.lab{grid-column:1/-1;padding:12px;border:1px dashed var(--hair2);background:rgba(0,0,0,.22);display:grid;gap:8px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+.lab.on{border-style:solid;border-color:rgba(236,238,242,.35);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.2))}
+.lab .lh{display:flex;justify-content:space-between;align-items:center;gap:8px;font:700 10px/1.2 var(--fb);letter-spacing:.22em;color:var(--ink2)}
+.lab p{margin:0;font-size:12.5px;color:var(--mute)}
+.filecell{display:flex;align-items:center;gap:10px;min-width:0}
+.filecell .fi,.filecell .thumb{flex:none}
+.filecell .fi{width:34px;height:34px;border:1px solid var(--hair2);display:grid;place-items:center;font:700 8px var(--fb);letter-spacing:.1em;color:var(--mute)}
+.filecell span{font-size:12px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upl{position:relative;overflow:hidden}
+.upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.labs .tr-row{grid-template-columns:1.5fr 1fr .8fr 1.1fr 1.5fr 1.1fr}
+
+/* trust */
+.trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.trust-grid .card p{font-size:13.5px;color:var(--ink2);margin:0 0 10px}
+.owner-line{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
+.owner-line .av{width:58px;height:58px;font-size:18px}
+.stored{list-style:none;margin:0;padding:0}
+.stored li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid rgba(222,226,234,.07);font-size:13px}
+.stored li span{color:var(--mute);font-size:12px;text-align:right}
+
+/* surprise desk */
+.desk .tr-row{grid-template-columns:1.4fr 1.6fr 1.3fr auto}
+.desk select.inp{padding:9px 30px 9px 10px;font-size:12.5px}
+.sentc{font:700 9px/1 var(--fb);letter-spacing:.22em;color:var(--chrome);padding:6px 8px 5px;border:1px solid rgba(236,238,242,.4)}
+.desk .why{font-size:12.5px;color:var(--ink2)}.desk .why small{display:block;color:var(--mute);font-size:11.5px}
+
+/* perk editor */
+.perkcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.perkcol{padding:14px;border:1px solid var(--hair);background:rgba(0,0,0,.18);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.perkcol h3{margin:0 0 4px}
+.perkcol .cnt{font-size:11.5px;color:var(--mute);margin-bottom:10px}
+.perkcol .sq{margin:8px 0 0}
+
+@media (max-width:1100px){.g-4{grid-template-columns:repeat(2,minmax(0,1fr))}.trust-grid{grid-template-columns:1fr 1fr}.pd-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:860px){
+  .top{grid-template-columns:1fr auto auto}
+  .wallet,.tierwrap{grid-template-columns:1fr}.tring{margin:0 auto}
+  .trust-grid,.perkcols{grid-template-columns:1fr}
+  .acts4{grid-template-columns:1fr 1fr}
+  .posts{grid-template-columns:1fr}
+  .desk .tr-row{grid-template-columns:1fr}
+  .labs .tr-row{grid-template-columns:1fr 1fr}
+  .parcel{grid-template-columns:1fr}
+  .owner-line{grid-template-columns:auto 1fr}.owner-line .btn{grid-column:1/-1}
+}
+@media (max-width:480px){
+  .g-4{grid-template-columns:1fr}
+  .pd-kpis{grid-template-columns:1fr 1fr}
+  .pick button{padding:9px 9px 8px;letter-spacing:.1em}
+  .sndbtn{padding:9px 9px 8px}.sndbtn span{display:none}
+  .cd span{min-width:40px}
+  .tiers{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .tilt,.btn,.tab,.qa{transform:none!important}
+}
 </style>
 
 <!-- ============ LOGO PLACEHOLDER: swap this ONE symbol for the final PEPTICITY logo ============ -->
@@ -642,6 +954,7 @@ html.cc #cur{display:block}
     <svg class="mbase" viewBox="0 0 200 200"><g fill="none" stroke="#000" stroke-opacity=".75"><circle cx="103" cy="104.5" r="96" stroke-width="3"/><circle cx="102.4" cy="103.6" r="60" stroke-width="2.2"/></g><g fill="none" stroke="#2a2c31"><circle cx="101.2" cy="101.8" r="96" stroke-width="2.4"/><circle cx="100.8" cy="101.2" r="60" stroke-width="1.6"/></g></svg>
     <svg class="mring" viewBox="0 0 200 200"><use href="#pep-ring"/></svg>
     <svg class="mp" viewBox="0 0 200 200"><use href="#pep-p"/></svg>
+    <canvas id="markgl"></canvas>
   </div>
 </div>
 
@@ -653,11 +966,13 @@ html.cc #cur{display:block}
     </div>
     <span class="sample" title="All figures, names and orders on this page are sample data for the demo">SAMPLE DATA</span>
     <div class="vswitch" id="vswitch" data-v="owner" role="group" aria-label="Switch view">
-      <span class="pill" aria-hidden="true"></span>
+      <span class="blade" aria-hidden="true"></span>
       <button type="button" data-view="owner" aria-pressed="true"><span class="dot"></span>GRACE (OWNER)<span class="unread" id="ubOwner"></span></button>
       <button type="button" data-view="client" aria-pressed="false"><span class="dot"></span>CLIENT<span class="unread" id="ubClient"></span></button>
     </div>
+    <button type="button" class="sndbtn" id="sndBtn" aria-pressed="false" aria-label="Interface sound, currently off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 9.5l5 5m0-5l-5 5"/></svg><span>SOUND OFF</span></button>
   </header>
+  <canvas id="gl3d" aria-hidden="true"></canvas>
   <span class="sample sample-m">SAMPLE DATA</span>
 
   <!-- ===================== OWNER ===================== -->
@@ -678,10 +993,13 @@ html.cc #cur{display:block}
       <button class="tab" role="tab" data-tab="sales"><span class="n">01</span>SALES + BEST SELLERS</button>
       <button class="tab" role="tab" data-tab="stock"><span class="n">02</span>STOCK + WHAT'S SHORT</button>
       <button class="tab" role="tab" data-tab="customers"><span class="n">03</span>CUSTOMERS + SIGN-UPS</button>
-      <button class="tab" role="tab" data-tab="marketing"><span class="n">04</span>MARKETING</button>
-      <button class="tab" role="tab" data-tab="referrals"><span class="n">05</span>REFERRALS</button>
-      <button class="tab" role="tab" data-tab="omsg"><span class="n">06</span>MESSAGES</button>
-      <button class="tab" role="tab" data-tab="money"><span class="n">07</span>MONEY + TAXES</button>
+      <button class="tab" role="tab" data-tab="delight"><span class="n">04</span>SURPRISE DESK</button>
+      <button class="tab" role="tab" data-tab="odrops"><span class="n">05</span>DROPS + TIERS</button>
+      <button class="tab" role="tab" data-tab="olab"><span class="n">06</span>LOTS + LAB REPORTS</button>
+      <button class="tab" role="tab" data-tab="marketing"><span class="n">07</span>MARKETING</button>
+      <button class="tab" role="tab" data-tab="referrals"><span class="n">08</span>REFERRALS</button>
+      <button class="tab" role="tab" data-tab="omsg"><span class="n">09</span>MESSAGES</button>
+      <button class="tab" role="tab" data-tab="money"><span class="n">10</span>MONEY + TAXES</button>
     </div>
 
     <!-- SALES -->
@@ -757,6 +1075,61 @@ html.cc #cur{display:block}
             <div id="signups" class="letter"></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- SURPRISE & DELIGHT DESK -->
+    <section class="panel" id="p-delight" role="tabpanel">
+      <div class="grid g-kpi">
+        <div class="glass card kpi big tilt"><div class="lab">TO SURPRISE THIS WEEK</div><div class="val" id="dkWeek">0</div><div class="foot">picked from orders, milestones and messages</div></div>
+        <div class="glass card kpi tilt"><div class="lab">NOTES SENT · OCTOBER</div><div class="val" id="dkSent">0</div><div class="foot">handwritten or digital</div></div>
+        <div class="glass card kpi tilt"><div class="lab">SHIPPING UPGRADES</div><div class="val" id="dkUp">0</div><div class="foot">given this month</div></div>
+        <div class="glass card kpi tilt"><div class="lab">NEVER PROMISED</div><div class="val" style="font-size:clamp(20px,2vw,26px)">AT RANDOM</div><div class="foot">rotate so it never feels expected</div></div>
+      </div>
+      <div class="glass card mt desk">
+        <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">SURPRISE &amp; DELIGHT</p><h2 class="h3d h2">5 CLIENTS TO SURPRISE THIS WEEK</h2></div><span class="sub">week of Oct 26 · sample list</span></div>
+        <div class="tbl" id="deskTbl"></div>
+        <p class="note">Gifts are notes, shipping upgrades, packaging and stationery. Never a product sample: that counts as advertising and supply.</p>
+      </div>
+    </section>
+
+    <!-- DROPS + TIERS -->
+    <section class="panel" id="p-odrops" role="tabpanel">
+      <div class="grid g-kpi" id="tierKpis"></div>
+      <div class="grid g-2b mt">
+        <div class="glass card">
+          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">BACK IN STOCK · MEMBERS FIRST</p><h2 class="h3d h2">PUBLISH A PRIVATE DROP</h2></div><span class="sub">members see it in their dashboard right away</span></div>
+          <form id="dropForm" class="fgrid" novalidate>
+            <div class="field w3"><label for="dpP">PRODUCT</label><select class="inp" id="dpP"></select></div>
+            <div class="field"><label for="dpQ">UNITS FOR MEMBERS</label><input class="inp" id="dpQ" inputmode="numeric" value="12" required></div>
+            <div class="field"><label for="dpH">MEMBERS-ONLY WINDOW</label><select class="inp" id="dpH"><option value="24">24 hours</option><option value="48" selected>48 hours</option><option value="72">72 hours</option></select></div>
+            <div class="field"><label for="dpOpen">OPENS</label><input class="inp" id="dpOpen" type="datetime-local" style="color-scheme:dark"></div>
+            <div class="field w3"><label>WHO GETS FIRST ACCESS</label>
+              <div style="display:flex;gap:18px;flex-wrap:wrap"><label class="sq"><input type="checkbox" id="dpRes" checked><span class="bx"></span>RESERVE members</label><label class="sq"><input type="checkbox" id="dpPriv" checked><span class="bx"></span>PRIVATE members</label></div></div>
+            <div class="w3" id="dpPrev"></div>
+            <div class="w3 rowline"><span class="muted" id="dpErr" role="alert"></span><button class="btn chrome morph" type="submit" id="dpBtn"><span class="lbl">PUBLISH DROP</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          </form>
+          <p class="note">The countdown and the unit count must be true. Never sell a members-only item to the public later at a lower price.</p>
+          <div class="card-h mt" style="margin-top:24px"><h2 class="h3">LIVE + UPCOMING DROPS</h2><span class="sub" id="dpCount"></span></div>
+          <div class="letter" id="dpList"></div>
+        </div>
+        <div class="glass card">
+          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">STATUS, NOT DISCOUNTS</p><h2 class="h3d h2">TIER PERKS</h2></div><span class="sub">service perks only</span></div>
+          <div class="perkcols" id="perkCols"></div>
+          <div class="rowline mt"><span class="muted">Spend to reach each tier: <b id="thrTxt" style="color:var(--ink2)"></b> <span class="tag-s">SAMPLE</span></span>
+            <button class="btn chrome morph" type="button" id="perkBtn"><span class="lbl">SAVE PERKS</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          <p class="note">Perks are service: first access, shipping, a direct line, stationery. No points per milligram. If counsel classes a product as prescription, provincial rules may limit perks on it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOTS + LAB REPORTS -->
+    <section class="panel" id="p-olab" role="tabpanel">
+      <div class="glass card">
+        <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">YOUR BOTTLE. YOUR LOT. YOUR REPORT.</p><h2 class="h3d h2">LOTS + LAB REPORTS</h2></div><span class="sub" id="labCount"></span></div>
+        <p class="muted" style="margin:-4px 0 12px;max-width:70ch">Upload the independent lab's report for each lot. Clients see it next to the bottle they bought, in their LOT LIBRARY.</p>
+        <div class="tbl labs" id="labTbl"></div>
+        <p class="note">Only upload a report that matches the lot number exactly. Clients see the lab's own facts: identity, purity, lot, date, lab name. No "pharmaceutical grade", no "safe".</p>
       </div>
     </section>
 
@@ -847,36 +1220,130 @@ html.cc #cur{display:block}
         <p class="eyebrow">WELCOME BACK · SAMPLE CLIENT</p>
         <h1 class="h3d">HELLO, JORDAN</h1>
       </div>
-      <div class="meta"><b>PEPTICITY TEAM MEMBER</b><br>Member since March 2026</div>
+      <div class="meta"><b id="tierMeta">RESERVE MEMBER</b><br>Member since March 2026</div>
     </div>
     <div class="tabs glass" role="tablist" aria-label="Client sections" data-group="client">
-      <button class="tab" role="tab" data-tab="orders"><span class="n">01</span>ORDERS + TRACKING</button>
-      <button class="tab" role="tab" data-tab="reorder"><span class="n">02</span>REORDER + ALERTS</button>
-      <button class="tab" role="tab" data-tab="perks"><span class="n">03</span>MEMBER PERKS</button>
-      <button class="tab" role="tab" data-tab="refer"><span class="n">04</span>REFER A FRIEND</button>
-      <button class="tab" role="tab" data-tab="cmsg"><span class="n">05</span>MESSAGES WITH GRACE</button>
+      <button class="tab" role="tab" data-tab="orders"><span class="n">01</span>ORDERS + JOURNEY</button>
+      <button class="tab" role="tab" data-tab="autoship"><span class="n">02</span>AUTO-SHIP</button>
+      <button class="tab" role="tab" data-tab="reorder"><span class="n">03</span>REORDER + ALERTS</button>
+      <button class="tab" role="tab" data-tab="drops"><span class="n">04</span>PRIVATE DROPS</button>
+      <button class="tab" role="tab" data-tab="perks"><span class="n">05</span>MEMBERSHIP</button>
+      <button class="tab" role="tab" data-tab="refer"><span class="n">06</span>REFER A FRIEND</button>
+      <button class="tab" role="tab" data-tab="lots"><span class="n">07</span>LOT LIBRARY</button>
+      <button class="tab" role="tab" data-tab="trust"><span class="n">08</span>TRUST + PRIVACY</button>
+      <button class="tab" role="tab" data-tab="cmsg"><span class="n">09</span>MESSAGES WITH GRACE</button>
     </div>
 
     <section class="panel" id="p-orders" role="tabpanel">
       <div class="grid g-2">
         <div id="orderList"></div>
         <div class="glass card r-f" style="align-self:start">
-          <div class="card-h"><h2 class="h3d h2">TRACKING</h2><span class="sub" id="trkId"></span></div>
+          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">WATCH IT LEAVE OUR HANDS</p><h2 class="h3d h2">LIVE JOURNEY</h2></div><span class="sub" id="trkId"></span></div>
+          <div class="live" id="liveLine"><span class="pd" aria-hidden="true"></span><div><b id="liveTxt">OUT FOR DELIVERY</b><br><span id="liveSub"></span></div></div>
+          <div class="parcel">
+            <div class="box3d" aria-hidden="true"><div class="bx"><span class="f t"></span><span class="f s"></span><span class="f fr"><span class="tape"></span><span class="seal"><b>P</b></span></span></div></div>
+            <div><span class="tag-s">SAMPLE</span><p class="ph" style="margin:10px 0 0">[Photo of your sealed parcel, taken at packing]</p><p class="ph" style="margin:6px 0 0;color:var(--dim)">Plain box. No product names on the outside.</p></div>
+          </div>
           <div class="shelf ledge" id="trkShelf" aria-label="Bottles in this shipment"></div>
           <ol class="timeline" id="timeline"></ol>
-          <p class="note">Carrier and tracking number shown here are samples.</p>
+          <p class="note">Carrier, times and tracking number shown here are samples.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-autoship" role="tabpanel">
+      <div class="grid g-2">
+        <div class="glass card">
+          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">NEVER RUN OUT. NEVER GET STUCK.</p><h2 class="h3d h2">YOUR AUTO-SHIP</h2></div><span class="statepill" id="asState"><i></i><span>ACTIVE</span></span></div>
+          <div class="field"><label>DELIVER EVERY</label><div class="pick" id="asEvery" role="group" aria-label="Delivery schedule"><button type="button" data-w="4">4 WEEKS</button><button type="button" data-w="6">6 WEEKS</button><button type="button" data-w="8">8 WEEKS</button><button type="button" data-w="12">12 WEEKS</button></div></div>
+          <div class="rowline mt" style="align-items:flex-end">
+            <div><p class="h3" style="margin-bottom:10px">NEXT DELIVERY</p><div class="big-date" id="asNext"></div><p class="muted" style="margin:8px 0 0" id="asCharge"></p></div>
+            <div class="basket" id="asBasket" aria-label="Bottles in your auto-ship"></div>
+          </div>
+          <div class="acts4 mt" id="asActs">
+            <button class="btn" type="button" data-as="skip">SKIP NEXT</button>
+            <button class="btn" type="button" data-as="delay">DELAY 2 WEEKS</button>
+            <button class="btn" type="button" data-as="swap">SWAP AN ITEM</button>
+            <button class="btn" type="button" data-as="cancel">CANCEL</button>
+          </div>
+          <p class="terms">[Auto-renewal terms: you're charged on the date shown, at the price shown, until you cancel. Cancel any time online, right here.]</p>
+        </div>
+        <div class="glass card" style="align-self:start">
+          <div class="card-h"><h2 class="h3d h2">COMING UP</h2><span class="sub">you set the schedule</span></div>
+          <div class="upnext" id="asUp"></div>
+          <p class="note">You choose how often. We never suggest a schedule based on use.</p>
         </div>
       </div>
     </section>
 
     <section class="panel" id="p-reorder" role="tabpanel">
-      <div class="card-h"><h2 class="h3d h2">BUY AGAIN</h2><span class="sub">one tap, same as last time</span></div>
+      <div class="grid g-2b">
+        <div class="glass card tilt">
+          <p class="eyebrow">YOUR USUAL, ONE TAP AWAY</p>
+          <h2 class="h3d h2">REORDER LAST BASKET</h2>
+          <div class="basket mt" id="lastBasket" aria-label="Your last basket"></div>
+          <div class="rowline mt"><span class="muted" id="lastTot"></span>
+            <button class="btn chrome morph" type="button" id="reBasket"><span class="lbl">REORDER IN ONE TAP</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </div>
+        <form class="glass card" id="remindForm" novalidate>
+          <p class="eyebrow">YOUR DATE, NOT OURS</p>
+          <h2 class="h3d h2">REMIND ME ON</h2>
+          <div class="fgrid mt" style="grid-template-columns:1fr 1fr">
+            <div class="field"><label for="rmDate">DATE</label><input class="inp" type="date" id="rmDate" style="color-scheme:dark" required></div>
+            <div class="field"><label>HOW</label><div class="pick" id="rmCh" role="group" aria-label="Reminder channel"><button type="button" data-ch="email" aria-pressed="true">EMAIL</button><button type="button" data-ch="text" aria-pressed="false">TEXT</button></div></div>
+            <div class="field w3" id="rmTelWrap" hidden><label for="rmTel">MOBILE NUMBER</label><input class="inp" id="rmTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 416 555 0123" data-hint="Add your area code, e.g. 416 555 0123">
+              <label class="sq" style="margin-top:8px"><input type="checkbox" id="rmConsent"><span class="bx"></span>[Text consent wording, lawyer to review]</label></div>
+          </div>
+          <div class="rowline mt"><span class="muted" id="rmErr" role="alert"></span>
+            <button class="btn chrome morph" type="submit" id="rmBtn"><span class="lbl">SET REMINDER</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          <p class="note" id="rmNow">Pick any date. We send one reminder, then stop.</p>
+        </form>
+      </div>
+      <div class="card-h" style="margin-top:34px"><h2 class="h3d h2">BUY AGAIN</h2><span class="sub">one tap, same as last time</span></div>
       <div class="grid g-3" id="buyAgain"></div>
       <div class="card-h" style="margin-top:34px"><h2 class="h3d h2">RESTOCK ALERTS</h2><span class="sub">we'll email you the moment it's back</span></div>
       <div class="grid g-3" id="alertsGrid"></div>
     </section>
 
+    <section class="panel" id="p-drops" role="tabpanel">
+      <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">BACK IN STOCK. YOU'RE FIRST.</p><h2 class="h3d h2">PRIVATE DROPS</h2></div><span class="sub">members get 48 hours before anyone else · <span class="tag-s">SAMPLE</span></span></div>
+      <div class="grid g-3" id="dropGrid"></div>
+      <p class="note">Countdowns show the real members-only window. When it closes, any units left go to the public shop.</p>
+    </section>
+
     <section class="panel" id="p-perks" role="tabpanel">
+      <div class="grid g-2b" style="margin-bottom:18px">
+        <div class="glass card">
+          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">RESERVE MEMBERS SEE IT FIRST</p><h2 class="h3d h2">YOUR TIER</h2></div><span class="sub">by spend · <span class="tag-s">SAMPLE</span></span></div>
+          <div class="tierwrap">
+            <div class="tring" id="tRing"></div>
+            <div>
+              <div class="tiers" id="tierBtns" role="group" aria-label="Tiers"></div>
+              <div class="hint" id="tierHint"></div>
+            </div>
+          </div>
+          <ul class="perks" id="perkList"></ul>
+        </div>
+        <div class="glass card">
+          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">YOUR CARD, ALWAYS ON YOU</p><h2 class="h3d h2">WALLET CARD</h2></div><span class="sub">preview</span></div>
+          <div class="wallet">
+            <div class="pass" id="pass" aria-label="Wallet pass preview">
+              <div class="top2"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#pep-logo"/></svg><b>PEPTICITY</b></div>
+              <div class="tierline"><span>TIER</span><b id="passTier">RESERVE</b></div>
+              <div class="fields"><div><span>MEMBER</span><b>JORDAN M.</b></div><div><span>NO.</span><b>PT-0042</b></div><div><span>REFERRAL CODE</span><b>JORDAN15</b></div><div><span>SINCE</span><b>03 / 2026</b></div></div>
+              <div class="code2"><svg viewBox="0 0 120 46" preserveAspectRatio="none" id="passCode" aria-hidden="true"></svg><small>PT-0042 · SAMPLE</small></div>
+            </div>
+            <div>
+              <p class="muted" style="margin:0 0 14px;max-width:38ch">Your tier and referral code on your phone. The pass never shows product names, because it can appear on your lock screen.</p>
+              <div class="walletbtns">
+                <button class="btn chrome" type="button" data-wallet="Apple Wallet">ADD TO APPLE WALLET</button>
+                <button class="btn" type="button" data-wallet="Google Wallet">ADD TO GOOGLE WALLET</button>
+              </div>
+              <p class="note">Restock and tier alerts on the pass count as marketing messages. You can switch them off any time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="grid g-2b">
         <div class="glass card r-c" style="display:grid;place-items:center;padding:34px 22px">
           <div class="mcard glass tilt" id="mcard">
@@ -925,6 +1392,54 @@ html.cc #cur{display:block}
           <div class="rstrip" id="rStrip"></div>
           <div class="stat3 mt" id="rStats"></div>
           <div class="letter mt" id="rList"></div>
+        </div>
+      </div>
+      <div class="glass card mt">
+        <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">BRING TWO. MOVE UP.</p><h2 class="h3d h2">YOUR STANDING</h2></div><span class="sub">private to you · no public leaderboard</span></div>
+        <div class="ladder" id="ladder"></div>
+        <div class="hint" id="ladderHint"></div>
+        <p class="note">You share your own link. We never email your friends for you.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="p-lots" role="tabpanel">
+      <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">EVERY BOTTLE HAS A LOT NUMBER</p><h2 class="h3d h2">YOUR BOTTLE. YOUR LOT. YOUR REPORT.</h2></div><span class="sub">from your orders · <span class="tag-s">SAMPLE</span></span></div>
+      <div class="grid g-3" id="lotGrid"></div>
+      <p class="note">A report only counts when it comes from an independent lab and matches your lot. If a lot has no report on file yet, we say so.</p>
+    </section>
+
+    <section class="panel" id="p-trust" role="tabpanel">
+      <div class="glass card tilt" style="margin-bottom:18px">
+        <div class="owner-line">
+          <span class="av g">G</span>
+          <div><p class="eyebrow" style="margin-bottom:8px">YOU'RE TALKING TO THE OWNER</p><h2 class="h3d h2">GRACE READS EVERY MESSAGE</h2><p class="muted" style="margin:8px 0 0">Messages here go to Grace, who runs PEPTICITY. Not a bot, not a call centre.</p></div>
+          <button class="btn chrome" type="button" id="toGrace">MESSAGE GRACE</button>
+        </div>
+      </div>
+      <div class="trust-grid">
+        <div class="glass card tilt">
+          <p class="eyebrow">DISCREET</p><h2 class="h3d h2">PLAIN PACKAGING</h2>
+          <p class="mt">A plain, sealed box. No product names on the outside.</p>
+          <p>Return address: [Return name and address shown on parcels]</p>
+        </div>
+        <div class="glass card tilt">
+          <p class="eyebrow">IN PLAIN WORDS</p><h2 class="h3d h2">REFUNDS + DAMAGE</h2>
+          <p class="mt">[Refund policy in plain words: what can come back, how long you have, who pays shipping]</p>
+          <p>[Damaged or missing parcel: what to send us and how fast we fix it]</p>
+        </div>
+        <div class="glass card tilt">
+          <p class="eyebrow">YOUR DATA. YOUR CALL.</p><h2 class="h3d h2">WHAT WE STORE</h2>
+          <ul class="stored mt"><li>Name + shipping address<span>to deliver</span></li><li>Orders + lot numbers<span>for your records</span></li><li>Messages with Grace<span>until you delete them</span></li><li>Email (+ mobile if you opt in)<span>reminders, letter</span></li></ul>
+        </div>
+      </div>
+      <div class="glass card mt">
+        <div class="card-h"><h2 class="h3d h2">YOUR DATA CONTROLS</h2><span class="sub">demo · nothing is sent</span></div>
+        <div class="rowline">
+          <p class="muted" style="margin:0;max-width:60ch">Download a copy of everything we hold about you, or ask us to delete it. Privacy officer: [Named privacy officer + contact]. [Promise to confirm before launch: no order details shared with ad platforms.]</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn chrome morph" type="button" id="dlData"><span class="lbl">DOWNLOAD MY DATA</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="btn" type="button" id="delData">DELETE MY DATA</button>
+          </div>
         </div>
       </div>
     </section>
