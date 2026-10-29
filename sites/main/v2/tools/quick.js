@@ -12,7 +12,7 @@ require('fs').mkdirSync(OUT, { recursive: true });
   p.on('pageerror', e => errs.push('PE ' + e.message.slice(0, 300)));
   p.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') errs.push(m.type() + ' ' + m.text().slice(0, 300)); });
   p.on('requestfailed', r => errs.push('RF ' + r.url().slice(0, 140) + ' ' + (r.failure() && r.failure().errorText)));
-  await p.goto('http://127.0.0.1:8799/index.html?nointro&v=' + (V === 'b' ? 'black' : 'white'));
+  await p.goto('http://127.0.0.1:8799/index.html?nointro&nobot&v=' + (V === 'b' ? 'black' : 'white'));
   await p.waitForTimeout(6000);
   console.log(await p.evaluate(() => ({ gl: window.__gl, cls: document.documentElement.className, sw: document.documentElement.scrollWidth, h: document.documentElement.scrollHeight, prods: window.__pc && window.__pc.products.length })));
   await p.screenshot({ path: OUT + V + M + '-0.png' });
