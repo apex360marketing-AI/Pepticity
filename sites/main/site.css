@@ -134,7 +134,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:400;letter-spacing:.06em;ma
   padding:max(14px,env(safe-area-inset-top)) var(--gut) 14px;transition:opacity .6s,transform .6s var(--ease)}
 html.intro-on .nav{opacity:0;transform:translateY(-12px);pointer-events:none}
 .wordmark{font:400 15px/1 var(--font-display);letter-spacing:.32em;text-decoration:none;padding:6px 0}
-.nav .wordmark{background-image:var(--metal-photo);filter:drop-shadow(0 1px 0 var(--ext-photo2)) drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.nav .wordmark{background-image:var(--metal-photo);filter:drop-shadow(0 1px 0 rgba(0,0,0,.7)) drop-shadow(0 0 10px rgba(0,0,0,.65))}
 .nav.on-light .wordmark{background-image:var(--metal-light);filter:drop-shadow(0 1px 0 var(--ext1)) drop-shadow(0 1px 0 var(--ext3))}
 .nav-r{display:flex;align-items:center;gap:8px}
 .nav-link{background:none;border:0;cursor:pointer;color:var(--photo-ink);font:400 10px/1 var(--font-display);letter-spacing:.2em;padding:12px 10px;min-height:40px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
@@ -157,12 +157,12 @@ html.intro-on #intro{display:block;animation:introSafety 0s linear 22s forwards}
 .film{position:absolute;left:50%;top:50%;width:max(100vw,100vh * 1.7704);aspect-ratio:1912/1080;transform:translate(-50%,-50%);transform-origin:50% 78%}
 .film video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;background:#000}
 .engrave{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.engrave text{font:400 46px var(--font-display);letter-spacing:0}
+.engrave text{font:400 48px var(--font-display);letter-spacing:0}
 .eng-face{fill:url(#g-eng);stroke:url(#g-eng);stroke-width:1.6;paint-order:stroke}
 .eng-shine{fill:url(#g-shine);opacity:0}
 .eng-cut{fill:var(--e-cut);stroke:var(--e-cut);stroke-width:1.6}
 .eng-glow{fill:var(--e-glow);opacity:.0}
-.cutter{position:absolute;left:0;top:79.1%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;opacity:0;
+.cutter{position:absolute;left:0;top:79.4%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;opacity:0;
   background:radial-gradient(circle,#fff 0 30%,var(--light-glow) 45%,transparent 72%);box-shadow:0 0 14px 4px var(--light-glow),0 0 40px 10px rgba(255,255,255,.35)}
 .embers{position:absolute;inset:0;pointer-events:none}
 .ember{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px var(--light-glow)}
@@ -388,3 +388,4 @@ html.rm .metal,html.rm .sheen::after,html.rm .p-ticks,html.rm .p-dash,html.rm .p
 .stage-mark{position:absolute;left:50%;top:50%;width:min(70vmin,680px);aspect-ratio:1;transform:translate(-50%,-50%);perspective:1400px;z-index:1;pointer-events:none;opacity:.16;mix-blend-mode:overlay}
 .stage-mark .pm{width:100%;height:100%;stroke:url(#g-metal)}
 html.rm .stage-mark{display:none}
+@media (max-width:480px){.btn{letter-spacing:.12em;padding:0 16px;font-size:11px}}
