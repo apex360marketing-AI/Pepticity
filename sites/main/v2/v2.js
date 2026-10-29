@@ -44,12 +44,15 @@
   }
 
   /* ================= frames (v1 atlases) ================= */
-  var MAN = {
+  /* CFG.frames.man = the manifest.json of CFG.frames.dir (HD: media/frames-hd/, 1920x1080 desktop tiles 2x2, 608x1080 phone tiles 4x2).
+     MAN_SD is the old v1 atlas table, used only when no manifest is configured. */
+  var MAN_SD = {
     'white-weave': { d: { n: 195, tw: 1024, th: 576, cols: 3, rows: 2, files: 33 }, m: { n: 195, tw: 432, th: 768, cols: 4, rows: 2, files: 25 } },
     'black-weave': { d: { n: 226, tw: 1024, th: 576, cols: 3, rows: 2, files: 38 }, m: { n: 226, tw: 432, th: 768, cols: 4, rows: 2, files: 29 } },
     'white-lab': { d: { n: 151, tw: 1024, th: 576, cols: 3, rows: 2, files: 26 }, m: { n: 151, tw: 432, th: 768, cols: 4, rows: 2, files: 19 } },
     'black-lab': { d: { n: 151, tw: 1024, th: 576, cols: 3, rows: 2, files: 26 }, m: { n: 151, tw: 432, th: 768, cols: 4, rows: 2, files: 19 } }
   };
+  var MAN = (CFG.frames && CFG.frames.man) || MAN_SD;
   var CROP = { d: { x: 0, w: 1 }, m: { x: 652 / 1912, w: 608 / 1912 } };
   var version = D.getAttribute('data-version') === 'black' ? 'black' : 'white';
   var kind = innerWidth / innerHeight < 0.95 ? 'm' : 'd';
@@ -75,15 +78,20 @@
   function loadAll() { var w = seq('weave'), l = seq('lab'); want(w, range(w.m.files)); want(l, range(l.m.files)); }
   function Painter(canvas, part) { this.c = canvas; this.ctx = canvas.getContext('2d'); this.part = part; this.rect = { x: 0, y: 0, w: 0, h: 0 }; this.last = -1; this.resize(); }
   Painter.prototype.resize = function () {
-    var r = Math.min(window.devicePixelRatio || 1, 1.5);
+    /* device resolution, no upscaling blur: backing store = CSS size x devicePixelRatio (capped at 2) */
+    var r = Math.min(window.devicePixelRatio || 1, 2);
     this.W = this.c.clientWidth || innerWidth; this.H = this.c.clientHeight || innerHeight;
     this.c.width = Math.round(this.W * r); this.c.height = Math.round(this.H * r);
     this.ctx.setTransform(r, 0, 0, r, 0, 0); this.ctx.imageSmoothingEnabled = true; this.ctx.imageSmoothingQuality = 'high'; this.last = -1;
   };
   Painter.prototype.draw = function (f) {
-    var s = seq(this.part), m = s.m; f = clamp(f, 0, m.n - 1);
-    if (!dirty && Math.abs(f - this.last) < 0.004) return;
-    var i = Math.floor(f), fr = f - i, A = s.frame(i) || s.nearest(i); if (!A) return;
+    var s = seq(this.part), m = s.m, now = performance.now(); f = clamp(f, 0, m.n - 1);
+    /* cross-fade only while moving; once the scroll settles, draw one whole frame so nothing is double-exposed */
+    if (Math.abs(f - (this.lf == null ? -9 : this.lf)) > 0.0005) { this.moveT = now; this.lf = f; }
+    var still = now - (this.moveT || 0) > 200;
+    if (!dirty && Math.abs(f - this.last) < 0.004 && still === this.still) return;
+    this.still = still;
+    var i = still ? Math.round(f) : Math.floor(f), fr = still ? 0 : f - i, A = s.frame(i) || s.nearest(i); if (!A) return;
     var sc = Math.max(this.W / m.tw, this.H / m.th), dw = m.tw * sc, dh = m.th * sc, dx = (this.W - dw) / 2, dy = (this.H - dh) / 2, ctx = this.ctx;
     ctx.globalAlpha = 1; ctx.drawImage(A.img, A.sx, A.sy, m.tw, m.th, dx, dy, dw, dh);
     if (fr > 0.02 && i + 1 < m.n) { var B = s.frame(i + 1); if (B) { ctx.globalAlpha = fr; ctx.drawImage(B.img, B.sx, B.sy, m.tw, m.th, dx, dy, dw, dh); ctx.globalAlpha = 1; } }
@@ -263,35 +271,33 @@
 
   /* ================= the entrance ================= */
   var intro = $('#intro'), vid = $('#chest'), film = $('#film');
-  var introDone = false, engraved = false, introTimers = [];
+  var introDone = false, introTimers = [], introTl = null;
   function setFilm() {
     var base = (CFG.chest && CFG.chest.base) || 'media/chest-';
     vid.innerHTML = ''; vid.poster = base + version + '-poster.jpg';
     [['mp4', 'video/mp4'], ['webm', 'video/webm']].forEach(function (s) { var el = document.createElement('source'); el.src = base + version + '.' + s[0]; el.type = s[1]; vid.appendChild(el); });
     vid.load();
   }
-  function engrave() {
-    if (engraved) return; engraved = true;
-    var rect = $('#engRect'), cutter = $('#cutter'), embers = $('#embers'), o = { w: 470 }, lastE = 0;
-    var glowHi = version === 'white' ? 0.55 : 0.95, glowLo = version === 'white' ? 0.18 : 0.35;
-    gsap.timeline()
-      .to(film, { scale: 1.1, duration: 3.2, ease: 'power2.inOut' }, 0)
-      .set(cutter, { opacity: 1 }, 0.15)
-      .to('.eng-glow', { opacity: glowHi, duration: 0.3 }, 0.15)
-      .to(o, { w: 1440, duration: 1.7, ease: 'power1.inOut', onUpdate: function () {
-        rect.setAttribute('width', o.w); cutter.style.left = (o.w / 1912 * 100) + '%';
-        var now = performance.now();
-        if (now - lastE > 45 && o.w > 560 && o.w < 1350) {
-          lastE = now; var e = document.createElement('i'); e.className = 'ember';
-          e.style.left = (o.w / 1912 * 100) + '%'; e.style.top = (76 + Math.random() * 5) + '%'; embers.appendChild(e);
-          gsap.to(e, { x: (Math.random() - 0.5) * 50, y: -40 - Math.random() * 70, opacity: 0, scale: 0.3, duration: 1.2 + Math.random(), ease: 'power1.out', onComplete: function () { e.remove(); } });
-        } } }, 0.15)
-      .to(cutter, { opacity: 0, duration: 0.25 }, 1.85)
-      .to('.eng-glow', { opacity: glowLo, duration: 0.8 }, 1.9)
-      .set('#engShine', { opacity: 1 }, 1.95)
-      .fromTo('#g-shine', { attr: { x1: 300, x2: 460 } }, { attr: { x1: 1500, x2: 1660 }, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, 1.95)
-      .set('#engShine', { opacity: 0 }, 3.05)
-      .add(function () { introTimers.push(setTimeout(liftIntro, 650)); }, 3.05);
+  /* R-ENTRANCE: the WHITE or BLACK chest film exactly as it is (the chest opens, the bottle rises with its peptide swirl),
+     then the camera pushes into the bottle's light and through it into the HERO CARD. */
+  function dive() {
+    if (introDone) return; introDone = true;
+    introTimers.forEach(clearTimeout); introTimers = [];
+    SS.set('pc-intro', '1');
+    var org = (CFG.chest && CFG.chest.focus) || [50, 57];
+    gsap.set(film, { transformOrigin: org[0] + '% ' + org[1] + '%' });
+    var tl = introTl = gsap.timeline();
+    tl.to(film, { scale: 2.6, duration: 2.1, ease: 'power3.in' }, 0)
+      .to('#introBloom', { opacity: 1, scale: 1.35, duration: 1.0, ease: 'power2.in' }, 1.0)
+      .add(function () {                                   /* we pass through the light: the hero is already there behind it */
+        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false;
+        startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
+        if (!RM) gsap.fromTo('.hero-card', { opacity: 0, scale: 0.74, y: 24 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.9, ease: 'expo.out', clearProps: 'transform' });
+      }, 1.85)
+      .to(intro, { opacity: 0, duration: 1.1, ease: 'power2.out' }, 1.95)
+      .add(function () { intro.classList.remove('dive'); gsap.set(intro, { clearProps: 'opacity' }); gsap.set(film, { clearProps: 'transform' }); gsap.set('#introBloom', { opacity: 0, scale: 1 }); vid.pause(); }, 3.15);
+    loadAll();
   }
   function liftIntro() {
     if (introDone) return; introDone = true;
@@ -304,34 +310,19 @@
     }, 1050);
     loadAll();
   }
-  function runLoader() {
-    introDone = false; introLive = true;
-    intro.classList.add('mode-loader'); D.classList.add('intro-on'); intro.classList.remove('lift');
-    stopScroll(); jump(0);
-    var t0 = performance.now();
-    (function wait() {   /* hold the words ~3.4 s once the 3D is up (or the flat fallback after 2.5 s) */
-      var g = window.__gl, ready = g && (g.ok === false || (window.__type3d && window.__type3d.frames > 3));
-      if (/[?&]holdintro/.test(location.search)) return;   /* review aid: keep the loader on screen */
-      if (ready || performance.now() - t0 > 7000) introTimers.push(setTimeout(liftIntro, 3400));
-      else introTimers.push(setTimeout(wait, 120));
-    })();
-    if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(liftIntro, 14000));
-    setTimeout(loadAll, 1500);
-  }
   function runIntro() {
-    if ((CFG.intro || 'loader') === 'loader') return runLoader();
-    intro.classList.remove('mode-loader');
-    introDone = false; engraved = false; introLive = true;
-    D.classList.add('intro-on'); intro.classList.remove('lift');
-    gsap.set(film, { scale: 1 }); $('#engRect').setAttribute('width', 0); gsap.set('.eng-glow', { opacity: 0 }); gsap.set('#engShine', { opacity: 0 });
+    introDone = false; introLive = true;
+    D.classList.add('intro-on'); intro.classList.remove('lift', 'dive');
+    gsap.set(film, { scale: 1 }); gsap.set('#introBloom', { opacity: 0, scale: 1 });
     stopScroll(); jump(0); setFilm();
-    var started = false, at = (CFG.chest && CFG.chest.engraveAt) || 8.35;
+    var started = false, at = (CFG.chest && CFG.chest.diveAt) || 9.1;
     vid.onplaying = function () { started = true; };
-    vid.ontimeupdate = function () { if (vid.currentTime >= at) engrave(); };
-    vid.onended = function () { engrave(); };
-    var pr = vid.play(); if (pr && pr.catch) pr.catch(function () { if (!started) introTimers.push(setTimeout(engrave, 600)); });
-    introTimers.push(setTimeout(function () { if (!started) engrave(); }, 3500));
-    introTimers.push(setTimeout(liftIntro, 16000));
+    vid.ontimeupdate = function () { if (vid.currentTime >= at) dive(); };
+    vid.onended = function () { dive(); };
+    if (/[?&]holdintro/.test(location.search)) { vid.ontimeupdate = vid.onended = null; }   /* review aid: keep the film on screen */
+    var pr = vid.play(); if (pr && pr.catch) pr.catch(function () { if (!started) introTimers.push(setTimeout(dive, 1200)); });
+    introTimers.push(setTimeout(function () { if (!started && !/[?&]holdintro/.test(location.search)) dive(); }, 4000));
+    if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(dive, 15000));
     setTimeout(loadAll, 2500);
   }
   $('#skipIntro').addEventListener('click', liftIntro);
@@ -429,28 +420,49 @@
     mcName.classList.remove('typing');
     if (nameIn.value.trim()) { member.name = nameIn.value.trim().slice(0, 22); member.notches = Math.max(member.notches || 2, 3); saveMember(); }
     renderMemberBits(); setGate('tap'); gateStatus.textContent = 'AWAITING CARD';
-    gsap.fromTo(mcard, { rotationY: -25 }, { rotationY: 0, duration: 1, ease: 'expo.out' });
+    if (window.PCCard3D) { PCCard3D.face(); PCCard3D.spin(1); PCCard3D.flare(); }   /* the freshly printed card spins once to face you */
+    else gsap.fromTo(mcard, { rotationY: -25 }, { rotationY: 0, duration: 1, ease: 'expo.out' });
     mcard.focus({ preventScroll: true });
   }
   fName.addEventListener('submit', function (e) { e.preventDefault(); toTap(); });
   $('[data-skip]', fName).addEventListener('click', toTap);
   mcard.addEventListener('click', function () {
+    if (mcard.dataset.dragged) return;                    /* the click that ends a drag-to-turn is not a tap */
     if (busy || opened) return;
     if (gate.dataset.state === 'tap') return scan();
+    if (window.PCCard3D) { PCCard3D.flip(); tone('tap'); return; }   /* tap: spring flip, the chip flares */
     if (gate.dataset.state === 'choose') $('#choJoin').click();
   });
+  /* sound: off by default; the confirm tone plays only when the visitor turns sound on */
+  var sndOn = LS.get('pc-sound') === '1', actx = null, sndBtn = $('#sndBtn');
+  function paintSnd() { if (sndBtn) { sndBtn.setAttribute('aria-pressed', String(sndOn)); sndBtn.textContent = sndOn ? 'SOUND ON' : 'SOUND OFF'; } }
+  if (sndBtn) sndBtn.addEventListener('click', function () { sndOn = !sndOn; LS.set('pc-sound', sndOn ? '1' : '0'); paintSnd(); if (sndOn) tone('tap'); });
+  paintSnd();
+  function tone(kind) {
+    if (!sndOn) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume();
+      var now = actx.currentTime, out = actx.createGain(); out.gain.value = 0.9; out.connect(actx.destination);
+      var notes = kind === 'ok' ? [[659.25, 0, 0.9], [987.77, 0.14, 1.3]] : [[880, 0, 0.25]];
+      notes.forEach(function (n) {
+        var o = actx.createOscillator(), g = actx.createGain(); o.type = 'sine'; o.frequency.value = n[0];
+        g.gain.setValueAtTime(0.0001, now + n[1]); g.gain.exponentialRampToValueAtTime(kind === 'ok' ? 0.07 : 0.03, now + n[1] + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + n[1] + n[2]); o.connect(g); g.connect(out); o.start(now + n[1]); o.stop(now + n[1] + n[2] + 0.05);
+      });
+    } catch (e) {}
+  }
   mcard.addEventListener('pointermove', function (e) {
-    if (busy) return; var r = mcard.getBoundingClientRect();
+    if (busy || window.PCCard3D) return; var r = mcard.getBoundingClientRect();
     mcard.classList.add('tilt'); mcard.style.setProperty('--ry', ((e.clientX - r.left) / r.width - 0.5) * 18 + 'deg'); mcard.style.setProperty('--rx', -((e.clientY - r.top) / r.height - 0.5) * 14 + 'deg');
   });
   mcard.addEventListener('pointerleave', function () { mcard.classList.remove('tilt'); });
 
-  var cam = $('#cam'), flood = $('#flood'), leaves = $$('.leaf'), dials = $$('.dial'), seam = $('.seam'), spill = $('.spill'), doorway = $('.doorway'), locks = $$('.locks li');
+  var cam = $('#cam'), flood = $('#flood'), beams = $('.beams'), leaves = $$('.leaf'), dials = $$('.dial'), seam = $('.seam'), spill = $('.spill'), doorway = $('.doorway'), locks = $$('.locks li');
   function ungate() { if (!D.classList.contains('gated')) return; D.classList.remove('gated'); ScrollTrigger.refresh(); dirty = true; pL.resize(); revealSetup(); }
   function openState() {
     opened = true; doorbox.classList.add('opened');
     gsap.set(leaves[0], { rotationY: -84, opacity: 1 }); gsap.set(leaves[1], { rotationY: 84, opacity: 1 }); gsap.set('.leaf .shade', { opacity: 0.6 });
-    gsap.set(doorway, { opacity: 1 }); gsap.set(spill, { opacity: 0.7, scaleY: 1 });
+    gsap.set(doorway, { opacity: 1 }); gsap.set(spill, { opacity: 0.7, scaleY: 1 }); gsap.set(beams, { opacity: 0.6, scale: 1 });
     locks.forEach(function (l) { l.classList.add('off'); });
     setGate('granted'); gateStatus.textContent = 'WELCOME IN'; $('#tapHint').textContent = 'The doors are open. Scroll down to step inside.';
   }
@@ -460,7 +472,7 @@
       .call(function () { locks[1].classList.add('off'); }, null, t0 + 0.5)
       .fromTo(dials[1], { opacity: 0, rotation: 0, transformOrigin: '50% 50%' }, { opacity: 1, rotation: -180, duration: 1.3 }, t0 + 0.5)
       .call(function () { locks[2].classList.add('off'); gateStatus.textContent = 'LOCKS RELEASED'; }, null, t0 + 1)
-      .to(seam, { opacity: 1, duration: 0.6, ease: 'power2.out' }, t0 + 1)
+      .fromTo(seam, { opacity: 0, scaleY: 0.12 }, { opacity: 1, scaleY: 1, duration: 0.8, ease: 'expo.out' }, t0 + 1)   /* light cracks through the seam */
       .to(gate, { opacity: 0, duration: 0.6, ease: 'power2.in' }, t0 + 1.6)
       .set(leaves, { opacity: 1 }, t0 + 1.85).set(doorway, { opacity: 1 }, t0 + 1.85)
       .to(dials, { opacity: 0, duration: 0.4 }, t0 + 1.85)
@@ -469,6 +481,7 @@
       .to('.leaf .shade', { opacity: 0.6, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
       .to(seam, { opacity: 0, duration: 0.8 }, t0 + 2.3)
       .fromTo(spill, { opacity: 0, scaleY: 0.2 }, { opacity: 0.85, scaleY: 1, duration: 2, ease: 'power2.out' }, t0 + 2.1)
+      .fromTo(beams, { opacity: 0, scale: 0.55 }, { opacity: 0.85, scale: 1.08, duration: 2.6, ease: 'power2.out' }, t0 + 1.95)
       .add(function () { var w = doorbox.offsetWidth, h = doorbox.offsetHeight; gsap.set(cam, { transformOrigin: (doorbox.offsetLeft + w * 0.5) + 'px ' + (doorbox.offsetTop + h * 0.53) + 'px' }); }, t0 + 3.1)
       .to(cam, { scale: 2.9, duration: 2.2, ease: 'power2.in' }, t0 + 3.1)
       .to(flood, { opacity: 1, duration: 1.1, ease: 'power1.in' }, t0 + 4.2)
@@ -478,7 +491,26 @@
     if (busy || opened) return;
     busy = true; stopScroll(); setGate('scanning'); gateStatus.textContent = 'READING CARD'; track('reveal_done:scanner');
     if (RM) { openState(); ungate(); busy = false; startScroll(); jump(absTop($('#lab'))); return; }
-    var pad = $('#pad').getBoundingClientRect(), cr = mcard.getBoundingClientRect();
+    var C = window.PCCard3D, padEl = $('#pad');
+    if (C) {   /* R-SCAN: glide onto the glass plate, lie down, a light line reads the card, the chip lights the plate, confirm, the doors part */
+      var plate = $('.pl-tilt', padEl).getBoundingClientRect(), r0 = mcard.getBoundingClientRect();
+      var px = plate.left + plate.width / 2 - (r0.left + r0.width / 2), py = plate.top + plate.height * 0.42 - (r0.top + r0.height / 2);
+      var ps = Math.min(1, plate.width * 0.86 / r0.width);
+      mcard.dataset.lock = '1';
+      var tl3 = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
+      tl3.call(function () { C.face(); }, null, 0)
+        .to(mcard, { x: px, y: py, scale: ps, duration: 1.15 }, 0)
+        .call(function () { C.lay(1); }, null, 0.2)
+        .call(function () { C.sweep(0.95); gateStatus.textContent = 'VERIFYING MEMBER'; }, null, 1.25)
+        .call(function () { padEl.classList.add('lit'); C.flare(); tone('ok'); }, null, 1.85)
+        .call(function () { setGate('granted'); gateStatus.textContent = 'ACCESS GRANTED'; }, null, 2.35)
+        .call(function () { C.lay(0); }, null, 2.6)
+        .to(mcard, { x: 0, y: 0, scale: 1, duration: 0.95 }, 2.6)
+        .call(function () { padEl.classList.remove('lit'); delete mcard.dataset.lock; }, null, 3.7);
+      openDoors(tl3, 2.8);
+      return;
+    }
+    var pad = padEl.getBoundingClientRect(), cr = mcard.getBoundingClientRect();
     var dx = pad.left + pad.width / 2 - (cr.left + cr.width / 2), dy = pad.top + pad.height / 2 - (cr.top + cr.height / 2);
     var sc = Math.min(1, pad.width * 1.05 / cr.width);
     var tl = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
@@ -983,7 +1015,7 @@
 
   if (RM) D.classList.remove('gated');
   document.fonts && document.fonts.ready.then(function () { $$('.x3d').forEach(function (el) { el.dataset.text = el.textContent; }); ScrollTrigger.refresh(); });
-  window.__pc = { J: J, L: L, X: X, get lenis() { return lenis; }, setVersion: setVersion, scan: scan, guest: guestEnter, liftIntro: liftIntro, goTo: goTo, openCart: openCart, addToCart: addToCart, events: events,
+  window.__pc = { J: J, L: L, X: X, get lenis() { return lenis; }, dive: function () { dive(); return introTl; }, setVersion: setVersion, scan: scan, guest: guestEnter, liftIntro: liftIntro, goTo: goTo, openCart: openCart, addToCart: addToCart, events: events,
     get cart() { return cart; }, get products() { return PRODUCTS; }, totals: totals, labState: labState, openModal: openModal, fireExit: function () { exitArmed = true; fireExit(); },
     loaded: function () { return { weave: seq('weave').loaded() + '/' + seq('weave').m.files, lab: seq('lab').loaded() + '/' + seq('lab').m.files, kind: kind }; } };
 })();

@@ -17,12 +17,13 @@ window.PC_CONFIG = {
   /* the counsel switch (hook-architecture): 15% offer + restock alerts show only while true */
   counselCleared: { offer: true },
   /* SWAP POINT: chest film. A new film drops in as media/chest-<white|black>.mp4/.webm (+ -poster.jpg) */
-  /* intro: 'loader' = the PEPTICITY STUDIO 3D word on the dark wall (default; the old chest film's bottle shows the old font).
-     'chest' = the chest film. SWAP POINT for the new chest film (media/chest2/white.mp4 is in progress): set intro:'chest' and chest.base */
-  intro: 'loader',
-  chest: { base: 'media/chest-', engraveAt: 8.35 },
-  /* SWAP POINT: city + lab frame atlases (v1). New lab footage (media/city2/) gets its own entry here */
-  frames: { dir: 'media/frames/' },
+  /* entrance: the chest film for the chosen look (media/chest-white.* / chest-black.*). At diveAt seconds the camera pushes
+     into the bottle (focus = % of the frame) and through its light into the hero card. */
+  intro: 'chest',
+  chest: { base: 'media/chest-', diveAt: 9.1, focus: [49, 46] },
+  /* SWAP POINT: city + lab frame atlases. HD (R-HD): media/frames-hd/, man = a copy of media/frames-hd/manifest.json.
+     Old v1 atlases: frames: { dir: 'media/frames/' } (no man). */
+  frames: { dir: 'media/frames-hd/', man: {"white-weave":{"d":{"n":195,"tw":1920,"th":1080,"cols":2,"rows":2,"files":49},"m":{"n":195,"tw":608,"th":1080,"cols":4,"rows":2,"files":25}},"black-weave":{"d":{"n":226,"tw":1920,"th":1080,"cols":2,"rows":2,"files":57},"m":{"n":226,"tw":608,"th":1080,"cols":4,"rows":2,"files":29}},"white-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}},"black-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}}} },
   /* SWAP POINT: the vial art used for every product until the new PEPTICITY vial is done */
   bottle: 'brand/src/dash/_blank.webp',
   /* the store data: every northernpeptides.st listing, exact prices (Grace removes items in this one JSON) */
@@ -63,37 +64,12 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 </div>
 <canvas id="gl-back" aria-hidden="true"></canvas>
 
-<!-- ENTRANCE: chest film, then PEPTICITY engraves itself across the case front -->
+<!-- ENTRANCE (R-ENTRANCE): the WHITE / BLACK chest film as it is, then the camera pushes through the bottle's light into the HERO CARD -->
 <div id="intro" role="region" aria-label="Entrance">
-  <div class="loader" id="loader" aria-hidden="true">
-    <div class="w3d w3d-load" data-word3d="PEPTICITY" data-funky="1" data-fill=".84" data-aspect="3.1"></div>
-    <div class="w3d w3d-load2" data-word3d="STUDIO" data-funky=".8" data-fill=".6" data-aspect="3.6"></div>
-    <p class="load-fb x3d">PEPTICITY</p>
-    <p class="load-cap">GRAND OPENING</p>
-  </div>
   <div class="film" id="film" aria-hidden="true">
     <video id="chest" muted playsinline preload="auto"></video>
-    <svg class="engrave" id="engrave" viewBox="0 0 1912 1080" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="g-eng" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" style="stop-color:var(--e1)"/><stop offset=".22" style="stop-color:var(--e2)"/><stop offset=".4" style="stop-color:var(--e1)"/><stop offset=".62" style="stop-color:var(--e3)"/><stop offset=".8" style="stop-color:var(--e1)"/><stop offset="1" style="stop-color:var(--e2)"/>
-        </linearGradient>
-        <linearGradient id="g-shine" gradientUnits="userSpaceOnUse" x1="300" y1="0" x2="460" y2="0">
-          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-        </linearGradient>
-        <clipPath id="engClip"><rect id="engRect" x="0" y="780" width="0" height="140"/></clipPath>
-        <filter id="engGlow" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
-      </defs>
-      <g clip-path="url(#engClip)">
-        <text class="eng-glow" x="956" y="868" text-anchor="middle" textLength="760" lengthAdjust="spacingAndGlyphs" filter="url(#engGlow)">PEPTICITY</text>
-        <text class="eng-cut" x="956" y="869.5" text-anchor="middle" textLength="760" lengthAdjust="spacingAndGlyphs">PEPTICITY</text>
-        <text class="eng-face" x="956" y="868" text-anchor="middle" textLength="760" lengthAdjust="spacingAndGlyphs">PEPTICITY</text>
-        <text class="eng-shine" id="engShine" x="956" y="868" text-anchor="middle" textLength="760" lengthAdjust="spacingAndGlyphs">PEPTICITY</text>
-      </g>
-    </svg>
-    <span class="cutter" id="cutter"></span>
-    <div class="embers" id="embers"></div>
   </div>
+  <div class="intro-bloom" id="introBloom" aria-hidden="true"></div>
   <div class="intro-skip"><button class="pc-btn pc-btn--sm" id="skipIntro" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SKIP INTRO</span></span></button></div>
 </div>
 
@@ -164,6 +140,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
           <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
           <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
           <span class="spill"></span>
+          <span class="beams"></span>
         </div>
         <span class="door-sign" id="doorSign" aria-hidden="true"><svg><use href="#pmark"/></svg><b>PEPTICITY</b></span>
       </div>
@@ -213,12 +190,19 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 
       <!-- THE CARD + THE DOORS (R138): glass member card with light moving inside; JOIN or ENTER AS GUEST -->
       <div class="gate glass" id="gate" data-state="choose" data-hook="H34" data-effect="FRM-02" data-no-cover>
-        <p class="eyebrow"><span>MEMBERS' ENTRANCE</span><i></i><span class="status" id="gateStatus">CHOOSE HOW YOU ENTER</span></p>
+        <p class="eyebrow"><span>MEMBERS' ENTRANCE</span><i></i><span class="status" id="gateStatus">CHOOSE HOW YOU ENTER</span><button class="linkish snd" id="sndBtn" type="button" aria-pressed="false">SOUND OFF</button></p>
         <div class="gate-grid">
           <div class="mcard-wrap">
             <div class="pad" id="pad" aria-hidden="true">
-              <svg viewBox="0 0 200 200"><circle class="p-ticks" cx="100" cy="100" r="94"/><circle class="p-ring" cx="100" cy="100" r="80"/><circle class="p-dash" cx="100" cy="100" r="66"/><circle class="p-arc" cx="100" cy="100" r="80"/><use href="#pmark" x="74" y="78" width="52" height="44" class="p-mark"/></svg>
-              <span class="pulse"></span><span class="pulse"></span>
+              <!-- the glass scanner plate: the card glides onto it, a light line reads it, the chip lights the plate -->
+              <span class="pl-tilt">
+                <span class="pl-glass"></span>
+                <span class="pl-ticks"><i></i><i></i><i></i><i></i></span>
+                <svg class="pl-mark"><use href="#pmark"/></svg>
+                <span class="pl-line"></span>
+                <span class="pl-bloom"></span>
+              </span>
+              <span class="pl-cap"><b class="c-idle">TAP THE CARD TO TURN IT</b><b class="c-tap">PLACE YOUR CARD HERE</b><b class="c-scan">READING</b></span>
             </div>
             <button class="mcard" id="mcard" type="button" aria-label="Your PEPTICITY member card">
               <span class="mc-flip">
@@ -228,7 +212,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
                   <span class="mc-top"><svg class="mc-p"><use href="#pmark"/></svg><span class="mc-word">PEPTICITY</span></span>
                   <span class="mc-chip" aria-hidden="true"></span>
                   <span class="mc-tier" id="mcTier">MEMBER CARD</span>
-                  <span class="mc-name" id="mcName">YOUR NAME HERE</span>
+                  <span class="mc-name" id="mcName">GUEST</span>
                   <span class="mc-notch" id="mcNotch" data-hook="H51" aria-label="Member progress"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
                   <span class="mc-scan" aria-hidden="true"></span>
                 </span>
@@ -591,6 +575,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 <script src="brand/ui/button.js"></script>
 <script src="v2.js"></script>
 <script type="module" src="gl3d.js"></script>
+<script type="module" src="card3d.js"></script>
 <script>
 /* PEPTICITY concierge bot (BOT-P01, shared/bot/pep-bot.js; it loads its own pep-bot.css). Mounts when the file exists. */
 window.PEPBOT_CONFIG={greetDelay:45000,offer:(window.PC_CONFIG.counselCleared.offer?'on':'off'),soldOut:'epitalon-50,wolverine-20mg,igf-1-lr3',weightShelf:'off'};
