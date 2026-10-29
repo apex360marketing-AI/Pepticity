@@ -14,6 +14,7 @@ cp -L brand/src/dash/_blank.webp publish/brand/src/dash/
 cp -L vendor/gsap.min.js vendor/ScrollTrigger.min.js vendor/lenis.min.js publish/vendor/
 cp -L media/chest-white.mp4 media/chest-white.webm media/chest-white-poster.jpg media/chest-black.mp4 media/chest-black.webm media/chest-black-poster.jpg publish/media/
 cp -L media/white-doors.jpg media/black-doors.jpg media/white-lab.jpg media/black-lab.jpg publish/media/
+mkdir -p publish/shared/bot && [ -f shared/bot/pep-bot.js ] && cp -L shared/bot/pep-bot.js publish/shared/bot/ ; [ -f shared/bot/pep-bot.css ] && cp -L shared/bot/pep-bot.css publish/shared/bot/ ; true
 mkdir -p publish/media/frames && cp -L media/frames/*-weave-*.webp media/frames/*-lab-*.webp publish/media/frames/
 ( cd publish && find . -type f ! -name FILES.txt | sort | while read f; do printf '%s\t%s\n' "$(du -k "$f" | cut -f1)KB" "$f"; done > FILES.txt )
 du -sh publish && find publish -type f | wc -l

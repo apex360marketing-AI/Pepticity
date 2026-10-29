@@ -21,6 +21,7 @@
      data-weight-shelf="on|off"    WEIGHT GOALS shelf (default off until counsel rules, playbook s.3)
      data-catalogue="url"          optional fresh catalogue.json (same shape) to refresh prices
      data-css="url"                override the stylesheet location
+     data-surface="light|dark"     force the glass tint (default: read from the host page background)
    Host events (window): pep:add-to-cart, pep:checkout, pep:capture (consent record included).
    If window.PEPCART.add(item) exists it is called too.
    API: PEPBOT.open() .close() .ask(text) .configure(obj) .setBackend(fn) .brain.respond(text)
@@ -610,7 +611,7 @@
   (function readConfig() {
     var pre = W.PEPBOT_CONFIG || {};
     var ds = SCRIPT ? SCRIPT.dataset : {};
-    var map = { dock: ds.dock, greetDelay: ds.greetDelay, soldOut: ds.soldOut, offer: ds.offer, weightShelf: ds.weightShelf, catalogue: ds.catalogue, css: ds.css, phone: ds.phone, email: ds.email, code: ds.code, held: ds.held };
+    var map = { dock: ds.dock, greetDelay: ds.greetDelay, soldOut: ds.soldOut, offer: ds.offer, weightShelf: ds.weightShelf, catalogue: ds.catalogue, css: ds.css, phone: ds.phone, email: ds.email, code: ds.code, held: ds.held, surface: ds.surface };
     Object.keys(map).forEach(function (k) { if (map[k] == null) delete map[k]; });
     configure(pre); configure(map);
   })();
@@ -670,6 +671,14 @@
     return svg;
   }
 
+  function hostIsLight() {
+    var els = [D.body, D.documentElement];
+    for (var i = 0; i < els.length; i++) {
+      var m = getComputedStyle(els[i]).backgroundColor.match(/[\d.]+/g);
+      if (m && (m.length < 4 || +m[3] > 0.5)) return (0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2]) > 150;
+    }
+    return true; // transparent all the way down = the browser's white
+  }
   function loadCss() {
     if (D.querySelector('link[data-pepbot]')) return;
     var href = CFG.css;
@@ -687,6 +696,8 @@
     var root = el('div', 'pb-root pb-dock-' + (CFG.dock === 'center' ? 'center' : 'right'));
     root.setAttribute('data-state', 'docked');
     if (REDUCED) root.classList.add('pb-reduced');
+    // light host pages (the white PEPTICITY version): deepen the smoke in the glass so white text keeps its contrast
+    if (CFG.surface === 'light' || (CFG.surface !== 'dark' && hostIsLight())) root.classList.add('pb-on-light');
 
     /* -- peek (proactive greeting) -- */
     var peek = el('div', 'pb-peek', null, { role: 'region', 'aria-label': 'PEPTICITY concierge greeting', 'aria-hidden': 'true' });

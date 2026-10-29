@@ -184,7 +184,7 @@ async function main() {
       transparent: true, side: THREE.BackSide, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: { c: { value: new THREE.Color(0xdfe5ff) }, s: { value: 1 } },
       vertexShader: 'varying vec3 vN;varying vec3 vP;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vP=mv.xyz;gl_Position=projectionMatrix*mv;}',
-      fragmentShader: 'uniform vec3 c;uniform float s;varying vec3 vN;varying vec3 vP;void main(){float f=pow(clamp(.72-dot(vN,normalize(-vP)),0.,1.),2.6)*s;gl_FragColor=vec4(c*f*1.6,f);}' }));
+      fragmentShader: 'uniform vec3 c;uniform float s;varying vec3 vN;varying vec3 vP;void main(){float f=pow(clamp(.62-dot(vN,normalize(-vP)),0.,1.),3.)*s;gl_FragColor=vec4(c*f*1.1,f);}' }));
     scene.add(atmo);
     /* the network: nodes on an outer shell, each joined to its nearest neighbours */
     const net = new THREE.Group(); world.add(net);
