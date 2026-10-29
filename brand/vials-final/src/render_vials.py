@@ -72,11 +72,11 @@ def warp(flat, cy_shift=True):
 def frost_layer(seed=7):
     soft = blur(B[..., :3], 12)
     smoke = np.array([13, 14, 17], np.float32)
-    fill = soft * 0.34 + smoke * 0.66                         # see-through: 34 % of the glass/liquid still reads
+    fill = soft * 0.16 + smoke * 0.84                         # see-through: 34 % of the glass/liquid still reads
     hp = (B[..., :3] - blur(B[..., :3], 16)).clip(0, None)     # glass highlights survive on top of the frost
     rng = np.random.default_rng(seed)
     grain = rng.normal(0, 4.2, (H, W, 1)).astype(np.float32)
-    shade = (0.62 + 0.38 * COSU)[None, :, None]
+    shade = (0.55 + 0.45 * COSU)[None, :, None]
     spec = np.exp(-((xs - (XC - 0.52 * R)) / 26.0) ** 2)[None, :, None] * 26  # soft vertical sheen
     spec2 = np.exp(-((xs - (XC + 0.70 * R)) / 14.0) ** 2)[None, :, None] * 12
     f = fill * shade + hp * 0.55 + grain + spec + spec2
@@ -223,18 +223,20 @@ def render(prod, side):
     cxl = LW // 2  # arc 0
     if side == 'front':
         # vertical PEPTICITY, reads bottom -> top, off-centre left
-        word = text_mask('PEPTICITY', 132, track=0.04).rotate(90, expand=True)
+        probe = text_mask('PEPTICITY', 100, track=0.06)
+        wsize = int(100 * 566 / probe.size[0])
+        word = text_mask('PEPTICITY', wsize, track=0.06).rotate(90, expand=True)
         ww, wh = word.size
-        wx = cxl - 128 - ww // 2
-        pm = p_mark_mask(int(ww * 0.86))
+        wx = cxl - 92 - ww // 2
+        pm = p_mark_mask(int(ww * 1.12))
         pw, ph = pm.size
-        gap = 34
+        gap = 30
         total = wh + gap + ph
         top = int((Y0 + Y1) / 2 - total / 2) + 6
         place_chrome(flat, word, wx, top, CHROME, axis=1, bevel=2, shadow=0.7)
         place_chrome(flat, pm, wx + ww // 2 - pw // 2, top + wh + gap, CHROME, axis=0, bevel=2, shadow=0.7)
         # clear window (chamfered) to the right of the word
-        win = dict(x0=cxl - 22, x1=cxl + 30, y0=top, y1=top + total)
+        win = dict(x0=wx + ww + 44, x1=wx + ww + 44 + 62, y0=Y0 - 20, y1=Y1 + 30)
         flat_win = np.zeros((H, LW), np.float32)
         c = 9
         poly = [(win['x0'] + c, win['y0']), (win['x1'] - c, win['y0']), (win['x1'], win['y0'] + c), (win['x1'], win['y1'] - c),
@@ -258,7 +260,7 @@ def render(prod, side):
             if max(m.size[0] for m in ms) <= maxw or size <= 34:
                 break
             size -= 2
-        sub = text_mask(lab['sub'], int(size * 0.42), track=0.10) if lab.get('sub') else None
+        sub = text_mask(lab['sub'], int(size * 0.5), track=0.08) if lab.get('sub') else None
         st = text_mask(lab['strength'], 46 if size > 46 else max(30, size - 4), track=0.08)
         lh = int(cap_px(size) * 1.55)
         blocks = []

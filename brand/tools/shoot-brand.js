@@ -26,7 +26,7 @@ const SECTIONS = { font: ['#match', '#words', '[data-slot="studio"]', '#sheet', 
     await page.route('https://fonts.googleapis.com/**', r => r.fulfill({ body: '', contentType: 'text/css' }));
     await page.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 204, body: '' }));
     await page.goto('file://' + path.join(ROOT, PAGE, 'index.html'));
-    await page.waitForFunction(() => window.__type3d && window.__type3d.frames > 2, null, { timeout: 150000 }).catch(() => errors.push('3D never started'));
+    await page.waitForFunction(() => window.__type3d && window.__type3d.ready && window.__type3d.frames >= 1, null, { timeout: 150000 }).catch(() => errors.push('3D never started'));
     const waitFrames = async n => { const f0 = await page.evaluate(() => window.__type3d ? __type3d.frames : 0); const t0 = Date.now();
       while ((await page.evaluate(() => window.__type3d ? __type3d.frames : 0)) < f0 + n && Date.now() - t0 < 30000) await page.waitForTimeout(200); };
     await waitFrames(4);
