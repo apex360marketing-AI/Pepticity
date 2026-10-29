@@ -280,3 +280,16 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - R133 "take that background [APEX Arsenal], that moving black and silver ... as a similar background on Pepticity" (artifact https://claude.ai/artifact/G4y1SywdUUEAhTfRgCEhhE)
 - R134 glassmorphism must be truly see-through ("You didn't do anything I asked you to, so it's see-through")
 - R135 (29 Oct) Owner APPROVED the one button + toggle ("I like that toggle button. You got the 3D effect there."). Change: the WHITE / BLACK labels must use his BLACK font, 3D like the reference. "That's the fucking font ... Don't forget it."
+
+## 29 Oct — owner: "don't stop and wait. Just keep going." (build go-ahead)
+- R136 Put the APEX Arsenal moving background into the PEPTICITY site.
+- R137 Improve the lab experience (stations, not rushed) and the city ride: "a little longer", "I don't want you just to like run into the door", "nice smooth transition".
+- R138 A cool card: glassmorphism/frosted with light in it; tap it; turns into the way to get in. GUEST or JOIN choice: "We don't wanna force it, but we're gonna lose them."
+- R139 ALL products on the site; something that closes a sale ("not one thing on this site that would make a sale").
+- R140 Hooks everywhere, "something people don't see"; create as many hook skills as possible; deep dive incl. repos for hooks. "You told me you had 20 hooks ... I didn't see one."
+- R141 A really good HERO card first (grand opening, 15%); "it went straight into the site".
+- R142 Chest film via Higgsfield: box tilted up so the top shows; the NEW P engraved into the top; opens as now; ~10 s; at the end PEPTICITY engraves across the front; box more forward, "in your face and big".
+- R143 Consistency/symmetry audit: no mixed small/big, narrow/wide; everything works.
+- R144 Use many more of the picked effects.
+- R145 Site "drastically bigger", more information; hit gym-goers, older people, people needing energy; little cards by goal (e.g. weight loss) that lead to the products for that interest, with a hook.
+- R146 Wants to send Grace in ~15 minutes; playbook first, but keep going without waiting.
