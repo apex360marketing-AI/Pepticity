@@ -143,7 +143,7 @@ html.intro-on #intro{display:block}
 .film video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;background:#000}
 [data-version="white"] .film video{filter:saturate(.22) brightness(1.04)}
 .intro-skip{position:absolute;right:var(--gut);bottom:calc(24px + env(safe-area-inset-bottom));z-index:2}
-@media (max-aspect-ratio:1/1){.film{width:200vw;top:46%}#intro::after{content:"";position:absolute;inset:0;background:linear-gradient(#000 0,transparent 22%,transparent 70%,#000 100%);pointer-events:none}}
+@media (max-aspect-ratio:1/1){.film{width:140vw;top:46%}#intro::after{content:"";position:absolute;inset:0;background:linear-gradient(#000 0,transparent 22%,transparent 70%,#000 100%);pointer-events:none}}
 
 /* ---------- nav ---------- */
 .nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px var(--gut);transition:background-color .4s}
@@ -692,3 +692,8 @@ html.intro-on main,html.intro-on .rail{display:none}
 /* autoplay blocked: tap the closed chest to open it */
 .intro-tap{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);z-index:5}
 .intro-tap[hidden]{display:none}
+
+/* entrance: hide the concierge while the chest film plays; TAP TO OPEN sits centred over the closed chest */
+html.intro-on .pb-root{display:none!important}
+#introTap{position:absolute!important;left:50%;bottom:18%;top:auto;transform:translateX(-50%);z-index:6}
+#introTap[hidden]{display:none!important}
