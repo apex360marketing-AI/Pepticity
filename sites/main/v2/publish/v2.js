@@ -761,7 +761,7 @@
     $('#intGrid').innerHTML = INTERESTS.map(function (i) {
       return '<li><button class="int-card glass" type="button" data-int="' + i.k + '">' +
         '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + '◆' + '</span></span>' +
-        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF · SEND ME THE SHELF + 15%</span></span></button></li>';
+        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF + 15%</span></span></button></li>';
     }).join('');
     document.dispatchEvent(new Event('pc-slots'));
   }
@@ -847,7 +847,7 @@
     function check() {
       var d = ctx.getImageData(0, 0, cv.width, cv.height).data, clear = 0, tot = 0;
       for (var i = 3; i < d.length; i += 16) { tot++; if (d[i] === 0) clear++; }
-      if (clear / tot > 0.45) reveal();
+      if (clear / tot > 0.35) reveal();
     }
     cv.addEventListener('pointerdown', function (e) { drawing = true; cv.setPointerCapture(e.pointerId); track('hook_interact'); wipe(e); });
     cv.addEventListener('pointermove', wipe);
