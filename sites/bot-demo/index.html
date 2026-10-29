@@ -59,12 +59,13 @@ section.blk{margin-top:64px}
 .does svg.edge{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .does ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 34px}
 @media (max-width:760px){.does ol{grid-template-columns:1fr}}
-.does li{position:relative;display:grid;grid-template-columns:44px 1fr;gap:4px 12px;padding:18px 8px 18px 0;border-top:1px solid var(--hair);isolation:isolate;overflow:hidden}
+.does li{position:relative;display:grid;grid-template-columns:44px 1fr;align-content:start;gap:4px 12px;padding:18px 8px 18px 0;border-top:1px solid var(--hair);isolation:isolate;overflow:hidden}
 .does li::after{content:"";position:absolute;top:-20%;bottom:-20%;left:0;width:40%;z-index:-1;pointer-events:none;opacity:0;
   background:linear-gradient(100deg,transparent,rgba(225,232,242,.07) 30%,rgba(255,255,255,.16) 50%,rgba(225,232,242,.07) 70%,transparent);transform:translateX(-130%) skewX(-18deg)}
 .does li:hover::after{animation:sweep 1.5s var(--ease-io) both}
 @keyframes sweep{0%{transform:translateX(-130%) skewX(-18deg);opacity:0}14%,84%{opacity:1}100%{transform:translateX(330%) skewX(-18deg);opacity:0}}
-.does .n{grid-row:span 2;font:400 20px/1 var(--h);letter-spacing:.06em;padding-top:2px;
+.does li > :not(.n){grid-column:2}
+.does .n{grid-row:1 / span 3;font:400 20px/1 var(--h);letter-spacing:.06em;padding-top:2px;
   background:linear-gradient(180deg,#fff,#aeb4bb 55%,#6b7077);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;transition:filter .4s ease}
 .does li:hover .n{filter:drop-shadow(0 0 10px rgba(240,245,252,.7))}
 .does h3{margin:0;font:400 12px/1.5 var(--h);letter-spacing:.13em;text-transform:uppercase;font-synthesis:none;color:#fff}
@@ -160,7 +161,7 @@ footer .pb-ph{color:var(--mute)}
         <div><b>NO DOSING</b>No amounts, mixing or schedules</div>
         <div><b>NO MEDICAL</b>No medical advice, ever</div>
         <div><b>ADULTS ONLY</b>Under-age visitors are stopped</div>
-        <div><b>SAFETY FIRST</b>Emergencies get 911 and 9-8-8 first</div>
+        <div><b>SAFETY FIRST</b>Emergencies get 911 and 9&#8209;8&#8209;8 first</div>
       </div>
       <p class="demo reveal"><b>DEMO SETTINGS</b> · IGF-1 LR3 is marked sold out so you can see the restock queue. Prices are the exact catalogue prices in CAD. The 15% code shown is a demo code.</p>
     </section>

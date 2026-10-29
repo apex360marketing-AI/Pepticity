@@ -315,3 +315,6 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - R155 Use every APEX Brain effect pick. (No separate APEX Brain picks file exists; the picks on record are docs/owner/effect-picks-2026-10-28.md, all placed.)
 - R156 Match the brand-font page "02 PEPTICITY IN 3D / STUDIO": every header in the rebuilt font, hero/section words LIVE 3D (type3d-engine makeWord + wallScene), one renderer, dark quiet premium feel.
 - R157 Include the concierge bot (shared/bot/pep-bot.js) as soon as it exists.
+
+## Added 29 Oct (sharing)
+- R154 · 29 Oct · "Get me a link that I can actually give to her, where she doesn't need to sign into my Claude." Anything for Grace goes out as a PUBLIC no-login link (GitHub Pages: https://apex360marketing-ai.github.io/Pepticity/), never a private Artifact link. DONE for both dashboards.

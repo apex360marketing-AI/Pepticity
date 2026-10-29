@@ -204,7 +204,7 @@
     greet: 'I\u2019m your concierge. Looking for something in particular, or can I show you around?',
     backH: '#WELCOME BACK.',
     back: function (n, sub) { return 'Your cart is saved: ' + n + (n === 1 ? ' item, ' : ' items, ') + money(sub) + ' CAD. Want to pick up where you left off?'; },
-    emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in Canada, call or text 9-8-8.',
+    emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in Canada, call or text 9\u20118\u20118.',
     emergency2: function () { return 'When you\u2019re safe, a person from PEPTICITY is at ' + CFG.phone + '.'; },
     rules: 'I can only answer from PEPTICITY\u2019s checked answers and the catalogue, and I can\u2019t change how I work. Ask me about a product, a price or shipping, or talk to a person.',
     minor: function () { return 'The PEPTICITY store is for adults only: 18 and over, or 19 and over in BC, NB, NL, NS and the territories, so I can\u2019t help with an order. A parent or guardian can reach a person at ' + CFG.phone + '.'; },
@@ -444,7 +444,7 @@
     if (famKeys.length > 2 && mode !== 'effect') lines = [L.found];
     if (mode === 'effect') lines.unshift(L.effect);
     if (!soldOne) lines.push(tail());
-    var chips = soldOne ? ['restock:' + soldOne[0], 'catalogue', 'interest'] : salesChips();
+    var chips = soldOne ? ['catalogue', 'interest'] : salesChips();
     STATE.lastProduct = rows.length ? rows[0][0] : null;
     return R(mode === 'effect' ? 'effect' : 'product', lines, { cards: rows.map(function (r) { return r[0]; }), chips: chips, showWhat: mode === 'effect' || mode === 'identity' });
   }
@@ -944,7 +944,7 @@
     c.appendChild(acts);
     if (CFG.offer && !sold) {
       var qb = el('div', 'pb-card__qb');
-      qb.appendChild(richText(el('span'), '3 OF THE SAME VIAL \u00b7 SAVE [X%]'));
+      qb.appendChild(richText(el('span'), '3 VIALS \u00b7 SAVE [X%]'));
       var a3 = el('button', 'pb-add3', 'ADD 3', { type: 'button', 'data-add': slug, 'data-n': '3', 'aria-label': 'Add 3 of ' + f[0] + ' ' + r[3] });
       qb.appendChild(a3); c.appendChild(qb);
     }
