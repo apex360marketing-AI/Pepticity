@@ -214,3 +214,12 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - Grace side: sales + best sellers; stock + what's short; customers + sign-ups; messages with clients; PLUS "a spot where it tracks her cost vs sale value which will be really good for taxes at the end of the year and a spot she can also upload any other expenses like our cost and whatnot. Manual upload spot pretty much does 75% of her tax work for the year."
 - Look: BLACK (matte + UV + chrome), glass cards, background pattern turned 30 degrees as a watermark, spinning logo watermark in the centre, subtle and classy.
 - Prompts must be pasted in the chat, not only sent as files. "Run it" means generate now.
+
+## Added 29 Oct (dashboard v2)
+- Client side: photos of the peptides they bought, each bottle lit underneath, lined up per order.
+- Grace side: horizontal-scrolling bottle shelves: IN STOCK (top), OUT OF STOCK, BACK IN STOCK; order by which has more.
+- Use the existing bottles as temporary art; restyle toward the owner's 3D metal reference (design/references/pepticity/3d-metal-type-BLACK.png).
+- Owner's own font for PEPTICITY is coming; text comes off the screen in 3D ("or 4D").
+- Textures: matte mixed with UV, also inside the watermark.
+- Background nodes less busy; the pointer lights the background only over the background, not over cards/buttons.
+- Custom cursor: unique, animated, interactive, "like a little tool", works with the background.
