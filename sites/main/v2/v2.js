@@ -761,7 +761,7 @@
     $('#intGrid').innerHTML = INTERESTS.map(function (i) {
       return '<li><button class="int-card glass" type="button" data-int="' + i.k + '">' +
         '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + '◆' + '</span></span>' +
-        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF · SEND ME THE SHELF + 15%</span></span></button></li>';
+        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF + 15%</span></span></button></li>';
     }).join('');
     document.dispatchEvent(new Event('pc-slots'));
   }

@@ -45,7 +45,9 @@ src = (SITE / "index.src.html").read_text()
 def _inl(m):
     path = m.group(1) or m.group(2)
     t = (ROOT / path).read_text().rstrip()
-    return re.sub(r"/\*.*?\*/", "", t, flags=re.S) if path.endswith(".css") else t
+    if path.endswith(".css"):
+        return re.sub(r"/\*.*?\*/", "", t, flags=re.S)
+    return re.sub(r"^\s*/\*.*?\*/", "", t, count=1, flags=re.S)
 src = re.sub(r"(?:/\*@INLINE:([^@]+)@\*/|//@INLINE:([^@]+)@)", _inl, src)
 eng = "\n".join(l for l in (ROOT / "brand/font/type3d-engine.js").read_text().splitlines() if not l.startswith("import "))
 eng = re.sub(r"^export ", "", eng, flags=re.M)
@@ -76,8 +78,8 @@ TRY = """<div style="display:grid;gap:14px;align-content:start">
 if BOT_JS.exists() and BOT_CSS.exists():
     state = "LIVE ON THIS PAGE"
     block = TRY + '<p class="fine">Answers come only from the approved answer library. Prices are from your catalogue. Sign-ups here are previews and send nothing.</p>'
-    bot = ('<link rel="stylesheet" data-pepbot="1" href="data:text/css,">\n<style>' + BOT_CSS.read_text() + '</style>\n'
-           '<script>window.PEPBOT_CONFIG={greetDelay:25000};</script>\n<script>' + BOT_JS.read_text().replace('</script', '<\\/script') + '</script>')
+    bot = ('<link rel="stylesheet" data-pepbot="1" href="data:text/css,">\n<style>' + re.sub(r"/\*.*?\*/", "", BOT_CSS.read_text(), flags=re.S) + '</style>\n'
+           '<script>window.PEPBOT_CONFIG={greetDelay:25000};</script>\n<script>' + re.sub(r" ?\(ledger R\d{3}\)", "", BOT_JS.read_text()).replace('</script', '<\\/script') + '</script>')
 else:
     state = "DEMO ARRIVING"
     block = CHAT + """

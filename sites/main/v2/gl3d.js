@@ -90,7 +90,7 @@ async function main() {
   function wordPanel(el) {
     const raw = el.dataset.word3d, phone = innerWidth < 760, funky = el.dataset.funky != null ? +el.dataset.funky : 0.6, fill = +(el.dataset.fill || 0.82);
     let lines = raw.split('|');
-    if (!phone && raw.replace('|', ' ').length <= 24) lines = [lines.join(' ')];
+    if (!phone && el.clientWidth > 560 && raw.replace('|', ' ').length <= 24) lines = [lines.join(' ')];
     const group = new THREE.Group(), letters = []; let width = 0;
     const LH = 0.7, GAP = 0.26, H = lines.length * LH + (lines.length - 1) * GAP;
     lines.forEach((ln, k) => { const w = makeWord(front, ln, {}); w.group.position.y = H / 2 - LH / 2 - k * (LH + GAP); group.add(w.group); letters.push(...w.letters); width = Math.max(width, w.width); });

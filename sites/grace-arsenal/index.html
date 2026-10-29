@@ -1336,12 +1336,7 @@ setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},1500
 </footer>
 
 <script>
-/* PEPTICITY · BG-P01 · SILVER SMOKE
-   Moving black-and-silver smoke ground in two modes: 'black' (matte + UV black, silver smoke)
-   and 'white' (crisp cool white, soft platinum smoke). Adapted from the liquid-chrome ground in
-   the APEX Arsenal artifact (raw WebGL at low resolution, pointer ripples it).
-   Usage: const bg = PCSmoke(canvasEl, {mode:'black'}); bg.setMode('white');
-   No chartreuse spark, no warm tones: every output colour is neutral or slightly cool. */
+
 (function () {
   const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
   const FS = `precision highp float;
@@ -1450,8 +1445,7 @@ setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},1500
     return api;
   };
 })();
-/* PEPTICITY · BTN-P01 · segmented toggle behaviour (click + arrow keys, roving tabindex).
-   Fires a 'pc-change' event on the .pc-seg with detail {index, value}. */
+
 (function () {
   function init(seg) {
     if (seg.__pc) return; seg.__pc = true;
@@ -2045,42 +2039,18 @@ whenNear(document.getElementById('earth'),()=>{try{
 }catch(e){console.warn('Earth 3D unavailable',e)}});
 </script>
 <link rel="stylesheet" data-pepbot="1" href="data:text/css,">
-<style>/* =====================================================================
-   PEPTICITY · BOT-P01 · SALES CONCIERGE · stylesheet (loaded automatically by pep-bot.js)
-   Contains: the PEPTICITY BLACK font (brand/font/PepticityBlack.woff2, inlined), the approved
-   button BTN-P01 (brand/ui/button.css, copied verbatim; its tokens scoped to .pb-root) and the
-   concierge styles. No other files needed.
-   ===================================================================== */
+<style>
 @font-face{font-family:"PepticityBlack";src:url(data:font/woff2;base64,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) format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
-/* ---------- BTN-P01 (verbatim from brand/ui/button.css) ---------- */
-/* =====================================================================
-   PEPTICITY · BTN-P01 · THE ONE BUTTON  (R129: "only one throughout the whole entire thing")
-   See-through chamfered glass, chrome hairline edge, ALL CAPS label, one slow light sweep
-   left to right on hover (1.5 s), soft illumination, press, focus and disabled states.
-   Sizes: .pc-btn--lg (large CTA) · default (regular) · .pc-btn--sm (small / nav).
-   Segmented toggle (.pc-seg) uses the same glass, hairline and sweep.
 
-   Markup
-     <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span></span></button>
-     <a class="pc-btn pc-btn--lg" href="#">…same inner spans…<i class="pc-btn__icon" aria-hidden="true"></i></a>
-     <div class="pc-seg" role="radiogroup" aria-label="Theme">
-       <span class="pc-seg__thumb" aria-hidden="true"></span>
-       <button class="pc-seg__opt" type="button" role="radio" aria-checked="true">WHITE</button>
-       <button class="pc-seg__opt" type="button" role="radio" aria-checked="false">BLACK</button>
-     </div>   (behaviour: brand/ui/button.js)
 
-   Surface: dark grounds by default. Put the button inside [data-pc-surface="light"] (or .pc-light)
-   on white grounds. Fonts: Syncopate 700 (Google Fonts) until the owner's BLACK font ships (R128).
-   No pills, no gold except the thin pale chrome-gold tick on the toggle thumb.
-   ===================================================================== */
 :root,.pb-root{
   --pc-dur-1:120ms; --pc-dur-2:200ms; --pc-dur-3:320ms; --pc-dur-4:560ms; --pc-dur-sweep:1500ms;
   --pc-ease-out:cubic-bezier(.16,1,.3,1); --pc-ease-in:cubic-bezier(.7,0,.84,0); --pc-ease-inout:cubic-bezier(.65,0,.35,1);
   --pc-motion:1;
 }
 
-/* ---- tokens: dark surface (default) ---- */
+
 .pc-btn,.pc-seg{
   --pc-ink:#eef1f5;
   --pc-fill-a:rgba(255,255,255,.07); --pc-fill-b:rgba(255,255,255,.012);
@@ -2092,7 +2062,7 @@ whenNear(document.getElementById('earth'),()=>{try{
   --pc-ring:#e9eef4;
   --pc-press:rgba(0,0,0,.18);
 }
-/* ---- tokens: light surface ---- */
+
 [data-pc-surface="light"] .pc-btn,[data-pc-surface="light"] .pc-seg,.pc-light .pc-btn,.pc-light .pc-seg,
 .pc-btn[data-pc-surface="light"],.pc-seg[data-pc-surface="light"]{
   --pc-ink:#131518;
@@ -2106,7 +2076,7 @@ whenNear(document.getElementById('earth'),()=>{try{
   --pc-press:rgba(42,45,49,.10);
 }
 
-/* ---- the button ---- */
+
 .pc-btn{
   --c:11px; --h:50px; --px:32px; --fs:11px; --ls:.26em;
   position:relative; display:inline-flex; vertical-align:middle; height:var(--h); max-width:100%;
@@ -2118,7 +2088,7 @@ whenNear(document.getElementById('earth'),()=>{try{
 .pc-btn--sm{--c:8px; --h:38px; --px:20px; --fs:9.5px; --ls:.22em}
 .pc-btn--block{display:flex; width:100%}
 
-/* glass face: chamfered top-left + bottom-right, hairline drawn as background layers so it follows the cut */
+
 .pc-btn__face,.pc-seg{
   position:relative; display:flex; align-items:center; justify-content:center; gap:.9em; width:100%; height:100%;
   clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
@@ -2140,7 +2110,7 @@ whenNear(document.getElementById('earth'),()=>{try{
   [data-pc-surface="light"] .pc-btn__face,[data-pc-surface="light"] .pc-seg,.pc-light .pc-btn__face,.pc-light .pc-seg{background-color:rgba(246,247,249,.9)}
 }
 
-/* the light sweep: one slow pass, left to right */
+
 .pc-btn__face::before,.pc-seg__opt::before{
   content:""; position:absolute; top:-30%; bottom:-30%; left:0; width:46%; pointer-events:none; z-index:0; opacity:0;
   background:linear-gradient(100deg,transparent 0%,var(--pc-sweep-soft) 30%,var(--pc-sweep) 50%,var(--pc-sweep-soft) 70%,transparent 100%);
@@ -2158,7 +2128,7 @@ whenNear(document.getElementById('earth'),()=>{try{
   animation-timing-function:var(--pc-ease-inout); animation-iteration-count:1; animation-fill-mode:both;
 }
 
-/* soft illumination: in over dur-3, out over dur-4 (slower release) */
+
 .pc-btn__face::after{
   content:""; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0;
   background:radial-gradient(70% 120% at 50% 0%,var(--pc-glow),transparent 70%),radial-gradient(60% 80% at 50% 120%,var(--pc-glow),transparent 70%);
@@ -2170,17 +2140,17 @@ whenNear(document.getElementById('earth'),()=>{try{
 .pc-btn:hover .pc-btn__label,.pc-btn:focus-visible .pc-btn__label{text-shadow:0 0 14px var(--pc-label-glow); transition-duration:var(--pc-dur-3)}
 .pc-btn:hover .pc-btn__face,.pc-btn:focus-visible .pc-btn__face{--pc-rim-t:var(--pc-rim-hot)}
 
-/* optional trailing chevron, drawn with two hairlines */
+
 .pc-btn__icon{display:inline-block; width:.95em; height:.95em; flex:none; margin-right:-.2em;
   background:linear-gradient(currentColor,currentColor) 50% 50%/100% 1.5px no-repeat;
   transition:transform var(--pc-dur-4) var(--pc-ease-out)}
 .pc-btn__icon::after{content:""; position:absolute; right:0; top:50%; width:.5em; height:.5em; border-top:1.5px solid currentColor; border-right:1.5px solid currentColor; transform:translate(-1px,-50%) rotate(45deg)}
 .pc-btn:hover .pc-btn__icon,.pc-btn:focus-visible .pc-btn__icon{transform:translateX(4px)}
 
-/* press: answers inside dur-1 */
+
 .pc-btn:active .pc-btn__face{transform:translateY(1px) scale(.985); --pc-fill-a:var(--pc-press); transition-duration:var(--pc-dur-1)}
 
-/* focus: a second chamfered hairline 5px outside the face (outline would be clipped by the cut) */
+
 .pc-btn::after,.pc-seg__opt::after{
   --o:5px; --c2:calc(var(--c) + 3px);
   content:""; position:absolute; inset:calc(var(--o) * -1); pointer-events:none; opacity:0;
@@ -2196,14 +2166,14 @@ whenNear(document.getElementById('earth'),()=>{try{
 .pc-btn:focus{outline:none}
 .pc-btn:focus-visible::after{opacity:1}
 
-/* disabled */
+
 .pc-btn:disabled,.pc-btn[aria-disabled="true"]{cursor:not-allowed; opacity:.38; filter:saturate(0)}
 .pc-btn:disabled .pc-btn__face::before,.pc-btn[aria-disabled="true"] .pc-btn__face::before{animation:none!important}
 .pc-btn:disabled .pc-btn__face::after,.pc-btn[aria-disabled="true"] .pc-btn__face::after{opacity:0!important}
 .pc-btn:disabled .pc-btn__label,.pc-btn[aria-disabled="true"] .pc-btn__label{text-shadow:none!important}
 .pc-btn:disabled .pc-btn__face,.pc-btn[aria-disabled="true"] .pc-btn__face{transform:none!important}
 
-/* ---- segmented toggle: same glass, same hairline, a glass thumb slides between options ---- */
+
 .pc-seg{
   --c:11px; --h:50px; --n:2; --i:0; --fs:11px; --ls:.26em;
   display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:auto; height:var(--h); padding:5px; gap:0;
@@ -2242,7 +2212,7 @@ whenNear(document.getElementById('earth'),()=>{try{
 .pc-seg__opt:focus{outline:none}
 .pc-seg__opt:focus-visible::after{opacity:1}
 
-/* demo hooks for static state boards (frozen states) */
+
 .pc-btn.is-hover .pc-btn__face::before{animation:none; opacity:1; transform:translateX(70%) skewX(-18deg)}
 .pc-btn.is-hover .pc-btn__face::after{opacity:1}
 .pc-btn.is-hover .pc-btn__label{text-shadow:0 0 14px var(--pc-label-glow)}
@@ -2250,7 +2220,7 @@ whenNear(document.getElementById('earth'),()=>{try{
 .pc-btn.is-active .pc-btn__face{transform:translateY(1px) scale(.985); --pc-fill-a:var(--pc-press)}
 .pc-btn.is-focus::after{opacity:1}
 
-/* motion off / reduced motion: states stay, travel stops */
+
 html[data-motion="off"]{--pc-motion:0}
 @media (prefers-reduced-motion:reduce){
   :root,.pb-root{--pc-motion:0}
@@ -2259,12 +2229,7 @@ html[data-motion="off"]{--pc-motion:0}
 }
 @media (hover:none){.pc-btn:active .pc-btn__face{transform:scale(.97)}}
 
-/* =====================================================================
-   BOT-P01 · THE CONCIERGE
-   Slim glass bar docked at the bottom (R052: no bubble, no pill) -> proactive peek -> tall frosted
-   see-through glass panel standing on a matte black base, silver hairline edge that follows the
-   chamfered cut, one travelling light. Platinum chrome only: no green, no gold-yellow, no pills.
-   ===================================================================== */
+
 .pb-root{
   --pb-ink:#eef1f5; --pb-ink2:rgba(238,241,245,.9); --pb-mute:rgba(222,227,234,.66); --pb-faint:rgba(222,227,234,.42);
   --pb-hair:rgba(226,231,238,.16); --pb-black:#0b0b0d;
@@ -2282,7 +2247,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-root button{font-family:inherit}
 .pb-root > *{pointer-events:auto}
 
-/* ---------- shared: chamfered cut with a drawn hairline (same technique as BTN-P01) ---------- */
+
 .pb-cut,.pb-card,.pb-form,.pb-cart,.pb-msg--you .pb-p,.pb-shelf,.pb-code{
   --c:12px; --rt:rgba(236,240,245,.52); --rs:rgba(200,207,216,.26); --rb:rgba(120,127,137,.34);
   --fa:rgba(255,255,255,.075); --fb:rgba(255,255,255,.014);
@@ -2298,7 +2263,7 @@ html[data-motion="off"]{--pc-motion:0}
     linear-gradient(145deg,var(--fa),var(--fb));
 }
 
-/* ---------- silver edge (SVG drawn to the real size) + travelling light ---------- */
+
 .pb-edge{position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; z-index:3}
 .pb-edge__line{vector-effect:non-scaling-stroke}
 .pb-edge__glint{stroke:#fff; stroke-linecap:round; stroke-dasharray:64px calc(var(--per,2000) * 1px); opacity:0;
@@ -2311,7 +2276,7 @@ html[data-motion="off"]{--pc-motion:0}
   58%{stroke-dashoffset:calc(var(--per,2000) * -1px); opacity:0} 100%{stroke-dashoffset:calc(var(--per,2000) * -1px); opacity:0}
 }
 
-/* ---------- the emblem: ring turns slowly, light passes over the P ---------- */
+
 .pb-emblem{display:block; flex:none; width:var(--s,36px); height:var(--s,36px); filter:drop-shadow(0 0 7px rgba(226,233,243,.28)) drop-shadow(0 1px 1px rgba(0,0,0,.6))}
 .pb-em{display:block; width:100%; height:100%; overflow:visible}
 .pb-em__ring{transform-box:fill-box; transform-origin:50% 50%; animation:pb-spin 46s linear infinite}
@@ -2319,7 +2284,7 @@ html[data-motion="off"]{--pc-motion:0}
 @keyframes pb-spin{to{transform:rotate(360deg)}}
 @keyframes pb-breathe{0%,100%{filter:drop-shadow(0 0 7px rgba(226,233,243,.28))} 50%{filter:drop-shadow(0 0 14px rgba(240,245,252,.7))}}
 
-/* ---------- the slim docked bar ---------- */
+
 .pb-bar{position:absolute; left:0; right:0; bottom:0; height:var(--pb-barh); cursor:pointer; outline:none;
   transition:transform .55s var(--pb-ease),opacity .35s ease,filter .35s ease}
 .pb-bar__in{position:absolute; inset:0; display:flex; align-items:center; gap:13px; padding:0 12px 0 13px;
@@ -2352,7 +2317,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-bar__open i{position:absolute; left:50%; top:54%; width:9px; height:9px; border-left:1.5px solid #fff; border-top:1.5px solid #fff; transform:translate(-50%,-50%) rotate(45deg); transition:transform .5s var(--pb-ease)}
 .pb-bar:hover .pb-bar__open i{transform:translate(-50%,-80%) rotate(45deg)}
 
-/* ---------- proactive peek (sits on the bar, same glass) ---------- */
+
 .pb-peek{position:absolute; left:0; right:0; bottom:calc(var(--pb-barh) + 10px); visibility:hidden; opacity:0; transform:translateY(14px); filter:blur(6px);
   transition:opacity .5s ease,transform .7s var(--pb-ease),filter .5s ease,visibility 0s linear .7s}
 .pb-root[data-state="peek"] .pb-peek{visibility:visible; opacity:1; transform:none; filter:none; transition-delay:0s}
@@ -2364,7 +2329,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-peek .pb-h{margin-bottom:6px}
 .pb-peek .pb-x{position:absolute; top:10px; right:10px}
 
-/* ---------- the tall panel: frosted glass column on a matte black base ---------- */
+
 .pb-panel{position:absolute; right:0; bottom:0; width:100%; height:min(760px,calc(100vh - 48px)); display:flex; flex-direction:column;
   --c:16px; visibility:hidden;
   clip-path:polygon(var(--c) calc(100% - var(--pb-barh)),100% calc(100% - var(--pb-barh)),100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 calc(100% - var(--pb-barh) + var(--c)));
@@ -2374,7 +2339,7 @@ html[data-motion="off"]{--pc-motion:0}
   clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
 .pb-root[data-state="open"] .pb-bar{opacity:0; transform:translateY(10px); pointer-events:none}
 .pb-root[data-state="open"] .pb-peek{visibility:hidden; opacity:0}
-/* the blur sits on the clipped panel itself (a clip-path parent would cut a child's backdrop off from the page) */
+
 .pb-panel{background:rgba(13,14,17,.44); -webkit-backdrop-filter:blur(24px) saturate(140%); backdrop-filter:blur(24px) saturate(140%)}
 .pb-panel__glass{position:relative; flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden;
   background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.025) 22%,rgba(255,255,255,.012) 70%,rgba(0,0,0,.12))}
@@ -2417,7 +2382,7 @@ html[data-motion="off"]{--pc-motion:0}
   animation:pb-rule 6.5s var(--pb-ease-io) infinite}
 @keyframes pb-rule{0%{transform:translateX(-100%)} 60%,100%{transform:translateX(560%)}}
 
-/* ---------- conversation ---------- */
+
 .pb-log{position:relative; z-index:1; flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:18px 18px 10px; outline:none;
   overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:rgba(220,226,234,.25) transparent;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 16px,#000 calc(100% - 8px),transparent); mask-image:linear-gradient(180deg,transparent 0,#000 16px,#000 calc(100% - 8px),transparent)}
@@ -2442,12 +2407,12 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-typing i:nth-child(2){animation-delay:.15s} .pb-typing i:nth-child(3){animation-delay:.3s}
 @keyframes pb-type{0%,100%{opacity:.25; transform:rotate(45deg) scale(.8)} 50%{opacity:1; transform:rotate(45deg) scale(1.1)}}
 
-/* chips: the approved button, small */
+
 .pb-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
 .pb-root .pb-chip{--h:34px; --px:13px; --fs:8.5px; --ls:.2em; --c:8px}
 .pb-peek .pb-chips{margin-top:12px}
 
-/* product mini-cards */
+
 .pb-cards{display:grid; gap:10px; margin-top:12px}
 .pb-cards--rail{display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; margin-right:-18px; padding:0 18px 8px 0;
   scrollbar-width:none; overscroll-behavior-x:contain}
@@ -2492,7 +2457,7 @@ html[data-motion="off"]{--pc-motion:0}
   background:linear-gradient(180deg,#fff,#c6cbd2 60%,#8d939b); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
 .pb-shelf__a{margin-top:6px; font-size:12px; color:var(--pb-mute)}
 
-/* full catalogue list */
+
 .pb-list{list-style:none; margin:12px 0 0; padding:0; border-top:1px solid var(--pb-hair)}
 .pb-list__row{position:relative; display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--pb-hair); transition:background .3s ease}
 .pb-list__row:hover{background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent)}
@@ -2509,7 +2474,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-list__add.is-sold{color:var(--pb-mute)}
 .pb-list__add.is-added{box-shadow:inset 0 0 0 1px #fff}
 
-/* cart */
+
 .pb-cart{--c:12px; margin-top:12px; padding:14px}
 .pb-cart__t{margin:0 0 10px; font:400 12px/1 var(--pb-font-h); letter-spacing:.18em; color:#fff}
 .pb-cart__row{display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--pb-hair)}
@@ -2530,7 +2495,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-cart__free{margin-top:10px; font:600 9px/1 var(--pb-font); letter-spacing:.2em; color:var(--pb-faint)}
 .pb-cart .pb-checkout{margin-top:12px}
 
-/* capture form */
+
 .pb-form{--c:12px; margin-top:12px; padding:15px 14px 13px; display:grid; gap:10px}
 .pb-form__t{font:400 12px/1.35 var(--pb-font-h); letter-spacing:.16em; color:#fff}
 .pb-field{width:100%; height:44px; padding:0 14px; border:0; outline:none; color:#fff; font:400 15px/1 var(--pb-font);
@@ -2557,7 +2522,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-code b{font:400 22px/1 var(--pb-font-h); letter-spacing:.3em; font-weight:400;
   background:linear-gradient(180deg,#fff,#cfd4da 52%,#8b9199 60%,#eef0f2); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
 
-/* ---------- matte black base ---------- */
+
 .pb-base{position:relative; z-index:2; padding:12px 14px calc(10px + env(safe-area-inset-bottom,0px));
   background:
     radial-gradient(120% 140% at 50% 0%,rgba(255,255,255,.05),transparent 60%),
@@ -2576,7 +2541,7 @@ html[data-motion="off"]{--pc-motion:0}
 .pb-root .pb-send{--h:44px; --px:16px; --fs:9px; --c:8px}
 .pb-fine{margin-top:9px; text-align:center; font:600 9px/1.3 var(--pb-font); letter-spacing:.16em; text-transform:uppercase; color:var(--pb-faint)}
 
-/* ---------- phones ---------- */
+
 @media (max-width:600px){
   .pb-root,.pb-root.pb-dock-center{left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom,0px)); width:auto; margin:0; --pb-barh:58px}
   .pb-panel{height:calc(100vh - 20px); height:calc(100dvh - 20px - env(safe-area-inset-bottom,0px)); --c:14px}
@@ -2592,7 +2557,7 @@ html[data-motion="off"]{--pc-motion:0}
   .pb-bar__hint{letter-spacing:.16em}
 }
 
-/* ---------- reduced motion: states stay, travel stops ---------- */
+
 @media (prefers-reduced-motion:reduce){
   .pb-root *,.pb-root *::before,.pb-root *::after{animation:none!important}
   .pb-panel{transition:visibility 0s!important}
@@ -2601,13 +2566,13 @@ html[data-motion="off"]{--pc-motion:0}
 }
 .pb-root.pb-reduced *,.pb-root.pb-reduced *::before,.pb-root.pb-reduced *::after{animation:none!important}
 .pb-root.pb-reduced .pb-edge__glint{display:none}
-/* the PEPTICITY font has one weight: never let the browser fake a bold */
+
 .pb-root .pc-btn{font-weight:400; font-synthesis:none}
 .pb-root .pb-h,.pb-root .pb-head__word,.pb-root .pb-bar__title,.pb-root .pb-card__name{font-synthesis:none}
-/* product names stay in the reading font: the brand face draws B like a 3 (BPC-157 must never read 3PC-157) */
+
 .pb-root .pb-chip--p{--pc-font:var(--pb-font); font-weight:700}
 .pb-root .pb-card__name,.pb-root .pb-list__name b,.pb-root .pb-cart__name b{font-synthesis:none}
-/* light host pages: same glass, deeper smoke behind the text */
+
 .pb-root.pb-on-light .pb-panel{background:rgba(14,15,18,.82)}
 .pb-root.pb-on-light .pb-bar__in{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 46%,rgba(0,0,0,.2)),rgba(14,15,18,.80)}
 .pb-root.pb-on-light .pb-peek__in{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02) 50%),rgba(14,15,18,.82)}
@@ -2619,7 +2584,7 @@ html[data-motion="off"]{--pc-motion:0}
    It loads pep-bot.css from the same folder by itself. The catalogue, the emblem and every answer
    are inlined, so it runs offline with no API (demo-safe, deterministic).
 
-   STORE MODEL (ledger R055): PEPTICITY is an online store selling the catalogue in
+   STORE MODEL: PEPTICITY is an online store selling the catalogue in
    shared/catalogue.json at exact prices. No clinician, consult, pharmacy or prescription wording.
    Binding rules: docs/owner/SALES-PLAYBOOK.md "WHERE THE LINE IS".
      - never says what a product does, never gives dosing, never mentions sexual function,
