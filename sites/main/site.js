@@ -330,7 +330,7 @@
           rect.setAttribute('width', o.w);
           cutter.style.left = (o.w / 1912 * 100) + '%';
           var now = performance.now();
-          if (now - lastE > 45 && o.w > 540 && o.w < 1380) {
+          if (now - lastE > 45 && o.w > 560 && o.w < 1350) {
             lastE = now;
             var e = document.createElement('i'); e.className = 'ember';
             e.style.left = (o.w / 1912 * 100) + '%'; e.style.top = (76 + Math.random() * 5) + '%';
@@ -341,8 +341,9 @@
       }, 0.15)
       .to(cutter, { opacity: 0, duration: 0.25 }, 1.85)
       .to('.eng-glow', { opacity: glowLo, duration: 0.8 }, 1.9)
-      .fromTo('#engSheen', { attr: { x: 380 }, opacity: 0.9 }, { attr: { x: 1500 }, opacity: 0.9, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, 1.95)
-      .set('#engSheen', { opacity: 0 }, 3.05)
+      .set('#engShine', { opacity: 1 }, 1.95)
+      .fromTo('#g-shine', { attr: { x1: 300, x2: 460 } }, { attr: { x1: 1500, x2: 1660 }, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, 1.95)
+      .set('#engShine', { opacity: 0 }, 3.05)
       .add(function () { introTimers.push(setTimeout(liftIntro, 650)); }, 3.05);
   }
   function liftIntro() {
@@ -361,7 +362,7 @@
   function runIntro() {
     introDone = false; engraved = false; introLive = true;
     D.classList.add('intro-on'); intro.classList.remove('lift'); intro.style.cssText = '';
-    gsap.set(film, { scale: 1 }); $('#engRect').setAttribute('width', 0); gsap.set('.eng-glow', { opacity: 0 });
+    gsap.set(film, { scale: 1 }); $('#engRect').setAttribute('width', 0); gsap.set('.eng-glow', { opacity: 0 }); gsap.set('#engShine', { opacity: 0 });
     stopScroll(); jump(0);
     setFilm();
     var started = false;
@@ -464,7 +465,7 @@
   function openState() {
     opened = true;
     doorbox.classList.add('opened');
-    gsap.set(leaves[0], { rotationY: -104, opacity: 1 }); gsap.set(leaves[1], { rotationY: 104, opacity: 1 });
+    gsap.set(leaves[0], { rotationY: -84, opacity: 1 }); gsap.set(leaves[1], { rotationY: 84, opacity: 1 }); gsap.set('.leaf .shade', { opacity: 0.6 });
     gsap.set(doorway, { opacity: 1 }); gsap.set(spill, { opacity: 0.7, scaleY: 1 });
     locks.forEach(function (l) { l.classList.add('off'); });
     scanner.dataset.state = 'granted'; statusEl.textContent = 'WELCOME IN';
@@ -503,8 +504,9 @@
       .to(scanner, { opacity: 0, y: 30, duration: 0.6, ease: 'power2.in' }, 4.2)
       .set(leaves, { opacity: 1 }, 4.35).set(doorway, { opacity: 1 }, 4.35)
       .to(dials, { opacity: 0, duration: 0.4 }, 4.35)
-      .to(leaves[0], { rotationY: -104, duration: 2.6, ease: 'power2.inOut' }, 4.4)
-      .to(leaves[1], { rotationY: 104, duration: 2.6, ease: 'power2.inOut' }, 4.4)
+      .to(leaves[0], { rotationY: -84, duration: 2.6, ease: 'power2.inOut' }, 4.4)
+      .to(leaves[1], { rotationY: 84, duration: 2.6, ease: 'power2.inOut' }, 4.4)
+      .to('.leaf .shade', { opacity: 0.6, duration: 2.6, ease: 'power2.inOut' }, 4.4)
       .to(seam, { opacity: 0, duration: 0.8 }, 4.8)
       .fromTo(spill, { opacity: 0, scaleY: 0.2 }, { opacity: 0.85, scaleY: 1, duration: 2, ease: 'power2.out' }, 4.6)
       .set(cam, { transformOrigin: ox + 'px ' + oy + 'px' }, 5.6)

@@ -158,17 +158,17 @@ html.intro-on #intro{display:block;animation:introSafety 0s linear 22s forwards}
 .film video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;background:#000}
 .engrave{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .engrave text{font:400 46px var(--font-display);letter-spacing:0}
-.eng-face{fill:url(#g-eng)}
-.eng-cut{fill:var(--e-cut)}
+.eng-face{fill:url(#g-eng);stroke:url(#g-eng);stroke-width:1.6;paint-order:stroke}
+.eng-shine{fill:url(#g-shine);opacity:0}
+.eng-cut{fill:var(--e-cut);stroke:var(--e-cut);stroke-width:1.6}
 .eng-glow{fill:var(--e-glow);opacity:.0}
-.eng-sheen{fill:url(#g-eng);opacity:0}
 .cutter{position:absolute;left:0;top:79.1%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;opacity:0;
   background:radial-gradient(circle,#fff 0 30%,var(--light-glow) 45%,transparent 72%);box-shadow:0 0 14px 4px var(--light-glow),0 0 40px 10px rgba(255,255,255,.35)}
 .embers{position:absolute;inset:0;pointer-events:none}
 .ember{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px var(--light-glow)}
 .skip{position:absolute;right:var(--gut);bottom:max(24px,env(safe-area-inset-bottom));z-index:3}
 @media (orientation:portrait){
-  .film{width:172vw;top:44%}
+  .film{width:142vw;top:46%}
   #intro::after{content:"";position:absolute;inset:0;background:linear-gradient(#000 0,transparent 22%,transparent 70%,#000 100%);pointer-events:none}
 }
 
@@ -213,6 +213,8 @@ canvas.frames{position:absolute;inset:0;width:100%;height:100%;display:block}
 .leaf.l img{left:-296.83%}.leaf.r img{left:-396.83%}
 .leaf .edge{position:absolute;top:0;bottom:0;width:6px;background:linear-gradient(90deg,rgba(255,255,255,.7),rgba(0,0,0,.6))}
 .leaf.l .edge{right:0}.leaf.r .edge{left:0}
+.leaf .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.65),rgba(0,0,0,.25));opacity:0}
+.leaf.r .shade{transform:scaleX(-1)}
 .seam{position:absolute;left:calc(50% - 1px);top:21.6%;height:62%;width:2px;background:#fff;opacity:0;box-shadow:0 0 12px 3px var(--light-glow),0 0 50px 12px var(--light-glow)}
 .dial{position:absolute;width:9.2%;aspect-ratio:1;top:calc(55.6% - 8.15%);opacity:0;overflow:visible}
 .dial.l{left:calc(43.6% - 4.6%)}.dial.r{left:calc(56.2% - 4.6%)}
@@ -225,7 +227,7 @@ canvas.frames{position:absolute;inset:0;width:100%;height:100%;display:block}
 .spill{position:absolute;left:30%;top:83.6%;width:40%;height:22%;opacity:0;background:radial-gradient(50% 100% at 50% 0,var(--light-glow),transparent 70%);mix-blend-mode:screen;transform-origin:50% 0}
 .flood{position:absolute;inset:0;z-index:9;background:radial-gradient(circle at 50% 52%,#fff,var(--light) 45%,var(--light) 100%);opacity:0;pointer-events:none}
 .doorbox.opened .leaf{opacity:1}.doorbox.opened .doorway{opacity:1}
-.doorbox.opened .leaf.l{transform:rotateY(-104deg)}.doorbox.opened .leaf.r{transform:rotateY(104deg)}
+.doorbox.opened .leaf.l{transform:rotateY(-84deg)}.doorbox.opened .leaf.r{transform:rotateY(84deg)}.doorbox.opened .shade{opacity:.6}
 .doorbox.opened .spill{opacity:.7}
 
 /* ---------- the scanner ---------- */
@@ -359,7 +361,7 @@ html.gated .after-gate{display:none}
   .locks{margin-top:10px}.locks li{padding:7px 4px;font-size:9px}
   .hint{font-size:12.5px;margin-top:8px}
   .cap{left:16px!important;right:16px!important;width:auto;bottom:6vh}
-  .cue{bottom:22px}
+  .cue{display:none}
   .journey{height:780vh}
 }
 @media (max-width:480px){

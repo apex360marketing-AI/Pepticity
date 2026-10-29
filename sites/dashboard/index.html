@@ -612,8 +612,14 @@ html.cc #cur{display:block}
 :focus-visible{border-radius:2px}
 
 /* GLASS: thin fill, pointer torch inside the pane, 12px blur */
-.glass{background:radial-gradient(260px circle at var(--mx,-600px) var(--my,-600px),rgba(236,234,255,.085),rgba(170,150,255,.03) 45%,transparent 70%),var(--grain),var(--glass),var(--tone);
+.glass{background:radial-gradient(260px circle at var(--mx,-600px) var(--my,-600px),rgba(236,234,255,.085),rgba(170,150,255,.03) 45%,transparent 70%),
+    linear-gradient(100deg,transparent 0%,rgba(255,255,255,.055) 45%,rgba(236,234,255,.075) 50%,rgba(255,255,255,.055) 55%,transparent 100%),var(--grain),var(--glass),var(--tone);
+  background-repeat:no-repeat,no-repeat,repeat,no-repeat,no-repeat;background-size:auto,42% 100%,auto,100% 100%,100% 100%;
+  background-position:0 0,-140% 0,0 0,0 0,0 0;
   -webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);border-radius:2px!important}
+@keyframes glsweep{from{background-position:0 0,-140% 0,0 0,0 0,0 0}to{background-position:0 0,240% 0,0 0,0 0,0 0}}
+@media (hover:hover){.glass:hover{animation:glsweep 1.6s var(--apx-ease-inout) 1 both}}
+.top.glass:hover,.tabs.glass:hover,.inbox.glass:hover,.toast.glass:hover,.sheet.glass:hover{animation:none}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .glass{background:linear-gradient(165deg,#1b1b1f,#121216 60%,#17131f)}
   .sheet-wrap{background:rgba(4,4,7,.92)}
@@ -638,9 +644,17 @@ button,input,select,textarea,.btn,.inp,.tab,.th,.x,.seg,.seg button,.search,.cod
 .morph[data-s="busy"],.morph[data-s="done"]{border-radius:2px!important}
 .morph .ring{border-radius:50%}
 
-/* VIEW SWITCH: a chamfered rail with a sliding chrome blade */
-.vswitch{border-radius:2px!important;padding:5px;--k:12px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
-.vswitch button{border-radius:2px!important;overflow:hidden}
+/* VIEW SWITCH: two chamfered glass buttons, exactly like .btn (inactive) and .btn.chrome (active) */
+.vswitch{border-radius:2px!important;padding:0;gap:8px;background:none!important;border:0!important;box-shadow:none!important}
+.vswitch button{--k:8px;border-radius:2px!important;overflow:hidden;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  border:1px solid var(--hair2);color:var(--ink);background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.02));-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:var(--spec);font:700 11.5px/1 var(--fh);letter-spacing:.2em;padding:13px 18px 12px;transition:color var(--apx-dur-3),background var(--apx-dur-3),transform var(--apx-dur-3) var(--apx-ease-out),filter var(--apx-dur-3)}
+.vswitch button[aria-pressed="false"]{color:var(--ink2)}
+.vswitch button[aria-pressed="true"]{color:#0b0b0d;border-color:rgba(255,255,255,.7);background:linear-gradient(180deg,#fdfdfe 0%,#d7dae0 40%,#a3a8b2 54%,#e2e4e8 80%,#fafafb 100%);box-shadow:inset 0 1px 0 #fff,inset 0 -2px 3px rgba(0,0,0,.25)}
+.vswitch button[aria-pressed="true"]::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
+@media (hover:hover){.vswitch button:hover{transform:translateY(-2px);filter:brightness(1.08)}}
+.vswitch button:active{transform:translateY(1px) scale(.975)}
+.vswitch .blade{display:none}
 .vswitch .blade{position:absolute;z-index:1;top:5px;bottom:5px;left:5px;width:calc(50% - 5px);transition:transform var(--apx-dur-4) var(--apx-ease-spring);
   clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
   background:linear-gradient(180deg,#fbfbfc 0%,#d6d9df 38%,#9ea3ad 52%,#e4e6ea 78%,#f7f7f9 100%);
@@ -652,9 +666,17 @@ button,input,select,textarea,.btn,.inp,.tab,.th,.x,.seg,.seg button,.search,.cod
 /* SHEEN SWEEP (TXT-09) on every control, not only .btn */
 .tab,.qa,.seg button,.vswitch button,.quick button,.sndbtn,.th{position:relative;overflow:hidden}
 .tab::after,.qa::after,.seg button::after,.vswitch button::after,.quick button::after,.sndbtn::after,.th::after{content:"";position:absolute;top:-10%;bottom:-10%;width:40%;left:-70%;transform:skewX(-20deg);pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
-.tab:hover::after,.qa:hover::after,.seg button:hover::after,.vswitch button:hover::after,.quick button:hover::after,.sndbtn:hover::after,.th:hover::after,
-.tab:focus-visible::after,.qa:focus-visible::after,.seg button:focus-visible::after,.vswitch button:focus-visible::after,.quick button:focus-visible::after{animation:sheen var(--apx-dur-5) var(--apx-ease-out)}
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)}
+.btn::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)!important;width:40%!important}
+.btn.chrome::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)!important}
+.btn:hover::after,.btn:focus-visible::after,.tab:hover::after,.qa:hover::after,.seg button:hover::after,.pick button:hover::after,.vswitch button:hover::after,.quick button:hover::after,.sndbtn:hover::after,.th:hover::after,.tierb:hover::after,
+.tab:focus-visible::after,.qa:focus-visible::after,.seg button:focus-visible::after,.vswitch button:focus-visible::after,.quick button:focus-visible::after{animation:sheen 1.6s var(--apx-ease-inout) 1 both}
+.pick button::after,.tierb::before{content:"";position:absolute;top:-10%;bottom:-10%;width:40%;left:-70%;transform:skewX(-20deg);pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)}
+.tierb::after{z-index:1}
+.tierb:hover::before{animation:sheen 1.6s var(--apx-ease-inout) 1 both}
+.mcard.glass{background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.03) 40%,rgba(146,118,255,.08) 75%,rgba(255,255,255,.1));animation:none}
+.mark #markgl{position:absolute;inset:0;width:100%;height:100%;display:block}
+html.p3d .mark .mp{display:none}
 
 /* LIFT + PRESS on every interactive thing */
 .btn,.tab,.qa,.seg button,.quick button,.th,.chip,.it,.code,.sndbtn{transition:transform var(--apx-dur-3) var(--apx-ease-out),filter var(--apx-dur-3) var(--apx-ease-out),color var(--apx-dur-3),background var(--apx-dur-3),border-color var(--apx-dur-3)}
@@ -1555,16 +1577,22 @@ var SEED_EXP = [
 
 /* ---------- STATE (in memory, mirrored to localStorage when allowed) ---------- */
 var KEY='pepticity-studio-demo-v1';
-var S = {eta:{'Retatrutide':'2026-11-06','TB-500':'2026-11-04','PT-141':'2026-11-12'},mail:{'Retatrutide':true},msgs:JSON.parse(JSON.stringify(SEED_MSGS)), exp:SEED_EXP.slice(), alerts:{}, letter:true, unread:{owner:{jordan:1,elena:1},client:0}, view:'owner', tab:{owner:'sales',client:'orders'}};
-try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); ['msgs','exp','alerts','letter','unread','tab','eta','mail'].forEach(function(k){if(L[k]!==undefined)S[k]=L[k]});}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify({msgs:S.msgs,exp:S.exp.map(function(x){var y=Object.assign({},x);if(y.file)y.file={name:y.file.name,type:y.file.type};return y}),alerts:S.alerts,letter:S.letter,unread:S.unread,tab:S.tab,eta:S.eta,mail:S.mail}))}catch(e){}}
+var S = {eta:{'Retatrutide':'2026-11-06','TB-500':'2026-11-04','PT-141':'2026-11-12'},mail:{'Retatrutide':true},msgs:JSON.parse(JSON.stringify(SEED_MSGS)), exp:SEED_EXP.slice(), alerts:{}, letter:true, unread:{owner:{jordan:1,elena:1},client:0}, view:'owner', tab:{owner:'sales',client:'orders'},
+  auto:{every:6,next:'2026-11-12',on:true,basket:['BPC-157','GHK-Cu','NAD+'],skips:[]}, remind:null, perks:null, drops:[], labs:{}, sent:{}, reserved:{}, snd:false};
+var SKEYS=['msgs','exp','alerts','letter','unread','tab','eta','mail','auto','remind','perks','drops','labs','sent','reserved','snd'];
+try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); SKEYS.forEach(function(k){if(L[k]!==undefined&&L[k]!==null)S[k]=L[k]});}}catch(e){}
+function save(){try{var o={};SKEYS.forEach(function(k){o[k]=S[k]});
+  o.exp=S.exp.map(function(x){var y=Object.assign({},x);if(y.file)y.file={name:y.file.name,type:y.file.type};return y});
+  o.labs={};Object.keys(S.labs).forEach(function(k){var f=S.labs[k];o.labs[k]={name:f.name,type:f.type,size:f.size,at:f.at}});
+  localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
 
 /* ---------- HELPERS ---------- */
 function countUp(el,to,fmt){
+  if(!el)return;
   fmt=fmt||function(v){return nf.format(Math.round(v))};
   if(RM){el.textContent=fmt(to);return}
-  var t0=performance.now(),d=1300;
-  (function f(t){var k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,4);el.textContent=fmt(to*e);if(k<1)requestAnimationFrame(f)})(t0);
+  var t0=performance.now(),d=1300,id=(el._cu=(el._cu||0)+1);el.textContent=fmt(0);
+  addLoop(function(t){if(el._cu!==id)return false;var k=Math.min(1,Math.max(0,(t-t0)/d)),e=1-Math.pow(1-k,4);el.textContent=fmt(to*e);return k<1});
 }
 function toast(msg){var t=$('#toast');$('span',t).textContent=msg;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('on')},2400)}
 function morph(btn,thanks,cb){
@@ -1804,17 +1832,18 @@ var ORDERS_C=[
  {id:'#PT-1041',date:'Sep 18, 2026',total:285.00,step:3,items:['NAD+ · 1000 mg','BPC-157 · 10 mg','Ipamorelin · 10 mg']},
  {id:'#PT-0977',date:'Aug 02, 2026',total:198.00,step:3,items:['TB-500 · 10 mg','Ipamorelin · 10 mg']}
 ];
-var STEPS=['PLACED','PACKED','SHIPPED','DELIVERED'];
+var STEPS=['PACKED','SHIPPED','OUT FOR DELIVERY','DELIVERED'];
 RENDER.orders=function(){
   var tk='<svg viewBox="0 0 24 24"><use href="#i-tick"/></svg>';
-  $('#orderList').innerHTML=ORDERS_C.map(function(o,oi){var dates=oi===0?['Oct 24','Oct 25','Oct 27','Expected Oct 30']:['','','',''];
-    return '<article class="glass order '+(oi%2?'r-b':'r-a')+' tilt"><div class="order-top"><div><div class="id">ORDER '+o.id+'</div><div class="d">'+o.date+' · '+o.items.length+' items</div></div><div><div class="tot">'+cad2.format(o.total)+'</div><div class="d" style="text-align:right">'+(o.step===3?'Delivered':STEPS[o.step].charAt(0)+STEPS[o.step].slice(1).toLowerCase()+' · on the way')+'</div></div></div>'+
-    '<div class="steps"><span class="prog" data-w="'+(o.step/3*75)+'"></span>'+STEPS.map(function(s,i){return '<div class="st '+(i<o.step||o.step===3?'done':i===o.step?'cur':'')+'"><span class="bd">'+tk+'</span><span class="sl">'+s+'</span><span class="sd">'+dates[i]+'</span></div>'}).join('')+'</div>'+
+  $('#orderList').innerHTML=ORDERS_C.map(function(o,oi){var dates=oi===0?['Oct 25','Oct 27','Today','Expected today']:['','','',''];
+    return '<article class="glass order '+(oi%2?'r-b':'r-a')+' tilt"><div class="order-top"><div><div class="id">ORDER '+o.id+'</div><div class="d">'+o.date+' · '+o.items.length+' items</div></div><div><div class="tot">'+cad2.format(o.total)+'</div><div class="d" style="text-align:right">'+(o.step===3?'Delivered':STEPS[o.step].charAt(0)+STEPS[o.step].slice(1).toLowerCase())+'</div></div></div>'+
+    '<div class="steps s4"><span class="prog" data-w="'+(o.step/3*75)+'"></span>'+STEPS.map(function(s,i){return '<div class="st '+(i<o.step||o.step===3?'done':i===o.step?'cur':'')+'"><span class="bd">'+tk+'</span><span class="sl">'+s+'</span><span class="sd">'+dates[i]+'</span></div>'}).join('')+'</div>'+
     '<div class="shelf" role="list" aria-label="Bottles in order '+o.id+'">'+o.items.map(function(it,i){var p=findP(it);return p?bottle(p,{sm:1,owned:1,i:i}):'<span class="it">'+esc(it)+'</span>'}).join('')+'</div></article>'}).join('');
   $('#trkShelf').innerHTML=ORDERS_C[0].items.map(function(it,i){var p=findP(it);return p?bottle(p,{sm:1,owned:1,i:i}):''}).join('');
   requestAnimationFrame(function(){requestAnimationFrame(function(){$$('#orderList .prog').forEach(function(p){p.style.width=p.dataset.w+'%'})})});
   $('#trkId').textContent='#PT-1088 · Canada Post (sample)';
-  $('#timeline').innerHTML=[['In transit · Toronto sorting facility','Oct 28 · 6:12 AM'],['Departed Mississauga depot','Oct 27 · 7:40 PM'],['Picked up by carrier','Oct 27 · 2:05 PM'],['Packed by PEPTICITY','Oct 25 · 11:30 AM'],['Order placed','Oct 24 · 8:51 PM']].map(function(x){return '<li><b>'+x[0]+'</b><span>'+x[1]+'</span></li>'}).join('');
+  $('#liveSub').textContent='Canada Post (sample) · on the truck in Toronto · updated 7:48 AM';
+  $('#timeline').innerHTML=[['Out for delivery · Toronto','Oct 29 · 7:48 AM'],['In transit · Toronto sorting facility','Oct 28 · 6:12 AM'],['Departed Mississauga depot','Oct 27 · 7:40 PM'],['Picked up by carrier','Oct 27 · 2:05 PM'],['Packed by PEPTICITY','Oct 25 · 11:30 AM'],['Order placed','Oct 24 · 8:51 PM']].map(function(x){return '<li><b>'+x[0]+'</b><span>'+x[1]+'</span></li>'}).join('');
   bindTilt();
 };
 var BUY=[['BPC-157','10 mg',95],['GHK-Cu','50 mg',75],['NAD+','1000 mg',129],['Ipamorelin','10 mg',89],['Bacteriostatic water (Pfizer)','30 ml',19],['Epitalon','10 mg',85]];
@@ -2006,17 +2035,38 @@ $('#platDetail').addEventListener('click',function(e){if(e.target.closest('#pdCl
 /* ---------- TILT ---------- */
 var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
 function bindTilt(){
-  if(RM||!fine)return;
-  $$('.tilt').forEach(function(el){if(el._t)return;el._t=1;
-    el.addEventListener('pointermove',function(e){var r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.setProperty('--rx',(-y*5).toFixed(2)+'deg');el.style.setProperty('--ry',(x*6).toFixed(2)+'deg')});
-    el.addEventListener('pointerleave',function(){el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg')});
-  });
+  /* every card, order, product, platform and shelf gets the tilt class; the shared loop does the work */
+  $$('.glass.card,.glass.order,.glass.prod,.glass.plat,.glass.drop-card,.glass.lot-card').forEach(function(el){if(!el.closest('.sheet')&&!el.classList.contains('inbox'))el.classList.add('tilt')});
 }
+(function(){
+  if(RM||!fine)return;
+  var hovG=null,hovT=null,mx=0,my=0,moved=false,settling=[];
+  document.addEventListener('pointermove',function(e){
+    if(e.pointerType&&e.pointerType!=='mouse')return;mx=e.clientX;my=e.clientY;moved=true;
+    var t=e.target&&e.target.closest?e.target:null;
+    var g=t?t.closest('.glass'):null;if(g&&(g.classList.contains('top')||g.classList.contains('tabs')||g.classList.contains('toast')))g=null;
+    if(g!==hovG){if(hovG){hovG.classList.remove('lit');hovG.style.removeProperty('--mx');hovG.style.removeProperty('--my')}hovG=g;if(g)g.classList.add('lit')}
+    var tt=t?t.closest('.tilt'):null;
+    if(tt!==hovT){if(hovT&&settling.indexOf(hovT)<0)settling.push(hovT);hovT=tt;if(tt){tt._rx=tt._rx||0;tt._ry=tt._ry||0}}
+  },{passive:true});
+  document.addEventListener('pointerleave',function(){if(hovT&&settling.indexOf(hovT)<0)settling.push(hovT);hovT=null;if(hovG){hovG.classList.remove('lit');hovG=null}});
+  addLoop(function(){
+    if(hovG&&moved){var r=hovG.getBoundingClientRect();hovG.style.setProperty('--mx',(mx-r.left).toFixed(0)+'px');hovG.style.setProperty('--my',(my-r.top).toFixed(0)+'px')}
+    if(hovT){var r2=hovT.getBoundingClientRect(),x=(mx-r2.left)/r2.width-.5,y=(my-r2.top)/r2.height-.5,big=r2.width>520?.45:1;
+      hovT._rx+=(-y*5*big-hovT._rx)*.14;hovT._ry+=(x*6*big-hovT._ry)*.14;
+      hovT.style.setProperty('--rx',hovT._rx.toFixed(2)+'deg');hovT.style.setProperty('--ry',hovT._ry.toFixed(2)+'deg')}
+    for(var i=settling.length-1;i>=0;i--){var el=settling[i];if(el===hovT){settling.splice(i,1);continue}
+      el._rx*=.84;el._ry*=.84;if(Math.abs(el._rx)+Math.abs(el._ry)<.02){el._rx=el._ry=0;settling.splice(i,1)}
+      el.style.setProperty('--rx',el._rx.toFixed(2)+'deg');el.style.setProperty('--ry',el._ry.toFixed(2)+'deg')}
+    moved=false;
+  });
+})();
 
 
 /* ---------- ONE SHARED ANIMATION LOOP (cursor, node light, smoke) ---------- */
 var LOOP=[],loopOn=false;
-function addLoop(f){LOOP.push(f);if(!loopOn){loopOn=true;requestAnimationFrame(function run(t){for(var i=0;i<LOOP.length;i++)LOOP[i](t);requestAnimationFrame(run)})}}
+function addLoop(f){LOOP.push(f);if(!loopOn){loopOn=true;requestAnimationFrame(function run(t){for(var i=LOOP.length-1;i>=0;i--){var r;try{r=LOOP[i](t)}catch(err){r=false;console.warn(err)}if(r===false)LOOP.splice(i,1)}requestAnimationFrame(run)})}}
+window.__pepLoop={add:addLoop};
 
 /* ---------- SMOKE: the APEX archive's liquid-chrome smoke, much quieter, under the lattice ---------- */
 (function(){
@@ -2131,11 +2181,12 @@ function addLoop(f){LOOP.push(f);if(!loopOn){loopOn=true;requestAnimationFrame(f
 })();
 
 /* ---------- WATERMARK SPIN ON SCROLL ---------- */
-var mark=$('#mark'),spin=0,target=0,raf=0;
-function tick(){spin+=(target-spin)*.08;mark.style.setProperty('--spin',spin.toFixed(2)+'deg');if(Math.abs(target-spin)>.05)raf=requestAnimationFrame(tick);else raf=0}
-if(!RM)addEventListener('scroll',function(){target=scrollY*.12;if(!raf)raf=requestAnimationFrame(tick)},{passive:true});
+var mark=$('#mark'),spin=0,target=0,spinning=false;
+function kickSpin(){if(spinning)return;spinning=true;addLoop(function(){spin+=(target-spin)*.08;mark.style.setProperty('--spin',spin.toFixed(2)+'deg');if(Math.abs(target-spin)>.05)return true;spinning=false;return false})}
+var nudge=0;
+if(!RM)addEventListener('scroll',function(){target=scrollY*.12+nudge;kickSpin()},{passive:true});
 // a quarter-turn nudge when switching views, so the mark feels alive
-var _sv=setView;setView=function(v,h){_sv(v,h);if(!RM){target+=v==='client'?45:-45;if(!raf)raf=requestAnimationFrame(tick)}};
+var _sv=setView;setView=function(v,h){_sv(v,h);if(!RM){nudge+=v==='client'?45:-45;target=scrollY*.12+nudge;kickSpin()}window.__pepView=v};
 
 /* ---------- INIT ---------- */
 $('#todayStr').textContent=new Date().toLocaleDateString('en-CA',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
