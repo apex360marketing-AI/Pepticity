@@ -935,6 +935,10 @@
     }
   })();
 
+  /* the concierge bot hands its cart adds to this cart */
+  window.PEPCART = { add: function (item) { var p = PRODUCTS.find(function (x) { return x.slug === item.slug; }); if (!p || !p.inStock) return; for (var i = 0; i < (item.qty || 1); i++) addToCart(p.id); } };
+  window.addEventListener('pep:checkout', function () { openModal('checkout'); });
+
   /* ================= load the catalogue ================= */
   function boot(data) {
     PRODUCTS = data.products; PRODUCTS.forEach(function (p) { BY[p.id] = p; });

@@ -88,14 +88,15 @@ async function main() {
   const { wallScene } = E;
   const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
   function wordPanel(el) {
-    const raw = el.dataset.word3d, phone = innerWidth < 760, funky = +(el.dataset.funky || 0.8), fill = +(el.dataset.fill || 0.82);
+    const raw = el.dataset.word3d, phone = innerWidth < 760, funky = el.dataset.funky != null ? +el.dataset.funky : 0.6, fill = +(el.dataset.fill || 0.82);
     let lines = raw.split('|');
     if (!phone && raw.replace('|', ' ').length <= 24) lines = [lines.join(' ')];
     const group = new THREE.Group(), letters = []; let width = 0;
     const LH = 0.7, GAP = 0.26, H = lines.length * LH + (lines.length - 1) * GAP;
     lines.forEach((ln, k) => { const w = makeWord(front, ln, {}); w.group.position.y = H / 2 - LH / 2 - k * (LH + GAP); group.add(w.group); letters.push(...w.letters); width = Math.max(width, w.width); });
     const ratio = width / H;
-    el.style.aspectRatio = String(clampN(ratio * (lines.length > 1 ? 0.5 : 0.3), phone ? 1.6 : 2.2, el.classList.contains('w3d-hero') ? 3.6 : 7));
+    const asp = el.dataset.aspect && !(phone && lines.length > 1) ? +el.dataset.aspect * (phone ? 0.62 : 1) : clampN(ratio * (lines.length > 1 ? 0.5 : 0.3), phone ? 1.6 : 2.2, 7);
+    el.style.aspectRatio = String(asp);
     const make = light => { const ws = wallScene(front, { light }); ws.key.shadow.mapSize.set(1024, 1024); ws.scene.environment = front.envRT.texture; return ws; };
     const dark = make(false); let light = null;
     const camera = dark.camera;

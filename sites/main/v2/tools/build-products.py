@@ -160,7 +160,7 @@ for p in SRC:
     price = int(pr['price']) / 10 ** pr['currency_minor_unit']
     cats = [html.unescape(c['name']) for c in p['categories'] if c['name'] != 'Peptides']
     out.append({
-        'id': p['id'], 'key': key, 'name': name, 'strength': strength,
+        'id': p['id'], 'slug': p['slug'], 'key': key, 'name': name, 'strength': strength,
         'price': price, 'currency': pr['currency_code'],
         'supplierName': html.unescape(p['name']), 'supplierCategories': cats,
         'inStock': bool(p['is_in_stock']) and p['id'] not in DEMO_SOLD_OUT,

@@ -302,3 +302,16 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - R151 Lab: an experience, slow, with hooks that sell; better dropper section (it was too fast).
 - R152 EVERY product, priced exactly as on her site; write-ups rewritten if wrong, hidden behind a button; a short note on each card.
 - R153 Owner wants condition hooks (pain, headaches, ED) and "what it's for" notes. DECISION: notes state the compound's class only; no condition/benefit claims (regulator risk); interest cards stay as visitor-interest filters + capture. Told the owner.
+
+## 29 Oct — site v2 build (relayed by the coordinator; owner said "don't stop and wait, just keep going")
+- R147 Rebuild the main site as v2 in sites/main/v2/ (v1 kept): chest intro → big HERO CARD → city weave → member card + doors → lab → interests → store → hooks → effects; WHITE + BLACK; verified at 1440 and 390. STATUS: built, see docs/owner/checklists/2026-10-29-site-v2.md
+- R148 STORE: every northernpeptides.st listing (36) at the exact live prices (Store API, pulled 29 Oct); each card: bottle, name, strength, price, ADD TO CART, a one-line NOTE (what it IS) and READ MORE (our own rewrite: identity, classification, research status, format; no claims, no dosing). One JSON Grace can edit (v2/data/products.json).
+- R149 LAB = an experience that sells: five stations that hold; hooks inside the lab (vial card + add to cart, join + 15%, see every product); swap point for new footage (media/city2/).
+- R150 Top 10 hooks from docs/research/HOOKS-DEEP-DIVE.md: sealed envelope, save my cart, catalogue finder, restock queue number, member progress card, welcome back, guest checkout/account after, all-in drawer price, almost-there line, lot passport.
+- R151 "Tighten the whole site": remove big gaps, shorten the long scroll-ins, a way to buy or join every 1–1.5 screens ("sales force").
+- R152 Interest entry cards: GYM AND PERFORMANCE, 55+ AND LONGEVITY, ENERGY, WEIGHT GOALS, RECOVERY, SKIN AND HAIR, SLEEP; class-level "researched in the context of" wording + capture.
+- R153 Footer: PEPTICITY rises out of the bottom in the new font, matte surface with light glowing through the letters.
+- R154 Keep "the scroll highlight with the little bottom thing" (TXT-04 + a small bottom progress indicator) on the main copy.
+- R155 Use every APEX Brain effect pick. (No separate APEX Brain picks file exists; the picks on record are docs/owner/effect-picks-2026-10-28.md, all placed.)
+- R156 Match the brand-font page "02 PEPTICITY IN 3D / STUDIO": every header in the rebuilt font, hero/section words LIVE 3D (type3d-engine makeWord + wallScene), one renderer, dark quiet premium feel.
+- R157 Include the concierge bot (shared/bot/pep-bot.js) as soon as it exists.
