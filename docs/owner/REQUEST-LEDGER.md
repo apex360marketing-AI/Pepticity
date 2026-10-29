@@ -223,3 +223,13 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - Textures: matte mixed with UV, also inside the watermark.
 - Background nodes less busy; the pointer lights the background only over the background, not over cards/buttons.
 - Custom cursor: unique, animated, interactive, "like a little tool", works with the background.
+
+## Added 29 Oct (dashboard v3)
+- Client: refer-a-friend spot in the dashboard (owner: 10–15% or points, my pick: give 15% / get 15% credit).
+- Grace: obvious ways to load expenses, product costs, and products (vials).
+- Stock: three rows: in stock / sold out / coming back (with date; auto email to the waitlist on arrival).
+- Grace: referrals tracker; marketing area with clicks; Instagram, Facebook, TikTok, Google Ads cards, each with an animated 3D graphic (slow, classy, different from the logo spin).
+- New font for all standout text (e.g. HELLO, JORDAN; PEPTICITY), in 3D; watermark 3D; centre P from the owner's font.
+- 10 researched next-level options + playbook for the dashboards (trust, hooks, sales).
+- Show the bottle currently used (sent).
+- After main page + both dashboards: audit and harden.
