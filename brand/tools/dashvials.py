@@ -95,6 +95,10 @@ def main():
         im = im.resize((round(im.width * 380 / im.height), 380), Image.LANCZOS)
         im.save(OUT / f'{slug(n)}.webp', 'WEBP', quality=80, method=6)
         print('ok', slug(n))
+    # blank: wordmark through the glass, no near label (the page writes a new product's name over it)
+    res = grey.copy(); L.put(res, L.wrap(front, 0.95, 0.86, 0.5, True), 0.24, far=True)
+    im = Image.fromarray((np.dstack([np.clip(res, 0, 1), mask]) * 255).astype(np.uint8), 'RGBA').crop(box)
+    im.resize((round(im.width * 380 / im.height), 380), Image.LANCZOS).save(OUT / '_blank.webp', 'WEBP', quality=80, method=6)
 
 
 if __name__ == '__main__':
