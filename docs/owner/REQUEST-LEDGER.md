@@ -279,3 +279,4 @@ Audit date: 29 Oct 2026. Every owner request, rule and decision for the PEPTICIT
 - R132 "underneath the actual bottles, they illuminate"
 - R133 "take that background [APEX Arsenal], that moving black and silver ... as a similar background on Pepticity" (artifact https://claude.ai/artifact/G4y1SywdUUEAhTfRgCEhhE)
 - R134 glassmorphism must be truly see-through ("You didn't do anything I asked you to, so it's see-through")
+- R135 (29 Oct) Owner APPROVED the one button + toggle ("I like that toggle button. You got the 3D effect there."). Change: the WHITE / BLACK labels must use his BLACK font, 3D like the reference. "That's the fucking font ... Don't forget it."
