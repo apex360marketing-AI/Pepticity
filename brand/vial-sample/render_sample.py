@@ -301,7 +301,7 @@ for img, cx in ((fi, 800), (bi, 1600)):
     pv.paste(im, (x0, y0), im)
 f2 = ImageFont.truetype(FONT, 26)
 d = ImageDraw.Draw(pv)
-for t, cx in (('FRONT', 800), ('BACK', 1600)):
+for t, cx in (('FRONT', 800), ('REAR', 1600)):
     tw = d.textlength(t, font=f2); d.text((cx - tw / 2, 1700), t, font=f2, fill=(120, 124, 130))
 pv.save(f'{OUT}/preview.png')
 print('done', fi.size, bi.size)
