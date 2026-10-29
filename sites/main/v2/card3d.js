@@ -178,12 +178,19 @@ async function main() {
     fragmentShader: `uniform float u,k,s,ks;uniform vec3 tint;varying vec2 vP;
       void main(){vec2 q=vec2(vP.x/${CW.toFixed(4)}+.5,vP.y/${CH.toFixed(4)}+.5);
         float d=(q.x*${dir.toFixed(1)}+q.y*.45)-u;float band=exp(-d*d*90.)*.55+exp(-d*d*900.)*.5;
-        float l=abs(q.x-s);float scan=exp(-l*l*9000.)*1.4+exp(-l*l*260.)*.25;
-        float a=band*k+scan*ks;gl_FragColor=vec4(tint*a,a);}` });
+        float a=band*k;gl_FragColor=vec4(tint*a,a);}` });
   const faceGeo = new THREE.ShapeGeometry(rounded(CW, CH, CR), 14);
   const sweepF = new THREE.Mesh(faceGeo, sweepMat(1)); sweepF.position.z = CT / 2 + 0.0015; sweepF.renderOrder = 6;
   const sweepB = new THREE.Mesh(faceGeo, sweepMat(-1)); sweepB.position.z = -CT / 2 - 0.0015; sweepB.rotation.y = Math.PI; sweepB.renderOrder = 6;
   card.add(sweepF, sweepB);
+  /* the scan line: its own plane so WHITE can read it as a graphite line (normal blend) and BLACK as light (additive) */
+  const scanMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { s: { value: -1 }, ks: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, add: { value: 1 } },
+    vertexShader: 'varying vec2 vP;void main(){vP=position.xy;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader: `uniform float s,ks,add;uniform vec3 tint;varying vec2 vP;
+      void main(){float qx=vP.x/${CW.toFixed(4)}+.5;float l=abs(qx-s);float a=(exp(-l*l*90000.)*1.3+exp(-l*l*900.)*.2)*ks;
+        gl_FragColor=add>.5?vec4(tint*a,a):vec4(tint,min(a*.55,.6));}` });
+  const scanF = new THREE.Mesh(faceGeo, scanMat); scanF.position.z = CT / 2 + 0.0025; scanF.renderOrder = 7; card.add(scanF);
 
   /* ---------- the words, in the PEPTICITY font ---------- */
   const textFace = new THREE.MeshPhysicalMaterial({ color: 0x9a9993, metalness: 0.86, roughness: 0.42, clearcoat: 0.1, envMapIntensity: 0.8 });
@@ -258,6 +265,7 @@ async function main() {
     edgeLine.opacity = b ? 0.5 : 0.22;
     notchMat[0].color.set(b ? 0x6b7077 : 0x9aa1aa);
     sweepF.material.uniforms.tint.value.setScalar(b ? 1 : 0.85);
+    scanMat.blending = b ? THREE.AdditiveBlending : THREE.NormalBlending; scanMat.uniforms.add.value = b ? 1 : 0; scanMat.uniforms.tint.value.set(b ? 0xf4f6ff : 0x2a2d31); scanMat.needsUpdate = true;
     kick();
   }
   setLook(); document.addEventListener('pc-version', setLook);
@@ -353,8 +361,8 @@ async function main() {
     /* the scan line (driven by the scan) */
     if (st.scanStart) {
       const q = (now - st.scanStart) / st.scanDur;
-      if (q >= 1) { st.scanStart = 0; sweepF.material.uniforms.ks.value = 0; }
-      else { sweepF.material.uniforms.s.value = -0.05 + q * 1.1; sweepF.material.uniforms.ks.value = Math.sin(Math.min(1, q) * Math.PI) * 1.3 + 0.2; }
+      if (q >= 1) { st.scanStart = 0; scanMat.uniforms.ks.value = 0; }
+      else { scanMat.uniforms.s.value = -0.05 + q * 1.1; scanMat.uniforms.ks.value = Math.min(1, Math.sin(Math.min(1, q) * Math.PI) * 2.2) * 1.2; }
     }
     renderer.render(scene, camera);
     window.__card3d.frames++;

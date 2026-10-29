@@ -136,14 +136,14 @@ html.lock:not(.intro-on) #gl-front{opacity:0}
 html.intro-on #intro{display:block}
 #intro.lift{opacity:0;transform:scale(1.05);pointer-events:none}
 #intro.dive{display:block;pointer-events:none}
-.intro-bloom{position:absolute;left:50%;top:46%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;border-radius:50%;opacity:0;pointer-events:none;
-  background:radial-gradient(closest-side,#fff 0%,rgba(244,246,255,.92) 18%,rgba(214,218,240,.45) 42%,transparent 70%);mix-blend-mode:screen}
-[data-version="white"] .intro-bloom{background:radial-gradient(closest-side,#fff 0%,#fff 30%,rgba(247,248,250,.8) 55%,transparent 72%);mix-blend-mode:normal}
+.intro-bloom{position:absolute;left:50%;top:46%;width:110vmax;height:110vmax;margin:-55vmax 0 0 -55vmax;opacity:0;pointer-events:none;will-change:opacity,transform;
+  background:radial-gradient(closest-side,#fff 0%,rgba(246,247,255,.95) 22%,rgba(220,223,240,.5) 46%,transparent 72%)}
+[data-version="white"] .intro-bloom{background:radial-gradient(closest-side,#fff 0%,#fff 34%,rgba(247,248,250,.85) 58%,transparent 76%)}
 .film{position:absolute;left:50%;top:50%;width:max(100vw,100vh * 1.7704);aspect-ratio:1912/1080;transform:translate(-50%,-50%);transform-origin:50% 78%}
 .film video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;background:#000}
 [data-version="white"] .film video{filter:saturate(.22) brightness(1.04)}
 .intro-skip{position:absolute;right:var(--gut);bottom:calc(24px + env(safe-area-inset-bottom));z-index:2}
-@media (max-aspect-ratio:1/1){.film{width:142vw;top:46%}#intro::after{content:"";position:absolute;inset:0;background:linear-gradient(#000 0,transparent 22%,transparent 70%,#000 100%);pointer-events:none}}
+@media (max-aspect-ratio:1/1){.film{width:200vw;top:46%}#intro::after{content:"";position:absolute;inset:0;background:linear-gradient(#000 0,transparent 22%,transparent 70%,#000 100%);pointer-events:none}}
 
 /* ---------- nav ---------- */
 .nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px var(--gut);transition:background-color .4s}

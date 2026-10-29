@@ -75,7 +75,8 @@
     })(queue.shift());
   }
   function range(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; }
-  function loadAll() { var w = seq('weave'), l = seq('lab'); want(w, range(w.m.files)); want(l, range(l.m.files)); }
+  function loadAll() {   /* HD sheets are heavy: the city's opening sheets, then the lab's first two (so the room behind the doors is never black), then the rest */
+    var w = seq('weave'), l = seq('lab'); want(w, range(Math.min(8, w.m.files))); want(l, [0, 1]); want(w, range(w.m.files)); want(l, range(l.m.files)); }
   function Painter(canvas, part) { this.c = canvas; this.ctx = canvas.getContext('2d'); this.part = part; this.rect = { x: 0, y: 0, w: 0, h: 0 }; this.last = -1; this.resize(); }
   Painter.prototype.resize = function () {
     /* device resolution, no upscaling blur: backing store = CSS size x devicePixelRatio (capped at 2) */

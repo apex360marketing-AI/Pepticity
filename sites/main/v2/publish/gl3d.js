@@ -122,7 +122,7 @@ async function main() {
   const loaderOn = D.classList.contains('intro-on');
   document.querySelectorAll('.loader [data-word3d]').forEach(wordPanel);
   const rest = () => document.querySelectorAll('[data-word3d]').forEach(el => { if (!el.closest('.loader')) wordPanel(el); });
-  if (loaderOn) await new Promise(res => { const t0 = performance.now(); (function w() { if ((window.__type3d && window.__type3d.frames > 2) || performance.now() - t0 > 4000) res(); else setTimeout(w, 80); })(); });
+  if (loaderOn && document.querySelector('.loader [data-word3d]')) await new Promise(res => { const t0 = performance.now(); (function w() { if ((window.__type3d && window.__type3d.frames > 2) || performance.now() - t0 > 4000) res(); else setTimeout(w, 80); })(); });
   rest();
 
   /* interest icons */
