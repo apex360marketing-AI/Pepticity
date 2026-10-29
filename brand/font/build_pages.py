@@ -128,7 +128,7 @@ glyph_cells = ''.join(
                  for c in J['regular'].keys()])
 
 TRAITS = [
-    ('Very wide letters, 1.1 to 1.45 times wider than tall', 'MATCH'),
+    ('29 OCT REDRAW: bolder, narrower letters with cut-outs. E is three bars with no left side; P is missing its upper stem; T stem floats; K arm floats and the leg clicks on with a ledge; shorter L foot', 'MATCH'),
     ('One stroke weight everywhere, about 0.19 of the letter height', 'MATCH'),
     ('B drawn with no stem: three bars, open counters, left ends cut on one 45 degree line, lower bowl a touch wider', 'MATCH'),
     ('L bar ends in a cut that runs parallel to the A leg', 'MATCH'),

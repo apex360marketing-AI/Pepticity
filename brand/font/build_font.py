@@ -77,12 +77,12 @@ def line_x(p, q, y):
 
 
 # ---------------------------------------------------------------- glyphs
-def make_glyphs(k=1.0, s=130, R=140, r=40):
+def make_glyphs(k=1.0, s=140, R=190, r=50, wf=0.8):
     d = round(130 * k)              # run of a 45 degree terminal cut (steeper when condensed)
     T0, M0, M1, B1 = CAP - s, CAP / 2 - s / 2, CAP / 2 + s / 2, s
     rc = (T0 - M1) / 2              # B / P counters: half-round ends
     Rb = rc + s
-    W = lambda w: round(w * k)
+    W = lambda w: round(w * k * wf)
     th = round(150 * (0.85 + 0.15 * k))  # horizontal thickness of diagonal strokes
     G = {}
 
@@ -228,10 +228,65 @@ def make_glyphs(k=1.0, s=130, R=140, r=40):
     w = W(810)
     G['9'] = (affinity.rotate(six, 180, origin=(w / 2, CAP / 2)), w)
 
+    v2_overrides(G, k, s, R, r, d, W, th)
     G['.'] = (BOX(0, 0, s, s), s)
     G['-'] = (BOX(0, M0, W(380), M1), W(380))
     return G
 
+
+
+def v2_overrides(G, k, s, R, r, d, W, th):
+    """29 Oct owner fix: bolder, narrower, smoother, with cut-outs like the BLACK picture."""
+    T0, M0, M1, B1 = CAP - s, CAP / 2 - s / 2, CAP / 2 + s / 2, s
+    rc = (T0 - M1) / 2; Rb = rc + s
+    g = 22 * (0.8 + 0.2 * k)          # hairline gap of every cut-out
+    cut = d                           # run of a 45 degree terminal cut
+    # B: three bars, no stem; top end leans back, middle and bottom lean forward (as in the picture)
+    w = W(860)
+    up = BOX(-600, M0, w, CAP, 0, Rb, Rb, 0).difference(BOX(-600, M1, w - s, T0, 0, rc, rc, 0))
+    lo = BOX(-600, 0, w, M1, 0, Rb, Rb, 0).difference(BOX(-600, B1, w - s, M0, 0, rc, rc, 0))
+    keepT = Polygon([(0, CAP), (5000, CAP), (5000, M1), (cut + W(60), M1 - 1), (cut + W(60), T0), (cut, T0)])
+    keepM = Polygon([(W(170), M0), (5000, M0), (5000, M1 + 1), (W(170) + cut, M1 + 1)])
+    keepB = Polygon([(0, 0), (5000, 0), (5000, M0 + 1), (cut, M0 + 1), (cut, B1)])
+    b = U(up, lo)
+    G['B'] = (U(b.intersection(BOX(0, M1, 5000, CAP)).intersection(keepT),
+                b.intersection(BOX(0, M0, 5000, M1)).intersection(keepM),
+                b.intersection(BOX(0, 0, 5000, M0)).intersection(keepB)), w)
+    # E: three bars only, no left side, mirror-symmetric top to bottom
+    w = W(700); im = W(70)
+    top = Polygon([(0, CAP), (w, CAP), (w - cut, T0), (cut, T0)])
+    bot = Polygon([(cut, B1), (w - cut, B1), (w, 0), (0, 0)])
+    hm = s / 2
+    mid = Polygon([(im, CAP / 2), (im + hm, M1), (w - im - hm, M1), (w - im, CAP / 2), (w - im - hm, M0), (im + hm, M0)])
+    G['E'] = (U(top, mid, bot), w)
+    # P: the bowl of the B with no stem above the middle bar (the missing piece), stem below
+    w = W(800)
+    bowl = BOX(-600, M0, w, CAP, 0, Rb, Rb, 0).difference(BOX(-600, M1, w - s, T0, 0, rc, rc, 0))
+    bowl = bowl.intersection(Polygon([(0, CAP), (5000, CAP), (5000, M0), (s, M0), (s, M1 - 1), (cut + s * 0.15, M1), (cut, T0)]))
+    stem = RP([(0, 0), (s, 0), (s, M0 + 1), (s, M1), (0, M1)], [0, 0, 0, r, 0])
+    G['P'] = (U(bowl, BOX(0, 0, s, M1)), w)
+    # C: big smooth outer curve, tight inner curve, 45 degree terminals
+    w = W(800); Rc = 250
+    G['C'] = (RP([(w, CAP), (0, CAP), (0, 0), (w, 0), (w - cut, B1), (s, B1), (s, T0), (w - cut, T0)],
+                 [0, Rc, Rc, 0, 0, r * 1.6, r * 1.6, 0]), w)
+    # T: top bar with cut ends, stem floats under it on a hairline gap
+    w = W(820)
+    G['T'] = (U(Polygon([(0, CAP), (w, CAP), (w - cut, T0), (cut, T0)]), BOX((w - s) / 2, 0, (w + s) / 2, T0 - g)), w)
+    # K: stem, a floating arm, and a leg that clicks onto the stem with a small ledge
+    w = W(800)
+    ya = 400                                   # arm bottom meets this height at the stem side
+    arm = Polygon([(w, CAP), (w - th * 1.15, CAP), (s + g + 10, ya), (s + g + 10 + th * 1.15, ya)])
+    ledge = 330                                # leg top edge leaves the stem here
+    leg = Polygon([(s - 1, ledge + s * 0.9), (s + W(60), ledge + s * 0.9), (w, 0), (w - th * 1.15, 0), (s + W(60) - th * 0.2, ledge), (s - 1, ledge)])
+    G['K'] = (U(BOX(0, 0, s, CAP), arm, leg.intersection(BOX(0, 0, w, CAP))), w)
+    # L: shorter foot, smooth outer corner, end cut parallel to the A leg
+    w = W(720); dl = round(B1 * 0.7)
+    G['L'] = (RP([(0, CAP), (s, CAP), (s, B1), (w, B1), (w - dl, 0), (0, 0)], [0, 0, r * 1.6, 0, 0, Rc]), w)
+    # Y: right arm runs into the stem, left arm floats on a hairline split
+    w = W(860); yj = 330; tx = th * 1.1
+    right = QUAD(w / 2 - tx / 2, w / 2 + tx / 2, w - tx, w, yj, CAP)
+    left = QUAD(w / 2 - tx / 2, w / 2 + tx / 2, 0, tx, yj, CAP).difference(right.buffer(g))
+    G['Y'] = (U(right, left, BOX((w - s) / 2, 0, (w + s) / 2, yj + 2)), w)
 
 def split_variant(G, gap=40):
     seam = BOX(-2000, CAP / 2 - gap / 2, 5000, CAP / 2 + gap / 2)
@@ -344,7 +399,7 @@ def write_font(G, family, style, fname):
 
 if __name__ == '__main__':
     REG = make_glyphs()
-    CON = make_glyphs(k=0.64, s=122, R=110, r=34)
+    CON = make_glyphs(k=0.64, s=128, R=150, r=40, wf=0.9)
     SPL = split_variant(REG)
     write_svg(REG, 'pepticity-black.svg', 'PEPTICITY BLACK glyph set')
     write_svg(CON, 'pepticity-black-condensed.svg', 'PEPTICITY BLACK CONDENSED glyph set')
