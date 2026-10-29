@@ -326,7 +326,9 @@
     var tap = $('#introTap');
     function tryPlay() { var pr = vid.play(); if (pr && pr.catch) pr.catch(function () { if (!started && tap) tap.hidden = false; }); }
     if (tap) tap.onclick = function () { tap.hidden = true; tryPlay(); };
-    if (vid.readyState >= 3) tryPlay(); else { vid.oncanplay = function () { vid.oncanplay = null; tryPlay(); }; vid.load(); }
+    /* call play() straight away: iPhones only start loading a video once play() is asked for */
+    tryPlay();
+    intro.addEventListener('click', function (e) { if (!started && !e.target.closest('#skipIntro')) { if (tap) tap.hidden = true; tryPlay(); } });
     if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(function () { if (!started) dive(); }, 30000));
     setTimeout(loadAll, 2500);
   }
