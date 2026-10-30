@@ -308,6 +308,7 @@ html.t3d .h3d[data-type3d]::after{display:none}
 .fit{display:inline-block;font-size:min(var(--fs),calc(100cqi / var(--w,10)))}
 .eyebrow{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin:0 0 18px;font:400 10px/1.3 var(--fh);letter-spacing:.32em;text-transform:uppercase;color:var(--mute)}
 .eyebrow::before{content:"";width:26px;height:1px;flex:none;background:linear-gradient(90deg,var(--chrome),transparent)}
+.eyebrow .eg{display:inline-flex;align-items:center;gap:12px}
 .eyebrow .sep{width:4px;height:4px;flex:none;transform:rotate(45deg);background:rgb(var(--acc) / .8);box-shadow:0 0 8px rgb(var(--acc) / .7)}
 
 /* every pc-seg thumb on this page: platinum tick, never the pale-gold one */
@@ -669,6 +670,9 @@ footer b{font:400 9px/1.6 var(--fh);letter-spacing:.3em;color:var(--ink2)}
   .grid--port .pk__d,.grid--sq .pk__d{display:none}
   .grid .pk--wide .pk__d{display:block;font-size:12.5px}
   .grid .pk--wide .pk__meta{grid-template-columns:auto minmax(0,1fr);gap:12px}
+  .grid .pk--wide .pk-seg{--fs:9.5px;--ls:.2em;--h:44px}
+  .grid .pk--wide .nt-l b{display:inline}
+  .grid .pk--wide .pk__t{font-size:11px;letter-spacing:.15em}
   .grid--port .pk-seg,.grid--sq .pk-seg{--fs:8px;--ls:.1em;--h:42px;padding:4px}
   .grid--port .pk-seg .pc-seg__opt,.grid--sq .pk-seg .pc-seg__opt{padding:0 1px;--c:6px}
   .grid--port .nt-l b,.grid--sq .nt-l b{display:none}
@@ -747,7 +751,7 @@ footer b{font:400 9px/1.6 var(--fh);letter-spacing:.3em;color:var(--ink2)}
   <section class="hero" id="hero" aria-labelledby="heroH">
     <div class="wrap hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow rv" style="--d:0">FOR GRACE<span class="sep"></span><span id="heroCount">3 SETS</span><span class="sep"></span>ABOUT 5 MINUTES</p>
+        <p class="eyebrow rv" style="--d:0">FOR GRACE<span class="eg"><span class="sep"></span><span id="heroCount">3 SETS</span></span><span class="eg"><span class="sep"></span>ABOUT 5 MINUTES</span></p>
         <h1 id="heroH" aria-label="PICK WHAT YOU LOVE">
           <span class="ln rv" style="--d:1"><span class="h3d fit" data-type3d>PICK WHAT</span></span>
           <span class="ln rv" style="--d:2"><span class="h3d fit" data-type3d>YOU LOVE</span></span>
@@ -774,7 +778,7 @@ footer b{font:400 9px/1.6 var(--fh);letter-spacing:.3em;color:var(--ink2)}
       <div id="sendForm">
         <header class="set__head">
           <span class="ghost" aria-hidden="true" id="sendGhost">04</span>
-          <p class="eyebrow rv" style="--d:0">LAST STEP<span class="sep"></span>ONE TAP</p>
+          <p class="eyebrow rv" style="--d:0">LAST STEP<span class="eg"><span class="sep"></span>ONE TAP</span></p>
           <h2 class="set__h rv" style="--d:1" id="sendH" aria-label="SEND MY PICKS"><span class="h3d fit" data-type3d>SEND MY PICKS</span></h2>
           <p class="set__lead rv" style="--d:2">Here is everything you picked. Check it over, then press <b>SEND</b>. Want to change something? Scroll up and tap again: this list updates as you go.</p>
         </header>
@@ -1047,7 +1051,7 @@ SETS.forEach(function(s,si){
   var cover=s.items.filter(function(i){return i.current})[0]||s.items[0];
   setsHTML+='<section class="set" id="'+s.id+'" data-set="'+s.id+'" aria-labelledby="h-'+s.id+'"><div class="wrap">'+
     '<header class="set__head"><span class="ghost" aria-hidden="true">'+n+'</span>'+
-      '<p class="eyebrow rv" style="--d:0">SET '+n+' OF '+('0'+SETS.length).slice(-2)+'<span class="sep"></span>'+s.items.length+' OPTIONS<span class="sep"></span>LOVE AS MANY AS YOU LIKE</p>'+
+      '<p class="eyebrow rv" style="--d:0">SET '+n+' OF '+('0'+SETS.length).slice(-2)+'<span class="eg"><span class="sep"></span>'+s.items.length+' OPTIONS</span><span class="eg"><span class="sep"></span>LOVE AS MANY AS YOU LIKE</span></p>'+
       '<h2 class="set__h rv" style="--d:1" id="h-'+s.id+'" aria-label="'+s.title+'"><span class="h3d fit" style="--w:'+w+'" data-type3d>'+s.title+'</span></h2>'+
       '<p class="set__lead rv" style="--d:2">'+(LEAD[s.id]?LEAD[s.id](s):'Tap a picture to see it up close.')+'</p></header>'+
     '<div class="bar gx" id="bar-'+s.id+'" aria-live="polite"><span class="bar__chip"><i aria-hidden="true"></i><span>'+s.short+' · <b class="lv">0</b> LOVED</span></span>'+
