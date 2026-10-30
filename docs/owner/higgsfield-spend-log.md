@@ -11,3 +11,8 @@ date | piece / ledger id | model + settings | credits | balance after | job id |
 2026-10-30 | lab3 white doors take 1 | gpt_image_2_5 high 2k 16:9 | 2.75 | - | 137a1ea5-f9da-4e7e-92ca-dfec5cb0433e | FAIL | warm gold cast on 27% of pixels
 2026-10-30 | lab3 white doors retry | gpt_image_2_5 high 2k 16:9 | 2.75 | - | 3cd3d0be-50a7-4884-9a01-4958a12416b1 | PASS | 0% warm, blue only colour, letters exact
 2026-10-30 | lab3 black doors sample | gpt_image_2_5 high 2k 16:9 | 2.75 | 444.41 | 062d1642-4b26-4afa-af9e-f6808c7f0e17 | PASS | violet gone, blue only colour
+2026-10-30 | lab3 white lab START still (R172, owner OK 1A) | gpt_image_2_5 high 2k 16:9 | 2.75 | - | 7993fc58-ffe0-4ddd-850c-449ab021ab10 | PASS | strand gone, blue chain only colour (2.6%), 0% warm, PEPTICITY exact
+2026-10-30 | lab3 black lab START still (R172) | gpt_image_2_5 high 2k 16:9 | 2.75 | - | 8dc81c72-6065-4c5f-a7fd-0b36224ae506 | PASS | strand gone, blue only colour (2.1%), 0% warm, 0% violet
+2026-10-30 | lab3 white lab FILM test (R172) | kling3_0 pro 10s sound off, start 7993fc58 end dc1047fb | 17.5 | - | 610fec58-e721-459a-86df-950b069c1830 | PASS | smooth dolly-in, PEPTICITY sharp every frame, blue chain only colour; warm stone neutralised at cut (tools/cut-lab.py)
+2026-10-30 | doors2 black hall end still v2 (R172 fix) | gpt_image_2_5 high 2k 16:9, edit of 5a3d089a | 2.75 | - | a3147bc3-d822-41eb-acc9-151a3a117de5 | PASS | strands + reflections gone, violet door now blue (only colour), 0% violet
+2026-10-30 | doors2 white hall end still v2 (R172 fix) | gpt_image_2_5 high 2k 16:9, edit of 18bf15ea | 2.75 | - | 2d46fec5-4853-4258-89db-880c4b9c7458 | PASS | strands gone, thin blue door line only colour, 0% warm
