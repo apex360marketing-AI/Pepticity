@@ -1496,7 +1496,6 @@ html.p3d .mark{isolation:isolate}
 /* SAVED WORDS underline */
 .dw-sv-btn:hover::after,.dw-sv-btn:focus-visible::after,.dw-sv-btn[aria-expanded="true"]::after{background:var(--acc)}
 /* coin footer: the landing sweep is in the accent */
-.mark-sweep{mix-blend-mode:screen}
 .mark-sweep i{background:linear-gradient(100deg,transparent 0%,color-mix(in srgb,var(--acc) 16%,transparent) 30%,color-mix(in srgb,var(--acc-hi) 70%,transparent) 50%,color-mix(in srgb,var(--acc) 16%,transparent) 70%,transparent 100%)}
 
 /* ---------- hover + focus: accent hairline and a soft outer glow ---------- */
@@ -1560,7 +1559,8 @@ html.p3d .mark{isolation:isolate}
 @media (max-width:860px){.acc-rail{right:1px;top:156px;bottom:18px;width:14px}.acc-rail::before,.acc-rail .rf{left:6.5px}.acc-rail .rh b{width:14px;margin-left:-7px}}
 
 /* ---------- YOUR COLOUR: a small hardware selector (frosted glass, octagonal gunmetal knob, an LED) ---------- */
-.top{grid-template-columns:auto 1fr auto auto auto}
+/* placed in the free space of the top bar so nothing that is already there moves */
+@media (min-width:1281px){.top .sample,.accsw{grid-column:2;grid-row:1}.accsw{justify-self:end}}
 .accsw{display:flex;align-items:center;gap:10px;min-width:0}
 .accsw-lab{border:0;background:none;margin:0;padding:6px 0;cursor:pointer;color:var(--mute);text-align:right;
   font:400 8px/1.45 var(--fh);letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;transition:color var(--pc-dur-3)}
@@ -1646,20 +1646,22 @@ html.p3d .mark{isolation:isolate}
 .acc-pop b{font:400 9.5px/1.2 var(--fh);letter-spacing:.2em;text-transform:uppercase;font-weight:400}
 .acc-pop small{font:500 10.5px/1 var(--fb);letter-spacing:.04em;color:var(--mute)}
 @media (min-width:861px) and (max-width:1280px){
+  .top{grid-template-columns:auto 1fr auto auto auto}.accsw{grid-column:4;grid-row:1}
   .accsw{flex-direction:column;align-items:stretch;gap:3px}
   .accsw-lab{padding:0;text-align:left;font-size:7px;line-height:1}.accsw-lab span{display:inline}
   .accsw-body{height:36px}
   .sndbtn .snd-t{display:none}.sndbtn.pc-btn{--px:12px}
 }
-@media (max-width:860px){.top{grid-template-columns:1fr auto auto auto}}
-@media (max-width:480px){
-  .top{grid-template-columns:1fr auto auto}
-  .accsw{gap:6px}
-  .accsw-lab{font-size:7px;letter-spacing:.2em;padding:8px 0}
-  .accsw-body{height:44px;padding:0 3px 0 4px}
-  .accsw-sw{gap:7px;padding:0 6px 0 1px}
+@media (max-width:860px){
+  .top .brand,.accsw{grid-column:1;grid-row:1}
+  .accsw{justify-self:end;flex-direction:column;align-items:flex-end;gap:3px}
+  .accsw-lab{padding:0;font-size:6.5px;line-height:1;letter-spacing:.24em}.accsw-lab span{display:inline}
+  .accsw-body{height:34px;padding:0 2px 0 3px;--c:7px}
+  .accsw-sw{gap:6px;padding:0 5px 0 1px}
+  .accsw-dial{transform:scale(.88);margin:0 -2px}
   .accsw-more{display:none}
 }
+@media (min-width:481px) and (max-width:640px){.top .sample{display:none}.sample-m{display:inline-block!important}}
 
 /* ---------- reduced motion: soft static accents, nothing moves with the scroll ---------- */
 @media (prefers-reduced-motion:reduce){
@@ -4032,10 +4034,11 @@ const ACC3D = (() => {
     const a = window.PEP_ACC || { rgb: [212, 255, 58], k: 0 }, k = RM ? 0 : (a.k || 0), c = a.rgb;
     const kk = c.join(',') + '|' + k.toFixed(3); if (kk === key) return false; key = kk;
     const t = 0.35 + 0.3 * k, m = BASE.map((v, i) => (v + (c[i] - v) * t) / 255);
-    mats.forEach(o => { o.color.setRGB(m[0], m[1], m[2], THREE.SRGBColorSpace); o.opacity = o.userData.o0 + (1 - o.userData.o0) * 0.72 * k; });
+    const m0 = BASE.map((v, i) => (v + (c[i] - v) * 0.35) / 255);   // the coin keeps a fixed, faint tint: it must look exactly as before
+    mats.forEach(o => { const q = o.userData.still ? m0 : m; o.color.setRGB(q[0], q[1], q[2], THREE.SRGBColorSpace); o.opacity = o.userData.still ? o.userData.o0 : o.userData.o0 + (1 - o.userData.o0) * 0.72 * k; });
     ver++; return true;
   }
-  function reg(mat, o0) { mat.userData.o0 = o0; mats.push(mat); key = ''; apply(); return mat; }
+  function reg(mat, o0, still) { mat.userData.o0 = o0; mat.userData.still = !!still; mats.push(mat); key = ''; apply(); return mat; }
   if (!RM && loop) loop.add(() => { apply(); });
   addEventListener('pep-acc', () => { if (RM) { key = ''; if (apply() && ACC3D.redraw) ACC3D.redraw(); } });
   return { reg, apply, get ver() { return ver; }, redraw: null };
@@ -4426,7 +4429,7 @@ function brandMats() {          // the engine's material recipe, for the emblem 
     gunmetal: new THREE.MeshPhysicalMaterial({ color: 0x7a7b80, metalness: 0.86, roughness: 0.52, roughnessMap: brushed, map: brushed, clearcoat: 0.08, clearcoatRoughness: 0.6, envMapIntensity: 0.62 }),
     platinum: new THREE.MeshPhysicalMaterial({ color: 0xe4e6ea, metalness: 1, roughness: 0.17, roughnessMap: brushed, envMapIntensity: 1.1 }),
     uv: new THREE.MeshPhysicalMaterial({ color: 0x0e0c14, metalness: 0.55, roughness: 0.32, sheen: 1, sheenColor: new THREE.Color(0x4b3b86), sheenRoughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.7 }),
-    edge: ACC3D.reg(new THREE.LineBasicMaterial({ color: 0xdcd6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }), 0.5)
+    edge: ACC3D.reg(new THREE.LineBasicMaterial({ color: 0xdcd6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }), 0.5, true)
   };
   for (const k of ['gunmetal', 'platinum', 'uv']) { M[k].polygonOffset = true; M[k].polygonOffsetFactor = 1; M[k].polygonOffsetUnits = 1; }
   return M;
