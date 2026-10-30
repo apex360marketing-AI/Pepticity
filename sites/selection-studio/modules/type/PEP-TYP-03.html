@@ -308,7 +308,7 @@ img{display:block;max-width:100%}
 /* ---- segmented toggle: same glass, same hairline, a glass thumb slides between options ---- */
 .pc-seg{
   --c:11px; --h:50px; --n:2; --i:0; --fs:11px; --ls:.26em;
-  display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:auto; height:var(--h); padding:5px; gap:0;
+  display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:auto; height:var(--h); padding:5px; gap:0; align-items:stretch;
   color:var(--pc-ink); font:700 var(--fs)/1 var(--pc-font); letter-spacing:var(--ls); text-transform:uppercase; isolation:isolate;
 }
 .pc-seg--sm{--c:8px; --h:38px; --fs:9.5px; --ls:.22em}
@@ -615,7 +615,7 @@ html[data-motion="off"]{--pc-motion:0}
     return api;
   };
   /* auto-mount the stage smoke */
-  function mount() { var c = document.querySelector('.pm-bg canvas[data-smoke]'); if (c) PM.stageSmoke = PM.smoke(c); }
+  function mount() { var c = document.querySelector('.pm-bg canvas[data-smoke]'), k = parseFloat(document.body.dataset.smokeScale); if (c) PM.stageSmoke = PM.smoke(c, k ? { scale: k } : {}); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 })();
 </script>

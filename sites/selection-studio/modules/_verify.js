@@ -47,7 +47,7 @@ async function crop(page, bb) {
   const RF = path.join(OUT, 'verify' + (arg && !arg.includes(',') ? '-' + arg : '') + '.json');
   const results = fs.existsSync(RF) ? JSON.parse(fs.readFileSync(RF, 'utf8')) : {};
   for (const e of list) {
-    const heavy = e.weight === 'Heavy', W8 = heavy ? 4200 : 1400, sel = TARGET[e.code] || '.pri';
+    const heavy = e.weight === 'Heavy' || e.code === 'PEP-CRD-02', W8 = heavy ? 4200 : 1400, sel = TARGET[e.code] || '.pri';
     const r = { code: e.code, cat: e.cat, interact: e.interact, errors: [], checks: {} };
     const shot = n => path.join(OUT, `${e.code}-${n}.png`);
     try {
@@ -72,7 +72,7 @@ async function crop(page, bb) {
         if (e.code === 'PEP-CRD-02') {
           await page.evaluate(() => { document.getElementById('sc').scrollTop = 0; }); await sleep(500);
           const s0 = await page.evaluate(() => [document.getElementById('sc').scrollTop, [...document.querySelectorAll('.halo .ht,.halo .hb')].map(x => x.style.opacity).join()]);
-          await page.mouse.move(720, 450); await page.mouse.wheel(0, 700); await sleep(1300);
+          await page.mouse.move(720, 450); await page.mouse.wheel(0, 700); await sleep(2600);
           const s1 = await page.evaluate(() => [document.getElementById('sc').scrollTop, [...document.querySelectorAll('.halo .ht,.halo .hb')].map(x => x.style.opacity).join()]);
           r.checks.scrollAdvances = s1[0] > s0[0]; r.checks.scrollLightsCards = s1[1] !== s0[1];
           await page.screenshot({ path: shot('d-scroll') });

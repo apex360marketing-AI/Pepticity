@@ -835,7 +835,7 @@
     var barIn = el('div', 'pb-bar__in');
     barIn.appendChild(emblem(34));
     var bt = el('div', 'pb-bar__text');
-    bt.appendChild(el('div', 'pb-bar__title', 'PEPTICITY CONCIERGE', { id: 'pbBarT' }));
+    bt.appendChild(el('div', 'pb-bar__title', 'PEPTICITY CONCIERGE', { id: 'pbBarT' })); bt.appendChild(D.createTextNode(' '));   /* a word gap for text readers; the column layout ignores it */
     UI.hint = el('div', 'pb-bar__hint', 'HOW CAN I HELP?', { id: 'pbBarH' });
     bt.appendChild(UI.hint); barIn.appendChild(bt);
     UI.barCart = el('span', 'pb-bar__cart', '', { 'aria-live': 'polite' });

@@ -1,9 +1,13 @@
-/* PEPTICITY main site v2.
-   Chest film + engraving -> HERO CARD -> SCR-17 word portal -> SCR-07 city weave (eased, cross-faded, glides to a stop)
-   -> member card + doors (JOIN or GUEST) -> lab (5 stations that hold, hooks inside) -> promise (TXT-04)
-   -> interests -> SCR-16 vial -> lot passport -> store (every listing, exact prices) + cart -> SCR-18/LAY-23 tiers
-   -> sealed envelope (CRD-124) + sentence sign-up (FRM-104) -> catalogue finder (FRM-102) -> HOV-17 network -> refer -> letter + TXT-13.
-   GSAP ScrollTrigger + Lenis on one ticker. Every form is preview only: nothing is sent. */
+/* PEPTICITY main site v3 (built from v2; owner's revised order, 30 Oct).
+   1 LOADER chest film -> 2 LANDING (public: WHO WE ARE + Grace's letter, OUR MISSION TXT-04, OUR STORY SCR-21 glass panes in depth)
+   -> 3 the 19+ AGE GATE (province select; passing it fetches the catalogue; remembered 30 days)
+   -> 4 SALES ZONE 1: SCR-17 portal + SCR-07 city weave (25% shorter) with liquid-glass hooks that sell
+   -> 5 member card + scanner + doors (JOIN or GUEST) -> 6 SALES ZONE 2: the BIO LAB (5 stations, 2 holograms with hooks)
+   -> 7 the SECOND DOORS (glass wipe + the door photo opening, scrubbed by scroll; CFG.secondDoorsFilm swaps in a film)
+   -> 8 SALES ZONE 3: the collection (offer, interests, filters, shelf, cart, restock queue) -> SCR-16 vial -> SCR-18 tiers
+   -> CRD-124 + FRM-104 -> FRM-102 finder -> lot passport (placeholder) -> HOV-17 network -> refer -> letter + TXT-13.
+   The concierge runs in GUIDE mode on the landing and SELL mode past the gate. GSAP ScrollTrigger + Lenis on one ticker.
+   Every form is preview only: nothing is sent. */
 (function () {
   'use strict';
   var D = document.documentElement, CFG = window.PC_CONFIG || {};
@@ -19,7 +23,16 @@
   var money = function (n) { return '$' + n.toFixed(2); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var OFFER = !!(CFG.counselCleared && CFG.counselCleared.offer);
+  var HIGH = !!CFG.showHighRisk;   /* high-risk listings stay hidden unless the owner flips PC_CONFIG.showHighRisk */
   var events = [];
+  /* ================= the 19+ pass (this device only, PC_CONFIG.agePassDays) ================= */
+  var PROV = { AB: 'Alberta', BC: 'British Columbia', MB: 'Manitoba', NB: 'New Brunswick', NL: 'Newfoundland and Labrador', NS: 'Nova Scotia', NT: 'Northwest Territories', NU: 'Nunavut', ON: 'Ontario', PE: 'Prince Edward Island', QC: 'Quebec', SK: 'Saskatchewan', YT: 'Yukon' };
+  function readPass() {   /* stored data is untrusted: exact shape, known province, not expired */
+    try { var q = JSON.parse(LS.get('pc-age-pass') || 'null'); if (q && q.ok === true && PROV[q.prov] && +q.exp > Date.now()) return { ok: true, prov: q.prov, at: +q.at || 0, exp: +q.exp }; } catch (e) {}
+    return null;
+  }
+  var pass = readPass();
+  if (!pass) D.classList.add('age-gated');
   function track(name) { events.push(name); }   /* privacy-safe: event names only, never field values */
 
   /* every 3D-look heading gets its extrusion layer */
@@ -100,7 +113,7 @@
     if (fr > 0.02 && i + 1 < m.n) { var B = s.frame(i + 1); if (B) { ctx.globalAlpha = fr; ctx.drawImage(B.img, B.sx, B.sy, m.tw, m.th, dx, dy, dw, dh); ctx.globalAlpha = 1; } }
     this.rect = { x: dx, y: dy, w: dw, h: dh }; this.last = f;
   };
-  var pW = new Painter($('#cvWeave'), 'weave'), pL = new Painter($('#cvLab'), 'lab');
+  var pW = new Painter($('#cvWeave'), 'weave'), pL = new Painter($('#cvLab'), 'lab'), pA = new Painter($('#cvAge'), 'weave');   /* pA: the first city frame behind the age gate */
   var doorSign = $('#doorSign');
   /* [u = frame/(n-1), x, y, width] of the film's door sign, in full-frame fractions */
   var SIGN = {
@@ -124,7 +137,9 @@
   function glide(y, dur) { if (lenis) lenis.scrollTo(y, { duration: dur || 1.6 }); else window.scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' }); }
   function absTop(el) { return el.getBoundingClientRect().top + (window.scrollY || 0); }
 
-  var J = { p: 0 }, L = { p: 0 }, X = { p: 0 };
+  var J = { p: 0 }, L = { p: 0 }, X = { p: 0 }, S = { p: 0 }, D2 = { p: 0 };
+  gsap.to(S, { p: 1, ease: 'none', scrollTrigger: { trigger: '#story', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1 } });
+  gsap.to(D2, { p: 1, ease: 'none', scrollTrigger: { trigger: '#doors2', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1.1 } });
   gsap.to(J, { p: 1, ease: 'none', scrollTrigger: { trigger: '#journey', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1.4 } });
   gsap.to(L, { p: 1, ease: 'none', scrollTrigger: { trigger: '#lab', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1.2 } });
   gsap.to(X, { p: 1, ease: 'none', scrollTrigger: { trigger: '#explode', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1 } });
@@ -157,19 +172,26 @@
 
   /* ================= per-frame UI ================= */
   var hooks = $$('.sr'), gate = $('#gate'), portal = $('#portal'), portalG = $('#portalG'), nav = $('#nav');
-  var stations = $$('.st'), labCam = $('#labCam'), plaque = $('#labPlaque'), labFade = $('.lab-fade');
+  var stations = $$('.st'), labCam = $('#labCam'), plaque = $('#labPlaque'), labFade = $('.lab-fade'), labSec = $('#lab');
+  var panes = $$('.pane'), storyBar = $('#storyBar'), heroCard = $('#heroCard'), ageSec = $('#age'), storeVeil = $('#storeVeil'), storeSec = $('#store');
+  var WIDE = function () { return innerWidth >= 900; };
+  /* SCR-21 pane timing: [in-start, in-end, out-start, out-end] on the story's own progress */
+  var PANE_T = [[-1, -1, 0.27, 0.42], [0.27, 0.42, 0.6, 0.74], [0.6, 0.74, 2, 2]];
   var exLayers = { cap: $('.ex-cap'), neck: $('.ex-neck'), label: $('.ex-label'), body: $('.ex-body') }, exCalls = $$('.ex-calls li');
   var busy = false, opened = false, introLive = D.classList.contains('intro-on'), lastGate = -1, curSt = -1;
   var emb = $('#emblemFlat');
 
   function frameUI() {
-    var p = J.p;
-    pW.draw(weaveFrame(p));
-    var gated = D.classList.contains('gated');
+    var p = J.p, ageGated = D.classList.contains('age-gated');
+    if (!ageGated) pW.draw(weaveFrame(p));
+    var gated = D.classList.contains('gated') || ageGated;
     var ls = labState(L.p);
     if (!gated) pL.draw(ls.f);
-    if (dirty) layoutDoors();
+    var ar = ageSec.getBoundingClientRect(); if (ar.bottom > 0 && ar.top < innerHeight) pA.draw(0);
+    if (dirty) { layoutDoors(); layoutD2(); }
     dirty = false;
+    storyUI(); heroUI();
+    if (!gated) { d2UI(); veilUI(); }
 
     /* SCR-17 portal */
     if (!RM) {
@@ -178,9 +200,9 @@
       portal.style.opacity = 1 - ss(0.82, 1, pp);
       portal.style.visibility = pp >= 1 ? 'hidden' : 'visible';
     }
-    doorbox.style.visibility = (busy || opened || p >= W_OUT - 0.004 || (RM && p >= 0.5)) ? 'visible' : 'hidden';
+    doorbox.style.visibility = (busy || p >= W_OUT - 0.004 || (RM && p >= 0.5)) ? 'visible' : 'hidden';
     /* the door sign in the film is in an old serif: our illuminated plaque tracks it frame by frame (measured on both films) */
-    var u = (busy || opened) ? 1 : weaveFrame(p) / (seq('weave').m.n - 1), T = SIGN[version], ds = doorSign;
+    var u = busy ? 1 : weaveFrame(p) / (seq('weave').m.n - 1), T = SIGN[version], ds = doorSign;
     if (u >= T[0][0] && pW.rect.w) {
       var k = 1; while (k < T.length - 1 && T[k][0] < u) k++;
       var A = T[k - 1], B = T[k], t = clamp((u - A[0]) / (B[0] - A[0]), 0, 1), L2 = function (i) { return A[i] + (B[i] - A[i]) * t; };
@@ -190,9 +212,11 @@
     } else ds.style.opacity = 0;
 
     hooks.forEach(function (h) {
-      var a = +h.dataset.at, d = Math.abs(p - a), o = RM ? 0 : 1 - ss(0.035, 0.06, d);
+      var a = +h.dataset.at, d = Math.abs(p - a), o = RM || h.dataset.empty ? 0 : 1 - ss(0.035, 0.06, d);
+      if (h.contains(document.activeElement) && d < 0.09) o = 1;   /* a focused field keeps its card */
       h.style.opacity = o; h.style.visibility = o < 0.02 ? 'hidden' : 'visible';
-      h.style.transform = 'translate3d(0,' + ((a - p) * 700) + 'px,0)';
+      if (o > 0.02) { h.style.transform = 'translate3d(0,' + ((a - p) * 520) + 'px,0)'; h.style.setProperty('--sheen', clamp(0.5 + (p - a) * 9, 0, 1).toFixed(3)); }
+      if (o > 0.5 && !h.__seen) { h.__seen = true; track('form_view:' + h.dataset.hook); }
     });
 
     if (!busy) {
@@ -222,8 +246,9 @@
         s.style.opacity = o; s.style.visibility = o < 0.02 ? 'hidden' : 'visible'; s.classList.toggle('on', o > 0.5);
       });
       if (ls.i !== curSt) { curSt = ls.i; track('stop_view:lab-' + curSt); }
-      labFade.style.opacity = 0;
+      labFade.style.opacity = ss(0.955, 1, L.p);   /* the lab ends in light: the second doors start in the same light */
     }
+    if (!gated) holoUI(ls);
 
     /* SCR-16 exploded vial */
     if (!RM) {
@@ -241,12 +266,147 @@
       emb.style.transform = 'rotateY(' + (s2 * 540) + 'deg) rotateX(' + (10 + Math.sin(s2 * 6.28) * 6) + 'deg)';
     }
   }
+
+  /* ================= LANDING motion ================= */
+  /* hero: the card recedes with a slow parallax as the mission comes up (transform only; the 3D words follow its box) */
+  var heroMoved = false;
+  function heroUI() {
+    if (RM || introLive || !heroCard) return;
+    var y = window.scrollY || 0;
+    if (y > 2 && y < innerHeight * 1.4) { var k = clamp(y / innerHeight, 0, 1); heroCard.style.transform = 'translate3d(0,' + (k * innerHeight * 0.22).toFixed(1) + 'px,0) scale(' + (1 - k * 0.05).toFixed(4) + ')'; heroMoved = true; }
+    else if (y <= 2 && heroMoved) { heroCard.style.transform = ''; heroMoved = false; }
+  }
+  /* SCR-21: three liquid-glass panes fly in from depth, hold while their words light, then pass the camera */
+  function storyUI() {
+    if (RM || !WIDE()) return;
+    var sp = S.p;
+    if (storyBar) storyBar.style.transform = 'scaleX(' + sp.toFixed(4) + ')';
+    panes.forEach(function (el, i) {
+      var T = PANE_T[i], kin = T[0] < 0 ? 1 : ss(T[0], T[1], sp), kout = ss(T[2], T[3], sp), o = kin * (1 - kout);
+      el.style.opacity = o.toFixed(3); el.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+      if (o < 0.01) return;
+      var sc = (0.7 + 0.3 * kin) * (1 + 0.42 * kout), y = (1 - kin) * 60 - kout * 30;
+      el.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
+      el.style.setProperty('--sheen', clamp((sp - (T[1] < 0 ? 0 : T[1])) * 3.2, 0, 1).toFixed(3));
+      var ws = el.__ws || (el.__ws = $$('.lw', el)), a = T[1] < 0 ? 0.02 : T[1], b = a + (Math.min(T[2], 1) - a) * 0.7, n = Math.round(ss(a, b, sp) * ws.length);
+      if (n !== el.__n) { el.__n = n; ws.forEach(function (w, k) { w.classList.toggle('lit', k < n); }); }
+    });
+  }
+  /* ================= the SECOND DOORS (lab -> product line) ================= */
+  var d2 = { stage: $('#d2Stage'), cam: $('#d2Cam'), scene: $('#d2Scene'), bg: $('#d2Bg'), box: $('#d2box'), sign: $('#d2Sign'), pane: $('#d2Pane'), veil: $('#d2Veil'),
+    cap: $('#d2Cap'), flood: $('#d2Flood'), from: $('#d2From'), film: $('#d2Film') };
+  d2.leaves = $$('#d2box .leaf'); d2.shades = $$('#d2box .shade'); d2.dials = $$('#d2box .dial'); d2.seam = $('#d2box .seam'); d2.spill = $('#d2box .spill'); d2.beams = $('#d2box .beams'); d2.doorway = $('#d2box .doorway');
+  var d2Film = !!CFG.secondDoorsFilm, d2Last = -1;
+  function setD2Film() {
+    if (!d2Film) return;
+    var v = d2.film; v.innerHTML = ''; v.hidden = false; d2.scene.hidden = true; d2.from.hidden = true; d2.pane.hidden = true;
+    [['mp4', 'video/mp4'], ['webm', 'video/webm']].forEach(function (x) { var el = document.createElement('source'); el.src = CFG.secondDoorsFilm + version + '.' + x[0]; el.type = x[1]; v.appendChild(el); });
+    v.preload = 'auto'; v.load();
+  }
+  function layoutD2() {
+    var W = d2.stage.clientWidth, H = d2.stage.clientHeight; if (!W || !H) return;
+    var sc = Math.max(W / 1912, H / 1080), w = 1912 * sc, h = 1080 * sc, x = (W - w) / 2, y = (H - h) / 2;
+    [d2.bg, d2.box].forEach(function (el) { el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.width = w + 'px'; el.style.height = h + 'px'; });
+    var sw = 0.29 * w * 1.08;   /* the plaque covers the photo's wall sign (same spot as the city film's last frame) */
+    d2.sign.style.left = (x + 0.502 * w) + 'px'; d2.sign.style.top = (y + 0.108 * h) + 'px'; d2.sign.style.width = sw + 'px'; d2.sign.style.height = (sw * 0.27) + 'px'; d2.sign.style.fontSize = (sw * 0.05) + 'px';
+    d2.cam.style.transformOrigin = (x + w * 0.5) + 'px ' + (y + h * 0.53) + 'px';
+  }
+  function d2UI() {
+    var r = d2.stage.parentNode.getBoundingClientRect();
+    if (r.bottom < -10 || r.top > innerHeight + 10) return;
+    var p = RM ? 0.42 : D2.p; if (Math.abs(p - d2Last) < 0.0004) return; d2Last = p;
+    d2.veil.style.opacity = RM ? 0 : (1 - ss(0, 0.07, p)).toFixed(3);
+    d2.flood.style.opacity = RM ? 0 : ss(0.82, 0.97, p).toFixed(3);
+    d2.cap.style.opacity = (ss(0.3, 0.4, p) * (1 - ss(0.58, 0.68, p))).toFixed(3);
+    if (d2Film) {
+      var v = d2.film; if (v.duration && isFinite(v.duration)) { var t = ss(0.04, 0.9, p) * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 1 / 30) v.currentTime = t; }
+      return;
+    }
+    var W = d2.stage.clientWidth, q = ss(0.06, 0.32, p), px = 1.15 - q * 1.5;   /* the glass blade crosses right to left; the doors appear behind it */
+    d2.pane.style.transform = 'translate3d(' + (px * W).toFixed(1) + 'px,0,0) rotate(5deg)';
+    d2.pane.style.visibility = q <= 0 || q >= 1 ? 'hidden' : 'visible';
+    d2.scene.style.clipPath = 'inset(0 0 0 ' + (clamp(px + 0.06, 0, 1) * 100).toFixed(2) + '%)';
+    d2.sign.style.opacity = ss(0.26, 0.36, p).toFixed(3);
+    var dio = ss(0.3, 0.36, p) * (1 - ss(0.5, 0.56, p)), rot = ss(0.3, 0.5, p) * 180;
+    d2.dials[0].style.opacity = d2.dials[1].style.opacity = dio.toFixed(3);
+    d2.dials[0].style.transform = 'rotate(' + rot.toFixed(1) + 'deg)'; d2.dials[1].style.transform = 'rotate(' + (-rot).toFixed(1) + 'deg)';
+    d2.seam.style.opacity = (ss(0.4, 0.45, p) * (1 - ss(0.58, 0.64, p))).toFixed(3); d2.seam.style.transform = 'scaleY(' + (0.12 + 0.88 * ss(0.4, 0.5, p)).toFixed(3) + ')';
+    var op = ss(0.46, 0.72, p);
+    d2.leaves[0].style.transform = 'rotateY(' + (-84 * op).toFixed(2) + 'deg)'; d2.leaves[1].style.transform = 'rotateY(' + (84 * op).toFixed(2) + 'deg)';
+    d2.shades.forEach(function (sh) { sh.style.opacity = (0.6 * op).toFixed(3); });
+    d2.doorway.style.opacity = ss(0.45, 0.5, p).toFixed(3);
+    var sp = ss(0.5, 0.7, p); d2.spill.style.opacity = (0.85 * sp).toFixed(3); d2.spill.style.transform = 'scaleY(' + (0.2 + 0.8 * sp).toFixed(3) + ')';
+    var bm = ss(0.48, 0.72, p); d2.beams.style.opacity = (0.85 * bm).toFixed(3); d2.beams.style.transform = 'scale(' + (0.55 + 0.53 * bm).toFixed(3) + ')';
+    d2.cam.style.transform = RM ? '' : 'scale(' + (1 + 1.9 * Math.pow(ss(0.66, 0.95, p), 1.6)).toFixed(4) + ')';
+  }
+  /* the collection's top edge carries the doors' light for one screen */
+  function veilUI() {
+    if (!storeVeil) return;
+    var r = storeSec.getBoundingClientRect();
+    if (r.top > innerHeight || r.top < -innerHeight) { if (storeVeil.__o !== 0) { storeVeil.style.opacity = 0; storeVeil.__o = 0; } return; }
+    var k = clamp((innerHeight - r.top) / innerHeight, 0, 1), o = RM ? 0 : 1 - ss(0.1, 0.9, k);
+    if (Math.abs(o - (storeVeil.__o || 0)) > 0.002) { storeVeil.style.opacity = o.toFixed(3); storeVeil.__o = o; }
+  }
+  /* ================= HOLOGRAMS (hologram-panels): glass panels that project up from the dropper tip and the vial rack ================= */
+  var HOLO = [
+    { el: $('#holoA'), st: 2, a: { d: [0.455, 0.61], m: [0.455, 0.61] } },   /* station 03: the dropper tip */
+    { el: $('#holoB'), st: 4, a: { d: [0.70, 0.705], m: [0.60, 0.71] } }     /* station 05: the vial rack (phones: its nearest vial) */
+  ];
+  HOLO.forEach(function (h) {
+    h.print = $('.holo-print', h.el); h.panel = $('.holo-panel', h.el); h.beam = $('.holo-beam', h.el); h.on = false; h.dismissed = false;
+    $('.holo-x', h.el).addEventListener('click', function () { h.dismissed = true; holoOut(h); });
+    h.el.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); h.dismissed = true; holoOut(h); } });
+  });
+  function prepHolo(h) {
+    if (h.el.id === 'holoB') { var j = joined(); $('.holo-join', h.el).hidden = j; $('.holo-sms', h.el).hidden = !j; h.el.setAttribute('aria-label', j ? 'New lots by text' : 'The PEPTICITY Team offer'); }
+  }
+  function holoIn(h) {
+    if (h.on) return; h.on = true; prepHolo(h); h.el.classList.add('on'); labSec.classList.add('holo-on'); track('form_view:' + h.el.dataset.hook);
+    if (h.tl) h.tl.kill();
+    if (RM) { gsap.set(h.beam, { scaleY: 1 }); gsap.set(h.print, { clipPath: 'inset(0% 0 0 0)', opacity: 1 }); return; }
+    h.tl = gsap.timeline({ onComplete: function () { h.el.classList.add('idle'); } });
+    h.tl.fromTo(h.beam, { scaleY: 0 }, { scaleY: 1, duration: 0.35, ease: 'power2.out' })
+      .fromTo(h.print, { clipPath: 'inset(100% 0 0 0)', opacity: 0 }, { clipPath: 'inset(0% 0 0 0)', opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.25)
+      .fromTo(h.panel, { scaleY: 0.92, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.6, ease: 'power3.out' }, 0.25)
+      .fromTo(h.panel, { '--sheen': 0 }, { '--sheen': 1, duration: 1.3, ease: 'power1.inOut' }, 0.8);
+  }
+  function holoOut(h) {
+    if (!h.on) return; h.on = false; h.el.classList.remove('idle');
+    if (h.el.contains(document.activeElement)) document.activeElement.blur();
+    if (h.tl) h.tl.kill();
+    h.tl = gsap.timeline({ onComplete: function () { h.el.classList.remove('on'); if (!HOLO.some(function (x) { return x.on; })) labSec.classList.remove('holo-on'); } });
+    h.tl.to(h.print, { clipPath: 'inset(100% 0 0 0)', opacity: 0, duration: 0.3, ease: 'power2.in' }).to(h.beam, { scaleY: 0, duration: 0.2, ease: 'power2.in' }, 0.12);
+  }
+  function frameToScreen(f, ls) {   /* film point (full-frame fractions) -> lab stage px, through the painter rect and the lab camera */
+    var r = pL.rect, c = CROP[kind]; if (!r.w) return null;
+    var X = r.x + (f[0] - c.x) / c.w * r.w, Y = r.y + f[1] * r.h, cw = labCam.clientWidth, ch = labCam.clientHeight;
+    var m = (ls.s - 1) / (2 * ls.s), tx = clamp(0.5 - ls.x, -m, m) * cw, ty = clamp(0.5 - ls.y, -m, m) * ch;
+    return { x: cw / 2 + ls.s * (X + tx - cw / 2), y: ch / 2 + ls.s * (Y + ty - ch / 2), W: cw, H: ch };
+  }
+  function holoUI(ls) {
+    HOLO.forEach(function (h) {
+      var keep = h.on && h.el.contains(document.activeElement);
+      var active = !h.dismissed && ((RM && labInView()) || (!RM && ls.i === h.st && ls.t > 0.36 && ls.t < 0.95)) || keep;
+      if (active && !h.on) holoIn(h); else if (!active && h.on) holoOut(h);
+      if (!h.on || RM) return;
+      var P = frameToScreen(h.a[kind], ls); if (!P) return;
+      var ax = clamp(P.x, 24, P.W - 24), ay = clamp(P.y, 90, P.H - 40);
+      h.el.style.left = ax.toFixed(1) + 'px'; h.el.style.top = ay.toFixed(1) + 'px';
+      var pw = h.print.offsetWidth, ph = h.print.offsetHeight, left = ax - pw / 2, dx = 0;
+      if (left < 12) dx = 12 - left; else if (left + pw > P.W - 12) dx = P.W - 12 - (left + pw);
+      var card = stations[ls.i]; if (card && WIDE() && !(innerWidth / innerHeight < 1)) { var cr = card.getBoundingClientRect(); if (left + dx < cr.right + 18) dx = cr.right + 18 - left; }
+      var gap = Math.max(14, Math.min(innerWidth < 760 ? 44 : 64, ay - 74 - ph));
+      if (Math.abs(dx - (h.dx || 0)) > 0.5) { h.dx = dx; h.print.style.setProperty('--dx', dx.toFixed(1) + 'px'); }
+      if (Math.abs(gap - (h.gap || 0)) > 0.5) { h.gap = gap; h.el.style.setProperty('--gap', gap.toFixed(1) + 'px'); }
+    });
+  }
+  function labInView() { var r = labSec.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }
   gsap.ticker.add(frameUI);
 
   function onResize() {
     var k = innerWidth / innerHeight < 0.95 ? 'm' : 'd';
     if (k !== kind) { kind = k; want(seq('weave'), [Math.floor(weaveFrame(J.p) / seq('weave').per)], true); if (!introLive) loadAll(); }
-    pW.resize(); pL.resize(); dirty = true; lastGate = -1;
+    pW.resize(); pL.resize(); pA.resize(); dirty = true; lastGate = -1; d2Last = -1; layoutD2();
   }
   var rT; addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(onResize, 120); });
 
@@ -259,7 +419,8 @@
     if (!quiet) LS.set('pc-version', version);
     if (vSeg.pcSelect) { var idx = version === 'black' ? 1 : 0; $$('.pc-seg__opt', vSeg).forEach(function (o, k) { o.setAttribute('aria-checked', String(k === idx)); }); vSeg.style.setProperty('--i', idx); }
     $$('.leaf img').forEach(function (i) { i.src = 'media/' + version + '-doors.jpg'; });
-    $('.doorway .peek').src = 'media/' + version + '-lab.jpg';
+    $('#doorbox .doorway .peek').src = 'media/' + version + '-lab.jpg';
+    $('#d2Bg').src = 'media/' + version + '-doors.jpg'; $('#d2From').src = 'media/' + version + '-lab.jpg'; if (d2Film) setD2Film(); d2Last = -1;
     var w = seq('weave'); want(w, [Math.floor(weaveFrame(J.p) / w.per), 0, w.m.files - 1], true);
     var l = seq('lab'); want(l, [Math.floor(labState(L.p).f / l.per)], true);
     if (!introLive) loadAll();
@@ -341,31 +502,44 @@
   if (introLive) runIntro(); else { loadAll(); heroIn(); }
 
   /* ================= forms (capture-forms; preview only) ================= */
-  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, PHONE = /^[+()\d\s.-]{10,}$/;
+  /* success states: each says what happened and the next step (capture-forms) */
   var SUCCESS = {
-    H01: function () { return 'Welcome to the PEPTICITY Team. ' + (OFFER ? 'Your 15% is saved to this device and applies in the cart.' : 'We\'ll email your welcome.') + ' Next: your card is waiting at the doors.'; },
-    H44: function () { return 'You\'re in. 15% applies in your cart. Next: SEE EVERY PRODUCT below.'; },
-    H45: function () { return 'Sealed. You\'re on the network. Next: the store is just above.'; },
-    H48: function () { return 'Your gift is saved. 15% applies in your cart. Next: open the store.'; },
+    H18a: function () { return 'You\'re on Grace\'s list. The first letter comes to your inbox. Next: read our story below.'; },
+    H18: function () { return 'You\'re on Grace\'s list. The next letter comes to your inbox.'; },
+    H18b: function () { return 'You\'re on Grace\'s list. The next letter comes to your inbox.'; },
+    H01b: function (f) { return 'Welcome to the PEPTICITY Team. ' + (OFFER ? 'Your 15% is saved to this device and applies in the cart.' : '') + (f.consent_email && f.consent_email.checked ? ' Grace\'s letter will come monthly.' : ''); },
+    H43: function () { return 'Saved. We\'ll text you when a sold-out lot is back. Reply STOP any time.'; },
+    H44b: function () { return 'You\'re in. 15% applies in your cart. Next: SEE EVERY PRODUCT below.'; },
+    H44c: function () { return 'Saved. We\'ll text you when a sold-out lot is back. Reply STOP any time.'; },
+    H45: function () { return 'Sealed. Grace will write when PEPTICITY has news for your province.'; },
+    H48: function () { return 'Your gift is saved. 15% applies in your cart. Next: the collection is just above.'; },
     'H48b': function () { return 'Your cart link is on its way.'; },
     H36: function (f) { return 'Thanks' + (f.name && f.name.value ? ', ' + f.name.value.trim() : '') + '. ' + (f.want ? 'You picked ' + f.want.value + '.' : ''); },
-    H18: function () { return 'You\'re on Grace\'s list. The next letter comes to your inbox.'; },
     H47: function () { return '15% applied to this order.'; },
-    H07: function () { return 'Saved. Your 15% is waiting in the cart.'; }
+    H50: function () { return ''; }
   };
+  /* consent (CASL): data-consent="required" = the email IS the purpose (letter, restock); "sms" = texts are the purpose.
+     Offer and card forms never require the marketing box (audit A15): the 15% is saved on this device either way. */
   function validate(form) {
-    var err = $('.err', form), em = form.email, c = form.consent_email;
+    var err = $('.err', form), em = form.email, ph = form.phone, c = form.consent_email, cs = form.consent_sms, need = form.dataset.consent || '';
     err.textContent = '';
-    if (em) em.removeAttribute('aria-invalid');
-    if (em && !EMAIL.test(em.value.trim())) { err.textContent = 'That email looks incomplete.'; em.setAttribute('aria-invalid', 'true'); em.focus(); return false; }
-    if (c && !c.checked && !form.hasAttribute('data-transactional')) { err.textContent = 'Tick the box so we\'re allowed to email you.'; c.focus(); return false; }
-    if (form.consent_sms && form.consent_sms.checked && form.phone && !form.phone.value.trim()) { err.textContent = 'Add your mobile number for text alerts, or untick that box.'; form.phone.focus(); return false; }
+    [em, ph].forEach(function (x) { if (x && x.removeAttribute) x.removeAttribute('aria-invalid'); });
+    var bad = function (el, t) { err.textContent = t; if (el) { if (el.type !== 'checkbox') el.setAttribute('aria-invalid', 'true'); el.focus(); } return false; };
+    if (em && em.type === 'email' && (em.required || em.value.trim()) && !EMAIL.test(em.value.trim())) return bad(em, 'That email looks incomplete.');
+    if (need === 'sms') {
+      if (!ph || !PHONE.test(ph.value.trim())) return bad(ph, 'That mobile number looks incomplete.');
+      if (!cs || !cs.checked) return bad(cs, 'Tick the box so we\'re allowed to text you.');
+    }
+    if (need === 'required' && c && !c.checked) return bad(c, 'Tick the box so we\'re allowed to email you.');
+    if (cs && cs.checked && ph && !ph.value.trim()) return bad(ph, 'Add your mobile number for texts, or untick that box.');
+    if (ph && ph.value.trim() && !PHONE.test(ph.value.trim())) return bad(ph, 'That mobile number looks incomplete.');
     return true;
   }
   function payload(form) {
     var g = function (n) { return form[n] && form[n].value ? form[n].value.trim() : ''; };
     var ce = form.consent_email, cs = form.consent_sms;
-    return { hook: form.dataset.hook, page: 'home', name: g('name'), email: g('email'), phone: g('phone'), province: '', goal: '',
+    return { hook: form.dataset.hook, page: 'home', name: g('name'), email: g('email'), phone: g('phone'), province: pass ? pass.prov : '', goal: '',
       consent_email: ce ? { given: ce.checked, text: ce.nextElementSibling.textContent, at: new Date().toISOString() } : { given: false },
       consent_sms: cs ? { given: cs.checked, text: cs.nextElementSibling.textContent, at: new Date().toISOString() } : { given: false },
       utm: {}, created_at: new Date().toISOString(), version: version };
@@ -389,14 +563,17 @@
         form.classList.add('sent-done');
         var ok = $('.ok', form), fn = SUCCESS[form.dataset.hook];
         if (ok) ok.textContent = (fn ? fn(form) + ' ' : '') + 'Preview only: nothing was sent.';
-        if (form.hasAttribute('data-offer') || form.dataset.hook === 'H36' || form.dataset.hook === 'H18') join(data.email, data.name);
+        if (form.hasAttribute('data-offer') && data.email) join(data.email, data.name);
+        if (form.consent_email && form.consent_email.checked && /H18/.test(form.dataset.hook)) LS.set('pc-letter', '1');
+        if (form.dataset.consent === 'sms') LS.set('pc-sms', '1');
         after && after(data, form);
       });
     });
   }
   $$('.cap-form').forEach(function (f) {
     if (f.dataset.step || f.classList.contains('ref-form') || f.id === 'passport') return;
-    wireForm(f, f.dataset.hook === 'H45' ? function () { f.classList.add('sealed'); } : f.dataset.hook === 'H48b' ? function () { setTimeout(closeExit, 2200); } : null);
+    wireForm(f, f.dataset.hook === 'H45' ? function () { f.classList.add('sealed'); } : f.dataset.hook === 'H48b' ? function () { setTimeout(closeExit, 2200); } :
+      f.closest('.holo') ? function () { var h = HOLO.find(function (x) { return x.el.contains(f); }); setTimeout(function () { if (h) { h.dismissed = true; holoOut(h); } }, 2600); } : null);
   });
 
   /* ================= the member card + doors (FRM-02, H34) ================= */
@@ -466,11 +643,11 @@
   });
   mcard.addEventListener('pointerleave', function () { mcard.classList.remove('tilt'); });
 
-  var cam = $('#cam'), flood = $('#flood'), beams = $('.beams'), leaves = $$('.leaf'), dials = $$('.dial'), seam = $('.seam'), spill = $('.spill'), doorway = $('.doorway'), locks = $$('.locks li');
+  var cam = $('#cam'), flood = $('#flood'), beams = $('#doorbox .beams'), leaves = $$('#doorbox .leaf'), dials = $$('#doorbox .dial'), seam = $('#doorbox .seam'), spill = $('#doorbox .spill'), doorway = $('#doorbox .doorway'), locks = $$('.locks li');
   function ungate() { if (!D.classList.contains('gated')) return; D.classList.remove('gated'); ScrollTrigger.refresh(); dirty = true; pL.resize(); revealSetup(); }
   function openState() {
     opened = true; doorbox.classList.add('opened');
-    gsap.set(leaves[0], { rotationY: -84, opacity: 1 }); gsap.set(leaves[1], { rotationY: 84, opacity: 1 }); gsap.set('.leaf .shade', { opacity: 0.6 });
+    gsap.set(leaves[0], { rotationY: -84, opacity: 1 }); gsap.set(leaves[1], { rotationY: 84, opacity: 1 }); gsap.set('#doorbox .leaf .shade', { opacity: 0.6 });
     gsap.set(doorway, { opacity: 1 }); gsap.set(spill, { opacity: 0.7, scaleY: 1 }); gsap.set(beams, { opacity: 0.6, scale: 1 });
     locks.forEach(function (l) { l.classList.add('off'); });
     setGate('granted'); gateStatus.textContent = 'WELCOME IN'; $('#tapHint').textContent = 'The doors are open. Scroll down to step inside.';
@@ -487,7 +664,7 @@
       .to(dials, { opacity: 0, duration: 0.4 }, t0 + 1.85)
       .to(leaves[0], { rotationY: -84, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
       .to(leaves[1], { rotationY: 84, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
-      .to('.leaf .shade', { opacity: 0.6, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
+      .to('#doorbox .leaf .shade', { opacity: 0.6, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
       .to(seam, { opacity: 0, duration: 0.8 }, t0 + 2.3)
       .fromTo(spill, { opacity: 0, scaleY: 0.2 }, { opacity: 0.85, scaleY: 1, duration: 2, ease: 'power2.out' }, t0 + 2.1)
       .fromTo(beams, { opacity: 0, scale: 0.55 }, { opacity: 0.85, scale: 1.08, duration: 2.6, ease: 'power2.out' }, t0 + 1.95)
@@ -547,11 +724,14 @@
     jump(absTop($('#lab'))); L.p = 0; dirty = true; busy = false; lastGate = -1;
     setTimeout(function () { ScrollTrigger.refresh(); startScroll(); gsap.to(flood, { opacity: 0, duration: 1.3, ease: 'power2.out' }); }, 60);
   }
-  $('#guestHero').addEventListener('click', function () { glide(absTop($('#journey')) + innerHeight * 0.8, 2.2); });
+  $('#toStory').addEventListener('click', function () { glide(absTop($('#mission')) - 20, 1.8); });
 
   /* ================= navigation helpers ================= */
   function goTo(id) {
     if (id === 'hero') return glide(0);
+    if (id === 'mission' || id === 'story' || id === 'age') return glide(absTop(document.getElementById(id)) - (id === 'mission' ? 20 : 0), 1.8);
+    /* the sales zones open only past the 19+ check: every route there lands on the gate first */
+    if (D.classList.contains('age-gated')) { glide(absTop($('#age')), 1.8); setTimeout(function () { var s0 = $('#ageProv'); if (s0 && !RM) s0.focus({ preventScroll: true }); }, 1900); return; }
     if (id === 'city') return glide(absTop($('#journey')) + innerHeight * 0.6);
     if (D.classList.contains('gated')) { if (!opened) openState(); ungate(); }
     var el = document.getElementById(id) || $('[data-stop-id="' + id + '"]');
@@ -581,28 +761,20 @@
   }, { passive: true });
 
   /* ================= store ================= */
-  var PRODUCTS = [], BY = {};
-  /* interest entry cards (interest-entry-hooks + docs/owner/SALES-PLAYBOOK.md section 3): the visitor's interest + a research area, never a result */
+  var PRODUCTS = [], BY = {}, DATA = null;
+  /* interest entry cards: shelves only (no "researched in the context of" wording, no WEIGHT GOALS). Which listings sit on a shelf
+     comes from data/products.json (p.shelves), so no product name is in this file or the page. */
   var INTERESTS = [
-    { k: 'gym', t: 'GYM AND PERFORMANCE', area: 'growth-hormone biology', keys: ['cjc_dac', 'cjc_nodac', 'ipamorelin', 'tesamorelin', 'igf1lr3', 'hgh'], icon: 'dumbbell' },
-    { k: 'age', t: '55+ AND LONGEVITY', area: 'ageing biology', keys: ['epitalon', 'motsc', 'ss31', 'nad', 'glutathione', 'thymosina1'], icon: 'hourglass' },
-    { k: 'energy', t: 'ENERGY', area: 'cellular energy (mitochondria)', keys: ['nad', 'motsc', 'ss31', '5amino1mq'], icon: 'bolt' },
-    { k: 'weight', t: 'WEIGHT GOALS', area: 'metabolism', keys: ['tirzepatide', 'retatrutide', 'aod9604', '5amino1mq', 'klow'], icon: 'gauge', counsel: true },
-    { k: 'recovery', t: 'RECOVERY', area: 'connective-tissue biology', keys: ['bpc157', 'tb500', 'wolverine', 'kpv', 'klow'], icon: 'ring' },
-    { k: 'skin', t: 'SKIN AND HAIR', area: 'skin and hair biology', keys: ['ghkcu', 'glow', 'glutathione'], icon: 'drop' },
-    { k: 'sleep', t: 'SLEEP', area: 'the body clock (circadian rhythm)', keys: ['epitalon'], icon: 'moon' }
+    { k: 'gym', t: 'GYM AND PERFORMANCE', icon: 'dumbbell' },
+    { k: 'age', t: '55+ AND LONGEVITY', icon: 'hourglass' },
+    { k: 'energy', t: 'ENERGY', icon: 'bolt' },
+    { k: 'recovery', t: 'RECOVERY', icon: 'ring' },
+    { k: 'skin', t: 'SKIN AND HAIR', icon: 'drop' },
+    { k: 'sleep', t: 'SLEEP', icon: 'moon' }
   ];
-  INTERESTS.forEach(function (i) { i.d = 'Compounds researched in the context of ' + i.area + '.'; i.shelf = i.t + ' SHELF'; });
-  function inInterest(I, p) { return I.keys.indexOf(p.key) > -1 && (!I.counsel || OFFER); }
-  var CLS = [
-    { k: 'incretin', t: 'INCRETIN CLASS', d: 'GLP-1 / GIP family', keys: ['tirzepatide', 'retatrutide'] },
-    { k: 'gh', t: 'GH-AXIS CLASS', d: 'GHRH analogues, secretagogues, HGH', keys: ['tesamorelin', 'cjc_dac', 'cjc_nodac', 'ipamorelin', 'hgh', 'igf1lr3', 'aod9604'] },
-    { k: 'short', t: 'SHORT-CHAIN PEPTIDES', d: 'Two to fifteen amino acids', keys: ['bpc157', 'tb500', 'epitalon', 'semax', 'selank', 'oxytocin', 'thymosina1', 'glutathione'] },
-    { k: 'melano', t: 'MELANOCORTIN AND COPPER', d: 'Alpha-MSH family, GHK-Cu', keys: ['ghkcu', 'pt141', 'melanotan2', 'kpv'] },
-    { k: 'mito', t: 'MITOCHONDRIAL PEPTIDES', d: 'MOTS-c, SS-31', keys: ['motsc', 'ss31'] },
-    { k: 'blend', t: 'BLENDS', d: 'Two or more in one vial', keys: ['klow', 'wolverine', 'glow'] },
-    { k: 'nonpep', t: 'NON-PEPTIDES', d: 'NAD+, 5-Amino-1MQ', keys: ['nad', '5amino1mq'] }
-  ];
+  function listed(p) { return !!p && !p.hidden && (HIGH || !p.highRisk); }
+  function inInterest(I, p) { return listed(p) && (p.shelves || []).indexOf(I.k) > -1; }
+  var CLS = [];   /* finder classes come with the catalogue (data/products.json "classes") */
   var filter = 'all';
   /* the bottle lights up from the bottom as its card reaches the screen (owner, 30 Oct) */
   var vialIO = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('lit', e.isIntersecting); }); }, { threshold: 0.55 }) : null;
@@ -626,15 +798,15 @@
   }
   function renderStore() {
     var sh = $('#shelf'), anc = $('#shelfAnc');
-    var vis = PRODUCTS.filter(function (p) { return !p.hidden; });
+    var vis = PRODUCTS.filter(listed);
     sh.innerHTML = vis.filter(function (p) { return !p.ancillary; }).map(prodCard).join('');
     var a = vis.filter(function (p) { return p.ancillary; });
     anc.innerHTML = a.map(prodCard).join(''); $('#ancLane').hidden = !a.length;
-    $('#storeCount').textContent = 'EVERY PRODUCT · ' + vis.length + ' LISTINGS';
+    $('#storeCount').textContent = 'THE PEPTICITY COLLECTION · ' + vis.length + ' LISTINGS';
     var fl = $('#filters');
     fl.innerHTML = '<button class="chip" type="button" data-f="all" aria-pressed="true">ALL</button>' + INTERESTS.map(function (i) { return '<button class="chip" type="button" data-f="' + i.k + '" aria-pressed="false">' + i.t + '</button>'; }).join('');
     observeProds(); watchVials();
-    fillMini();
+    renderInterests(); fillMini();
   }
   function applyFilter(k) {
     filter = k;
@@ -663,12 +835,14 @@
     return '<div class="mini-prod">' + '<div class="mp-v"><img src="' + CFG.bottle + '" alt=""></div><div><b>' + esc(p.name) + ' · ' + esc(p.strength) + '</b><span>' + money(p.price) + ' CAD</span><em>' + esc(p.note) + '</em></div>' +
       '<button class="pc-btn pc-btn--sm" type="button" data-add="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">ADD</span></span></button></div>';
   }
-  function byKey(k, strength) { return PRODUCTS.find(function (p) { return p.key === k && p.inStock && (!strength || p.strength === strength); }); }
+  function bySlug(sl) { return PRODUCTS.find(function (p) { return p.slug === sl && listed(p) && p.inStock; }); }
+  /* featured tiles (city cards, the hologram on the bench) are picked in data/products.json "featured" */
   function fillMini() {
-    $$('.sr[data-buy]').forEach(function (h) { var p = byKey(h.dataset.buy); if (p) $('.sr-prod', h).innerHTML = miniCard(p); });
-    var lb = $('#labBuy'), p = byKey('bpc157');
-    if (lb && p) lb.innerHTML = '<p class="mini-t" style="margin-bottom:8px">THE VIAL ON THIS BENCH</p>' + miniCard(p);
-    var st5 = $('.st[data-st="4"] .cap-form'); if (st5 && joined()) st5.outerHTML = '<p class="mini-t">YOU\'RE ON THE TEAM · 15% APPLIES IN YOUR CART</p>';
+    var F = (DATA && DATA.featured) || {};
+    $$('.sr[data-feature]').forEach(function (h) { var i = +h.dataset.feature.split('-')[1], p = bySlug((F.city || [])[i]);
+      if (p) { $('.sr-prod', h).innerHTML = miniCard(p); delete h.dataset.empty; } else h.dataset.empty = '1'; });
+    var hp = $('#holoProd'), b = bySlug(F.bench);
+    if (hp) hp.innerHTML = b ? miniCard(b) : '<p>[Featured product: set in data/products.json]</p>';
   }
 
   /* ================= cart (offer-to-checkout) ================= */
@@ -676,6 +850,7 @@
   cart = (Array.isArray(cart) ? cart : []).filter(function (l) { return l && isFinite(l.id); }).map(function (l) { return { id: +l.id, q: Math.max(1, Math.min(999, parseInt(l.q, 10) || 1)) }; });   /* numbers only */
   function saveCart() { LS.set('pc-cart', JSON.stringify(cart)); renderCart(); }
   function addToCart(id, btn) {
+    if (!listed(BY[id]) || !BY[id].inStock) return;
     var l = cart.find(function (x) { return x.id === id; }); if (l) l.q++; else cart.push({ id: id, q: 1 });
     saveCart(); track('cta_click:add');
     if (btn) { var lab = $('.pc-btn__label', btn), t = lab.textContent; btn.style.width = btn.offsetWidth + 'px'; lab.textContent = 'ADDED ✓'; btn.classList.add('done'); setTimeout(function () { lab.textContent = t; btn.classList.remove('done'); btn.style.width = ''; }, 1500); }
@@ -690,7 +865,7 @@
   }
   function renderCart() {
     if (!PRODUCTS.length) return;
-    cart = cart.filter(function (l) { return BY[l.id]; });
+    cart = cart.filter(function (l) { return listed(BY[l.id]); });
     var T = totals(), lines = $('#lines');
     $('#cartN').textContent = T.items;
     lines.innerHTML = cart.map(function (l) {
@@ -1015,7 +1190,7 @@
   })();
 
   /* the concierge bot hands its cart adds to this cart */
-  window.PEPCART = { add: function (item) { var p = PRODUCTS.find(function (x) { return x.slug === item.slug; }); if (!p || !p.inStock) return; for (var i = 0; i < (item.qty || 1); i++) addToCart(p.id); } };
+  window.PEPCART = { add: function (item) { var p = PRODUCTS.find(function (x) { return x.slug === item.slug; }); if (!p || !p.inStock || !listed(p) || !pass) return; for (var i = 0; i < (item.qty || 1); i++) addToCart(p.id); } };
   window.addEventListener('pep:checkout', function () { openModal('checkout'); });
 
   /* ================= load the catalogue ================= */

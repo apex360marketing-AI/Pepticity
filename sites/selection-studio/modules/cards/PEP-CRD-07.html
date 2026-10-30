@@ -400,7 +400,7 @@ p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink2)}
     return api;
   };
   /* auto-mount the stage smoke */
-  function mount() { var c = document.querySelector('.pm-bg canvas[data-smoke]'); if (c) PM.stageSmoke = PM.smoke(c); }
+  function mount() { var c = document.querySelector('.pm-bg canvas[data-smoke]'), k = parseFloat(document.body.dataset.smokeScale); if (c) PM.stageSmoke = PM.smoke(c, k ? { scale: k } : {}); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 })();
 </script>
