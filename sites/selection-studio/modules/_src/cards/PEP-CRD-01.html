@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-01 · GLASS MEMBER CARD</title>
+<!--@meta {"order":1,"code":"PEP-CRD-01","name":"GLASS MEMBER CARD","interact":"drag","weight":"Heavy",
+ "desc":"The PEPTICITY member card as a thick block of frosted glass in real 3D, with the P glowing in its chip. Drag it to turn it over, flick it to spin, or tap to flip.",
+ "source":"PEPTICITY sites/main/v2/card3d.js (inlined; glyphs inline, BLACK look, tap-to-flip and accent glow added) + the approved P (brand/logo/p-mark.svg)"}-->
+<!--@head-->
+<!--@importmap-->
+<style>
+.pm-main{padding-top:clamp(60px,10vh,96px);padding-bottom:clamp(64px,11vh,100px)}
+.wrap{display:grid;justify-items:center;gap:clamp(26px,5vh,44px);width:100%}
+.mcard{--c:16px;position:relative;width:min(560px,78vw,calc((100vh - 230px) * 1.586));aspect-ratio:1.586;padding:0;border:0;background:none;cursor:pointer;perspective:1200px;-webkit-tap-highlight-color:transparent;touch-action:pan-y}
+.mcard:focus{outline:none}
+.mcard:focus-visible::after{content:"";position:absolute;inset:-12px;border:1.5px solid var(--acc-text);clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+.mc3d{position:absolute;left:-14%;top:-24%;width:128%;height:148%;pointer-events:none;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5))}
+html.card3d-on .mc-flip{opacity:0}
+html.card3d-on .mcard{cursor:grab}
+html.card3d-on .mcard:active{cursor:grabbing}
+.floor{position:absolute;left:12%;right:12%;bottom:-18%;height:22%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 22%,transparent),transparent 70%);filter:blur(14px);opacity:.55;animation:floorB 5s var(--e-io) infinite alternate;animation-play-state:var(--play)}
+@keyframes floorB{to{opacity:.9;transform:scaleX(1.08)}}
+/* the flat card (stays if 3D is unavailable): v2.css member card, BLACK look */
+.mc-flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1s var(--e-out)}
+.mcard.flip .mc-flip{transform:rotateY(180deg)}
+.mc-face{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;color:#fff;text-align:left;
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)));
+  -webkit-backdrop-filter:blur(14px) saturate(180%);backdrop-filter:blur(14px) saturate(180%);
+  background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.04) 55%,rgba(255,255,255,.12));box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),inset 0 1px 0 rgba(255,255,255,.7)}
+.mc-back{transform:rotateY(180deg);display:grid;place-items:center}
+.mc-top{position:absolute;left:8%;top:12%;display:flex;align-items:center;gap:10px}
+.mc-p{width:30px;height:25px;fill:url(#gGun)}.mc-p.big{width:90px;height:74px}
+.mc-word{font:400 18px var(--fh);letter-spacing:.08em}
+.mc-chip{position:absolute;right:9%;top:13%;width:44px;height:34px;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);background:linear-gradient(135deg,#8e8d85,#3a3936 50%,#6b6a64);box-shadow:0 0 18px var(--acc-bloom)}
+.mc-tier{position:absolute;left:8%;bottom:31%;font:400 10px var(--fh);letter-spacing:.32em;color:rgba(255,255,255,.8)}
+.mc-name{position:absolute;left:8%;bottom:17%;font:400 22px var(--fh);letter-spacing:.12em}
+.mc-notch{position:absolute;left:8%;right:8%;bottom:8%;display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.mc-notch i{height:3px;background:rgba(255,255,255,.22)}.mc-notch i.on{background:#fff;box-shadow:0 0 8px rgba(255,255,255,.8)}
+.mc-back-t{position:absolute;bottom:12%;font:400 10px var(--fh);letter-spacing:.3em;color:#e6e9ed}
+.cap{display:flex;align-items:center;gap:16px;font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute);text-transform:uppercase}
+.cap b{font-weight:400;color:var(--ink2)}
+.cap i{width:4px;height:4px;transform:rotate(45deg);background:var(--acc-hi);box-shadow:0 0 6px var(--acc)}
+.cap .s{padding:5px 8px 4px;border:1px dashed var(--hair2);color:var(--ink2);letter-spacing:.28em}
+@media (max-width:520px){.cap{gap:10px;font-size:8px;letter-spacing:.26em}}
+@media (prefers-reduced-motion:reduce){.floor{animation:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-01" data-name="GLASS MEMBER CARD" data-hint="DRAG">
+<!--@stage-->
+<!--@glyphs-->
+<!--@pmark-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a3a29b"/><stop offset=".46" stop-color="#6b6a64"/><stop offset=".54" stop-color="#2a2a28"/><stop offset="1" stop-color="#8e8d85"/></linearGradient></defs></svg>
+<main class="pm-main">
+  <div class="wrap">
+    <button class="mcard" id="mcard" type="button" aria-label="PEPTICITY member card. Drag to turn it, tap to flip it.">
+      <span class="floor" aria-hidden="true"></span>
+      <span class="mc-flip" aria-hidden="true">
+        <span class="mc-face mc-front">
+          <span class="mc-top"><svg class="mc-p" viewBox="0 0 1.416 1.16"><use href="#pmark"/></svg><span class="mc-word">PEPTICITY</span></span>
+          <span class="mc-chip"></span>
+          <span class="mc-tier" id="mcTier">PEPTICITY TEAM</span>
+          <span class="mc-name" id="mcName">GUEST</span>
+          <span class="mc-notch" id="mcNotch"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        </span>
+        <span class="mc-face mc-back"><svg class="mc-p big" viewBox="0 0 1.416 1.16"><use href="#pmark"/></svg><span class="mc-back-t">THE PEPTICITY TEAM</span></span>
+      </span>
+    </button>
+    <p class="cap"><b>MEMBER CARD</b><i aria-hidden="true"></i>DRAG TO TURN<i aria-hidden="true"></i>TAP TO FLIP<span class="s">SAMPLE</span></p>
+  </div>
+</main>
+<!--@tail-->
+<script>
+/* flat-card fallback: tap flips it with CSS if the 3D card never starts */
+(function(){var b=document.getElementById('mcard');b.addEventListener('click',function(){if(!document.documentElement.classList.contains('card3d-on'))b.classList.toggle('flip')})})();
+</script>
+<script type="module">
+/*@card3d*/
+</script>
+</body>
+</html>

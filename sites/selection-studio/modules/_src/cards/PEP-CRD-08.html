@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-08 · LIQUID GLASS</title>
+<!--@meta {"order":8,"code":"PEP-CRD-08","name":"LIQUID GLASS","interact":"hover","weight":"Heavy",
+ "desc":"A slab of perfectly clear glass that really bends the moving smoke behind it, strongest at its cut edges. Move over it and a drop of liquid glass follows your pointer, magnifying whatever is under it.",
+ "source":"New for PEPTICITY (Selection Studio library B): real refraction of the BG-P01 silver smoke ground (brand/ui/smoke-bg.js) through the PEPTICITY chamfer, drop lens after APEX liquid-glass-studio"}-->
+<!--@head-->
+<style>
+.lg{--c:28px;position:relative;width:min(620px,100%,(100vh - 96px) * 1.62);aspect-ratio:1.62;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(22px,4vw,38px);cursor:none;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(255,255,255,.75) calc(50% + .5px),transparent calc(50% + 1.5px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.5px),rgba(160,166,176,.55) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(255,255,255,.2),rgba(255,255,255,.85) 40%,rgba(255,255,255,.3)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(150,156,166,.5),rgba(220,226,234,.35) 50%,rgba(150,156,166,.5)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(255,255,255,.7),rgba(150,156,166,.4)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(220,226,234,.4),rgba(150,156,166,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    radial-gradient(120% 70% at 10% -10%,rgba(255,255,255,.16),transparent 50%),
+    linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,0) 40%,rgba(255,255,255,.03))}
+.lg::before{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 26px rgba(255,255,255,.06),inset 0 -18px 30px -18px color-mix(in srgb,var(--acc) 30%,transparent)}
+.lg .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.kick{font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--ink2);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.tag{font:400 8px/1 var(--fh);letter-spacing:.26em;padding:6px 8px 5px;border:1px dashed rgba(230,234,240,.35);color:var(--ink)}
+h2{margin:0 0 10px;font:400 clamp(26px,4.6vw,44px)/1 var(--fh);letter-spacing:.08em;color:var(--chrome);text-shadow:.01em .02em 0 #55585e,.02em .04em 0 #3b3d42,.03em .06em 0 #2a2b2f,.1em .17em .14em rgba(0,0,0,.6)}
+p{margin:0;max-width:34ch;font-size:14.5px;line-height:1.55;color:#e3e6ea;text-shadow:0 1px 8px rgba(0,0,0,.75)}
+.dot{position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#fff,var(--acc-hi) 50%,transparent 72%);box-shadow:0 0 10px var(--acc);transition:opacity .3s}
+.lg.hot .dot{opacity:.9}
+.ring{position:absolute;left:0;top:0;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .35s;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),inset 0 2px 8px rgba(255,255,255,.35),inset 0 -6px 14px color-mix(in srgb,var(--acc) 35%,transparent),0 8px 24px rgba(0,0,0,.35)}
+.lg.hot .ring{opacity:1}
+.ring::after{content:"";position:absolute;left:18%;top:12%;width:34%;height:22%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.7),transparent);transform:rotate(-24deg)}
+.nogl .lg{-webkit-backdrop-filter:blur(2px) saturate(160%);backdrop-filter:blur(2px) saturate(160%);background-color:rgba(255,255,255,.03)}
+@media (prefers-reduced-motion:reduce){.ring,.dot{transition:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-08" data-name="LIQUID GLASS" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <article class="lg" id="lg">
+    <div class="top"><span class="kick">CLEAR GLASS · REAL REFRACTION</span><span class="tag">LIVE</span></div>
+    <div><h2>LIQUID GLASS</h2><p>The smoke behind bends through the glass, most at the cut edges. Move over it to drop a lens.</p></div>
+    <span class="ring" id="ring" aria-hidden="true"></span><span class="dot" id="dot" aria-hidden="true"></span>
+  </article>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var cv=document.querySelector('.pm-bg canvas');cv.removeAttribute('data-smoke');   /* this module draws its own ground: the smoke plus the glass that bends it */
+  var FS=['precision highp float;',
+  'uniform vec2 r;uniform float t;uniform vec2 m;uniform float rip;uniform vec4 card;uniform float ch;uniform vec3 drop;uniform float dk;uniform vec3 acc;',
+  'float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+  'float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),f.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x),f.y);}',
+  'float fbm(vec2 p){float v=0.,a=.5;mat2 R=mat2(.8,.6,-.6,.8);for(int i=0;i<4;i++){v+=a*n2(p);p=R*p*2.03;a*=.5;}return v;}',
+  'float H(vec2 p){vec2 q=p*.9;vec2 w=vec2(fbm(q+vec2(0.,t*.040)),fbm(q+vec2(5.2,-t*.034)));float h=fbm(q*1.3+w*1.9+vec2(t*.022,0.));float d=length(p-m);h+=.05*sin(d*30.-t*3.)*exp(-d*3.4)*rip;h+=.18*exp(-d*d*7.)*rip;return h;}',
+  'float env(vec3 R){float sky=.10*smoothstep(-.4,1.,R.y);float band=1.0*exp(-pow((R.y-.30)*7.,2.));float band2=.55*exp(-pow((R.y+.12)*10.,2.));float v1=.62*exp(-pow((R.x+.62)*10.,2.));float v2=.45*exp(-pow((R.x-.55)*13.,2.));return .012+sky+band+band2+v1+v2;}',
+  /* signed distance to the PEPTICITY chamfered card (cut at top-left and bottom-right), in canvas pixels */
+  'float sdCard(vec2 q){vec2 d=abs(q)-card.zw;float bx=length(max(d,0.))+min(max(d.x,d.y),0.);float cut=(abs(q.x-q.y)-(card.z+card.w-ch))*.70710678;return max(bx,cut);}',
+  'vec3 smoke(vec2 fc){vec2 uv=fc/r;vec2 p=(fc-.5*r)/r.y;float e=1.6/r.y;float h=H(p);vec3 n=normalize(vec3(-(H(p+vec2(e,0.))-h)/e*.11,-(H(p+vec2(0.,e))-h)/e*.11,1.));vec3 R=reflect(vec3(0.,0.,-1.),n);',
+  ' float fres=pow(1.-max(n.z,0.),3.);float E=env(R);float L=E+fres*.35;float d=length(p-m);L+=.28*exp(-d*d*9.)*(.4+.6*smoothstep(.2,1.,E));float spec=pow(max(dot(n,normalize(vec3(.35,.55,1.))),0.),220.);',
+  ' vec2 sp=p*1.2+vec2(t*.016,-t*.011);float sm=fbm(sp+fbm(sp*1.7+vec2(t*.02))*1.4);float wisp=smoothstep(.42,.86,sm);float vig=mix(.40,.80,smoothstep(1.3,0.,length(uv-vec2(.5,.46))));',
+  ' vec3 tint=vec3(.86,.885,.92);vec3 col=L*tint+vec3(.9)*spec*.45+tint*wisp*.10;col*=vig;col=1.-exp(-col*1.2);col=pow(col,vec3(1.55))*.66;float lum=dot(col,vec3(.3333));',
+  ' vec3 base=vec3(.043,.043,.047);vec3 uvb=vec3(.070,.058,.100);float uvm=(1.-smoothstep(0.,.16,lum))*smoothstep(.25,.85,sm);return max(col,mix(base,uvb,uvm*.85));}',
+  'void main(){vec2 fc=gl_FragCoord.xy;vec2 q=fc-card.xy;float sd=sdCard(q);vec3 col;float S=r.y/900.;',
+  ' if(sd<0.){',
+  '  float ew=46.*S;float ins=-sd;vec2 g=vec2(sdCard(q+vec2(1.,0.))-sdCard(q-vec2(1.,0.)),sdCard(q+vec2(0.,1.))-sdCard(q-vec2(0.,1.)))*.5;',
+  '  float bend=pow(1.-clamp(ins/ew,0.,1.),2.2);vec2 f=card.xy+q*.93+g*bend*38.*S*dk;',          /* magnified a touch, bent hard at the edges */
+  '  float dd=length(fc-drop.xy);float dr=drop.z;if(dd<dr&&dr>1.){float k=dd/dr;float z=sqrt(max(0.,1.-k*k));vec2 o=fc-drop.xy;f=drop.xy+o*(.55+.45*k)-o*(1.-z)*.18;}',
+  '  vec3 cr=smoke(f+g*bend*5.*S);vec3 cb=smoke(f-g*bend*5.*S);col=vec3(cr.r,(cr.g+cb.g)*.5,cb.b);',  /* a hair of colour split at the edge */
+  '  col=col*1.12+.012;col+=acc*.10*bend;',
+  '  if(dd<dr&&dr>1.){float k=dd/dr;col+=vec3(.9,.92,1.)*.10*smoothstep(.75,1.,k)+acc*.12*smoothstep(.85,1.,k);}',
+  ' }else{col=smoke(fc);float halo=exp(-sd/(14.*S))*.06;col+=acc*halo;}',
+  ' gl_FragColor=vec4(col,1.);}'].join('\n');
+  var lg=document.getElementById('lg'),ring=document.getElementById('ring'),dot=document.getElementById('dot');
+  var dx=0,dy=0,tx=0,ty=0,R=0,TR=0,hot=false,dk=.2,tdk=1;
+  var api=PM.smoke(cv,{fs:FS,uniforms:['card','ch','drop','dk','acc'],scale:matchMedia('(max-width:900px)').matches?.5:.62,before:function(gl,U,a){
+    var b=lg.getBoundingClientRect(),s=a.scale||.6,H=cv.height,c=parseFloat(getComputedStyle(lg).getPropertyValue('--c'))||28;
+    gl.uniform4f(U.card,(b.left+b.width/2)*s,H-(b.top+b.height/2)*s,b.width/2*s,b.height/2*s);gl.uniform1f(U.ch,c*s);
+    gl.uniform3f(U.drop,(b.left+dx)*s,H-(b.top+dy)*s,R*s);gl.uniform1f(U.dk,dk);var ac=PM.acc.rgb;gl.uniform3f(U.acc,ac[0]/255,ac[1]/255,ac[2]/255);
+  }});
+  if(!api.ok){document.documentElement.classList.add('nogl');return}
+  var loop=PM.loop(function(){var k=PM.RM?1:.18;dx+=(tx-dx)*k;dy+=(ty-dy)*k;R+=(TR-R)*(PM.RM?1:.14);dk+=(tdk-dk)*.06;
+    ring.style.width=ring.style.height=(R*2).toFixed(1)+'px';ring.style.transform='translate('+(dx-R).toFixed(1)+'px,'+(dy-R).toFixed(1)+'px)';dot.style.transform='translate('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px)';
+    if(!PM.playing||PM.RM)api.draw(0);
+    return Math.abs(tx-dx)+Math.abs(ty-dy)+Math.abs(TR-R)+Math.abs(tdk-dk)>.05});
+  function at(e){var b=lg.getBoundingClientRect();tx=e.clientX-b.left;ty=e.clientY-b.top}
+  lg.addEventListener('pointerenter',function(e){at(e);dx=tx;dy=ty;hot=true;lg.classList.add('hot');TR=Math.min(92,lg.offsetHeight*.3);loop.kick()});
+  lg.addEventListener('pointermove',function(e){at(e);loop.kick()});
+  lg.addEventListener('pointerleave',function(){hot=false;lg.classList.remove('hot');TR=0;loop.kick()});
+  lg.addEventListener('pointerdown',function(e){at(e);TR=Math.min(130,lg.offsetHeight*.42);loop.kick()});
+  lg.addEventListener('pointerup',function(){TR=hot?Math.min(92,lg.offsetHeight*.3):0;loop.kick()});
+  /* the edge bend eases in when the module starts */
+  PM.on('play',function(){dk=.2;tdk=1;loop.kick()});if(PM.playing||PM.RM){dk=1}
+  PM.on('acc',function(){api.draw(0)});
+  loop.kick();
+  /* idle demo: the drop drifts across the glass until the pointer arrives */
+  var it=0,lastIn=0;lg.addEventListener('pointermove',function(){lastIn=performance.now()});
+  PM.ambient(function(dt){if(hot||performance.now()-lastIn<3000)return;it+=dt;var w=lg.offsetWidth,h=lg.offsetHeight;tx=w*(.5+.32*Math.sin(it*.42));ty=h*(.52+.2*Math.sin(it*.77));TR=Math.min(78,h*.26);loop.kick()});
+  PM.on('pause',function(){if(!hot){TR=0;loop.kick()}});
+})();
+</script>
+</body>
+</html>

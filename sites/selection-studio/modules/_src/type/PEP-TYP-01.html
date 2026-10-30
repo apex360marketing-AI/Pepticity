@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-TYP-01 · PEPTICITY STUDIO 3D</title>
+<!--@meta {"order":1,"code":"PEP-TYP-01","name":"PEPTICITY STUDIO 3D","interact":"drag","weight":"Heavy",
+ "desc":"The approved PEPTICITY lettering, live in real 3D: matte gunmetal faces, dark sides with a faint violet sheen and a hairline of light on every edge. The letters turn into place, lean toward your pointer, and turn again as you drag across them.",
+ "source":"PEPTICITY brand/font/type3d-engine.js + glyphs.json (commit 6de50ec), set exactly as sites/brand-font section 02 (PEPTICITY fill .84 funky 1, STUDIO fill .6 funky .8, dark wall, same light); BTN-P01 button"}-->
+<!--@head-->
+<!--@btnp01-->
+<!--@importmap-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text);--c:12px;--h:54px;--px:30px;--fs:11.5px}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.sheet{position:relative;width:min(1180px,100%);display:grid;gap:clamp(12px,2.2vh,18px);touch-action:pan-y;cursor:ew-resize}
+.eyebrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 2px;font:400 9px/1 var(--fh);letter-spacing:.36em;color:var(--mute)}
+.eyebrow span{display:flex;align-items:center;gap:12px}
+.eyebrow span::before{content:"";width:28px;height:1px;background:linear-gradient(90deg,var(--acc),transparent);box-shadow:0 0 6px var(--acc-bloom)}
+.eyebrow b{font-weight:400;color:var(--ink2)}
+.panel{--cut:14px;position:relative;background:rgba(230,233,237,.035);border:1px solid rgba(230,233,237,.13);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.panel::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(230,233,237,.07) 50%,transparent 65%);transform:translateX(-120%);transition:transform 1.4s cubic-bezier(.45,0,.2,1)}
+.panel:hover::after{transform:translateX(120%)}
+.slot{position:relative;width:100%}
+.slot.big{aspect-ratio:3.3/1}
+.slot.mid{aspect-ratio:3.6/1}
+.row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(14px,3vw,34px);align-items:center}
+.copy{display:grid;gap:18px;justify-items:start}
+.copy p{margin:0;max-width:40ch;color:var(--ink2);font-size:clamp(13.5px,1.25vw,15.5px);line-height:1.6}
+.copy small{font:400 8.5px/1 var(--fh);letter-spacing:.32em;color:var(--dim)}
+/* fallback (no WebGL): the flat PEPTICITY BLACK with the dashboard's CSS extrusion */
+.fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(80% 90% at 60% 30%,#5a595b,#3b3a3c 55%,#232224)}
+.no3d .fb{display:flex}
+.fb b{font:400 clamp(28px,7vw,92px)/1 var(--fh);letter-spacing:.06em;color:#9a9993;text-shadow:.008em .014em 0 #55585e,.016em .028em 0 #47494f,.024em .042em 0 #3b3d42,.032em .056em 0 #313337,.04em .07em 0 #28292d,.1em .17em .12em rgba(0,0,0,.62)}
+.slot.mid .fb b{font-size:clamp(24px,5vw,64px)}
+@media (max-width:700px){.row{grid-template-columns:minmax(0,1fr)}.slot.big{aspect-ratio:2.4/1}.slot.mid{aspect-ratio:3/1}}
+@media (prefers-reduced-motion:reduce){.panel::after{display:none}}
+</style>
+<script>
+window.type3dFallback=function(why){if(window.__fb)return;window.__fb=why||'fallback';document.documentElement.classList.add('no3d');var g=document.getElementById('gl');if(g)g.style.display='none'};
+setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},9000);
+</script>
+</head>
+<body data-code="PEP-TYP-01" data-name="PEPTICITY STUDIO 3D" data-hint="DRAG">
+<!--@stage-->
+<!--@glyphs-->
+<canvas id="gl" aria-hidden="true"></canvas>
+<main class="pm-main">
+  <div class="sheet" id="sheet">
+    <p class="eyebrow"><span>PEPTICITY STUDIO · <b>LIVE 3D</b></span><b>01 / 05</b></p>
+    <div class="panel"><div class="slot big" data-slot="pepticity" role="img" aria-label="PEPTICITY in 3D gunmetal letters"><div class="fb"><b>PEPTICITY</b></div></div></div>
+    <div class="row">
+      <div class="panel"><div class="slot mid" data-slot="studio" role="img" aria-label="STUDIO in 3D gunmetal letters"><div class="fb"><b>STUDIO</b></div></div></div>
+      <div class="copy">
+        <p>Your lettering in real 3D: matte gunmetal faces, dark sides with a faint violet sheen and a hairline of light on every edge. Drag across the words to turn them.</p>
+        <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">ENTER THE STUDIO</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+      </div>
+    </div>
+  </div>
+</main>
+<!--@tail-->
+<script type="module">
+/*@t3d*/
+// ---------------------------------------------------------------- the brand-font page set-up (section 02), driven by the studio
+const stage = createStage(document.getElementById('gl'));
+if (stage) {
+  /* drive: 0.5 = letters in place (what the brand page shows mid-scroll); the intro and a drag move it */
+  const D = { v: REDUCED ? 0.5 : 0.1, t: 0.5, held: false };
+  const slotEl = n => document.querySelector(`[data-slot="${n}"]`);
+  function wordSlot(name, text, o = {}) {
+    const ws = wallScene(stage, o.wall || {});
+    const w = makeWord(stage, text, o.word || {});
+    ws.scene.add(w.group);
+    const st = { ry: 0, rx: 0, l: w.letters.map(() => ({ ry: o.funky ? 1.2 : 0, z: 0 })) };
+    return stage.addSlot(slotEl(name), {
+      scene: ws.scene, camera: ws.camera,
+      fit: a => fitCamera(ws.camera, w.width, w.height, a, o.fill || 0.86, o.lookY || 0),
+      update(dt, t, prog, p) {
+        prog = D.v;
+        const k = o.tilt ?? 1;
+        st.ry = damp(st.ry, p.x * 0.16 * k, 3, dt); st.rx = damp(st.rx, p.y * 0.1 * k, 3, dt);
+        w.group.rotation.set(st.rx, st.ry, 0);
+        if (o.funky) {
+          const local = clamp((prog - 0.5) * 2.6, -1, 1);
+          w.letters.forEach((L, i) => {
+            const s = st.l[i], n = w.letters.length, phase = (i - (n - 1) / 2) / n;
+            const tgt = -local * (1.15 + phase * 1.4) * (o.funky);
+            s.ry = damp(s.ry, tgt + Math.sin(t * 0.7 + i * 0.6) * 0.035, 5, dt);
+            s.z = damp(s.z, Math.abs(local) * 0.07 * Math.sin(i * 1.7 + 1), 5, dt);
+            L.rotation.y = s.ry; L.position.z = s.z;
+          });
+        }
+      }
+    });
+  }
+  wordSlot('pepticity', 'PEPTICITY', { fill: 0.84, funky: 1 });
+  wordSlot('studio', 'STUDIO', { fill: 0.6, funky: 0.8 });
+  /* the studio's play/pause + drag driver (sets __t3dBusy so the paused engine still answers the hand) */
+  let busyT = 0;
+  const loop = PM.loop((now, dt) => {
+    if (!D.held) D.t = PM.damp(D.t, 0.5, 2.2, dt);
+    D.v = REDUCED ? 0.5 : PM.damp(D.v, D.t, D.held ? 9 : 2.4, dt);
+    window.__t3dBusy = now < busyT || Math.abs(D.v - 0.5) > 0.002;
+    stage.kick();
+    return window.__t3dBusy;
+  });
+  const wake = ms => { busyT = performance.now() + (ms || 1400); loop.kick(); };
+  PM.on('play', () => { D.v = REDUCED ? 0.5 : 0.1; D.t = 0.5; wake(2600); stage.kick(); });
+  addEventListener('pointermove', () => wake(900), { passive: true });
+  const sheet = document.getElementById('sheet');
+  let x0 = 0;
+  sheet.addEventListener('pointerdown', e => { D.held = true; x0 = e.clientX; try { sheet.setPointerCapture(e.pointerId); } catch (_) {} wake(); });
+  sheet.addEventListener('pointermove', e => { if (!D.held) return; D.t = clamp(0.5 - (e.clientX - x0) / Math.max(300, sheet.clientWidth) * 0.9, 0, 1); wake(); });
+  const up = () => { if (D.held) { D.held = false; wake(2400); } };
+  sheet.addEventListener('pointerup', up); sheet.addEventListener('pointercancel', up);
+  sheet.addEventListener('wheel', e => { if (REDUCED) return; e.preventDefault(); D.t = clamp(D.t + e.deltaY * 0.0012, 0, 1); wake(2400); }, { passive: false });
+  if (PM.playing) wake(2600);
+  /* while playing, the letters turn through once every 9 s so a still tile shows the 3D */
+  let acc = 0; PM.ambient(dt => { acc += dt; if (acc > 9 && !D.held) { acc = 0; D.v = 0.2; wake(2600); } });
+}
+</script>
+</body>
+</html>

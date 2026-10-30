@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BG-P01 · ARSENAL SMOKE · PEPTICITY</title>
+<meta name="fx-code" content="BG-P01"><meta name="fx-interact" content="hover">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/button.css">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* BG-P01 ARSENAL SMOKE (brand/ui/smoke-bg.js, the ground of the PEPTICITY Arsenal and the live site): liquid black-and-silver
+   smoke that drifts slowly and ripples under your pointer, a faint 30-degree chevron watermark and a soft vignette. */
+#smoke{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+#smoke.pc-nogl{display:none}
+.base{position:fixed;inset:0;z-index:0;background:radial-gradient(90% 70% at 50% 40%,#16161a,#0b0b0c 60%,#060607)}
+.wm{position:fixed;left:50%;top:50%;width:260vmax;height:260vmax;margin:-130vmax 0 0 -130vmax;z-index:1;pointer-events:none;transform:rotate(-30deg);background:#fff;opacity:.05;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='96' viewBox='0 0 168 96'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linejoin='miter'%3E%3Cpath d='M12 40 L30 14 L48 40'/%3E%3Cpath d='M96 88 L114 62 L132 88'/%3E%3Cpath d='M60 27 H80 M144 75 H164'/%3E%3C/g%3E%3Cg fill='%23000'%3E%3Cpath d='M84 24 l3 3 l-3 3 l-3 -3z M0 72 l3 3 l-3 3 l-3 -3z M168 72 l3 3 l-3 3 l-3 -3z'/%3E%3C/g%3E%3C/svg%3E") 0 0/168px 96px repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='96' viewBox='0 0 168 96'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linejoin='miter'%3E%3Cpath d='M12 40 L30 14 L48 40'/%3E%3Cpath d='M96 88 L114 62 L132 88'/%3E%3Cpath d='M60 27 H80 M144 75 H164'/%3E%3C/g%3E%3Cg fill='%23000'%3E%3Cpath d='M84 24 l3 3 l-3 3 l-3 -3z M0 72 l3 3 l-3 3 l-3 -3z M168 72 l3 3 l-3 3 l-3 -3z'/%3E%3C/g%3E%3C/svg%3E") 0 0/168px 96px repeat;
+  animation:wmDrift 160s linear infinite;animation-play-state:var(--play)}
+@keyframes wmDrift{to{-webkit-mask-position:168px 96px;mask-position:168px 96px}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>BG-P01</b><span>ARSENAL SMOKE</span></div>
+<div class="base" aria-hidden="true"></div>
+<canvas id="smoke" aria-hidden="true"></canvas>
+<div class="wm" aria-hidden="true"></div>
+<div class="fx-vig" aria-hidden="true"></div>
+<section class="bg-sample">
+  <p class="fx-eyebrow">MATTE AND UV BLACK · SILVER SMOKE</p>
+  <h2 class="fx-h fx-chrome">PEPTICITY</h2>
+  <div class="fx-glass bg-card"><b>THE GROUND BEHIND EVERY PAGE</b><span>Move your pointer across it and the smoke ripples.</span>
+    <button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></div>
+</section>
+<script src="../_shared/fx-kit.js"></script>
+<script src="../_shared/smoke.js"></script>
+<script>
+(function () {
+  FX.hint('hover', FX.coarse ? 'TAP' : 'HOVER');
+  var smoke = window.PCSmoke ? PCSmoke(document.getElementById('smoke'), { mode: 'black', offset: 0, held: !FX.playing || FX.rm }) : null;
+  addEventListener('fx:play', function () { if (smoke && smoke.play && !FX.rm) smoke.play(); });
+  addEventListener('fx:pause', function () { if (smoke && smoke.pause) smoke.pause(); });
+  window.__bg = smoke;
+})();
+</script>
+</body>
+</html>

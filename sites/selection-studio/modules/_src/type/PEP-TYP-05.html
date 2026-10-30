@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-TYP-05 · 3D HEADLINE + BODY</title>
+<!--@meta {"order":5,"code":"PEP-TYP-05","name":"3D HEADLINE + BODY","interact":"hover","weight":"Heavy",
+ "desc":"How a real page reads: the 3D PEPTICITY lettering floats straight on the moving background as the headline, with calm, easy-to-read body text and small labels under it. The headline leans toward your pointer.",
+ "source":"PEPTICITY brand/font/type3d-engine.js (approved materials and edge light, shown without the wall so it floats on the BG-P01 smoke) paired with Geist body and Geist Mono labels (as on sites/brand-font); BTN-P01 button"}-->
+<!--@head-->
+<!--@fonts:Geist,Geist Mono-->
+<!--@btnp01-->
+<!--@importmap-->
+<style>
+:root{--pc-font:var(--fh);--body:"Geist",ui-sans-serif,system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace}
+.pc-btn{--pc-ring:var(--acc-text);--c:12px;--h:52px;--px:28px;--fs:11px}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.ed{position:relative;width:min(1080px,100%);display:grid;gap:clamp(10px,2vh,18px)}
+.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(230,233,237,.13)}
+.slot{position:relative}
+.slot.wm{width:min(260px,44%);aspect-ratio:5.4/1}
+.slot.hl{width:100%;aspect-ratio:4.6/1;margin:clamp(2px,1vh,10px) 0}
+.mono{font:500 10.5px/1.5 var(--mono);letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+.mono b{font-weight:500;color:var(--acc-text)}
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,.8fr);gap:clamp(16px,3vw,40px);align-items:start}
+.lede{margin:0;font:400 clamp(17px,1.9vw,23px)/1.4 var(--body);letter-spacing:-.01em;color:#eef0f3;text-wrap:balance}
+.cols p{margin:0;font:400 clamp(13.5px,1.2vw,15px)/1.65 var(--body);color:var(--ink2)}
+.side{display:grid;gap:14px;justify-items:start}
+.side .mono{line-height:1.8}
+.rule{height:1px;width:100%;background:linear-gradient(90deg,var(--acc-line),transparent);transform-origin:0 50%;animation:ruleIn 1.6s var(--e-out) both;animation-play-state:var(--play)}
+@keyframes ruleIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.fb{position:absolute;inset:0;display:none;align-items:center}
+.no3d .fb{display:flex}
+.fb b{font:400 clamp(26px,7vw,88px)/1 var(--fh);letter-spacing:.05em;color:#9a9993;text-shadow:.008em .014em 0 #55585e,.016em .028em 0 #47494f,.024em .042em 0 #3b3d42,.032em .056em 0 #313337,.1em .17em .12em rgba(0,0,0,.62)}
+.slot.wm .fb b{font-size:22px}
+@media (max-width:860px){.mast .mono:last-child{display:none}}
+@media (max-width:600px){.cols{grid-template-columns:minmax(0,1fr)}.slot.hl{aspect-ratio:3.2/1}}
+@media (max-height:520px){.ed{gap:8px}.mast{padding-bottom:6px}.slot.hl{aspect-ratio:5.6/1;margin:0}.lede{font-size:16px}.cols p{font-size:13px;line-height:1.55}.side{gap:10px}.side .mono{font-size:9.5px;line-height:1.6}.pc-btn{--h:44px;--px:20px}}
+@media (prefers-reduced-motion:reduce){.rule{animation:none}}
+</style>
+<script>
+window.type3dFallback=function(why){if(window.__fb)return;window.__fb=why||'fallback';document.documentElement.classList.add('no3d');var g=document.getElementById('gl');if(g)g.style.display='none'};
+setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},9000);
+</script>
+</head>
+<body data-code="PEP-TYP-05" data-name="3D HEADLINE + BODY" data-hint="HOVER">
+<!--@stage-->
+<!--@glyphs-->
+<canvas id="gl" aria-hidden="true"></canvas>
+<main class="pm-main">
+  <article class="ed">
+    <header class="mast"><div class="slot wm" data-slot="wm" role="img" aria-label="PEPTICITY"><div class="fb"><b>PEPTICITY</b></div></div><span class="mono">THE LETTER · <b>ISSUE 01</b></span><span class="mono">HEADLINE 3D · BODY GEIST</span></header>
+    <h1 class="slot hl" data-slot="hl" aria-label="JOIN THE TEAM" style="margin:0"><div class="fb"><b>JOIN THE TEAM</b></div></h1>
+    <span class="rule" aria-hidden="true"></span>
+    <div class="cols">
+      <p class="lede">Every product comes in the same clear PEPTICITY bottle and ships in a plain, sealed box.</p>
+      <p>Join the PEPTICITY Team for the monthly letter and first word when a product is back in stock. One email a month, and you can leave any time.</p>
+      <div class="side"><span class="mono">SAMPLE COPY<br>BODY · GEIST 400<br>LABELS · GEIST MONO</span>
+        <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></div>
+    </div>
+  </article>
+</main>
+<!--@tail-->
+<script type="module">
+/*@t3d*/
+const stage = createStage(document.getElementById('gl'));
+if (stage) {
+  const slotEl = n => document.querySelector(`[data-slot="${n}"]`);
+  /* the approved word, without the wall: it floats on the page ground (same materials, same edge hairline) */
+  function floatSlot(name, text, o = {}) {
+    const ws = wallScene(stage, o.wall || {});
+    ws.wall.visible = false; ws.key.castShadow = false;   /* no wall to land on, so no shadow pass */
+    const w = makeWord(stage, text, o.word || {});
+    ws.scene.add(w.group);
+    const st = { ry: 0, rx: 0, intro: REDUCED ? 1 : 0, t0: performance.now(), l: w.letters.map((_, i) => ({ ry: REDUCED ? 0 : -1.4, d: i * 0.07 })) };
+    o.st = st;
+    return stage.addSlot(slotEl(name), {
+      scene: ws.scene, camera: ws.camera,
+      fit: a => fitCamera(ws.camera, w.width, w.height, a, o.fill || 0.9, 0),
+      update(dt, t, prog, p) {
+        const k = o.tilt ?? 1;
+        st.ry = damp(st.ry, p.x * 0.2 * k, 3, dt); st.rx = damp(st.rx, p.y * 0.12 * k, 3, dt);
+        w.group.rotation.set(st.rx, st.ry, 0);
+        st.intro = REDUCED ? 1 : Math.min(1, (performance.now() - st.t0) / 1800);   /* wall-clock, so slow devices finish on time */
+        w.letters.forEach((L, i) => { const s = st.l[i]; const on = st.intro * 1.6 - s.d > 0 ? 0 : -1.4; s.ry = damp(s.ry, on + Math.sin(t * 0.6 + i * 0.7) * 0.03, 4.5, dt); L.rotation.y = s.ry; });
+      }
+    });
+  }
+  const A = { fill: 0.94, tilt: 0.5 }, B = { fill: 0.96, tilt: 1 };
+  floatSlot('wm', 'PEPTICITY', A);
+  floatSlot('hl', 'JOIN THE TEAM', B);
+  let busyT = 0;
+  const loop = PM.loop(now => { window.__t3dBusy = now < busyT; stage.kick(); return window.__t3dBusy; });
+  const wake = ms => { busyT = performance.now() + (ms || 1200); loop.kick(); };
+  const replay = () => { [A, B].forEach(o => { if (!o.st || REDUCED) return; o.st.intro = 0; o.st.t0 = performance.now(); o.st.l.forEach(s => { s.ry = -1.4; }); }); wake(3200); };
+  PM.on('play', replay);
+  addEventListener('pointermove', () => wake(900), { passive: true });
+  if (PM.playing) wake(3200);
+  let acc = 0; PM.ambient(dt => { acc += dt; if (acc > 11) { acc = 0; replay(); } });
+}
+</script>
+</body>
+</html>

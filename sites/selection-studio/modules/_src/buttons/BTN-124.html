@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTN-124 · MAGNET PULL</title>
+<!--@meta {"order":2,"code":"BTN-124","name":"MAGNET PULL","interact":"hover","weight":"Medium",
+ "desc":"A slanted glass button that is pulled toward your pointer like a magnet as you come near. Its lit edge grows the closer you get, and it springs back when you leave.",
+ "source":"APEX library BTN-124 Magnet Pull (spring physics and proximity halo reused), re-cut as PEPTICITY chamfered glass"}-->
+<!--@head-->
+<style>
+.mag{--c:16px;--hc:var(--acc);position:relative;display:inline-grid;place-items:center;height:78px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.mag.sec{--hc:var(--chrome);height:66px;font-size:12px}
+.mag:focus{outline:none}
+.mag-field{position:absolute;left:50%;top:50%;width:420px;height:240px;margin:-120px 0 0 -210px;pointer-events:none;opacity:0;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--hc) 14%,transparent),transparent 72%)}
+.mag-body,.mag-lw{position:absolute;inset:0;will-change:transform}
+.mag-lw{position:relative;inset:auto;z-index:3;display:grid;place-items:center}
+.mag-g{position:absolute;inset:0;transform:skewX(-12deg);--c:16px}
+.mag.sec .mag-g{--c:13px}
+.mag-halo{position:absolute;inset:-12px -18px;transform:skewX(-12deg) scale(.9);pointer-events:none;opacity:0}
+.mag-halo .pm-lit{--lc:22px;inset:0;opacity:1;--lit:var(--hc)}
+.mag-halo b{position:absolute;inset:7px;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(to bottom right,transparent calc(50% - .5px),color-mix(in srgb,var(--hc) 80%,#fff) 50%,transparent calc(50% + .5px)) 0 0/var(--k) var(--k) no-repeat,
+  linear-gradient(to bottom right,transparent calc(50% - .5px),color-mix(in srgb,var(--hc) 80%,#fff) 50%,transparent calc(50% + .5px)) 100% 100%/var(--k) var(--k) no-repeat,
+  linear-gradient(color-mix(in srgb,var(--hc) 70%,transparent),color-mix(in srgb,var(--hc) 70%,transparent)) 100% 0/calc(100% - var(--k)) 1px no-repeat,
+  linear-gradient(color-mix(in srgb,var(--hc) 70%,transparent),color-mix(in srgb,var(--hc) 70%,transparent)) 0 100%/calc(100% - var(--k)) 1px no-repeat,
+  linear-gradient(color-mix(in srgb,var(--hc) 70%,transparent),color-mix(in srgb,var(--hc) 70%,transparent)) 0 100%/1px calc(100% - var(--k)) no-repeat,
+  linear-gradient(color-mix(in srgb,var(--hc) 70%,transparent),color-mix(in srgb,var(--hc) 70%,transparent)) 100% 0/1px calc(100% - var(--k)) no-repeat}
+.mag-amb{position:absolute;inset:0;transform:skewX(-12deg);overflow:hidden;--k:16px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.mag-amb::before{content:"";position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+  transform:translateX(-120%);animation:magSheen 5.5s var(--e-io) infinite;animation-play-state:var(--play)}
+@keyframes magSheen{0%{transform:translateX(-120%)}55%,100%{transform:translateX(420%)}}
+.mag-l{display:inline-flex;align-items:center;gap:18px;height:100%;padding:0 74px 0 58px;white-space:nowrap;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+.mag.sec .mag-l{padding:0 60px 0 46px}
+.mag-l .tick{position:absolute;right:30px;top:50%;width:10px;height:10px;margin-top:-5px;border-top:1.6px solid var(--hc);border-right:1.6px solid var(--hc);transform:rotate(45deg);
+  filter:drop-shadow(0 0 4px color-mix(in srgb,var(--hc) 60%,transparent))}
+.mag.sec .mag-l .tick{right:24px;opacity:.75}
+.mag-ring{position:absolute;inset:-9px -14px;transform:skewX(-12deg);pointer-events:none;opacity:0;transition:opacity var(--d2)}
+.mag-ring{--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,
+  linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.mag:focus-visible .mag-ring{opacity:1}
+.mag:focus-visible .mag-halo{opacity:1!important;transform:skewX(-12deg) scale(1)!important}
+@media (max-width:520px),(max-height:480px){.mag{height:66px;font-size:12px;letter-spacing:.24em}.mag-l{padding:0 56px 0 40px}.mag.sec{height:58px;font-size:11px}.mag.sec .mag-l{padding:0 48px 0 34px}}
+@media (prefers-reduced-motion:reduce){.mag-amb::before{animation:none}}
+</style>
+</head>
+<body data-code="BTN-124" data-name="MAGNET PULL" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="mag pri" type="button"><span class="mag-field" aria-hidden="true"></span><span class="mag-body" aria-hidden="true"><span class="mag-halo"><span class="pm-lit"><i></i></span><b></b></span><span class="mag-g pg"></span><span class="mag-amb"></span></span><span class="mag-ring" aria-hidden="true"></span><span class="mag-lw"><span class="mag-l">JOIN THE TEAM<i class="tick" aria-hidden="true"></i></span></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="mag sec" type="button"><span class="mag-field" aria-hidden="true"></span><span class="mag-body" aria-hidden="true"><span class="mag-halo"><span class="pm-lit"><i></i></span><b></b></span><span class="mag-g pg"></span><span class="mag-amb"></span></span><span class="mag-ring" aria-hidden="true"></span><span class="mag-lw"><span class="mag-l">NOT NOW<i class="tick" aria-hidden="true"></i></span></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+/* BTN-124 spring: the APEX library code (velocity spring .14 / damping .74, label parallax .55, halo by proximity), PEPTICITY skin */
+(function(){
+  document.querySelectorAll('.mag').forEach(function(el){
+    var body=el.querySelector('.mag-body'),lw=el.querySelector('.mag-lw'),halo=el.querySelector('.mag-halo'),field=el.querySelector('.mag-field');
+    var bx=0,by=0,vx=0,vy=0,tx=0,ty=0,lx=0,ly=0,h=0,th=0,sc=1,tsc=1,R=150,lerp=PM.lerp;
+    var loop=PM.loop(function(){
+      if(PM.RM){bx=by=lx=ly=0;h=th;sc=tsc}
+      else{vx+=(tx-bx)*.14;vy+=(ty-by)*.14;vx*=.74;vy*=.74;bx+=vx;by+=vy;lx=lerp(lx,tx*.55,.2);ly=lerp(ly,ty*.55,.2);h=lerp(h,th,.15);sc=lerp(sc,tsc,.3)}
+      body.style.transform='translate('+bx.toFixed(2)+'px,'+by.toFixed(2)+'px) scale('+sc.toFixed(4)+')';
+      lw.style.transform='translate('+(bx+lx).toFixed(2)+'px,'+(by+ly).toFixed(2)+'px) scale('+sc.toFixed(4)+')';
+      halo.style.opacity=h.toFixed(3);halo.style.transform='skewX(-12deg) scale('+(.9+h*.1).toFixed(4)+')';field.style.opacity=(h*.9).toFixed(3);
+      return Math.abs(vx)+Math.abs(vy)+Math.abs(tx-bx)+Math.abs(ty-by)+Math.abs(h-th)+Math.abs(sc-tsc)>.01;
+    });
+    addEventListener('pointermove',function(e){
+      if(e.pointerType!=='mouse')return;
+      var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy;
+      var ex=Math.max(0,Math.abs(dx)-r.width/2),ey=Math.max(0,Math.abs(dy)-r.height/2),d=Math.hypot(ex,ey);
+      if(d<R){var f=1-d/R;tx=dx*.22*f;ty=dy*.32*f;th=f;loop.kick()}else if(tx||ty||th){tx=ty=th=0;loop.kick()}
+    },{passive:true});
+    document.addEventListener('pointerleave',function(){tx=ty=th=0;loop.kick()});
+    el.addEventListener('pointerdown',function(e){tsc=.96;tx*=.3;ty*=.3;if(e.pointerType!=='mouse')th=1;loop.kick()});
+    var up=function(){tsc=1;if(!PM.FINE)setTimeout(function(){th=0;loop.kick()},500);loop.kick()};
+    el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);el.addEventListener('pointerleave',function(){tsc=1;loop.kick()});
+    el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){tsc=.96;loop.kick()}});
+    el.addEventListener('keyup',function(){tsc=1;loop.kick()});
+    loop.kick();
+  });
+})();
+</script>
+</body>
+</html>

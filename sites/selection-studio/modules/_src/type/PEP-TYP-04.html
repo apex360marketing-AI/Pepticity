@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-TYP-04 · PEPTICITY BLACK SPLIT</title>
+<!--@meta {"order":4,"code":"PEP-TYP-04","name":"PEPTICITY BLACK SPLIT","interact":"hover","weight":"Light",
+ "desc":"The sister cut with a hairline seam through every letter. Point at the word and the letters open along that seam, letting a line of light in your colour show through; a slow light also runs along the seam on its own.",
+ "source":"PEPTICITY brand/font/PepticityBlackSplit.woff2 (commit 6de50ec); BTN-P01 button"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fs);--seam:48.6%}
+.pc-btn{--pc-ring:var(--acc-text);--c:12px;--h:54px;--px:30px;--fs:11.5px}
+.ct{position:relative;width:min(1120px,100%);display:grid;justify-items:center;text-align:center;gap:clamp(14px,2.6vh,24px)}
+.kick{display:flex;align-items:center;gap:14px;font:400 9px/1 var(--fh);letter-spacing:.36em;color:var(--mute)}
+.kick::before,.kick::after{content:"";width:28px;height:1px;background:linear-gradient(90deg,transparent,var(--acc))}
+.kick::after{transform:scaleX(-1)}
+.kick b{font-weight:400;color:var(--ink2)}
+/* the wordmark: every letter is two clipped halves that part along the font's own seam */
+.wm{position:relative;display:flex;justify-content:center;margin:0;font:400 clamp(44px,10.4vw,142px)/1 var(--fs);letter-spacing:.03em;white-space:nowrap;cursor:default;padding:.08em 0}
+.L{position:relative;display:inline-block;--o:0}
+.L .t,.L .b{display:block;background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px),linear-gradient(180deg,#e2e4e8 0%,#a3a7ae 36%,#6f726f 52%,#8e8d85 72%,#cfd2d6 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+.L .t{clip-path:inset(0 0 calc(100% - var(--seam)) 0);transform:translateY(calc(var(--o) * -.075em))}
+.L .b{position:absolute;left:0;top:0;clip-path:inset(var(--seam) 0 0 0);transform:translateY(calc(var(--o) * .075em))}
+.L .s{position:absolute;left:-.04em;right:-.04em;top:var(--seam);height:2px;margin-top:-1px;pointer-events:none;opacity:var(--o);
+  background:linear-gradient(90deg,transparent,var(--acc-hi) 20%,#fff 50%,var(--acc-hi) 80%,transparent);box-shadow:0 0 8px var(--acc),0 0 18px var(--acc-bloom);transform:scaleY(calc(1 + var(--o) * 1.5))}
+/* the idle seam light: one bright run left to right along the whole word */
+.run{position:absolute;left:0;right:0;top:.566em;height:0;pointer-events:none;overflow:visible}
+.run i{position:absolute;left:0;top:-1px;width:18%;height:2px;opacity:0;background:linear-gradient(90deg,transparent,var(--acc-hi),#fff,var(--acc-hi),transparent);box-shadow:0 0 10px var(--acc)}
+.run.go i{animation:run 2.4s cubic-bezier(.65,0,.35,1) 1 both}
+@keyframes run{0%{transform:translateX(-30%);opacity:0}12%,85%{opacity:1}100%{transform:translateX(560%);opacity:0}}
+.hl{margin:0;font:400 clamp(18px,2.8vw,34px)/1.18 var(--fs);letter-spacing:.08em;color:var(--chrome);max-width:26ch}
+.ct p{margin:0;max-width:50ch;color:var(--ink2);font-size:clamp(13.5px,1.25vw,15.5px);line-height:1.6}
+@media (prefers-reduced-motion:reduce){.run{display:none}.L .t,.L .b{transition:none}}
+</style>
+</head>
+<body data-code="PEP-TYP-04" data-name="PEPTICITY BLACK SPLIT" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="ct">
+    <p class="kick"><b>PEPTICITY BLACK</b>· SPLIT · 04 / 05</p>
+    <h1 class="wm" id="wm" aria-label="PEPTICITY"><span class="run" aria-hidden="true"><i></i></span></h1>
+    <h2 class="hl">A SEAM OF LIGHT THROUGH EVERY LETTER</h2>
+    <p>The split cut runs a hairline seam through each capital. Quiet at a glance, striking up close, and made to open with light.</p>
+    <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">OPEN THE STORE</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var wm=document.getElementById('wm'),run=wm.querySelector('.run');
+  wm.insertAdjacentHTML('beforeend',[].map.call('PEPTICITY',function(c){return '<span class="L" aria-hidden="true"><span class="t">'+c+'</span><span class="b">'+c+'</span><span class="s"></span></span>'}).join(''));
+  var L=[].slice.call(wm.querySelectorAll('.L')),o=L.map(function(){return 0}),px=-1,wave=-1;
+  var loop=PM.loop(function(now){var busy=false;L.forEach(function(l,i){var t=0;
+      if(px>=0){var b=l.getBoundingClientRect(),d=Math.abs(px-(b.left+b.width/2))/Math.max(50,b.width*1.5);t=Math.max(0,1-d)}
+      if(wave>=0){var q=(now-wave)/1000-i*.09;if(q>0&&q<1)t=Math.max(t,Math.sin(q*Math.PI))}
+      if(PM.RM){o[i]=t>.5?1:0}else o[i]+=(t-o[i])*.14;l.style.setProperty('--o',o[i].toFixed(3));if(Math.abs(t-o[i])>.002)busy=true});
+    if(wave>=0&&now-wave>2200)wave=-1;return busy||wave>=0});
+  wm.addEventListener('pointermove',function(e){px=e.clientX;loop.kick()});
+  wm.addEventListener('pointerleave',function(){px=-1;loop.kick()});
+  wm.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'){wave=performance.now();loop.kick()}});
+  function seam(){if(PM.RM)return;run.classList.remove('go');void run.offsetWidth;run.classList.add('go')}
+  function open(){wave=performance.now();loop.kick()}
+  PM.on('play',function(){setTimeout(open,500)});if(PM.playing)setTimeout(open,500);
+  var acc=0,k=0;PM.ambient(function(dt){acc+=dt;if(acc>4){acc=0;(k++%2?open:seam)()}});
+})();
+</script>
+</body>
+</html>

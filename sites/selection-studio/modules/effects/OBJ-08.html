@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OBJ-08 · SCROLL-TO-SPIN EMBLEM · PEPTICITY</title>
+<meta name="fx-code" content="OBJ-08"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<style>
+/* OBJ-08 SCROLL-TO-SPIN EMBLEM: the real 3D PEPTICITY coin (the dashboards' watermark coin) turns as you scroll,
+   swinging from edge-on to face-on through three chapters, then lands flat and full-size with one sweep of light. */
+#smoke{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.85}
+#smoke.pc-nogl{display:none}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.sweep{position:fixed;z-index:2;left:0;top:0;width:10px;height:10px;border-radius:50%;pointer-events:none;overflow:hidden;opacity:0;
+  -webkit-mask-image:radial-gradient(circle closest-side,#000 97%,transparent 99%);mask-image:radial-gradient(circle closest-side,#000 97%,transparent 99%);mix-blend-mode:screen}
+.sweep i{position:absolute;inset:-10% -60%;background:linear-gradient(100deg,transparent 30%,color-mix(in srgb,var(--acc) 22%,transparent) 42%,color-mix(in srgb,var(--acc-hi) 75%,#fff) 50%,color-mix(in srgb,var(--acc) 22%,transparent) 58%,transparent 70%);transform:translateX(-70%)}
+.sweep.go{opacity:1}
+.sweep.go i{animation:sw 1.7s cubic-bezier(.65,0,.35,1) 1 both}
+@keyframes sw{to{transform:translateX(70%)}}
+.chap{position:fixed;z-index:3;top:50%;width:min(380px,40vw);transform:translateY(-50%);opacity:0;visibility:hidden;pointer-events:none}
+.chap.l{left:clamp(20px,7vw,110px)}.chap.r{right:clamp(20px,7vw,110px);text-align:right}
+.chap.r .fx-eyebrow{justify-content:flex-end}
+.chap h2{margin:16px 0 12px;font:400 clamp(26px,3.4vw,50px)/1 var(--fh);letter-spacing:.06em}
+.chap p{margin:0;color:var(--ink2);font-size:clamp(14px,1.1vw,16px)}
+.chap.r p{margin-left:auto;max-width:32ch}
+.end{position:fixed;z-index:3;left:50%;bottom:clamp(26px,6vh,60px);transform:translateX(-50%);text-align:center;opacity:0;pointer-events:none;width:min(560px,90vw)}
+.end p{margin:10px 0 0;color:var(--ink2);font-size:14px}
+.fb{position:fixed;inset:0;display:grid;place-items:center;z-index:1}
+.fb img{width:min(60vmin,520px);opacity:.9;filter:brightness(.55) contrast(1.1) drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+@media (max-width:700px){.chap{top:auto;bottom:clamp(70px,12vh,110px);transform:none;width:auto;left:20px!important;right:20px!important;text-align:left!important}.chap.r .fx-eyebrow{justify-content:flex-start}.chap.r p{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>OBJ-08</b><span>SCROLL-TO-SPIN EMBLEM</span></div>
+<canvas id="smoke" aria-hidden="true"></canvas>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="fb" id="fb" hidden><img src="../_assets/logo/emblem.svg" alt="The PEPTICITY emblem"></div>
+<div class="sweep" id="sweep" aria-hidden="true"><i></i></div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="The PEPTICITY emblem: scroll to turn it">
+  <section class="fx-pin" style="--len:640vh"><div class="fx-sticky"></div></section>
+</main>
+<section class="chap l" data-a=".04" data-b=".3"><p class="fx-eyebrow">01 · THE MARK</p><h2 class="fx-chrome">THE P AT THE CENTRE</h2><p>The PEPTICITY P sits in the middle of the coin, in matte gunmetal with a hairline of light on every edge.</p></section>
+<section class="chap r" data-a=".3" data-b=".56"><p class="fx-eyebrow">02 · THE RING</p><h2 class="fx-chrome">PEPTICITY ALL AROUND</h2><p>The name is raised round the ring, top and bottom, between two polished bands.</p></section>
+<section class="chap l" data-a=".56" data-b=".8"><p class="fx-eyebrow">03 · BOTH FACES</p><h2 class="fx-chrome">STRUCK ON BOTH SIDES</h2><p>Turn it over and the back is struck the same as the front. Edge-on, you see the UV-black core.</p></section>
+<div class="end" id="intro" style="opacity:1"><p class="fx-eyebrow" style="justify-content:center">THE PEPTICITY EMBLEM</p><p>Scroll and it turns. Keep going and it lands.</p></div>
+<div class="end" id="end"><p class="fx-eyebrow" style="justify-content:center">IT LANDS</p><p>Stop scrolling and it settles flat, with one sweep of light.</p></div>
+<script src="../_shared/fx-kit.js"></script>
+<script src="../_shared/smoke.js"></script>
+<script>
+(function () {
+  var smoke = window.PCSmoke ? PCSmoke(document.getElementById('smoke'), { mode: 'black', offset: 8, held: !FX.playing || FX.rm }) : null;
+  addEventListener('fx:play', function () { if (smoke && smoke.play && !FX.rm) smoke.play(); });
+  addEventListener('fx:pause', function () { if (smoke && smoke.pause) smoke.pause(); });
+})();
+</script>
+<script type="module">
+import { THREE, stage3d, buildCoin, coinLights, accentEdges, noGL } from '../_shared/fx3d.mjs';
+const sc = FX.scroller(document.getElementById('sc'), { ease: 3.2, tourPeriod: 22 }); FX.rail(sc); FX.hint('scroll');
+const canvas = document.getElementById('gl');
+const st = stage3d(canvas, { dpr: FX.mobile ? 1.5 : 2, shadows: false });
+const chaps = [...document.querySelectorAll('.chap')], end = document.getElementById('end'), intro = document.getElementById('intro'), sweep = document.getElementById('sweep');
+if (!st) { noGL('#fb'); }
+else {
+  const scene = new THREE.Scene(); scene.environment = st.envRT.texture;
+  coinLights(scene);
+  const { coin, edge } = buildCoin(st);
+  const rig = new THREE.Group(); rig.add(coin); scene.add(rig);
+  accentEdges([edge], 0.35);
+  const cam = new THREE.PerspectiveCamera(26, 1, 0.1, 80);
+  const TAU = Math.PI * 2, TURNS = 3;
+  let yaw = 0, pitch = 0.95, lx = 0, armed = true, sweeping = false, tl = { x: 0, y: 0 };
+  sweep.addEventListener('animationend', () => { sweep.classList.remove('go'); sweeping = false; });
+  const v3 = new THREE.Vector3();
+  FX.loop((dt, t, now, live) => {
+    const p = sc.p, wide = innerWidth / innerHeight > 1.05;
+    const land = FX.ease((p - 0.8) / 0.17);
+    /* turn: three full turns across the scroll, then the nearest face-on whole turn */
+    const raw = p * TAU * TURNS + (FX.rm ? 0 : Math.sin(t * 0.25) * 0.12 * (1 - land));
+    const flat = Math.round(raw / TAU) * TAU;
+    const tYaw = raw + (flat - raw) * land;
+    yaw = FX.damp(yaw, tYaw, 2.4 + land * 2, dt);
+    pitch = FX.damp(pitch, (0.95 - 0.85 * FX.ease(p / 0.6)) * (1 - land), 3, dt);
+    /* side to side so each chapter has its own side of the screen */
+    const side = !wide || p < 0.035 ? 0 : p < 0.3 ? 0.55 : p < 0.56 ? -0.55 : p < 0.8 ? 0.55 : 0;
+    lx = FX.damp(lx, side * (1 - land), 2.2, dt);
+    tl.x = FX.damp(tl.x, FX.pointer.inside && !FX.rm ? FX.pointer.ny * 0.12 : 0, 3, dt);
+    tl.y = FX.damp(tl.y, FX.pointer.inside && !FX.rm ? FX.pointer.nx * 0.18 : 0, 3, dt);
+    coin.rotation.set(pitch, yaw, 0);
+    rig.rotation.set(tl.x * (1 - land * 0.7), tl.y * (1 - land * 0.7), 0);
+    rig.position.set(lx * (wide ? 1.6 : 0), (FX.rm ? 0 : Math.sin(t * 0.6) * 0.03) * (1 - land) + 0.1 * land, 0);
+    /* camera: from far to close, the coin ends near full height */
+    st.size(); cam.aspect = st.aspect();
+    const fill = 0.44 + 0.2 * FX.ease(p / 0.8) + 0.1 * land, fov = cam.fov * Math.PI / 180;
+    const dH = 2.1 / fill / (2 * Math.tan(fov / 2)), dW = 2.1 / Math.min(0.92, fill * 1.15) / (2 * Math.tan(fov / 2) * cam.aspect);
+    const d = Math.max(dH, wide ? dH : dW);
+    cam.position.set(0, 0, d); cam.lookAt(0, 0, 0); cam.updateProjectionMatrix();
+    st.draw(scene, cam);
+    /* chapters + ending */
+    chaps.forEach(c => { const a = +c.dataset.a, b = +c.dataset.b, o = FX.ss(a, a + 0.04, p) * (1 - FX.ss(b - 0.04, b, p));
+      c.style.opacity = o.toFixed(3); c.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+      c.style.transform = (innerWidth > 700 ? 'translateY(-50%) ' : '') + 'translate3d(0,' + ((1 - o) * 20).toFixed(1) + 'px,0)'; });
+    end.style.opacity = FX.ss(0.9, 0.97, p).toFixed(3); intro.style.opacity = (1 - FX.ss(0.01, 0.04, p)).toFixed(3);
+    /* the landing sweep: once, when it has settled face-on */
+    v3.set(rig.position.x, rig.position.y, 0).project(cam);
+    const R = 1.0 / (2 * Math.tan(fov / 2) * d) * innerHeight, cx = (v3.x + 1) / 2 * innerWidth, cy = (1 - v3.y) / 2 * innerHeight;
+    sweep.style.width = sweep.style.height = (R * 2).toFixed(1) + 'px';
+    sweep.style.transform = 'translate3d(' + (cx - R).toFixed(1) + 'px,' + (cy - R).toFixed(1) + 'px,0)';
+    if (p > 0.985 && armed && Math.abs(yaw - tYaw) < 0.01 && !FX.rm) { armed = false; sweeping = true; sweep.classList.remove('go'); void sweep.offsetWidth; sweep.classList.add('go'); }
+    if (p < 0.9) armed = true;
+    return Math.abs(yaw - tYaw) > 1e-4 || Math.abs(pitch) > 1e-4 && Math.abs(pitch - (0.95 - 0.85 * FX.ease(p / 0.6)) * (1 - land)) > 1e-4 || sweeping;
+  });
+  window.__fx3d = { st, coin, get yaw() { return yaw; } };
+}
+</script>
+</body>
+</html>

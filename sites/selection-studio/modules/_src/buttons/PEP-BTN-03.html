@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-BTN-03 · LIQUID FILL</title>
+<!--@meta {"order":3,"code":"PEP-BTN-03","name":"LIQUID FILL","interact":"hover","weight":"Medium",
+ "desc":"Glass with a little glowing liquid resting in the bottom. Point at it and the liquid rises to fill the glass, sloshing as you move, with small bubbles rising through it.",
+ "source":"New for PEPTICITY (Selection Studio library B); BTN-P01 glass and chamfer"}-->
+<!--@head-->
+<style>
+.liq{--c:16px;--lq-a:var(--acc-hi);--lq-b:var(--acc);--lq-c:var(--acc-dim);--lq-ink:var(--acc-ink);
+  position:relative;display:inline-block;height:76px;min-width:330px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.liq.sec{--c:13px;height:64px;min-width:280px;font-size:12px;--lq-a:#eef0f3;--lq-b:#a9aeb6;--lq-c:#4a4e55;--lq-ink:#0b0b0c}
+.liq.sec .liq-body{opacity:.62}.liq.sec svg.w1,.liq.sec svg.w2{opacity:.6}.liq.sec .liq-glow{opacity:.35}
+.liq:focus{outline:none}
+.liq-face{position:absolute;inset:0;--c:inherit}
+.liq-face.pg{--c:16px}.liq.sec .liq-face.pg{--c:13px}
+.liq-tank{position:absolute;inset:1px;overflow:hidden;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.liq-lvl{position:absolute;inset:0;transform:translateY(74%);transition:transform 1.1s var(--e-spring);will-change:transform}
+.liq.hot .liq-lvl{transform:translateY(4%)}
+.liq.press .liq-lvl{transform:translateY(-6%);transition-duration:.35s}
+.liq-tilt{position:absolute;inset:0;transform-origin:50% 0}
+.liq-body{position:absolute;left:-12%;right:-12%;top:0;height:170%;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--lq-a) 92%,transparent) 0,color-mix(in srgb,var(--lq-b) 88%,transparent) 14%,color-mix(in srgb,var(--lq-c) 92%,transparent) 70%);
+  box-shadow:inset 0 10px 18px -8px rgba(255,255,255,.45)}
+.liq-body::after{content:"";position:absolute;left:8%;right:56%;top:12%;height:22%;background:linear-gradient(90deg,rgba(255,255,255,.0),rgba(255,255,255,.28),rgba(255,255,255,0));filter:blur(3px)}
+.liq svg{position:absolute;left:-12%;width:248%;height:16px;top:-15px;display:block;animation:liqWave 2.8s linear infinite;animation-play-state:var(--play)}
+.liq svg.w2{top:-12px;opacity:.55;animation-duration:4.4s;animation-direction:reverse}
+.liq svg.w1{fill:color-mix(in srgb,var(--lq-a) 92%,transparent)}
+.liq svg.w2{fill:color-mix(in srgb,var(--lq-b) 80%,transparent)}
+@keyframes liqWave{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.liq-glow{position:absolute;left:-20%;right:-20%;top:-26px;height:30px;background:radial-gradient(50% 50% at 50% 100%,color-mix(in srgb,var(--lq-b) 55%,transparent),transparent);filter:blur(6px);opacity:.8}
+.bub{position:absolute;bottom:-8px;width:var(--s,5px);height:var(--s,5px);border-radius:50%;left:var(--x);
+  background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.95),rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 70%);box-shadow:0 0 0 .5px rgba(255,255,255,.5);
+  animation:liqBub var(--d,3.2s) var(--e-in) infinite;animation-delay:var(--dl,0s);animation-play-state:var(--play);opacity:0}
+@keyframes liqBub{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.9}85%{opacity:.7}100%{transform:translateY(-62px) translateX(6px) scale(1);opacity:0}}
+.liq-l{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;gap:16px;white-space:nowrap;padding:0 40px;pointer-events:none}
+.liq-l.a{text-shadow:0 1px 10px rgba(0,0,0,.55)}
+.liq-l.b{color:var(--lq-ink);clip-path:inset(76% 0 0 0);transition:clip-path 1.1s var(--e-spring)}
+.liq.hot .liq-l.b{clip-path:inset(6% 0 0 0)}
+.liq.press .liq-l.b{clip-path:inset(0 0 0 0);transition-duration:.35s}
+.liq-l svg.ic{position:static;width:18px;height:18px;animation:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;top:auto;left:auto}
+.liq .pm-lit{--lit:var(--lq-b)}
+.liq.hot .pm-lit,.liq:focus-visible .pm-lit{opacity:.75}
+.liq-ring{position:absolute;inset:-6px;pointer-events:none;opacity:0;--k:19px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.liq:focus-visible .liq-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.liq{height:66px;min-width:280px;font-size:12px;letter-spacing:.24em}.liq.sec{height:58px;min-width:240px;font-size:11px}}
+@media (prefers-reduced-motion:reduce){.liq svg,.bub{animation:none}.bub{display:none}.liq-lvl,.liq-l.b{transition-duration:.01s}}
+</style>
+</head>
+<body data-code="PEP-BTN-03" data-name="LIQUID FILL" data-hint="HOVER">
+<!--@stage-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <path id="wv" d="M0 10 Q 15 3 30 10 T 60 10 T 90 10 T 120 10 T 150 10 T 180 10 T 210 10 T 240 10 V 20 H 0 Z"/>
+  <g id="cart"><path d="M3 4h2.2l2 10.5h10.6l1.9-7.5H6.3"/><circle cx="9" cy="19" r="1.3"/><circle cx="16.6" cy="19" r="1.3"/></g>
+</defs></svg>
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="liq pri" type="button" aria-label="CHECKOUT">
+        <span class="pm-lit" aria-hidden="true"><i></i></span>
+        <span class="liq-face pg" aria-hidden="true"></span>
+        <span class="liq-tank" aria-hidden="true"><span class="liq-lvl"><span class="liq-tilt">
+          <span class="liq-glow"></span>
+          <svg class="w2" viewBox="0 0 240 20" preserveAspectRatio="none"><use href="#wv"/></svg>
+          <span class="liq-body"></span>
+          <svg class="w1" viewBox="0 0 240 20" preserveAspectRatio="none"><use href="#wv"/></svg>
+          <i class="bub" style="--x:18%;--d:3.4s;--dl:-.4s"></i><i class="bub" style="--x:34%;--s:4px;--d:2.7s;--dl:-1.6s"></i><i class="bub" style="--x:52%;--s:6px;--d:3.9s;--dl:-2.2s"></i>
+          <i class="bub" style="--x:67%;--s:3px;--d:2.4s;--dl:-.9s"></i><i class="bub" style="--x:81%;--d:3.1s;--dl:-2.8s"></i>
+        </span></span></span>
+        <span class="liq-l a" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><use href="#cart"/></svg>CHECKOUT</span>
+        <span class="liq-l b" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><use href="#cart"/></svg>CHECKOUT</span>
+        <span class="liq-ring" aria-hidden="true"></span>
+      </button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="liq sec" type="button" aria-label="VIEW CART">
+        <span class="pm-lit" aria-hidden="true"><i></i></span>
+        <span class="liq-face pg" aria-hidden="true"></span>
+        <span class="liq-tank" aria-hidden="true"><span class="liq-lvl"><span class="liq-tilt">
+          <span class="liq-glow"></span>
+          <svg class="w2" viewBox="0 0 240 20" preserveAspectRatio="none"><use href="#wv"/></svg>
+          <span class="liq-body"></span>
+          <svg class="w1" viewBox="0 0 240 20" preserveAspectRatio="none"><use href="#wv"/></svg>
+          <i class="bub" style="--x:22%;--d:3.2s;--dl:-1s"></i><i class="bub" style="--x:48%;--s:4px;--d:2.8s;--dl:-2s"></i><i class="bub" style="--x:74%;--s:3px;--d:3.6s;--dl:-.3s"></i>
+        </span></span></span>
+        <span class="liq-l a" aria-hidden="true">VIEW CART</span>
+        <span class="liq-l b" aria-hidden="true">VIEW CART</span>
+        <span class="liq-ring" aria-hidden="true"></span>
+      </button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  document.querySelectorAll('.liq').forEach(function(el){
+    var tilt=el.querySelector('.liq-tilt'),a=0,va=0,ta=0,lastX=null,lastT=0;
+    var loop=PM.loop(function(now,dt){
+      if(PM.RM){tilt.style.transform='none';return false}
+      va+=(ta-a)*.12;va*=.86;a+=va;ta*=.9;
+      tilt.style.transform='rotate('+a.toFixed(3)+'deg)';
+      return Math.abs(a)+Math.abs(va)+Math.abs(ta)>.01;
+    });
+    var on=function(){el.classList.add('hot')},off=function(){el.classList.remove('hot','press');lastX=null};
+    el.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')on()});
+    el.addEventListener('pointerleave',off);
+    el.addEventListener('focus',function(){if(el.matches(':focus-visible'))on()});el.addEventListener('blur',off);
+    el.addEventListener('pointermove',function(e){
+      var now=performance.now();if(lastX!=null){var v=(e.clientX-lastX)/Math.max(8,now-lastT);ta=PM.clamp(ta-v*9,-9,9);loop.kick()}lastX=e.clientX;lastT=now;
+    });
+    el.addEventListener('pointerdown',function(e){on();el.classList.add('press');ta+=(Math.random()>.5?6:-6);loop.kick()});
+    var up=function(e){el.classList.remove('press');if(e&&e.pointerType&&e.pointerType!=='mouse')setTimeout(off,900)};
+    el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+    el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){el.classList.add('hot','press')}});
+    el.addEventListener('keyup',function(){el.classList.remove('press')});
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SCR-101 · FLIPBOOK SCRUB: THE CASE · PEPTICITY</title>
+<meta name="fx-code" content="SCR-101"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* SCR-101 FLIPBOOK SCRUB: the Higgsfield chest film, frame by frame under your scroll. Forward opens the case, back closes it.
+   Letterboxed like a cinema print, a running timecode, three giant chapter words and a film-strip scrubber. */
+#film{position:absolute;inset:0;width:100%;height:100%}
+@media (min-aspect-ratio:23/20){#film{-webkit-mask-image:linear-gradient(90deg,transparent 11%,#000 30%);mask-image:linear-gradient(90deg,transparent 11%,#000 30%)}.grade{background:radial-gradient(110% 80% at 60% 50%,transparent 46%,rgba(2,2,3,.6) 100%),linear-gradient(90deg,#030304 0,#030304 13%,rgba(3,3,4,.78) 19%,rgba(3,3,4,.32) 34%,transparent 52%)}}
+.bars i{position:absolute;left:0;right:0;height:var(--bar,9vh);background:#030304;z-index:3;transition:height 1.2s var(--e-out)}
+.bars i:first-child{top:0}.bars i:last-child{bottom:0}
+.grade{position:absolute;inset:0;z-index:2;pointer-events:none;background:
+  radial-gradient(110% 80% at 50% 50%,transparent 46%,rgba(2,2,3,.6) 100%),
+  linear-gradient(90deg,rgba(3,3,4,.72) 0%,rgba(3,3,4,.2) 34%,transparent 52%)}
+.beats{position:absolute;left:clamp(20px,6vw,96px);top:50%;transform:translateY(-50%);z-index:4;width:min(44vw,600px);height:clamp(220px,34vh,320px);pointer-events:none}
+.beat{position:absolute;left:0;top:0;width:100%;opacity:0;visibility:hidden}
+.beat .n{display:flex;align-items:center;gap:12px;font:400 10px/1 var(--fh);letter-spacing:.34em;color:var(--acc-text)}
+.beat .n::after{content:"";width:40px;height:1px;background:linear-gradient(90deg,var(--acc),transparent)}
+.beat h2{margin:18px 0 14px;font:400 clamp(40px,5.4vw,86px)/.9 var(--fh);white-space:nowrap;letter-spacing:.05em;color:transparent;
+  -webkit-text-stroke:1px rgba(236,240,246,.82);text-shadow:0 0 30px rgba(220,226,255,.14)}
+.beat h2 span{display:inline-block;will-change:transform,opacity,filter}
+.beat p{margin:0;max-width:34ch;color:var(--ink2);font-size:clamp(14px,1.15vw,17px)}
+.meter{position:absolute;left:clamp(20px,6vw,96px);right:clamp(20px,6vw,96px);bottom:calc(var(--bar,9vh) + clamp(14px,2.4vh,26px));z-index:4;pointer-events:none}
+.meter .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;font:400 9px/1 var(--fh);letter-spacing:.3em;color:var(--mute)}
+.meter .row b{font-weight:400;color:var(--ink);letter-spacing:.2em;font-variant-numeric:tabular-nums}
+.strip{position:relative;height:16px}
+.strip::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(236,240,246,.22) 0 1px,transparent 1px 10px);
+  -webkit-mask:linear-gradient(180deg,#000 0 30%,transparent 30% 70%,#000 70%);mask:linear-gradient(180deg,#000 0 30%,transparent 30% 70%,#000 70%)}
+.strip i{position:absolute;left:0;top:7px;height:2px;width:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,transparent,var(--acc))}
+.strip b{position:absolute;top:-3px;left:calc(var(--p,0) * 100%);width:2px;height:22px;margin-left:-1px;background:var(--acc-hi);box-shadow:0 0 8px var(--acc),0 0 18px var(--acc-bloom)}
+.strip em{position:absolute;top:24px;transform:translateX(-50%);font:400 8px/1 var(--fh);letter-spacing:.28em;color:var(--dim);font-style:normal;white-space:nowrap}
+.load{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;font:400 9px var(--fh);letter-spacing:.34em;color:var(--mute);transition:opacity .5s}
+.ready .load{opacity:0}
+@media (max-width:700px){
+  .beats{left:20px;right:20px;width:auto;top:auto;bottom:calc(var(--bar,9vh) + 84px);transform:none;height:auto;min-height:170px}
+  .beat{top:auto;bottom:0}
+  .beat h2{font-size:clamp(40px,13vw,64px);margin:12px 0 8px}
+  .grade{background:radial-gradient(110% 80% at 50% 40%,transparent 40%,rgba(2,2,3,.6) 100%),linear-gradient(0deg,rgba(3,3,4,.85) 0%,rgba(3,3,4,.3) 42%,transparent 60%)}
+  .strip em{display:none}
+}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>SCR-101</b><span>FLIPBOOK SCRUB</span></div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="The PEPTICITY case opening, frame by frame: scroll to play it forward and back">
+  <section class="fx-pin" style="--len:620vh">
+    <div class="fx-sticky">
+      <canvas id="film" role="img" aria-label="A black PEPTICITY case in cold smoke opens, and the vial rises out of it with the peptide swirl"></canvas>
+      <div class="grade" aria-hidden="true"></div>
+      <div class="bars" aria-hidden="true"><i></i><i></i></div>
+      <div class="beats">
+        <article class="beat" data-a="0" data-b=".3"><span class="n">CHAPTER 01</span><h2>SEALED</h2><p>The PEPTICITY case waits in the dark, wrapped in cold smoke.</p></article>
+        <article class="beat" data-a=".3" data-b=".6"><span class="n">CHAPTER 02</span><h2>UNLOCKED</h2><p>The clasp gives, the lid lifts and the smoke rolls out over the edge.</p></article>
+        <article class="beat" data-a=".6" data-b="1.01"><span class="n">CHAPTER 03</span><h2>REVEALED</h2><p>The vial rises into the light with the peptide swirl beside it.</p></article>
+      </div>
+      <div class="meter" aria-hidden="true">
+        <div class="row"><span>THE CASE · SCROLL TO PLAY</span><b id="tc">00:00:00</b></div>
+        <div class="strip" id="strip"><i></i><b></b><em style="left:14%">SEALED</em><em style="left:45%">UNLOCKED</em><em style="left:80%">REVEALED</em></div>
+      </div>
+      <div class="load">LOADING THE FILM</div>
+    </div>
+  </section>
+</main>
+<script src="../_shared/fx-kit.js"></script>
+<script src="../_shared/fx-frames.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var sc = FX.scroller($('#sc'), { ease: 4.2 }); FX.hint('scroll');
+  var N = 121, FPS = 12;
+  var film = FX.frames({ canvas: $('#film'), n: N, focus: [0.62, 0.5], url: function (i) { return '../_assets/chest/c-' + ('00' + i).slice(-3) + '.webp'; } });
+  /* split each chapter word into letters for the rise */
+  var beats = [].slice.call(document.querySelectorAll('.beat')).map(function (b) {
+    var h = b.querySelector('h2'), t = h.textContent; h.setAttribute('aria-label', t);
+    h.innerHTML = t.split('').map(function (c) { return '<span aria-hidden="true">' + c + '</span>'; }).join('');
+    return { el: b, a: +b.dataset.a, b: +b.dataset.b, ls: [].slice.call(h.children) };
+  });
+  var strip = $('#strip'), tc = $('#tc'), D = document.documentElement, ready = false;
+  function pad(n) { return ('0' + n).slice(-2); }
+  FX.loop(function (dt, t, now, live) {
+    var p = sc.p, busy = false;
+    if (!ready && film.loaded() > 0) { ready = true; document.body.classList.add('ready'); }
+    /* the film's first half is the sealed case; give the opening most of the scroll */
+    var u = p < 0.28 ? p / 0.28 * 0.48 : 0.48 + (p - 0.28) / 0.72 * 0.52;
+    var f = FX.rm ? (p < 0.3 ? 0 : p < 0.6 ? Math.round((N - 1) * 0.66) : N - 1) : u * (N - 1);
+    /* wide screens: the case sits right of centre so the chapter words have their own dark side */
+    var wide = innerWidth / innerHeight > 1.15;
+    var zoom = (wide ? 0.92 : 1.02) + (FX.rm ? 0 : 0.012 * Math.sin(t * 0.5));
+    if (film.draw(f, zoom, wide ? 0.15 : 0)) busy = true;
+    strip.style.setProperty('--p', p.toFixed(4));
+    var secs = f / FPS * (241 / 242); tc.textContent = '00:' + pad(Math.floor(secs)) + ':' + pad(Math.floor((secs % 1) * 24));
+    /* letterbox opens a touch as the case opens */
+    D.style.setProperty('--bar', (9 - 3.5 * FX.ss(0.3, 0.8, p)).toFixed(2) + 'vh');
+    beats.forEach(function (B) {
+      var o = FX.ss(B.a, B.a + 0.06, p) * (1 - FX.ss(B.b - 0.06, B.b, p));
+      if (B.a === 0) o = 1 - FX.ss(B.b - 0.06, B.b, p);
+      B.el.style.opacity = o.toFixed(3); B.el.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+      var local = FX.clamp((p - B.a) / 0.08, 0, 1);
+      if (B.a === 0) local = 1;
+      B.ls.forEach(function (L, i) {
+        var k = FX.rm ? 1 : FX.ease(FX.clamp(local * 1.6 - i * 0.08, 0, 1));
+        L.style.transform = 'translate3d(0,' + ((1 - k) * 60).toFixed(1) + '%,0)';
+        L.style.opacity = k.toFixed(3);
+        L.style.filter = k > 0.98 ? 'none' : 'blur(' + ((1 - k) * 8).toFixed(1) + 'px)';
+      });
+    });
+    return busy;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-06 · TODAY'S WORD</title>
+<!--@meta {"order":6,"code":"PEP-CRD-06","name":"TODAY'S WORD","interact":"tap","weight":"Light",
+ "desc":"One short line a day on a glass card. The words drift in out of a soft blur, a slow light passes across the glass and its edge breathes in your colour. Save the ones you like, or tap NEXT to see another.",
+ "source":"PEPTICITY sites/dashboard-color TODAY'S WORD card (shine, accent breath, word-by-word entrance, SAVE heart, phone switch, the original lines)"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text)}
+.dw{--c:24px;position:relative;width:min(860px,100%);padding:clamp(24px,3.6vw,34px) clamp(22px,3.6vw,38px);display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,270px);gap:22px 44px;align-items:center;overflow:hidden;isolation:isolate;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  background:var(--grain),linear-gradient(165deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 42%,rgba(255,255,255,.035) 100%),linear-gradient(118deg,rgba(9,9,10,.3) 0%,rgba(9,9,10,.3) 47%,rgba(17,12,30,.34) 53%,rgba(17,12,30,.34) 100%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);box-shadow:inset 0 0 0 1px rgba(222,226,234,.16),inset 0 1px 0 rgba(255,255,255,.26)}
+:root{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .56  0 0 0 0 .75  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.dw>*{position:relative;z-index:1}
+.dw>.dw-shine{position:absolute;z-index:0;top:-25%;bottom:-25%;left:0;width:34%;pointer-events:none;
+  background:linear-gradient(100deg,transparent 0%,rgba(225,232,242,.035) 30%,rgba(255,255,255,.1) 47%,color-mix(in srgb,var(--acc-hi) 60%,transparent) 50%,rgba(255,255,255,.1) 53%,rgba(225,232,242,.035) 70%,transparent 100%);
+  transform:translateX(-140%) skewX(-18deg);animation:dwShine 13s var(--e-io) 1.2s infinite;animation-play-state:var(--play)}
+.dw:hover>.dw-shine{animation:dwSweep 1.5s var(--e-io) 1 both}
+@keyframes dwShine{0%{transform:translateX(-140%) skewX(-18deg)}15%,100%{transform:translateX(400%) skewX(-18deg)}}
+@keyframes dwSweep{0%{transform:translateX(-140%) skewX(-18deg)}100%{transform:translateX(400%) skewX(-18deg)}}
+.dw>.acc-breath{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.22;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,transparent),inset 0 0 18px -6px var(--acc-bloom);
+  animation:accBreath 6.5s ease-in-out infinite alternate;animation-play-state:var(--play)}
+@keyframes accBreath{to{opacity:.72}}
+.dw-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;margin:0 0 18px}
+.h3d{position:relative;margin:0;font:400 clamp(17px,2vw,22px)/1.1 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:.01em .02em 0 #484b51,.02em .04em 0 #3a3d42,.03em .06em 0 #2e3034,.04em .08em 0 #232427,.05em .1em 0 #1b1c1e,.12em .22em .16em rgba(0,0,0,.65),.2em .34em .4em rgba(0,0,0,.45)}
+.h3d::after{content:attr(data-t);position:absolute;inset:0;pointer-events:none;text-shadow:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 3px,rgba(0,0,0,.08) 3px 4px,transparent 4px 6px),linear-gradient(180deg,#f4f5f7 0%,#d3d6db 26%,#a3a7ae 46%,#80848c 56%,#a6aab1 74%,#dcdfe3 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.dw-date{font:400 9.5px/1.4 var(--fh);letter-spacing:.3em;color:var(--mute);text-transform:uppercase}
+.dw-q{margin:0;min-height:2.6em;max-width:28ch;font:500 clamp(21px,2.6vw,32px)/1.26 var(--fb);letter-spacing:-.012em;color:#eceef2;text-wrap:balance}
+.dw-q .w{display:inline-block;opacity:0;background:linear-gradient(180deg,#fdfdfe 0%,#e4e7eb 55%,#b3b8c0 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.dw.in .dw-q .w{opacity:1;animation:dwWord .95s var(--e-out) both;animation-delay:calc(var(--i) * 55ms + 120ms)}
+@keyframes dwWord{from{opacity:0;transform:translateY(.4em);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.dw-acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:24px}
+.pc-btn{--c:10px;--h:46px;--px:22px;--fs:10.5px}
+.pc-btn svg{width:15px;height:15px;flex:none;position:relative;z-index:1}
+.dw-save .hrt{overflow:visible}
+.dw-save .hrt path{fill:transparent;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;transition:fill .35s var(--e-out)}
+.dw-save[aria-pressed="true"] .hrt path{fill:var(--acc-text);stroke:var(--acc-text)}
+.dw-save[aria-pressed="true"] .hrt{animation:dwBeat .55s var(--e-out)}
+@keyframes dwBeat{0%{transform:scale(.7)}55%{transform:scale(1.22)}100%{transform:scale(1)}}
+.dw-count{margin-left:6px;font:400 9.5px/1 var(--fh);letter-spacing:.24em;color:var(--mute)}
+.dw-count b{font-weight:400;color:var(--ink2);margin-left:.4em}
+.dw-side{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:6px 0 6px 34px;border-left:1px solid rgba(230,234,240,.12)}
+.sw{display:flex;align-items:center;gap:14px;cursor:pointer}
+.sw input{position:absolute;opacity:0;pointer-events:none}
+.tg{position:relative;width:46px;height:24px;flex:none;border-radius:2px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--hair2),inset 0 2px 4px rgba(0,0,0,.5);transition:box-shadow .3s}
+.tg::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:1px;background:linear-gradient(180deg,#d3d6db,#80848c);box-shadow:0 1px 2px rgba(0,0,0,.6);transition:transform .4s var(--e-spring),background .3s}
+.sw input:checked+.tg{box-shadow:inset 0 0 0 1px var(--acc-line),inset 0 0 12px -4px var(--acc-bloom)}
+.sw input:checked+.tg::after{transform:translateX(22px);background:linear-gradient(180deg,var(--acc-hi),var(--acc))}
+.sw input:focus-visible+.tg{outline:2px solid var(--acc-text);outline-offset:3px}
+.sw-t{font:400 9.5px/1.6 var(--fh);letter-spacing:.16em;color:var(--ink);text-transform:uppercase}
+.dw-note{margin:0;font-size:12.5px;line-height:1.5;color:var(--mute)}
+.tag{align-self:flex-start;font:400 8px/1 var(--fh);letter-spacing:.26em;padding:6px 8px 5px;border:1px dashed var(--hair2);color:var(--ink2)}
+@media (max-height:480px){.dw{padding:20px 22px;gap:16px 28px;grid-template-columns:minmax(0,1fr) minmax(170px,210px)}.dw-head{margin-bottom:12px}.dw-q{font-size:clamp(19px,5vh,24px)}.dw-acts{margin-top:16px}.dw-side{padding-left:22px}.pc-btn{--h:42px;--px:16px}}
+@media (max-width:600px){.dw{grid-template-columns:minmax(0,1fr);gap:18px}.dw-side{padding:18px 0 0;border-left:0;border-top:1px solid rgba(230,234,240,.12)}}
+@media (prefers-reduced-motion:reduce){.dw>.dw-shine{display:none}.dw>.acc-breath{animation:none;opacity:.45}.dw.in .dw-q .w{animation:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-06" data-name="TODAY'S WORD" data-hint="TAP">
+<!--@stage-->
+<main class="pm-main">
+  <section class="dw" id="dw" aria-labelledby="dwT">
+    <span class="dw-shine" aria-hidden="true"></span><span class="acc-breath" aria-hidden="true"></span>
+    <div class="dw-main">
+      <div class="dw-head"><h2 class="h3d" id="dwT" data-t="TODAY'S WORD">TODAY'S WORD</h2><time class="dw-date" id="dwDate"></time></div>
+      <p class="dw-q" id="dwQ" aria-live="polite"></p>
+      <div class="dw-acts">
+        <button class="pc-btn dw-save" type="button" id="dwSave" aria-pressed="false"><span class="pc-btn__face"><svg class="hrt" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.2s-7.6-4.5-9.3-9.3C1.5 7.6 3.6 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.4 0 5.5 3.1 4.3 6.4-1.7 4.8-9.3 9.3-9.3 9.3z"/></svg><span class="pc-btn__label" id="svT">SAVE</span></span></button>
+        <button class="pc-btn" type="button" id="dwNext"><span class="pc-btn__face"><span class="pc-btn__label">NEXT</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+        <span class="dw-count">SAVED WORDS<b id="dwCount">0</b></span>
+      </div>
+    </div>
+    <div class="dw-side">
+      <span class="tag">SAMPLE</span>
+      <label class="sw"><input type="checkbox" id="dwPush"><span class="tg" aria-hidden="true"></span><span class="sw-t">SEND MY DAILY WORD TO MY PHONE</span></label>
+      <p class="dw-note">Turns on once PEPTICITY is installed on your phone. Preview only, nothing is sent.</p>
+    </div>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  /* the original lines from the dashboard's TODAY'S WORD list */
+  var WORDS=["Small and steady beats big and rare.","You don’t need a perfect day. You need a next step.","Show up today. Let tomorrow look after itself.","Keep it simple, and keep it going.",
+    "A quiet routine, kept with care, is its own kind of luxury.","Start from here, at a pace you can keep.","One kept promise to yourself is worth ten big plans.","Momentum is made of very ordinary days."];
+  var dw=document.getElementById('dw'),q=document.getElementById('dwQ'),save=document.getElementById('dwSave'),svT=document.getElementById('svT'),cnt=document.getElementById('dwCount'),i=0,saved={};
+  var esc=function(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+  document.getElementById('dwDate').textContent=new Date().toLocaleDateString('en-CA',{weekday:'long',month:'long',day:'numeric'}).toUpperCase();
+  function show(){dw.classList.remove('in');q.innerHTML=WORDS[i].split(' ').map(function(w,k){return '<span class="w" style="--i:'+k+'">'+esc(w)+'</span>'}).join(' ');void q.offsetWidth;dw.classList.add('in');
+    var on=!!saved[i];save.setAttribute('aria-pressed',String(on));svT.textContent=on?'SAVED':'SAVE'}
+  save.addEventListener('click',function(){saved[i]=!saved[i];if(!saved[i])delete saved[i];cnt.textContent=Object.keys(saved).length;var on=!!saved[i];save.setAttribute('aria-pressed',String(on));svT.textContent=on?'SAVED':'SAVE'});
+  document.getElementById('dwNext').addEventListener('click',function(){i=(i+1)%WORDS.length;show()});
+  show();
+  /* while playing, a new line every 9 s until the visitor taps something */
+  var acc=0,touched=false;dw.addEventListener('pointerdown',function(){touched=true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>9){acc=0;i=(i+1)%WORDS.length;show()}});
+})();
+</script>
+</body>
+</html>

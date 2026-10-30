@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRD-130 · HINGED DOORS</title>
+<!--@meta {"order":12,"code":"CRD-130","name":"HINGED DOORS","interact":"tap","weight":"Medium",
+ "desc":"Two glass doors on polished hinges with the P split across them and a thin line of light where they meet. Tap and they swing open to reveal a members' sign-up inside; tap again to close them.",
+ "source":"APEX library CRD-130 Hinged Doors (glass doors that swing open on chrome hinges to a short form), re-cut with the approved P and PEPTICITY chamfers"}-->
+<!--@head-->
+<!--@btnp01-->
+<!--@pmark-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text);--c:10px;--h:46px;--px:22px;--fs:10.5px}
+.frame{--c:26px;position:relative;width:min(620px,100%,(100vh - 130px) * 1.55);aspect-ratio:1.55;perspective:1300px;margin-bottom:22px}
+@media (max-height:480px){.room{gap:9px;padding:20px 26px}.room h2{font-size:20px}.room p{font-size:12.5px}.f input{height:40px}.pc-btn{--h:40px;--px:16px}.tapcue{bottom:-28px}}
+/* inside: the room behind the doors */
+.room{position:absolute;inset:0;--k:26px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  display:flex;flex-direction:column;justify-content:center;gap:14px;padding:clamp(22px,5vw,46px);
+  background:radial-gradient(80% 70% at 50% 110%,color-mix(in srgb,var(--acc) 22%,transparent),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015)),rgba(10,10,12,.55);
+  box-shadow:inset 0 0 0 1px rgba(230,234,240,.16),inset 0 30px 60px -30px rgba(0,0,0,.8)}
+.room .k{font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute)}
+.room h2{margin:0;font:400 clamp(20px,3.4vw,30px)/1.1 var(--fh);letter-spacing:.08em;color:var(--chrome);text-shadow:.02em .04em 0 #3a3d42,.04em .08em 0 #232427,.1em .2em .16em rgba(0,0,0,.6)}
+.room p{margin:0;font-size:13.5px;color:var(--ink2);max-width:40ch}
+.f{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.f label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.f input{--k:9px;flex:1 1 200px;min-width:0;height:46px;padding:0 14px;border:0;background:rgba(255,255,255,.04);color:var(--ink);font:500 14px var(--fb);
+  clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));box-shadow:inset 0 0 0 1px var(--hair2),inset 0 2px 5px rgba(0,0,0,.5);outline:none}
+.f input:focus{box-shadow:inset 0 0 0 1px var(--acc-line),inset 0 2px 5px rgba(0,0,0,.5)}
+.room small{font-size:11.5px;color:var(--dim)}
+.room small.ok{color:var(--acc-text)}
+/* the doors */
+.door{position:absolute;top:0;bottom:0;width:50%;transform-style:preserve-3d;transition:transform 1.25s cubic-bezier(.7,0,.2,1);will-change:transform;cursor:pointer}
+.door.l{left:0;transform-origin:0 50%}.door.r{right:0;transform-origin:100% 50%}
+.frame.open .door.l{transform:rotateY(-108deg)}.frame.open .door.r{transform:rotateY(108deg)}
+.pane{position:absolute;inset:0;overflow:hidden;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);
+  background:linear-gradient(180deg,rgba(255,255,255,.10),transparent 46%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.015)),rgba(16,15,20,.5)}
+.door.l .pane{--k:26px;clip-path:polygon(var(--k) 0,100% 0,100% 100%,0 100%,0 var(--k));box-shadow:inset 1px 0 0 rgba(236,240,245,.6),inset 0 1px 0 rgba(236,240,245,.7),inset 0 -1px 0 rgba(120,127,137,.5),inset -1px 0 0 rgba(236,240,245,.25)}
+.door.r .pane{--k:26px;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%);box-shadow:inset -1px 0 0 rgba(120,127,137,.5),inset 0 1px 0 rgba(236,240,245,.7),inset 0 -1px 0 rgba(120,127,137,.5),inset 1px 0 0 rgba(236,240,245,.25)}
+.door.l .pane::before{content:"";position:absolute;left:0;top:var(--k);width:calc(var(--k) * 1.4142);height:1px;transform-origin:0 0;transform:rotate(-45deg);background:rgba(236,240,245,.6)}
+.pp{position:absolute;top:50%;width:200%;height:34%;transform:translateY(-58%);pointer-events:none;opacity:.8}
+.door.l .pp{left:0}.door.r .pp{right:0}
+.pp svg{width:100%;height:100%;overflow:visible}
+.pp use{fill:url(#gGun);stroke:rgba(220,214,255,.6);stroke-width:.006}
+.hinge{position:absolute;width:6px;height:44px;background:linear-gradient(90deg,#3a3d42,#f4f6f8 40%,#9aa1aa 60%,#2a2d31);box-shadow:0 1px 3px rgba(0,0,0,.6)}
+.door.l .hinge{left:-3px}.door.r .hinge{right:-3px}
+.hinge.a{top:16%}.hinge.b{bottom:16%}
+.handle{position:absolute;top:50%;width:4px;height:70px;margin-top:-35px;background:linear-gradient(180deg,#f4f6f8,#9aa1aa 50%,#e6e9ed);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 4px 8px rgba(0,0,0,.5)}
+.door.l .handle{right:16px}.door.r .handle{left:16px}
+.door .lbl{position:absolute;bottom:22px;font:400 8.5px/1 var(--fh);letter-spacing:.32em;color:var(--ink2)}
+.door.l .lbl{right:30px}.door.r .lbl{left:30px}
+.seam{position:absolute;left:50%;top:6%;bottom:6%;width:2px;margin-left:-1px;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,var(--acc-hi),transparent);box-shadow:0 0 10px var(--acc),0 0 22px var(--acc-bloom);
+  animation:seam 3.4s var(--e-io) infinite alternate;animation-play-state:var(--play);transition:opacity .3s}
+@keyframes seam{from{opacity:.35}to{opacity:1}}
+.frame.open .seam{opacity:0;animation:none}
+.tapcue{position:absolute;left:50%;bottom:-38px;transform:translateX(-50%);font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute);white-space:nowrap}
+.tapcue b{font-weight:400;color:var(--acc-text)}
+.door:focus{outline:none}
+.frame:not(.open) .door:focus-visible .pane{box-shadow:inset 0 0 0 2px var(--acc-text)}
+.close{position:absolute;right:18px;top:16px;z-index:1;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--ink2)}
+.close::before,.close::after{content:"";position:absolute;left:8px;right:8px;top:50%;height:1.5px;background:currentColor;transform:rotate(45deg)}
+.close::after{transform:rotate(-45deg)}
+.close:hover{color:#fff}
+@media (max-width:560px){.frame{aspect-ratio:.95}.door .lbl{display:none}}
+@media (prefers-reduced-motion:reduce){.door{transition-duration:.01s}.seam{animation:none;opacity:.8}}
+</style>
+</head>
+<body data-code="CRD-130" data-name="HINGED DOORS" data-hint="TAP">
+<!--@stage-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a3a29b"/><stop offset=".46" stop-color="#6b6a64"/><stop offset=".54" stop-color="#2a2a28"/><stop offset="1" stop-color="#8e8d85"/></linearGradient></defs></svg>
+<main class="pm-main">
+  <div class="frame" id="fr">
+    <section class="room" id="room" aria-label="Members' room" inert>
+      <button class="close" type="button" id="cl" aria-label="Close the doors"></button>
+      <span class="k">BEHIND THE DOORS</span>
+      <h2>THE MEMBERS' ROOM</h2>
+      <p>Join the PEPTICITY Team for the monthly letter and word on restocks.</p>
+      <form class="f" id="fm" novalidate><label for="em">Email</label><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+        <button class="pc-btn" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></form>
+      <small id="nt">Preview only. Nothing is sent.</small>
+    </section>
+    <div class="door l" tabindex="0" role="button" aria-label="Open the doors" aria-controls="room"><div class="pane"><div class="pp"><svg viewBox="0 0 1.416 1.16" preserveAspectRatio="xMidYMid meet"><use href="#pmark"/></svg></div><span class="hinge a"></span><span class="hinge b"></span><span class="handle"></span><span class="lbl">MEMBERS</span></div></div>
+    <div class="door r" tabindex="-1" aria-hidden="true"><div class="pane"><div class="pp"><svg viewBox="0 0 1.416 1.16" preserveAspectRatio="xMidYMid meet"><use href="#pmark"/></svg></div><span class="hinge a"></span><span class="hinge b"></span><span class="handle"></span><span class="lbl">ONLY</span></div></div>
+    <span class="seam" aria-hidden="true"></span>
+    <p class="tapcue" id="cue"><b>TAP</b> TO OPEN</p>
+  </div>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var fr=document.getElementById('fr'),room=document.getElementById('room'),cue=document.getElementById('cue'),dl=fr.querySelector('.door.l'),nt=document.getElementById('nt');
+  function set(open){fr.classList.toggle('open',open);if(open){room.removeAttribute('inert');dl.setAttribute('aria-label','Doors open')}else{room.setAttribute('inert','');dl.setAttribute('aria-label','Open the doors')}
+    cue.innerHTML=open?'<b>TAP</b> × TO CLOSE':'<b>TAP</b> TO OPEN'}
+  fr.querySelectorAll('.door').forEach(function(d){d.addEventListener('click',function(){touched=true;set(!fr.classList.contains('open'))})});
+  dl.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();touched=true;set(true);setTimeout(function(){document.getElementById('em').focus({preventScroll:true})},PM.RM?0:900)}});
+  document.getElementById('cl').addEventListener('click',function(){touched=true;set(false);dl.focus({preventScroll:true})});
+  document.getElementById('fm').addEventListener('submit',function(e){e.preventDefault();var v=document.getElementById('em').value.trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){nt.textContent='Please check the email address. Preview only, nothing is sent.';nt.className='';return}
+    nt.textContent='Thank you. This is a preview, so nothing was sent.';nt.className='ok'});
+  /* idle demo while playing: the doors open, hold, and close again */
+  var acc=2,touched=false;document.addEventListener('pointerdown',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>8){acc=0;set(true);setTimeout(function(){if(!touched)set(false)},3800)}});
+})();
+</script>
+</body>
+</html>

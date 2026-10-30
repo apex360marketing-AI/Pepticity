@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-07 · CHIPPED-CORNER GLASS</title>
+<!--@meta {"order":7,"code":"PEP-CRD-07","name":"CHIPPED-CORNER GLASS","interact":"hover","weight":"Light",
+ "desc":"The dashboard's glass cards with their corners chipped off at different angles. Point at one: it lifts and leans toward you, its outline lights in your colour and a spark of light runs down each cut corner.",
+ "source":"PEPTICITY sites/dashboard glass cards (.glass[data-sh] chipped corners, grain, tone, tilt and lift) with the accent edge from sites/dashboard-color"}-->
+<!--@head-->
+<style>
+:root{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .56  0 0 0 0 .75  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2.4vw,26px);width:min(1080px,100%);perspective:1100px}
+.cw{position:relative;min-width:0;perspective:1100px}
+.card{--c:26px;position:relative;min-height:clamp(230px,40vh,320px);padding:26px 24px 22px;display:flex;flex-direction:column;isolation:isolate;
+  background:var(--grain),linear-gradient(165deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 42%,rgba(255,255,255,.035) 100%),linear-gradient(118deg,rgba(9,9,10,.3) 0%,rgba(9,9,10,.3) 47%,rgba(17,12,30,.34) 53%,rgba(17,12,30,.34) 100%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);box-shadow:inset 0 0 0 1px rgba(222,226,234,.14),inset 0 1px 0 rgba(255,255,255,.26);
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));transition:transform .55s var(--e-out),filter .55s var(--e-out)}
+.card::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(120% 60% at 12% -8%,rgba(255,255,255,.14),transparent 46%),radial-gradient(60% 40% at 100% 100%,rgba(146,118,255,.07),transparent 70%)}
+.card[data-sh="1"]{clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.card[data-sh="2"]{clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
+.card[data-sh="4"]{clip-path:polygon(var(--c) 0,calc(100% - var(--c)) 0,100% var(--c),100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.cw.hot .card{--ty:-6px;filter:brightness(1.08)}
+.n{font:400 clamp(44px,6vw,68px)/1 var(--fh);letter-spacing:.04em;color:transparent;-webkit-text-stroke:1px rgba(230,234,240,.28);margin-bottom:auto;transition:-webkit-text-stroke-color .5s}
+.cw.hot .n{-webkit-text-stroke-color:var(--acc-line)}
+.lab{font:400 9px/1 var(--fh);letter-spacing:.32em;color:var(--mute);margin:18px 0 10px}
+h2{margin:0 0 10px;font:400 clamp(15px,1.6vw,19px)/1.15 var(--fh);letter-spacing:.12em;color:var(--chrome);text-shadow:.02em .04em 0 #3a3d42,.04em .08em 0 #232427,.1em .2em .16em rgba(0,0,0,.6)}
+p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink2)}
+/* the lit outline: an SVG polygon traced round the cut shape (outside the clip), plus a spark that runs down each cut */
+.edge{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);pointer-events:none;overflow:visible;opacity:0;transition:opacity .6s var(--e-out);
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))}
+.edge polygon{fill:none;stroke:var(--acc);stroke-width:1.4;filter:drop-shadow(0 0 4px var(--acc)) drop-shadow(0 0 10px var(--acc-bloom))}
+.cw.hot .edge{opacity:.9;transition-duration:.35s}
+.cw.hot .edge{--ty:-6px}
+.spark{position:absolute;left:0;top:0;width:34px;height:2px;margin:-1px 0 0 -17px;pointer-events:none;opacity:0;border-radius:2px;z-index:3;
+  background:linear-gradient(90deg,transparent,var(--acc-hi),#fff,var(--acc-hi),transparent);box-shadow:0 0 8px var(--acc),0 0 16px var(--acc-bloom)}
+.cw.hot .spark{animation:spark .9s var(--e-io) .15s 1 both}
+@keyframes spark{0%{opacity:0;transform:translate(var(--x0),var(--y0)) rotate(var(--a))}20%{opacity:1}80%{opacity:1}100%{opacity:0;transform:translate(var(--x1),var(--y1)) rotate(var(--a))}}
+.tag{position:absolute;right:20px;top:22px;font:400 8px/1 var(--fh);letter-spacing:.26em;padding:6px 8px 5px;border:1px dashed var(--hair2);color:var(--ink2)}
+.cw:nth-child(2) .tag{right:auto;left:20px}
+@media (max-height:480px){.card{min-height:0;height:min(64vh,280px);padding:18px 16px 16px;--c:20px}.n{font-size:clamp(34px,10vh,48px)}.lab{margin:10px 0 8px}h2{font-size:14px}p{font-size:12.5px}.tag{right:12px;top:14px}.cw:nth-child(2) .tag{left:12px}}
+@media (max-width:600px){.trio{grid-template-columns:minmax(0,1fr);max-width:420px}.card{min-height:150px;--c:20px}.n{font-size:40px}}
+@media (prefers-reduced-motion:reduce){.card,.edge{transition:none}.cw.hot .spark{animation:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-07" data-name="CHIPPED-CORNER GLASS" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="trio" aria-label="Chipped glass cards">
+    <div class="cw"><article class="card" data-sh="1"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">01</span><span class="lab">THE STORE</span><h2>EVERY PRODUCT</h2><p>All of PEPTICITY in one place, each in the clear bottle.</p></article></div>
+    <div class="cw"><article class="card" data-sh="2"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">02</span><span class="lab">YOUR ORDERS</span><h2>FROM PACKED TO DOOR</h2><p>Follow each parcel from the moment it is sealed.</p></article></div>
+    <div class="cw"><article class="card" data-sh="4"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">03</span><span class="lab">THE TEAM</span><h2>MEMBERS</h2><p>Your card, the monthly letter and word on restocks.</p></article></div>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  function pts(w,h,c,sh){if(sh==='2')return [[0,0],[w-c,0],[w,c],[w,h],[c,h],[0,h-c]];if(sh==='4')return [[c,0],[w-c,0],[w,c],[w,h-c],[w-c,h],[0,h],[0,c]];return [[c,0],[w,0],[w,h-c],[w-c,h],[0,h],[0,c]]}
+  function cuts(w,h,c,sh){if(sh==='2')return [[[w-c,0],[w,c]],[[c,h],[0,h-c]]];if(sh==='4')return [[[0,c],[c,0]],[[w-c,0],[w,c]],[[w,h-c],[w-c,h]]];return [[[0,c],[c,0]],[[w,h-c],[w-c,h]]]}
+  var NS='http://www.w3.org/2000/svg';
+  [].forEach.call(document.querySelectorAll('.cw'),function(cw){
+    var card=cw.querySelector('.card'),sh=card.dataset.sh,svg=document.createElementNS(NS,'svg');svg.setAttribute('class','edge');svg.setAttribute('aria-hidden','true');
+    var pg=document.createElementNS(NS,'polygon');svg.appendChild(pg);cw.appendChild(svg);var sparks=[];
+    function lay(){var w=card.offsetWidth,h=card.offsetHeight,c=parseFloat(getComputedStyle(card).getPropertyValue('--c'))||26;
+      svg.setAttribute('viewBox',(-6)+' '+(-6)+' '+(w+12)+' '+(h+12));pg.setAttribute('points',pts(w,h,c,sh).map(function(p){return p.join(',')}).join(' '));
+      sparks.forEach(function(s){s.remove()});sparks=cuts(w,h,c,sh).map(function(cu){var s=document.createElement('i');s.className='spark';s.setAttribute('aria-hidden','true');
+        var a=Math.atan2(cu[1][1]-cu[0][1],cu[1][0]-cu[0][0])*180/Math.PI;s.style.cssText='--x0:'+cu[0][0]+'px;--y0:'+cu[0][1]+'px;--x1:'+cu[1][0]+'px;--y1:'+cu[1][1]+'px;--a:'+a+'deg';cw.appendChild(s);return s})}
+    lay();addEventListener('resize',lay);if(document.fonts)document.fonts.ready.then(lay);
+    function set(rx,ry){card.style.setProperty('--rx',rx+'deg');card.style.setProperty('--ry',ry+'deg');svg.style.setProperty('--rx',rx+'deg');svg.style.setProperty('--ry',ry+'deg')}
+    cw.addEventListener('pointerenter',function(){cw.classList.add('hot')});
+    cw.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||PM.RM)return;var b=card.getBoundingClientRect(),px=(e.clientX-b.left)/b.width-.5,py=(e.clientY-b.top)/b.height-.5;set((-py*9).toFixed(2),(px*11).toFixed(2))});
+    cw.addEventListener('pointerleave',function(){cw.classList.remove('hot');set(0,0)});
+    cw.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'){cw.classList.remove('hot');void cw.offsetWidth;cw.classList.add('hot');setTimeout(function(){cw.classList.remove('hot')},1400)}});
+  });
+  /* idle demo while playing: each card lights in turn every 3.5 s until the pointer arrives */
+  var cws=[].slice.call(document.querySelectorAll('.cw')),acc=1.5,k=0,touched=false;document.addEventListener('pointermove',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>3.5){acc=0;var c=cws[k++%cws.length];c.classList.add('hot');setTimeout(function(){if(!touched)c.classList.remove('hot')},1700)}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-ENT-02 · THE DOORS OPEN · PEPTICITY</title>
+<meta name="fx-code" content="PEP-ENT-02"><meta name="fx-interact" content="tap">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../_assets/stills/doors-full.webp" as="image">
+<link rel="stylesheet" href="../_shared/button.css">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+/* PEP-ENT-02 THE DOORS OPEN: the site opens on the PEPTICITY doors from the city film. The lights come up, the plaque lights,
+   a scan passes down the steel, then the two heavy doors swing inward in real perspective while the camera walks through the
+   light into the page. Tap REPLAY (or the doors) to open them again. */
+body{background:#000}
+.cam{position:fixed;inset:0;overflow:hidden;perspective:1400px}
+.frame{position:absolute;left:50%;top:50%;width:max(100vw,calc(100vh * 1912 / 1080));aspect-ratio:1912/1080;transform:translate(-50%,-50%);transform-origin:50% 52%;will-change:transform;container-type:inline-size}
+@media (max-aspect-ratio:1/1){.frame{width:calc(100vh * 1912 / 1080 * .96)}}
+.layer{position:absolute;inset:0;background:url(../_assets/stills/doors-full.webp) center/100% 100% no-repeat}
+/* the building with the doorway cut out (the doors are their own layers) */
+.shell{-webkit-mask:linear-gradient(#000,#000),linear-gradient(#000,#000);-webkit-mask-size:100% 100%,25.6% 61.6%;-webkit-mask-position:0 0,50% 55.47%;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
+  mask:linear-gradient(#000,#000) 0 0/100% 100% no-repeat exclude,linear-gradient(#000,#000) 50% 55.47%/25.6% 61.6% no-repeat}
+.inside{position:absolute;left:37.2%;top:21.3%;width:25.6%;height:61.6%;overflow:hidden;background:radial-gradient(60% 70% at 50% 55%,#ffffff 0%,color-mix(in srgb,var(--acc) 14%,#eef1f8) 26%,#4a4d58 62%,#0c0c10 100%)}
+.inside img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none;opacity:.55;mix-blend-mode:multiply}
+.leaf{position:absolute;top:21.3%;height:61.6%;width:12.8%;background-image:url(../_assets/stills/doors-full.webp);background-size:781.25% 162.34%;will-change:transform}
+.leaf.l{left:37.2%;background-position:42.66% 55.47%;transform-origin:0% 50%}
+.leaf.r{left:50%;background-position:57.34% 55.47%;transform-origin:100% 50%}
+.leaf::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,var(--sh,0)),transparent)}
+.leaf.r::after{background:linear-gradient(270deg,rgba(0,0,0,var(--sh,0)),transparent)}
+.dark{position:absolute;inset:0;background:#000;pointer-events:none}
+.plaque{position:absolute;left:50.25%;top:11.4%;width:31%;height:9.4%;transform:translate(-50%,-50%);display:grid;place-items:center;
+  background:linear-gradient(180deg,#17181c,#0b0c0e);box-shadow:0 0 0 1px rgba(255,255,255,.14);clip-path:polygon(3% 0,100% 0,100% 72%,97% 100%,0 100%,0 28%)}
+.plaque b{font:400 3.1cqw/1 var(--fh);letter-spacing:.14em;padding-left:.14em;color:#3a3b40;transition:color .3s,text-shadow .3s}
+.plaque b.lit{position:absolute;inset:0;display:grid;place-items:center;opacity:0;color:#f4f6fb;text-shadow:0 0 6px #fff,0 0 16px color-mix(in srgb,var(--acc) 70%,#fff),0 0 34px var(--acc-bloom)}
+.scan{position:absolute;left:36%;width:28%;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--acc-hi),#fff,var(--acc-hi),transparent);box-shadow:0 0 18px var(--acc),0 0 40px var(--acc-bloom);opacity:0}
+.bloom{position:fixed;inset:0;background:radial-gradient(50% 50% at 50% 50%,#fff,color-mix(in srgb,var(--acc) 30%,#eef1f7) 40%,rgba(255,255,255,0) 75%);opacity:0;pointer-events:none;z-index:5}
+.page{position:fixed;inset:0;z-index:6;display:grid;place-items:center;opacity:0;visibility:hidden;padding:20px}
+.page .bgimg{position:absolute;inset:0;background:url(../_assets/stills/lab.webp) center/cover;filter:brightness(.42) blur(2px);transform:scale(1.06)}
+.page .card{position:relative;display:grid;justify-items:center;gap:14px;text-align:center;padding:clamp(26px,4vw,48px) clamp(22px,4vw,56px);width:min(620px,94vw)}
+.page .card.fx-glass{--c:22px;background-color:rgba(8,8,11,.45)}
+.page h2{margin:0;font:400 clamp(26px,4.2vw,56px)/1 var(--fh);letter-spacing:.08em}
+.page p{margin:0;color:var(--ink2);max-width:40ch}
+.replay{position:fixed;left:50%;bottom:clamp(12px,2vh,18px);transform:translateX(-50%);z-index:20}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-ENT-02</b><span>THE DOORS OPEN</span></div>
+<div class="cam" id="cam"><div class="frame" id="frame">
+  <div class="inside"><img src="../_assets/stills/lab-dropper.webp" alt=""></div>
+  <div class="layer shell" aria-hidden="true"></div>
+  <div class="leaf l" id="ll" aria-hidden="true"></div><div class="leaf r" id="lr" aria-hidden="true"></div>
+  <div class="plaque" id="plq"><b>PEPTICITY</b><b class="lit" id="plit" aria-hidden="true">PEPTICITY</b></div>
+  <div class="scan" id="scan"></div>
+  <div class="dark" id="dark"></div>
+</div></div>
+<div class="bloom" id="bloom"></div>
+<div class="page" id="page"><div class="bgimg"></div><div class="card fx-glass"><p class="fx-eyebrow">WELCOME IN</p><h2 class="fx-chrome">GRAND OPENING</h2><p>Join the PEPTICITY Team: 15% off your first order, the monthly letter and first word on restocks.</p>
+  <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></div></div>
+<button class="pc-btn pc-btn--sm replay" type="button" id="replay"><span class="pc-btn__face"><span class="pc-btn__label">REPLAY</span></span></button>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  FX.hint('tap', 'TAP REPLAY');
+  var $ = function (s) { return document.querySelector(s); };
+  var tl = null, holdT = null, ran = false;
+  function reset() {
+    gsap.set('#frame', { scale: 1.06, x: 0 }); gsap.set('#dark', { opacity: 1 }); gsap.set('#ll', { rotationY: 0, '--sh': 0 }); gsap.set('#lr', { rotationY: 0, '--sh': 0 });
+    gsap.set('#scan', { top: '21%', opacity: 0 }); gsap.set('#bloom', { opacity: 0 }); gsap.set('#page', { opacity: 0, visibility: 'hidden', scale: 1.04 }); gsap.set('#plit', { opacity: 0 });
+  }
+  function still() { gsap.set('#dark', { opacity: 0 }); gsap.set('#frame', { scale: 1 }); gsap.set('#plit', { opacity: 1 }); gsap.set('#page', { opacity: 0, visibility: 'hidden' }); }
+  function run() {
+    clearTimeout(holdT); if (tl) tl.kill();
+    if (FX.rm || typeof gsap === 'undefined') { still(); gsap && gsap.set('#page', { opacity: 1, visibility: 'visible' }); return; }
+    reset(); ran = true;
+    tl = gsap.timeline({ onComplete: hold });
+    tl.to('#dark', { opacity: 0, duration: 1.4, ease: 'power2.inOut' }, 0.2)
+      .to('#frame', { scale: 1, duration: 2.2, ease: 'power2.out' }, 0.2)
+      .to('#plit', { keyframes: { opacity: [0, 0.7, 0.2, 0.9, 0.5, 1] }, duration: 0.6, ease: 'none' }, 1.2)
+      .to('#scan', { opacity: 1, duration: 0.15 }, 1.75)
+      .to('#scan', { top: '83%', duration: 0.95, ease: 'power1.inOut' }, 1.75)
+      .to('#scan', { opacity: 0, duration: 0.25 }, 2.55)
+      /* the doors: heavy, slow start, swing inward */
+      .to('#ll', { rotationY: 86, '--sh': 0.7, duration: 1.9, ease: 'power3.inOut' }, 2.75)
+      .to('#lr', { rotationY: -86, '--sh': 0.7, duration: 1.9, ease: 'power3.inOut' }, 2.75)
+      /* the camera walks through the light */
+      .to('#frame', { scale: 3.1, duration: 2.1, ease: 'power3.in' }, 3.3)
+      .to('#bloom', { opacity: 1, duration: 0.6, ease: 'power2.in' }, 4.75)
+      .set('#page', { visibility: 'visible' }, 5.2)
+      .to('#page', { opacity: 1, scale: 1, duration: 1.1, ease: 'expo.out' }, 5.25)
+      .to('#bloom', { opacity: 0, duration: 1.0, ease: 'power2.out' }, 5.3);
+  }
+  function hold() { holdT = setTimeout(function () { if (FX.playing) run(); }, 4200); }
+  $('#replay').addEventListener('click', run);
+  $('#cam').addEventListener('click', run);
+  addEventListener('fx:replay', run);
+  addEventListener('fx:play', function () { if (!ran) run(); else if (tl && tl.progress() < 1) tl.resume(); else hold(); });
+  addEventListener('fx:pause', function () { clearTimeout(holdT); if (tl) tl.pause(); });
+  if (typeof gsap === 'undefined') return;
+  if (FX.playing) run(); else still();
+  window.__ent = { run: run, get tl() { return tl; } };
+})();
+</script>
+</body>
+</html>

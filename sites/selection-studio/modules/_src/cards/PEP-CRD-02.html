@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-02 · SCROLL-LIT CARD</title>
+<!--@meta {"order":2,"code":"PEP-CRD-02","name":"SCROLL-LIT CARD","interact":"scroll","weight":"Light",
+ "desc":"Glass cards that light up as they reach the middle of the screen: the edge facing the light warms in your colour and a bright streak races along the outline once. A thin light rail tracks how far you have scrolled.",
+ "source":"PEPTICITY sites/dashboard-color accent layer (card halos warmed by distance from the middle, the left-to-right streak, the light rail, the ring geometry), chipped glass from sites/dashboard"}-->
+<!--@head-->
+<style>
+.scroller{position:fixed;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;overscroll-behavior:contain}
+.scroller::-webkit-scrollbar{display:none}
+.track{position:relative;width:min(760px,100% - 40px);margin:0 auto;padding:calc(50vh - 90px) 0 calc(50vh - 90px);display:grid;gap:clamp(90px,26vh,220px)}
+.lead{position:absolute;left:0;right:0;top:clamp(56px,12vh,110px);text-align:center;font:400 9px/1 var(--fh);letter-spacing:.36em;color:var(--mute)}
+.lead b{display:block;margin:0 auto 14px;width:1px;height:38px;background:linear-gradient(transparent,var(--acc-line));animation:cue 1.8s var(--e-io) infinite;animation-play-state:var(--play);transform-origin:50% 0}
+@keyframes cue{0%{transform:scaleY(0)}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+.lw{position:relative}
+.lw:nth-child(2){margin-left:8%}.lw:nth-child(3){margin-right:8%}
+/* chipped glass (dashboard .glass[data-sh]) */
+.card{--c:22px;position:relative;padding:28px 30px 26px;isolation:isolate;
+  background:var(--grain),linear-gradient(165deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 42%,rgba(255,255,255,.035) 100%),linear-gradient(118deg,rgba(9,9,10,.32) 0%,rgba(9,9,10,.32) 47%,rgba(17,12,30,.36) 53%,rgba(17,12,30,.36) 100%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);box-shadow:inset 0 0 0 1px rgba(222,226,234,.16),inset 0 1px 0 rgba(255,255,255,.26)}
+:root{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .56  0 0 0 0 .75  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.card[data-sh="1"]{clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.card[data-sh="2"]{clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
+.card[data-sh="4"]{clip-path:polygon(var(--c) 0,calc(100% - var(--c)) 0,100% var(--c),100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(120% 60% at 12% -8%,rgba(255,255,255,.14),transparent 46%),radial-gradient(60% 40% at 100% 100%,rgba(146,118,255,.07),transparent 70%)}
+.eyebrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute)}
+.eyebrow span{display:flex;align-items:center;gap:10px}
+.eyebrow span::before{content:"";width:24px;height:1px;background:linear-gradient(90deg,var(--acc),transparent)}
+.tag{padding:5px 7px 4px;border:1px dashed var(--hair2);color:var(--ink2);letter-spacing:.26em;font-size:8px}
+h2{margin:0 0 12px;font:400 clamp(19px,2.6vw,26px)/1.15 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--chrome);
+  text-shadow:.01em .02em 0 #484b51,.02em .04em 0 #3a3d42,.03em .06em 0 #2e3034,.04em .08em 0 #232427,.12em .22em .16em rgba(0,0,0,.65)}
+p{margin:0;color:var(--ink2);font-size:14.5px;line-height:1.6;max-width:46ch}
+q{display:block;font:500 clamp(19px,2.4vw,24px)/1.3 var(--fb);color:#eceef2;quotes:none;max-width:28ch}
+.steps{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.steps i{--k:7px;font:400 8.5px/1 var(--fh);font-style:normal;letter-spacing:.26em;padding:9px 12px 8px;color:var(--mute);box-shadow:inset 0 0 0 1px var(--hair);
+  clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.steps i.on{color:var(--acc-text);box-shadow:inset 0 0 0 1px var(--acc-line),inset 0 0 14px -4px var(--acc-bloom)}
+/* halo: hairline + soft glow on the edge facing the middle, plus the streak (dashboard accent layer) */
+.halo{position:absolute;left:-26px;top:-26px;right:-26px;bottom:-26px;pointer-events:none;z-index:-1}
+.halo .ht,.halo .hb{position:absolute;inset:0;opacity:0}
+.halo .hg{position:absolute;inset:0;filter:blur(3.5px)}
+.halo .hg i,.halo .hl{position:absolute;inset:0}
+.halo .hg i{clip-path:var(--ring-g);opacity:.55}
+.halo .hl{clip-path:var(--ring-l);opacity:.85}
+.halo .ht .hg i{background:linear-gradient(180deg,var(--acc) 0,color-mix(in srgb,var(--acc) 50%,transparent) 38%,color-mix(in srgb,var(--acc) 12%,transparent) 80%,transparent)}
+.halo .hb .hg i{background:linear-gradient(0deg,var(--acc) 0,color-mix(in srgb,var(--acc) 50%,transparent) 38%,color-mix(in srgb,var(--acc) 12%,transparent) 80%,transparent)}
+.halo .ht .hl{background:linear-gradient(180deg,var(--acc-hi) 0,var(--acc) 16%,color-mix(in srgb,var(--acc) 42%,transparent) 50%,color-mix(in srgb,var(--acc) 10%,transparent) 85%,transparent)}
+.halo .hb .hl{background:linear-gradient(0deg,var(--acc-hi) 0,var(--acc) 16%,color-mix(in srgb,var(--acc) 42%,transparent) 50%,color-mix(in srgb,var(--acc) 10%,transparent) 85%,transparent)}
+.halo .hs{position:absolute;inset:0;opacity:0}
+.halo .hs .sc,.halo .hs .sb{position:absolute;inset:0;overflow:hidden}
+.halo .hs .sc{clip-path:var(--ring-s)}
+.halo .hs .sb{clip-path:var(--ring-g);filter:blur(2.5px);opacity:.75}
+.halo .hs i{position:absolute;top:0;bottom:0;left:0;width:170px;transform:translateX(-170px)}
+.halo .hs .sc i{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--acc) 70%,transparent) 32%,#fff 50%,color-mix(in srgb,var(--acc) 70%,transparent) 68%,transparent)}
+.halo .hs .sb i{background:linear-gradient(90deg,transparent,var(--acc) 50%,transparent)}
+.halo .hs.go{animation:hsO 1.25s linear 1 both}
+.halo .hs.go i{animation:hsX 1.25s cubic-bezier(.45,0,.25,1) 1 both}
+@keyframes hsX{from{transform:translateX(-170px)}to{transform:translateX(var(--hw,900px))}}
+@keyframes hsO{0%{opacity:0}10%,82%{opacity:1}100%{opacity:0}}
+/* light rail */
+.rail{position:fixed;right:14px;top:70px;bottom:60px;width:24px;z-index:5;pointer-events:none}
+.rail::before{content:"";position:absolute;left:11.5px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(230,234,240,.12) 6%,rgba(230,234,240,.12) 94%,transparent)}
+.rail .rf{position:absolute;left:11.5px;top:0;width:1px;height:100%;transform-origin:50% 0;transform:scaleY(0);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--acc) 40%,transparent) 55%,var(--acc))}
+.rail .rh{position:absolute;left:0;right:0;top:0;height:100%}
+.rail .rh i{position:absolute;left:50%;top:0;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--acc-hi);box-shadow:0 0 6px var(--acc),0 0 14px var(--acc-bloom)}
+@media (max-width:600px){.lw:nth-child(n){margin:0}.card{padding:22px 20px 20px;--c:16px}.rail{right:4px}}
+@media (prefers-reduced-motion:reduce){.halo .hs{display:none}.lead b{animation:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-02" data-name="SCROLL-LIT CARD" data-hint="SCROLL">
+<!--@stage-->
+<div class="scroller" id="sc" tabindex="0" aria-label="Scroll to light the cards">
+  <div class="track">
+    <p class="lead" aria-hidden="true"><b></b>SCROLL</p>
+    <div class="lw"><span class="halo" aria-hidden="true"></span>
+      <article class="card" data-sh="1"><div class="eyebrow"><span>01 · YOUR ORDER</span><b class="tag">SAMPLE</b></div>
+        <h2>PACKED AND SEALED</h2><p>A plain, sealed box. No product names on the outside.</p>
+        <div class="steps"><i class="on">PAID</i><i class="on">PACKED</i><i>ON ITS WAY</i><i>DELIVERED</i></div></article></div>
+    <div class="lw"><span class="halo" aria-hidden="true"></span>
+      <article class="card" data-sh="2"><div class="eyebrow"><span>02 · TODAY'S WORD</span><b class="tag">SAMPLE</b></div>
+        <q>Small and steady beats big and rare.</q></article></div>
+    <div class="lw"><span class="halo" aria-hidden="true"></span>
+      <article class="card" data-sh="4"><div class="eyebrow"><span>03 · RESTOCK ALERT</span><b class="tag">SAMPLE</b></div>
+        <h2>BACK IN STOCK</h2><p>The product you saved is available again. It is waiting in your cart.</p></article></div>
+  </div>
+</div>
+<div class="rail" aria-hidden="true"><span class="rf"></span><span class="rh"><i></i></span></div>
+<!--@tail-->
+<script>
+(function(){
+  var sc=document.getElementById('sc'),PAD=26,RM=PM.RM,smooth=function(v){v=v<0?0:v>1?1:v;return v*v*(3-2*v)};
+  function poly(w,h,c,sh){if(sh==='2')return [[0,0],[w-c,0],[w,c],[w,h],[c,h],[0,h-c]];if(sh==='4')return [[c,0],[w-c,0],[w,c],[w,h-c],[w-c,h],[0,h],[0,c]];return [[c,0],[w,0],[w,h-c],[w-c,h],[0,h],[0,c]]}
+  function offsetPoly(pts,d){var n=pts.length,area=0,i;for(i=0;i<n;i++){var a=pts[i],b=pts[(i+1)%n];area+=a[0]*b[1]-b[0]*a[1]}var s=area>0?1:-1,L=[];
+    for(i=0;i<n;i++){var p=pts[i],q=pts[(i+1)%n],dx=q[0]-p[0],dy=q[1]-p[1],len=Math.hypot(dx,dy)||1,nx=s*dy/len,ny=-s*dx/len;L.push([p[0]+nx*d,p[1]+ny*d,dx,dy])}
+    var out=[];for(i=0;i<n;i++){var A=L[(i+n-1)%n],B=L[i],den=A[2]*B[3]-A[3]*B[2];if(Math.abs(den)<1e-9){out.push([B[0],B[1]]);continue}var t=((B[0]-A[0])*B[3]-(B[1]-A[1])*B[2])/den;out.push([A[0]+A[2]*t,A[1]+A[3]*t])}return out}
+  function ring(o,inn){var f=function(p){return (p[0]+PAD).toFixed(2)+'px '+(p[1]+PAD).toFixed(2)+'px'};return 'polygon(evenodd,'+o.map(f).join(',')+','+f(o[0])+','+inn.map(f).join(',')+','+f(inn[0])+')'}
+  var recs=[].map.call(document.querySelectorAll('.lw'),function(lw){
+    var h=lw.querySelector('.halo');h.innerHTML='<span class="ht"><span class="hg"><i></i></span><span class="hl"></span></span><span class="hb"><span class="hg"><i></i></span><span class="hl"></span></span><span class="hs"><span class="sb"><i></i></span><span class="sc"><i></i></span></span>';
+    var r={lw:lw,card:lw.querySelector('.card'),halo:h,ht:h.children[0],hb:h.children[1],hs:h.children[2],heat:0,arm:true,hov:false};
+    r.card.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse'){if(!r.hov)streak(r);r.hov=true;loop.kick()}});
+    r.card.addEventListener('pointerleave',function(){r.hov=false;loop.kick()});
+    r.hs.addEventListener('animationend',function(e){if(e.animationName==='hsO')r.hs.classList.remove('go')});
+    return r;
+  });
+  function measure(){recs.forEach(function(r){var c=r.card,w=c.offsetWidth,h=c.offsetHeight,cc=parseFloat(getComputedStyle(c).getPropertyValue('--c'))||22,b=poly(w,h,cc,c.dataset.sh);
+    r.halo.style.setProperty('--ring-g',ring(offsetPoly(b,3.5),b));r.halo.style.setProperty('--ring-l',ring(offsetPoly(b,1.15),offsetPoly(b,.05)));
+    r.halo.style.setProperty('--ring-s',ring(offsetPoly(b,1.7),offsetPoly(b,-.1)));r.halo.style.setProperty('--hw',(w+PAD*2)+'px')})}
+  function streak(r){if(RM)return;r.hs.classList.remove('go');void r.hs.offsetWidth;r.hs.classList.add('go')}
+  var rf=document.querySelector('.rail .rf'),rh=document.querySelector('.rail .rh');
+  var loop=PM.loop(function(now,dt){
+    var H=sc.clientHeight,mid=H/2,busy=false;
+    recs.forEach(function(r){
+      var b=r.card.getBoundingClientRect(),d=Math.max(0,b.top-mid,mid-b.bottom),pos=1-smooth(d/(H*.46)),tgt=r.hov?1:pos;
+      r.heat=RM?tgt:PM.damp(r.heat,tgt,tgt>r.heat?6.5:3.2,dt||.016);if(Math.abs(r.heat-tgt)<.002)r.heat=tgt;else busy=true;
+      var hc=(b.top+b.bottom)/2,sd=Math.max(-1,Math.min(1,(hc-mid)/((b.bottom-b.top)/2+H*.22))),bal=r.hov?0:sd;
+      var ot=r.heat*(.5+.5*bal),ob=r.heat*(.5-.5*bal);if(r.hov)ot=ob=r.heat*.85;
+      r.ht.style.opacity=ot.toFixed(3);r.hb.style.opacity=ob.toFixed(3);
+      if(r.arm&&r.heat>.5){r.arm=false;streak(r)}if(!r.arm&&r.heat<.2)r.arm=true;
+    });
+    var m=Math.max(1,sc.scrollHeight-H),p=sc.scrollTop/m;rf.style.transform='scaleY('+p.toFixed(4)+')';rh.style.transform='translateY('+(p*100).toFixed(2)+'%)';
+    return busy;
+  });
+  sc.addEventListener('scroll',function(){loop.kick()},{passive:true});
+  addEventListener('resize',function(){measure();loop.kick()});
+  measure();if(document.fonts)document.fonts.ready.then(function(){measure();loop.kick()});loop.kick();
+  /* auto tour while playing: a slow scroll down and back up until the visitor scrolls themselves */
+  var user=false,dir=1,wait=1.2;['wheel','touchstart','pointerdown','keydown'].forEach(function(t){sc.addEventListener(t,function(){user=true},{passive:true})});
+  PM.ambient(function(dt){if(user)return;if(wait>0){wait-=dt;return}var m=sc.scrollHeight-sc.clientHeight;sc.scrollTop+=dir*dt*Math.max(70,sc.clientHeight*.16);
+    if(sc.scrollTop>=m-1&&dir>0){dir=-1;wait=1.4}else if(sc.scrollTop<=0&&dir<0){dir=1;wait=1.4}});
+})();
+</script>
+</body>
+</html>

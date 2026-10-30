@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTN-130 · GLASS BLINDS</title>
+<!--@meta {"order":13,"code":"BTN-130","name":"GLASS BLINDS","interact":"hover","weight":"Medium",
+ "desc":"Glass made of slim slats like window blinds. The slats near your pointer turn open to let light through and close behind you in a wave; a click flips them all in a ripple.",
+ "source":"APEX library BTN-130 Glass Blinds (slats that swing in a wave from the pointer), turned to vertical slats on PEPTICITY chamfered glass"}-->
+<!--@head-->
+<style>
+.bl{--c:16px;--lc:var(--acc);position:relative;display:inline-grid;place-items:center;height:78px;width:350px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.bl.sec{--c:13px;--lc:#dfe3ea;height:66px;width:280px;font-size:12px}
+.bl:focus{outline:none}
+.bl-box{position:absolute;inset:0;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));perspective:420px}
+/* behind the slats: frosted glass with a band of light in the button's colour */
+.bl-back{position:absolute;inset:0;-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);
+  background:radial-gradient(70% 140% at var(--lx,50%) 50%,color-mix(in srgb,var(--lc) 62%,transparent),color-mix(in srgb,var(--lc) 14%,transparent) 55%,transparent 80%),rgba(255,255,255,.03)}
+.bl-sl{position:absolute;inset:0;display:flex;transform-style:preserve-3d}
+.bl-sl i{flex:1 1 0;height:100%;transform-origin:50% 50%;will-change:transform;
+  background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.05) 40%,rgba(255,255,255,.02) 60%,rgba(0,0,0,.18)),linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02) 50%,rgba(255,255,255,.06));
+  box-shadow:inset 1px 0 0 rgba(255,255,255,.28),inset -1px 0 0 rgba(0,0,0,.35)}
+.bl-sl i:nth-child(odd){background-color:rgba(255,255,255,.012)}
+.bl-rim{position:absolute;inset:0;pointer-events:none}
+.bl-rim.pg{--c:16px;-webkit-backdrop-filter:none;backdrop-filter:none;--g-fill-a:transparent;--g-fill-b:transparent;background-color:transparent}
+.bl.sec .bl-rim.pg{--c:13px}
+.bl-l{position:relative;z-index:3;display:inline-flex;align-items:center;gap:14px;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.8),0 0 16px rgba(0,0,0,.55);transition:transform var(--d1)}
+.bl:active .bl-l{transform:scale(.985)}
+.bl .pm-lit{--lit:var(--lc)}
+.bl.hot .pm-lit,.bl:focus-visible .pm-lit{opacity:.45}
+.bl-ring{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.bl:focus-visible .bl-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.bl{height:68px;width:290px;font-size:12px;letter-spacing:.24em}.bl.sec{height:58px;width:230px;font-size:11px}}
+</style>
+</head>
+<body data-code="BTN-130" data-name="GLASS BLINDS" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="bl pri" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="bl-box" aria-hidden="true"><span class="bl-back"></span><span class="bl-sl"></span></span><span class="bl-rim pg" aria-hidden="true"></span><span class="bl-l">FIND MY PRODUCT</span><span class="bl-ring" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="bl sec" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="bl-box" aria-hidden="true"><span class="bl-back"></span><span class="bl-sl"></span></span><span class="bl-rim pg" aria-hidden="true"></span><span class="bl-l">ALL PRODUCTS</span><span class="bl-ring" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+/* BTN-130: each slat turns by how close the pointer is (a soft comb), springs shut behind it; a click sends a full flip rippling out */
+(function(){
+  document.querySelectorAll('.bl').forEach(function(el,ix){
+    var box=el.querySelector('.bl-sl'),back=el.querySelector('.bl-back'),N=el.classList.contains('sec')?12:16;
+    box.innerHTML=new Array(N+1).join('<i></i>');
+    var sl=[].slice.call(box.children),a=sl.map(function(){return 0}),v=sl.map(function(){return 0});
+    var px=-1,hot=false,flip=null,idleT=ix*2;
+    var loop=PM.loop(function(now){
+      var busy=false,w=el.offsetWidth,sw=w/N;
+      for(var i=0;i<N;i++){
+        var t=0,q=-1;
+        if(px>=0){var d=Math.abs((i+.5)*sw-px)/sw;t=Math.max(0,1-d/3.2)*72}
+        if(flip)q=((now-flip.t0)/1000-Math.abs(i-flip.i)*.035)/.75;
+        if(q>0&&q<1&&!PM.RM){var e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;a[i]=e*180;v[i]=0;busy=true}
+        else{if(q>=1&&a[i]>100){a[i]-=180}
+          if(PM.RM){a[i]=t*.6;v[i]=0}else{v[i]+=(t-a[i])*.16;v[i]*=.7;a[i]+=v[i]}
+          if(Math.abs(v[i])>.05||Math.abs(t-a[i])>.1)busy=true}
+        sl[i].style.transform='rotateY('+a[i].toFixed(2)+'deg)';
+      }
+      if(flip&&(now-flip.t0)/1000>N*.035+.8)flip=null;
+      return busy||!!flip;
+    });
+    function at(e){var b=el.getBoundingClientRect();px=e.clientX-b.left;back.style.setProperty('--lx',(px/b.width*100).toFixed(1)+'%')}
+    el.addEventListener('pointerenter',function(e){hot=true;el.classList.add('hot');at(e);loop.kick()});
+    el.addEventListener('pointermove',function(e){hot=true;at(e);loop.kick()});
+    el.addEventListener('pointerleave',function(){hot=false;el.classList.remove('hot');px=-1;loop.kick()});
+    el.addEventListener('focus',function(){if(el.matches(':focus-visible')){px=el.offsetWidth/2;el.classList.add('hot');loop.kick()}});
+    el.addEventListener('blur',function(){if(!hot){px=-1;el.classList.remove('hot');loop.kick()}});
+    el.addEventListener('click',function(e){var b=el.getBoundingClientRect(),x=e.clientX?e.clientX-b.left:b.width/2;flip={t0:performance.now(),i:Math.floor(x/(b.width/N))};loop.kick()});
+    /* idle demo: a soft light passes behind the slats, opening them as it goes */
+    PM.ambient(function(dt){if(hot)return;idleT+=dt;var ph=(idleT%6)/6;if(ph<.5){px=el.offsetWidth*(-.15+ph*2.6);back.style.setProperty('--lx',(px/el.offsetWidth*100).toFixed(1)+'%')}else px=-1;loop.kick()});
+    PM.on('pause',function(){if(!hot){px=-1;loop.kick()}});
+  });
+})();
+</script>
+</body>
+</html>

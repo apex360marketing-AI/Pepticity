@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TXT-13 · RISING WORDMARK · PEPTICITY</title>
+<meta name="fx-code" content="TXT-13"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<style>
+/* TXT-13 RISING WORDMARK: scroll to the foot of the page and PEPTICITY, in the PEPTICITY STUDIO 3D lettering, rises letter
+   by letter out of a lit slot in the floor, then one band of light runs across it. Scroll back up and it sinks away again. */
+body{background:#08080a}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.col{position:relative;z-index:2;width:min(1100px,100%);margin:0 auto;padding:clamp(70px,16vh,150px) clamp(20px,5vw,56px) 0}
+.top{display:grid;gap:16px;max-width:560px}
+.top .fx-h{font-size:clamp(26px,3.4vw,50px)}
+.links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2.4vw,30px);margin-top:clamp(70px,16vh,150px);padding-top:22px;border-top:1px solid var(--hair)}
+.links div{display:grid;gap:10px;align-content:start}
+.links b{font:400 9.5px/1 var(--fh);letter-spacing:.3em;color:var(--mute)}
+.links span{font-size:14px;color:var(--ink2)}
+.foot{height:100vh;position:relative}
+.slot{position:fixed;z-index:3;left:6%;right:6%;height:1px;top:var(--by,80%);pointer-events:none;opacity:var(--so,0);
+  background:linear-gradient(90deg,transparent,var(--acc-line) 18%,var(--acc-hi) 50%,var(--acc-line) 82%,transparent);box-shadow:0 0 14px var(--acc-bloom),0 0 40px color-mix(in srgb,var(--acc) 30%,transparent)}
+.slot::after{content:"";position:absolute;left:0;right:0;top:1px;height:90px;background:radial-gradient(46% 100% at 50% 0%,color-mix(in srgb,var(--acc) 13%,transparent),transparent 72%)}
+.under{position:fixed;z-index:3;left:0;right:0;top:calc(var(--by,80%) + 22px);text-align:center;pointer-events:none;opacity:var(--uo,0);
+  font:400 9px var(--fh);letter-spacing:.34em;color:var(--mute)}
+.flat{position:fixed;left:0;right:0;bottom:12vh;z-index:2;text-align:center;font:400 clamp(44px,11vw,170px)/1 var(--fh);letter-spacing:.06em;color:#7a7b80}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>TXT-13</b><span>RISING WORDMARK</span></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="slot" aria-hidden="true"></div>
+<div class="under" aria-hidden="true">PEPTICITY · © 2026</div>
+<div class="flat" id="flat" hidden>PEPTICITY</div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="A page footer: scroll to the bottom and the PEPTICITY wordmark rises">
+  <div class="col">
+    <header class="top"><p class="fx-eyebrow">THE FOOT OF EVERY PAGE</p><h2 class="fx-h fx-chrome">THE NAME RISES TO MEET YOU</h2><p class="fx-p">Scroll down to the bottom: the wordmark rises out of the floor, one letter at a time.</p></header>
+    <nav class="links" aria-label="Sample footer">
+      <div><b>STORE</b><span>Every vial, one plain price.</span></div>
+      <div><b>THE LETTER</b><span>Grace writes once a month.</span></div>
+      <div><b>RESTOCKS</b><span>The team hears first.</span></div>
+      <div><b>CONTACT</b><span>[Contact details: to be set]</span></div>
+    </nav>
+  </div>
+  <div class="foot"><h2 class="sr">PEPTICITY</h2></div>
+</main>
+<script src="../_shared/fx-kit.js"></script>
+<script type="module">
+import { THREE, stage3d, makeWord, coinLights, accentEdges } from '../_shared/fx3d.mjs';
+const sc = FX.scroller(document.getElementById('sc'), { ease: 4.5, tourPeriod: 14 }); FX.rail(sc); FX.hint('scroll');
+const st = stage3d(document.getElementById('gl'), { dpr: FX.mobile ? 1.5 : 2, shadows: false });
+const D = document.documentElement;
+if (!st) document.getElementById('flat').hidden = false;
+else {
+  st.renderer.localClippingEnabled = true;
+  const scene = new THREE.Scene(); scene.environment = st.envRT.texture;
+  const { key } = coinLights(scene, [2.2, 2.6, 3.4]);
+  const word = makeWord(st, 'PEPTICITY', { depth: 0.14, bevel: 0.014 });
+  scene.add(word.group);
+  /* the floor slot: everything below y = 0 (the base of the letters) is cut away, so each letter rises out of it */
+  const clip = new THREE.Plane(new THREE.Vector3(0, 1, 0), word.height / 2);
+  ['gunmetal', 'uv', 'chevron', 'edge'].forEach(k => { st.MAT[k].clippingPlanes = [clip]; st.MAT[k].needsUpdate = true; });
+  accentEdges([st.MAT.edge], 0.35);
+  const sweepL = new THREE.PointLight(0xffffff, 0, 2.2, 1.6); scene.add(sweepL);
+  const cam = new THREE.PerspectiveCamera(24, 1, 0.1, 60);
+  const L = word.letters.map((pv, i) => ({ pv, i, k: 0, home: pv.position.clone() }));
+  let pass = -1, passed = false, last = 0;
+  const v3 = new THREE.Vector3();
+  FX.loop((dt, t, now, live) => {
+    st.size(); cam.aspect = st.aspect();
+    const fov = cam.fov * Math.PI / 180, W = word.width, fill = innerWidth < 700 ? 0.9 : 0.84;
+    const d = W / fill / (2 * Math.tan(fov / 2) * cam.aspect);
+    /* the word sits low on the screen, base on the slot line */
+    const lift = Math.tan(fov / 2) * d * 0.5;
+    cam.position.set(0, lift + 0.12, d); cam.lookAt(0, lift, 0); cam.updateProjectionMatrix();
+    const p = sc.p, rise = FX.clamp((p - 0.52) / 0.42, 0, 1);
+    let moving = false;
+    L.forEach(o => {
+      const k = FX.rm ? (p > 0.7 ? 1 : 0) : FX.ease(rise * 1.55 - o.i * 0.065);
+      if (Math.abs(k - o.k) > 1e-4) moving = true; o.k = k;
+      o.pv.position.y = o.home.y - (1 - k) * 0.82;
+      o.pv.rotation.x = (1 - k) * 0.5;
+    });
+    /* the light pass: once, when the last letter is up */
+    const allUp = L[L.length - 1].k > 0.995;
+    if (allUp && !passed && !FX.rm) { passed = true; pass = 0; }
+    if (!allUp && rise < 0.6) passed = false;
+    if (pass >= 0) { pass += dt / 1.8; const u = FX.ease(pass); sweepL.position.set(-W * 0.6 + u * W * 1.2, 0.5, 0.45); sweepL.intensity = Math.sin(Math.min(1, pass) * Math.PI) * 6; if (pass >= 1) { pass = -1; sweepL.intensity = 0; } }
+    word.group.rotation.y = FX.rm ? 0 : FX.pointer.inside ? FX.pointer.nx * 0.08 * rise : 0;
+    st.draw(scene, cam);
+    /* the glowing slot sits exactly on the letters' base */
+    v3.set(0, -word.height / 2 + 0.002, 0).project(cam);
+    const by = (1 - v3.y) / 2 * innerHeight;
+    D.style.setProperty('--by', by.toFixed(1) + 'px');
+    D.style.setProperty('--so', FX.ss(0.45, 0.6, p).toFixed(3));
+    D.style.setProperty('--uo', FX.ss(0.85, 0.98, p).toFixed(3));
+    return moving || pass >= 0;
+  });
+  window.__fx3d = { st, word };
+}
+</script>
+</body>
+</html>

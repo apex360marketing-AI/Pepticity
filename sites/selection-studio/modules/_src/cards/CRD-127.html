@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRD-127 · STACKED DECK</title>
+<!--@meta {"order":10,"code":"CRD-127","name":"STACKED DECK","interact":"hover","weight":"Light",
+ "desc":"Four glass cards in a neat stack. Point at the stack and they fan out like a hand of cards; point at one to lift it. Click to deal the top card to the back of the deck.",
+ "source":"APEX library CRD-127 Fanned Deck (fan on hover, deal on click), re-cut as PEPTICITY chamfered glass"}-->
+<!--@head-->
+<style>
+.deck{position:relative;width:min(300px,62vw,(100vh - 170px) * .7);aspect-ratio:.7;margin-top:2vh;margin-bottom:5vh;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.deck:focus{outline:none}
+.deck:focus-visible::after{content:"";position:absolute;inset:-18px;border:1.5px solid var(--acc-text)}
+.cd{--c:24px;position:absolute;inset:0;transform-origin:50% 115%;will-change:transform;
+  transform:translate(var(--x,0px),var(--y,0px)) rotate(var(--r,0deg)) scale(var(--s,1));transition:transform .7s var(--e-spring),filter .5s;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.75) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.5) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.4),#fff 52%,rgba(200,207,216,.4)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.45),rgba(200,207,216,.35) 50%,rgba(120,127,137,.45)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.7),rgba(120,127,137,.4)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.4),rgba(120,127,137,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.10),transparent 46%),linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),rgba(14,13,18,.22);
+  display:flex;flex-direction:column;padding:22px 20px 20px;color:var(--ink)}
+.cd .n{font:400 clamp(54px,9vw,82px)/1 var(--fh);letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(230,234,240,.35);transition:-webkit-text-stroke-color .4s}
+.cd .lab{margin-top:auto;font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute)}
+.cd h2{margin:10px 0 8px;font:400 clamp(17px,2.4vw,22px)/1.1 var(--fh);letter-spacing:.1em;color:var(--chrome);text-shadow:.02em .04em 0 #3a3d42,.04em .08em 0 #232427,.1em .2em .16em rgba(0,0,0,.6)}
+.cd p{margin:0;font-size:13px;line-height:1.5;color:var(--ink2)}
+.cd .bar{position:absolute;left:20px;right:20px;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--acc),transparent);opacity:0;transition:opacity .4s;box-shadow:0 0 10px var(--acc)}
+.cd.up{filter:brightness(1.15)}
+.cd.up .bar{opacity:1}
+.cd.up .n{-webkit-text-stroke-color:var(--acc-line)}
+.cd.deal{transition:transform .45s var(--e-in),opacity .3s .25s}
+.under{position:absolute;left:8%;right:8%;bottom:-12%;height:12%;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 30%,transparent),transparent);filter:blur(12px);opacity:.5;transition:opacity .5s,transform .6s var(--e-out)}
+.deck.fan .under{opacity:.9;transform:scaleX(1.8)}
+.count{position:absolute;left:50%;bottom:-22%;transform:translateX(-50%);font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute);white-space:nowrap}
+.count b{font-weight:400;color:var(--acc-text)}
+@media (prefers-reduced-motion:reduce){.cd{transition:none}}
+</style>
+</head>
+<body data-code="CRD-127" data-name="STACKED DECK" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <div class="deck" id="deck" tabindex="0" role="button" aria-label="A deck of four cards. Press to deal the top card to the back.">
+    <span class="under" aria-hidden="true"></span>
+    <article class="cd"><span class="bar"></span><span class="n">04</span><span class="lab">YOUR ACCOUNT</span><h2>ORDERS AND CARD</h2><p>Your orders, your member card and your saved words.</p></article>
+    <article class="cd"><span class="bar"></span><span class="n">03</span><span class="lab">THE TEAM</span><h2>MEMBERS</h2><p>The monthly letter and word on restocks.</p></article>
+    <article class="cd"><span class="bar"></span><span class="n">02</span><span class="lab">THE JOURNAL</span><h2>READ</h2><p>Plain-English notes from the PEPTICITY studio.</p></article>
+    <article class="cd"><span class="bar"></span><span class="n">01</span><span class="lab">THE STORE</span><h2>SHOP</h2><p>Every product, each in the clear bottle.</p></article>
+    <p class="count" aria-live="polite">CARD <b id="ct">01</b> OF 04</p>
+  </div>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var deck=document.getElementById('deck'),ct=document.getElementById('ct'),order=[].slice.call(deck.querySelectorAll('.cd')),fan=false,hov=-1,busy=false;
+  function lay(){var n=order.length,top=n-1;
+    order.forEach(function(c,i){var k=i-top,x=0,y=0,r=0,s=1;   /* k: 0 = top card, negative = further back */
+      if(fan){var a=(i-(n-1)/2);r=a*11;x=a*34;y=Math.abs(a)*8;if(i===hov){y-=26;s=1.04}}
+      else{x=k*-6;y=k*-8;r=k*-1.5;s=1+k*.02}
+      c.style.setProperty('--x',x+'px');c.style.setProperty('--y',y+'px');c.style.setProperty('--r',r+'deg');c.style.setProperty('--s',s);
+      c.style.zIndex=i+1;c.classList.toggle('up',fan?i===hov:i===top)});
+    ct.textContent=order[order.length-1].querySelector('.n').textContent}
+  deck.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse'){fan=true;deck.classList.add('fan');lay()}});
+  deck.addEventListener('pointerleave',function(){fan=false;hov=-1;deck.classList.remove('fan');lay()});
+  deck.addEventListener('pointermove',function(e){if(!fan)return;var t=e.target.closest('.cd'),i=t?order.indexOf(t):-1;if(i!==hov){hov=i;lay()}});
+  function deal(){if(busy)return;busy=true;var top=order[order.length-1];top.classList.add('deal');top.style.setProperty('--x',(fan?220:180)+'px');top.style.setProperty('--y','-40px');top.style.setProperty('--r','18deg');
+    setTimeout(function(){top.classList.remove('deal');order.pop();order.unshift(top);top.style.zIndex=0;lay();setTimeout(function(){busy=false},300)},PM.RM?10:440)}
+  deck.addEventListener('click',deal);
+  deck.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();deal()}});
+  deck.addEventListener('focus',function(){if(deck.matches(':focus-visible')){fan=true;deck.classList.add('fan');lay()}});
+  deck.addEventListener('blur',function(){fan=false;deck.classList.remove('fan');lay()});
+  lay();
+  /* idle demo while playing: fan, deal one, gather */
+  var acc=1,touched=false;document.addEventListener('pointermove',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>6){acc=0;fan=true;deck.classList.add('fan');lay();setTimeout(function(){if(touched)return;deal();setTimeout(function(){if(touched)return;fan=false;deck.classList.remove('fan');lay()},1400)},1100)}});
+})();
+</script>
+</body>
+</html>

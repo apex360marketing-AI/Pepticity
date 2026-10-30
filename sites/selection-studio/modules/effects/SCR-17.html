@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SCR-17 · WORD PORTAL · PEPTICITY</title>
+<meta name="fx-code" content="SCR-17"><meta name="fx-interact" content="scroll">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* SCR-17 WORD PORTAL: scroll flies the camera through the word PEPTICITY, straight through the letter I and down into the
+   Higgsfield city film (SCR-07 weave frames), weaving between the towers until it lands at the PEPTICITY doors. */
+#city,#dust{position:absolute;inset:0;width:100%;height:100%}
+#dust{pointer-events:none;mix-blend-mode:screen}
+#portal{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#portal text{font-family:"PEPTICITY BLACK",sans-serif;font-size:224px;letter-spacing:14px}
+.shade{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(180deg,rgba(5,5,7,.55),transparent 22%,transparent 72%,rgba(5,5,7,.7)),
+  radial-gradient(120% 90% at 50% 45%,transparent 50%,rgba(2,2,3,.55) 100%)}
+.intro{position:absolute;left:50%;bottom:clamp(64px,13vh,130px);transform:translateX(-50%);display:grid;justify-items:center;gap:14px;text-align:center;pointer-events:none;width:min(92vw,560px)}
+.intro .fx-p{font-size:14px;color:var(--mute)}
+.cap{position:absolute;left:clamp(18px,5vw,72px);bottom:clamp(70px,12vh,120px);margin:0;padding:18px 22px 18px;width:min(420px,calc(100vw - 36px));opacity:0;visibility:hidden;
+  transform:translate3d(0,24px,0);will-change:transform,opacity}
+.cap b{display:block;font:400 clamp(14px,1.3vw,18px)/1.15 var(--fh);letter-spacing:.14em;margin-bottom:8px}
+.cap span{display:block;font-size:14px;color:var(--ink2)}
+.cap.fx-glass{background-color:rgba(8,8,11,.5)}
+.cap em{position:absolute;right:16px;top:14px;font:400 9px var(--fh);letter-spacing:.3em;color:var(--acc-text);font-style:normal}
+.plaque{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:grid;place-items:center;opacity:0;pointer-events:none;
+  background:linear-gradient(180deg,#17181c,#0b0c0e);box-shadow:0 0 0 1px rgba(255,255,255,.16),0 0 34px color-mix(in srgb,var(--acc) 22%,transparent);
+  clip-path:polygon(3% 0,100% 0,100% 72%,97% 100%,0 100%,0 28%)}
+.plaque b{font:400 1em/1 "PEPTICITY BLACK",sans-serif;letter-spacing:.12em;color:#f4f6fb;padding-left:.12em;
+  text-shadow:0 0 6px #fff,0 0 16px color-mix(in srgb,var(--acc) 70%,#fff),0 0 34px var(--acc-bloom)}
+.load{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 9px var(--fh);letter-spacing:.34em;color:var(--mute);transition:opacity .5s}
+.ready .load{opacity:0}
+@media (max-width:700px){#portal text{font-size:236px}.cap{bottom:74px}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>SCR-17</b><span>WORD PORTAL</span></div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="Word portal: scroll to fly through the word PEPTICITY into the city">
+  <section class="fx-pin" style="--len:760vh">
+    <div class="fx-sticky" id="stage">
+      <canvas id="city" role="img" aria-label="The PEPTICITY city at night, filmed from above and flying down to the PEPTICITY doors"></canvas>
+      <canvas id="dust" aria-hidden="true"></canvas>
+      <div class="plaque" id="plaque" aria-hidden="true"><b>PEPTICITY</b></div>
+      <svg id="portal" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <linearGradient id="chr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".46" stop-color="#b9bec5"/><stop offset=".54" stop-color="#6b7077"/><stop offset="1" stop-color="#e6e9ed"/></linearGradient>
+          <radialGradient id="plate" gradientUnits="userSpaceOnUse" cx="800" cy="470" r="1200"><stop offset="0" stop-color="#16151b"/><stop offset=".5" stop-color="#0c0b10"/><stop offset="1" stop-color="#060607"/></radialGradient>
+          <mask id="pm" maskUnits="userSpaceOnUse" x="-60000" y="-60000" width="120000" height="120000">
+            <rect x="-60000" y="-60000" width="120000" height="120000" fill="#fff"/>
+            <text id="mt" x="800" y="530" text-anchor="middle" fill="#000">PEPTICITY</text>
+          </mask>
+        </defs>
+        <g id="zoom">
+          <rect x="-60000" y="-60000" width="120000" height="120000" fill="url(#plate)" mask="url(#pm)"/>
+          <text id="glow" x="800" y="530" text-anchor="middle" fill="none" stroke-width="5" opacity=".55" style="stroke:var(--acc);filter:blur(6px)">PEPTICITY</text>
+          <text id="edge" x="800" y="530" text-anchor="middle" fill="none" stroke="url(#chr)" stroke-width="1.3" vector-effect="non-scaling-stroke">PEPTICITY</text>
+        </g>
+      </svg>
+      <div class="shade" aria-hidden="true"></div>
+      <div class="intro" id="intro"><p class="fx-eyebrow">INTO THE CITY OF PEPTICITY</p><p class="fx-p">Scroll and fly straight through the word.</p></div>
+      <figure class="cap fx-glass" data-a=".17" data-b=".42"><em>01</em><b>HIGH ABOVE THE CITY</b><span>The ride starts above the towers and drifts slowly down.</span></figure>
+      <figure class="cap fx-glass" data-a=".42" data-b=".7"><em>02</em><b>BETWEEN THE TOWERS</b><span>It weaves between the buildings at walking pace, never rushed.</span></figure>
+      <figure class="cap fx-glass" data-a=".7" data-b="1.1"><em>03</em><b>THE PEPTICITY DOORS</b><span>And it lands at street level, in front of the doors to the store.</span></figure>
+      <div class="load" id="load">LOADING THE CITY</div>
+    </div>
+  </section>
+</main>
+<script src="../_shared/fx-kit.js"></script>
+<script src="../_shared/fx-frames.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var sc = FX.scroller($('#sc')); FX.rail(sc); FX.hint('scroll');
+  var N = 113;
+  var city = FX.frames({ canvas: $('#city'), n: N, url: function (i) { return '../_assets/weave/w-' + ('00' + i).slice(-3) + '.webp'; } });
+  var P_END = 0.16, W_IN = 0.12, W_OUT = 0.93;
+  /* the film's own door sign (an old serif) is covered by a lit PEPTICITY plaque, tracked frame by frame
+     (table measured on this film for the live site, sites/main/v2/v2.js SIGN.black: [u, x, y, width] in frame fractions) */
+  var SIGN = [[0.6, 0.49, 0.615, 0.12], [0.649, 0.494, 0.514, 0.137], [0.702, 0.496, 0.42, 0.16], [0.751, 0.498, 0.337, 0.19], [0.8, 0.5, 0.27, 0.21],
+    [0.853, 0.502, 0.2, 0.238], [0.902, 0.502, 0.15, 0.27], [0.951, 0.5, 0.12, 0.283], [1, 0.502, 0.108, 0.29]];
+  var zoomG = $('#zoom'), portal = $('#portal'), glow = $('#glow'), mt = $('#mt'), plaque = $('#plaque'), intro = $('#intro');
+  var caps = [].slice.call(document.querySelectorAll('.cap'));
+  var Z0 = { x: 800, y: 470 }, Z1 = { x: 800, y: 470 };
+  function measure() {
+    try { var bb = mt.getBBox(); Z0 = { x: bb.x + bb.width / 2, y: bb.y + bb.height / 2 }; var fs = parseFloat(getComputedStyle(mt).fontSize) || 224, st = mt.getStartPositionOfChar(4); Z1 = { x: st.x + 0.115 * fs, y: st.y - 0.35 * fs };   /* the I's ink centre: advance 230, ink 45..185, cap 700 (PepticityBlack.woff2) */ } catch (e) { }
+  }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { measure(); document.body.classList.add('fonts'); FX.wake(); });
+
+  function weaveFrame(p) {
+    var q = FX.clamp((p - W_IN) / (W_OUT - W_IN), 0, 1);
+    if (FX.rm) return q < 0.34 ? 0 : q < 0.75 ? Math.round((N - 1) * 0.5) : N - 1;
+    var e = 1 - Math.pow(1 - q, 1.6);
+    return (0.55 * FX.ss(0, 1, q) + 0.45 * e) * (N - 1);
+  }
+
+  /* dust: fine motes the camera flies through, only while it moves */
+  var dc = $('#dust'), dx = dc.getContext('2d'), DW = 0, DH = 0, motes = [], MN = FX.mobile ? 60 : 130;
+  function dsize() { var r = Math.min(devicePixelRatio || 1, 1.5); DW = dc.clientWidth; DH = dc.clientHeight; dc.width = DW * r; dc.height = DH * r; dx.setTransform(r, 0, 0, r, 0, 0); }
+  dsize(); addEventListener('resize', function () { dsize(); FX.wake(); });
+  for (var i = 0; i < MN; i++) motes.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() * 0.95 + 0.05, px: null, py: null });
+  var dustA = 0;
+
+  var ready = false, settle = 0;
+  FX.loop(function (dt, t, now, live) {
+    var p = sc.p, busy = false;
+    if (!ready && city.loaded() > 0) { ready = true; document.body.classList.add('ready'); }
+    /* portal */
+    var pp = FX.clamp(p / P_END, 0, 1);
+    if (FX.rm) {
+      portal.style.opacity = String(1 - FX.ss(0.4, 1, pp)); portal.style.visibility = pp >= 1 ? 'hidden' : 'visible';
+    } else {
+      var k = FX.ss(0, 0.62, pp), zx = Z0.x + (Z1.x - Z0.x) * k, zy = Z0.y + (Z1.y - Z0.y) * k;
+      var s = (1 + Math.pow(pp, 2.7) * 150) * (1 + 0.012 * Math.sin(t * 0.6) * (1 - pp));
+      zoomG.setAttribute('transform', 'translate(800 450) scale(' + s.toFixed(4) + ') translate(' + (-zx).toFixed(2) + ' ' + (-zy).toFixed(2) + ')');
+      portal.style.opacity = String(1 - FX.ss(0.86, 1, pp)); portal.style.visibility = pp >= 1 ? 'hidden' : 'visible';
+      glow.style.display = pp > 0.35 ? 'none' : '';
+      glow.setAttribute('opacity', String(0.55 * (1 - pp / 0.35) * (0.75 + 0.25 * Math.sin(t * 1.4))));
+    }
+    intro.style.opacity = String(1 - FX.ss(0.02, 0.09, p));
+    /* the city film */
+    var f = weaveFrame(p), push = p < W_IN ? 1 + 0.06 * pp + (FX.rm ? 0 : 0.01 * Math.sin(t * 0.35)) : 1;
+    if (city.draw(f, push)) busy = true;
+    /* plaque on the door sign */
+    var u = f / (N - 1), r = city.rect;
+    if (u >= SIGN[0][0] && r.w) {
+      var j = 1; while (j < SIGN.length - 1 && SIGN[j][0] < u) j++;
+      var A = SIGN[j - 1], B = SIGN[j], m = FX.clamp((u - A[0]) / (B[0] - A[0]), 0, 1), L = function (n) { return A[n] + (B[n] - A[n]) * m; };
+      var w = L(3) * r.w * 1.08;
+      plaque.style.left = (r.x + L(1) * r.w) + 'px'; plaque.style.top = (r.y + L(2) * r.h) + 'px';
+      plaque.style.width = w + 'px'; plaque.style.height = (w * 0.27) + 'px'; plaque.style.fontSize = (w * 0.068) + 'px';
+      plaque.style.opacity = String(FX.ss(0.6, 0.64, u));
+    } else plaque.style.opacity = '0';
+    /* captions */
+    caps.forEach(function (c) {
+      var a = +c.dataset.a, b = +c.dataset.b, o = FX.ss(a, a + 0.05, p) * (1 - FX.ss(b - 0.05, b, p));
+      c.style.opacity = o.toFixed(3); c.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+      c.style.transform = FX.rm ? 'none' : 'translate3d(0,' + ((1 - o) * 24).toFixed(1) + 'px,0)';
+    });
+    /* dust */
+    var inDive = p > W_IN && p < W_OUT + 0.02, speed = Math.abs(sc.v);
+    var target = FX.rm ? 0 : (inDive ? Math.min(1, speed * 5) : 0);
+    dustA = FX.damp(dustA, target, 4, dt);
+    if (dustA > 0.004) {
+      dx.clearRect(0, 0, DW, DH);
+      var cx = DW / 2, cy = DH * 0.48, adv = (speed * 1.3 + 0.02) * dt * (sc.v >= 0 ? 1 : -1);
+      dx.lineCap = 'round';
+      for (var q = 0; q < motes.length; q++) {
+        var M = motes[q]; M.z -= adv;
+        if (M.z < 0.04 || M.z > 1) { M.z = M.z < 0.04 ? 1 : 0.05; M.x = Math.random() * 2 - 1; M.y = Math.random() * 2 - 1; M.px = null; }
+        var sx = cx + M.x / M.z * DW * 0.35, sy = cy + M.y / M.z * DH * 0.35;
+        var a2 = dustA * Math.min(1, (1 - M.z) * 1.4) * 0.55;
+        if (M.px !== null && a2 > 0.01) {
+          dx.strokeStyle = 'rgba(232,236,246,' + a2.toFixed(3) + ')'; dx.lineWidth = Math.max(0.6, (1 - M.z) * 2.2);
+          dx.beginPath(); dx.moveTo(M.px, M.py); dx.lineTo(sx, sy); dx.stroke();
+        }
+        M.px = sx; M.py = sy;
+      }
+      busy = true; settle = 1;
+    } else if (settle) { dx.clearRect(0, 0, DW, DH); settle = 0; }
+    return busy;
+  });
+  addEventListener('resize', function () { measure(); });
+})();
+</script>
+</body>
+</html>

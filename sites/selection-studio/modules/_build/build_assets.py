@@ -60,9 +60,13 @@ box = (x0, y0, x1, y1)
 Image.fromarray(cut).crop(box).save(A / "vial/vial.webp", quality=90, method=6)
 clr = np.dstack([clear.astype(np.uint8), a])
 Image.fromarray(clr).crop(box).save(A / "vial/vial-clear.webp", quality=90, method=6)
-diff = np.clip(front - clear, 0, 255).astype(np.uint8)
+diff = np.clip(front - clear, 0, 255).astype(np.float32)
 diff[a < 8] = 0
-Image.fromarray(diff).crop(box).save(A / "vial/vial-print.webp", quality=92, method=6)
+# straight-alpha version (works inside 3D-transformed layers where blend modes do not): alpha = brightness of the print
+al = np.clip(diff.max(2) * 1.25, 0, 255)
+rgb = np.clip(diff / np.maximum(al[..., None], 1) * 255, 0, 255)
+rgb = np.where(al[..., None] > 4, np.maximum(rgb, 200), 0)
+Image.fromarray(np.dstack([rgb, al]).astype(np.uint8), "RGBA").crop(box).save(A / "vial/vial-print.webp", quality=92, method=6)
 shutil.copy2(ROOT / "sites/main/v2/assets/vial-pepticity.webp", A / "vial/vial-pepticity.webp")
 # label band (rows where the frosted label sits) in crop space, for the mercury mask
 lum = clear.mean(2)
@@ -71,12 +75,13 @@ geo = {"crop": box, "w": int(x1 - x0), "h": int(y1 - y0)}
 (A / "vial/vial.json").write_text(json.dumps(geo))
 log(A / "vial/vial.webp", f"brand/vial-hf/front-cutout.png crop {box}")
 log(A / "vial/vial-clear.webp", "brand/vial-hf/front-clear.png + cut-out alpha")
-log(A / "vial/vial-print.webp", "front.png - front-clear.png (print only)")
+log(A / "vial/vial-print.webp", "front.png - front-clear.png (print only, alpha = its brightness)")
 
 # ---------------------------------------------------------------- stills (Higgsfield)
 M = ROOT / "sites/main/media"
 def still(src, dst, crop=None, width=1600, q=74):
-    im = Image.open(M / src).convert("RGB")
+    im = src if isinstance(src, Image.Image) else Image.open(M / src).convert("RGB")
+    src = "frames-hd/black-lab-d-000 frame 0" if isinstance(src, Image.Image) else src
     W, H = im.size
     if crop:
         cx, cy, s = crop                       # centre (fractions) + zoom; result keeps the frame's aspect
@@ -92,9 +97,11 @@ still("black-doors.jpg", "doors-full.webp", width=1912)
 im = Image.open(M / "black-doors.jpg").convert("RGB"); im = im.crop((0, 170, im.width, im.height)); im.save(A / "stills/doors.webp", quality=76, method=6)
 log(A / "stills/doors.webp", "media/black-doors.jpg below the sign")
 still("black-lab.jpg", "lab.webp")
-still("black-lab.jpg", "lab-dropper.webp", (0.42, 0.68, 1.7))      # the dropper fills the vial (v2 lab station 3)
-still("black-lab.jpg", "lab-columns.webp", (0.15, 0.55, 1.6))      # purification columns (station 2)
-still("black-lab.jpg", "lab-cabinets.webp", (0.85, 0.52, 1.6))     # freeze-drying cabinets (station 4)
+# lab crops from the HD lab film's first frame, framed to stay clear of the film's serif wall sign (centre, y ~0.37)
+LAB = Image.open(M / "frames-hd/black-lab-d-000.webp").convert("RGB").crop((0, 0, 1920, 1080))
+still(LAB, "lab-dropper.webp", (0.45, 0.77, 2.0))      # the dropper fills the vial (v2 lab station 3)
+still(LAB, "lab-columns.webp", (0.13, 0.72, 2.0))      # purification columns (station 2)
+still(LAB, "lab-cabinets.webp", (0.87, 0.70, 2.0))     # freeze-drying cabinets (station 4)
 still("chest-black-poster.jpg", "chest.webp", width=1600)
 
 # ---------------------------------------------------------------- frames

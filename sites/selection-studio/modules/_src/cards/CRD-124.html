@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRD-124 · FOG WIPE</title>
+<!--@meta {"order":11,"code":"CRD-124","name":"FOG WIPE","interact":"drag","weight":"Medium",
+ "desc":"A misted pane of glass. Wipe it with your pointer or finger and the words underneath come through sharp; leave it and the mist slowly creeps back. A button clears it all at once.",
+ "source":"APEX library CRD-124 Fog Wipe (wipe to clear, fog returns, clear button), re-cut as PEPTICITY chamfered glass with a sample order"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text);--c:9px;--h:40px;--px:18px;--fs:9.5px;--ls:.24em}
+.fw{--c:24px;position:relative;width:min(620px,100%);isolation:isolate;touch-action:none;cursor:crosshair;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(8px) saturate(160%);backdrop-filter:blur(8px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.75) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.5) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.4),#fff 52%,rgba(200,207,216,.4)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.45),rgba(200,207,216,.35) 50%,rgba(120,127,137,.45)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.7),rgba(120,127,137,.4)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.4),rgba(120,127,137,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.07),transparent 46%),linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
+.head{position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:22px 26px 18px;border-bottom:1px solid rgba(230,234,240,.14)}
+.head .k{font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute)}
+.head h2{margin:8px 0 0;font:400 clamp(17px,2.4vw,22px)/1.1 var(--fh);letter-spacing:.1em;color:var(--chrome);text-shadow:.02em .04em 0 #3a3d42,.04em .08em 0 #232427,.1em .2em .16em rgba(0,0,0,.6)}
+.pane{position:relative;height:clamp(200px,34vh,250px)}
+.copy{position:absolute;inset:0;padding:16px 26px 20px;display:flex;flex-direction:column;gap:2px}
+.copy.blur{filter:blur(3.5px);opacity:.92}
+.copy.sharp{z-index:3}
+.line{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(230,234,240,.1)}
+.line b{font:400 13px/1.2 var(--fh);letter-spacing:.12em;font-weight:400;color:var(--ink)}
+.line small{display:block;margin-top:5px;font:500 11px/1 var(--fb);color:var(--mute);letter-spacing:.03em}
+.line .p{font:400 12px/1 var(--fh);letter-spacing:.08em;color:var(--ink2)}
+.line .t{font:400 7.5px/1 var(--fh);letter-spacing:.24em;padding:5px 7px 4px;border:1px dashed var(--hair2);color:var(--ink2)}
+.copy .note{margin-top:auto;font-size:12px;color:var(--mute)}
+.copy.sharp .line b{color:#fff}.copy.sharp .line .p{color:var(--acc-text)}
+canvas.fog{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block}
+.cur{position:absolute;left:0;top:0;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;z-index:4;pointer-events:none;opacity:0;transition:opacity .25s;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 70%,#fff),0 0 12px var(--acc-bloom)}
+.fw.hot .cur{opacity:.8}
+.rm .cur{display:none}
+@media (max-width:520px){.head{padding:18px 18px 14px}.copy{padding:12px 18px 16px}.line b{font-size:11.5px}}
+</style>
+</head>
+<body data-code="CRD-124" data-name="FOG WIPE" data-hint="WIPE" data-hint-touch="WIPE">
+<!--@stage-->
+<main class="pm-main">
+  <article class="fw" id="fw">
+    <div class="head"><div><span class="k">WIPE THE GLASS</span><h2>YOUR SAMPLE ORDER</h2></div>
+      <button class="pc-btn" type="button" id="clear"><span class="pc-btn__face"><span class="pc-btn__label">CLEAR IT</span></span></button></div>
+    <div class="pane" id="pane">
+      <div class="copy blur" aria-hidden="true"></div>
+      <canvas class="fog" aria-hidden="true"></canvas>
+      <div class="copy sharp"></div>
+      <span class="cur" aria-hidden="true"></span>
+    </div>
+  </article>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var HTML='<div class="line"><span><b>GHK-CU</b><small>50 mg · 1 vial</small></span><span class="p">[PRICE]</span><span class="t">SAMPLE</span></div>'+
+    '<div class="line"><span><b>BPC-157</b><small>10 mg · 1 vial</small></span><span class="p">[PRICE]</span><span class="t">SAMPLE</span></div>'+
+    '<div class="line"><span><b>NAD+</b><small>1000 mg · 1 vial</small></span><span class="p">[PRICE]</span><span class="t">SAMPLE</span></div>'+
+    '<p class="note">A plain, sealed box. No product names on the outside.</p>';
+  document.querySelectorAll('.copy').forEach(function(c){c.innerHTML=HTML});
+  var fw=document.getElementById('fw'),pane=document.getElementById('pane'),cv=pane.querySelector('canvas'),sharp=pane.querySelector('.copy.sharp'),cur=pane.querySelector('.cur'),x=cv.getContext('2d');
+  var W=0,H=0,dpr=Math.min(2,devicePixelRatio||1),noise=null,spots=[],R=34;
+  function makeNoise(){var c=document.createElement('canvas');c.width=c.height=128;var g=c.getContext('2d'),id=g.createImageData(128,128);
+    for(var i=0;i<id.data.length;i+=4){var v=200+Math.random()*55;id.data[i]=v;id.data[i+1]=v;id.data[i+2]=v+4;id.data[i+3]=16+Math.random()*26}g.putImageData(id,0,0);return x.createPattern(c,'repeat')}
+  function fogAll(a){x.save();x.globalCompositeOperation='source-over';x.globalAlpha=a;x.fillStyle='rgba(214,220,230,.07)';x.fillRect(0,0,W,H);x.fillStyle=noise;x.fillRect(0,0,W,H);x.restore()}
+  function size(){var b=pane.getBoundingClientRect();W=b.width;H=b.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);x.setTransform(dpr,0,0,dpr,0,0);noise=makeNoise();fogAll(1);spots=[];clip()}
+  /* the sharp copy shows through a union of round wipes (clip-path), the mist canvas gets the same holes rubbed out */
+  function clip(){if(!spots.length){sharp.style.clipPath='inset(0 0 100% 0)';return}
+    sharp.style.clipPath='path("'+spots.map(function(s){var r=Math.max(.5,s.r);return 'M'+(s.x-r).toFixed(1)+' '+s.y.toFixed(1)+'a'+r.toFixed(1)+' '+r.toFixed(1)+' 0 1 0 '+(2*r).toFixed(1)+' 0a'+r.toFixed(1)+' '+r.toFixed(1)+' 0 1 0 '+(-2*r).toFixed(1)+' 0'}).join('')+'")'}
+  function wipe(px,py){x.save();x.globalCompositeOperation='destination-out';var g=x.createRadialGradient(px,py,0,px,py,R);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.7,'rgba(0,0,0,.9)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.beginPath();x.arc(px,py,R,0,Math.PI*2);x.fill();x.restore();
+    spots.push({x:px,y:py,r:R*.8});if(spots.length>260)spots.splice(0,spots.length-260);clip()}
+  var last=null,down=false;
+  function at(e){var b=pane.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]}
+  function stroke(p){if(last){var dx=p[0]-last[0],dy=p[1]-last[1],d=Math.hypot(dx,dy),n=Math.ceil(d/10);for(var i=1;i<=n;i++)wipe(last[0]+dx*i/n,last[1]+dy*i/n)}else wipe(p[0],p[1]);last=p}
+  pane.addEventListener('pointerenter',function(e){fw.classList.add('hot');last=null});
+  pane.addEventListener('pointerleave',function(){fw.classList.remove('hot');last=null});
+  pane.addEventListener('pointerdown',function(e){down=true;try{pane.setPointerCapture(e.pointerId)}catch(_){}last=null;stroke(at(e))});
+  pane.addEventListener('pointerup',function(){down=false;last=null});
+  pane.addEventListener('pointermove',function(e){var p=at(e);cur.style.transform='translate('+p[0]+'px,'+p[1]+'px)';if(e.pointerType==='mouse'||down)stroke(p);lastWipe=performance.now()});
+  document.getElementById('clear').addEventListener('click',function(){x.clearRect(0,0,W,H);spots=[{x:W/2,y:H/2,r:Math.hypot(W,H)}];clip();lastWipe=performance.now()});
+  /* the mist creeps back: the canvas fogs a little each tick, the clear spots shrink */
+  var lastWipe=0,tick=0;
+  function regrow(dt){if(performance.now()-lastWipe<900)return;tick+=dt;if(tick<.08)return;var k=tick;tick=0;fogAll(.05*k/.08);
+    spots.forEach(function(s){s.r-=k*(s.r>200?260:16)});spots=spots.filter(function(s){return s.r>1});clip()}
+  PM.ambient(regrow);
+  if(PM.RM){/* reduced motion: no creeping mist; the button and wiping still work */}
+  size();addEventListener('resize',size);
+  /* idle demo while playing: a slow figure-eight wipe so a still tile shows the idea */
+  var it=0,touched=false;pane.addEventListener('pointermove',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;it+=dt;if((it%7)<2.4){var q=(it%7)/2.4,px=W*(.12+.76*q),py=H*(.5+.28*Math.sin(q*Math.PI*2));stroke([px,py]);lastWipe=performance.now()}else last=null});
+})();
+</script>
+</body>
+</html>

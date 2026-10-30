@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-BTN-07 · EDGE STREAK</title>
+<!--@meta {"order":7,"code":"PEP-BTN-07","name":"EDGE STREAK","interact":"hover","weight":"Light",
+ "desc":"Point at it and the edge of the glass warms up in your colour while a narrow, bright streak of light races once along its outline from left to right.",
+ "source":"PEPTICITY sites/dashboard-color scroll-lit card halos (edge glow + left-to-right light streak, the same ring geometry), made into a button"}-->
+<!--@head-->
+<style>
+.stk{--c:16px;--sc:var(--acc);--sc-hi:var(--acc-hi);position:relative;display:inline-grid;place-items:center;height:76px;min-width:340px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.stk.sec{--c:13px;--sc:#c9cdd4;--sc-hi:#ffffff;height:64px;min-width:290px;font-size:12px}
+.stk:focus{outline:none}
+.stk-face{position:absolute;inset:0;transition:transform var(--d1) var(--e-out)}
+.stk-face.pg{--c:16px}.stk.sec .stk-face.pg{--c:13px}
+.stk:active .stk-face{transform:translateY(1px) scale(.985)}
+.stk-l{position:relative;z-index:3;display:inline-flex;align-items:center;gap:16px;padding:0 48px;white-space:nowrap;text-shadow:0 1px 10px rgba(0,0,0,.6);transition:text-shadow .5s}
+.stk-l b{font-weight:400;display:inline-block;width:18px;height:1px;background:var(--sc);box-shadow:0 0 6px var(--sc);transform:scaleX(.5);transform-origin:0 50%;transition:transform .6s var(--e-out)}
+.stk.hot .stk-l b{transform:scaleX(1.4)}
+.stk.hot .stk-l{text-shadow:0 0 14px color-mix(in srgb,var(--sc) 50%,transparent)}
+/* the halo: hairline + soft glow + streak, clipped to rings around the cut (ring polygons are measured in JS, as on the dashboard) */
+.halo{position:absolute;left:-26px;top:-26px;right:-26px;bottom:-26px;pointer-events:none;z-index:2}
+.halo .ht{position:absolute;inset:0;opacity:0;transition:opacity .9s var(--e-out)}
+.stk.hot .halo .ht{opacity:.9;transition-duration:.45s}
+.halo .hg{position:absolute;inset:0;filter:blur(3.5px)}
+.halo .hg i,.halo .hl{position:absolute;inset:0}
+.halo .hg i{clip-path:var(--ring-g);opacity:.6;background:linear-gradient(180deg,var(--sc),color-mix(in srgb,var(--sc) 55%,transparent) 50%,var(--sc))}
+.halo .hl{clip-path:var(--ring-l);opacity:.9;background:linear-gradient(180deg,var(--sc-hi),var(--sc) 30%,color-mix(in srgb,var(--sc) 55%,transparent) 60%,var(--sc))}
+.halo .hs{position:absolute;inset:0;opacity:0}
+.halo .hs .sc,.halo .hs .sb{position:absolute;inset:0;overflow:hidden}
+.halo .hs .sc{clip-path:var(--ring-s)}
+.halo .hs .sb{clip-path:var(--ring-g);filter:blur(2.5px);opacity:.8}
+.halo .hs i{position:absolute;top:0;bottom:0;left:0;width:150px;transform:translateX(-150px)}
+.halo .hs .sc i{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--sc) 70%,transparent) 32%,#fff 50%,color-mix(in srgb,var(--sc) 70%,transparent) 68%,transparent)}
+.halo .hs .sb i{background:linear-gradient(90deg,transparent,var(--sc) 50%,transparent)}
+.halo .hs.go{animation:stkO 1.25s linear 1 both}
+.halo .hs.go i{animation:stkX 1.25s cubic-bezier(.45,0,.25,1) 1 both}
+@keyframes stkX{from{transform:translateX(-150px)}to{transform:translateX(var(--hw,600px))}}
+@keyframes stkO{0%{opacity:0}10%,82%{opacity:1}100%{opacity:0}}
+.stk-ring{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.stk:focus-visible .stk-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.stk{height:66px;min-width:280px;font-size:12px;letter-spacing:.24em}.stk.sec{height:58px;min-width:240px;font-size:11px}.stk-l{padding:0 34px}}
+@media (prefers-reduced-motion:reduce){.halo .hs{display:none}}
+</style>
+</head>
+<body data-code="PEP-BTN-07" data-name="EDGE STREAK" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="stk pri" type="button"><span class="stk-face pg" aria-hidden="true"></span><span class="halo" aria-hidden="true"><span class="ht"><span class="hg"><i></i></span><span class="hl"></span></span><span class="hs"><span class="sb"><i></i></span><span class="sc"><i></i></span></span></span><span class="stk-l">OPEN THE STORE<b aria-hidden="true"></b></span><span class="stk-ring" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="stk sec" type="button"><span class="stk-face pg" aria-hidden="true"></span><span class="halo" aria-hidden="true"><span class="ht"><span class="hg"><i></i></span><span class="hl"></span></span><span class="hs"><span class="sb"><i></i></span><span class="sc"><i></i></span></span></span><span class="stk-l">HOW IT WORKS<b aria-hidden="true"></b></span><span class="stk-ring" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+/* ring geometry from the colour dashboard: offset the chamfer polygon outward, clip an even-odd ring between two offsets */
+(function(){
+  var PAD=26;
+  function poly(w,h,c){return [[c,0],[w,0],[w,h-c],[w-c,h],[0,h],[0,c]]}
+  function offsetPoly(pts,d){var n=pts.length,area=0,i;for(i=0;i<n;i++){var a=pts[i],b=pts[(i+1)%n];area+=a[0]*b[1]-b[0]*a[1]}var s=area>0?1:-1,L=[];
+    for(i=0;i<n;i++){var p=pts[i],q=pts[(i+1)%n],dx=q[0]-p[0],dy=q[1]-p[1],len=Math.hypot(dx,dy)||1,nx=s*dy/len,ny=-s*dx/len;L.push([p[0]+nx*d,p[1]+ny*d,dx,dy])}
+    var out=[];for(i=0;i<n;i++){var A=L[(i+n-1)%n],B=L[i],den=A[2]*B[3]-A[3]*B[2];if(Math.abs(den)<1e-9){out.push([B[0],B[1]]);continue}var t=((B[0]-A[0])*B[3]-(B[1]-A[1])*B[2])/den;out.push([A[0]+A[2]*t,A[1]+A[3]*t])}
+    return out}
+  function ring(o,inn){var f=function(p){return (p[0]+PAD).toFixed(2)+'px '+(p[1]+PAD).toFixed(2)+'px'};return 'polygon(evenodd,'+o.map(f).join(',')+','+f(o[0])+','+inn.map(f).join(',')+','+f(inn[0])+')'}
+  var els=[].slice.call(document.querySelectorAll('.stk'));
+  function measure(el){var w=el.offsetWidth,h=el.offsetHeight,c=parseFloat(getComputedStyle(el).getPropertyValue('--c'))||16,base=poly(w,h,c),hl=el.querySelector('.halo');
+    hl.style.setProperty('--ring-g',ring(offsetPoly(base,4),base));hl.style.setProperty('--ring-l',ring(offsetPoly(base,1.3),offsetPoly(base,.05)));
+    hl.style.setProperty('--ring-s',ring(offsetPoly(base,1.8),offsetPoly(base,-.2)));hl.style.setProperty('--hw',(w+PAD*2)+'px')}
+  function streak(el){if(PM.RM)return;var hs=el.querySelector('.hs');hs.classList.remove('go');void hs.offsetWidth;hs.classList.add('go')}
+  els.forEach(function(el){
+    measure(el);
+    var on=function(){if(!el.classList.contains('hot'))streak(el);el.classList.add('hot')},off=function(){el.classList.remove('hot')};
+    el.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')on()});el.addEventListener('pointerleave',off);
+    el.addEventListener('focus',function(){if(el.matches(':focus-visible'))on()});el.addEventListener('blur',off);
+    el.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'){on();setTimeout(off,1400)}else streak(el)});
+    el.querySelector('.hs').addEventListener('animationend',function(e){if(e.animationName==='stkO')e.currentTarget.classList.remove('go')});
+  });
+  if(window.ResizeObserver)new ResizeObserver(function(){els.forEach(measure)}).observe(document.body);
+  if(document.fonts)document.fonts.ready.then(function(){els.forEach(measure)});
+  /* idle: the streak passes on its own every 4.5 s, one button at a time */
+  var acc=0,i=0;PM.ambient(function(dt){acc+=dt;if(acc>4.5){acc=0;var el=els[i++%els.length];if(!el.classList.contains('hot'))streak(el)}});
+})();
+</script>
+</body>
+</html>

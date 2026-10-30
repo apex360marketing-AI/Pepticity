@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTN-128 · GLASS SLAB</title>
+<!--@meta {"order":6,"code":"BTN-128","name":"GLASS SLAB","interact":"tap","weight":"Medium",
+ "desc":"A thick block of glass you can see the edge of. It leans toward your pointer, and when you press it the glass sinks down into its own thickness and springs back up.",
+ "source":"APEX library BTN-128 Glass Slab (thick edge that shows as it tilts), with a real press-in added for PEPTICITY"}-->
+<!--@head-->
+<style>
+.slab{--c:16px;--ec:var(--acc);position:relative;display:inline-block;height:76px;width:330px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;perspective:700px}
+.slab.sec{--c:13px;--ec:#9ea4ad;height:64px;width:270px;font-size:12px}
+.slab:focus{outline:none}
+.slab-3d{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.slab-side,.slab-face{position:absolute;inset:0;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+/* the thickness: stacked glass layers stepping back in depth; tinted like the edge of real thick glass */
+.slab-side{transform:translateZ(calc(var(--k) * -1.8px));--w:2px;
+  clip-path:polygon(evenodd,var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c),var(--c) 0,
+    calc(var(--c) + var(--w) * .4) var(--w),calc(100% - var(--w)) var(--w),calc(100% - var(--w)) calc(100% - var(--c) - var(--w) * .4),calc(100% - var(--c) - var(--w) * .4) calc(100% - var(--w)),var(--w) calc(100% - var(--w)),var(--w) calc(var(--c) + var(--w) * .4),calc(var(--c) + var(--w) * .4) var(--w));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ec) 55%,rgba(255,255,255,.35)),color-mix(in srgb,var(--ec) 30%,rgba(20,20,24,.4)));opacity:calc(.95 - var(--k) * .07)}
+.slab-back{position:absolute;inset:0;transform:translateZ(-15px);clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ec) 10%,transparent),color-mix(in srgb,var(--ec) 4%,transparent))}
+.slab-face{transform:translateZ(0);transition:transform .45s var(--e-spring)}
+.slab-face.pg{--c:16px}.slab.sec .slab-face.pg{--c:13px}
+.slab-face::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 90% at var(--gx,30%) var(--gy,0%),rgba(255,255,255,.26),transparent 60%),linear-gradient(100deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%)}
+.slab-l{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px;white-space:nowrap;transform:translateZ(2px);transition:transform .45s var(--e-spring);text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.slab-l::after{content:"";width:22px;height:1px;background:var(--ec);box-shadow:0 0 6px var(--ec)}
+.slab.sec .slab-l::after{display:none}
+.slab.press .slab-face{transform:translateZ(-14px)}
+.slab.press .slab-l{transform:translateZ(-12px)}
+.slab-glow{position:absolute;left:8%;right:8%;bottom:-26px;height:30px;pointer-events:none;border-radius:50%;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--ec) 40%,transparent),transparent);filter:blur(8px);opacity:.45;transition:opacity .4s,transform .45s var(--e-spring)}
+.slab:hover .slab-glow,.slab:focus-visible .slab-glow{opacity:.85}
+.slab.press .slab-glow{opacity:1;transform:scale(1.15,.8)}
+.slab-ring{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.slab:focus-visible .slab-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.slab{height:66px;width:280px;font-size:12px;letter-spacing:.24em}.slab.sec{height:58px;width:230px;font-size:11px}}
+</style>
+</head>
+<body data-code="BTN-128" data-name="GLASS SLAB" data-hint="PRESS">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="slab pri" type="button"><span class="slab-glow" aria-hidden="true"></span><span class="slab-3d" aria-hidden="true"></span><span class="sr">SHOP NOW</span><span class="slab-ring" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="slab sec" type="button"><span class="slab-glow" aria-hidden="true"></span><span class="slab-3d" aria-hidden="true"></span><span class="sr">BROWSE</span><span class="slab-ring" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  document.querySelectorAll('.slab').forEach(function(el,ix){
+    var g=el.querySelector('.slab-3d'),label=el.querySelector('.sr').textContent,h='';
+    for(var k=8;k>=1;k--)h+='<span class="slab-side" style="--k:'+k+'"></span>';
+    g.innerHTML='<span class="slab-back"></span>'+h+'<span class="slab-face pg"></span><span class="slab-l">'+label+'</span>';
+    var face=g.querySelector('.slab-face');
+    /* rest pose leans back so the thickness reads; the pointer steers it */
+    var rx=16,ry=-12,trx=16,try_=-12,t=ix*1.7,hot=false;
+    var loop=PM.loop(function(){
+      var k=PM.RM?1:.12;rx+=(trx-rx)*k;ry+=(try_-ry)*k;
+      g.style.transform='rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+      face.style.setProperty('--gx',(50-ry*2.6).toFixed(1)+'%');face.style.setProperty('--gy',(rx*2.4-20).toFixed(1)+'%');
+      return Math.abs(trx-rx)+Math.abs(try_-ry)>.02;
+    });
+    el.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;hot=true;var r=el.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+      trx=-py*26+4;try_=px*30;loop.kick()});
+    el.addEventListener('pointerleave',function(){hot=false;trx=16;try_=-12;el.classList.remove('press');loop.kick()});
+    el.addEventListener('pointerdown',function(){el.classList.add('press')});
+    var up=function(){el.classList.remove('press')};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+    el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter')el.classList.add('press')});el.addEventListener('keyup',up);
+    /* idle: a slow float so the edge keeps catching light */
+    PM.ambient(function(dt){if(hot)return;t+=dt;trx=16+Math.sin(t*.8)*5;try_=-12+Math.sin(t*.55)*9;loop.kick()});
+    loop.kick();
+  });
+})();
+</script>
+</body>
+</html>

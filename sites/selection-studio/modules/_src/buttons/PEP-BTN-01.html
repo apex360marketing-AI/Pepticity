@@ -15,12 +15,11 @@
 /* large stage size of the approved button */
 .pm-duo .pc-btn{--c:16px;--h:74px;--px:56px;--fs:14px;--ls:.3em}
 .pm-duo .pc-btn.sec{--c:13px;--h:62px;--px:42px;--fs:12.5px;--ls:.28em}
-@media (max-width:520px){.pm-duo .pc-btn{--h:64px;--px:34px;--fs:12px;--ls:.24em}.pm-duo .pc-btn.sec{--h:56px;--px:30px;--fs:11px}}
+@media (max-width:520px),(max-height:480px){.pm-duo .pc-btn{--h:64px;--px:34px;--fs:12px;--ls:.24em}.pm-duo .pc-btn.sec{--h:56px;--px:30px;--fs:11px}}
 
 /* PRIMARY: the accent layer from the colour dashboard (hairline, outer glow, accent sweep) + a lit base line at rest */
-.pri::before{content:"";position:absolute;inset:2px;z-index:-1;pointer-events:none;opacity:0;
-  box-shadow:0 0 8px color-mix(in srgb,var(--acc) 55%,transparent),0 0 22px color-mix(in srgb,var(--acc) 28%,transparent);transition:opacity var(--pc-dur-4) var(--pc-ease-out)}
-.pri:hover::before,.pri:focus-visible::before{opacity:1;transition-duration:var(--pc-dur-3)}
+.pri .pm-lit{z-index:-1}
+.pri:hover .pm-lit,.pri:focus-visible .pm-lit{opacity:.85;transition-duration:var(--pc-dur-3)}
 .pri:hover .pc-btn__face,.pri:focus-visible .pc-btn__face{--pc-rim-hot:var(--acc-hi);--pc-rim-t:var(--acc-line);--pc-rim-s:color-mix(in srgb,var(--acc) 40%,transparent);
   --pc-glow:color-mix(in srgb,var(--acc) 15%,transparent);--pc-sweep:color-mix(in srgb,var(--acc-hi) 55%,#fff);--pc-sweep-soft:color-mix(in srgb,var(--acc) 22%,transparent)}
 .pri .base{position:absolute;left:18%;right:18%;bottom:0;height:1px;z-index:2;pointer-events:none;
@@ -31,7 +30,6 @@
 .pri .pc-btn__icon{color:var(--acc-text)}
 /* idle cue while playing: the sweep passes by itself every few seconds so a still tile still looks alive */
 .is-playing .pc-btn.idle .pc-btn__face::before{animation-name:pc-sweep;animation-duration:calc(var(--pc-dur-sweep) * var(--pc-motion));animation-timing-function:var(--pc-ease-inout);animation-fill-mode:both;animation-iteration-count:1}
-.state{margin:18px 0 0;font:400 9px/1 var(--fh);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;height:9px}
 @media (prefers-reduced-motion:reduce){.pri .base{animation:none;opacity:.8}}
 </style>
 </head>
@@ -41,7 +39,7 @@
   <section class="pm-duo" aria-label="Button states">
     <figure class="pm-cell is-primary">
       <figcaption class="pm-cap">PRIMARY</figcaption>
-      <button class="pc-btn pc-btn--lg pri" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span><i class="pc-btn__icon" aria-hidden="true"></i></span><span class="base" aria-hidden="true"></span></button>
+      <button class="pc-btn pc-btn--lg pri" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span><i class="pc-btn__icon" aria-hidden="true"></i></span><span class="base" aria-hidden="true"></span><span class="pm-lit" aria-hidden="true"><i></i></span></button>
     </figure>
     <figure class="pm-cell">
       <figcaption class="pm-cap">SECONDARY</figcaption>

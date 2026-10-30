@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTN-117 · CLEAR SPOT</title>
+<!--@meta {"order":11,"code":"BTN-117","name":"CLEAR SPOT","interact":"hover","weight":"Medium",
+ "desc":"Heavily frosted glass that clears in a circle wherever you point, like wiping a misted window with a fingertip. Click and the whole pane clears for a moment.",
+ "source":"APEX library BTN-117 Clear Spot (frost that clears under the pointer, clears fully on click), re-cut as PEPTICITY chamfered glass"}-->
+<!--@head-->
+<style>
+.clr{--c:16px;--rc:var(--acc);position:relative;display:inline-grid;place-items:center;height:80px;width:340px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.clr.sec{--c:13px;--rc:#e6e8ec;height:66px;width:270px;font-size:12px}
+.clr:focus{outline:none}
+.clr-clear{position:absolute;inset:0}
+.clr-clear.pg{--c:16px;--g-blur:blur(1.5px) saturate(150%);--g-fill-a:rgba(255,255,255,.04);--g-fill-b:rgba(255,255,255,0)}
+.clr.sec .clr-clear.pg{--c:13px}
+/* the frost: heavy blur + milk + grain; its clip-path carries a round hole that follows the pointer (set in JS) */
+.clr-frost{position:absolute;inset:0;-webkit-backdrop-filter:blur(16px) saturate(120%) brightness(1.08);backdrop-filter:blur(16px) saturate(120%) brightness(1.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.06)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.clr-ring{position:absolute;left:0;top:0;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;pointer-events:none;z-index:2;opacity:0;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rc) 85%,#fff),0 0 10px color-mix(in srgb,var(--rc) 55%,transparent),inset 0 0 12px color-mix(in srgb,var(--rc) 40%,transparent)}
+.clr-wrap{position:absolute;inset:0;overflow:hidden;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.clr-l{position:relative;z-index:3;display:inline-flex;align-items:center;gap:14px;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.65),0 0 14px rgba(0,0,0,.4)}
+.clr-l i{width:8px;height:8px;border-radius:50%;background:var(--rc);box-shadow:0 0 6px var(--rc),0 0 14px color-mix(in srgb,var(--rc) 50%,transparent)}
+.clr:active .clr-l{transform:scale(.985)}
+.clr .pm-lit{--lit:var(--rc)}
+.clr.hot .pm-lit,.clr:focus-visible .pm-lit{opacity:.5}
+.clr-ring2{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.clr:focus-visible .clr-ring2{opacity:1}
+@media (max-width:520px),(max-height:480px){.clr{height:68px;width:280px;font-size:12px;letter-spacing:.24em}.clr.sec{height:58px;width:230px;font-size:11px}}
+</style>
+</head>
+<body data-code="BTN-117" data-name="CLEAR SPOT" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="clr pri" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="clr-clear pg" aria-hidden="true"></span><span class="clr-wrap" aria-hidden="true"><span class="clr-frost"></span><span class="clr-ring"></span></span><span class="clr-l"><i aria-hidden="true"></i>SEE THE BOTTLE</span><span class="clr-ring2" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="clr sec" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="clr-clear pg" aria-hidden="true"></span><span class="clr-wrap" aria-hidden="true"><span class="clr-frost"></span><span class="clr-ring"></span></span><span class="clr-l">DETAILS</span><span class="clr-ring2" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+/* BTN-117: the hole is part of the frost's clip-path (even-odd path: chamfered pane + circle), lerped every frame while it moves */
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.clr'));
+  els.forEach(function(el,ix){
+    var frost=el.querySelector('.clr-frost'),ring=el.querySelector('.clr-ring');
+    var x=0,y=0,r=0,tx=0,ty=0,tr=0,w=0,h=0,c=16,hot=false,full=false,idleT=ix*2.3,lastIn=0;
+    function geo(){w=el.offsetWidth;h=el.offsetHeight;c=parseFloat(getComputedStyle(el).getPropertyValue('--c'))||16;if(!x){x=tx=w*.5;y=ty=h*.5}}
+    function paint(){
+      var R=Math.max(0,r),pane='M'+c+' 0H'+w+'V'+(h-c)+'L'+(w-c)+' '+h+'H0V'+c+'Z';
+      var hole=R>.5?' M'+(x-R).toFixed(1)+' '+y.toFixed(1)+'a'+R.toFixed(1)+' '+R.toFixed(1)+' 0 1 0 '+(2*R).toFixed(1)+' 0a'+R.toFixed(1)+' '+R.toFixed(1)+' 0 1 0 '+(-2*R).toFixed(1)+' 0Z':'';
+      frost.style.clipPath='path(evenodd,"'+pane+hole+'")';
+      ring.style.opacity=R>2&&!full?Math.min(1,R/30).toFixed(2):'0';
+      ring.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px) scale('+(R/50).toFixed(3)+')';
+    }
+    var loop=PM.loop(function(){var k=PM.RM?1:.2;x+=(tx-x)*k;y+=(ty-y)*k;r+=(tr-r)*(PM.RM?1:.14);paint();return Math.abs(tx-x)+Math.abs(ty-y)+Math.abs(tr-r)>.3});
+    geo();paint();addEventListener('resize',function(){geo();paint()});
+    function at(e){var b=el.getBoundingClientRect();tx=e.clientX-b.left;ty=e.clientY-b.top}
+    el.addEventListener('pointerenter',function(e){geo();at(e);x=tx;y=ty;hot=true;el.classList.add('hot');if(!full)tr=h*.62;loop.kick()});
+    el.addEventListener('pointermove',function(e){at(e);lastIn=performance.now();loop.kick()});
+    el.addEventListener('pointerleave',function(){hot=false;el.classList.remove('hot');if(!full)tr=0;loop.kick()});
+    el.addEventListener('focus',function(){if(el.matches(':focus-visible')){geo();tx=w/2;ty=h/2;tr=h*.62;el.classList.add('hot');loop.kick()}});
+    el.addEventListener('blur',function(){if(!hot){tr=0;el.classList.remove('hot');loop.kick()}});
+    el.addEventListener('click',function(){full=true;tr=Math.hypot(w,h);loop.kick();setTimeout(function(){full=false;tr=hot?h*.62:0;loop.kick()},PM.RM?700:1100)});
+    /* idle demo while playing: a soft clear spot drifts slowly across the pane until the pointer arrives */
+    PM.ambient(function(dt){if(hot||full||performance.now()-lastIn<3000)return;idleT+=dt;geo();
+      tx=w*(.5+.36*Math.sin(idleT*.55));ty=h*(.5+.18*Math.sin(idleT*1.1));tr=h*.42;loop.kick()});
+    PM.on('pause',function(){if(!hot&&!full){tr=0;loop.kick()}});
+  });
+})();
+</script>
+</body>
+</html>

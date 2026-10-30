@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-03 · LED SWITCH PANEL</title>
+<!--@meta {"order":3,"code":"PEP-CRD-03","name":"LED SWITCH PANEL","interact":"tap","weight":"Light",
+ "desc":"The YOUR COLOUR switch as a frosted glass panel: turn the machined knob and it clicks round one notch, the light changes colour and the whole panel takes on the new colour. Or tap a colour in the list.",
+ "source":"PEPTICITY sites/dashboard-color YOUR COLOUR selector (knob, colour ticks, LED, the frosted list of colours), enlarged into a panel"}-->
+<!--@head-->
+<style>
+.panel{--c:20px;position:relative;width:min(640px,100%);display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(22px,4vw,44px);align-items:center;padding:clamp(24px,4vw,40px);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(16px) saturate(170%);backdrop-filter:blur(16px) saturate(170%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(240,242,246,.6) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.5) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.36),rgba(244,246,250,.7) 45%,rgba(200,207,216,.36)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.45),rgba(200,207,216,.28) 50%,rgba(120,127,137,.45)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.5),rgba(120,127,137,.4)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.4),rgba(120,127,137,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    radial-gradient(80% 60% at 20% 100%,color-mix(in srgb,var(--acc) 12%,transparent),transparent 70%),
+    linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 40%),rgba(40,40,45,.28)}
+.panel-glow{position:absolute;inset:-14px;z-index:-1;pointer-events:none;filter:blur(16px);opacity:.5;
+  background:radial-gradient(60% 50% at 25% 60%,color-mix(in srgb,var(--acc) 36%,transparent),transparent 70%)}
+.head{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:-6px}
+.head h2{margin:0;font:400 clamp(16px,2.2vw,21px)/1 var(--fh);letter-spacing:.2em;color:var(--chrome);text-shadow:.02em .04em 0 #3a3d42,.04em .08em 0 #232427,.1em .2em .2em rgba(0,0,0,.6)}
+.head span{font:400 8.5px/1 var(--fh);letter-spacing:.32em;color:var(--mute)}
+/* the hardware: a large octagonal knob in a recessed well, colour ticks round it, the LED under it */
+.hw{display:grid;justify-items:center;gap:20px}
+.dialbtn{position:relative;width:150px;height:150px;border:0;padding:0;margin:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.dialbtn:focus{outline:none}
+.dialbtn:focus-visible .well{outline:1.5px solid var(--acc-text);outline-offset:4px}
+.ticks i{position:absolute;left:50%;top:50%;width:3px;height:9px;margin:-4.5px 0 0 -1.5px;background:var(--tc);opacity:.4;transform:rotate(calc(var(--n) * 40deg)) translateY(-68px);transition:opacity .45s,box-shadow .45s}
+.ticks i.on{opacity:1;box-shadow:0 0 8px var(--tc),0 0 3px var(--tc)}
+.well{position:absolute;left:50%;top:50%;width:110px;height:110px;margin:-55px 0 0 -55px;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+  background:radial-gradient(circle at 50% 60%,#050505,#121214 70%,#2a2a2e);box-shadow:inset 0 2px 4px rgba(0,0,0,.9)}
+.knobw{position:absolute;left:50%;top:50%;width:88px;height:88px;margin:-44px 0 0 -44px;filter:drop-shadow(0 4px 3px rgba(0,0,0,.85)) drop-shadow(0 0 1px rgba(0,0,0,.9));transition:transform .12s}
+.knob,.gloss{position:absolute;inset:0;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.knob{background:conic-gradient(from 8deg,#8e8d85,#4e4d48 11%,#22211e 24%,#6b6a64 37%,#9a9991 49%,#3f3e3a 61%,#1c1b19 74%,#76756e 87%,#8e8d85);transform:rotate(var(--ang,0deg));transition:transform .62s cubic-bezier(.34,1.56,.64,1)}
+.knob::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:24px;margin-left:-2px;background:#ecebe5;box-shadow:0 0 4px rgba(255,255,255,.6)}
+.knob::before{content:"";position:absolute;inset:20%;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);background:repeating-conic-gradient(rgba(255,255,255,.05) 0 3deg,rgba(0,0,0,.08) 3deg 6deg)}
+.gloss{background:radial-gradient(75% 60% at 34% 22%,rgba(255,255,255,.32),transparent 58%),radial-gradient(70% 70% at 60% 85%,rgba(0,0,0,.35),transparent 70%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.dialbtn:active .knobw{transform:scale(.95)}
+.ledrow{display:flex;align-items:center;gap:14px}
+.led{position:relative;width:22px;height:22px;flex:none;border-radius:50%;background:radial-gradient(circle at 50% 35%,#55544f,#1c1b19 70%);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 1px rgba(0,0,0,.7)}
+.led i{position:absolute;inset:5px;border-radius:50%;z-index:1;background:radial-gradient(circle at 50% 50%,#fff 0,color-mix(in srgb,var(--acc) 45%,#fff) 26%,var(--acc) 56%,color-mix(in srgb,var(--acc) 62%,#000) 100%);box-shadow:0 0 4px var(--acc),0 0 1px var(--acc)}
+.led i::after{content:"";position:absolute;left:18%;top:12%;width:42%;height:30%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0));transform:rotate(-24deg)}
+.led b{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 70%,transparent),color-mix(in srgb,var(--acc) 22%,transparent) 55%,transparent);opacity:.6;animation:ledB 5.2s ease-in-out infinite alternate;animation-play-state:var(--play)}
+@keyframes ledB{from{opacity:.48}to{opacity:.85}}
+.led.flare b{animation:ledF .7s cubic-bezier(.16,1,.3,1) 1,ledB 5.2s ease-in-out .7s infinite alternate}
+@keyframes ledF{0%{opacity:.5;transform:scale(1)}30%{opacity:1;transform:scale(1.9)}100%{opacity:.6;transform:scale(1)}}
+.ledrow b.nm{font:400 11px/1 var(--fh);font-weight:400;letter-spacing:.26em;color:var(--acc-text);min-width:10ch}
+/* the list of colours */
+.list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px}
+.list button{--k:7px;position:relative;display:grid;grid-template-columns:16px minmax(0,1fr);align-items:center;gap:12px;width:100%;min-height:40px;padding:0 12px 0 10px;margin:0;border:0;
+  background:none;color:var(--ink);cursor:pointer;text-align:left;opacity:.72;transition:opacity .25s,background-color .25s;
+  clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.list button:hover,.list button:focus-visible{opacity:1;background:rgba(255,255,255,.06);outline:none}
+.list button:focus-visible{box-shadow:inset 0 0 0 1px var(--acc-text)}
+.list button[aria-checked="true"]{opacity:1;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(236,240,245,.2)}
+.list .dot{justify-self:center;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle,#fff 0,color-mix(in srgb,var(--c2) 50%,#fff) 30%,var(--c2) 65%);box-shadow:0 0 6px var(--c2),0 0 12px color-mix(in srgb,var(--c2) 45%,transparent)}
+.list button[aria-checked="true"] .dot{box-shadow:0 0 8px var(--c2),0 0 18px var(--c2)}
+.list b{font:400 9.5px/1.2 var(--fh);letter-spacing:.2em;font-weight:400}
+.list small{display:block;margin-top:4px;font:500 10px/1 var(--fb);letter-spacing:.04em;color:var(--mute)}
+.bar{grid-column:1/-1;position:relative;height:2px;background:rgba(230,234,240,.1);overflow:hidden}
+.bar i{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--acc),var(--acc-hi),var(--acc),transparent);box-shadow:0 0 10px var(--acc);transform:translateX(-100%);animation:barRun 3.6s var(--e-io) infinite;animation-play-state:var(--play)}
+@keyframes barRun{to{transform:translateX(100%)}}
+@media (max-width:600px){.panel{grid-template-columns:minmax(0,1fr);justify-items:stretch}.hw{justify-self:center}.list{grid-template-columns:repeat(3,minmax(0,1fr))}.list button{grid-template-columns:12px minmax(0,1fr);gap:8px;padding:0 6px}.list small{display:none}.list b{font-size:8px;letter-spacing:.14em}}
+@media (prefers-reduced-motion:reduce){.knob{transition:none}.led b,.led.flare b,.bar i{animation:none}.bar i{transform:none;opacity:.6}}
+</style>
+</head>
+<body data-code="PEP-CRD-03" data-name="LED SWITCH PANEL" data-hint="TAP">
+<!--@stage-->
+<main class="pm-main">
+  <section class="panel" aria-label="Your colour">
+    <span class="panel-glow" aria-hidden="true"></span>
+    <div class="head"><h2>YOUR COLOUR</h2><span>TURN THE KNOB</span></div>
+    <div class="hw">
+      <button class="dialbtn" id="dial" type="button" role="spinbutton" aria-valuemin="1" aria-valuemax="9"><span class="ticks" aria-hidden="true"></span><span class="well" aria-hidden="true"></span><span class="knobw" aria-hidden="true"><span class="knob"></span><span class="gloss"></span></span></button>
+      <div class="ledrow"><span class="led" id="led" aria-hidden="true"><b></b><i></i></span><b class="nm" id="nm" aria-live="polite"></b></div>
+    </div>
+    <ul class="list" id="list" role="radiogroup" aria-label="All colours"></ul>
+    <div class="bar" aria-hidden="true"><i></i></div>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var A=PM.ACC,dial=document.getElementById('dial'),knob=dial.querySelector('.knob'),tk=dial.querySelector('.ticks'),led=document.getElementById('led'),nm=document.getElementById('nm'),list=document.getElementById('list');
+  var STEP=360/A.length,idx=Math.max(0,A.findIndex(function(a){return a.k===PM.acc.k})),ang=idx*STEP;
+  tk.innerHTML=A.map(function(a,i){return '<i style="--n:'+i+';--tc:'+a.hex+';transform:rotate('+(i*STEP)+'deg) translateY(-68px)"></i>'}).join('');
+  list.innerHTML=A.map(function(a,i){return '<li><button type="button" role="radio" data-i="'+i+'" style="--c2:'+a.hex+'"><span class="dot" aria-hidden="true"></span><span><b>'+a.n+'</b><small>'+a.hex+'</small></span></button></li>'}).join('');
+  var opts=[].slice.call(list.querySelectorAll('button'));
+  function paint(){var a=A[idx];knob.style.setProperty('--ang',ang+'deg');[].forEach.call(tk.children,function(t,i){t.classList.toggle('on',i===idx)});
+    opts.forEach(function(o,i){o.setAttribute('aria-checked',String(i===idx));o.tabIndex=i===idx?0:-1});nm.textContent=a.n;
+    dial.setAttribute('aria-valuenow',String(idx+1));dial.setAttribute('aria-valuetext',a.n);dial.setAttribute('aria-label','YOUR COLOUR: '+a.n+'. Press for the next colour.')}
+  function set(i,how,fromShell){i=(i+A.length)%A.length;if(i===idx&&how!=='init')return;var step=((i-idx)%A.length+A.length)%A.length;if(how==='prev')step-=A.length;else if(how==='jump'&&step>A.length/2)step-=A.length;
+    ang+=step*STEP;idx=i;paint();if(!fromShell)PM.setAcc(A[i].k);if(how!=='init'&&!PM.RM){led.classList.remove('flare');void led.offsetWidth;led.classList.add('flare')}}
+  dial.addEventListener('click',function(){set(idx+1,'next')});
+  dial.addEventListener('keydown',function(e){var m={ArrowRight:1,ArrowUp:1,ArrowLeft:-1,ArrowDown:-1}[e.key];if(m){e.preventDefault();set(idx+m,m>0?'next':'prev')}});
+  list.addEventListener('click',function(e){var o=e.target.closest('button');if(o)set(+o.dataset.i,'jump')});
+  list.addEventListener('keydown',function(e){var m={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];if(m){e.preventDefault();set(idx+m,'jump');opts[idx].focus()}});
+  led.addEventListener('animationend',function(e){if(e.animationName==='ledF')led.classList.remove('flare')});
+  PM.on('acc',function(a){var i=A.findIndex(function(x){return x.k===a.k});if(i>-1&&i!==idx)set(i,'jump',true)});
+  paint();
+})();
+</script>
+</body>
+</html>

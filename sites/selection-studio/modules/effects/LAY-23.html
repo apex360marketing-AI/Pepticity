@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LAY-23 · MERCURY VIALS · PEPTICITY</title>
+<meta name="fx-code" content="LAY-23"><meta name="fx-interact" content="hover">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* LAY-23 MERCURY VIALS: three PEPTICITY vials (the approved Higgsfield bottle), one per way to belong. Liquid silver rises
+   inside each glass when they appear and lifts higher when you point at one: you see it below and above the frosted label,
+   and softly through it. A small spring at the top, a glint that runs up the metal, an accent rim on the surface. */
+body{background:radial-gradient(80% 60% at 50% 40%,#16161b 0%,#0a0a0c 62%,#050506 100%)}
+.wrap{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr;padding:clamp(56px,10vh,96px) clamp(20px,6vw,96px) clamp(40px,7vh,70px)}
+.head{display:grid;gap:14px;max-width:640px}
+.head .fx-h{font-size:clamp(24px,3vw,44px)}
+.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,4vw,70px);align-items:end;justify-items:center;padding-top:clamp(10px,3vh,30px)}
+.tier{position:relative;display:grid;justify-items:center;gap:clamp(14px,2.4vh,22px);width:100%;max-width:300px;cursor:pointer;outline:none}
+.vial{position:relative;height:min(46vh,430px);aspect-ratio:354/869;transition:transform .7s var(--e-spring)}
+.tier:hover .vial,.tier.on .vial,.tier:focus-visible .vial{transform:translateY(-8px)}
+.vial img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;max-width:none}
+/* the liquid: clipped to the glass inside, behind the label at 35% (frosted), full strength above and below it */
+.merc{position:absolute;left:9.6%;right:9.6%;bottom:4.6%;top:35.5%;overflow:hidden;border-radius:0 0 12% 12% / 0 0 5% 5%;opacity:.94;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 7.4%,rgba(0,0,0,.5) 8.4%,rgba(0,0,0,.5) 77.4%,#000 78.4%,#000 100%);
+          mask-image:linear-gradient(180deg,#000 0%,#000 7.4%,rgba(0,0,0,.5) 8.4%,rgba(0,0,0,.5) 77.4%,#000 78.4%,#000 100%)}
+.col{position:absolute;left:0;right:0;bottom:0;height:calc(var(--lv,0) * 100%);
+  background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 30%,rgba(0,0,0,.25)),linear-gradient(90deg,#0e0f12 0%,#5d636c 10%,#e4e8ee 19%,#8a9099 28%,#2c3036 46%,#a7adb6 62%,#eef1f5 70%,#4a4f57 84%,#121316 100%)}
+.col::before{content:"";position:absolute;left:0;right:0;top:-6px;height:12px;border-radius:50%;
+  background:radial-gradient(60% 50% at 40% 40%,#ffffff,#b6bcc6 45%,#5a5f67 100%);box-shadow:0 0 0 1px color-mix(in srgb,var(--acc) 55%,transparent),0 0 12px var(--acc-bloom);
+  transform:scaleY(var(--wob,1))}
+.col::after{content:"";position:absolute;left:18%;width:10%;top:0;bottom:0;background:linear-gradient(180deg,transparent,rgba(255,255,255,.75) 50%,transparent);height:30%;
+  transform:translateY(calc(var(--gl,0) * 400%));opacity:.7;filter:blur(1px)}
+.gauge{position:absolute;right:-16%;top:35.5%;bottom:4.6%;width:1px;background:linear-gradient(180deg,transparent,rgba(236,240,246,.22) 12%,rgba(236,240,246,.22) 88%,transparent)}
+.gauge i{position:absolute;left:-5px;width:11px;height:1px;bottom:calc(var(--lv,0) * 100%);background:var(--acc-hi);box-shadow:0 0 8px var(--acc),0 0 14px var(--acc-bloom)}
+.gauge i::after{content:"";position:absolute;left:3px;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--acc-hi)}
+.floor{position:absolute;left:-30%;right:-30%;bottom:-3%;height:9%;background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 24%,rgba(226,232,246,.45)),transparent);filter:blur(10px);opacity:calc(.35 + var(--lv,0) * .5)}
+.meta{display:grid;gap:6px;text-align:center}
+.meta b{font:400 clamp(12px,1.05vw,15px)/1.15 var(--fh);letter-spacing:.16em}
+.meta span{font-size:13.5px;color:var(--ink2);max-width:28ch;margin:0 auto}
+.meta em{font:400 8.5px var(--fh);letter-spacing:.3em;color:var(--mute);font-style:normal;transition:color .4s}
+.tier.on .meta em,.tier:hover .meta em{color:var(--acc-text)}
+@media (max-width:700px){.wrap{padding:56px 12px 60px}.head .fx-p{display:none}.vial{height:34vh}.meta span{font-size:11.5px}.meta b{font-size:10.5px;letter-spacing:.1em}.row{gap:10px}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>LAY-23</b><span>MERCURY VIALS</span></div>
+<div class="wrap">
+  <header class="head"><p class="fx-eyebrow">MEMBERSHIP</p><h2 class="fx-h fx-chrome">THREE WAYS TO BELONG</h2><p class="fx-p">Point at a vial and its silver rises.</p></header>
+  <div class="row" id="row">
+    <div class="tier" tabindex="0" data-lv=".28"><div class="vial"><img src="../_assets/vial/vial.webp" alt="PEPTICITY vial, a little silver inside"><div class="merc"><div class="col"></div></div><div class="gauge" aria-hidden="true"><i></i></div><div class="floor"></div></div>
+      <div class="meta"><em>TIER I</em><b>GUEST</b><span>Browse every product and every price.</span></div></div>
+    <div class="tier" tabindex="0" data-lv=".62"><div class="vial"><img src="../_assets/vial/vial.webp" alt="PEPTICITY vial, more than half full of silver"><div class="merc"><div class="col"></div></div><div class="gauge" aria-hidden="true"><i></i></div><div class="floor"></div></div>
+      <div class="meta"><em>TIER II · FREE</em><b>PEPTICITY TEAM</b><span>15% off your first order, the monthly letter, first word on restocks.</span></div></div>
+    <div class="tier" tabindex="0" data-lv=".92"><div class="vial"><img src="../_assets/vial/vial.webp" alt="PEPTICITY vial, almost full of silver"><div class="merc"><div class="col"></div></div><div class="gauge" aria-hidden="true"><i></i></div><div class="floor"></div></div>
+      <div class="meta"><em>TIER III</em><b>FOUNDING CIRCLE</b><span>[Founding perks: to be set by Grace]</span></div></div>
+  </div>
+</div>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  FX.hint('hover', FX.coarse ? 'TAP' : 'HOVER');
+  var tiers = [].slice.call(document.querySelectorAll('.tier')).map(function (el, i) {
+    return { el: el, col: el.querySelector('.col'), vial: el.querySelector('.vial'), base: +el.dataset.lv, lv: 0, v: 0, hov: 0, wob: 0, wv: 0, i: i };
+  });
+  var hover = -1, demo = -1, demoT = 0, start = performance.now(), idle = performance.now();
+  tiers.forEach(function (T, i) {
+    T.el.addEventListener('pointerenter', function () { hover = i; idle = performance.now(); FX.wake(); });
+    T.el.addEventListener('pointerleave', function () { if (hover === i) hover = -1; FX.wake(); });
+    T.el.addEventListener('focus', function () { hover = i; FX.wake(); });
+    T.el.addEventListener('blur', function () { if (hover === i) hover = -1; FX.wake(); });
+    T.el.addEventListener('click', function () { hover = hover === i && FX.coarse ? -1 : i; idle = performance.now(); T.wv += 6; FX.wake(); });
+  });
+  FX.loop(function (dt, t, now, live) {
+    /* when nobody points (and it is playing) the highlight walks along the three vials on its own */
+    if (live && hover < 0 && now - idle > 2500) { demoT += dt; demo = Math.floor(demoT / 2.6) % 3; } else { demo = -1; demoT = 0; }
+    var act = hover > -1 ? hover : demo, busy = false;
+    var rise = FX.rm ? 1 : FX.ease((now - start) / 1600);
+    tiers.forEach(function (T, i) {
+      var on = act === i;
+      T.el.classList.toggle('on', on);
+      var target = Math.min(0.97, T.base * rise + (on ? 0.08 : 0));
+      if (FX.rm) { T.lv = target; T.v = 0; }
+      else { var k = 46, c = 9; T.v += ((target - T.lv) * k - T.v * c) * dt; T.lv += T.v * dt; }   /* a small spring: it overshoots a touch and settles */
+      if (!FX.rm) { var kick = Math.abs(T.v) * 2; T.wv += (-(T.wob) * 60 - T.wv * 6 + kick * 20) * dt; T.wob += T.wv * dt; }
+      T.col.style.setProperty('--lv', Math.max(0, T.lv).toFixed(4));
+      T.vial.style.setProperty('--lv', Math.max(0, T.lv).toFixed(4));
+      T.col.style.setProperty('--wob', (1 + FX.clamp(T.wob, -0.6, 0.6) + (FX.rm ? 0 : Math.sin(t * 2.2 + i) * 0.08)).toFixed(3));
+      T.col.style.setProperty('--gl', FX.rm ? '0' : ((t * 0.22 + i * 0.33) % 1 * 1.4 - 0.2).toFixed(3));
+      if (Math.abs(target - T.lv) > 1e-4 || Math.abs(T.v) > 1e-4 || Math.abs(T.wob) > 1e-3) busy = true;
+    });
+    return busy;
+  });
+})();
+</script>
+</body>
+</html>

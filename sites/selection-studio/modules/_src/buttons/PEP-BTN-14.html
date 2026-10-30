@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-BTN-14 · HOLD TO CONFIRM</title>
+<!--@meta {"order":14,"code":"PEP-BTN-14","name":"HOLD TO CONFIRM","interact":"tap","weight":"Light",
+ "desc":"For the important clicks. Press and hold: light fills the glass from left to right and the letters light up one by one. Let go early and it drains away; hold to the end and it confirms.",
+ "source":"New for PEPTICITY (Selection Studio library B); BTN-P01 glass and chamfer"}-->
+<!--@head-->
+<style>
+.hold{--c:16px;--hc:var(--acc);--hc-t:var(--acc-text);position:relative;display:inline-grid;place-items:center;height:78px;min-width:350px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.hold.sec{--c:13px;--hc:#dfe3ea;--hc-t:#fff;height:66px;min-width:290px;font-size:12px}
+.hold:focus{outline:none}
+.hold-g{position:absolute;inset:0;transition:transform .18s var(--e-out)}
+.hold-g.pg{--c:16px}.hold.sec .hold-g.pg{--c:13px}
+.hold.down .hold-g{transform:scale(.985)}
+.hold-clip{position:absolute;inset:0;overflow:hidden;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.hold-fill{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--hc) 8%,transparent),color-mix(in srgb,var(--hc) 34%,transparent))}
+.hold-edge{position:absolute;top:0;bottom:0;left:0;width:3px;margin-left:-1.5px;opacity:0;
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--hc) 60%,#fff),transparent);box-shadow:0 0 12px var(--hc),0 0 26px color-mix(in srgb,var(--hc) 55%,transparent)}
+.hold-base{position:absolute;left:0;right:0;bottom:0;height:2px;transform-origin:0 50%;transform:scaleX(0);background:var(--hc);box-shadow:0 0 8px var(--hc)}
+.hold-l{position:relative;z-index:3;display:grid;place-items:center;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.hold-l>span{grid-area:1/1;display:inline-flex;align-items:center;gap:12px;white-space:nowrap;padding:0 46px;transition:opacity .3s,transform .45s var(--e-out)}
+.hold-l .a .ch{display:inline-block;color:var(--ink);opacity:.62;transition:color .18s,opacity .18s,text-shadow .18s}
+.hold-l .a .ch.on{color:var(--hc-t);opacity:1;text-shadow:0 0 10px color-mix(in srgb,var(--hc) 65%,transparent)}
+.hold-l .a{gap:0}
+.hold-l .a .sp{display:inline-block;width:.45em}
+.hold-l .b{opacity:0;transform:translateY(50%);color:var(--hc-t)}
+.hold-l .b svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.hold.ok .hold-l .a{opacity:0;transform:translateY(-50%)}
+.hold.ok .hold-l .b{opacity:1;transform:none}
+.hold.ok .hold-fill{background:linear-gradient(90deg,color-mix(in srgb,var(--hc) 22%,transparent),color-mix(in srgb,var(--hc) 44%,transparent))}
+.hold-flash{position:absolute;inset:0;opacity:0;background:radial-gradient(60% 140% at 50% 50%,color-mix(in srgb,var(--hc) 60%,#fff),transparent 75%)}
+.hold.ok .hold-flash{animation:holdFlash .7s var(--e-out) 1}
+@keyframes holdFlash{0%{opacity:.9}100%{opacity:0}}
+.hold-dots{position:absolute;left:50%;bottom:-20px;display:flex;gap:5px;transform:translateX(-50%)}
+.hold-dots i{width:16px;height:2px;background:rgba(230,234,240,.18);transition:background .2s,box-shadow .2s}
+.hold-dots i.on{background:var(--hc);box-shadow:0 0 6px var(--hc)}
+.hold .pm-lit{--lit:var(--hc)}
+.hold.down .pm-lit,.hold.ok .pm-lit{opacity:.6}
+.hold-ring{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.hold:focus-visible .hold-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.hold{height:68px;min-width:290px;font-size:12px;letter-spacing:.22em}.hold.sec{height:58px;min-width:240px;font-size:11px}.hold-l>span{padding:0 30px}}
+</style>
+</head>
+<body data-code="PEP-BTN-14" data-name="HOLD TO CONFIRM" data-hint="HOLD">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="hold pri" type="button" data-t="HOLD TO CONFIRM" data-ok="CONFIRMED" aria-describedby="hh"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="hold-g pg" aria-hidden="true"></span>
+        <span class="hold-clip" aria-hidden="true"><span class="hold-fill"></span><span class="hold-edge"></span><span class="hold-base"></span><span class="hold-flash"></span></span>
+        <span class="hold-l"></span><span class="hold-dots" aria-hidden="true"></span><span class="hold-ring" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="hold sec" type="button" data-t="HOLD TO CANCEL" data-ok="CANCELLED" aria-describedby="hh"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="hold-g pg" aria-hidden="true"></span>
+        <span class="hold-clip" aria-hidden="true"><span class="hold-fill"></span><span class="hold-edge"></span><span class="hold-base"></span><span class="hold-flash"></span></span>
+        <span class="hold-l"></span><span class="hold-dots" aria-hidden="true"></span><span class="hold-ring" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+  <p id="hh" class="sr">Press and hold for about one second. Keyboard: hold Space or Enter.</p>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var DUR=1.15;
+  document.querySelectorAll('.hold').forEach(function(el){
+    var t=el.dataset.t,box=el.querySelector('.hold-l'),fill=el.querySelector('.hold-fill'),edge=el.querySelector('.hold-edge'),base=el.querySelector('.hold-base'),dots=el.querySelector('.hold-dots');
+    el.setAttribute('aria-label',t);
+    var n=0;box.innerHTML='<span class="a" aria-hidden="true">'+[].map.call(t,function(c){return c===' '?'<span class="sp"></span>':'<span class="ch" data-n="'+(n++)+'">'+c+'</span>'}).join('')+'</span>'+
+      '<span class="b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>'+el.dataset.ok+'</span>';
+    dots.innerHTML=new Array(9).join('<i></i>');
+    var chs=[].slice.call(box.querySelectorAll('.ch')),ds=[].slice.call(dots.children),p=0,holding=false,done=false;
+    function paint(){
+      fill.style.transform='scaleX('+p.toFixed(4)+')';base.style.transform='scaleX('+p.toFixed(4)+')';
+      edge.style.transform='translateX('+(p*el.offsetWidth).toFixed(1)+'px)';edge.style.opacity=(p>0&&p<1&&!done)?'1':'0';
+      chs.forEach(function(c,i){c.classList.toggle('on',p>=(i+.5)/chs.length)});
+      ds.forEach(function(d,i){d.classList.toggle('on',p>=(i+1)/ds.length-.001)});
+    }
+    var loop=PM.loop(function(now,dt){
+      if(done)return false;
+      if(holding)p=Math.min(1,p+dt/DUR);else p=Math.max(0,p-dt*2.4);
+      paint();
+      if(p>=1){finish();return false}
+      return holding||p>0;
+    });
+    function finish(){done=true;holding=false;el.classList.remove('down');el.classList.add('ok');paint();
+      if(navigator.vibrate&&!PM.FINE)try{navigator.vibrate(18)}catch(e){}
+      setTimeout(function(){el.classList.remove('ok');done=false;loop.kick()},1900)}
+    function start(){if(done)return;holding=true;el.classList.add('down');loop.kick()}
+    function stop(){holding=false;el.classList.remove('down');loop.kick()}
+    el.addEventListener('pointerdown',function(e){if(e.button)return;try{el.setPointerCapture(e.pointerId)}catch(_){}start()});
+    el.addEventListener('pointerup',stop);el.addEventListener('pointercancel',stop);el.addEventListener('lostpointercapture',stop);
+    el.addEventListener('contextmenu',function(e){e.preventDefault()});
+    el.addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')){e.preventDefault();if(!e.repeat)start()}});
+    el.addEventListener('keyup',function(e){if(e.key===' '||e.key==='Enter')stop()});
+    el.addEventListener('blur',stop);
+    paint();
+  });
+  /* idle demo while playing: a slow half-hold that drains away, so a still tile shows what the button does */
+  var pri=document.querySelector('.hold.pri'),acc=3,touched=false;document.addEventListener('pointerdown',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>7){acc=0;pri.dispatchEvent(new KeyboardEvent('keydown',{key:' '}));setTimeout(function(){pri.dispatchEvent(new KeyboardEvent('keyup',{key:' '}))},700)}});
+})();
+</script>
+</body>
+</html>

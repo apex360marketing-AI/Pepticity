@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-BTN-04 · LED SWITCH</title>
+<!--@meta {"order":4,"code":"PEP-BTN-04","name":"LED SWITCH","interact":"tap","weight":"Light",
+ "desc":"A small piece of hardware in frosted glass: press it and the machined metal knob clicks round one notch while a real-looking light comes on in your colour. Press again to switch it off.",
+ "source":"PEPTICITY sites/dashboard-color YOUR COLOUR selector (frosted glass body, octagonal gunmetal knob, LED lens with bloom), made into an on/off button"}-->
+<!--@head-->
+<style>
+.led{--c:13px;--lc:var(--acc);position:relative;display:inline-flex;align-items:center;height:84px;margin:0;padding:0 26px 0 14px;border:0;background:none;cursor:pointer;color:var(--ink);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;gap:20px;text-align:left}
+.led.sec{--lc:#f2f1ec;height:72px;--c:11px}
+.led:focus{outline:none}
+.led-body{position:absolute;inset:0;z-index:0;--c:13px;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(240,242,246,.62) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.5) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.38),rgba(244,246,250,.78) 45%,rgba(200,207,216,.38)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.45),rgba(200,207,216,.3) 50%,rgba(120,127,137,.45)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.55),rgba(120,127,137,.4)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.42),rgba(120,127,137,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 44%,rgba(0,0,0,.10)),
+    rgba(74,75,82,.30)}
+.led.sec .led-body{--c:11px}
+.led-body::before{content:"";position:absolute;top:-30%;bottom:-30%;left:0;width:40%;opacity:0;transform:translateX(-120%) skewX(-18deg);
+  background:linear-gradient(100deg,transparent,rgba(225,232,242,.10) 30%,rgba(255,255,255,.4) 50%,rgba(225,232,242,.10) 70%,transparent)}
+.led:hover .led-body::before,.led:focus-visible .led-body::before{animation:ledSweep 1.5s var(--e-io) 1 both}
+@keyframes ledSweep{0%{transform:translateX(-120%) skewX(-18deg);opacity:0}14%,84%{opacity:1}100%{transform:translateX(300%) skewX(-18deg);opacity:0}}
+.led>*:not(.led-body){position:relative;z-index:1}
+/* the knob: recessed octagonal well, ticks, machined gunmetal octagon with a bone pointer (dashboard values, scaled x2) */
+.dial{position:relative;width:62px;height:62px;flex:none}
+.led.sec .dial{transform:scale(.86);margin:0 -4px}
+.ticks i{position:absolute;left:50%;top:50%;width:2px;height:6px;margin:-3px 0 0 -1px;background:#8c919b;opacity:.38;transform:rotate(calc(var(--n) * 45deg)) translateY(-28px);transition:opacity .45s,background .45s,box-shadow .45s}
+.ticks i.on{opacity:1;background:var(--lc);box-shadow:0 0 6px var(--lc),0 0 2px var(--lc)}
+.led[aria-checked="false"] .ticks i.on{background:#c3c7cf;box-shadow:none;opacity:.7}
+.well{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+  background:radial-gradient(circle at 50% 60%,#050505,#121214 70%,#2a2a2e);box-shadow:inset 0 1px 2px rgba(0,0,0,.9)}
+.knobw{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;filter:drop-shadow(0 2.5px 2px rgba(0,0,0,.85)) drop-shadow(0 0 .5px rgba(0,0,0,.9));transition:transform .12s}
+.knob,.gloss{position:absolute;inset:0;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.knob{background:conic-gradient(from 8deg,#8e8d85,#4e4d48 11%,#22211e 24%,#6b6a64 37%,#9a9991 49%,#3f3e3a 61%,#1c1b19 74%,#76756e 87%,#8e8d85);transform:rotate(var(--ang,0deg));transition:transform .62s cubic-bezier(.34,1.56,.64,1)}
+.knob::after{content:"";position:absolute;left:50%;top:3px;width:3px;height:12px;margin-left:-1.5px;background:#ecebe5;box-shadow:0 0 3px rgba(255,255,255,.6)}
+.gloss{background:radial-gradient(75% 60% at 34% 22%,rgba(255,255,255,.32),transparent 58%),radial-gradient(70% 70% at 60% 85%,rgba(0,0,0,.35),transparent 70%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.led:hover .knob{--hov:12deg}
+.led .knob{transform:rotate(calc(var(--ang,0deg) + var(--hov,0deg)))}
+.led:active .knobw{transform:scale(.94)}
+/* words */
+.led-t{display:grid;gap:9px;min-width:0}
+.led-t b{font:400 13px/1 var(--fh);letter-spacing:.26em;text-transform:uppercase;white-space:nowrap}
+.led.sec .led-t b{font-size:11.5px}
+.led-t small{position:relative;display:block;height:11px;overflow:hidden;font:400 9.5px/11px var(--fh);letter-spacing:.32em;color:var(--mute)}
+.led-t small span{display:block;transition:transform .5s var(--e-out)}
+.led[aria-checked="true"] .led-t small span{transform:translateY(-11px)}
+.led[aria-checked="true"] .led-t small span:last-child{color:var(--lc)}
+.led.sec[aria-checked="true"] .led-t small span:last-child{color:#f2f1ec}
+/* the LED: lens in a gunmetal bezel, bright core, soft bloom, glass reflection, breathing slowly when on */
+.lens{position:relative;width:24px;height:24px;flex:none;border-radius:50%;margin-left:8px;
+  background:radial-gradient(circle at 50% 35%,#55544f,#1c1b19 70%);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 2px rgba(0,0,0,.7)}
+.lens i{position:absolute;inset:5px;border-radius:50%;z-index:1;transition:background .35s,box-shadow .35s;
+  background:radial-gradient(circle at 50% 50%,#3a3a3d 0,#1b1b1e 70%);box-shadow:inset 0 1px 2px rgba(0,0,0,.8)}
+.lens i::after{content:"";position:absolute;left:18%;top:12%;width:42%;height:30%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.7),rgba(255,255,255,0));transform:rotate(-24deg)}
+.lens b{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;z-index:0;pointer-events:none;opacity:0;transform:scale(.6);
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--lc) 70%,transparent),color-mix(in srgb,var(--lc) 22%,transparent) 55%,transparent);transition:opacity .4s,transform .5s var(--e-out)}
+.led[aria-checked="true"] .lens i{background:radial-gradient(circle at 50% 50%,#fff 0,color-mix(in srgb,var(--lc) 45%,#fff) 26%,var(--lc) 56%,color-mix(in srgb,var(--lc) 62%,#000) 100%);box-shadow:0 0 4px var(--lc),0 0 1px var(--lc)}
+.led[aria-checked="true"] .lens b{opacity:.7;transform:scale(1);animation:ledBreath 5.2s ease-in-out .7s infinite alternate;animation-play-state:var(--play)}
+@keyframes ledBreath{from{opacity:.5}to{opacity:.9}}
+.lens.flare b{animation:ledFlare .7s cubic-bezier(.16,1,.3,1) 1,ledBreath 5.2s ease-in-out .7s infinite alternate}
+@keyframes ledFlare{0%{opacity:.5;transform:scale(1)}30%{opacity:1;transform:scale(1.8)}100%{opacity:.7;transform:scale(1)}}
+/* a faint wash of the LED colour on the glass when it is on */
+.led-wash{position:absolute;inset:0;z-index:0!important;pointer-events:none;opacity:0;transition:opacity .5s;
+  background:radial-gradient(60% 140% at 92% 50%,color-mix(in srgb,var(--lc) 16%,transparent),transparent 70%);
+  clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px)}
+.led[aria-checked="true"] .led-wash{opacity:1}
+.led-ring{position:absolute;inset:-6px;z-index:2;pointer-events:none;opacity:0;--k:16px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.led:focus-visible .led-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.led{height:76px;gap:14px;padding:0 20px 0 10px}.led-t b{font-size:11.5px;letter-spacing:.22em}.dial{transform:scale(.88);margin:0 -4px}.led.sec .dial{transform:scale(.78)}}
+@media (prefers-reduced-motion:reduce){.knob,.led-t small span,.lens b{transition:none}.led[aria-checked="true"] .lens b,.lens.flare b{animation:none;opacity:.75}}
+</style>
+</head>
+<body data-code="PEP-BTN-04" data-name="LED SWITCH" data-hint="PRESS">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="led pri" type="button" role="switch" aria-checked="false" aria-label="RESTOCK ALERTS">
+        <span class="led-body" aria-hidden="true"></span><span class="led-wash" aria-hidden="true"></span>
+        <span class="dial" aria-hidden="true"><span class="ticks"></span><span class="well"></span><span class="knobw"><span class="knob"></span><span class="gloss"></span></span></span>
+        <span class="led-t" aria-hidden="true"><b>RESTOCK ALERTS</b><small><span>OFF</span><span>ON</span></small></span>
+        <span class="lens" aria-hidden="true"><b></b><i></i></span>
+        <span class="led-ring" aria-hidden="true"></span>
+      </button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="led sec" type="button" role="switch" aria-checked="true" aria-label="SOUND">
+        <span class="led-body" aria-hidden="true"></span><span class="led-wash" aria-hidden="true"></span>
+        <span class="dial" aria-hidden="true"><span class="ticks"></span><span class="well"></span><span class="knobw"><span class="knob"></span><span class="gloss"></span></span></span>
+        <span class="led-t" aria-hidden="true"><b>SOUND</b><small><span>OFF</span><span>ON</span></small></span>
+        <span class="lens" aria-hidden="true"><b></b><i></i></span>
+        <span class="led-ring" aria-hidden="true"></span>
+      </button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  document.querySelectorAll('.led').forEach(function(el){
+    var tk=el.querySelector('.ticks'),knob=el.querySelector('.knob'),lens=el.querySelector('.lens');
+    tk.innerHTML=[0,1,2,3,4,5,6,7].map(function(n){return '<i style="--n:'+n+'"'+(n===2?' class="on"':'')+'></i>'}).join('');
+    var on=el.getAttribute('aria-checked')==='true',ang=on?90:0;
+    knob.style.setProperty('--ang',ang+'deg');
+    el.addEventListener('click',function(){
+      on=!on;ang+=on?90:-90;knob.style.setProperty('--ang',ang+'deg');el.setAttribute('aria-checked',String(on));
+      if(on&&!PM.RM){lens.classList.remove('flare');void lens.offsetWidth;lens.classList.add('flare')}
+      if(navigator.vibrate&&!PM.FINE)try{navigator.vibrate(8)}catch(e){}
+    });
+    lens.addEventListener('animationend',function(e){if(e.animationName==='ledFlare')lens.classList.remove('flare')});
+  });
+  /* idle cue while playing: the primary switch flicks on and off once every ~7 s until someone touches it */
+  var pri=document.querySelector('.led.pri'),touched=false,acc=0;
+  document.addEventListener('pointerdown',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>7){acc=0;pri.click();setTimeout(function(){if(!touched)pri.click()},2600)}});
+})();
+</script>
+</body>
+</html>

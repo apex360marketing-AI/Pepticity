@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-TYP-02 · PEPTICITY BLACK FLAT</title>
+<!--@meta {"order":2,"code":"PEP-TYP-02","name":"PEPTICITY BLACK FLAT","interact":"hover","weight":"Light",
+ "desc":"The PEPTICITY lettering as a flat typeface in brushed gunmetal: the same wide, sharp-cornered capitals, light enough for every heading. Letters rise in, lift toward your pointer, and a line of light passes over the headline.",
+ "source":"PEPTICITY brand/font/PepticityBlack.woff2 (commit 6de50ec); the heading light pass from sites/dashboard-color; BTN-P01 button"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text);--c:12px;--h:54px;--px:30px;--fs:11.5px}
+.sp{position:relative;width:min(1180px,100%);display:grid;gap:clamp(14px,2.6vh,24px)}
+.kick{display:flex;flex-wrap:wrap;white-space:nowrap;align-items:center;gap:8px 14px;font:400 9px/1 var(--fh);letter-spacing:.36em;color:var(--mute)}
+.kick::before{content:"";width:28px;height:1px;background:linear-gradient(90deg,var(--acc),transparent)}
+.kick b{font-weight:400;color:var(--ink2)}
+/* the wordmark: flat PEPTICITY BLACK in brushed gunmetal, a hairline of light on top */
+.wm{display:flex;margin:0;font:400 clamp(46px,11.2vw,150px)/.95 var(--fh);letter-spacing:.03em;white-space:nowrap;cursor:default}
+.wm span{display:inline-block;position:relative;transform:translateY(var(--y,0px)) scale(var(--s,1));transform-origin:50% 100%;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px),linear-gradient(180deg,#d9dbdf 0%,#a3a7ae 38%,#6f726f 52%,#8e8d85 70%,#c9ccd1 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 -1px 0 rgba(255,255,255,.35)) drop-shadow(0 10px 18px rgba(0,0,0,.55))}
+.wm span.in{animation:rise 1s var(--e-out) both;animation-delay:calc(var(--i) * 60ms)}
+@keyframes rise{from{opacity:0;transform:translateY(.35em)}to{opacity:1;transform:translateY(var(--y,0px)) scale(var(--s,1))}}
+.hl{position:relative;margin:0;font:400 clamp(20px,3.3vw,42px)/1.12 var(--fh);letter-spacing:.06em;color:var(--chrome);max-width:24ch}
+/* light pass (dashboard .acc-pass): a lit copy of the words travels through a soft window */
+.pass{position:absolute;inset:-.15em -.3em;overflow:hidden;pointer-events:none;contain:paint}
+.pass b{position:absolute;inset:0;transform:translateX(-100%);-webkit-mask-image:linear-gradient(90deg,transparent 36%,#000 48%,#000 52%,transparent 64%);mask-image:linear-gradient(90deg,transparent 36%,#000 48%,#000 52%,transparent 64%)}
+.pass i{position:absolute;inset:0;padding:.15em .3em;font-style:normal;transform:translateX(100%);color:color-mix(in srgb,var(--acc-hi) 70%,#fff);text-shadow:0 0 3px var(--acc),0 0 10px var(--acc-bloom)}
+.pass.go b{animation:pB 1.7s cubic-bezier(.65,0,.35,1) 1 both}.pass.go i{animation:pI 1.7s cubic-bezier(.65,0,.35,1) 1 both}
+@keyframes pB{from{transform:translateX(-100%)}to{transform:translateX(100%)}}@keyframes pI{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
+.row p{margin:0;max-width:52ch;color:var(--ink2);font-size:clamp(13.5px,1.25vw,15.5px);line-height:1.6}
+.spec{position:relative;overflow:hidden;border-top:1px solid rgba(230,233,237,.12);border-bottom:1px solid rgba(230,233,237,.12);padding:12px 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.spec div{display:flex;width:max-content;animation:mq 38s linear infinite;animation-play-state:var(--play)}
+.spec span{font:400 clamp(14px,1.6vw,20px)/1 var(--fh);letter-spacing:.14em;color:#6b6f77;padding-right:2.4em;white-space:nowrap}
+.spec span b{font-weight:400;color:var(--ink2)}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media (max-width:640px){.row{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){.spec div{animation:none}.wm span.in{animation:none}.pass{display:none}}
+</style>
+</head>
+<body data-code="PEP-TYP-02" data-name="PEPTICITY BLACK FLAT" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="sp">
+    <p class="kick"><b>PEPTICITY BLACK</b>· FLAT · 02 / 05</p>
+    <h1 class="wm" id="wm" aria-label="PEPTICITY"></h1>
+    <h2 class="hl" id="hl">CLEAR BOTTLES. SEALED BOXES.<span class="pass" aria-hidden="true"><b><i>CLEAR BOTTLES. SEALED BOXES.</i></b></span></h2>
+    <div class="row">
+      <p>The same wide, sharp-cornered capitals as the 3D lettering, set flat so they are as light and quick as ordinary text. One look for every heading, button and label.</p>
+      <button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+    </div>
+    <div class="spec" aria-hidden="true"><div><span><b>ABCDEFGHIJKLM</b> NOPQRSTUVWXYZ · 0123456789 · GRAND OPENING ·</span><span><b>ABCDEFGHIJKLM</b> NOPQRSTUVWXYZ · 0123456789 · GRAND OPENING ·</span></div></div>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var wm=document.getElementById('wm'),T='PEPTICITY';
+  wm.innerHTML=[].map.call(T,function(c,i){return '<span aria-hidden="true" style="--i:'+i+'">'+c+'</span>'}).join('');
+  var L=[].slice.call(wm.children),y=L.map(function(){return 0}),s=L.map(function(){return 1}),px=-1;
+  function rise(){if(PM.RM)return;L.forEach(function(l){l.classList.remove('in');void l.offsetWidth;l.classList.add('in')})}
+  /* the dock: letters near the pointer lift and grow a little */
+  var loop=PM.loop(function(){var busy=false;L.forEach(function(l,i){var ty=0,ts=1;if(px>=0&&!PM.RM){var b=l.getBoundingClientRect(),c=b.left+b.width/2,d=Math.abs(px-c)/Math.max(60,b.width*1.6),f=Math.max(0,1-d);ty=-f*14;ts=1+f*.06}
+    y[i]+=(ty-y[i])*.16;s[i]+=(ts-s[i])*.16;l.style.setProperty('--y',y[i].toFixed(2)+'px');l.style.setProperty('--s',s[i].toFixed(4));if(Math.abs(ty-y[i])>.05||Math.abs(ts-s[i])>.001)busy=true});return busy});
+  wm.addEventListener('pointermove',function(e){px=e.clientX;loop.kick()});
+  wm.addEventListener('pointerleave',function(){px=-1;loop.kick()});
+  var pass=document.querySelector('.pass');function sweep(){if(PM.RM)return;pass.classList.remove('go');void pass.offsetWidth;pass.classList.add('go')}
+  document.getElementById('hl').addEventListener('pointerenter',sweep);
+  PM.on('play',function(){rise();setTimeout(sweep,900)});if(PM.playing){rise();setTimeout(sweep,900)}
+  var acc=0;PM.ambient(function(dt){acc+=dt;if(acc>6){acc=0;sweep()}});
+})();
+</script>
+</body>
+</html>

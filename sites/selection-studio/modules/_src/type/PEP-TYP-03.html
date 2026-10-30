@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-TYP-03 · PEPTICITY BLACK CONDENSED</title>
+<!--@meta {"order":3,"code":"PEP-TYP-03","name":"PEPTICITY BLACK CONDENSED","interact":"hover","weight":"Light",
+ "desc":"The narrow sister cut: the same weight in a slimmer body, so long names fit on a bottle, a label or a phone. Shown running up the side like the bottle label, with light rising through it; the headline letters stretch as you pass over them.",
+ "source":"PEPTICITY brand/font/PepticityBlackCondensed.woff2 (commit 6de50ec), vertical setting after the PEPTICITY bottle label (brand/vial-hf); BTN-P01 button"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fc)}
+.pc-btn{--pc-ring:var(--acc-text);--c:12px;--h:54px;--px:30px;--fs:12.5px;--ls:.22em}
+.lay{position:relative;width:min(1080px,100%);display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(22px,5vw,64px);align-items:center}
+/* the vertical wordmark, like the bottle: reads bottom to top, light rises through it */
+.vert{position:relative;height:min(68vh,520px);display:grid;place-items:center;padding:0 clamp(10px,2vw,22px);
+  border-left:1px solid rgba(230,233,237,.14);border-right:1px solid rgba(230,233,237,.14)}
+.vert h1{margin:0;writing-mode:vertical-rl;transform:rotate(180deg);font:400 clamp(46px,9.2vh,92px)/1 var(--fc);letter-spacing:.06em;white-space:nowrap;position:relative}
+.vert h1 .base{display:block;filter:drop-shadow(-1px 0 0 rgba(255,255,255,.28)) drop-shadow(-8px 0 14px rgba(0,0,0,.5))}
+.vert h1 .base span{display:inline-block;background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px),linear-gradient(90deg,#c9ccd1 0%,#a3a29b 30%,#6b6a64 55%,#8e8d85 75%,#b9bec5 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.vert h1 .base span.in{animation:slot .9s var(--e-out) both;animation-delay:calc(var(--i) * 70ms)}
+@keyframes slot{from{opacity:0;transform:translateX(-.5em)}to{opacity:1;transform:none}}
+/* the rising light: a lit copy seen through a soft band; the band travels up while the copy counter-moves (transforms only, as the dashboard heading pass) */
+.lw{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0;transform:translateY(55%);
+  -webkit-mask-image:linear-gradient(0deg,transparent 41%,#000 48.5%,#000 51.5%,transparent 59%);mask-image:linear-gradient(0deg,transparent 41%,#000 48.5%,#000 51.5%,transparent 59%)}
+.lwi{position:absolute;inset:0;display:grid;place-items:center;transform:translateY(-55%)}
+.lwi h1{color:color-mix(in srgb,var(--acc-hi) 70%,#fff);text-shadow:0 0 4px var(--acc),0 0 14px var(--acc-bloom)}
+.lw.go{animation:lwUp 2.2s cubic-bezier(.3,.1,.2,1) 1 both}.lw.go .lwi{animation:lwDn 2.2s cubic-bezier(.3,.1,.2,1) 1 both}
+@keyframes lwUp{0%{transform:translateY(55%);opacity:0}10%,90%{opacity:1}100%{transform:translateY(-55%);opacity:0}}
+@keyframes lwDn{0%{transform:translateY(-55%)}100%{transform:translateY(55%)}}
+.vert small{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);font:400 8.5px/1 var(--fh);letter-spacing:.3em;color:var(--dim);white-space:nowrap}
+.side{display:grid;gap:clamp(14px,2.6vh,22px);min-width:0}
+.kick{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font:400 9px/1 var(--fh);letter-spacing:.36em;color:var(--mute);white-space:nowrap}
+.kick::before{content:"";width:28px;height:1px;background:linear-gradient(90deg,var(--acc),transparent)}
+.kick b{font-weight:400;color:var(--ink2)}
+.hl{margin:0;display:flex;flex-wrap:wrap;font:400 clamp(34px,6.4vw,84px)/.98 var(--fc);letter-spacing:.04em;color:var(--chrome);text-shadow:0 1px 0 #6d717a,0 2px 0 #3b3d42,0 10px 18px rgba(0,0,0,.55)}
+.hl .w{display:inline-flex;margin-right:.32em;white-space:nowrap}
+.hl .c{display:inline-block;transform:scaleY(var(--s,1));transform-origin:50% 100%}
+.side p{margin:0;max-width:46ch;color:var(--ink2);font-size:clamp(13.5px,1.25vw,15.5px);line-height:1.6}
+.labels{display:flex;gap:8px;flex-wrap:wrap}
+.labels span{--k:7px;padding:9px 12px 8px;font:400 12px/1 var(--fc);letter-spacing:.12em;color:var(--ink2);box-shadow:inset 0 0 0 1px var(--hair2);background:rgba(255,255,255,.03);
+  clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.labels span b{font-weight:400;color:var(--acc-text);margin-left:.5em}
+.act{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+@media (max-width:640px){.lay{grid-template-columns:auto minmax(0,1fr);gap:16px}.vert{height:min(62vh,420px);padding:0 6px}.vert h1{font-size:clamp(40px,9vh,70px)}.hl{font-size:clamp(28px,9vw,44px)}.labels span:nth-child(3){display:none}}
+@media (prefers-reduced-motion:reduce){.vert h1 .base span.in{animation:none}.lw{display:none}}
+</style>
+</head>
+<body data-code="PEP-TYP-03" data-name="PEPTICITY BLACK CONDENSED" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="lay">
+    <div class="vert"><h1 aria-label="PEPTICITY"><span class="base" id="vb" aria-hidden="true"></span></h1><div class="lw" id="vl" aria-hidden="true"><div class="lwi"><h1>PEPTICITY</h1></div></div><small>CONDENSED</small></div>
+    <div class="side">
+      <p class="kick"><b>PEPTICITY BLACK</b>· CONDENSED · 03 / 05</p>
+      <h2 class="hl" id="hl" aria-label="BUILT FOR LABELS AND VIALS"></h2>
+      <p>The same weight in a narrow body, so long product names still fit on a bottle, a label or a phone screen.</p>
+      <div class="labels" aria-label="Sample label lines"><span>GHK-CU<b>50 MG</b></span><span>BPC-157<b>10 MG</b></span><span>NAD+<b>1000 MG</b></span></div>
+      <div class="act"><button class="pc-btn" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SEE THE LABELS</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button></div>
+    </div>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var vb=document.getElementById('vb'),vl=document.getElementById('vl'),hl=document.getElementById('hl');
+  vb.innerHTML=[].map.call('PEPTICITY',function(c,i){return '<span style="--i:'+i+'">'+c+'</span>'}).join('');
+  var n=0;hl.innerHTML='BUILT FOR LABELS AND VIALS'.split(' ').map(function(w){return '<span class="w" aria-hidden="true">'+[].map.call(w,function(c){return '<span class="c">'+c+'</span>'}).join('')+'</span>'}).join('');
+  var C=[].slice.call(hl.querySelectorAll('.c')),s=C.map(function(){return 1}),px=-1,py=-1;
+  var loop=PM.loop(function(){var busy=false;C.forEach(function(c,i){var t=1;if(px>=0&&!PM.RM){var b=c.getBoundingClientRect(),d=Math.hypot((px-(b.left+b.width/2))/Math.max(40,b.width*2.2),(py-(b.top+b.height/2))/Math.max(50,b.height*1.2)),f=Math.max(0,1-d);t=1+f*.18}
+    s[i]+=(t-s[i])*.18;c.style.setProperty('--s',s[i].toFixed(4));if(Math.abs(t-s[i])>.001)busy=true});return busy});
+  hl.addEventListener('pointermove',function(e){px=e.clientX;py=e.clientY;loop.kick()});
+  hl.addEventListener('pointerleave',function(){px=py=-1;loop.kick()});
+  function slot(){if(PM.RM)return;[].forEach.call(vb.children,function(l){l.classList.remove('in');void l.offsetWidth;l.classList.add('in')})}
+  function light(){if(PM.RM)return;vl.classList.remove('go');void vl.offsetWidth;vl.classList.add('go')}
+  document.querySelector('.vert').addEventListener('pointerenter',light);
+  PM.on('play',function(){slot();setTimeout(light,800)});if(PM.playing){slot();setTimeout(light,800)}
+  var acc=0;PM.ambient(function(dt){acc+=dt;if(acc>5.5){acc=0;light()}});
+})();
+</script>
+</body>
+</html>

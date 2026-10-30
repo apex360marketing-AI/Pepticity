@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TRN-03 · SCAN WIPE PAGE CHANGE · PEPTICITY</title>
+<meta name="fx-code" content="TRN-03"><meta name="fx-interact" content="tap">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* TRN-03 SCAN WIPE: how one page hands over to the next. Tap a page name and a bright scan line in your colour runs down the
+   screen: above it the new page is already there, below it the old page waits and dims; a fine band of scan lines trails it. */
+body{background:#060607}
+.pg{position:fixed;inset:0;overflow:hidden}
+.pg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none;transform:scale(1.04)}
+.pg .sh{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,7,.86) 0%,rgba(5,5,7,.45) 46%,rgba(5,5,7,.1) 100%),linear-gradient(0deg,rgba(5,5,7,.7),transparent 40%)}
+.pg .tx{position:absolute;left:clamp(20px,6vw,96px);bottom:clamp(90px,16vh,150px);display:grid;gap:14px;max-width:min(560px,86vw)}
+.pg h2{margin:0;font:400 clamp(36px,6.4vw,100px)/.95 var(--fh);letter-spacing:.06em}
+.pg p{margin:0;color:var(--ink2);font-size:clamp(14px,1.2vw,17px);max-width:40ch}
+.pg .no{font:400 10px var(--fh);letter-spacing:.34em;color:var(--acc-text)}
+.pg.vial .vb{position:absolute;right:8%;top:8%;bottom:8%;width:40%;display:grid;place-items:center;background:radial-gradient(50% 40% at 50% 72%,rgba(220,226,240,.14),transparent 70%)}
+.pg.vial .vb img{position:relative;inset:auto;width:auto;height:84%;object-fit:contain;transform:none}
+.pg.vial{background:radial-gradient(80% 70% at 70% 50%,#17171c,#08080a 70%)}
+#nxt{clip-path:inset(0 0 100% 0)}
+#cur{filter:brightness(var(--dim,1))}
+.scan{position:fixed;left:0;right:0;top:0;height:2px;z-index:10;pointer-events:none;opacity:0;transform:translate3d(0,var(--y,0px),0);
+  background:linear-gradient(90deg,transparent 0%,var(--acc) 12%,#fff 50%,var(--acc) 88%,transparent 100%);box-shadow:0 0 10px var(--acc),0 0 30px var(--acc-bloom),0 0 70px color-mix(in srgb,var(--acc) 30%,transparent)}
+.scan::before{content:"";position:absolute;left:0;right:0;bottom:2px;height:120px;background:repeating-linear-gradient(180deg,color-mix(in srgb,var(--acc) 22%,transparent) 0 1px,transparent 1px 5px);
+  -webkit-mask-image:linear-gradient(0deg,#000,transparent);mask-image:linear-gradient(0deg,#000,transparent);opacity:.7}
+.scan::after{content:"";position:absolute;left:0;right:0;top:2px;height:40px;background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 16%,transparent),transparent)}
+.nav{position:fixed;z-index:12;left:50%;top:clamp(14px,2.4vh,22px);transform:translateX(-50%);display:flex;gap:6px;padding:5px}
+.nav.fx-glass{--c:10px;background-color:rgba(8,8,11,.35)}
+.nav button{border:0;background:none;color:var(--mute);font:400 9.5px/1 var(--fh);letter-spacing:.28em;padding:11px 14px 10px;cursor:pointer;position:relative;transition:color .3s}
+.nav button[aria-current="true"]{color:var(--ink)}
+.nav button[aria-current="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:4px;height:1px;background:var(--acc);box-shadow:0 0 8px var(--acc-bloom)}
+.nav button:hover{color:var(--ink)}
+@media (max-width:600px){.nav{top:auto;bottom:62px}.nav button{padding:10px 9px;letter-spacing:.2em}.pg .tx{bottom:130px}.pg.vial .vb{right:0;width:60%;top:4%;bottom:auto;height:46%}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>TRN-03</b><span>SCAN WIPE</span></div>
+<div class="pg" id="cur"></div>
+<div class="pg" id="nxt"></div>
+<div class="scan" id="scan" aria-hidden="true"></div>
+<nav class="nav fx-glass" id="nav" aria-label="Pages"><button type="button" data-i="0" aria-current="true">THE CITY</button><button type="button" data-i="1">THE LAB</button><button type="button" data-i="2">THE VIAL</button></nav>
+<template id="p0"><img src="../_assets/stills/city.webp" alt="The PEPTICITY city at night"><i class="sh"></i><div class="tx"><span class="no">PAGE 01</span><h2 class="fx-chrome">THE CITY</h2><p>Every visit starts high above the towers, at night.</p></div></template>
+<template id="p1"><img src="../_assets/stills/lab-cabinets.webp" alt="Glass vials in a rack in the lab"><i class="sh"></i><div class="tx"><span class="no">PAGE 02</span><h2 class="fx-chrome">THE LAB</h2><p>Glass, steel and light: the room behind the doors.</p></div></template>
+<template id="p2"><div class="vb"><img src="../_assets/vial/vial.webp" alt="The PEPTICITY vial"></div><i class="sh"></i><div class="tx"><span class="no">PAGE 03</span><h2 class="fx-chrome">THE VIAL</h2><p>See-through label, PEPTICITY up the side, lit from below.</p></div></template>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  FX.hint('tap', 'TAP A PAGE');
+  var $ = function (s) { return document.querySelector(s); };
+  var cur = $('#cur'), nxt = $('#nxt'), scan = $('#scan'), D = document.documentElement, idx = 0, busy = false, auto = 0;
+  var btns = [].slice.call(document.querySelectorAll('#nav button'));
+  function fill(el, i) { el.className = 'pg' + (i === 2 ? ' vial' : ''); el.innerHTML = document.getElementById('p' + i).innerHTML; }
+  fill(cur, 0);
+  var anim = null;
+  function go(i) {
+    if (busy || i === idx) return; busy = true;
+    fill(nxt, i); btns.forEach(function (b, k) { b.setAttribute('aria-current', String(k === i)); });
+    var H = innerHeight;
+    if (FX.rm) { fill(cur, i); idx = i; busy = false; return; }
+    anim = { t0: performance.now(), dur: 1150, i: i, H: H };
+    scan.style.opacity = '1'; FX.wake();
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { auto = performance.now(); go(+b.dataset.i); }); });
+  addEventListener('fx:replay', function () { go((idx + 1) % 3); });
+  var lastAuto = performance.now();
+  FX.loop(function (dt, t, now, live) {
+    /* playing and untouched: it changes page on its own every few seconds */
+    if (live && !busy && now - auto > 5200 && now - lastAuto > 3600) { lastAuto = now; go((idx + 1) % 3); }
+    if (!anim) return false;
+    var q = Math.min(1, (now - anim.t0) / anim.dur), e = q < 0.5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2;
+    var y = e * (anim.H + 4);
+    nxt.style.clipPath = 'inset(0 0 ' + Math.max(0, anim.H - y).toFixed(1) + 'px 0)';
+    D.style.setProperty('--y', (y - 1).toFixed(1) + 'px');
+    D.style.setProperty('--dim', (1 - 0.45 * Math.sin(Math.min(1, q * 1.2) * Math.PI / 2)).toFixed(3));
+    if (q >= 1) {
+      fill(cur, anim.i); idx = anim.i; nxt.style.clipPath = 'inset(0 0 100% 0)'; nxt.innerHTML = ''; D.style.setProperty('--dim', '1');
+      scan.style.opacity = '0'; anim = null; busy = false; lastAuto = now; return false;
+    }
+    return true;
+  });
+  window.__ent = { go: go, seek: function (s) { if (!anim) go((idx + 1) % 3); if (anim) anim.t0 = performance.now() - s * 1000; } };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-05 · PRODUCT GLASS CARD</title>
+<!--@meta {"order":5,"code":"PEP-CRD-05","name":"PRODUCT GLASS CARD","interact":"hover","weight":"Light",
+ "desc":"A see-through product card with the PEPTICITY bottle standing in a pool of light. Point at it and the bottle lifts while a line of light rises up through the glass. Pick a size, then add it to the cart.",
+ "source":"PEPTICITY store card (sites/main/v2: the Higgsfield bottle assets/vial-pepticity.webp with the rising shine), BTN-P01 button, product name and sizes from shared/inventory.js"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text)}
+.pcard{--c:22px;position:relative;width:min(720px,100%);display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:stretch;isolation:isolate;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.7) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.5) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.4),rgba(236,240,245,.7) 30%,#fff 52%,rgba(236,240,245,.7) 70%,rgba(200,207,216,.4)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.42),rgba(200,207,216,.4) 45%,rgba(120,127,137,.42)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.7),rgba(120,127,137,.42)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.4),rgba(120,127,137,.42)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%),linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.01));
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .6s var(--e-out)}
+.stagev{position:relative;display:grid;place-items:end center;min-height:clamp(300px,52vh,420px);padding:30px 0 34px;overflow:hidden}
+.stagev::before{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25))}
+.pool{position:absolute;left:50%;bottom:18px;width:240px;height:60px;margin-left:-120px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 50%,#fff 10%),color-mix(in srgb,var(--acc) 18%,transparent) 50%,transparent);filter:blur(6px);opacity:.55;transition:opacity .6s,transform .6s var(--e-out)}
+.pool::after{content:"";position:absolute;left:30%;right:30%;top:42%;height:18%;border-radius:50%;background:rgba(255,255,255,.7);filter:blur(4px)}
+.vial{position:relative;z-index:2;height:clamp(230px,40vh,330px);aspect-ratio:305/760;transition:transform .8s var(--e-out);will-change:transform}
+.vial img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 24px 22px rgba(0,0,0,.6))}
+.vial .shine{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;
+  -webkit-mask:url(../_assets/vial-pepticity.webp) center/100% 100% no-repeat;mask:url(../_assets/vial-pepticity.webp) center/100% 100% no-repeat;
+  background:linear-gradient(to top,transparent 0%,transparent 46%,color-mix(in srgb,var(--acc-hi) 40%,rgba(225,235,255,.4)) 48.4%,rgba(255,255,255,.9) 50%,color-mix(in srgb,var(--acc-hi) 40%,rgba(225,235,255,.4)) 51.6%,transparent 54%,transparent 100%);
+  background-size:100% 300%;background-position:0 0%}
+.float{animation:vFloat 6s var(--e-io) infinite alternate;animation-play-state:var(--play)}
+@keyframes vFloat{from{transform:translateY(0)}to{transform:translateY(-7px)}}
+.pcard.hot .vial{transform:translateY(-12px)}
+.pcard.hot .pool{opacity:.95;transform:scale(1.12)}
+.pcard.lit .vial .shine{animation:vShine 1.6s cubic-bezier(.3,.1,.2,1) 1 both}
+@keyframes vShine{0%{background-position:0 0%;opacity:0}12%{opacity:1}88%{opacity:1}100%{background-position:0 100%;opacity:0}}
+.info{position:relative;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:clamp(24px,4vw,40px) clamp(22px,4vw,40px) clamp(24px,4vw,40px) 6px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.kick{font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--mute)}
+.tag{font:400 8px/1 var(--fh);letter-spacing:.26em;padding:6px 8px 5px;border:1px dashed var(--hair2);color:var(--ink2)}
+.name{margin:0;font:400 clamp(30px,5vw,46px)/1 var(--fh);letter-spacing:.06em;color:var(--chrome);text-shadow:.01em .02em 0 #55585e,.02em .04em 0 #3b3d42,.03em .06em 0 #2a2b2f,.04em .08em 0 #1f2023,.1em .17em .14em rgba(0,0,0,.6)}
+.desc{margin:0;color:var(--ink2);font-size:14px;line-height:1.55;max-width:34ch}
+.sizes{display:flex;gap:8px}
+.sizes button{--k:8px;min-width:84px;height:40px;padding:0 14px;border:0;margin:0;background:rgba(255,255,255,.03);color:var(--ink2);cursor:pointer;font:400 10px/1 var(--fh);letter-spacing:.22em;
+  clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));box-shadow:inset 0 0 0 1px var(--hair2);transition:color .25s,box-shadow .25s,background .25s}
+.sizes button:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+.sizes button[aria-checked="true"]{color:var(--acc-text);box-shadow:inset 0 0 0 1px var(--acc-line),inset 0 0 14px -4px var(--acc-bloom);background:color-mix(in srgb,var(--acc) 6%,transparent)}
+.price{display:flex;align-items:baseline;gap:12px}
+.price b{font:400 24px/1 var(--fh);letter-spacing:.06em;color:var(--chrome)}
+.price small{font-size:12px;color:var(--mute)}
+.added{font:400 9px/1 var(--fh);letter-spacing:.3em;color:var(--acc-text);opacity:0;transform:translateY(4px);transition:opacity .3s,transform .4s var(--e-out)}
+.added.on{opacity:1;transform:none}
+.pc-btn{--c:12px;--h:54px;--px:30px;--fs:11.5px}
+@media (max-height:480px){.stagev{min-height:0;padding:16px 0 18px}.vial{height:min(54vh,240px)}.info{gap:11px;padding:18px 22px 18px 4px}.name{font-size:30px}.desc{font-size:13px}.pool{bottom:8px}.pc-btn{--h:46px}}
+@media (max-width:560px){.pcard{grid-template-columns:minmax(0,1fr)}.stagev{min-height:260px;padding:22px 0 26px}.vial{height:220px}.info{padding:6px 22px 26px}.name{font-size:30px}}
+@media (prefers-reduced-motion:reduce){.float{animation:none}.vial,.pcard,.pool{transition:none}.vial .shine{display:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-05" data-name="PRODUCT GLASS CARD" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <article class="pcard" id="pc">
+    <div class="stagev"><span class="pool" aria-hidden="true"></span><div class="float"><div class="vial"><img src="../_assets/vial-pepticity.webp" alt="PEPTICITY bottle"><span class="shine" aria-hidden="true"></span></div></div></div>
+    <div class="info">
+      <div class="row"><span class="kick">PEPTICITY · VIAL</span><span class="tag">SAMPLE</span></div>
+      <h2 class="name">GHK-CU</h2>
+      <p class="desc">A copper-bound peptide of three amino acids.</p>
+      <div class="sizes" role="radiogroup" aria-label="Size"><button type="button" role="radio" aria-checked="true">50 MG</button><button type="button" role="radio" aria-checked="false">100 MG</button></div>
+      <div class="price"><b>[PRICE]</b><small>per vial</small></div>
+      <div class="row" style="justify-content:flex-start;gap:16px"><button class="pc-btn" type="button" id="add"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button><span class="added" id="added" aria-live="polite">ADDED</span></div>
+    </div>
+  </article>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var pc=document.getElementById('pc'),sizes=[].slice.call(document.querySelectorAll('.sizes button')),added=document.getElementById('added');
+  function shine(){if(PM.RM)return;pc.classList.remove('lit');void pc.offsetWidth;pc.classList.add('lit')}
+  pc.addEventListener('pointerenter',function(e){pc.classList.add('hot');shine()});
+  pc.addEventListener('pointerleave',function(){pc.classList.remove('hot');pc.style.setProperty('--rx','0deg');pc.style.setProperty('--ry','0deg')});
+  pc.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||PM.RM)return;var b=pc.getBoundingClientRect(),px=(e.clientX-b.left)/b.width-.5,py=(e.clientY-b.top)/b.height-.5;
+    pc.style.setProperty('--ry',(px*7).toFixed(2)+'deg');pc.style.setProperty('--rx',(-py*5).toFixed(2)+'deg')});
+  pc.addEventListener('animationend',function(e){if(e.animationName==='vShine')pc.classList.remove('lit')});
+  sizes.forEach(function(b){b.addEventListener('click',function(){sizes.forEach(function(o){o.setAttribute('aria-checked',String(o===b))});shine()})});
+  document.getElementById('add').addEventListener('click',function(){added.textContent='ADDED · '+sizes.filter(function(o){return o.getAttribute('aria-checked')==='true'})[0].textContent;added.classList.add('on');shine();setTimeout(function(){added.classList.remove('on')},1800)});
+  /* first light when the module starts, then every 7 s while playing */
+  PM.on('play',function(){setTimeout(shine,400)});if(PM.playing)setTimeout(shine,400);
+  var acc=0;PM.ambient(function(dt){acc+=dt;if(acc>7){acc=0;if(!pc.classList.contains('hot'))shine()}});
+})();
+</script>
+</body>
+</html>

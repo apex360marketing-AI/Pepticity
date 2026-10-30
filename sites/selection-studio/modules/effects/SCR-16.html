@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SCR-16 · EXPLODED VIAL · PEPTICITY</title>
+<meta name="fx-code" content="SCR-16"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../_assets/vial/vial.webp" as="image">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* SCR-16 EXPLODED VIAL: the approved Higgsfield PEPTICITY bottle comes apart in depth as you scroll: cap, crimp seal, glass
+   neck and body separate, and the printed lettering lifts off the frosted label and floats forward. Each part is named,
+   with a leader line in the accent. Point to look around it; scroll back and it clicks together again. */
+body{background:radial-gradient(70% 70% at 50% 46%,#16161b 0%,#0b0b0d 55%,#050506 100%)}
+.stage{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:clamp(18px,4vw,64px);padding:0 clamp(20px,6vw,96px)}
+.head{display:grid;gap:16px;align-content:center}
+.head .fx-h{font-size:clamp(26px,3.3vw,50px)}
+.scene{position:relative;height:min(68vh,640px);aspect-ratio:354/869;perspective:1200px;perspective-origin:50% 40%}
+.rig{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.L{position:absolute;inset:0;background:center/contain no-repeat;will-change:transform;transform-style:preserve-3d}
+.L.cap{background-image:url(../_assets/vial/vial.webp);clip-path:inset(0 0 89.1% 0)}
+.L.crimp{background-image:url(../_assets/vial/vial.webp);clip-path:inset(10.8% 0 79.8% 0)}
+.L.neck{background-image:url(../_assets/vial/vial.webp);clip-path:inset(20.2% 0 65.6% 0)}
+.L.body{background-image:url(../_assets/vial/vial-clear.webp);clip-path:inset(34.4% 0 0 0)}
+.L.print{background-image:url(../_assets/vial/vial-print.webp);filter:drop-shadow(0 0 5px rgba(230,236,255,.45))}
+.L.print::after{content:"";position:absolute;inset:0;background:url(../_assets/vial/vial-print.webp) center/contain no-repeat;opacity:calc(var(--pg,0) * .8);filter:blur(7px)}
+.shine{position:absolute;inset:0;pointer-events:none;-webkit-mask:url(../_assets/vial/vial.webp) center/contain no-repeat;mask:url(../_assets/vial/vial.webp) center/contain no-repeat;
+  background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.28) 48%,rgba(255,255,255,.06) 54%,transparent 64%);background-size:300% 100%;background-position:120% 0;
+  animation:shine 6.5s var(--e-io) infinite;animation-play-state:var(--play);mix-blend-mode:screen}
+@keyframes shine{0%,55%{background-position:120% 0}100%{background-position:-60% 0}}
+.pool{position:absolute;left:-40%;right:-40%;bottom:-7%;height:16%;background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 28%,rgba(230,236,255,.5)),transparent);filter:blur(10px);opacity:.55;pointer-events:none}
+.refl{position:absolute;left:0;right:0;top:100%;height:30%;background:url(../_assets/vial/vial-clear.webp) center bottom/100% auto no-repeat;transform:scaleY(-1);opacity:.16;
+  -webkit-mask-image:linear-gradient(0deg,transparent 0%,#000 100%);mask-image:linear-gradient(0deg,transparent 0%,#000 100%);pointer-events:none;background-size:contain;background-position:center top}
+.calls{list-style:none;margin:0;padding:0;display:grid;gap:clamp(12px,2.4vh,22px)}
+.calls li{position:relative;display:grid;gap:5px;padding:4px 0 4px 18px;opacity:.28;transition:opacity .6s var(--e-out)}
+.calls li::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--hair2);transition:background .6s,box-shadow .6s}
+.calls li.on{opacity:1}
+.calls li.on::before{background:var(--acc);box-shadow:0 0 8px var(--acc-bloom)}
+.calls b{font:400 clamp(12px,1vw,14px)/1.1 var(--fh);letter-spacing:.16em}
+.calls span{font-size:13.5px;color:var(--ink2)}
+.calls em{font:400 8.5px var(--fh);letter-spacing:.3em;color:var(--acc-text);font-style:normal}
+#lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+#lines path{fill:none;stroke:var(--acc);stroke-width:1;opacity:.85;filter:drop-shadow(0 0 3px var(--acc-bloom))}
+#lines circle{fill:var(--acc-hi)}
+@media (max-width:760px){
+  .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr auto;padding:64px 20px 70px;gap:10px;align-items:start}
+  .head{gap:8px}.head .fx-h{font-size:24px}.head .fx-p{display:none}
+  .scene{height:44vh;margin:0 auto;align-self:center}
+  .calls{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}.calls span{font-size:12px}
+  #lines{display:none}
+}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>SCR-16</b><span>EXPLODED VIAL</span></div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="The PEPTICITY vial, taken apart as you scroll">
+  <section class="fx-pin" style="--len:480vh">
+    <div class="fx-sticky">
+      <div class="stage" id="stage">
+        <header class="head"><p class="fx-eyebrow">THE VIAL, TAKEN APART</p><h2 class="fx-h fx-chrome">INSIDE EVERY PEPTICITY VIAL</h2><p class="fx-p">Four parts and the lettering. Scroll to take it apart, scroll back to put it together.</p></header>
+        <div class="scene" id="scene" role="img" aria-label="The PEPTICITY vial separating into cap, crimp seal, glass and printed label">
+          <div class="pool" aria-hidden="true"></div>
+          <div class="rig" id="rig">
+            <div class="L body" data-k="body"></div>
+            <div class="L neck" data-k="neck"></div>
+            <div class="L crimp" data-k="crimp"></div>
+            <div class="L cap" data-k="cap"></div>
+            <div class="L print" data-k="print"></div>
+            <div class="shine" aria-hidden="true"></div>
+          </div>
+        </div>
+        <ul class="calls" id="calls">
+          <li data-at=".14" data-k="cap"><em>01</em><b>FLIP-OFF CAP</b><span>A black cap that lifts off in one move.</span></li>
+          <li data-at=".26" data-k="crimp"><em>02</em><b>CRIMP SEAL</b><span>Aluminium crimp over a rubber stopper.</span></li>
+          <li data-at=".38" data-k="neck"><em>03</em><b>CLEAR GLASS</b><span>A clear glass vial, sealed under the stopper.</span></li>
+          <li data-at=".5" data-k="print"><em>04</em><b>THE LETTERING</b><span>PEPTICITY, the P and the peptide swirl on a frosted label.</span></li>
+        </ul>
+      </div>
+      <svg id="lines" aria-hidden="true"></svg>
+    </div>
+  </section>
+</main>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var sc = FX.scroller($('#sc'), { ease: 4 }); FX.rail(sc); FX.hint('scroll');
+  var rig = $('#rig'), scene = $('#scene'), lines = $('#lines');
+  var L = {}; [].forEach.call(document.querySelectorAll('.L'), function (el) { L[el.dataset.k] = el; });
+  var calls = [].slice.call(document.querySelectorAll('#calls li'));
+  /* part centres in bottle space (fractions of height) for the leader lines */
+  var Y = { cap: 0.055, crimp: 0.155, neck: 0.27, print: 0.6 };
+  var tx = 0, ty = 0;
+  FX.loop(function (dt, t, now, live) {
+    var p = sc.p, e = FX.rm ? (p > 0.3 ? 1 : 0) : FX.ease((p - 0.06) / 0.56), H = scene.clientHeight, K = innerWidth > 760 ? 1 : 0.7;
+    var idle = FX.rm ? 0 : Math.sin(t * 0.6);
+    tx = FX.damp(tx, FX.rm ? 0 : (FX.pointer.inside ? FX.pointer.nx : 0) * 14 + idle * 4, 3.2, dt);
+    ty = FX.damp(ty, FX.rm ? 0 : (FX.pointer.inside ? -FX.pointer.ny : 0) * 6, 3.2, dt);
+    rig.style.transform = 'rotateY(' + (tx + e * -10).toFixed(2) + 'deg) rotateX(' + ty.toFixed(2) + 'deg)';
+    var f = function (k) { return FX.rm ? 0 : Math.sin(t * 0.9 + k) * e; };
+    L.cap.style.transform = 'translate3d(0,' + (-e * 0.19 * K * H + f(1) * 4).toFixed(1) + 'px,' + (e * 70).toFixed(1) + 'px) rotateX(' + (-e * 14).toFixed(2) + 'deg)';
+    L.crimp.style.transform = 'translate3d(0,' + (-e * 0.125 * K * H + f(2) * 3).toFixed(1) + 'px,' + (e * 46).toFixed(1) + 'px)';
+    L.neck.style.transform = 'translate3d(0,' + (-e * 0.06 * K * H + f(3) * 2).toFixed(1) + 'px,' + (e * 22).toFixed(1) + 'px)';
+    L.body.style.transform = 'translate3d(0,' + (e * 0.05 * H).toFixed(1) + 'px,0)';
+    rig.parentNode.style.transform = 'translate3d(0,' + (e * 0.06 * K * H).toFixed(1) + 'px,0)';
+    L.print.style.transform = 'translate3d(' + (e * (innerWidth > 760 ? 0.4 : 0.55) * scene.clientWidth).toFixed(1) + 'px,' + (e * 0.02 * H + f(4) * 5).toFixed(1) + 'px,' + (e * 190).toFixed(1) + 'px) rotateY(' + (-e * 26).toFixed(2) + 'deg)';
+    L.print.style.setProperty('--pg', (e * 0.9).toFixed(3));
+    calls.forEach(function (c) { c.classList.toggle('on', p >= +c.dataset.at || FX.rm && p > 0.3); });
+    /* leader lines from each part to its name (desktop) */
+    if (innerWidth > 760) {
+      var sr = scene.getBoundingClientRect(), out = '';
+      calls.forEach(function (c) {
+        if (!c.classList.contains('on')) return;
+        var k = c.dataset.k, el = L[k], r = el.getBoundingClientRect();
+        var py = k === 'print' ? r.top + r.height * 0.6 : sr.top + Y[k] * sr.height + (k === 'cap' ? -e * 0.19 * K * H : k === 'crimp' ? -e * 0.125 * K * H : -e * 0.06 * K * H);
+        var px = k === 'print' ? r.left + r.width * 0.66 : sr.left + sr.width * 0.88;
+        var cr = c.getBoundingClientRect(), qx = cr.left - 10, qy = cr.top + cr.height / 2;
+        var mx = px + (qx - px) * 0.45;
+        out += '<path d="M' + px.toFixed(1) + ' ' + py.toFixed(1) + ' L' + mx.toFixed(1) + ' ' + py.toFixed(1) + ' L' + (mx + 18).toFixed(1) + ' ' + qy.toFixed(1) + ' L' + qx.toFixed(1) + ' ' + qy.toFixed(1) + '"/><circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="2.5"/>';
+      });
+      lines.innerHTML = out;
+    }
+    return false;
+  });
+})();
+</script>
+</body>
+</html>

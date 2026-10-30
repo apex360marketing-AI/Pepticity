@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-CRD-09 · TILT PARALLAX</title>
+<!--@meta {"order":9,"code":"PEP-CRD-09","name":"TILT PARALLAX","interact":"hover","weight":"Medium",
+ "desc":"A glass card built in layers: the frosted plate at the back, the P floating in front of it, the bottle in front of that and the words nearest to you. Tilt it with your pointer and the layers slide past each other in real depth.",
+ "source":"New for PEPTICITY (Selection Studio library B): layered depth with the approved P (brand/logo/p-mark.svg, gunmetal) and the Higgsfield bottle (assets/vial-pepticity.webp); tilt with glare from premium-micro-interactions"}-->
+<!--@head-->
+<!--@pmark-->
+<style>
+.scene{perspective:1000px;width:min(470px,86vw);aspect-ratio:.8;max-height:calc(100vh - 150px)}
+.rig{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
+.L{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
+.plate{--c:30px;transform:translateZ(0);clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.75) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.5) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.4),#fff 52%,rgba(200,207,216,.4)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.45),rgba(200,207,216,.35) 50%,rgba(120,127,137,.45)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.7),rgba(120,127,137,.4)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.4),rgba(120,127,137,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    radial-gradient(70% 50% at 50% 80%,color-mix(in srgb,var(--acc) 16%,transparent),transparent 70%),
+    linear-gradient(180deg,rgba(255,255,255,.09),transparent 46%),linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.01))}
+.pm{transform:translateZ(40px);display:grid;place-items:center;padding:0 0 8%}
+.pm svg{width:62%;height:auto;max-height:46%;overflow:visible;opacity:.42}
+.pm use{fill:url(#gGun);stroke:rgba(220,214,255,.55);stroke-width:.006}
+.vl{transform:translateZ(90px);display:flex;align-items:flex-start;justify-content:flex-end;padding:14% 11% 0 0}
+.vl img{height:56%;width:auto;filter:drop-shadow(0 30px 26px rgba(0,0,0,.6))}
+.pool{position:absolute;right:6%;top:62%;width:40%;height:9%;transform:translateZ(60px);border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 55%,#fff 5%),transparent);filter:blur(10px);opacity:.6}
+.tx{transform:translateZ(130px);display:flex;flex-direction:column;justify-content:space-between;padding:8% 9%}
+.tx .row{display:flex;justify-content:space-between;align-items:center}
+.kick{font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--ink2);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.tag{font:400 8px/1 var(--fh);letter-spacing:.26em;padding:6px 8px 5px;border:1px dashed rgba(230,234,240,.35);color:var(--ink);background:rgba(0,0,0,.2)}
+.tx h2{margin:0;font:400 clamp(22px,4vw,34px)/1.04 var(--fh);letter-spacing:.06em;color:var(--chrome);text-shadow:.01em .02em 0 #55585e,.02em .04em 0 #3b3d42,.03em .06em 0 #2a2b2f,.04em .08em 0 #1f2023,.12em .2em .2em rgba(0,0,0,.7)}
+.tx p{margin:10px 0 0;font:400 9px/1 var(--fh);letter-spacing:.3em;color:var(--acc-text)}
+.glare{transform:translateZ(150px);--c:30px;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  background:radial-gradient(circle at var(--gx,30%) var(--gy,20%),rgba(255,255,255,.22),transparent 42%);opacity:var(--go,.5);transition:opacity .4s}
+.shadow{position:absolute;left:10%;right:10%;bottom:-9%;height:10%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.65),transparent);filter:blur(8px);transform:translateZ(-60px) rotateX(80deg)}
+@media (prefers-reduced-motion:reduce){.rig{transform:none}}
+</style>
+</head>
+<body data-code="PEP-CRD-09" data-name="TILT PARALLAX" data-hint="HOVER">
+<!--@stage-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a3a29b"/><stop offset=".46" stop-color="#6b6a64"/><stop offset=".54" stop-color="#2a2a28"/><stop offset="1" stop-color="#8e8d85"/></linearGradient></defs></svg>
+<main class="pm-main">
+  <div class="scene" id="scene" aria-label="PEPTICITY layered glass card" role="img">
+    <div class="rig" id="rig">
+      <span class="shadow" aria-hidden="true"></span>
+      <div class="L plate"></div>
+      <div class="L pm" aria-hidden="true"><svg viewBox="0 0 1.416 1.16"><use href="#pmark"/></svg></div>
+      <span class="pool" aria-hidden="true"></span>
+      <div class="L vl"><img src="../_assets/vial-pepticity.webp" alt=""></div>
+      <div class="L tx"><div class="row"><span class="kick">PEPTICITY</span><span class="tag">SAMPLE</span></div><div><h2>THE CLEAR<br>BOTTLE</h2><p>TILT ME</p></div></div>
+      <div class="L glare" aria-hidden="true"></div>
+    </div>
+  </div>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var sc=document.getElementById('scene'),rig=document.getElementById('rig'),gl=rig.querySelector('.glare');
+  var rx=0,ry=0,tx=0,ty=0,hot=false,t=0;
+  var loop=PM.loop(function(){var k=PM.RM?1:.09;rx+=(tx-rx)*k;ry+=(ty-ry)*k;
+    rig.style.setProperty('--rx',rx.toFixed(2)+'deg');rig.style.setProperty('--ry',ry.toFixed(2)+'deg');
+    gl.style.setProperty('--gx',(50+ry*3).toFixed(1)+'%');gl.style.setProperty('--gy',(40-rx*3).toFixed(1)+'%');
+    return Math.abs(tx-rx)+Math.abs(ty-ry)>.02});
+  function at(x,y){var b=sc.getBoundingClientRect(),px=(x-b.left)/b.width-.5,py=(y-b.top)/b.height-.5;ty=PM.clamp(px*30,-18,18);tx=PM.clamp(-py*26,-15,15);loop.kick()}
+  addEventListener('pointermove',function(e){if(PM.RM)return;var b=sc.getBoundingClientRect();if(e.clientX>b.left-120&&e.clientX<b.right+120&&e.clientY>b.top-120&&e.clientY<b.bottom+120){hot=true;gl.style.setProperty('--go','1');at(e.clientX,e.clientY)}else if(hot){hot=false;tx=ty=0;gl.style.setProperty('--go','.5');loop.kick()}},{passive:true});
+  sc.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'&&!PM.RM){hot=true;at(e.clientX,e.clientY)}});
+  sc.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'&&!PM.RM)at(e.clientX,e.clientY)});
+  sc.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse'){hot=false;tx=ty=0;loop.kick()}});
+  document.addEventListener('pointerleave',function(){hot=false;tx=ty=0;loop.kick()});
+  /* idle sway while playing so the depth reads even in a still tile */
+  PM.ambient(function(dt){if(hot)return;t+=dt;ty=Math.sin(t*.6)*9;tx=Math.sin(t*.43+1)*4.5;loop.kick()});
+  PM.on('pause',function(){if(!hot){tx=ty=0;loop.kick()}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTN-126 · FOCUS FRAME</title>
+<!--@meta {"order":12,"code":"BTN-126","name":"FOCUS FRAME","interact":"hover","weight":"Light",
+ "desc":"Glass framed by camera-style corner marks that drift as if hunting for focus. Point at it and they snap tight and lock on in your colour; click and the glass flashes like a shutter.",
+ "source":"APEX library BTN-126 Focus Frame (hunting corner marks, lock on hover, flash on press), PEPTICITY skin"}-->
+<!--@head-->
+<style>
+.foc{--c:14px;--fc:var(--acc);position:relative;display:inline-grid;place-items:center;height:74px;min-width:330px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.foc.sec{--c:12px;--fc:#e6e8ec;height:62px;min-width:270px;font-size:12px}
+.foc:focus{outline:none}
+.foc-g{position:absolute;inset:0;transition:transform var(--d1) var(--e-out)}
+.foc-g.pg{--c:14px}.foc.sec .foc-g.pg{--c:12px}
+.foc:active .foc-g{transform:scale(.985)}
+.foc-l{position:relative;z-index:3;display:inline-flex;align-items:center;gap:14px;padding:0 46px;white-space:nowrap;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.rec{width:7px;height:7px;border-radius:50%;background:var(--fc);box-shadow:0 0 6px var(--fc);animation:recBlink 1.6s steps(2,jump-none) infinite;animation-play-state:var(--play)}
+.foc.sec .rec{display:none}
+@keyframes recBlink{0%{opacity:1}100%{opacity:.25}}
+/* the marks: four L brackets outside the glass; each hunts on its own little loop until the pointer locks them */
+.foc-m{position:absolute;inset:0;pointer-events:none;z-index:2}
+.foc-m i{position:absolute;width:18px;height:14px;border-color:rgba(236,240,245,.7);border-style:solid;border-width:0;transition:transform .35s cubic-bezier(.2,1.6,.4,1),border-color .25s,filter .25s}
+.foc-m .tl{left:-14px;top:-12px;border-left-width:2px;border-top-width:2px}
+.foc-m .tr{right:-14px;top:-12px;border-right-width:2px;border-top-width:2px}
+.foc-m .bl{left:-14px;bottom:-12px;border-left-width:2px;border-bottom-width:2px}
+.foc-m .br{right:-14px;bottom:-12px;border-right-width:2px;border-bottom-width:2px}
+.foc-m i{animation:hunt 2.6s ease-in-out infinite;animation-play-state:var(--play)}
+.foc-m .tr{animation-delay:-.6s}.foc-m .bl{animation-delay:-1.3s}.foc-m .br{animation-delay:-1.9s}
+@keyframes hunt{0%,100%{translate:0 0}25%{translate:-3px -2px}50%{translate:2px 1px}75%{translate:-1px 3px}}
+.foc.lock .foc-m i{animation:none;border-color:var(--fc);filter:drop-shadow(0 0 4px var(--fc))}
+.foc.lock .foc-m .tl{transform:translate(9px,8px)}.foc.lock .foc-m .tr{transform:translate(-9px,8px)}
+.foc.lock .foc-m .bl{transform:translate(9px,-8px)}.foc.lock .foc-m .br{transform:translate(-9px,-8px)}
+.foc.lock .foc-m{animation:lockBlink .32s steps(2,jump-none) 2}
+@keyframes lockBlink{0%{opacity:1}100%{opacity:.35}}
+/* readout */
+.foc-r{position:absolute;right:0;top:-34px;font:400 8.5px/1 var(--fh);letter-spacing:.32em;color:var(--fc);opacity:0;transform:translateY(4px);transition:opacity .25s,transform .35s var(--e-out);white-space:nowrap;text-shadow:0 0 8px color-mix(in srgb,var(--fc) 50%,transparent)}
+.foc-r b{font-weight:400;color:var(--mute)}
+.foc.lock .foc-r{opacity:1;transform:none}
+/* the shutter flash */
+.foc-f{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(60% 120% at 50% 50%,#fff,rgba(255,255,255,.5) 60%,rgba(255,255,255,.2));
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.foc.snap .foc-f{animation:snap .5s var(--e-out) 1}
+@keyframes snap{0%{opacity:.85}100%{opacity:0}}
+.foc.snap .foc-m i{transition-duration:.12s}
+.foc.snap .foc-m .tl{transform:translate(14px,12px)}.foc.snap .foc-m .tr{transform:translate(-14px,12px)}
+.foc.snap .foc-m .bl{transform:translate(14px,-12px)}.foc.snap .foc-m .br{transform:translate(-14px,-12px)}
+.foc .pm-lit{--lit:var(--fc)}
+.foc.lock .pm-lit{opacity:.35}
+.foc-ring{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:18px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.foc:focus-visible .foc-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.foc{height:64px;min-width:270px;font-size:12px;letter-spacing:.24em}.foc.sec{height:56px;min-width:220px;font-size:11px}.foc-l{padding:0 32px}}
+@media (prefers-reduced-motion:reduce){.foc-m i,.rec,.foc.lock .foc-m{animation:none}.foc-m i{transition:none}}
+</style>
+</head>
+<body data-code="BTN-126" data-name="FOCUS FRAME" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="foc pri" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="foc-g pg" aria-hidden="true"></span><span class="foc-f" aria-hidden="true"></span>
+        <span class="foc-m" aria-hidden="true"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></span>
+        <span class="foc-r" aria-hidden="true"><b>AF ·</b> LOCKED</span>
+        <span class="foc-l"><i class="rec" aria-hidden="true"></i>SEE IT UP CLOSE</span><span class="foc-ring" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="foc sec" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="foc-g pg" aria-hidden="true"></span><span class="foc-f" aria-hidden="true"></span>
+        <span class="foc-m" aria-hidden="true"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></span>
+        <span class="foc-r" aria-hidden="true"><b>AF ·</b> LOCKED</span>
+        <span class="foc-l">GALLERY</span><span class="foc-ring" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  document.querySelectorAll('.foc').forEach(function(el){
+    var on=function(){el.classList.add('lock')},off=function(){el.classList.remove('lock')};
+    el.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')on()});el.addEventListener('pointerleave',off);
+    el.addEventListener('focus',function(){if(el.matches(':focus-visible'))on()});el.addEventListener('blur',off);
+    el.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')on();el.classList.remove('snap');void el.offsetWidth;el.classList.add('snap')});
+    el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){el.classList.remove('snap');void el.offsetWidth;el.classList.add('snap')}});
+    el.addEventListener('animationend',function(e){if(e.animationName==='snap'){el.classList.remove('snap');if(!PM.FINE)setTimeout(off,500)}});
+  });
+})();
+</script>
+</body>
+</html>

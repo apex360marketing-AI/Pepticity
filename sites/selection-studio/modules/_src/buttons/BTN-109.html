@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTN-109 · CHROME BEZEL</title>
+<!--@meta {"order":5,"code":"BTN-109","name":"CHROME BEZEL","interact":"hover","weight":"Medium",
+ "desc":"Clear glass set in a polished chrome frame with two tiny screws. The shine on the chrome turns to face your pointer, the screws turn as you arrive, and the glass presses in when you click.",
+ "source":"APEX library BTN-109 Chrome Bezel (reflection that turns toward the pointer, turning screws), re-cut as a PEPTICITY chamfered bezel"}-->
+<!--@head-->
+<style>
+.bez{--c:18px;--b:6px;--gl:var(--acc);position:relative;display:inline-grid;place-items:center;height:82px;min-width:340px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 13.5px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;
+  filter:drop-shadow(0 18px 26px rgba(0,0,0,.6))}
+.bez.sec{--c:15px;--b:5px;--gl:var(--chrome);height:68px;min-width:270px;font-size:12px}
+.bez:focus{outline:none}
+/* the chrome ring: a chamfered frame; the polished reflection inside it is a big conic disc that turns (transform only) */
+.bez-ring{position:absolute;inset:0;overflow:hidden;
+  clip-path:polygon(evenodd,var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c),var(--c) 0,
+    calc(var(--c) + var(--b) * .5) var(--b),calc(100% - var(--b)) var(--b),calc(100% - var(--b)) calc(100% - var(--c) - var(--b) * .5),calc(100% - var(--c) - var(--b) * .5) calc(100% - var(--b)),var(--b) calc(100% - var(--b)),var(--b) calc(var(--c) + var(--b) * .5),calc(var(--c) + var(--b) * .5) var(--b))}
+.bez-spin{position:absolute;left:50%;top:50%;width:600px;height:600px;margin:-300px 0 0 -300px;will-change:transform;
+  background:conic-gradient(from 0deg,#fbfcfd,#9ba1a9 7%,#e9ecef 13%,#2a2d31 21%,#60656c 28%,#f4f6f8 36%,#b9bec5 44%,#3a3d42 52%,#d3d7dc 60%,#f9fafb 66%,#585c63 74%,#1c1d20 82%,#a3a8af 90%,#fbfcfd)}
+.bez-ring::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent 40%,rgba(0,0,0,.35))}
+/* inner bevel line where chrome meets glass */
+.bez-in{position:absolute;inset:var(--b);--k:calc(var(--c) - var(--b) * .4);clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k))}
+.bez-in.pg{--c:calc(var(--c) - var(--b) * .4);--g-rim-t:rgba(0,0,0,.55);--g-rim-s:rgba(0,0,0,.4);--g-rim-hot:rgba(0,0,0,.6);--g-rim-b:rgba(255,255,255,.5);
+  --g-fill-a:rgba(255,255,255,.06);--g-fill-b:rgba(255,255,255,.01);transition:transform var(--d1) var(--e-out)}
+.bez-in::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;transition:opacity .5s var(--e-out);
+  background:radial-gradient(70% 120% at 50% 120%,color-mix(in srgb,var(--gl) 32%,transparent),transparent 70%)}
+.bez:hover .bez-in::after,.bez:focus-visible .bez-in::after{opacity:1}
+.bez.press .bez-in{transform:scale(.985)}
+.bez.press .bez-in::before{opacity:1}
+.bez-in::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .15s;box-shadow:inset 0 3px 10px rgba(0,0,0,.75),inset 0 0 0 1px rgba(0,0,0,.4)}
+/* screws */
+.screw{position:absolute;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;z-index:3;
+  background:radial-gradient(circle at 35% 30%,#ffffff,#b9bec5 35%,#4a4e55 75%,#2a2d31);box-shadow:inset 0 0 0 .5px rgba(0,0,0,.6),0 1px 1px rgba(0,0,0,.6)}
+.screw.l{left:calc(var(--b) * .5 - 2px)}.screw.r{right:calc(var(--b) * .5 - 2px)}
+.screw::after{content:"";position:absolute;left:1.5px;right:1.5px;top:50%;height:1.4px;margin-top:-.7px;background:#1c1d20;transform:rotate(var(--sr,35deg));transition:transform .7s var(--e-spring)}
+.bez:hover .screw::after,.bez:focus-visible .screw::after{--sr:215deg}
+.bez-l{position:relative;z-index:4;display:inline-flex;align-items:center;gap:14px;padding:0 54px;white-space:nowrap;text-shadow:0 1px 10px rgba(0,0,0,.6);transition:transform var(--d1) var(--e-out)}
+.bez.press .bez-l{transform:translateY(1px) scale(.985)}
+.bez-l i{width:7px;height:7px;border-radius:50%;background:var(--gl);box-shadow:0 0 6px var(--gl),0 0 14px color-mix(in srgb,var(--gl) 50%,transparent)}
+.bez .pm-lit{--lc:var(--c);inset:-9px;--lit:var(--gl)}
+.bez:hover .pm-lit,.bez:focus-visible .pm-lit{opacity:.55}
+.bez-ring2{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:21px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.bez:focus-visible .bez-ring2{opacity:1}
+@media (max-width:520px),(max-height:480px){.bez{height:70px;min-width:280px;font-size:12px;letter-spacing:.24em}.bez.sec{height:60px;min-width:230px;font-size:11px}.bez-l{padding:0 40px}}
+@media (prefers-reduced-motion:reduce){.screw::after{transition:none}}
+</style>
+</head>
+<body data-code="BTN-109" data-name="CHROME BEZEL" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="bez pri" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="bez-in pg" aria-hidden="true"></span><span class="bez-ring" aria-hidden="true"><span class="bez-spin"></span></span><i class="screw l" aria-hidden="true"></i><i class="screw r" aria-hidden="true"></i><span class="bez-l"><i aria-hidden="true"></i>MEMBER LOGIN</span><span class="bez-ring2" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="bez sec" type="button"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="bez-in pg" aria-hidden="true"></span><span class="bez-ring" aria-hidden="true"><span class="bez-spin"></span></span><i class="screw l" aria-hidden="true"></i><i class="screw r" aria-hidden="true"></i><span class="bez-l">CONTACT US</span><span class="bez-ring2" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+/* BTN-109: the reflection turns to face the pointer (shortest way round), drifts slowly when nobody is near */
+(function(){
+  var items=[].map.call(document.querySelectorAll('.bez'),function(el,i){return {el:el,spin:el.querySelector('.bez-spin'),a:i*70,t:i*70,near:false}});
+  var mx=-1e4,my=-1e4;
+  function face(it){var r=it.el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,d=Math.hypot(mx-cx,my-cy);it.near=d<Math.max(260,r.width);
+    if(it.near){var ang=Math.atan2(my-cy,mx-cx)*180/Math.PI+90,diff=((ang-it.t)%360+540)%360-180;it.t+=diff}}
+  var loop=PM.loop(function(){var busy=false;items.forEach(function(it){face(it);var k=PM.RM?1:.12;it.a+=(it.t-it.a)*k;it.spin.style.transform='rotate('+it.a.toFixed(2)+'deg)';if(Math.abs(it.t-it.a)>.05)busy=true});return busy});
+  addEventListener('pointermove',function(e){mx=e.clientX;my=e.clientY;loop.kick()},{passive:true});
+  PM.ambient(function(dt){items.forEach(function(it){if(!it.near){it.t+=dt*14}});loop.kick()});
+  items.forEach(function(it){
+    var el=it.el;
+    el.addEventListener('pointerdown',function(){el.classList.add('press');it.t+=40;loop.kick()});
+    var up=function(){el.classList.remove('press')};el.addEventListener('pointerup',up);el.addEventListener('pointerleave',up);el.addEventListener('pointercancel',up);
+    el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter')el.classList.add('press')});el.addEventListener('keyup',up);
+  });
+  loop.kick();
+})();
+</script>
+</body>
+</html>

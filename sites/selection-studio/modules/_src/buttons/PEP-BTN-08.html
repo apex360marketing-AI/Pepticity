@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-BTN-08 · LETTER ROLL</title>
+<!--@meta {"order":8,"code":"PEP-BTN-08","name":"LETTER ROLL","interact":"hover","weight":"Light",
+ "desc":"Each letter of the label rolls up one after another like a split-flap sign, bringing in a lit copy of itself, while the arrow slides out and back in.",
+ "source":"New for PEPTICITY (Selection Studio library B); split-text roll on BTN-P01 glass"}-->
+<!--@head-->
+<style>
+.roll{--c:16px;--rc:var(--acc-text);position:relative;display:inline-grid;place-items:center;height:76px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);
+  font:400 14px/1 var(--fh);letter-spacing:.3em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.roll.sec{--c:13px;--rc:#ffffff;height:64px;font-size:12.5px}
+.roll:focus{outline:none}
+.roll-face{position:absolute;inset:0;transition:transform var(--d1) var(--e-out)}
+.roll-face.pg{--c:16px}.roll.sec .roll-face.pg{--c:13px}
+.roll:active .roll-face{transform:translateY(1px) scale(.985)}
+.roll-in{position:relative;z-index:2;display:inline-flex;align-items:center;gap:22px;padding:0 50px 0 56px;white-space:nowrap}
+.roll.sec .roll-in{padding:0 40px 0 44px;gap:18px}
+.w{display:inline-flex;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.ch{position:relative;display:inline-block;height:1.15em;line-height:1.15em;overflow:hidden;margin-right:.04em}
+.ch.sp{width:.5em}
+.ch>span{display:block;transition:transform .62s var(--e-out);transition-delay:calc(var(--i) * 26ms)}
+.ch>span+span{position:absolute;left:0;top:0;transform:translateY(105%);color:var(--rc);text-shadow:0 0 12px color-mix(in srgb,var(--rc) 55%,transparent)}
+.roll.hot .ch>span:first-child{transform:translateY(-105%)}
+.roll.hot .ch>span+span{transform:translateY(0)}
+.roll.press .ch>span{transform-origin:50% 100%}
+.roll.press .w{transform:scaleY(.86);transition:transform .12s}
+.w{transition:transform .5s var(--e-spring)}
+/* the arrow: exits right, a lit one enters from the left */
+.arw{position:relative;width:20px;height:14px;overflow:hidden;flex:none}
+.arw i{position:absolute;inset:0;transition:transform .55s var(--e-out)}
+.arw i::before{content:"";position:absolute;left:0;right:2px;top:50%;height:1.5px;margin-top:-.75px;background:currentColor}
+.arw i::after{content:"";position:absolute;right:1px;top:50%;width:7px;height:7px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:translate(0,-50%) rotate(45deg)}
+.arw i+i{transform:translateX(-120%);color:var(--rc)}
+.roll.hot .arw i:first-child{transform:translateX(120%);transition-delay:.05s}
+.roll.hot .arw i+i{transform:translateX(0);transition-delay:.22s}
+.roll .pm-lit{--lit:var(--rc)}
+.roll.hot .pm-lit,.roll:focus-visible .pm-lit{opacity:.55}
+.roll.sec.hot .pm-lit{opacity:.3}
+.roll-ring{position:absolute;inset:-7px;pointer-events:none;opacity:0;--k:20px;clip-path:polygon(var(--k) 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%,0 var(--k));
+  background:linear-gradient(var(--acc-text),var(--acc-text)) 0 0/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 100%/100% 2px no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 0 0/2px 100% no-repeat,linear-gradient(var(--acc-text),var(--acc-text)) 100% 0/2px 100% no-repeat}
+.roll:focus-visible .roll-ring{opacity:1}
+@media (max-width:520px),(max-height:480px){.roll{height:66px;font-size:12px;letter-spacing:.24em}.roll.sec{height:58px;font-size:11px}.roll-in{padding:0 36px 0 40px;gap:16px}.ch{margin-right:.02em}}
+@media (prefers-reduced-motion:reduce){.ch>span,.arw i{transition:none}}
+</style>
+</head>
+<body data-code="PEP-BTN-08" data-name="LETTER ROLL" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="roll pri" type="button" data-t="SHOP THE RANGE"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="roll-face pg" aria-hidden="true"></span><span class="roll-in"></span><span class="roll-ring" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="roll sec" type="button" data-t="READ THE JOURNAL"><span class="pm-lit" aria-hidden="true"><i></i></span><span class="roll-face pg" aria-hidden="true"></span><span class="roll-in"></span><span class="roll-ring" aria-hidden="true"></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.roll'));
+  els.forEach(function(el){
+    var t=el.dataset.t,box=el.querySelector('.roll-in');el.setAttribute('aria-label',t);
+    box.innerHTML='<span class="w" aria-hidden="true">'+[].map.call(t,function(c,i){return c===' '?'<span class="ch sp"></span>':'<span class="ch" style="--i:'+i+'"><span>'+c+'</span><span>'+c+'</span></span>'}).join('')+'</span><span class="arw" aria-hidden="true"><i></i><i></i></span>';
+    var on=function(){el.classList.add('hot')},off=function(){el.classList.remove('hot','press')};
+    el.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')on()});el.addEventListener('pointerleave',off);
+    el.addEventListener('focus',function(){if(el.matches(':focus-visible'))on()});el.addEventListener('blur',off);
+    el.addEventListener('pointerdown',function(e){el.classList.add('press');if(e.pointerType!=='mouse'){el.classList.toggle('hot')}});
+    var up=function(){el.classList.remove('press')};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+    el.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter')el.classList.add('press')});el.addEventListener('keyup',up);
+  });
+  /* idle demo while playing: roll in and back out every 5 s, one button at a time, until the pointer arrives */
+  var acc=0,i=0,touched=false;document.addEventListener('pointermove',function(){touched=true},{once:true});
+  PM.ambient(function(dt){if(touched)return;acc+=dt;if(acc>5){acc=0;var el=els[i++%els.length];el.classList.add('hot');setTimeout(function(){if(!touched)el.classList.remove('hot')},1900)}});
+})();
+</script>
+</body>
+</html>
