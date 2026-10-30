@@ -22,7 +22,7 @@ var DEFAULT_EMAIL = 'Gracet@live.ca';                             // ?email= in 
    keep:true pages stay loaded once opened; the others share one live window, so the browser never runs out of 3D (WebGL) slots. */
 var VIEWS = {
   site:    { label:'WEBSITE',           short:'SITE',      src:'../site/', keep:true },
-  dash:    { label:"GRACE'S DASHBOARD", short:'DASHBOARD', src:'../graces-dashboard/' },
+  dash:    { label:"GRACE'S DASHBOARD", short:'STUDIO',    src:'../graces-dashboard/' },
   client:  { label:'CLIENT SIDE',       short:'CLIENT',    src:'../client/' },
   colours: { label:'COLOURS',           short:'COLOURS',   src:'../dashboard-color/', fallback:'../graces-dashboard/', missing:'Colour options landing shortly' }
 };
@@ -251,6 +251,7 @@ html[data-motion="off"]{--pc-motion:0}
   --matte:#0b0b0c; --uv:#0d0b13; --ink:#ecedf1; --ink2:#c3c7cf; --mute:#9ba1aa; --dim:#7d828c;
   --chrome:#e6e8ec; --plat:#b8bdc7; --hair:rgba(222,226,234,.14); --hair2:rgba(222,226,234,.26);
   --acc:230 234 240;                     /* the lit edge: platinum until Grace picks a colour */
+  --acc-ink:color-mix(in srgb,rgb(var(--acc)) 55%,#fff);   /* accent for words: always readable on black */
   --fh:"PEPTICITY BLACK","Instrument Sans",ui-sans-serif,system-ui,sans-serif;
   --fb:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --pc-font:"PEPTICITY BLACK","Instrument Sans",Arial,sans-serif;
@@ -345,7 +346,7 @@ html.t3d .lg .pfb{visibility:hidden}
 .vtabs .pc-seg__opt.cue::before{animation:pc-sweep calc(var(--pc-dur-sweep) * var(--pc-motion)) var(--pc-ease-inout) 1 both}
 .vbar .sp{flex:1}
 .vnow{display:none;font:400 9px/1.3 var(--fh);letter-spacing:.26em;color:var(--mute);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.vnow b{font-weight:400;color:rgb(var(--acc))}
+.vnow b{font-weight:400;color:var(--acc-ink)}
 @media (min-width:1600px){.vnow{display:block}}
 .icon-btn.pc-btn{--h:46px;--c:10px;--px:0px;width:46px;flex:none}
 .icon-btn svg{width:15px;height:15px}
@@ -364,7 +365,7 @@ html.t3d .lg .pfb{visibility:hidden}
 .vnote i{width:6px;height:6px;flex:none;transform:rotate(45deg);background:rgb(var(--acc));box-shadow:0 0 10px rgb(var(--acc))}
 .vtoast{position:absolute;z-index:3;left:50%;bottom:20px;--c:8px;padding:11px 18px;transform:translate(-50%,12px);opacity:0;pointer-events:none;
   font:400 9.5px/1 var(--fh);letter-spacing:.28em;color:var(--ink);background-color:rgba(10,10,12,.55);transition:opacity .45s var(--ease),transform .6s var(--ease)}
-.vtoast b{font-weight:400;color:rgb(var(--acc))}
+.vtoast b{font-weight:400;color:var(--acc-ink)}
 .vtoast.on{opacity:1;transform:translate(-50%,0)}
 
 /* the question panel: smoke ground inside a hairline frame, glass tiles on top */
@@ -381,7 +382,7 @@ html.t3d .lg .pfb{visibility:hidden}
   border-top:1px solid rgba(222,226,234,.1);background:linear-gradient(180deg,rgba(10,10,12,.2),rgba(10,10,12,.5))}
 .pnav.off{display:none}
 .pnav .st{justify-self:center;text-align:center;font:400 9px/1.4 var(--fh);letter-spacing:.24em;color:var(--mute);text-transform:uppercase;min-width:0}
-.pnav .st b{font-weight:400;color:rgb(var(--acc))}
+.pnav .st b{font-weight:400;color:var(--acc-ink)}
 .pnav .pc-btn{--h:46px;--px:20px;--fs:10.5px;--ls:.22em}
 .pc-btn__label{display:inline-flex;align-items:center;gap:.8em;text-shadow:0 1px 0 rgba(0,0,0,.6)}
 .pc-btn .bk{display:inline-block;width:.95em;height:.95em;position:relative;margin-left:-.2em;background:linear-gradient(currentColor,currentColor) 50% 50%/100% 1.5px no-repeat;transition:transform var(--pc-dur-4) var(--pc-ease-out)}
@@ -518,7 +519,7 @@ html.t3d .lg .pfb{visibility:hidden}
 .sub-l{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:22px 0 10px;font:400 10px/1.3 var(--fh);letter-spacing:.24em;color:var(--ink2);text-transform:uppercase}
 .sub-l span{font-size:8.5px;color:var(--mute);letter-spacing:.22em}
 .acc-note{margin:10px 0 0;min-height:1.4em;font-size:13px;color:var(--mute);transition:color .4s}
-.acc-note.lit{color:rgb(var(--acc))}
+.acc-note.lit{color:var(--acc-ink)}
 .colour-dim .opts--dots{opacity:.55;transition:opacity .5s}
 /* busy / clean: a five-step scale with a density meter */
 .opt--step .opt__face{gap:14px}
@@ -539,7 +540,7 @@ html.t3d .lg .pfb{visibility:hidden}
 .opt--num[aria-checked="true"] .num{text-shadow:0 0 18px rgb(var(--acc) / .7)}
 .opt--num .opt__txt{display:none}
 .rate-cap{margin:14px 0 0;font:400 9.5px/1.4 var(--fh);letter-spacing:.24em;color:var(--mute);min-height:1.4em;text-transform:uppercase}
-.rate-cap b{font-weight:400;color:rgb(var(--acc))}
+.rate-cap b{font-weight:400;color:var(--acc-ink)}
 /* notes + fields */
 .note{margin-top:12px}
 .note-tg{display:inline-flex;align-items:center;gap:10px;padding:8px 0;border:0;background:none;cursor:pointer;font:400 9px/1 var(--fh);letter-spacing:.24em;color:var(--mute);text-transform:uppercase;transition:color .3s}
@@ -620,6 +621,7 @@ html.t3d .lg .pfb{visibility:hidden}
   .prog{display:none}
   .wrap{left:8px;right:8px;bottom:calc(84px + env(safe-area-inset-bottom));grid-template-columns:minmax(0,1fr)}
   .vbar{gap:6px}
+  .vbar .sp{display:none}
   .vtabs.pc-seg{--h:40px;--c:8px;--fs:8.5px;--ls:.13em;flex:1}
   .vtabs .pc-seg__opt{padding:0 4px}.vtabs .pc-seg__opt .l{display:none}.vtabs .pc-seg__opt .s{display:inline}
   .vnow{display:none}
