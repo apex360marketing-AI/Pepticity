@@ -3515,6 +3515,7 @@ function setAcc(i,how){
   try{localStorage.setItem('pep-acc',a.k)}catch(e){}
   try{var u=new URL(location.href);if(u.searchParams.has('acc')){u.searchParams.set('acc',a.k);history.replaceState(history.state,'',u.href)}}catch(e){}
   fromRgb=P.rgb.slice();toRgb=rgbOf(a.hex);fadeT=RM?1:0;if(RM)P.rgb=toRgb.slice();
+  HTML.style.setProperty('--acc-rgb',(RM||how==='init'?toRgb:P.rgb).join(','));   // --acc (registered colour) fades in CSS; --acc-rgb follows it here
   paintUI();
   if(how!=='init'){led.classList.remove('flare');void led.offsetWidth;led.classList.add('flare')}
   dispatchEvent(new CustomEvent('pep-acc',{detail:{slug:a.k,hex:a.hex}}));
@@ -3523,7 +3524,7 @@ function setAcc(i,how){
 ticks.push(function(dt){       // the 3D edge colour follows the page's 600 ms cross-fade
   if(fadeT>=1)return false;
   fadeT=Math.min(1,fadeT+dt/.6);var e=fadeT<.5?4*fadeT*fadeT*fadeT:1-Math.pow(-2*fadeT+2,3)/2;
-  P.rgb=fromRgb.map(function(v,j){return Math.round(v+(toRgb[j]-v)*e)});return fadeT<1;
+  P.rgb=fromRgb.map(function(v,j){return Math.round(v+(toRgb[j]-v)*e)});HTML.style.setProperty('--acc-rgb',P.rgb.join(','));return fadeT<1;
 });
 paintUI();
 /* click = next; hold = the full list */
