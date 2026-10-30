@@ -1,0 +1,133 @@
+/* =====================================================================
+   SELECTION STUDIO · MODULE RUNTIME (shared by every live module, inlined by modules/_build.py)
+   Brand tokens (PEPTICITY BLACK look), the accent layer (?acc=<slug> + postMessage {acc}),
+   play/pause (postMessage {cmd}), the smoke stage, the corner hint and reduced motion.
+   Ambient animation uses animation-play-state:var(--play) so the shell can pause it;
+   interaction feedback (hover, press, focus) always answers.
+   ===================================================================== */
+@property --acc{syntax:'<color>';inherits:true;initial-value:#d4ff3a}
+@property --acc-text{syntax:'<color>';inherits:true;initial-value:#d4ff3a}
+:root{
+  /* ground + metal (owner's BLACK image: wall #323232, metal #080807 to #8E8D85) */
+  --ground:#0b0b0c; --uv:#120f1a; --wall:#323232;
+  --ink:#eceef2; --ink2:#c3c7cf; --mute:#8c919b; --dim:#5d616a;
+  --chrome:#e6e8ec; --plat:#b8bdc7; --steel:#7d828c; --gun-0:#080807; --gun-1:#55544f; --gun-2:#8e8d85;
+  --hair:rgba(222,226,234,.14); --hair2:rgba(222,226,234,.26);
+  --uvglow:rgba(146,118,255,.16); --edge:#dcd6ff;
+  /* glass */
+  --g-fill-a:rgba(255,255,255,.075); --g-fill-b:rgba(255,255,255,.012);
+  --g-rim-hot:#ffffff; --g-rim-t:rgba(236,240,245,.70); --g-rim-s:rgba(200,207,216,.40); --g-rim-b:rgba(120,127,137,.42);
+  --g-blur:blur(12px) saturate(165%);
+  /* type */
+  --fh:"PEPTICITY BLACK","Instrument Sans",ui-sans-serif,system-ui,sans-serif;
+  --fc:"PEPTICITY BLACK CONDENSED","PEPTICITY BLACK",ui-sans-serif,system-ui,sans-serif;
+  --fs:"PEPTICITY BLACK SPLIT","PEPTICITY BLACK",ui-sans-serif,system-ui,sans-serif;
+  --fb:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* motion (motion-design-system tokens) */
+  --d1:120ms; --d2:200ms; --d3:320ms; --d4:560ms; --d5:900ms; --d-sweep:1500ms;
+  --e-out:cubic-bezier(.16,1,.3,1); --e-in:cubic-bezier(.7,0,.84,0); --e-io:cubic-bezier(.65,0,.35,1);
+  --e-spring:linear(0,.056,.174,.313,.472,.624,.759,.863,.951,1.015,1.056,1.079,1.088,1.087,1.079,1.066,1.054,1.04,1.027,1.016,1.007,1.001,.997,.994,.992,.992,.993,.994,.995,.996,.997,.998,.999,1);
+  --play:running; --m:1;
+  /* accent (one colour, picked by the client; text tint stays 4.5:1 on black) */
+  --acc:#D4FF3A; --acc-rgb:212,255,58; --acc-text:#D4FF3A;
+  --acc-hi:color-mix(in srgb,var(--acc) 62%,#fff);
+  --acc-dim:color-mix(in srgb,var(--acc) 58%,#16161a);
+  --acc-soft:color-mix(in srgb,var(--acc) 16%,transparent);
+  --acc-line:color-mix(in srgb,var(--acc) 72%,transparent);
+  --acc-bloom:color-mix(in srgb,var(--acc) 46%,transparent);
+  --acc-ink:#0b0b0c;
+  transition:--acc .6s var(--e-io),--acc-text .6s var(--e-io);
+  color-scheme:dark;
+}
+:root[data-acc="chartreuse"]{--acc:#D4FF3A;--acc-rgb:212,255,58;--acc-text:#D4FF3A;--acc-ink:#0b0b0c}
+:root[data-acc="blue"]{--acc:#0066FF;--acc-rgb:0,102,255;--acc-text:color-mix(in srgb,#0066FF 60%,#fff);--acc-ink:#fff}
+:root[data-acc="cyan"]{--acc:#0FFFFF;--acc-rgb:15,255,255;--acc-text:#0FFFFF;--acc-ink:#0b0b0c}
+:root[data-acc="red"]{--acc:#FF004F;--acc-rgb:255,0,79;--acc-text:color-mix(in srgb,#FF004F 65%,#fff);--acc-ink:#fff}
+:root[data-acc="violet"]{--acc:#6F00FF;--acc-rgb:111,0,255;--acc-text:color-mix(in srgb,#6F00FF 50%,#fff);--acc-ink:#fff}
+:root[data-acc="orchid"]{--acc:#8D029B;--acc-rgb:141,2,155;--acc-text:color-mix(in srgb,#8D029B 50%,#fff);--acc-ink:#fff}
+:root[data-acc="copper"]{--acc:#C46210;--acc-rgb:196,98,16;--acc-text:color-mix(in srgb,#C46210 65%,#fff);--acc-ink:#fff}
+:root[data-acc="salmon"]{--acc:#FA8072;--acc-rgb:250,128,114;--acc-text:#FA8072;--acc-ink:#0b0b0c}
+:root[data-acc="platinum"]{--acc:#E6E8EC;--acc-rgb:230,232,236;--acc-text:#E6E8EC;--acc-ink:#0b0b0c}
+:root[data-acc="violet"],:root[data-acc="orchid"],:root[data-acc="blue"]{--acc-hi:color-mix(in srgb,var(--acc) 52%,#fff)}
+:root[data-acc="red"]{--acc-hi:color-mix(in srgb,var(--acc) 76%,#fff)}
+:root.is-paused{--play:paused}
+:root.rm{--m:0}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--ground)}
+body{color:var(--ink);font:400 15px/1.5 var(--fb);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  min-height:100%;position:relative}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc-text);outline-offset:3px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+img{display:block;max-width:100%}
+
+/* ---------- the stage: matte + UV black, live silver smoke (BG-P01), a faint accent floor glow ---------- */
+.pm-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:radial-gradient(1200px 700px at 105% -10%,rgba(146,118,255,.10),transparent 60%),
+    radial-gradient(900px 600px at -10% 110%,rgba(146,118,255,.06),transparent 60%),
+    linear-gradient(118deg,var(--ground) 0%,var(--ground) 46%,#0d0b13 54%,#0d0b13 100%)}
+.pm-bg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pm-bg canvas.pc-nogl{display:none}
+.pm-bg::before{content:"";position:absolute;left:50%;bottom:-38%;width:120%;height:70%;transform:translateX(-50%);
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 9%,transparent),transparent 72%);opacity:.9}
+.pm-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 42%,rgba(0,0,0,.6) 100%)}
+.pm-grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:.5;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .58  0 0 0 0 .7  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.pm-main{position:relative;z-index:2;min-height:100%;height:100%;display:grid;place-items:center;padding:clamp(54px,9vh,88px) clamp(16px,4vw,56px)}
+
+/* ---------- corner chrome: the code tag (top left) and the hint (bottom right) ---------- */
+.pm-tag{position:fixed;left:clamp(12px,2.2vw,22px);top:clamp(12px,2.2vw,20px);z-index:20;display:flex;align-items:center;gap:10px;pointer-events:none;
+  font:400 9px/1 var(--fh);letter-spacing:.32em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+.pm-tag i{width:6px;height:6px;border-radius:50%;flex:none;background:var(--acc-hi);box-shadow:0 0 6px var(--acc),0 0 12px var(--acc-bloom)}
+.pm-tag b{font-weight:400;color:var(--ink2)}
+.pm-tag span{opacity:.5}
+.pm-hint{--c:7px;position:fixed;right:clamp(12px,2.2vw,22px);bottom:clamp(12px,2.2vw,20px);z-index:20;display:flex;align-items:center;gap:9px;height:30px;padding:0 12px 0 10px;
+  pointer-events:none;font:400 8.5px/1 var(--fh);letter-spacing:.32em;text-transform:uppercase;color:var(--ink2);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.6) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.45) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.3),rgba(244,246,250,.62) 45%,rgba(200,207,216,.3)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.4),rgba(200,207,216,.25) 50%,rgba(120,127,137,.4)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.45),rgba(120,127,137,.35)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.35),rgba(120,127,137,.35)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.015))}
+.pm-hint svg{width:15px;height:15px;flex:none;overflow:visible;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.pm-hint .pulse{transform-origin:center;transform-box:fill-box;animation:pmPulse 2.2s var(--e-io) infinite;animation-play-state:var(--play);stroke:var(--acc-hi)}
+@keyframes pmPulse{0%{opacity:.9;transform:scale(.6)}70%,100%{opacity:0;transform:scale(1.5)}}
+.pm-bare .pm-tag,.pm-nohint .pm-hint{display:none}
+
+/* ---------- shared PEPTICITY glass: chamfered, see-through, chrome hairline drawn as layers that follow the cut ---------- */
+.pg{--c:14px;position:relative;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),var(--g-rim-t) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),var(--g-rim-b) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,var(--g-rim-s),var(--g-rim-t) 30%,var(--g-rim-hot) 52%,var(--g-rim-t) 70%,var(--g-rim-s)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,var(--g-rim-b),var(--g-rim-s) 45%,var(--g-rim-b)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(var(--g-rim-t),var(--g-rim-b)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(var(--g-rim-s),var(--g-rim-b)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.09),transparent 46%),
+    linear-gradient(145deg,var(--g-fill-a),var(--g-fill-b))}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.pg{background-color:rgba(20,22,26,.86)}}
+
+/* ---------- the two-state stage for buttons: PRIMARY + SECONDARY ---------- */
+.pm-duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,6vw,96px);align-items:center;justify-items:center;width:min(1180px,100%)}
+.pm-cell{margin:0;display:grid;justify-items:center;gap:22px;min-width:0;width:100%}
+.pm-cap{font:400 9px/1 var(--fh);letter-spacing:.36em;text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:12px}
+.pm-cap::before,.pm-cap::after{content:"";width:28px;height:1px;background:linear-gradient(90deg,transparent,rgba(230,234,240,.3))}
+.pm-cap::after{transform:scaleX(-1)}
+.pm-cell.is-primary .pm-cap{color:var(--ink2)}
+.pm-cell.is-primary .pm-cap::before,.pm-cell.is-primary .pm-cap::after{background:linear-gradient(90deg,transparent,var(--acc-line))}
+@media (max-width:760px){.pm-duo{grid-template-columns:minmax(0,1fr);gap:clamp(30px,7vh,56px)}}
+
+/* ---------- reduced motion: the look stays, the travel stops ---------- */
+@media (prefers-reduced-motion:reduce){
+  :root{transition:none;--m:0}
+  .pm-hint .pulse{animation:none;opacity:.6;transform:none}
+}
+:root.rm .pm-hint .pulse{animation:none;opacity:.6}
