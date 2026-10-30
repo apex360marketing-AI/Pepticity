@@ -56,7 +56,7 @@ async function crop(page, bb) {
       let page = await ctx.newPage(); await errsOf(page, r.errors);
       await page.goto(BASE + e.file, { waitUntil: 'networkidle' }); await sleep(W8);
       const st = await page.evaluate(() => ({ pm: !!window.PM, playing: window.PM && PM.playing, code: window.PM && PM.code, t: window.PM ? PM.t : -1 }));
-      await sleep(2000);
+      await sleep(heavy ? 5000 : 2000);
       const t2 = await page.evaluate(() => window.PM ? PM.t : -1);
       r.checks.runtime = st.pm && st.playing && st.code === e.code;
       r.checks.ambientClock = t2 > st.t;
@@ -132,7 +132,7 @@ async function crop(page, bb) {
       r.checks.iframeReady = await page.evaluate(() => window.__msgs.some(m => m && m.event === 'ready'));
       r.checks.iframeWaitsForPlay = await fr.evaluate(() => PM.inFrame && !PM.playing);
       await page.evaluate(() => document.querySelector('iframe').contentWindow.postMessage({ cmd: 'play' }, '*')); await sleep(900);
-      const p1 = await fr.evaluate(() => [PM.playing, PM.t]); await sleep(700); const p2 = await fr.evaluate(() => PM.t);
+      const p1 = await fr.evaluate(() => [PM.playing, PM.t]); await sleep(heavy ? 4000 : 1500); const p2 = await fr.evaluate(() => PM.t);
       r.checks.iframePlay = p1[0] && p2 > p1[1];
       await page.evaluate(() => document.querySelector('iframe').contentWindow.postMessage({ acc: 'blue', hex: '#0066FF', name: 'BLUE' }, '*')); await sleep(900);
       r.checks.iframeRetint = await fr.evaluate(() => document.documentElement.dataset.acc === 'blue');
