@@ -23,6 +23,7 @@ function hexRgb(h) { h = String(h).replace('#', ''); return [parseInt(h.slice(0,
 function ico(id, cls) { return '<svg class="' + (cls || '') + '" aria-hidden="true"><use href="#' + id + '"/></svg>'; }
 var NUM = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'];
 function numWord(n) { return NUM[n] || String(n); }
+function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 'S'); }
 function cap1(s) { s = String(s || ''); return s.charAt(0) + s.slice(1).toLowerCase(); }
 function ease(v) { return 1 - Math.pow(1 - Math.min(1, Math.max(0, v)), 3); }
 function damp(c, t, l, dt) { return c + (t - c) * (1 - Math.exp(-l * dt)); }
@@ -204,7 +205,7 @@ function chapterStatus(c) {
   if (!live.length) return 'LOADING SOON';
   if (cr) return 'FINAL: ' + cr.code;
   var lv = live.filter(function (o) { return P(o.code).v === 'love'; }).length;
-  return (lv ? lv + ' LOVED · ' : '') + live.length + ' OPTIONS';
+  return (lv ? lv + ' LOVED · ' : '') + plural(live.length, 'OPTION');
 }
 function buildRail() {
   var html = '', g = null;
@@ -440,7 +441,7 @@ function render(c) {
   var live = liveOpts(c), all = BY[c.id] || [];
   if (c.kind === 'start') el.innerHTML = startHTML(c);
   else if (c.kind === 'accents' || c.kind === 'modules' || c.kind === 'set') {
-    var cnt = live.length ? live.length + ' OPTIONS' : 'LOADING SOON';
+    var cnt = live.length ? plural(live.length, 'OPTION') : 'LOADING SOON';
     var gcls = c.kind === 'set' ? (SETS[c.set] && SETS[c.set].orient === 'land' ? 'grid--land' : 'grid--port') : 'grid--m';
     el.innerHTML = headHTML(c, cnt + '<span class="sep"></span>LOVE ANY · CROWN ONE') +
       '<div class="grid ' + gcls + '">' + all.map(function (o, k) { return tileHTML(o, k, c); }).join('') + '</div>' + nextHTML(c);
@@ -534,7 +535,9 @@ function over(o, hint, isMod) {
   else if (o.kind === 'image') tryB = '<button class="pc-btn try" type="button" data-try aria-label="See ' + esc(o.code + ' ' + o.name) + ' full screen"><span class="pc-btn__face"><span class="pc-btn__label">' + ico('i-expand') + 'TRY IT</span></span></button>';
   return '<div class="tl__over"><div class="tl__row"><span style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip gx chip--code">' + esc(o.code) + '</span>' +
     (o.current ? '<span class="chip gx chip--cur">CURRENT PICK</span>' : '') + '<span class="chip gx chip--final">' + ico('i-crown') + 'FINAL PICK</span></span>' + tryB + '</div>' +
-    '<div class="tl__row">' + (hint ? '<span class="chip gx">' + ico(hint.i) + hint.t + '</span>' : '<span></span>') + (isMod ? '<span class="chip gx chip--live"><i></i><span data-livet>PAUSED</span></span>' : '') + '</div></div>';
+    '<div class="tl__row">' + (hint ? '<span class="chip gx">' + ico(hint.i) + hint.t + '</span>' : '<span></span>') +
+    (isMod ? '<span style="display:flex;gap:6px">' + (CH[o.ch] && CH[o.ch].replay ? '<button class="chip gx chip--btn" type="button" data-replay aria-label="Replay ' + esc(o.code) + '">' + ico('i-replay') + 'REPLAY</button>' : '') +
+      '<span class="chip gx chip--live"><i></i><span data-livet>PAUSED</span></span></span>' : '') + '</div></div>';
 }
 
 /* ---------------------------------------------------------------- picking */
@@ -698,6 +701,7 @@ function openStage(code) {
 function fillStage(o, dir) {
   var stg = $('#stg'), c = CH[o.ch], fr = $('#stgFrame'), hint = o.kind === 'image' ? { i: 'i-look', t: 'MOVE TO TILT · SCROLL TO ZOOM' } : (HINT[o.interact] || HINT.look);
   stg.setAttribute('data-code', o.code);
+  $('#stgReplay').hidden = !(o.kind === 'module' && c.replay);
   $('#stgEye').innerHTML = esc(c.title) + ' · <b>' + pad(ST.idx + 1) + '</b> / ' + pad(ST.list.length);
   $('#stgT').innerHTML = '<span>' + esc(o.code) + '</span><span style="color:var(--mute)">·</span><span>' + esc(o.name) + '</span><span class="chip gx stg__hint">' + ico(hint.i) + hint.t + '</span>' + (o.current ? '<span class="chip gx chip--cur">CURRENT PICK</span>' : '');
   $('#stgD').textContent = o.desc || '';
@@ -1059,6 +1063,8 @@ function bind() {
     if ((el = t.closest('.pk-seg [data-v]'))) { var r = el.closest('[data-code]'); if (r) pick(r.dataset.code, el.dataset.v); return; }
     if ((el = t.closest('[data-crown], #stgCrown'))) { var r2 = el.closest('[data-code]'); if (r2) crown(r2.dataset.code); return; }
     if ((el = t.closest('[data-shield]'))) { var tl = el.closest('.tl'); if (!FINE.matches) openStage(tl.dataset.code); else { tl.classList.add('engaged'); LV.engagedAt = scrollY || 1; LV.hover = tl; lvSchedule(); } return; }
+    if ((el = t.closest('[data-replay]'))) { var rt = el.closest('.tl'); if (rt && rt.__frame) { post(rt.__frame, { cmd: 'replay' }); LV.hover = rt; lvSchedule(); } return; }
+    if (t.closest('#stgReplay')) { if (ST.frame) { post(ST.frame, { cmd: 'replay' }); post(ST.frame, { cmd: 'play' }); } return; }
     if ((el = t.closest('[data-try]'))) { var r3 = el.closest('[data-code]'); if (r3) openStage(r3.dataset.code); return; }
     if ((el = t.closest('[data-use]'))) { var o = OPTS[el.closest('[data-code]').dataset.code]; if (o) setAccent(o.slug); return; }
     if ((el = t.closest('.note-tg'))) { var box = D.getElementById(el.getAttribute('aria-controls')), open = el.getAttribute('aria-expanded') !== 'true'; el.setAttribute('aria-expanded', open); box.hidden = !open; if (open) $('input', box).focus(); return; }

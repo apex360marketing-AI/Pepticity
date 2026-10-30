@@ -84,11 +84,13 @@ body{background:radial-gradient(80% 60% at 50% 40%,#16161b 0%,#0a0a0c 62%,#05050
       if (FX.rm) { T.lv = target; T.v = 0; }
       else { var k = 46, c = 9; T.v += ((target - T.lv) * k - T.v * c) * dt; T.lv += T.v * dt; }   /* a small spring: it overshoots a touch and settles */
       if (!FX.rm) { var kick = Math.abs(T.v) * 2; T.wv += (-(T.wob) * 60 - T.wv * 6 + kick * 20) * dt; T.wob += T.wv * dt; }
+      if (Math.abs(target - T.lv) < 5e-4 && Math.abs(T.v) < 5e-3) { T.lv = target; T.v = 0; }
+      if (Math.abs(T.wob) < 4e-3 && Math.abs(T.wv) < 2e-2) { T.wob = 0; T.wv = 0; }
       T.col.style.setProperty('--lv', Math.max(0, T.lv).toFixed(4));
       T.vial.style.setProperty('--lv', Math.max(0, T.lv).toFixed(4));
       T.col.style.setProperty('--wob', (1 + FX.clamp(T.wob, -0.6, 0.6) + (FX.rm ? 0 : Math.sin(t * 2.2 + i) * 0.08)).toFixed(3));
       T.col.style.setProperty('--gl', FX.rm ? '0' : ((t * 0.22 + i * 0.33) % 1 * 1.4 - 0.2).toFixed(3));
-      if (Math.abs(target - T.lv) > 1e-4 || Math.abs(T.v) > 1e-4 || Math.abs(T.wob) > 1e-3) busy = true;
+      if (T.lv !== target || T.v !== 0 || T.wob !== 0) busy = true;
     });
     return busy;
   });

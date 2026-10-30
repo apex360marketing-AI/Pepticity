@@ -27,13 +27,13 @@
     mobile: innerWidth < 900, coarse: matchMedia('(pointer: coarse)').matches,
     clamp: clamp,
     lerp: function (a, b, t) { return a + (b - a) * t; },
-    damp: function (c, t, l, dt) { return rm || snap ? t : c + (t - c) * (1 - Math.exp(-l * dt)); },
+    damp: function (c, t, l, dt) { if (rm || snap) return t; var r = c + (t - c) * (1 - Math.exp(-l * dt)); return Math.abs(t - r) < 1e-4 ? t : r; },
     ss: function (a, b, v) { v = clamp((v - a) / (b - a), 0, 1); return v * v * (3 - 2 * v); },
     ease: function (v) { v = clamp(v, 0, 1); return v * v * v * (v * (v * 6 - 15) + 10); },
     acc: { slug: 'chartreuse', hex: ACC.chartreuse, rgb: [212, 255, 58] }
   };
   if (rm) D.classList.add('rm');
-  if (q.get('chrome') === '0') D.classList.add('fx-bare');
+  if (q.get('chrome') === '0' || q.get('bare') === '1') D.classList.add('fx-bare');
   if (q.get('hint') === '0') D.classList.add('fx-nohint');
 
   function post(msg) { if (embedded) try { parent.postMessage(msg, '*'); } catch (e) { } }
@@ -121,7 +121,7 @@
     S.to = function (p) { var m = el.scrollHeight - el.clientHeight; el.scrollTop = p * m; read(); };
     var phase = 0, period = opt.tourPeriod || 16;
     FX.loop(function (dt, t, now, live) {
-      var tourOn = tourForced === 1 || (tourForced === 0 && embedded && opt.tour !== false);
+      var tourOn = tourForced === 1 || (tourForced === 0 && embedded && q.get('in') !== 'stage' && opt.tour !== false);   /* tiles demo themselves; TRY IT (in=stage) waits for the visitor */
       var want = live && tourOn && now - idleAt > 2600;
       if (want && !S.touring) { S.touring = true; phase = Math.acos(clamp(1 - 2 * S.raw, -1, 1)); }
       if (!want) S.touring = false;

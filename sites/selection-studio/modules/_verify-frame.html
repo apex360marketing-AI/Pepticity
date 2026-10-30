@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>module in an iframe · verifier harness</title>
+<style>html,body{margin:0;background:#050506}iframe{display:block;margin:20px;border:0;background:#000}</style>
+</head>
+<body>
+<script>
+/* hosts one module the way the studio does (a fixed-size iframe) and records what it posts back */
+window.__msgs=[];addEventListener('message',function(e){window.__msgs.push(e.data)});
+var q=new URLSearchParams(location.search),f=document.createElement('iframe');
+f.width=q.get('w')||640;f.height=q.get('h')||400;f.src=q.get('src');f.title='module';document.body.appendChild(f);
+</script>
+</body>
+</html>

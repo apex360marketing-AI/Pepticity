@@ -180,7 +180,7 @@ else {
     st.draw(scene, cam);
     return !!drag || Math.abs(dragV) > 1e-3 || hoverT > 1e-3 && hoverT < 0.999;
   });
-  window.__fx3d = { st, get hover() { return hover; } };
+  window.__fx3d = { st, get hover() { return hover; }, cityXY(i) { cities[i].core.getWorldPosition(cpos); v.copy(cpos).project(cam); return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]; } };
 }
 </script>
 </body>

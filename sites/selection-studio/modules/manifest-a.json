@@ -1,0 +1,237 @@
+{
+ "_about": "SELECTION STUDIO · module library A (effects, entrances, backgrounds, emblems). Every file is a standalone live module: ?acc=<slug|hex> or postMessage({acc}) re-tints it, postMessage({cmd:'play'|'pause'}) runs or holds its loop (standalone pages play at once, embedded ones wait for play or ?play=1), postMessage({cmd:'replay'}) replays an entrance or steps a scene, and each module posts {pep:'ready', code, interact} to its parent. Scroll modules have their own internal scroller and, inside a tile (not in=stage), scrub themselves slowly when left alone. ?hint=0 / ?chrome=0 hide the corner hint / code tag; ?rm=1 forces the reduced-motion still. Shared runtime: _shared/fx-kit.css + fx-kit.js; 3D: _shared/type3d.mjs (brand type engine) + fx3d.mjs; assets: _assets/ (rebuilt by _build/build_assets.py). Serve over http(s): the 3D modules use ES modules.",
+ "accents": ["chartreuse", "blue", "cyan", "red", "violet", "orchid", "copper", "salmon", "platinum"],
+ "modules": [
+  {
+   "code": "OBJ-08",
+   "cat": "effects",
+   "name": "SCROLL-TO-SPIN EMBLEM",
+   "desc": "The real 3D PEPTICITY coin turns as you scroll, from edge-on to face-on through three short chapters, then lands flat with one sweep of light.",
+   "file": "effects/OBJ-08.html",
+   "interact": "scroll",
+   "source": "APEX OBJ-08 Black-Chrome Monogram (owner pick: 'rotates as they scroll'); coin geometry from sites/dashboard-color startMark() via the brand type engine; BG-P01 smoke ground",
+   "weight": "Heavy",
+   "motionSafe": true
+  },
+  {
+   "code": "SCR-04",
+   "cat": "effects",
+   "name": "SIDEWAYS GALLERY",
+   "desc": "Scrolling down walks you sideways along a curved wall of five framed rooms from the PEPTICITY films; the frames lean with your speed and the middle one lights up.",
+   "file": "effects/SCR-04.html",
+   "interact": "scroll",
+   "source": "APEX SCR-04 Sideways Journey (horizontal pinned scroll), rebuilt for PEPTICITY with Higgsfield stills: city, doors, lab, case, vial",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "SCR-101",
+   "cat": "effects",
+   "name": "FLIPBOOK SCRUB: THE CASE",
+   "desc": "The chest film plays frame by frame under your scroll: forward opens the case and the vial rises with the swirl, back closes it again.",
+   "file": "effects/SCR-101.html",
+   "interact": "scroll",
+   "source": "APEX library SCR-101 Flipbook Scrub (owner maybe-pick) on the Higgsfield chest film sites/main/media/chest-black.mp4 (121 frames)",
+   "weight": "Heavy",
+   "motionSafe": true
+  },
+  {
+   "code": "SCR-16",
+   "cat": "effects",
+   "name": "EXPLODED VIAL",
+   "desc": "The PEPTICITY vial comes apart in depth as you scroll: cap, crimp seal and glass separate, the lettering lifts off the label, and each part is named.",
+   "file": "effects/SCR-16.html",
+   "interact": "scroll",
+   "source": "APEX SCR-16 Exploded Layers (owner yes, 29 Oct) and sites/main/v2 exploded vial, on layers of the approved Higgsfield bottle brand/vial-hf",
+   "weight": "Light",
+   "motionSafe": true
+  },
+  {
+   "code": "LAY-23",
+   "cat": "effects",
+   "name": "MERCURY VIALS",
+   "desc": "Three PEPTICITY vials, one per way to belong: liquid silver rises inside each glass, and lifts higher when you point at one.",
+   "file": "effects/LAY-23.html",
+   "interact": "hover",
+   "source": "APEX LAY-23 Mercury Vials (owner yes) and sites/main/v2 tiers, with the approved Higgsfield bottle",
+   "weight": "Light",
+   "motionSafe": true
+  },
+  {
+   "code": "SCR-17",
+   "cat": "effects",
+   "name": "WORD PORTAL FLY-THROUGH",
+   "desc": "Scroll flies the camera straight through the word PEPTICITY and down through the night city to the PEPTICITY doors.",
+   "file": "effects/SCR-17.html",
+   "interact": "scroll",
+   "source": "APEX SCR-17 Word Portal + SCR-07 Skyline Dive (owner yes) from sites/main/v2; Higgsfield city film frames (frames-hd black-weave) and the v2 door-sign plaque table",
+   "weight": "Heavy",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-EFX-01",
+   "cat": "effects",
+   "name": "SCROLL-LIT GLASS",
+   "desc": "See-through glass cards over moving silver smoke: each one catches the light as it reaches the middle of the screen and a streak runs round its edge.",
+   "file": "effects/PEP-EFX-01.html",
+   "interact": "scroll",
+   "source": "sites/dashboard-color card halos + light streak (30 Oct), BG-P01 smoke ground",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "TXT-104",
+   "cat": "effects",
+   "name": "SCATTER ASSEMBLE IN 3D",
+   "desc": "Nine PEPTICITY letters in the approved 3D lettering tumble in front of a matte wall and fly together into the word as you scroll, shadows and all.",
+   "file": "effects/TXT-104.html",
+   "interact": "scroll",
+   "source": "APEX library TXT-104 Scatter Assemble, rebuilt in real 3D with brand/font/type3d-engine.js (PEPTICITY STUDIO look, wall scene from sites/brand-font)",
+   "weight": "Heavy",
+   "motionSafe": true
+  },
+  {
+   "code": "HOV-17",
+   "cat": "effects",
+   "name": "EARTH AND NETWORK",
+   "desc": "A lit earth turns with Canada facing you; PEPTICITY cities glow, linked by arcs of light. Point at a city and it lights every city it links to.",
+   "file": "effects/HOV-17.html",
+   "interact": "hover",
+   "source": "APEX HOV-17 Wax Seal Atlas (owner yes: 'love the earth... nodes and edges') and sites/main/v2 gl3d.js earth + network; NASA public-domain textures",
+   "weight": "Heavy",
+   "motionSafe": true
+  },
+  {
+   "code": "FRM-02",
+   "cat": "effects",
+   "name": "GLASS MEMBER CARD",
+   "desc": "A thick frosted-glass PEPTICITY card in real 3D: it leans toward your pointer like a magnet, turns when you drag it, flips when you tap and engraves your name.",
+   "file": "effects/FRM-02.html",
+   "interact": "drag",
+   "source": "APEX FRM-02 Live Member Card (owner yes, 29 Oct); sites/main/v2/card3d.js glass card with the approved P mark chip",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-ENT-01",
+   "cat": "entrances",
+   "name": "WINDOWS FROM EVERY ANGLE",
+   "desc": "The page arrives as glass windows flying in from every angle, from deep behind, the sides, above and below, and locks into the landing page.",
+   "file": "entrances/PEP-ENT-01.html",
+   "interact": "tap",
+   "source": "Owner's idea ('windows sliding in from different angles'), GSAP 3.15 timeline with Higgsfield stills",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-ENT-02",
+   "cat": "entrances",
+   "name": "THE DOORS OPEN",
+   "desc": "The site opens on the PEPTICITY doors: lights up, the plaque glows, a scan runs down the steel, the doors swing in and you walk through the light.",
+   "file": "entrances/PEP-ENT-02.html",
+   "interact": "tap",
+   "source": "sites/main/v2 scanner and doors (owner note: grand, top-secret doors), on the Higgsfield doors still; GSAP 3.15",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "TRN-03",
+   "cat": "entrances",
+   "name": "SCAN WIPE",
+   "desc": "How one page hands over to the next: a bright scan line runs down the screen with the new page above it and the old one dimming below.",
+   "file": "entrances/TRN-03.html",
+   "interact": "tap",
+   "source": "APEX TRN-03 Scan Wipe, turned into a page-to-page transition with Higgsfield stills",
+   "weight": "Light",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-ENT-03",
+   "cat": "entrances",
+   "name": "TILE TO PAGE MORPH",
+   "desc": "Tap a tile and its picture grows into the full page while its title glides into place; back shrinks it home again.",
+   "file": "entrances/PEP-ENT-03.html",
+   "interact": "tap",
+   "source": "Browser View Transitions API (shared-element morph) with a Web Animations fallback; Higgsfield stills",
+   "weight": "Light",
+   "motionSafe": true
+  },
+  {
+   "code": "BG-P01",
+   "cat": "backgrounds",
+   "name": "ARSENAL SMOKE",
+   "desc": "Liquid black-and-silver smoke that drifts slowly and ripples under your pointer, under a faint 30-degree chevron watermark.",
+   "file": "backgrounds/BG-P01.html",
+   "interact": "hover",
+   "source": "brand/ui/smoke-bg.js (BG-P01, the Arsenal and live-site ground) + the R093 30-degree watermark",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-BGD-01",
+   "cat": "backgrounds",
+   "name": "DASHBOARD SMOKE",
+   "desc": "Matte black meets UV black, silver smoke drifts through, a fine hexagon lattice floats in the middle and the nodes near your pointer light up and join.",
+   "file": "backgrounds/PEP-BGD-01.html",
+   "interact": "hover",
+   "source": "sites/dashboard-color ground: BG-P01 smoke + 30-degree lattice + the cursor tool's node light",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-BGD-02",
+   "cat": "backgrounds",
+   "name": "HELIX FIELD",
+   "desc": "The peptide swirl from the bottle as a slow field of bead helices floating in the dark, a few beads carrying your colour along the strands.",
+   "file": "backgrounds/PEP-BGD-02.html",
+   "interact": "hover",
+   "source": "New for the studio (three.js r160 points), after the peptide swirl on the approved bottle and the v2 member card etch",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-BGD-03",
+   "cat": "backgrounds",
+   "name": "MATTE WALL, LIGHT SWEEP",
+   "desc": "The matte gunmetal wall from your BLACK image with a slow gallery light sweeping across it and a second light that follows your pointer.",
+   "file": "backgrounds/PEP-BGD-03.html",
+   "interact": "hover",
+   "source": "Owner's BLACK image colours (wall #323232, brand/reference-kit), CSS only",
+   "weight": "Light",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-EMB-01",
+   "cat": "emblems",
+   "name": "THE SPINNING COIN",
+   "desc": "The PEPTICITY coin turns slowly on display against the matte wall; it speeds up when you point, spins when you flick it and turns over when you tap.",
+   "file": "emblems/PEP-EMB-01.html",
+   "interact": "drag",
+   "source": "OBJ-08 emblem coin as built for the dashboards (sites/dashboard-color startMark) via the brand type engine",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "PEP-EMB-02",
+   "cat": "emblems",
+   "name": "THE 3D P",
+   "desc": "The approved PEPTICITY P in matte gunmetal stands off the wall with its shadow, leans toward your pointer and turns all the way round as you scroll.",
+   "file": "emblems/PEP-EMB-02.html",
+   "interact": "scroll",
+   "source": "LOGO_P glyph (dashboard glyph table, approved P mark) extruded by brand/font/type3d-engine.js on the sites/brand-font wall",
+   "weight": "Medium",
+   "motionSafe": true
+  },
+  {
+   "code": "TXT-13",
+   "cat": "emblems",
+   "name": "RISING WORDMARK",
+   "desc": "Scroll to the foot of the page and PEPTICITY rises letter by letter out of a lit slot in the floor, then one band of light runs across it.",
+   "file": "emblems/TXT-13.html",
+   "interact": "scroll",
+   "source": "APEX TXT-13 Rising Wordmark (owner yes) and the sites/main/v2 footer, in real 3D with the brand type engine",
+   "weight": "Medium",
+   "motionSafe": true
+  }
+ ]
+}

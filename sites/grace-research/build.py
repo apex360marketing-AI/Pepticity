@@ -8,7 +8,7 @@ import markdown
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SITE = ROOT / "sites/grace-research"
-EXCLUDE = re.compile(r"(REQUEST-LEDGER|effect-picks|prompt|BRAIN)", re.I)
+EXCLUDE = re.compile(r"(REQUEST-LEDGER|effect-picks|prompt|BRAIN|AUDIT|BROWSER-DESKTOP|SELECTION-STUDIO|checklist)", re.I)  # never publish owner-internal docs
 
 # order: playbooks first, then research, then anything new that lands in the folders
 PREFERRED = ["SALES-PLAYBOOK.md", "DASHBOARD-NEXT-LEVEL-PLAYBOOK.md", "HOOKS-DEEP-DIVE.md", "lead-magnet-hooks.md", "quiz-and-guide-research.md"]
