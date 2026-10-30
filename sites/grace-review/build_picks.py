@@ -113,17 +113,23 @@ def build_set(cfg):
         m = re.search(r"\d+", str(n))
         n = f"{int(m.group()):02d}" if m else f"{i + 1:02d}"
         name = first(it, "name", "title", "label", default=f"{cfg['unit'].title()} {n}")
-        tag = first(it, "type", "kind", "material", "style", "group", "base", "variant", default="")
-        fin = str(first(it, "finish", default="")).strip()
-        if not tag and fin and len(fin) <= 18:
-            tag, fin = fin, ""
+        # short words become a tag chip on the picture, long ones the one-line description under the name
+        texts = [str(it[k]).strip() for k in ("desc", "description", "finish", "style", "blurb", "summary", "caption", "material")
+                 if isinstance(it.get(k), str) and it[k].strip()]
+        long_t = [t for t in texts if len(t) > 18]
+        tag = first(it, "type", "kind", "group", "base", "variant", default="")
+        if not tag:
+            short_t = [t for t in texts if len(t) <= 18]
+            tag = short_t[0] if short_t else ""
+        if not tag and isinstance(it.get("clear"), bool):
+            tag = "SEE-THROUGH" if it["clear"] else "BLACK"
         if len(str(tag)) > 18:
             tag = ""
         status = str(first(it, "status", "state", default="")).lower()
         current = bool(first(it, "current", "approved", "current_pick", "currentPick", "is_current", "pick", default=False)) \
             or status in ("approved", "current", "current pick", "current_pick")
         items.append(dict(
-            n=n, name=title_case(name), desc=re.sub(r"\s*#[0-9A-Fa-f]{6}\b", "", str(first(it, "desc", "description", "blurb", "summary", "caption", default=fin))).strip(),
+            n=n, name=title_case(name), desc=re.sub(r"\s*#[0-9A-Fa-f]{6}\b", "", long_t[0] if long_t else "").strip(),
             tag=str(tag).replace("_", " ").upper().strip() if tag else "",
             src=f"assets/{cfg['id']}/{dst.name}", thumb=thumb_rel, w=w, h=h, current=current))
     if not items:
