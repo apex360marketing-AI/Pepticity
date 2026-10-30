@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-BGD-01 · DASHBOARD SMOKE · PEPTICITY</title>
+<meta name="fx-code" content="PEP-BGD-01"><meta name="fx-interact" content="hover">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/button.css">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* PEP-BGD-01 DASHBOARD SMOKE (sites/dashboard-color ground): matte black meeting UV black on a 118-degree split, the silver
+   smoke drifting through it, a fine 30-degree hexagon lattice drifting in the middle, and a node light under your pointer:
+   the lattice points near it glow and join up in your colour. Click or tap for a ripple through the nodes. */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:
+   radial-gradient(1200px 700px at 105% -10%,rgba(146,118,255,.10),transparent 60%),
+   radial-gradient(900px 600px at -10% 110%,rgba(146,118,255,.06),transparent 60%),
+   linear-gradient(118deg,#0b0b0c 0%,#0b0b0c 46%,#0d0b13 54%,#0d0b13 100%)}
+.bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 42%,transparent 45%,rgba(2,2,3,.55) 100%)}
+#smoke{position:absolute;inset:0;width:100%;height:100%}
+#smoke.pc-nogl{display:none}
+.lattice{position:absolute;left:50%;top:50%;width:260vmax;height:260vmax;margin:-130vmax 0 0 -130vmax;transform:rotate(30deg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='291' viewBox='0 0 84 145.5'%3E%3Cg fill='none' stroke-width='.45'%3E%3Cpath stroke='%23dfe3ea' stroke-opacity='.07' d='M42 0v24.25L21 36.4 21 60.6 42 72.75 63 60.6V36.4L42 24.25M0 36.4l21 0M63 36.4h21'/%3E%3Cpath stroke='%23c4cad2' stroke-opacity='.07' d='M42 72.75v24.25L21 109.1v24.25L42 145.5l21-12.15V109.1L42 97M0 109.1h21M63 109.1h21'/%3E%3C/g%3E%3Cg%3E%3Ccircle cx='42' cy='24.25' r='.9' fill='%23e6e8ec' fill-opacity='.12'/%3E%3Ccircle cx='42' cy='97' r='.9' fill='%23e6e9ed' fill-opacity='.12'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:168px 291px;animation:drift 120s linear infinite;animation-play-state:var(--play);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0,#000 22%,transparent 48%);mask-image:radial-gradient(circle at 50% 50%,#000 0,#000 22%,transparent 48%)}
+@keyframes drift{to{background-position:168px 582px}}
+#nodes{position:absolute;inset:0;width:100%;height:100%}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-BGD-01</b><span>DASHBOARD SMOKE</span></div>
+<div class="bg" aria-hidden="true"><canvas id="smoke"></canvas><div class="lattice"></div><canvas id="nodes"></canvas></div>
+<section class="bg-sample">
+  <p class="fx-eyebrow">MATTE AND UV BLACK · LATTICE · NODE LIGHT</p>
+  <h2 class="fx-h fx-chrome">PEPTICITY</h2>
+  <div class="fx-glass bg-card"><b>THE GROUND BEHIND EVERY PAGE</b><span>Move your pointer over it: the nodes near it light up and join.</span>
+    <button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></div>
+</section>
+<script src="../_shared/fx-kit.js"></script>
+<script src="../_shared/smoke.js"></script>
+<script>
+(function () {
+  FX.hint('hover', FX.coarse ? 'TAP' : 'HOVER');
+  var smoke = window.PCSmoke ? PCSmoke(document.getElementById('smoke'), { mode: 'black', offset: 8, held: !FX.playing || FX.rm }) : null;
+  addEventListener('fx:play', function () { if (smoke && smoke.play && !FX.rm) smoke.play(); });
+  addEventListener('fx:pause', function () { if (smoke && smoke.pause) smoke.pause(); });
+  /* the node light (dashboard-color cursor tool, background part): a 30-degree triangular lattice of nodes; near the pointer
+     they light and join, a click sends a ripple. When nobody points (and it plays) a slow light wanders on its own. */
+  var cv = document.getElementById('nodes'), ctx = cv.getContext('2d'), nodes = [], pairs = [], W = 0, H = 0, ripples = [], I = 0, mx = -999, my = -999, wx = 0, wy = 0;
+  function build() {
+    var dpr = Math.min(devicePixelRatio || 1, 1.5); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    nodes = []; pairs = []; var sp = FX.mobile ? 120 : 170, ang = Math.PI / 6, ca = Math.cos(ang), sa = Math.sin(ang), R = Math.hypot(W, H) / 2 + sp, seed = 7;
+    var rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    for (var j = -Math.ceil(R / (sp * .866)); j <= Math.ceil(R / (sp * .866)); j++) for (var i = -Math.ceil(R / sp); i <= Math.ceil(R / sp); i++) {
+      var gx = i * sp + (j & 1 ? sp / 2 : 0), gy = j * sp * .866, x = W / 2 + gx * ca - gy * sa + (rnd() - .5) * 30, y = H / 2 + gx * sa + gy * ca + (rnd() - .5) * 30;
+      if (x > -40 && x < W + 40 && y > -40 && y < H + 40) nodes.push({ x: x, y: y, a: 0 });
+    }
+    for (var a = 0; a < nodes.length; a++) for (var b = a + 1; b < nodes.length; b++) { var d = Math.hypot(nodes[a].x - nodes[b].x, nodes[a].y - nodes[b].y); if (d < sp * 1.2) pairs.push([a, b]); }
+    FX.wake();
+  }
+  build(); addEventListener('resize', build);
+  addEventListener('pointerdown', function (e) { ripples.push({ x: e.clientX, y: e.clientY, t0: performance.now() }); if (ripples.length > 4) ripples.shift(); FX.wake(); });
+  var dirty = false;
+  FX.loop(function (dt, t, now, live) {
+    var P = FX.pointer, ptr = P.inside && P.type === 'mouse';
+    /* the wandering light for tiles and touch screens */
+    var wander = live && !ptr;
+    if (ptr) { mx = P.x; my = P.y; } else if (wander) { wx = W * (0.5 + 0.32 * Math.sin(t * 0.21)); wy = H * (0.5 + 0.26 * Math.sin(t * 0.33 + 1)); mx = wx; my = wy; }
+    I = FX.damp(I, ptr ? 1 : wander ? 0.85 : 0, 5, dt);
+    ripples = ripples.filter(function (r) { return now - r.t0 < 1400; });
+    if (I > 0.004 || ripples.length) {
+      ctx.clearRect(0, 0, W, H); dirty = true;
+      var a3 = FX.acc.rgb, ac = a3.join(',');
+      if (I > 0.004) { var g = ctx.createRadialGradient(mx, my, 0, mx, my, 280); g.addColorStop(0, 'rgba(226,224,240,' + (.075 * I) + ')'); g.addColorStop(.45, 'rgba(' + ac + ',' + (.04 * I) + ')'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(mx - 280, my - 280, 560, 560); }
+      for (var k = 0; k < nodes.length; k++) { var n = nodes[k], d = Math.hypot(n.x - mx, n.y - my), a = I * Math.pow(Math.max(0, 1 - d / 260), 1.5);
+        for (var q = 0; q < ripples.length; q++) { var rp = ripples[q], e = (now - rp.t0) / 1400, rr = e * Math.max(W, H) * .75, dd = Math.hypot(n.x - rp.x, n.y - rp.y); a += Math.max(0, 1 - Math.abs(dd - rr) / 70) * (1 - e) * .9; }
+        n.a = Math.min(1, a); }
+      ctx.lineWidth = 1;
+      for (var p = 0; p < pairs.length; p++) { var A = nodes[pairs[p][0]], B = nodes[pairs[p][1]], la = Math.min(A.a, B.a); if (la < .02) continue;
+        ctx.strokeStyle = 'rgba(' + ac + ',' + (la * .42).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke(); }
+      for (k = 0; k < nodes.length; k++) { n = nodes[k]; if (n.a < .02) continue; d = Math.hypot(n.x - mx, n.y - my);
+        if (I > .05 && d < 200) { ctx.strokeStyle = 'rgba(240,242,246,' + (I * (1 - d / 200) * .3).toFixed(3) + ')'; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(n.x, n.y); ctx.stroke(); ctx.setLineDash([]); }
+        ctx.fillStyle = 'rgba(' + ac + ',' + (n.a * .26).toFixed(3) + ')'; ctx.beginPath(); ctx.arc(n.x, n.y, 3 + n.a * 6, 0, 6.283); ctx.fill();
+        ctx.fillStyle = 'rgba(244,245,248,' + (n.a * .95).toFixed(3) + ')'; ctx.beginPath(); ctx.arc(n.x, n.y, 1 + n.a * 1.6, 0, 6.283); ctx.fill(); }
+    } else if (dirty) { ctx.clearRect(0, 0, W, H); dirty = false; }
+    return ripples.length > 0 || (I > 0.004 && I < 0.996);
+  });
+})();
+</script>
+</body>
+</html>

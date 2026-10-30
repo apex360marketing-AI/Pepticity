@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-ENT-03 · TILE TO PAGE MORPH · PEPTICITY</title>
+<meta name="fx-code" content="PEP-ENT-03"><meta name="fx-interact" content="tap">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/button.css">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* PEP-ENT-03 TILE TO PAGE MORPH (View Transitions): tap a tile and its picture grows into the full page while its title
+   glides into place as the page heading; BACK shrinks it home again. Built on the browser's View Transitions, with a
+   hand-made fallback where they are not available. */
+body{background:radial-gradient(90% 80% at 50% 40%,#141419 0%,#09090b 62%,#050506 100%)}
+.grid{position:fixed;inset:clamp(64px,11vh,110px) clamp(16px,5vw,72px) clamp(56px,9vh,84px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1.6vw,22px);align-content:center}
+.head{position:fixed;left:clamp(16px,5vw,72px);top:clamp(40px,6vh,58px);display:grid;gap:10px}
+.head .fx-h{font-size:clamp(20px,2.4vw,34px)}
+.tile{--c:14px;position:relative;aspect-ratio:3/4.2;border:0;padding:0;cursor:pointer;background:#0b0b0d;overflow:hidden;color:inherit;text-align:left;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));transition:transform .5s var(--e-out)}
+.tile:hover{transform:translateY(-6px)}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none;transition:scale .8s var(--e-out)}
+.tile:hover img{scale:1.05}
+.tile .sh{position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,5,7,.85),transparent 55%)}
+.tile .t{position:absolute;left:16px;right:16px;bottom:16px;display:grid;gap:6px}
+.tile b{font:400 clamp(12px,1.2vw,16px)/1.1 var(--fh);letter-spacing:.16em;width:max-content}
+.tile span{font:400 8.5px var(--fh);letter-spacing:.3em;color:var(--acc-text)}
+.tile .rim{position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(230,234,240,.16);transition:box-shadow .4s}
+.tile:hover .rim,.tile:focus-visible .rim{box-shadow:inset 0 0 0 1px var(--acc-line),inset 0 0 30px var(--acc-soft)}
+.detail{position:fixed;inset:0;z-index:5;display:none}
+.detail.on{display:block}
+.detail .img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}
+.detail .sh{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,7,.9) 0%,rgba(5,5,7,.5) 46%,rgba(5,5,7,.08) 100%),linear-gradient(0deg,rgba(5,5,7,.6),transparent 40%)}
+.detail .tx{position:absolute;left:clamp(20px,6vw,96px);top:50%;transform:translateY(-50%);display:grid;gap:16px;max-width:min(560px,86vw)}
+.detail h2{margin:0;font:400 clamp(40px,6.6vw,104px)/.95 var(--fh);letter-spacing:.06em;width:max-content;max-width:100%}
+.detail p{margin:0;color:var(--ink2);font-size:clamp(14px,1.2vw,17px);max-width:40ch}
+.detail .back{position:fixed;right:clamp(16px,4vw,56px);top:clamp(14px,2.4vh,22px);z-index:6}
+.vialbg{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(50% 40% at 50% 72%,rgba(220,226,240,.14),transparent 70%),linear-gradient(180deg,#0d0d11,#050506)}
+.vialbg img{position:absolute;left:50%;top:11%;height:78%;width:auto;max-width:none;object-fit:contain;transform:translateX(-50%)}
+.detail .vialbg{left:auto;width:55%}
+::view-transition-group(*){animation-duration:.75s;animation-timing-function:cubic-bezier(.65,0,.35,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
+@media (max-width:760px){.head .fx-h{font-size:17px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));inset:128px 14px 64px;align-content:start}.tile{aspect-ratio:3/3.6}.detail .vialbg{width:100%;opacity:.6}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-ENT-03</b><span>TILE TO PAGE MORPH</span></div>
+<header class="head"><p class="fx-eyebrow">TAP A ROOM</p><h2 class="fx-h fx-chrome">EVERY TILE OPENS INTO ITS PAGE</h2></header>
+<div class="grid" id="grid">
+  <button class="tile" type="button" data-k="city" data-t="THE CITY" data-p="Every visit starts high above the towers, at night."><img src="../_assets/stills/city.webp" alt="The PEPTICITY city at night"><i class="sh"></i><span class="t"><span>ROOM 01</span><b>THE CITY</b></span><i class="rim"></i></button>
+  <button class="tile" type="button" data-k="doors" data-t="THE DOORS" data-p="Heavy steel doors at street level, the way into the store."><img src="../_assets/stills/doors.webp" alt="The PEPTICITY doors"><i class="sh"></i><span class="t"><span>ROOM 02</span><b>THE DOORS</b></span><i class="rim"></i></button>
+  <button class="tile" type="button" data-k="lab" data-t="THE LAB" data-p="Glass, steel and light: the room behind the doors."><img src="../_assets/stills/lab-dropper.webp" alt="A glass dropper over a vial in the lab"><i class="sh"></i><span class="t"><span>ROOM 03</span><b>THE LAB</b></span><i class="rim"></i></button>
+  <button class="tile" type="button" data-k="vial" data-t="THE VIAL" data-p="See-through label, PEPTICITY up the side, lit from below."><span class="vialbg"><img src="../_assets/vial/vial.webp" alt="The PEPTICITY vial"></span><i class="sh"></i><span class="t"><span>ROOM 04</span><b>THE VIAL</b></span><i class="rim"></i></button>
+</div>
+<section class="detail" id="detail" aria-live="polite">
+  <div id="dmedia"></div><i class="sh"></i>
+  <div class="tx"><p class="fx-eyebrow" id="deb">ROOM</p><h2 class="fx-chrome" id="dt">THE CITY</h2><p id="dp"></p></div>
+  <button class="pc-btn pc-btn--sm back" type="button" id="back"><span class="pc-btn__face"><span class="pc-btn__label">BACK</span></span></button>
+</section>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  FX.hint('tap', 'TAP A TILE');
+  var $ = function (s) { return document.querySelector(s); };
+  var tiles = [].slice.call(document.querySelectorAll('.tile')), detail = $('#detail'), dmedia = $('#dmedia'), dt = $('#dt'), dp = $('#dp'), deb = $('#deb');
+  var open = null, busy = false, lastUser = 0;
+  var VT = !!document.startViewTransition && !FX.rm;
+  function media(t) { return t.dataset.k === 'vial' ? '<span class="vialbg"><img src="../_assets/vial/vial.webp" alt="The PEPTICITY vial"></span>' : '<img class="img" src="' + t.querySelector('img').getAttribute('src') + '" alt="' + t.querySelector('img').alt + '">'; }
+  function names(t, on) {
+    var m = t.dataset.k === 'vial' ? t.querySelector('.vialbg') : t.querySelector('img'), b = t.querySelector('b');
+    m.style.viewTransitionName = on ? 'hero-img' : ''; b.style.viewTransitionName = on ? 'hero-title' : '';
+  }
+  function setDetail(t) {
+    dmedia.innerHTML = media(t); dt.textContent = t.dataset.t; dp.textContent = t.dataset.p; deb.textContent = t.querySelector('.t span').textContent;
+    var dm = dmedia.firstElementChild; dm.style.viewTransitionName = 'hero-img'; dt.style.viewTransitionName = 'hero-title';
+  }
+  /* fallback morph (no View Transitions): grow the picture from the tile's box with the Web Animations API */
+  function flip(fromEl, toEl, rev) {
+    var a = fromEl.getBoundingClientRect(), b = toEl.getBoundingClientRect();
+    var k = [{ transform: 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + a.width / b.width + ',' + a.height / b.height + ')', transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }];
+    return toEl.animate(rev ? k.reverse() : k, { duration: FX.rm ? 1 : 750, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'both' });
+  }
+  function show(t) {
+    if (busy || open) return; busy = true;
+    var done = function () { busy = false; };
+    if (VT) {
+      names(t, true);
+      var vt = document.startViewTransition(function () { names(t, false); setDetail(t); detail.classList.add('on'); open = t; });
+      vt.finished.then(done, done);
+    } else {
+      setDetail(t); detail.classList.add('on'); open = t;
+      var an = flip(t, dmedia.firstElementChild); an.onfinish = done;
+    }
+  }
+  function hide() {
+    if (busy || !open) return; busy = true; var t = open;
+    var done = function () { busy = false; };
+    if (VT) {
+      var vt = document.startViewTransition(function () { detail.classList.remove('on'); dmedia.innerHTML = ''; dt.style.viewTransitionName = ''; names(t, true); open = null; });
+      vt.finished.then(function () { names(t, false); done(); }, done);
+    } else {
+      var an = flip(t, dmedia.firstElementChild, true); an.onfinish = function () { detail.classList.remove('on'); dmedia.innerHTML = ''; open = null; done(); };
+    }
+  }
+  tiles.forEach(function (t) { t.addEventListener('click', function () { lastUser = performance.now(); show(t); }); });
+  $('#back').addEventListener('click', function () { lastUser = performance.now(); hide(); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  addEventListener('fx:replay', function () { if (open) hide(); else show(tiles[0]); });
+  /* playing and untouched: it opens a tile, holds, goes back, moves to the next */
+  var step = 0, lastStep = performance.now();
+  FX.loop(function (dt2, t, now, live) {
+    if (live && !busy && now - lastUser > 6000 && now - lastStep > (open ? 3000 : 2200)) {
+      lastStep = now;
+      if (open) hide(); else { show(tiles[step % tiles.length]); step++; }
+    }
+    return false;
+  });
+  setInterval(function () { if (FX.playing) FX.wake(); }, 500);
+  window.__ent = { show: function (i) { show(tiles[i]); }, hide: hide, get open() { return !!open; }, vt: VT };
+})();
+</script>
+</body>
+</html>

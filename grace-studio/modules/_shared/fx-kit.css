@@ -1,0 +1,131 @@
+/* =====================================================================
+   SELECTION STUDIO · LIVE MODULE KIT (manifest-a: effects, entrances, backgrounds, emblems)
+   One stylesheet shared by every module in these four folders. Brand tokens (the owner's BLACK image:
+   wall #323232, metal #080807 to #8E8D85), the accent layer, the internal scroller, the corner tag + hint,
+   the scroll rail, PEPTICITY glass and reduced motion. Matches the corner chrome of the manifest-b runtime
+   so every live tile in the studio reads as one family.
+   ===================================================================== */
+@font-face{font-family:"PEPTICITY BLACK";src:url("../_assets/fonts/PepticityBlack.woff2") format("woff2");font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:"PEPTICITY BLACK CONDENSED";src:url("../_assets/fonts/PepticityBlackCondensed.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Instrument Sans";src:url("../_assets/fonts/instrument-sans-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Instrument Sans";src:url("../_assets/fonts/instrument-sans-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Instrument Sans";src:url("../_assets/fonts/instrument-sans-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@property --acc{syntax:'<color>';inherits:true;initial-value:#d4ff3a}
+@property --acc-text{syntax:'<color>';inherits:true;initial-value:#d4ff3a}
+
+:root{
+  --ground:#0b0b0c; --uv:#0d0b13; --wall:#323232;
+  --ink:#eceef2; --ink2:#c3c7cf; --mute:#8c919b; --dim:#5d616a;
+  --gun-0:#080807; --gun-1:#55544f; --gun-2:#8e8d85;
+  --hair:rgba(222,226,234,.14); --hair2:rgba(222,226,234,.28); --edge:#dcd6ff;
+  --fh:"PEPTICITY BLACK","Instrument Sans",ui-sans-serif,system-ui,sans-serif;
+  --fb:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --chrome:linear-gradient(100deg,#9aa4af 0%,#f5f8fb 18%,#ffffff 24%,#8e98a3 38%,#eef2f6 54%,#4a525c 66%,#e6ebf0 82%,#a9b2bc 100%);
+  --e-out:cubic-bezier(.16,1,.3,1); --e-in:cubic-bezier(.7,0,.84,0); --e-io:cubic-bezier(.65,0,.35,1);
+  --e-spring:linear(0,.056,.174,.313,.472,.624,.759,.863,.951,1.015,1.056,1.079,1.088,1.087,1.079,1.066,1.054,1.04,1.027,1.016,1.007,1.001,.997,.994,.992,.992,.993,.994,.995,.996,.997,.998,.999,1);
+  --play:running;
+  --acc:#D4FF3A; --acc-rgb:212,255,58; --acc-text:#D4FF3A; --acc-ink:#0b0b0c;
+  --acc-hi:color-mix(in srgb,var(--acc) 62%,#fff);
+  --acc-soft:color-mix(in srgb,var(--acc) 16%,transparent);
+  --acc-line:color-mix(in srgb,var(--acc) 72%,transparent);
+  --acc-bloom:color-mix(in srgb,var(--acc) 46%,transparent);
+  transition:--acc .6s var(--e-io),--acc-text .6s var(--e-io);
+  color-scheme:dark;
+}
+:root.paused{--play:paused}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--ground)}
+body{color:var(--ink);font:400 15px/1.55 var(--fb);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;position:relative}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc-text);outline-offset:3px}
+img{display:block;max-width:100%}
+canvas{display:block}
+[hidden]{display:none!important}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- type ---------- */
+.fx-h{margin:0;font:400 clamp(26px,4.4vw,64px)/1.02 var(--fh);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
+.fx-chrome{background:var(--chrome);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:fxSheen 9s var(--e-io) infinite;animation-play-state:var(--play)}
+@keyframes fxSheen{0%,58%{background-position:0% 50%}100%{background-position:100% 50%}}
+.fx-eyebrow{margin:0;display:flex;align-items:center;gap:12px;font:400 10px/1 var(--fh);letter-spacing:.34em;text-transform:uppercase;color:var(--mute)}
+.fx-eyebrow::before{content:"";width:28px;height:1px;flex:none;background:linear-gradient(90deg,var(--acc-hi),var(--acc));box-shadow:0 0 6px var(--acc)}
+.fx-p{margin:0;color:var(--ink2);font-size:clamp(14px,1.1vw,16px);max-width:46ch}
+
+/* ---------- the internal scroller (works the same alone or inside an iframe; never chains to the host page) ---------- */
+.fx-scroller{position:fixed;inset:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;z-index:2}
+.fx-scroller::-webkit-scrollbar{display:none}
+.fx-pin{position:relative;height:var(--len,400vh)}
+.fx-sticky{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden}
+
+/* ---------- corner chrome: code tag (top left), hint (bottom right), scroll rail (right edge) ---------- */
+.fx-tag{position:fixed;left:clamp(12px,2.2vw,22px);top:clamp(12px,2.2vw,20px);z-index:40;display:flex;align-items:center;gap:10px;pointer-events:none;
+  font:400 9px/1 var(--fh);letter-spacing:.32em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+.fx-tag i{width:6px;height:6px;border-radius:50%;flex:none;background:var(--acc-hi);box-shadow:0 0 6px var(--acc),0 0 12px var(--acc-bloom)}
+.fx-tag b{font-weight:400;color:var(--ink2)}
+.fx-tag span{opacity:.6}
+.fx-hint{--c:7px;position:fixed;right:clamp(12px,2.2vw,22px);bottom:clamp(12px,2.2vw,20px);z-index:40;display:flex;align-items:center;gap:9px;height:30px;padding:0 12px 0 10px;
+  pointer-events:none;font:400 8.5px/1 var(--fh);letter-spacing:.32em;text-transform:uppercase;color:var(--ink2);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.6) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.45) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.3),rgba(244,246,250,.62) 45%,rgba(200,207,216,.3)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.4),rgba(200,207,216,.25) 50%,rgba(120,127,137,.4)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.45),rgba(120,127,137,.35)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.35),rgba(120,127,137,.35)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.015));
+  transition:opacity .6s var(--e-out)}
+.fx-hint.dim{opacity:.55}
+.fx-hint svg{width:15px;height:15px;flex:none;overflow:visible;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.fx-hint .ac{stroke:var(--acc-hi)}
+.fx-hint .wheel{animation:fxWheel 1.8s var(--e-io) infinite;animation-play-state:var(--play)}
+@keyframes fxWheel{0%{transform:translateY(-1.5px);opacity:0}30%{opacity:1}100%{transform:translateY(3px);opacity:0}}
+.fx-hint .pulse{transform-origin:center;transform-box:fill-box;animation:fxPulse 2.2s var(--e-io) infinite;animation-play-state:var(--play)}
+@keyframes fxPulse{0%{opacity:.9;transform:scale(.6)}70%,100%{opacity:0;transform:scale(1.6)}}
+.fx-hint .sway{animation:fxSway 2.4s var(--e-io) infinite;animation-play-state:var(--play)}
+@keyframes fxSway{0%,100%{transform:translateX(-2px)}50%{transform:translateX(2px)}}
+.fx-rail{position:fixed;right:clamp(10px,1.6vw,18px);top:22%;bottom:22%;width:9px;z-index:39;pointer-events:none}
+.fx-rail::before{content:"";position:absolute;left:4px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(230,234,240,.16) 10%,rgba(230,234,240,.16) 90%,transparent)}
+.fx-rail i{position:absolute;left:4px;top:0;width:1px;height:100%;transform-origin:50% 0;transform:scaleY(var(--p,0));background:linear-gradient(180deg,transparent,var(--acc-line))}
+.fx-rail b{position:absolute;left:1.5px;top:calc(var(--p,0) * 100% - 3px);width:6px;height:6px;border-radius:50%;background:var(--acc-hi);box-shadow:0 0 6px var(--acc),0 0 14px var(--acc-bloom)}
+.fx-bare .fx-tag{display:none}
+.fx-nohint .fx-hint{display:none}
+@media (max-width:600px){.fx-tag span{display:none}.fx-rail{top:30%;bottom:30%}}
+
+/* ---------- PEPTICITY glass: chamfered, see-through, a chrome hairline that follows the cut (no pills) ---------- */
+.fx-glass{--c:14px;position:relative;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  -webkit-backdrop-filter:blur(12px) saturate(165%);backdrop-filter:blur(12px) saturate(165%);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - .2px),rgba(236,240,245,.7) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),rgba(120,127,137,.42) calc(50% - .5px),transparent calc(50% + .2px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(90deg,rgba(200,207,216,.4),rgba(236,240,245,.7) 30%,#fff 52%,rgba(236,240,245,.7) 70%,rgba(200,207,216,.4)) 100% 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(90deg,rgba(120,127,137,.42),rgba(200,207,216,.4) 45%,rgba(120,127,137,.42)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(rgba(236,240,245,.7),rgba(120,127,137,.42)) 0 100%/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(rgba(200,207,216,.4),rgba(120,127,137,.42)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.09),transparent 46%),
+    linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.012))}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.fx-glass{background-color:rgba(20,22,26,.86)}}
+
+/* ---------- ground helpers ---------- */
+.fx-ground{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:var(--ground)}
+.fx-vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 42%,rgba(2,2,3,.62) 100%)}
+.fx-grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:.45;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .6  0 0 0 0 .66  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.fx-gl{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+
+/* ---------- reduced motion: every module also keeps its own still state ---------- */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+:root.rm *,:root.rm *::before,:root.rm *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+
+/* ---------- background modules: the same small sample on every ground so they compare like for like ---------- */
+.bg-sample{position:fixed;inset:0;z-index:5;display:grid;place-items:center;align-content:center;gap:clamp(14px,2.4vh,24px);padding:60px 20px;text-align:center;pointer-events:none}
+.bg-sample .fx-eyebrow{justify-content:center}
+.bg-sample .fx-h{font-size:clamp(34px,6.4vw,92px);letter-spacing:.1em}
+.bg-card{--c:18px;display:grid;justify-items:center;gap:10px;padding:22px 28px 24px;width:min(440px,90vw);pointer-events:auto}
+.bg-card b{font:400 clamp(11px,1vw,13px)/1.2 var(--fh);letter-spacing:.2em}
+.bg-card span{font-size:14px;color:var(--ink2)}
+.bg-card .pc-btn{margin-top:6px}
+:root{--pc-font:"PEPTICITY BLACK","Instrument Sans",Arial,sans-serif}

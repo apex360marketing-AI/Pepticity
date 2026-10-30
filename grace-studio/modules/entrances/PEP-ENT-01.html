@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-ENT-01 · WINDOWS FROM EVERY ANGLE · PEPTICITY</title>
+<meta name="fx-code" content="PEP-ENT-01"><meta name="fx-interact" content="tap">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/button.css">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+/* PEP-ENT-01 WINDOWS FROM EVERY ANGLE (the owner's idea): the page arrives as glass windows that fly in from different angles,
+   from deep behind, from the sides, from above and below, each turning as it comes, and lock into place as the landing page.
+   One light sweep crosses each window as it lands. Tap REPLAY to watch it again. */
+body{background:radial-gradient(90% 80% at 50% 40%,#141419 0%,#0a0a0c 60%,#050506 100%)}
+.room{position:fixed;inset:0;perspective:1700px;perspective-origin:50% 45%;overflow:hidden}
+.page{position:absolute;inset:clamp(54px,8vh,80px) clamp(16px,4vw,56px) clamp(54px,8vh,74px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:clamp(10px,1.4vw,18px);transform-style:preserve-3d}
+.w{--c:16px;position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform,opacity;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.w.fx-glass{background-color:rgba(12,12,15,.35)}
+.w img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none;opacity:.92}
+.w .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,8,.1),rgba(6,6,8,.7))}
+.w .in{position:absolute;inset:0;padding:clamp(14px,1.6vw,24px);display:grid;align-content:end;gap:8px}
+.w .in.top{align-content:start}
+.w b{font:400 clamp(11px,1vw,14px)/1.15 var(--fh);letter-spacing:.16em}
+.w span{font-size:13px;color:var(--ink2)}
+.w .sw{position:absolute;inset:-10% -50%;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.2) 48%,color-mix(in srgb,var(--acc) 20%,transparent) 52%,transparent 64%);transform:translateX(-80%);pointer-events:none}
+.w.land .sw{animation:wsw 1.2s var(--e-io) 1 both}
+@keyframes wsw{to{transform:translateX(80%)}}
+.w .rim{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(230,234,240,.16)}
+.w.land .rim{animation:wrim 1.6s var(--e-out) 1 both}
+@keyframes wrim{0%{box-shadow:inset 0 0 0 1px var(--acc-line),0 0 24px var(--acc-bloom)}100%{box-shadow:inset 0 0 0 1px rgba(230,234,240,.16)}}
+.A{grid-column:1/3;grid-row:1/3}.B{grid-column:3/5;grid-row:1}.C{grid-column:3;grid-row:2/4}.Dd{grid-column:4;grid-row:2}.E{grid-column:1;grid-row:3}.F{grid-column:2;grid-row:3}.G{grid-column:4;grid-row:3}
+.A .in{align-content:end;gap:14px}
+.A h2{margin:0;font:400 clamp(30px,5.2vw,82px)/.95 var(--fh);letter-spacing:.08em}
+.B .in{align-content:center;gap:10px}
+.B h3{margin:0;font:400 clamp(18px,2.2vw,32px)/1.05 var(--fh);letter-spacing:.08em}
+.C .vb{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(60% 40% at 50% 70%,rgba(220,226,240,.13),transparent 70%)}
+.C .vb img{position:absolute;inset:auto;left:50%;top:8%;width:auto;height:72%;object-fit:contain;transform:translateX(-50%)}
+.replay{position:fixed;left:50%;bottom:clamp(12px,2vh,18px);transform:translateX(-50%);z-index:20}
+@media (max-width:760px){
+  .page{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1.4fr 1fr 1fr 1fr;inset:52px 12px 64px}
+  .A{grid-column:1/3;grid-row:1}.B{grid-column:1/3;grid-row:2}.C{grid-column:1;grid-row:3/5}.Dd{grid-column:2;grid-row:3}.E{display:none}.F{grid-column:2;grid-row:4}.G{display:none}
+  .w span{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-ENT-01</b><span>WINDOWS FROM EVERY ANGLE</span></div>
+<div class="room"><div class="page" id="page">
+  <div class="w A fx-glass" data-f="deep"><img src="../_assets/stills/city.webp" alt="The PEPTICITY city at night"><i class="shade"></i><div class="in"><p class="fx-eyebrow">GRAND OPENING</p><h2 class="fx-chrome">PEPTICITY</h2></div><i class="sw"></i><i class="rim"></i></div>
+  <div class="w B fx-glass" data-f="right"><div class="in"><p class="fx-eyebrow">JOIN THE PEPTICITY TEAM</p><h3>15% OFF YOUR FIRST ORDER</h3><div><button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">CLAIM MY 15%</span></span></button></div></div><i class="sw"></i><i class="rim"></i></div>
+  <div class="w C fx-glass" data-f="below"><div class="vb"><img src="../_assets/vial/vial.webp" alt="The PEPTICITY vial"></div><div class="in"><b>THE VIAL</b><span>See-through label, lit from below.</span></div><i class="sw"></i><i class="rim"></i></div>
+  <div class="w Dd fx-glass" data-f="topright"><img src="../_assets/stills/lab-dropper.webp" alt="A glass dropper over a vial in the lab"><i class="shade"></i><div class="in"><b>THE LAB</b></div><i class="sw"></i><i class="rim"></i></div>
+  <div class="w E fx-glass" data-f="left"><div class="in"><b>THE MONTHLY LETTER</b><span>Grace writes to the team once a month.</span></div><i class="sw"></i><i class="rim"></i></div>
+  <div class="w F fx-glass" data-f="belowleft"><img src="../_assets/stills/doors.webp" alt="The PEPTICITY doors"><i class="shade"></i><div class="in"><b>THE DOORS</b></div><i class="sw"></i><i class="rim"></i></div>
+  <div class="w G fx-glass" data-f="top"><div class="in"><b>FIRST WORD ON RESTOCKS</b><span>The team hears first.</span></div><i class="sw"></i><i class="rim"></i></div>
+</div></div>
+<button class="pc-btn pc-btn--sm replay" type="button" id="replay"><span class="pc-btn__face"><span class="pc-btn__label">REPLAY</span></span></button>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  FX.hint('tap', 'TAP REPLAY');
+  var ws = [].slice.call(document.querySelectorAll('.w')).filter(function (w) { return getComputedStyle(w).display !== 'none'; });
+  /* each window has its own angle of arrival */
+  var FROM = {
+    deep: { z: -1600, rotationX: 38, rotationY: -12, y: -60 },
+    right: { x: '120vw', rotationY: -78, z: -300 },
+    below: { y: '115vh', rotationX: -64, rotationZ: 9 },
+    topright: { x: '70vw', y: '-90vh', rotationZ: -28, rotationY: -40 },
+    left: { x: '-120vw', rotationY: 75, z: -200 },
+    belowleft: { x: '-60vw', y: '100vh', rotationZ: 20, rotationX: -30 },
+    top: { y: '-120vh', rotationX: 72, z: -400 }
+  };
+  var OUT = { deep: { z: 900, opacity: 0 }, right: { x: '-40vw', rotationY: 60, opacity: 0 }, below: { y: '-60vh', rotationX: 50, opacity: 0 }, topright: { x: '40vw', y: '60vh', rotationZ: 30, opacity: 0 },
+    left: { x: '60vw', rotationY: -50, opacity: 0 }, belowleft: { y: '-80vh', rotationZ: -25, opacity: 0 }, top: { y: '80vh', rotationX: -60, opacity: 0 } };
+  var tl = null, holdT = null, ran = false;
+  function land(w) { w.classList.remove('land'); void w.offsetWidth; w.classList.add('land'); }
+  function run() {
+    clearTimeout(holdT); if (tl) tl.kill();
+    ws.forEach(function (w) { w.classList.remove('land'); });
+    if (FX.rm || typeof gsap === 'undefined') { ws.forEach(function (w) { w.style.opacity = 1; w.style.transform = 'none'; }); return; }
+    tl = gsap.timeline({ onComplete: hold });
+    gsap.set(ws, { clearProps: 'transform,opacity' });
+    ws.forEach(function (w, i) {
+      var f = FROM[w.dataset.f] || {};
+      tl.fromTo(w, Object.assign({ opacity: 0, transformPerspective: 1700 }, f), { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, opacity: 1, duration: 1.45, ease: 'expo.out',
+        onComplete: function () { land(w); } }, 0.15 + i * 0.11);
+    });
+    tl.fromTo('#page', { scale: 1.05 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, 0);
+    ran = true;
+  }
+  function hold() { holdT = setTimeout(function () { if (FX.playing) leave(); }, 3800); }
+  function leave() {
+    if (FX.rm) return;
+    tl = gsap.timeline({ onComplete: run });
+    ws.slice().reverse().forEach(function (w, i) { tl.to(w, Object.assign({ duration: 0.75, ease: 'power3.in' }, OUT[w.dataset.f] || { opacity: 0 }), i * 0.06); });
+  }
+  document.getElementById('replay').addEventListener('click', run);
+  addEventListener('fx:replay', run);
+  addEventListener('fx:play', function () { if (!ran) run(); else if (tl) tl.resume(); if (!tl || !tl.isActive()) hold(); });
+  addEventListener('fx:pause', function () { clearTimeout(holdT); if (tl) tl.pause(); });
+  /* embedded and not yet told to play: show the finished page as a still */
+  if (!FX.playing) { ws.forEach(function (w) { w.style.opacity = 1; }); }
+  else run();
+  window.__ent = { run: run, get tl() { return tl; } };
+})();
+</script>
+</body>
+</html>

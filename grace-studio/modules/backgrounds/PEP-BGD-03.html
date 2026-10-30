@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-BGD-03 · MATTE WALL, LIGHT SWEEP · PEPTICITY</title>
+<meta name="fx-code" content="PEP-BGD-03"><meta name="fx-interact" content="hover">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/button.css">
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* PEP-BGD-03 MATTE WALL, LIGHT SWEEP: the matte gunmetal wall from the owner's BLACK image (#323232, the wall the 3D
+   lettering is lit against), with a fine grain. A tall soft gallery light sweeps slowly across it and back, a low raking
+   light follows your pointer, and a thin line of your colour spills along the foot of the wall. */
+body{background:#232224}
+.wall{position:fixed;inset:0;z-index:0;background:radial-gradient(120% 90% at 50% 30%,#3a393b 0%,#323232 38%,#262527 72%,#1b1a1c 100%)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.55;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.sweep{position:fixed;inset:-20% -40%;z-index:2;pointer-events:none;mix-blend-mode:soft-light;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.10) 42%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.10) 58%,transparent 70%);
+  transform:translate3d(var(--sx,-30%),0,0) skewX(-8deg);will-change:transform}
+.sweep2{position:fixed;inset:-20% -40%;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.16;
+  background:linear-gradient(100deg,transparent 40%,rgba(236,240,250,.5) 50%,transparent 60%);transform:translate3d(var(--sx,-30%),0,0) skewX(-8deg);will-change:transform}
+.rake{position:fixed;inset:0;z-index:3;pointer-events:none;mix-blend-mode:soft-light;opacity:var(--ri,0);
+  background:radial-gradient(520px 340px at var(--rx,50%) var(--ry,60%),rgba(255,255,255,.7),transparent 70%)}
+.foot{position:fixed;left:0;right:0;bottom:0;height:34%;z-index:3;pointer-events:none;
+  background:linear-gradient(0deg,rgba(10,10,11,.75),transparent)}
+.spill{position:fixed;left:8%;right:8%;bottom:0;height:2px;z-index:4;pointer-events:none;
+  background:radial-gradient(50% 100% at var(--fx,50%) 100%,var(--acc),transparent 70%);box-shadow:0 0 30px 6px color-mix(in srgb,var(--acc) 22%,transparent);opacity:.85}
+.spillg{position:fixed;left:0;right:0;bottom:0;height:24%;z-index:3;pointer-events:none;
+  background:radial-gradient(40% 100% at var(--fx,50%) 100%,color-mix(in srgb,var(--acc) 12%,transparent),transparent 70%)}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-BGD-03</b><span>MATTE WALL, LIGHT SWEEP</span></div>
+<div class="wall" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="sweep" aria-hidden="true"></div><div class="sweep2" aria-hidden="true"></div>
+<div class="rake" aria-hidden="true"></div>
+<div class="foot" aria-hidden="true"></div><div class="spillg" aria-hidden="true"></div><div class="spill" aria-hidden="true"></div>
+<section class="bg-sample">
+  <p class="fx-eyebrow">MATTE GUNMETAL WALL · GALLERY LIGHT</p>
+  <h2 class="fx-h fx-chrome">PEPTICITY</h2>
+  <div class="fx-glass bg-card"><b>THE GROUND BEHIND EVERY PAGE</b><span>A slow light crosses the wall. Your pointer rakes a second one.</span>
+    <button class="pc-btn pc-btn--sm" type="button"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></div>
+</section>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  FX.hint('hover', FX.coarse ? 'TAP' : 'HOVER');
+  var D = document.documentElement, rx = 50, ry = 60, ri = 0;
+  FX.loop(function (dt, t, now, live) {
+    /* the gallery light: across and back every ~24 s, easing at each end */
+    var ph = FX.rm ? 0.5 : 0.5 - 0.5 * Math.cos(t * Math.PI * 2 / 24 + Math.PI * 0.6);
+    D.style.setProperty('--sx', (-34 + ph * 68).toFixed(2) + '%');
+    D.style.setProperty('--fx', (14 + ph * 72).toFixed(1) + '%');
+    var P = FX.pointer, on = P.inside && !FX.rm;
+    rx = FX.damp(rx, on ? P.x / innerWidth * 100 : 50, 4, dt); ry = FX.damp(ry, on ? P.y / innerHeight * 100 : 60, 4, dt); ri = FX.damp(ri, on ? 0.9 : 0, 3, dt);
+    D.style.setProperty('--rx', rx.toFixed(2) + '%'); D.style.setProperty('--ry', ry.toFixed(2) + '%'); D.style.setProperty('--ri', ri.toFixed(3));
+    return Math.abs(ri - (on ? 0.9 : 0)) > 1e-3;
+  });
+})();
+</script>
+</body>
+</html>

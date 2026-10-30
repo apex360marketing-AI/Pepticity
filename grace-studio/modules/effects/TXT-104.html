@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TXT-104 · SCATTER ASSEMBLE IN 3D · PEPTICITY</title>
+<meta name="fx-code" content="TXT-104"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<style>
+/* TXT-104 SCATTER ASSEMBLE: the nine PEPTICITY letters, in the approved PEPTICITY STUDIO 3D type (matte gunmetal faces,
+   UV-black sides, a hairline of light on every edge), tumble in the air in front of a matte wall and fly together into the
+   word as you scroll, their shadows landing with them. Once it is built the letters lean away from your pointer. */
+body{background:#232224}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:1}
+.wallfb{position:fixed;inset:0;background:radial-gradient(70% 60% at 62% 32%,#5a595b,#3b3a3c 55%,#232224);z-index:0}
+.copy{position:fixed;z-index:3;left:50%;bottom:clamp(54px,11vh,110px);transform:translateX(-50%);width:min(620px,90vw);text-align:center;display:grid;justify-items:center;gap:12px;pointer-events:none}
+.copy .fx-p{color:#d4d7dd;margin:0 auto;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.copy .fx-eyebrow{color:#c9cdd4}
+.step{opacity:0;transform:translate3d(0,18px,0)}
+.intro{position:fixed;z-index:3;left:50%;top:clamp(60px,12vh,120px);transform:translateX(-50%);text-align:center;width:min(560px,90vw);pointer-events:none}
+.intro .fx-p{margin:10px auto 0;color:#cfd2d8;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.flat{position:fixed;inset:0;display:grid;place-items:center;z-index:2;font:400 clamp(40px,9vw,140px)/1 var(--fh);letter-spacing:.06em;color:#6f6f6c;text-shadow:0 1px 0 #9a9993,0 18px 30px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>TXT-104</b><span>SCATTER ASSEMBLE</span></div>
+<div class="wallfb" aria-hidden="true"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="flat" id="flat" hidden>PEPTICITY</div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="The word PEPTICITY assembles from scattered 3D letters as you scroll">
+  <section class="fx-pin" style="--len:520vh"><div class="fx-sticky"><h2 class="sr">PEPTICITY</h2></div></section>
+</main>
+<div class="intro" id="intro"><p class="fx-eyebrow" style="justify-content:center">NINE LETTERS IN THE AIR</p><p class="fx-p">Scroll and they fly together.</p></div>
+<div class="copy"><p class="fx-eyebrow step" id="s1" style="justify-content:center">GRAND OPENING</p><p class="fx-p step" id="s2">Join the PEPTICITY Team: 15% off your first order, the monthly letter and first word on restocks.</p></div>
+<script src="../_shared/fx-kit.js"></script>
+<script type="module">
+import { THREE, stage3d, makeWord, wallScene, fitCamera, accentEdges } from '../_shared/fx3d.mjs';
+const sc = FX.scroller(document.getElementById('sc'), { ease: 3.6, tourPeriod: 18 }); FX.rail(sc); FX.hint('scroll');
+const st = stage3d(document.getElementById('gl'), { dpr: FX.mobile ? 1.5 : 2 });
+const intro = document.getElementById('intro'), s1 = document.getElementById('s1'), s2 = document.getElementById('s2');
+if (!st) { document.getElementById('flat').hidden = false; }
+else {
+  const ws = wallScene(st, { keyPos: [3.0, 2.1, 2.3], shadowRadius: 7 });
+  const word = makeWord(st, 'PEPTICITY', {});
+  ws.scene.add(word.group); ws.scene.environment = st.envRT.texture;
+  accentEdges([st.MAT.edge], 0.35);
+  /* a seeded scatter so every visit starts from the same beautiful mess */
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const L = word.letters.map((pv, i) => {
+    const home = pv.position.clone();
+    const n = word.letters.length, side = (i - (n - 1) / 2) / n;
+    return { pv, home, i,
+      from: new THREE.Vector3(home.x * 1.08 + side * 0.7 + (rnd() - 0.5) * 1.1, (rnd() - 0.5) * 1.3, 0.35 + rnd() * 1.0),
+      rot: new THREE.Euler((rnd() - 0.5) * 5, (rnd() - 0.5) * 6, (rnd() - 0.5) * 3),
+      spin: new THREE.Vector3((rnd() - 0.5) * 0.9, (rnd() - 0.5) * 1.2, (rnd() - 0.5) * 0.6),
+      push: 0, k: 0 };
+  });
+  const v = new THREE.Vector3();
+  const cam = ws.camera;
+  FX.loop((dt, t, now, live) => {
+    const p = sc.p, phone = innerWidth < 700;
+    st.size(); cam.aspect = st.aspect();
+    const built = FX.ease((p - 0.08) / 0.62);
+    /* the camera eases in as the word comes together */
+    fitCamera(cam, word.width * (phone ? 1.02 : 1.0), word.height, cam.aspect, (phone ? 0.74 : 0.6) + 0.2 * built, -0.02);
+    cam.updateProjectionMatrix();
+    let moving = false;
+    L.forEach(o => {
+      const k = FX.rm ? (p > 0.4 ? 1 : 0) : FX.ease((p * 1.3 - 0.06 - o.i * 0.045) / 0.5);
+      if (Math.abs(k - o.k) > 1e-4) moving = true; o.k = k;
+      const a = 1 - k, tt = FX.rm ? 0 : t;
+      /* repel: letters near the pointer lean back a little once the word is built */
+      let rep = 0;
+      if (k > 0.98 && FX.pointer.inside && !FX.coarse && !FX.rm) {
+        v.copy(o.home).applyMatrix4(word.group.matrixWorld).project(cam);
+        const sx = (v.x + 1) / 2 * innerWidth, sy = (1 - v.y) / 2 * innerHeight;
+        const d = Math.hypot(sx - FX.pointer.x, sy - FX.pointer.y) / Math.max(innerWidth * 0.12, 80);
+        rep = Math.max(0, 1 - d);
+      }
+      o.push = FX.damp(o.push, rep, 6, dt);
+      o.pv.position.set(
+        o.home.x + (o.from.x - o.home.x) * a,
+        o.home.y + (o.from.y - o.home.y) * a + Math.sin(tt * 0.8 + o.i) * 0.03 * a,
+        o.home.z + (o.from.z - o.home.z) * a - o.push * 0.06);
+      o.pv.rotation.set(
+        (o.rot.x + o.spin.x * tt) * a + o.push * 0.25,
+        (o.rot.y + o.spin.y * tt) * a + Math.sin(tt * 0.7 + o.i * 0.6) * 0.03 * k,
+        (o.rot.z + o.spin.z * tt) * a);
+    });
+    word.group.rotation.set(FX.rm ? 0 : FX.pointer.ny * 0.06 * built, FX.rm ? 0 : FX.pointer.nx * 0.12 * built, 0);
+    st.draw(ws.scene, cam);
+    intro.style.opacity = (1 - FX.ss(0.02, 0.08, p)).toFixed(3);
+    const c1 = FX.ss(0.74, 0.82, p), c2 = FX.ss(0.8, 0.9, p);
+    s1.style.opacity = c1.toFixed(3); s1.style.transform = 'translate3d(0,' + ((1 - c1) * 18).toFixed(1) + 'px,0)';
+    s2.style.opacity = c2.toFixed(3); s2.style.transform = 'translate3d(0,' + ((1 - c2) * 18).toFixed(1) + 'px,0)';
+    return moving || L.some(o => o.push > 1e-3);
+  });
+  window.__fx3d = { st, word };
+}
+</script>
+</body>
+</html>

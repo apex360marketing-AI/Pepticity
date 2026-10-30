@@ -1,0 +1,1305 @@
+/* PEPTICITY main site v3 (built from v2; owner's revised order, 30 Oct).
+   1 LOADER chest film -> 2 LANDING (public: WHO WE ARE + Grace's letter, OUR MISSION TXT-04, OUR STORY SCR-21 glass panes in depth)
+   -> 3 the 19+ AGE GATE (province select; passing it fetches the catalogue; remembered 30 days)
+   -> 4 SALES ZONE 1: SCR-17 portal + SCR-07 city weave (25% shorter) with liquid-glass hooks that sell
+   -> 5 member card + scanner + doors (JOIN or GUEST) -> 6 SALES ZONE 2: the BIO LAB (5 stations, 2 holograms with hooks)
+   -> 7 the SECOND DOORS (glass wipe + the door photo opening, scrubbed by scroll; CFG.secondDoorsFilm swaps in a film)
+   -> 8 SALES ZONE 3: the collection (offer, interests, filters, shelf, cart, restock queue) -> SCR-16 vial -> SCR-18 tiers
+   -> CRD-124 + FRM-104 -> FRM-102 finder -> lot passport (placeholder) -> HOV-17 network -> refer -> letter + TXT-13.
+   The concierge runs in GUIDE mode on the landing and SELL mode past the gate. GSAP ScrollTrigger + Lenis on one ticker.
+   Every form is preview only: nothing is sent. */
+(function () {
+  'use strict';
+  var D = document.documentElement, CFG = window.PC_CONFIG || {};
+  CFG.shipping = CFG.shipping || { flat: 15, freeOver: 200, placeholder: true };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var RM = D.classList.contains('rm');
+  var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
+  var ss = function (a, b, x) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  var LS = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }, del: function (k) { try { localStorage.removeItem(k); } catch (e) {} } };
+  var SS = { get: function (k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+  var J_ = function (k, d) { try { return JSON.parse(LS.get(k)) || d; } catch (e) { return d; } };
+  var money = function (n) { return '$' + n.toFixed(2); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var OFFER = !!(CFG.counselCleared && CFG.counselCleared.offer);
+  var HIGH = !!CFG.showHighRisk;   /* high-risk listings stay hidden unless the owner flips PC_CONFIG.showHighRisk */
+  var events = [];
+  /* ================= the 19+ pass (this device only, PC_CONFIG.agePassDays) ================= */
+  var PROV = { AB: 'Alberta', BC: 'British Columbia', MB: 'Manitoba', NB: 'New Brunswick', NL: 'Newfoundland and Labrador', NS: 'Nova Scotia', NT: 'Northwest Territories', NU: 'Nunavut', ON: 'Ontario', PE: 'Prince Edward Island', QC: 'Quebec', SK: 'Saskatchewan', YT: 'Yukon' };
+  function readPass() {   /* stored data is untrusted: exact shape, known province, not expired */
+    try { var q = JSON.parse(LS.get('pc-age-pass') || 'null'); if (q && q.ok === true && PROV[q.prov] && +q.exp > Date.now()) return { ok: true, prov: q.prov, at: +q.at || 0, exp: +q.exp }; } catch (e) {}
+    return null;
+  }
+  var pass = readPass();
+  if (!pass) D.classList.add('age-gated');
+  function track(name) { events.push(name); }   /* privacy-safe: event names only, never field values */
+
+  /* every 3D-look heading gets its extrusion layer */
+  $$('.x3d').forEach(function (el) { if (!el.dataset.text) el.dataset.text = el.textContent; });
+
+  var toastT;
+  function toast(t) { var el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('show'); }, 2200); }
+
+  if (typeof gsap === 'undefined') { D.classList.remove('intro-on', 'gated'); return; }
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ================= member state ================= */
+  var member = J_('pc-member', null);   /* {email,name,joinedAt,notches} */
+  if (!member || typeof member !== 'object' || Array.isArray(member)) member = null;   /* stored data is untrusted: keep only well-typed fields */
+  else { member.email = typeof member.email === 'string' ? member.email : ''; member.name = typeof member.name === 'string' ? member.name.slice(0, 22) : ''; if (member.notches != null) member.notches = Math.max(0, Math.min(10, +member.notches || 0)); }
+  function joined() { return !!(member && member.email); }
+  function saveMember() { LS.set('pc-member', JSON.stringify(member)); renderMemberBits(); }
+  function join(email, name) {
+    member = member || {};
+    member.email = email || member.email; if (name) member.name = name;
+    member.joinedAt = member.joinedAt || new Date().toISOString();
+    member.notches = Math.max(member.notches || 0, 2);   /* endowed progress: joining lights 2 of 10 */
+    saveMember(); renderCart();
+  }
+
+  /* ================= frames (v1 atlases) ================= */
+  /* CFG.frames.man = the manifest.json of CFG.frames.dir (HD: media/frames-hd/, 1920x1080 desktop tiles 2x2, 608x1080 phone tiles 4x2).
+     MAN_SD is the old v1 atlas table, used only when no manifest is configured. */
+  var MAN_SD = {
+    'white-weave': { d: { n: 195, tw: 1024, th: 576, cols: 3, rows: 2, files: 33 }, m: { n: 195, tw: 432, th: 768, cols: 4, rows: 2, files: 25 } },
+    'black-weave': { d: { n: 226, tw: 1024, th: 576, cols: 3, rows: 2, files: 38 }, m: { n: 226, tw: 432, th: 768, cols: 4, rows: 2, files: 29 } },
+    'white-lab': { d: { n: 151, tw: 1024, th: 576, cols: 3, rows: 2, files: 26 }, m: { n: 151, tw: 432, th: 768, cols: 4, rows: 2, files: 19 } },
+    'black-lab': { d: { n: 151, tw: 1024, th: 576, cols: 3, rows: 2, files: 26 }, m: { n: 151, tw: 432, th: 768, cols: 4, rows: 2, files: 19 } }
+  };
+  var MAN = (CFG.frames && CFG.frames.man) || MAN_SD;
+  var CROP = { d: { x: 0, w: 1 }, m: { x: 652 / 1912, w: 608 / 1912 } };
+  var version = D.getAttribute('data-version') === 'black' ? 'black' : 'white';
+  var kind = innerWidth / innerHeight < 0.95 ? 'm' : 'd';
+  var seqs = {}, dirty = true;
+  function Seq(name, k) { this.name = name; this.k = k; this.m = MAN[name][k]; this.per = this.m.cols * this.m.rows; this.imgs = []; this.ok = new Uint8Array(this.m.files); this.req = new Uint8Array(this.m.files); }
+  Seq.prototype.url = function (i) { return (CFG.frames && CFG.frames.dir || 'media/frames/') + this.name + '-' + this.k + '-' + ('00' + i).slice(-3) + '.webp'; };
+  Seq.prototype.frame = function (f) { var a = Math.floor(f / this.per); if (!this.ok[a]) return null; var j = f % this.per, m = this.m; return { img: this.imgs[a], sx: (j % m.cols) * m.tw, sy: Math.floor(j / m.cols) * m.th }; };
+  Seq.prototype.nearest = function (f) { for (var d = 0; d < this.m.n; d++) { var a = this.frame(Math.max(0, f - d)); if (a) return a; if (f + d < this.m.n) { a = this.frame(f + d); if (a) return a; } } return null; };
+  Seq.prototype.loaded = function () { var c = 0; for (var i = 0; i < this.ok.length; i++) c += this.ok[i]; return c; };
+  function seq(part) { var key = version + '-' + part + '-' + kind; if (!seqs[key]) seqs[key] = new Seq(version + '-' + part, kind); return seqs[key]; }
+  var queue = [], active = 0;
+  function want(s, list, front) { var jobs = []; list.forEach(function (i) { if (i >= 0 && i < s.m.files && !s.req[i]) { s.req[i] = 1; jobs.push([s, i]); } }); queue = front ? jobs.concat(queue) : queue.concat(jobs); pump(); }
+  function pump() {
+    while (active < 4 && queue.length) (function (job) {
+      var s = job[0], i = job[1], img = new Image(); active++; img.decoding = 'async';
+      var done = function () { active--; pump(); };
+      img.onload = function () { var fin = function () { s.imgs[i] = img; s.ok[i] = 1; dirty = true; done(); }; if (img.decode) img.decode().then(fin, fin); else fin(); };
+      img.onerror = function () { s.req[i] = 0; done(); };
+      img.src = s.url(i);
+    })(queue.shift());
+  }
+  function range(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; }
+  function loadAll() {   /* HD sheets are heavy: the city's opening sheets, then the lab's first two (so the room behind the doors is never black), then the rest */
+    var w = seq('weave'), l = seq('lab'); want(w, range(Math.min(8, w.m.files))); want(l, [0, 1]); want(w, range(w.m.files)); want(l, range(l.m.files)); }
+  function Painter(canvas, part) { this.c = canvas; this.ctx = canvas.getContext('2d'); this.part = part; this.rect = { x: 0, y: 0, w: 0, h: 0 }; this.last = -1; this.resize(); }
+  Painter.prototype.resize = function () {
+    /* device resolution, no upscaling blur: backing store = CSS size x devicePixelRatio (capped at 2) */
+    var r = Math.min(window.devicePixelRatio || 1, 2);
+    this.W = this.c.clientWidth || innerWidth; this.H = this.c.clientHeight || innerHeight;
+    this.c.width = Math.round(this.W * r); this.c.height = Math.round(this.H * r);
+    this.ctx.setTransform(r, 0, 0, r, 0, 0); this.ctx.imageSmoothingEnabled = true; this.ctx.imageSmoothingQuality = 'high'; this.last = -1;
+  };
+  Painter.prototype.draw = function (f) {
+    var s = seq(this.part), m = s.m, now = performance.now(); f = clamp(f, 0, m.n - 1);
+    /* cross-fade only while moving; once the scroll settles, draw one whole frame so nothing is double-exposed */
+    if (Math.abs(f - (this.lf == null ? -9 : this.lf)) > 0.0005) { this.moveT = now; this.lf = f; }
+    var still = now - (this.moveT || 0) > 200;
+    if (!dirty && Math.abs(f - this.last) < 0.004 && still === this.still) return;
+    this.still = still;
+    var i = still ? Math.round(f) : Math.floor(f), fr = still ? 0 : f - i, A = s.frame(i) || s.nearest(i); if (!A) return;
+    var sc = Math.max(this.W / m.tw, this.H / m.th), dw = m.tw * sc, dh = m.th * sc, dx = (this.W - dw) / 2, dy = (this.H - dh) / 2, ctx = this.ctx;
+    ctx.globalAlpha = 1; ctx.drawImage(A.img, A.sx, A.sy, m.tw, m.th, dx, dy, dw, dh);
+    if (fr > 0.02 && i + 1 < m.n) { var B = s.frame(i + 1); if (B) { ctx.globalAlpha = fr; ctx.drawImage(B.img, B.sx, B.sy, m.tw, m.th, dx, dy, dw, dh); ctx.globalAlpha = 1; } }
+    this.rect = { x: dx, y: dy, w: dw, h: dh }; this.last = f;
+  };
+  var pW = new Painter($('#cvWeave'), 'weave'), pL = new Painter($('#cvLab'), 'lab'), pA = new Painter($('#cvAge'), 'weave');   /* pA: the first city frame behind the age gate */
+  var doorSign = $('#doorSign');
+  /* [u = frame/(n-1), x, y, width] of the film's door sign, in full-frame fractions */
+  var SIGN = {
+    black: [[0.6, 0.49, 0.615, 0.12], [0.649, 0.494, 0.514, 0.137], [0.702, 0.496, 0.42, 0.16], [0.751, 0.498, 0.337, 0.19], [0.8, 0.5, 0.27, 0.21], [0.853, 0.502, 0.2, 0.238], [0.902, 0.502, 0.15, 0.27], [0.951, 0.5, 0.12, 0.283], [1, 0.502, 0.108, 0.29]],
+    white: [[0.745, 0.504, 0.434, 0.105], [0.8, 0.5, 0.337, 0.19], [0.846, 0.502, 0.264, 0.215], [0.897, 0.502, 0.194, 0.254], [0.949, 0.5, 0.135, 0.281], [1, 0.502, 0.108, 0.293]]
+  };
+  want(seq('weave'), [0, 1], true);
+  var doorbox = $('#doorbox');
+  function layoutDoors() { var r = pW.rect, c = CROP[kind]; if (!r.w) return; var fw = r.w / c.w, fx = r.x - c.x * fw; doorbox.style.left = fx + 'px'; doorbox.style.top = r.y + 'px'; doorbox.style.width = fw + 'px'; doorbox.style.height = r.h + 'px'; }
+
+  /* ================= smooth scroll ================= */
+  var lenis = null;
+  if (!RM && typeof Lenis !== 'undefined' && matchMedia('(pointer: fine)').matches) {
+    lenis = new Lenis({ lerp: 0.075, smoothWheel: true, wheelMultiplier: 0.9 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0);
+  }
+  function stopScroll() { if (lenis) lenis.stop(); D.classList.add('lock'); }
+  function startScroll() { if (lenis) lenis.start(); D.classList.remove('lock'); }
+  function jump(y) { if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); window.scrollTo(0, y); }
+  function glide(y, dur) { if (lenis) lenis.scrollTo(y, { duration: dur || 1.6 }); else window.scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' }); }
+  function absTop(el) { return el.getBoundingClientRect().top + (window.scrollY || 0); }
+
+  var J = { p: 0 }, L = { p: 0 }, X = { p: 0 }, S = { p: 0 }, D2 = { p: 0 };
+  gsap.to(S, { p: 1, ease: 'none', scrollTrigger: { trigger: '#story', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1 } });
+  gsap.to(D2, { p: 1, ease: 'none', scrollTrigger: { trigger: '#doors2', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1.1 } });
+  gsap.to(J, { p: 1, ease: 'none', scrollTrigger: { trigger: '#journey', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1.4 } });
+  gsap.to(L, { p: 1, ease: 'none', scrollTrigger: { trigger: '#lab', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1.2 } });
+  gsap.to(X, { p: 1, ease: 'none', scrollTrigger: { trigger: '#explode', start: 'top top', end: 'bottom bottom', scrub: RM ? true : 1 } });
+
+  /* portal 0 -> .075, weave .06 -> .86 (glides to a stop), gate from .88 */
+  var P_END = 0.075, W_IN = 0.055, W_OUT = 0.86;
+  function weaveFrame(p) {
+    var n = seq('weave').m.n - 1; if (RM) return p < 0.5 ? 0 : n;
+    var q = clamp((p - W_IN) / (W_OUT - W_IN), 0, 1);
+    var e = 1 - Math.pow(1 - q, 1.6);            /* ease-out: the last stretch to the doors slows down and glides to a stop */
+    return (0.55 * ss(0, 1, q) + 0.45 * e) * n;
+  }
+  /* lab: 5 stations, each = short move + long hold */
+  var ST = [
+    { f: 4, s: 1.55, x: 0.52, y: 0.16 },   /* the chain (glass-bead chain overhead) */
+    { f: 40, s: 1.6, x: 0.14, y: 0.48 },   /* purification (glass columns, left) */
+    { f: 78, s: 1.7, x: 0.42, y: 0.64 },   /* the dropper fills the vial */
+    { f: 112, s: 1.55, x: 0.86, y: 0.46 }, /* freeze-drying (cabinets, right) */
+    { f: 146, s: 1.75, x: 0.62, y: 0.8 }   /* sealing + crimping (vial rack) */
+  ];
+  function labState(p) {
+    var n = ST.length, seg = clamp(p, 0, 0.9999) * n, i = Math.floor(seg), t = seg - i;
+    var a = ST[Math.max(0, i - 1)], b = ST[i];
+    var move = i === 0 ? 1 : ss(0, 0.28, t);            /* first 28% of a station moves, the rest holds */
+    var hold = ss(0.28, 1, t);
+    var f = a.f + (b.f - a.f) * move + hold * 3;          /* a near-still drift while holding */
+    var lerp = function (k) { return a[k] + (b[k] - a[k]) * move; };
+    return { i: i, t: t, f: f, s: lerp('s') + hold * 0.04, x: lerp('x'), y: lerp('y'), holding: t > 0.3 };
+  }
+
+  /* ================= per-frame UI ================= */
+  var hooks = $$('.sr'), gate = $('#gate'), portal = $('#portal'), portalG = $('#portalG'), nav = $('#nav');
+  var stations = $$('.st'), labCam = $('#labCam'), plaque = $('#labPlaque'), labFade = $('.lab-fade'), labSec = $('#lab');
+  var panes = $$('.pane'), storyBar = $('#storyBar'), heroCard = $('#heroCard'), ageSec = $('#age'), storeVeil = $('#storeVeil'), storeSec = $('#store');
+  var WIDE = function () { return innerWidth >= 900; };
+  /* SCR-21 pane timing: [in-start, in-end, out-start, out-end] on the story's own progress */
+  var PANE_T = [[-1, -1, 0.27, 0.42], [0.27, 0.42, 0.6, 0.74], [0.6, 0.74, 2, 2]];
+  var exLayers = { cap: $('.ex-cap'), neck: $('.ex-neck'), label: $('.ex-label'), body: $('.ex-body') }, exCalls = $$('.ex-calls li');
+  var busy = false, opened = false, introLive = D.classList.contains('intro-on'), lastGate = -1, curSt = -1;
+  var emb = $('#emblemFlat');
+
+  function frameUI() {
+    var p = J.p, ageGated = D.classList.contains('age-gated');
+    if (!ageGated) pW.draw(weaveFrame(p));
+    var gated = D.classList.contains('gated') || ageGated;
+    var ls = labState(L.p);
+    if (!gated) pL.draw(ls.f);
+    var ar = ageSec.getBoundingClientRect(); if (ar.bottom > 0 && ar.top < innerHeight) pA.draw(0);
+    if (dirty) { layoutDoors(); layoutD2(); }
+    dirty = false;
+    storyUI(); heroUI();
+    if (!gated) { d2UI(); veilUI(); }
+
+    /* SCR-17 portal */
+    if (!RM) {
+      var pp = clamp(p / P_END, 0, 1), sc = 1 + Math.pow(pp, 2.4) * 46;
+      portalG.setAttribute('transform', 'translate(800 400) scale(' + sc.toFixed(3) + ') translate(-800 -400)');
+      portal.style.opacity = 1 - ss(0.82, 1, pp);
+      portal.style.visibility = pp >= 1 ? 'hidden' : 'visible';
+    }
+    doorbox.style.visibility = (busy || p >= W_OUT - 0.004 || (RM && p >= 0.5)) ? 'visible' : 'hidden';
+    /* the door sign in the film is in an old serif: our illuminated plaque tracks it frame by frame (measured on both films) */
+    var u = busy ? 1 : weaveFrame(p) / (seq('weave').m.n - 1), T = SIGN[version], ds = doorSign;
+    if (u >= T[0][0] && pW.rect.w) {
+      var k = 1; while (k < T.length - 1 && T[k][0] < u) k++;
+      var A = T[k - 1], B = T[k], t = clamp((u - A[0]) / (B[0] - A[0]), 0, 1), L2 = function (i) { return A[i] + (B[i] - A[i]) * t; };
+      var c = CROP[kind], fw = pW.rect.w / c.w, fx = pW.rect.x - c.x * fw, w = L2(3) * fw * 1.08;
+      ds.style.left = (fx + L2(1) * fw) + 'px'; ds.style.top = (pW.rect.y + L2(2) * pW.rect.h) + 'px';
+      ds.style.width = w + 'px'; ds.style.height = (w * 0.27) + 'px'; ds.style.fontSize = (w * 0.068) + 'px'; ds.style.opacity = 1;
+    } else ds.style.opacity = 0;
+
+    hooks.forEach(function (h) {
+      var a = +h.dataset.at, d = Math.abs(p - a), o = RM || h.dataset.empty ? 0 : 1 - ss(0.035, 0.06, d);
+      if (h.contains(document.activeElement) && d < 0.09) o = 1;   /* a focused field keeps its card */
+      h.style.opacity = o; h.style.visibility = o < 0.02 ? 'hidden' : 'visible';
+      if (o > 0.02) { h.style.transform = 'translate3d(0,' + ((a - p) * 520) + 'px,0)'; h.style.setProperty('--sheen', clamp(0.5 + (p - a) * 9, 0, 1).toFixed(3)); }
+      if (o > 0.5 && !h.__seen) { h.__seen = true; track('form_view:' + h.dataset.hook); }
+    });
+
+    if (!busy) {
+      var go = RM ? (p >= 0.5 ? 1 : 0) : ss(0.875, 0.93, p);
+      if (Math.abs(go - lastGate) > 0.001) {
+        gate.style.opacity = go; gate.style.visibility = go < 0.01 ? 'hidden' : 'visible';
+        var mob = innerWidth <= 760 || innerWidth / innerHeight < 1;
+        gate.style.transform = mob ? 'translate3d(-50%,' + ((1 - go) * 40) + 'px,0)' : 'translate3d(0,calc(-50% + ' + ((1 - go) * 40) + 'px),0)';
+        lastGate = go;
+      }
+    }
+
+    /* lab stations */
+    if (!gated && !RM) {
+      var cw = labCam.clientWidth, ch = labCam.clientHeight, m = (ls.s - 1) / (2 * ls.s);
+      var tx = clamp(0.5 - ls.x, -m, m) * 100, ty = clamp(0.5 - ls.y, -m, m) * 100;
+      labCam.style.transform = 'scale(' + ls.s.toFixed(4) + ') translate(' + tx.toFixed(3) + '%,' + ty.toFixed(3) + '%)';
+      var r = pL.rect;
+      if (r.w) {   /* the illuminated plaque covers the back-wall sign, in frame space inside the lab camera */
+        var fw = r.w / CROP[kind].w, fx = r.x - CROP[kind].x * fw;
+        plaque.style.left = (fx + fw * (0.494 + ls.f * 0.00012)) + 'px'; plaque.style.top = (r.y + r.h * 0.372) + 'px';
+        plaque.style.fontSize = (fw * 0.0168) + 'px';
+      }
+      plaque.style.opacity = 1;
+      stations.forEach(function (s, k) {
+        var on = k === ls.i, o = on ? ss(0.12, 0.32, ls.t) * (k === ST.length - 1 ? 1 : 1 - ss(0.94, 1, ls.t)) : 0;
+        s.style.opacity = o; s.style.visibility = o < 0.02 ? 'hidden' : 'visible'; s.classList.toggle('on', o > 0.5);
+      });
+      if (ls.i !== curSt) { curSt = ls.i; track('stop_view:lab-' + curSt); }
+      labFade.style.opacity = ss(0.955, 1, L.p);   /* the lab ends in light: the second doors start in the same light */
+    }
+    if (!gated) holoUI(ls);
+
+    /* SCR-16 exploded vial */
+    if (!RM) {
+      var e = ss(0.08, 0.7, X.p);
+      exLayers.cap.style.transform = 'translate3d(0,' + (-e * 24) + '%,0) rotateY(' + (e * 18) + 'deg)';
+      exLayers.neck.style.transform = 'translate3d(0,' + (-e * 18) + '%,0)';
+      exLayers.label.style.transform = 'translate3d(' + (e * 46) + '%,' + (-e * 2) + '%,' + (e * 80) + 'px) rotateY(' + (-e * 28) + 'deg)';
+      exLayers.body.style.transform = 'translate3d(0,' + (e * 12) + '%,0) rotateY(' + (-e * 8) + 'deg)';
+      exCalls.forEach(function (c, k) { c.classList.toggle('on', X.p > 0.12 + k * 0.15); });
+    }
+
+    /* OBJ-08 flat fallback rotation (the 3D emblem in gl3d.js reads the same scroll) */
+    if (!RM && emb) {
+      var docH = Math.max(1, D.scrollHeight - innerHeight), s2 = (window.scrollY || 0) / docH;
+      emb.style.transform = 'rotateY(' + (s2 * 540) + 'deg) rotateX(' + (10 + Math.sin(s2 * 6.28) * 6) + 'deg)';
+    }
+  }
+
+  /* ================= LANDING motion ================= */
+  /* hero: the card recedes with a slow parallax as the mission comes up (transform only; the 3D words follow its box) */
+  var heroMoved = false;
+  function heroUI() {
+    if (RM || introLive || !heroCard) return;
+    var y = window.scrollY || 0;
+    if (y > 2 && y < innerHeight * 1.4) { var k = clamp(y / innerHeight, 0, 1); heroCard.style.transform = 'translate3d(0,' + (-k * innerHeight * 0.1).toFixed(1) + 'px,0) scale(' + (1 - k * 0.06).toFixed(4) + ')'; heroMoved = true; }
+    else if (y <= 2 && heroMoved) { heroCard.style.transform = ''; heroMoved = false; }
+  }
+  /* SCR-21: three liquid-glass panes fly in from depth, hold while their words light, then pass the camera */
+  var lastSp = -1;
+  function storyUI() {
+    if (RM || !WIDE()) return;
+    var sp = S.p; if (Math.abs(sp - lastSp) < 0.0002) return; lastSp = sp;
+    if (storyBar) storyBar.style.transform = 'scaleX(' + sp.toFixed(4) + ')';
+    panes.forEach(function (el, i) {
+      var T = PANE_T[i], kin = T[0] < 0 ? 1 : ss(T[0], T[1], sp), kout = ss(T[2], T[3], sp), o = kin * (1 - kout);
+      el.style.opacity = o.toFixed(3); el.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+      if (o < 0.01) return;
+      var sc = (0.7 + 0.3 * kin) * (1 + 0.42 * kout), y = (1 - kin) * 60 - kout * 30;
+      el.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
+      el.style.setProperty('--sheen', clamp((sp - (T[1] < 0 ? 0 : T[1])) * 3.2, 0, 1).toFixed(3));
+      var ws = el.__ws || (el.__ws = $$('.lw', el)), a = T[1] < 0 ? 0.02 : T[1], b = a + (Math.min(T[2], 1) - a) * 0.7, n = Math.round(ss(a, b, sp) * ws.length);
+      if (n !== el.__n) { el.__n = n; ws.forEach(function (w, k) { w.classList.toggle('lit', k < n); }); }
+    });
+  }
+  /* ================= the SECOND DOORS (lab -> product line) ================= */
+  var d2 = { stage: $('#d2Stage'), cam: $('#d2Cam'), scene: $('#d2Scene'), bg: $('#d2Bg'), box: $('#d2box'), sign: $('#d2Sign'), pane: $('#d2Pane'), veil: $('#d2Veil'),
+    cap: $('#d2Cap'), flood: $('#d2Flood'), from: $('#d2From'), film: $('#d2Film') };
+  d2.leaves = $$('#d2box .leaf'); d2.shades = $$('#d2box .shade'); d2.dials = $$('#d2box .dial'); d2.seam = $('#d2box .seam'); d2.spill = $('#d2box .spill'); d2.beams = $('#d2box .beams'); d2.doorway = $('#d2box .doorway');
+  var d2Film = !!CFG.secondDoorsFilm, d2Last = -1;
+  function setD2Film() {
+    if (!d2Film) return;
+    var v = d2.film; v.innerHTML = ''; v.hidden = false; d2.scene.hidden = true; d2.from.hidden = true; d2.pane.hidden = true;
+    [['mp4', 'video/mp4'], ['webm', 'video/webm']].forEach(function (x) { var el = document.createElement('source'); el.src = CFG.secondDoorsFilm + version + '.' + x[0]; el.type = x[1]; v.appendChild(el); });
+    v.preload = 'auto'; v.load();
+  }
+  function layoutD2() {
+    var W = d2.stage.clientWidth, H = d2.stage.clientHeight; if (!W || !H) return;
+    var sc = Math.max(W / 1912, H / 1080), w = 1912 * sc, h = 1080 * sc, x = (W - w) / 2, y = (H - h) / 2;
+    [d2.bg, d2.box].forEach(function (el) { el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.width = w + 'px'; el.style.height = h + 'px'; });
+    var sw = 0.29 * w * 1.08;   /* the plaque covers the photo's wall sign (same spot as the city film's last frame) */
+    d2.sign.style.left = (x + 0.502 * w) + 'px'; d2.sign.style.top = (y + 0.108 * h) + 'px'; d2.sign.style.width = sw + 'px'; d2.sign.style.height = (sw * 0.27) + 'px'; d2.sign.style.fontSize = (sw * 0.05) + 'px';
+    d2.cam.style.transformOrigin = (x + w * 0.5) + 'px ' + (y + h * 0.53) + 'px';
+  }
+  function d2UI() {
+    var r = d2.stage.parentNode.getBoundingClientRect();
+    if (r.bottom < -10 || r.top > innerHeight + 10) return;
+    var p = RM ? 0.42 : D2.p; if (Math.abs(p - d2Last) < 0.0004) return; d2Last = p;
+    d2.veil.style.opacity = RM ? 0 : (1 - ss(0, 0.07, p)).toFixed(3);
+    d2.flood.style.opacity = RM ? 0 : ss(0.82, 0.97, p).toFixed(3);
+    d2.cap.style.opacity = (ss(0.27, 0.35, p) * (1 - ss(0.46, 0.53, p))).toFixed(3);
+    if (d2Film) {
+      var v = d2.film; if (v.duration && isFinite(v.duration)) { var t = ss(0.04, 0.9, p) * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 1 / 30) v.currentTime = t; }
+      return;
+    }
+    var W = d2.stage.clientWidth, q = ss(0.06, 0.32, p), px = 1.15 - q * 1.5;   /* the glass blade crosses right to left; the doors appear behind it */
+    d2.pane.style.transform = 'translate3d(' + (px * W).toFixed(1) + 'px,0,0) rotate(5deg)';
+    d2.pane.style.visibility = q <= 0 || q >= 1 ? 'hidden' : 'visible';
+    d2.scene.style.clipPath = 'inset(0 0 0 ' + (clamp(px + 0.06, 0, 1) * 100).toFixed(2) + '%)';
+    d2.sign.style.opacity = ss(0.26, 0.36, p).toFixed(3);
+    var dio = ss(0.3, 0.36, p) * (1 - ss(0.5, 0.56, p)), rot = ss(0.3, 0.5, p) * 180;
+    d2.dials[0].style.opacity = d2.dials[1].style.opacity = dio.toFixed(3);
+    d2.dials[0].style.transform = 'rotate(' + rot.toFixed(1) + 'deg)'; d2.dials[1].style.transform = 'rotate(' + (-rot).toFixed(1) + 'deg)';
+    d2.seam.style.opacity = (ss(0.4, 0.45, p) * (1 - ss(0.58, 0.64, p))).toFixed(3); d2.seam.style.transform = 'scaleY(' + (0.12 + 0.88 * ss(0.4, 0.5, p)).toFixed(3) + ')';
+    var op = ss(0.46, 0.72, p);
+    d2.leaves[0].style.transform = 'rotateY(' + (-84 * op).toFixed(2) + 'deg)'; d2.leaves[1].style.transform = 'rotateY(' + (84 * op).toFixed(2) + 'deg)';
+    d2.shades.forEach(function (sh) { sh.style.opacity = (0.6 * op).toFixed(3); });
+    d2.doorway.style.opacity = ss(0.45, 0.5, p).toFixed(3);
+    var sp = ss(0.5, 0.7, p); d2.spill.style.opacity = (0.85 * sp).toFixed(3); d2.spill.style.transform = 'scaleY(' + (0.2 + 0.8 * sp).toFixed(3) + ')';
+    var bm = ss(0.48, 0.72, p); d2.beams.style.opacity = (0.85 * bm).toFixed(3); d2.beams.style.transform = 'scale(' + (0.55 + 0.53 * bm).toFixed(3) + ')';
+    d2.cam.style.transform = RM ? '' : 'scale(' + (1 + 1.9 * Math.pow(ss(0.66, 0.95, p), 1.6)).toFixed(4) + ')';
+  }
+  /* the collection's top edge carries the doors' light for one screen */
+  function veilUI() {
+    if (!storeVeil) return;
+    var r = storeSec.getBoundingClientRect();
+    if (r.top > innerHeight || r.top < -innerHeight) { if (storeVeil.__o !== 0) { storeVeil.style.opacity = 0; storeVeil.__o = 0; } return; }
+    var k = clamp((innerHeight - r.top) / innerHeight, 0, 1), o = RM ? 0 : 1 - ss(0.1, 0.9, k);
+    if (Math.abs(o - (storeVeil.__o || 0)) > 0.002) { storeVeil.style.opacity = o.toFixed(3); storeVeil.__o = o; }
+  }
+  /* ================= HOLOGRAMS (hologram-panels): glass panels that project up from the dropper tip and the vial rack ================= */
+  var HOLO = [
+    { el: $('#holoA'), st: 2, a: { d: [0.455, 0.61], m: [0.455, 0.61] } },   /* station 03: the dropper tip */
+    { el: $('#holoB'), st: 4, a: { d: [0.70, 0.705], m: [0.60, 0.71] } }     /* station 05: the vial rack (phones: its nearest vial) */
+  ];
+  HOLO.forEach(function (h) {
+    h.print = $('.holo-print', h.el); h.panel = $('.holo-panel', h.el); h.beam = $('.holo-beam', h.el); h.on = false; h.dismissed = false;
+    $('.holo-x', h.el).addEventListener('click', function () { h.dismissed = true; holoOut(h); });
+    h.el.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); h.dismissed = true; holoOut(h); } });
+  });
+  function prepHolo(h) {
+    if (h.el.id === 'holoB') { var j = joined(); $('.holo-join', h.el).hidden = j; $('.holo-sms', h.el).hidden = !j; h.el.setAttribute('aria-label', j ? 'New lots by text' : 'The PEPTICITY Team offer'); }
+  }
+  function holoIn(h) {
+    if (h.on) return; h.on = true; prepHolo(h); h.el.classList.add('on'); labSec.classList.add('holo-on'); track('form_view:' + h.el.dataset.hook);
+    if (h.tl) h.tl.kill();
+    if (RM) { gsap.set(h.beam, { scaleY: 1 }); gsap.set(h.print, { clipPath: 'inset(0% 0 0 0)', opacity: 1 }); return; }
+    h.tl = gsap.timeline({ onComplete: function () { h.el.classList.add('idle'); } });
+    h.tl.fromTo(h.beam, { scaleY: 0 }, { scaleY: 1, duration: 0.35, ease: 'power2.out' })
+      .fromTo(h.print, { clipPath: 'inset(100% 0 0 0)', opacity: 0 }, { clipPath: 'inset(0% 0 0 0)', opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.25)
+      .fromTo(h.panel, { scaleY: 0.92, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.6, ease: 'power3.out' }, 0.25)
+      .fromTo(h.panel, { '--sheen': 0 }, { '--sheen': 1, duration: 1.3, ease: 'power1.inOut' }, 0.8);
+  }
+  function holoOut(h) {
+    if (!h.on) return; h.on = false; h.el.classList.remove('idle');
+    if (h.el.contains(document.activeElement)) document.activeElement.blur();
+    if (h.tl) h.tl.kill();
+    h.tl = gsap.timeline({ onComplete: function () { h.el.classList.remove('on'); if (!HOLO.some(function (x) { return x.on; })) labSec.classList.remove('holo-on'); } });
+    h.tl.to(h.print, { clipPath: 'inset(100% 0 0 0)', opacity: 0, duration: 0.3, ease: 'power2.in' }).to(h.beam, { scaleY: 0, duration: 0.2, ease: 'power2.in' }, 0.12);
+  }
+  function frameToScreen(f, ls) {   /* film point (full-frame fractions) -> lab stage px, through the painter rect and the lab camera */
+    var r = pL.rect, c = CROP[kind]; if (!r.w) return null;
+    var X = r.x + (f[0] - c.x) / c.w * r.w, Y = r.y + f[1] * r.h, cw = labCam.clientWidth, ch = labCam.clientHeight;
+    var m = (ls.s - 1) / (2 * ls.s), tx = clamp(0.5 - ls.x, -m, m) * cw, ty = clamp(0.5 - ls.y, -m, m) * ch;
+    return { x: cw / 2 + ls.s * (X + tx - cw / 2), y: ch / 2 + ls.s * (Y + ty - ch / 2), W: cw, H: ch };
+  }
+  function holoUI(ls) {
+    HOLO.forEach(function (h) {
+      var keep = h.on && h.el.contains(document.activeElement);
+      var active = !h.dismissed && ((RM && labInView()) || (!RM && ls.i === h.st && ls.t > 0.36 && ls.t < 0.95)) || keep;
+      if (active && !h.on) holoIn(h); else if (!active && h.on) holoOut(h);
+      if (!h.on || RM) return;
+      var P = frameToScreen(h.a[kind], ls); if (!P) return;
+      var ax = clamp(P.x, 24, P.W - 24), ay = clamp(P.y, 90, P.H - 40);
+      h.el.style.left = ax.toFixed(1) + 'px'; h.el.style.top = ay.toFixed(1) + 'px';
+      var pw = h.print.offsetWidth, ph = h.print.offsetHeight, left = ax - pw / 2, dx = 0;
+      if (left < 12) dx = 12 - left; else if (left + pw > P.W - 12) dx = P.W - 12 - (left + pw);
+      var card = stations[ls.i]; if (card && WIDE() && !(innerWidth / innerHeight < 1)) { var cr = card.getBoundingClientRect(); if (left + dx < cr.right + 18) dx = cr.right + 18 - left; }
+      var gap = Math.max(14, Math.min(innerWidth < 760 ? 44 : 64, ay - 74 - ph));
+      if (Math.abs(dx - (h.dx || 0)) > 0.5) { h.dx = dx; h.print.style.setProperty('--dx', dx.toFixed(1) + 'px'); }
+      if (Math.abs(gap - (h.gap || 0)) > 0.5) { h.gap = gap; h.el.style.setProperty('--gap', gap.toFixed(1) + 'px'); }
+    });
+  }
+  function labInView() { var r = labSec.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }
+  gsap.ticker.add(frameUI);
+
+  function onResize() {
+    var k = innerWidth / innerHeight < 0.95 ? 'm' : 'd';
+    if (k !== kind) { kind = k; want(seq('weave'), [Math.floor(weaveFrame(J.p) / seq('weave').per)], true); if (!introLive) loadAll(); }
+    pW.resize(); pL.resize(); pA.resize(); dirty = true; lastGate = -1; d2Last = -1; lastSp = -1; layoutD2();
+  }
+  var rT; addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(onResize, 120); });
+
+  /* ================= version toggle (BTN-P01 segmented) ================= */
+  var smoke = window.PCSmoke ? PCSmoke($('#smoke'), { mode: version === 'black' ? 'black' : 'white', offset: 8 }) : null;
+  var vSeg = $('#vSeg');
+  function setVersion(v, quiet) {
+    version = v === 'black' ? 'black' : 'white';
+    D.setAttribute('data-version', version);
+    if (!quiet) LS.set('pc-version', version);
+    if (vSeg.pcSelect) vSeg.pcSelect(version === 'black' ? 1 : 0);   /* keeps the switch's own record in step (first arrow key works) */
+    $$('.leaf img').forEach(function (i) { i.src = 'media/' + version + '-doors.jpg'; });
+    $('#doorbox .doorway .peek').src = 'media/' + version + '-lab.jpg';
+    $('#d2Bg').src = 'media/' + version + '-doors.jpg'; $('#d2From').src = 'media/' + version + '-lab.jpg'; if (d2Film) setD2Film(); d2Last = -1;
+    var w = seq('weave'); want(w, [Math.floor(weaveFrame(J.p) / w.per), 0, w.m.files - 1], true);
+    var l = seq('lab'); want(l, [Math.floor(labState(L.p).f / l.per)], true);
+    if (!introLive) loadAll();
+    if (smoke) smoke.setMode(version);
+    dirty = true; pW.last = pL.last = -1;
+    document.dispatchEvent(new CustomEvent('pc-version', { detail: version }));
+  }
+  if (window.PCButtons) PCButtons.init();
+  vSeg.addEventListener('pc-change', function (e) { if (e.detail.value !== version) setVersion(e.detail.value); });
+  setVersion(version, true);
+  if (/[?&]sheen=([1-5])/.test(location.search)) D.setAttribute('data-sheen', RegExp.$1);
+
+  /* ================= the entrance ================= */
+  var intro = $('#intro'), vid = $('#chest'), film = $('#film');
+  var introDone = false, introTimers = [], introTl = null;
+  function setFilm() {
+    var base = (CFG.chest && CFG.chest.base) || 'media/chest-';
+    vid.innerHTML = ''; vid.poster = base + version + '-poster.jpg';
+    [['mp4', 'video/mp4'], ['webm', 'video/webm']].forEach(function (s) { var el = document.createElement('source'); el.src = base + version + '.' + s[0]; el.type = s[1]; vid.appendChild(el); });
+    vid.load();
+  }
+  /* R-ENTRANCE: the WHITE or BLACK chest film exactly as it is (the chest opens, the bottle rises with its peptide swirl),
+     then the camera pushes into the bottle's light and through it into the HERO CARD. */
+  function dive() {
+    if (introDone) return; introDone = true;
+    introTimers.forEach(clearTimeout); introTimers = [];
+    SS.set('pc-intro', '1');
+    var org = (CFG.chest && CFG.chest.focus) || [50, 57];
+    gsap.set(film, { transformOrigin: org[0] + '% ' + org[1] + '%' });
+    var tl = introTl = gsap.timeline();
+    tl.to(film, { scale: 2.6, duration: 2.1, ease: 'power3.in' }, 0)
+      .to('#introBloom', { opacity: 1, scale: 1.35, duration: 1.0, ease: 'power2.in' }, 1.0)
+      .add(function () {                                   /* we pass through the light: the hero is already there behind it */
+        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false;
+        startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
+        if (!RM) gsap.fromTo('.hero-card', { opacity: 0, scale: 0.74, y: 24 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.9, ease: 'expo.out', clearProps: 'transform' });
+      }, 1.85)
+      .to(intro, { opacity: 0, duration: 1.1, ease: 'power2.out' }, 1.95)
+      .add(function () { intro.classList.remove('dive'); gsap.set(intro, { clearProps: 'opacity' }); gsap.set(film, { clearProps: 'transform' }); gsap.set('#introBloom', { opacity: 0, scale: 1 }); vid.pause(); }, 3.15);
+    loadAll();
+  }
+  function liftIntro() {
+    if (introDone) return; introDone = true;
+    introTimers.forEach(clearTimeout); introTimers = [];
+    SS.set('pc-intro', '1'); intro.classList.add('lift');
+    setTimeout(function () {
+      D.classList.remove('intro-on'); introLive = false; intro.classList.remove('lift'); vid.pause();
+      startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
+      heroIn();
+    }, 1050);
+    loadAll();
+  }
+  function runIntro() {
+    introDone = false; introLive = true;
+    D.classList.add('intro-on'); intro.classList.remove('lift', 'dive');
+    gsap.set(film, { scale: 1 }); gsap.set('#introBloom', { opacity: 0, scale: 1 });
+    stopScroll(); jump(0); setFilm();
+    var started = false, at = (CFG.chest && CFG.chest.diveAt) || 9.1;
+    vid.onplaying = function () { started = true; };
+    vid.ontimeupdate = function () { if (vid.currentTime >= at) dive(); };
+    vid.onended = function () { dive(); };
+    if (/[?&]holdintro/.test(location.search)) { vid.ontimeupdate = vid.onended = null; }   /* review aid: keep the film on screen */
+    /* never skip the film because it loads slowly: the closed-chest poster holds until it can play.
+       If the browser blocks autoplay (e.g. iPhone low-power mode), show TAP TO OPEN instead of skipping. */
+    var tap = $('#introTap');
+    function tryPlay() { var pr = vid.play(); if (pr && pr.catch) pr.catch(function () { if (!started && tap) tap.hidden = false; }); }
+    if (tap) tap.onclick = function () { tap.hidden = true; tryPlay(); };
+    /* call play() straight away: iPhones only start loading a video once play() is asked for */
+    tryPlay();
+    intro.addEventListener('click', function (e) { if (!started && !e.target.closest('#skipIntro')) { if (tap) tap.hidden = true; tryPlay(); } });
+    if (!/[?&]holdintro/.test(location.search)) introTimers.push(setTimeout(function () { if (!started) dive(); }, 30000));
+    setTimeout(loadAll, 2500);
+  }
+  $('#skipIntro').addEventListener('click', liftIntro);
+  addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.classList.contains('intro-on')) liftIntro(); });
+  $('#replay').addEventListener('click', function () { closeMenu(); runIntro(); });
+  function heroIn() { if (RM) return; gsap.fromTo('.hero-card', { opacity: 0, y: 40, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: 'expo.out' }); }
+  if (introLive) runIntro(); else { loadAll(); heroIn(); }
+
+  /* ================= forms (capture-forms; preview only) ================= */
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, PHONE = /^[+()\d\s.-]{10,}$/;
+  /* success states: each says what happened and the next step (capture-forms) */
+  var SUCCESS = {
+    H18a: function () { return 'You\'re on Grace\'s list. The first letter comes to your inbox. Next: read our story below.'; },
+    H18: function () { return 'You\'re on Grace\'s list. The next letter comes to your inbox.'; },
+    H18b: function () { return 'You\'re on Grace\'s list. The next letter comes to your inbox.'; },
+    H01b: function (f) { return 'Welcome to the PEPTICITY Team. ' + (OFFER ? 'Your 15% is saved to this device and applies in the cart.' : '') + (f.consent_email && f.consent_email.checked ? ' Grace\'s letter will come monthly.' : ''); },
+    H43: function () { return 'Saved. We\'ll text you when a sold-out lot is back. Reply STOP any time.'; },
+    H44b: function () { return 'You\'re in. 15% applies in your cart. Next: SEE EVERY PRODUCT below.'; },
+    H44c: function () { return 'Saved. We\'ll text you when a sold-out lot is back. Reply STOP any time.'; },
+    H45: function () { return 'Sealed. Grace will write when PEPTICITY has news for your province.'; },
+    H48: function () { return 'Your gift is saved. 15% applies in your cart. Next: the collection is just above.'; },
+    'H48b': function () { return 'Your cart link is on its way.'; },
+    H36: function (f) { return 'Thanks' + (f.name && f.name.value ? ', ' + f.name.value.trim() : '') + '. ' + (f.want ? 'You picked ' + f.want.value + '.' : ''); },
+    H47: function () { return '15% applied to this order.'; },
+    H50: function () { return ''; }
+  };
+  /* consent (CASL): data-consent="required" = the email IS the purpose (letter, restock); "sms" = texts are the purpose.
+     Offer and card forms never require the marketing box (audit A15): the 15% is saved on this device either way. */
+  function validate(form) {
+    var err = $('.err', form), em = form.email, ph = form.phone, c = form.consent_email, cs = form.consent_sms, need = form.dataset.consent || '';
+    err.textContent = '';
+    [em, ph].forEach(function (x) { if (x && x.removeAttribute) x.removeAttribute('aria-invalid'); });
+    var bad = function (el, t) { err.textContent = t; if (el) { if (el.type !== 'checkbox') el.setAttribute('aria-invalid', 'true'); el.focus(); } return false; };
+    if (em && em.type === 'email' && (em.required || em.value.trim()) && !EMAIL.test(em.value.trim())) return bad(em, 'That email looks incomplete.');
+    if (need === 'sms') {
+      if (!ph || !PHONE.test(ph.value.trim())) return bad(ph, 'That mobile number looks incomplete.');
+      if (!cs || !cs.checked) return bad(cs, 'Tick the box so we\'re allowed to text you.');
+    }
+    if (need === 'required' && c && !c.checked) return bad(c, 'Tick the box so we\'re allowed to email you.');
+    if (cs && cs.checked && ph && !ph.value.trim()) return bad(ph, 'Add your mobile number for texts, or untick that box.');
+    if (ph && ph.value.trim() && !PHONE.test(ph.value.trim())) return bad(ph, 'That mobile number looks incomplete.');
+    return true;
+  }
+  function payload(form) {
+    var g = function (n) { return form[n] && form[n].value ? form[n].value.trim() : ''; };
+    var ce = form.consent_email, cs = form.consent_sms;
+    return { hook: form.dataset.hook, page: 'home', name: g('name'), email: g('email'), phone: g('phone'), province: pass ? pass.prov : '', goal: '',
+      consent_email: ce ? { given: ce.checked, text: ce.nextElementSibling.textContent, at: new Date().toISOString() } : { given: false },
+      consent_sms: cs ? { given: cs.checked, text: cs.nextElementSibling.textContent, at: new Date().toISOString() } : { given: false },
+      utm: {}, created_at: new Date().toISOString(), version: version };
+  }
+  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state */
+    if (!btn) { cb && cb(); return; }
+    var lab = $('.pc-btn__label', btn), w = btn.offsetWidth;
+    btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; lab.textContent = 'SENDING';
+    setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); lab.textContent = label || 'DONE ✓'; cb && cb(); }, RM ? 10 : 650);
+  }
+  function wireForm(form, after) {
+    form.addEventListener('focusin', function () { if (!form.__started) { form.__started = true; track('form_start'); } });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (form.classList.contains('sent-done')) return;
+      if (!validate(form)) return;
+      var data = payload(form);
+      if (location.hash === '#debug') console.log('[preview payload]', data);
+      track('form_submit');
+      morph($('button[type=submit]', form), 'DONE ✓', function () {
+        form.classList.add('sent-done');
+        var ok = $('.ok', form), fn = SUCCESS[form.dataset.hook];
+        if (ok) ok.textContent = (fn ? fn(form) + ' ' : '') + 'Preview only: nothing was sent.';
+        if (form.hasAttribute('data-offer') && data.email) join(data.email, data.name);
+        if (form.consent_email && form.consent_email.checked && /H18/.test(form.dataset.hook)) LS.set('pc-letter', '1');
+        if (form.dataset.consent === 'sms') LS.set('pc-sms', '1');
+        after && after(data, form);
+      });
+    });
+  }
+  $$('.cap-form').forEach(function (f) {
+    if (f.dataset.step || f.classList.contains('ref-form') || f.id === 'passport') return;
+    wireForm(f, f.dataset.hook === 'H45' ? function () { f.classList.add('sealed'); } : f.dataset.hook === 'H48b' ? function () { setTimeout(closeExit, 2200); } :
+      f.closest('.holo') ? function () { var h = HOLO.find(function (x) { return x.el.contains(f); }); setTimeout(function () { if (h) { h.dismissed = true; holoOut(h); } }, 2600); } : null);
+  });
+
+  /* ================= the member card + doors (FRM-02, H34) ================= */
+  var mcard = $('#mcard'), mcName = $('#mcName'), mcTier = $('#mcTier'), gateStatus = $('#gateStatus');
+  function setGate(s) { gate.dataset.state = s; }
+  function renderMemberBits() {
+    var n = joined() ? (member.notches || 2) : 0;
+    $$('#mcNotch i').forEach(function (i, k) { i.classList.toggle('on', k < n); });
+    if (joined()) { mcName.textContent = (member.name || 'FOUNDING MEMBER').toUpperCase(); mcTier.textContent = 'FOUNDING MEMBER · ' + n + ' OF 10'; }
+    var prog = $('#cardProg'); if (prog) prog.textContent = joined() ? 'YOUR CARD: ' + n + ' OF 10 NOTCHES LIT' : '';
+    var lb = $('#labBuyJoin'); if (lb) lb.hidden = joined();
+  }
+  $('#choJoin').addEventListener('click', function () {
+    if (joined()) { setGate('tap'); gateStatus.textContent = 'CARD READY'; return; }
+    setGate('email'); gateStatus.textContent = 'ISSUING YOUR CARD'; setTimeout(function () { $('[data-step=email] input[type=email]').focus({ preventScroll: true }); }, 60);
+  });
+  $('#choGuest').addEventListener('click', function () { guestEnter(); });
+  var fEmail = $('[data-step=email]'), fName = $('[data-step=name]');
+  fEmail.addEventListener('submit', function (e) {
+    e.preventDefault(); if (!validate(fEmail)) return;
+    var data = payload(fEmail); if (location.hash === '#debug') console.log('[preview payload]', data);
+    morph($('button[type=submit]', fEmail), 'CARD ISSUED ✓', function () {
+      join(data.email); setTimeout(function () { setGate('name'); gateStatus.textContent = 'NAME YOUR CARD'; $('input', fName).focus({ preventScroll: true }); }, 450);
+    });
+  });
+  var nameIn = $('input', fName);
+  nameIn.addEventListener('input', function () { mcName.classList.add('typing'); mcName.textContent = (nameIn.value || 'YOUR NAME HERE').toUpperCase(); });
+  nameIn.addEventListener('blur', function () { mcName.classList.remove('typing'); });
+  function toTap() {
+    mcName.classList.remove('typing');
+    if (nameIn.value.trim()) { member.name = nameIn.value.trim().slice(0, 22); member.notches = Math.max(member.notches || 2, 3); saveMember(); }
+    renderMemberBits(); setGate('tap'); gateStatus.textContent = 'AWAITING CARD';
+    if (window.PCCard3D) { PCCard3D.face(); PCCard3D.spin(1); PCCard3D.flare(); }   /* the freshly printed card spins once to face you */
+    else gsap.fromTo(mcard, { rotationY: -25 }, { rotationY: 0, duration: 1, ease: 'expo.out' });
+    mcard.focus({ preventScroll: true });
+  }
+  fName.addEventListener('submit', function (e) { e.preventDefault(); toTap(); });
+  $('[data-skip]', fName).addEventListener('click', toTap);
+  mcard.addEventListener('click', function () {
+    if (mcard.dataset.dragged) return;                    /* the click that ends a drag-to-turn is not a tap */
+    if (busy || opened) return;
+    if (gate.dataset.state === 'tap') return scan();
+    if (window.PCCard3D) { PCCard3D.flip(); tone('tap'); return; }   /* tap: spring flip, the chip flares */
+    if (gate.dataset.state === 'choose') $('#choJoin').click();
+  });
+  /* sound: off by default; the confirm tone plays only when the visitor turns sound on */
+  var sndOn = LS.get('pc-sound') === '1', actx = null, sndBtn = $('#sndBtn');
+  function paintSnd() { if (sndBtn) { sndBtn.setAttribute('aria-pressed', String(sndOn)); sndBtn.textContent = sndOn ? 'SOUND ON' : 'SOUND OFF'; } }
+  if (sndBtn) sndBtn.addEventListener('click', function () { sndOn = !sndOn; LS.set('pc-sound', sndOn ? '1' : '0'); paintSnd(); if (sndOn) tone('tap'); });
+  paintSnd();
+  function tone(kind) {
+    if (!sndOn) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume();
+      var now = actx.currentTime, out = actx.createGain(); out.gain.value = 0.9; out.connect(actx.destination);
+      var notes = kind === 'ok' ? [[659.25, 0, 0.9], [987.77, 0.14, 1.3]] : [[880, 0, 0.25]];
+      notes.forEach(function (n) {
+        var o = actx.createOscillator(), g = actx.createGain(); o.type = 'sine'; o.frequency.value = n[0];
+        g.gain.setValueAtTime(0.0001, now + n[1]); g.gain.exponentialRampToValueAtTime(kind === 'ok' ? 0.07 : 0.03, now + n[1] + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + n[1] + n[2]); o.connect(g); g.connect(out); o.start(now + n[1]); o.stop(now + n[1] + n[2] + 0.05);
+      });
+    } catch (e) {}
+  }
+  mcard.addEventListener('pointermove', function (e) {
+    if (busy || window.PCCard3D) return; var r = mcard.getBoundingClientRect();
+    mcard.classList.add('tilt'); mcard.style.setProperty('--ry', ((e.clientX - r.left) / r.width - 0.5) * 18 + 'deg'); mcard.style.setProperty('--rx', -((e.clientY - r.top) / r.height - 0.5) * 14 + 'deg');
+  });
+  mcard.addEventListener('pointerleave', function () { mcard.classList.remove('tilt'); });
+
+  var cam = $('#cam'), flood = $('#flood'), beams = $('#doorbox .beams'), leaves = $$('#doorbox .leaf'), dials = $$('#doorbox .dial'), seam = $('#doorbox .seam'), spill = $('#doorbox .spill'), doorway = $('#doorbox .doorway'), locks = $$('.locks li');
+  function ungate() { if (!D.classList.contains('gated')) return; D.classList.remove('gated'); ScrollTrigger.refresh(); dirty = true; pL.resize(); revealSetup(); }
+  function openState() {
+    opened = true; doorbox.classList.add('opened');
+    gsap.set(leaves[0], { rotationY: -84, opacity: 1 }); gsap.set(leaves[1], { rotationY: 84, opacity: 1 }); gsap.set('#doorbox .leaf .shade', { opacity: 0.6 });
+    gsap.set(doorway, { opacity: 1 }); gsap.set(spill, { opacity: 0.7, scaleY: 1 }); gsap.set(beams, { opacity: 0.6, scale: 1 });
+    locks.forEach(function (l) { l.classList.add('off'); });
+    setGate('granted'); gateStatus.textContent = 'WELCOME IN'; $('#tapHint').textContent = 'The doors are open. Scroll down to step inside.';
+  }
+  function openDoors(tl, t0) {
+    tl.call(function () { locks[0].classList.add('off'); }, null, t0)
+      .fromTo(dials[0], { opacity: 0, rotation: 0, transformOrigin: '50% 50%' }, { opacity: 1, rotation: 180, duration: 1.3 }, t0)
+      .call(function () { locks[1].classList.add('off'); }, null, t0 + 0.5)
+      .fromTo(dials[1], { opacity: 0, rotation: 0, transformOrigin: '50% 50%' }, { opacity: 1, rotation: -180, duration: 1.3 }, t0 + 0.5)
+      .call(function () { locks[2].classList.add('off'); gateStatus.textContent = 'LOCKS RELEASED'; }, null, t0 + 1)
+      .fromTo(seam, { opacity: 0, scaleY: 0.12 }, { opacity: 1, scaleY: 1, duration: 0.8, ease: 'expo.out' }, t0 + 1)   /* light cracks through the seam */
+      .to(gate, { opacity: 0, duration: 0.6, ease: 'power2.in' }, t0 + 1.6)
+      .set(leaves, { opacity: 1 }, t0 + 1.85).set(doorway, { opacity: 1 }, t0 + 1.85)
+      .to(dials, { opacity: 0, duration: 0.4 }, t0 + 1.85)
+      .to(leaves[0], { rotationY: -84, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
+      .to(leaves[1], { rotationY: 84, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
+      .to('#doorbox .leaf .shade', { opacity: 0.6, duration: 2.6, ease: 'power2.inOut' }, t0 + 1.9)
+      .to(seam, { opacity: 0, duration: 0.8 }, t0 + 2.3)
+      .fromTo(spill, { opacity: 0, scaleY: 0.2 }, { opacity: 0.85, scaleY: 1, duration: 2, ease: 'power2.out' }, t0 + 2.1)
+      .fromTo(beams, { opacity: 0, scale: 0.55 }, { opacity: 0.85, scale: 1.08, duration: 2.6, ease: 'power2.out' }, t0 + 1.95)
+      .add(function () { var w = doorbox.offsetWidth, h = doorbox.offsetHeight; gsap.set(cam, { transformOrigin: (doorbox.offsetLeft + w * 0.5) + 'px ' + (doorbox.offsetTop + h * 0.53) + 'px' }); }, t0 + 3.1)
+      .to(cam, { scale: 2.9, duration: 2.2, ease: 'power2.in' }, t0 + 3.1)
+      .to(flood, { opacity: 1, duration: 1.1, ease: 'power1.in' }, t0 + 4.2)
+      .call(enterLab, null, t0 + 5.35);
+  }
+  function scan() {
+    if (busy || opened) return;
+    busy = true; stopScroll(); setGate('scanning'); gateStatus.textContent = 'READING CARD'; track('reveal_done:scanner');
+    if (RM) { openState(); ungate(); busy = false; startScroll(); jump(absTop($('#lab'))); return; }
+    var C = window.PCCard3D, padEl = $('#pad');
+    if (C) {   /* R-SCAN: glide onto the glass plate, lie down, a light line reads the card, the chip lights the plate, confirm, the doors part */
+      var plate = $('.pl-tilt', padEl).getBoundingClientRect(), r0 = mcard.getBoundingClientRect();
+      var px = plate.left + plate.width / 2 - (r0.left + r0.width / 2), py = plate.top + plate.height * 0.42 - (r0.top + r0.height / 2);
+      var ps = Math.min(1, plate.width * 0.86 / r0.width);
+      mcard.dataset.lock = '1';
+      var tl3 = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
+      tl3.call(function () { C.face(); }, null, 0)
+        .to(mcard, { x: px, y: py, scale: ps, duration: 1.15 }, 0)
+        .call(function () { C.lay(1); }, null, 0.2)
+        .call(function () { C.sweep(0.95); gateStatus.textContent = 'VERIFYING MEMBER'; }, null, 1.25)
+        .call(function () { padEl.classList.add('lit'); C.flare(); tone('ok'); }, null, 1.85)
+        .call(function () { setGate('granted'); gateStatus.textContent = 'ACCESS GRANTED'; }, null, 2.35)
+        .call(function () { C.lay(0); }, null, 2.6)
+        .to(mcard, { x: 0, y: 0, scale: 1, duration: 0.95 }, 2.6)
+        .call(function () { padEl.classList.remove('lit'); delete mcard.dataset.lock; }, null, 3.7);
+      openDoors(tl3, 2.8);
+      return;
+    }
+    var pad = padEl.getBoundingClientRect(), cr = mcard.getBoundingClientRect();
+    var dx = pad.left + pad.width / 2 - (cr.left + cr.width / 2), dy = pad.top + pad.height / 2 - (cr.top + cr.height / 2);
+    var sc = Math.min(1, pad.width * 1.05 / cr.width);
+    var tl = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
+    mcard.classList.remove('tilt');
+    tl.to(mcard, { x: dx, y: dy, scale: sc, duration: 0.8 }, 0)
+      .to('.mc-flip', { rotationY: 540, duration: 1.4, ease: 'power2.inOut' }, 0)      /* it spins onto the scanner */
+      .fromTo('.mc-scan', { opacity: 0.95, top: '-22%' }, { top: '100%', duration: 0.6, repeat: 1, ease: 'none' }, 1.3)
+      .call(function () { gateStatus.textContent = 'VERIFYING MEMBER'; }, null, 1.6)
+      .set('.mc-scan', { opacity: 0 }, 2.5)
+      .call(function () { setGate('granted'); gateStatus.textContent = 'ACCESS GRANTED'; }, null, 2.5)
+      .to(mcard, { x: 0, y: 0, scale: 1, duration: 0.7 }, 2.6)
+      .set('.mc-flip', { rotationY: 0 }, 3.3);
+    openDoors(tl, 2.8);
+  }
+  function guestEnter() {
+    if (busy || opened) return;
+    busy = true; stopScroll(); SS.set('pc-guest', '1');
+    mcTier.textContent = 'GUEST PASS'; mcName.textContent = 'GUEST';
+    setGate('granted'); gateStatus.textContent = 'GUEST ENTRY';
+    if (RM) { openState(); ungate(); busy = false; startScroll(); jump(absTop($('#lab'))); return; }
+    openDoors(gsap.timeline({ defaults: { ease: 'power3.inOut' } }), 0.2);
+  }
+  function enterLab() {
+    openState(); ungate(); gsap.set(cam, { scale: 1 }); gsap.set(gate, { opacity: 0 });
+    jump(absTop($('#lab'))); L.p = 0; dirty = true; busy = false; lastGate = -1;
+    setTimeout(function () { ScrollTrigger.refresh(); startScroll(); gsap.to(flood, { opacity: 0, duration: 1.3, ease: 'power2.out' }); }, 60);
+  }
+  $('#toStory').addEventListener('click', function () { glide(absTop($('#mission')) - 20, 1.8); });
+
+  /* ================= navigation helpers ================= */
+  function goTo(id) {
+    if (id === 'hero') return glide(0);
+    if (id === 'mission' || id === 'story' || id === 'age') return glide(absTop(document.getElementById(id)) - (id === 'mission' ? 20 : 0), 1.8);
+    /* the sales zones open only past the 19+ check: every route there lands on the gate first */
+    if (D.classList.contains('age-gated')) { glide(absTop($('#age')), 1.8); setTimeout(function () { var s0 = $('#ageProv'); if (s0 && !RM) s0.focus({ preventScroll: true }); }, 1900); return; }
+    if (id === 'city') return glide(absTop($('#journey')) + innerHeight * 0.6);
+    if (D.classList.contains('gated')) { if (!opened) openState(); ungate(); }
+    var el = document.getElementById(id) || $('[data-stop-id="' + id + '"]');
+    setTimeout(function () { if (el) glide(absTop(el) - (id === 'lab' ? 0 : 60), 1.6); }, 40);
+  }
+  $('#toStore').addEventListener('click', function () { goTo('store'); });
+  document.addEventListener('click', function (e) {
+    var g = e.target.closest('[data-go]'); if (g) { e.preventDefault(); closeMenu(); goTo(g.dataset.go); return; }
+    var o = e.target.closest('[data-open]'); if (o) { e.preventDefault(); openModal(o.dataset.open); }
+  });
+
+  /* ================= LAB station nav + settle-on-hold ================= */
+  $('#stNext').addEventListener('click', function () {
+    var ls = labState(L.p), lab = $('#lab'), span = lab.offsetHeight - innerHeight;
+    var next = Math.min(ST.length - 1, ls.i + (ls.holding ? 1 : 0));
+    if (ls.i === ST.length - 1 && ls.holding) return glide(absTop($('#doors2')) + innerHeight * 0.4, 2.4);
+    glide(absTop(lab) + span * ((next + 0.55) / ST.length), 2.4);
+  });
+  var settleT;
+  addEventListener('scroll', function () {
+    clearTimeout(settleT);
+    if (D.classList.contains('gated') || RM || busy) return;
+    settleT = setTimeout(function () {
+      var lab = $('#lab'), r = lab.getBoundingClientRect(); if (r.top > 0 || r.bottom < innerHeight) return;
+      var ls = labState(L.p); if (ls.t > 0.05 && ls.t < 0.3) { var span = lab.offsetHeight - innerHeight; glide(absTop(lab) + span * ((ls.i + 0.42) / ST.length), 1.4); }
+    }, 260);
+  }, { passive: true });
+
+  /* ================= store ================= */
+  var PRODUCTS = [], BY = {}, DATA = null;
+  /* interest entry cards: shelves only (no "researched in the context of" wording, no WEIGHT GOALS). Which listings sit on a shelf
+     comes from data/products.json (p.shelves), so no product name is in this file or the page. */
+  var INTERESTS = [
+    { k: 'gym', t: 'GYM AND PERFORMANCE', icon: 'dumbbell' },
+    { k: 'age', t: '55+ AND LONGEVITY', icon: 'hourglass' },
+    { k: 'energy', t: 'ENERGY', icon: 'bolt' },
+    { k: 'recovery', t: 'RECOVERY', icon: 'ring' },
+    { k: 'skin', t: 'SKIN AND HAIR', icon: 'drop' },
+    { k: 'sleep', t: 'SLEEP', icon: 'moon' }
+  ];
+  function listed(p) { return !!p && !p.hidden && (HIGH || !p.highRisk); }
+  function inInterest(I, p) { return listed(p) && (p.shelves || []).indexOf(I.k) > -1; }
+  var CLS = [];   /* finder classes come with the catalogue (data/products.json "classes") */
+  var filter = 'all';
+  /* the bottle lights up from the bottom as its card reaches the screen (owner, 30 Oct) */
+  var vialIO = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('lit', e.isIntersecting); }); }, { threshold: 0.55 }) : null;
+  function watchVials(root) { if (!vialIO) return; (root || D).querySelectorAll('.prod').forEach(function (el) { vialIO.observe(el); }); }
+  function bottle(p, cls) {
+    return '<div class="vial ' + (cls || '') + '"><span class="pool" aria-hidden="true"></span><img src="' + CFG.bottle + '" alt="" width="305" height="760" loading="lazy">' +
+      '<span class="shine" aria-hidden="true" style="-webkit-mask-image:url(' + CFG.bottle + ');mask-image:url(' + CFG.bottle + ')"></span></div>';
+  }
+  function prodCard(p) {
+    var more = p.more.map(function (m) { return '<div><h4>' + esc(m[0]) + '</h4><p>' + esc(m[1]) + '</p></div>'; }).join('');
+    var act = p.inStock
+      ? '<button class="pc-btn pc-btn--sm" type="button" data-add="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button>'
+      : '<span class="soldout">SOLD OUT</span><button class="pc-btn pc-btn--sm" type="button" data-rs="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">TELL ME WHEN IT\'S BACK</span></span></button>';
+    var rs = '';
+    return '<li class="prod glass" data-id="' + p.id + '">' + bottle(p) +
+      '<div><h3 class="h3">' + esc(p.name) + '</h3><p class="strength">' + esc(p.strength) + (p.demoStock ? ' · SAMPLE STOCK STATE' : '') + '</p></div>' +
+      '<p class="note">' + esc(p.note) + '</p>' +
+      '<div class="acts"><p class="price">' + money(p.price) + ' <small style="font-size:10px;letter-spacing:.2em">CAD</small></p>' + act +
+      '<button class="linkish" type="button" data-more aria-expanded="false">READ MORE</button></div>' +
+      '<div class="more">' + more + '</div>' + rs + '</li>';
+  }
+  function renderStore() {
+    var sh = $('#shelf'), anc = $('#shelfAnc');
+    var vis = PRODUCTS.filter(listed);
+    sh.innerHTML = vis.filter(function (p) { return !p.ancillary; }).map(prodCard).join('');
+    var a = vis.filter(function (p) { return p.ancillary; });
+    anc.innerHTML = a.map(prodCard).join(''); $('#ancLane').hidden = !a.length;
+    $('#storeCount').textContent = 'THE PEPTICITY COLLECTION · ' + vis.length + ' LISTINGS';
+    var fl = $('#filters');
+    fl.innerHTML = '<button class="chip" type="button" data-f="all" aria-pressed="true">ALL</button>' + INTERESTS.map(function (i) { return '<button class="chip" type="button" data-f="' + i.k + '" aria-pressed="false">' + i.t + '</button>'; }).join('');
+    observeProds(); watchVials();
+    renderInterests(); fillMini();
+  }
+  function applyFilter(k) {
+    filter = k;
+    $$('#filters .chip').forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.f === k)); });
+    var I = INTERESTS.find(function (i) { return i.k === k; });
+    $$('#shelf .prod').forEach(function (li) {
+      var p = BY[li.dataset.id], show = !I || inInterest(I, p);
+      li.classList.toggle('hide', !show); if (show) li.classList.add('in');
+    });
+    $('#ancLane').style.display = I ? 'none' : '';
+    ScrollTrigger.refresh();
+  }
+  $('#filters').addEventListener('click', function (e) { var c = e.target.closest('.chip'); if (c) applyFilter(c.dataset.f); });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-add]'); if (a) { addToCart(+a.dataset.add, a); return; }
+    var m = e.target.closest('[data-more]'); if (m) { var li = m.closest('.prod'); var o = li.classList.toggle('open'); m.setAttribute('aria-expanded', String(o)); m.textContent = o ? 'SHOW LESS' : 'READ MORE'; return; }
+    var r = e.target.closest('[data-rs]'); if (r) openModal('restock', BY[+r.dataset.rs]);
+  });
+  var pio = null;
+  function observeProds() {
+    if (!('IntersectionObserver' in window) || RM) { $$('.prod').forEach(function (el) { el.classList.add('in'); }); return; }
+    pio = pio || new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); pio.unobserve(en.target); } }); }, { rootMargin: '0px 0px -6% 0px' });
+    $$('.prod:not(.in)').forEach(function (el, k) { el.style.transitionDelay = (k % 4) * 70 + 'ms'; pio.observe(el); });
+  }
+  function miniCard(p) {
+    return '<div class="mini-prod">' + '<div class="mp-v"><img src="' + CFG.bottle + '" alt=""></div><div><b>' + esc(p.name) + ' · ' + esc(p.strength) + '</b><span>' + money(p.price) + ' CAD</span><em>' + esc(p.note) + '</em></div>' +
+      '<button class="pc-btn pc-btn--sm" type="button" data-add="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">ADD</span></span></button></div>';
+  }
+  function bySlug(sl) { return PRODUCTS.find(function (p) { return p.slug === sl && listed(p) && p.inStock; }); }
+  /* featured tiles (city cards, the hologram on the bench) are picked in data/products.json "featured" */
+  function fillMini() {
+    var F = (DATA && DATA.featured) || {};
+    $$('.sr[data-feature]').forEach(function (h) { var i = +h.dataset.feature.split('-')[1], p = bySlug((F.city || [])[i]);
+      if (p) { $('.sr-prod', h).innerHTML = miniCard(p); delete h.dataset.empty; } else h.dataset.empty = '1'; });
+    var hp = $('#holoProd'), b = bySlug(F.bench);
+    if (hp) hp.innerHTML = b ? miniCard(b) : '<p>[Featured product: set in data/products.json]</p>';
+  }
+
+  /* ================= cart (offer-to-checkout) ================= */
+  var cart = J_('pc-cart', []);   /* [{id,q}] */
+  cart = (Array.isArray(cart) ? cart : []).filter(function (l) { return l && isFinite(l.id); }).map(function (l) { return { id: +l.id, q: Math.max(1, Math.min(999, parseInt(l.q, 10) || 1)) }; });   /* numbers only */
+  function saveCart() { LS.set('pc-cart', JSON.stringify(cart)); renderCart(); }
+  function addToCart(id, btn) {
+    if (!listed(BY[id]) || !BY[id].inStock) return;
+    var l = cart.find(function (x) { return x.id === id; }); if (l) l.q++; else cart.push({ id: id, q: 1 });
+    saveCart(); track('cta_click:add');
+    if (btn) { var lab = $('.pc-btn__label', btn), t = lab.textContent; btn.style.width = btn.offsetWidth + 'px'; lab.textContent = 'ADDED ✓'; btn.classList.add('done'); setTimeout(function () { lab.textContent = t; btn.classList.remove('done'); btn.style.width = ''; }, 1500); }
+    var p = BY[id]; toast((p ? p.name + ' ' + p.strength : 'ITEM') + ' ADDED');
+  }
+  function totals() {
+    var sub = 0, items = 0;
+    cart.forEach(function (l) { var p = BY[l.id]; if (p) { sub += p.price * l.q; items += l.q; } });
+    var disc = joined() && OFFER ? Math.round(sub * (CFG.foundingRate || 0.15) * 100) / 100 : 0;
+    var after = sub - disc, sh = CFG.shipping, ship = !items ? 0 : (after >= sh.freeOver ? 0 : sh.flat);
+    return { sub: sub, disc: disc, ship: ship, total: after + ship, items: items, toFree: Math.max(0, sh.freeOver - after), after: after };
+  }
+  function renderCart() {
+    if (!PRODUCTS.length) return;
+    cart = cart.filter(function (l) { return listed(BY[l.id]); });
+    var T = totals(), lines = $('#lines');
+    $('#cartN').textContent = T.items;
+    lines.innerHTML = cart.map(function (l) {
+      var p = BY[l.id];
+      return '<li class="line"><img src="' + CFG.bottle + '" alt=""><div><b>' + esc(p.name) + '</b><small>' + esc(p.strength) + ' · ' + money(p.price) + '</small>' +
+        '<div class="qty"><button type="button" data-q="-1" data-id="' + p.id + '" aria-label="One fewer">−</button><span>' + l.q + '</span><button type="button" data-q="1" data-id="' + p.id + '" aria-label="One more">+</button></div></div>' +
+        '<div class="lp">' + money(p.price * l.q) + '<button class="rm" type="button" data-rm="' + p.id + '">Remove</button></div></li>';
+    }).join('');
+    $('#cartEmpty').hidden = !!cart.length;
+    var sh = CFG.shipping, ph = sh.placeholder ? ' <small>[PLACEHOLDER RATE]</small>' : '';
+    $('#totals').innerHTML = !cart.length ? '' :
+      '<div class="almost" data-hook="H55"><span>' + (T.toFree > 0 ? money(T.toFree) + ' TO FREE SHIPPING' : 'FREE SHIPPING UNLOCKED') + (sh.placeholder ? ' [PLACEHOLDER THRESHOLD]' : '') + '</span><i><b style="width:' + Math.min(100, T.after / sh.freeOver * 100) + '%"></b></i></div>' +
+      '<div class="tr"><span>Subtotal</span><span>' + money(T.sub) + '</span></div>' +
+      (T.disc ? '<div class="tr code"><span>PEPTICITY TEAM · 15% OFF FIRST ORDER</span><span>−' + money(T.disc) + '</span></div>' : '') +
+      '<div class="tr" data-hook="H54"><span>Shipping' + ph + '</span><span>' + (T.ship ? money(T.ship) : 'FREE') + '</span></div>' +
+      '<div class="tr total"><span>TOTAL</span><span>' + money(T.total) + ' CAD</span></div>' +
+      '<div class="tr"><span>Taxes calculated at checkout. No other fees.</span><span></span></div>';
+    $('#cartJoin').hidden = joined() || !OFFER || !cart.length;
+    $('#checkout').disabled = !cart.length;
+  }
+  $('#lines').addEventListener('click', function (e) {
+    var q = e.target.closest('[data-q]'), r = e.target.closest('[data-rm]');
+    if (q) { var l = cart.find(function (x) { return x.id === +q.dataset.id; }); if (l) { l.q += +q.dataset.q; if (l.q < 1) cart.splice(cart.indexOf(l), 1); } saveCart(); }
+    if (r) { cart = cart.filter(function (x) { return x.id !== +r.dataset.rm; }); saveCart(); }
+  });
+  var lastFocus = null;
+  function trap(el, e) {
+    if (e.key !== 'Tab') return; var f = $$('a,button:not([disabled]),input,select,[tabindex="0"]', el).filter(function (x) { return x.offsetParent !== null; }); if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  }
+  function openCart() { lastFocus = document.activeElement; renderCart(); D.classList.add('drawer-open'); $('#scrimx').hidden = false; $('#cart').hidden = false; stopScroll(); setTimeout(function () { $('#cart .x').focus(); }, 30); track('cart_open'); }
+  function closeCart() { D.classList.remove('drawer-open'); $('#cart').hidden = true; $('#scrimx').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
+  $('#cartBtn').addEventListener('click', openCart);
+  $('#cart').addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeCart(); });
+  $('#cart').addEventListener('keydown', function (e) { trap($('#cart'), e); });
+  $('#scrimx').addEventListener('click', closeCart);
+  wireForm($('#cartJoin'), function () { renderCart(); });
+  $('#checkout').addEventListener('click', function () { closeCart(); openModal('checkout'); });
+
+  /* ================= modal ================= */
+  /* one purpose per box, sender line + privacy link placeholders (audit A15) */
+  var SENDER = ' PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.';
+  var C_LETTER = 'Yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time.' + SENDER;
+  var C_SMS = 'Yes, PEPTICITY may text me about new lots and restocks at this number. Up to [2] texts a month. Message and data rates may apply. Reply STOP to stop, HELP for help. Consent is not a condition of any purchase. <a href="#privacy" class="ph-link">[Privacy promise]</a>';
+  var TERMS = '<p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>';
+  function capForm(hook, btn, consentHtml, opts) {
+    opts = opts || {};
+    return '<form class="cap-form" data-hook="' + hook + '"' + (opts.offer ? ' data-offer' : '') + (opts.need ? ' data-consent="' + opts.need + '"' : '') + ' novalidate>' +
+      '<div class="row"><label class="field"><span class="lbl">' + (opts.sms ? 'MOBILE NUMBER' : 'EMAIL') + '</span>' +
+      (opts.sms ? '<input type="tel" name="phone" autocomplete="tel" inputmode="tel" required>' : '<input type="email" name="email" autocomplete="email" inputmode="email" required>') + '</label>' +
+      '<button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">' + btn + '</span></span></button></div>' +
+      '<label class="consent"><input type="checkbox" name="' + (opts.sms ? 'consent_sms' : 'consent_email') + '"><span>' + consentHtml + '</span></label>' +
+      '<p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>' + (opts.offer && OFFER ? TERMS : '') + '</form>';
+  }
+  function openModal(kind, arg) {
+    var b = $('#modalBody'), html = '';
+    if (kind === 'join' && (!OFFER || D.classList.contains('age-gated'))) kind = 'letter';   /* the offer never shows before the 19+ gate */
+    if (kind === 'join') html = '<p class="eyebrow"><span>GRAND OPENING</span></p><h2 class="h2s x3d" id="modalT">JOIN THE PEPTICITY TEAM</h2><p>15% off your first order, saved to this device and applied in the cart.</p>' +
+      capForm('H01b', 'CLAIM MY 15% OFF', 'Optional: ' + C_LETTER.charAt(0).toLowerCase() + C_LETTER.slice(1), { offer: true });
+    if (kind === 'letter') html = '<p class="eyebrow"><span>GRACE\'S LETTER</span></p><h2 class="h2s x3d" id="modalT">ONE LETTER A MONTH</h2><p>A note from Grace, once a month, with founding-list news.</p>' + capForm('H18b', 'GET THE LETTER', C_LETTER, { need: 'required' });
+    if (kind === 'sms') html = '<p class="eyebrow"><span>FIRST WORD BY TEXT</span></p><h2 class="h2s x3d" id="modalT">NEW LOTS, BY TEXT</h2><p>One text when a sold-out lot is back. Up to [2] texts a month. Reply STOP any time.</p>' + capForm('H43', 'TEXT ME', C_SMS, { sms: true, need: 'sms' });
+    if (kind === 'quiz') { closeModal(); return goTo('quiz'); }
+    if (kind === 'restock') {
+      var P = arg;
+      html = '<p class="eyebrow"><span>SOLD OUT · RESTOCK QUEUE</span></p><h2 class="h2s x3d" id="modalT">' + esc(P.name + ' ' + P.strength) + '</h2><p>Join the queue and we\'ll email you when the next lot lands.</p>' +
+        capForm('H50', 'JOIN THE QUEUE', 'Yes, PEPTICITY may email me when ' + esc(P.name + ' ' + P.strength) + ' is back. I can unsubscribe at any time.' + SENDER, { need: 'required' });
+    }
+    if (kind === 'checkout') {
+      var T = totals();
+      html = '<p class="eyebrow"><span>CHECKOUT · GUEST</span></p><h2 class="h2s x3d" id="modalT">NO ACCOUNT NEEDED</h2>' +
+        '<div class="sum"><div class="tr" style="display:flex;justify-content:space-between"><span>' + T.items + ' items</span><span>' + money(T.sub) + '</span></div>' +
+        (T.disc ? '<div style="display:flex;justify-content:space-between"><span>PEPTICITY TEAM · 15%</span><span>−' + money(T.disc) + '</span></div>' : '') +
+        '<div style="display:flex;justify-content:space-between"><span>Shipping' + (CFG.shipping.placeholder ? ' [placeholder]' : '') + '</span><span>' + (T.ship ? money(T.ship) : 'FREE') + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;font-family:var(--display)"><span>TOTAL</span><span>' + money(T.total) + ' CAD</span></div></div>' +
+        '<p>19+ PASS · ' + (pass ? esc(PROV[pass.prov]).toUpperCase() : '[province]') + '. [Payment and the real store backend connect here.]</p>' +
+        '<button class="pc-btn pc-btn--block" type="button" id="placeOrder"><span class="pc-btn__face"><span class="pc-btn__label">PLACE ORDER (PREVIEW)</span></span></button>';
+    }
+    if (kind === 'thanks') {
+      html = '<p class="eyebrow"><span>THANK YOU</span></p><h2 class="h2s x3d" id="modalT">ORDER RECEIVED</h2><p>Preview only: no order was placed.</p>' +
+        '<form class="cap-form" data-hook="H53" id="acctForm" novalidate><p class="mini-t">SAVE YOUR DETAILS FOR NEXT TIME</p><label class="field"><span class="lbl">CHOOSE A PASSWORD</span><input type="password" name="pw" autocomplete="new-password" minlength="8"></label>' +
+        '<label class="field"><span class="lbl">MOBILE FOR SHIPPING UPDATES ON THIS ORDER (OPTIONAL)</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel"></label>' +
+        '<label class="consent"><input type="checkbox" name="consent_sms"><span>Optional, separate: ' + C_SMS + '</span></label>' +
+        '<p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p><button class="pc-btn" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">SAVE MY DETAILS</span></span></button></form>';
+    }
+    if (!html) return;
+    lastFocus = document.activeElement;
+    b.innerHTML = html; $$('.x3d', b).forEach(function (el) { el.dataset.text = el.textContent; });
+    $$('.cap-form', b).forEach(function (f) { if (f.id === 'acctForm') return;
+      wireForm(f, f.dataset.hook === 'H50' ? function () { var ok = $('.ok', f); ok.textContent = 'You\'re in the queue: #[REAL POSITION] in line for the next lot. ' + ok.textContent; } : null); });
+    var po = $('#placeOrder', b); if (po) po.addEventListener('click', function () { cart = []; saveCart(); openModal('thanks'); });
+    var af = $('#acctForm', b); if (af) af.addEventListener('submit', function (e) { e.preventDefault(); $('.ok', af).textContent = 'Saved. Preview only: nothing was sent.'; });
+    $('#modal').hidden = false; D.classList.add('modal-open'); stopScroll(); track('form_view');
+    setTimeout(function () { var i = $('input', b) || $('.x', $('#modal')); i.focus({ preventScroll: true }); }, 40);
+  }
+  function closeModal() { D.classList.remove('modal-open'); $('#modal').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
+  $('#modal').addEventListener('click', function (e) { if (e.target.closest('[data-close]') || e.target === $('#modal') || e.target.closest('[data-go]')) closeModal(); });
+  $('#modal').addEventListener('keydown', function (e) { trap($('.modal'), e); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!menu.hidden) { closeMenu(); if (lastFocus) lastFocus.focus({ preventScroll: true }); } else if (!exitEl.hidden) closeExit();   /* Esc on the menu hands focus back to MENU, like the × does */
+  });
+
+  /* ================= menu ================= */
+  var menu = $('#menu');
+  function openMenu() { lastFocus = document.activeElement; menu.hidden = false; D.classList.add('menu-open'); requestAnimationFrame(function () { menu.classList.add('open'); }); $('#menuBtn').setAttribute('aria-expanded', 'true'); stopScroll(); $('.x', menu).focus(); }
+  function closeMenu() { if (menu.hidden) return; D.classList.remove('menu-open'); menu.classList.remove('open'); menu.hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); startScroll(); }
+  $('#menuBtn').addEventListener('click', openMenu);
+  menu.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) { closeMenu(); if (lastFocus) lastFocus.focus(); } });
+  menu.addEventListener('keydown', function (e) { trap(menu, e); });
+  $$('.menu-list a').forEach(function (a, k) { a.style.transitionDelay = k * 60 + 'ms'; });
+
+  /* ================= interests (cards + 3D icon slots) ================= */
+  function renderInterests() {
+    $('#intGrid').innerHTML = INTERESTS.map(function (i) {
+      var n = PRODUCTS.filter(function (p) { return inInterest(i, p); }).length;
+      return '<li><button class="int-card glass" type="button" data-int="' + i.k + '" data-hook="H42c">' +
+        '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + '◆' + '</span></span>' +
+        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>Names, sizes and prices on this shelf.</p><span class="n">' + n + (n === 1 ? ' LISTING' : ' LISTINGS') + '</span><span class="go">OPEN THE SHELF</span></span></button></li>';
+    }).join('');
+    document.dispatchEvent(new Event('pc-slots'));
+  }
+  $('#intGrid').addEventListener('click', function (e) {
+    var c = e.target.closest('[data-int]'); if (!c) return;
+    var I = INTERESTS.find(function (i) { return i.k === c.dataset.int; });
+    $$('.int-card').forEach(function (x) { x.classList.toggle('on', x === c); });
+    applyFilter(I.k); track('cta_click:interest'); setTimeout(function () { glide(absTop($('#filters')) - 90, 1.2); }, 60);
+  });
+
+  /* ================= TXT-04 scroll highlight + the little bottom progress ================= */
+  var HL = $$('[data-hl]');
+  HL.forEach(function (p) { p.innerHTML = p.textContent.trim().split(/\s+/).map(function (w) { return '<span class="w">' + esc(w) + '</span>'; }).join(' '); });
+  var hlProg = $('#hlProg'), hlBar = $('b', hlProg);
+  function hlUpdate() {
+    var best = null;
+    HL.forEach(function (p) {
+      var r = p.getBoundingClientRect(), ws = $$('.w', p);
+      if (r.bottom < 0 || r.top > innerHeight) { if (r.top > innerHeight) ws.forEach(function (w) { w.classList.remove('lit'); }); else ws.forEach(function (w) { w.classList.add('lit'); }); return; }
+      var t = RM ? 1 : clamp((innerHeight * 0.82 - r.top) / (r.height + innerHeight * 0.38), 0, 1), n = Math.round(t * ws.length);
+      ws.forEach(function (w, k) { w.classList.toggle('lit', k < n); });
+      if (p.id === 'promiseP' || !best) best = t;
+    });
+    if (best !== null && best > 0 && best < 1) { hlProg.classList.add('show'); hlBar.style.width = (best * 100) + '%'; } else hlProg.classList.remove('show');
+  }
+  gsap.ticker.add(hlUpdate);
+
+  /* ================= reveals: tiers (SCR-18/LAY-23), footer (TXT-13) ================= */
+  var rio = null;
+  function revealSetup() {
+    if (!('IntersectionObserver' in window)) { $$('.tier,.foot-mark').forEach(function (t) { t.classList.add('in'); }); return; }
+    rio = rio || new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); rio.unobserve(en.target); } }); }, { threshold: 0.35 });
+    $$('.tier:not(.in),.foot-mark:not(.in)').forEach(function (t) { rio.observe(t); });
+  }
+  revealSetup();
+  /* SCR-18: earlier cards recede as the next one stacks on top */
+  gsap.ticker.add(function () {
+    if (D.classList.contains('gated') || RM) return;
+    var ts = $$('.tier');
+    ts.forEach(function (t, k) {
+      var nx = ts[k + 1]; if (!nx) { t.style.transform = ''; return; }
+      var r = nx.getBoundingClientRect(), top = parseFloat(getComputedStyle(nx).top) || 110;
+      var c = clamp(1 - (r.top - top) / (innerHeight * 0.6), 0, 1);
+      t.style.transform = 'scale(' + (1 - c * 0.05) + ')'; t.style.filter = 'brightness(' + (1 - c * 0.12) + ')';
+    });
+  });
+  var tierT = $('.tier[style*="--i:1"] .tier-t'); if (tierT) { var cp = document.createElement('p'); cp.className = 'card-progress'; cp.id = 'cardProg'; cp.dataset.hook = 'H51'; tierT.insertBefore(cp, tierT.querySelector('ul')); }
+
+  /* ================= SEALED ENVELOPE (CRD-124 fog wipe; gamified-reveal-hooks) ================= */
+  (function () {
+    var cv = $('#fog'), gift = $('#gift'), form = $('.gift-form'), done = false;
+    if (!cv) return;
+    var ctx = cv.getContext('2d'), W = 0, H = 0, drawing = false, lastCheck = 0;
+    function paint() {
+      var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var dark = version === 'black';
+      var g = ctx.createLinearGradient(0, 0, W, H);
+      g.addColorStop(0, dark ? '#2a2c31' : '#e8eaee'); g.addColorStop(0.5, dark ? '#16171a' : '#f7f8fa'); g.addColorStop(1, dark ? '#2a2c31' : '#dfe2e6');
+      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      for (var i = 0; i < 1400; i++) { ctx.fillStyle = 'rgba(' + (dark ? '255,255,255,' : '0,0,0,') + (Math.random() * 0.05) + ')'; ctx.fillRect(Math.random() * W, Math.random() * H, 2, 2); }
+      ctx.strokeStyle = dark ? 'rgba(255,255,255,.25)' : 'rgba(42,45,49,.25)'; ctx.lineWidth = 1;   /* envelope flap */
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W / 2, H * 0.55); ctx.lineTo(W, 0); ctx.stroke();
+      var cx = W / 2, cy = H * 0.55, rad = 34, sg = ctx.createRadialGradient(cx - 10, cy - 10, 4, cx, cy, rad);   /* the chrome seal */
+      sg.addColorStop(0, '#ffffff'); sg.addColorStop(0.5, '#b9bec5'); sg.addColorStop(1, '#4a4f57');
+      ctx.fillStyle = sg; ctx.beginPath();
+      for (var k = 0; k < 24; k++) { var a = k / 24 * Math.PI * 2, rr = k % 2 ? rad : rad * 0.86; ctx.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); }
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#2a2d31'; ctx.font = '400 20px "PEPTICITY BLACK"'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('P', cx, cy + 1);
+      ctx.fillStyle = dark ? 'rgba(255,255,255,.7)' : 'rgba(17,18,20,.6)'; ctx.font = '400 10px "PEPTICITY BLACK"'; ctx.fillText('DRAG ACROSS THE SEAL', cx, H - 22);
+    }
+    function reveal() {
+      if (done) return; done = true; cv.classList.add('gone'); form.hidden = false; track('hook_reveal');
+      if (member && member.notches < 4) { member.notches++; saveMember(); }
+      setTimeout(function () { var i = $('input[type=email]', form); if (i && !RM) i.focus({ preventScroll: true }); }, 420);
+    }
+    function wipe(e) {
+      if (!drawing || done) return; var r = cv.getBoundingClientRect();
+      ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); ctx.arc(e.clientX - r.left, e.clientY - r.top, e.pointerType === 'touch' ? 36 : 28, 0, Math.PI * 2); ctx.fill();
+      var now = performance.now(); if (now - lastCheck > 120) { lastCheck = now; check(); }
+    }
+    function check() {
+      var d = ctx.getImageData(0, 0, cv.width, cv.height).data, clear = 0, tot = 0;
+      for (var i = 3; i < d.length; i += 16) { tot++; if (d[i] === 0) clear++; }
+      if (clear / tot > 0.35) reveal();
+    }
+    cv.addEventListener('pointerdown', function (e) { drawing = true; cv.setPointerCapture(e.pointerId); track('hook_interact'); wipe(e); });
+    cv.addEventListener('pointermove', wipe);
+    cv.addEventListener('pointerup', function () { drawing = false; });
+    $('#fogKey').addEventListener('click', reveal);
+    var fio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { paint(); fio.disconnect(); } }); fio.observe(cv);
+    document.addEventListener('pc-version', function () { if (!done) paint(); });
+    if (RM) { $('#fogKey').textContent = 'SHOW MY GIFT'; }
+  })();
+
+  /* ================= CATALOGUE FINDER (FRM-102 stepper; product-finder-quiz) ================= */
+  var Q = { step: 0, cls: null, size: null, band: null };
+  try { var qs = JSON.parse(LS.get('pc-finder') || 'null'); if (qs) { Q.cls = qs.cls; Q.size = qs.size; Q.band = qs.band; } } catch (e) {}
+  function inCls() { var c = CLS.find(function (x) { return x.k === Q.cls; }); return PRODUCTS.filter(function (p) { return listed(p) && !p.ancillary && c && c.keys.indexOf(p.key) > -1; }); }
+  function mg(p) { return parseFloat(p.strength) || 0; }
+  function bands(list) { var ps = list.map(function (p) { return p.price; }).sort(function (a, b) { return a - b; }); var lo = ps[0], hi = ps[ps.length - 1], m = Math.round((lo + hi) / 2); return lo === hi ? [{ k: 'all', t: money(lo), a: lo, b: hi }] : [{ k: 'lo', t: money(lo) + ' – ' + money(m), a: lo, b: m }, { k: 'hi', t: money(m) + ' – ' + money(hi), a: m, b: hi }, { k: 'all', t: 'ANY PRICE', a: lo, b: hi }]; }
+  function renderFinder() {
+    var box = $('#qsteps'), html = '', n = Q.step;
+    $('#qbar').style.width = (25 + n * 25) + '%'; $('#qStepNo').textContent = 'STEP ' + (n + 1) + ' OF 4';
+    if (n === 0) html = '<div class="qstep"><h3 class="h3">WHAT ARE YOU BROWSING?</h3><div class="qopts">' + CLS.filter(function (c) { return PRODUCTS.some(function (p) { return listed(p) && c.keys.indexOf(p.key) > -1; }); }).map(function (c) { return '<button class="qopt" type="button" data-cls="' + c.k + '" aria-pressed="' + (Q.cls === c.k) + '">' + c.t + '<small>' + c.d + '</small></button>'; }).join('') + '</div></div>';
+    if (n === 1) html = '<div class="qstep"><h3 class="h3">WHICH SIZE SUITS YOU?</h3><div class="qopts">' + [['small', 'SMALLER VIALS', 'Up to 10 mg'], ['large', 'LARGER VIALS', 'Over 10 mg'], ['any', 'ANY SIZE', 'Show them all']].map(function (s) { return '<button class="qopt" type="button" data-size="' + s[0] + '" aria-pressed="' + (Q.size === s[0]) + '">' + s[1] + '<small>' + s[2] + '</small></button>'; }).join('') + '</div></div>';
+    if (n === 2) html = '<div class="qstep"><h3 class="h3">YOUR PRICE RANGE?</h3><div class="qopts">' + bands(inCls()).map(function (b) { return '<button class="qopt" type="button" data-band="' + b.k + '" aria-pressed="' + (Q.band === b.k) + '">' + b.t + '<small>CAD, from the real prices</small></button>'; }).join('') + '</div></div>';
+    if (n === 3) {
+      var list = inCls(), B = bands(list).find(function (b) { return b.k === Q.band; }) || bands(list).pop();
+      var pick = list.filter(function (p) { return (Q.size === 'any' || (Q.size === 'small' ? mg(p) <= 10 : mg(p) > 10)) && p.price >= B.a && p.price <= B.b; });
+      if (!pick.length) pick = list.filter(function (p) { return p.price >= B.a && p.price <= B.b; });
+      if (!pick.length) pick = list;
+      pick = pick.sort(function (x, y) { return (y.inStock - x.inStock) || x.price - y.price; }).slice(0, 3);
+      Q.pick = pick.map(function (p) { return p.id; });
+      html = '<div class="qstep"><h3 class="h3">YOUR SHORTLIST</h3><ul class="shelf qres">' + pick.map(prodCard).join('') + '</ul>' +
+        '<div class="btn-row" style="justify-content:center"><button class="pc-btn" type="button" id="addAll"><span class="pc-btn__face"><span class="pc-btn__label">ADD ALL TO CART</span></span></button></div>' +
+        '<form class="cap-form" data-hook="H49" novalidate data-offer><p class="mini-t">EMAIL THIS SHORTLIST' + (OFFER ? ' · JOIN FOR 15%' : '') + '</p><div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>' +
+        '<button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">EMAIL MY SHORTLIST</span></span></button></div>' +
+        '<label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace. I can unsubscribe at any time.' + SENDER + '</span></label><p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>' + (OFFER ? TERMS : '') + '</form></div>';
+    }
+    html += '<div class="qnav">' + (n > 0 ? '<button class="linkish" type="button" id="qBack">BACK</button>' : '<span></span>') + '<button class="linkish" type="button" data-go="store">SKIP TO THE COLLECTION</button></div>';
+    box.innerHTML = html;
+    $$('.prod', box).forEach(function (el) { el.classList.add('in'); });
+    $$('form', box).forEach(function (f) { if (f.classList.contains('rs')) wireForm(f); else wireForm(f); });
+    var aa = $('#addAll', box); if (aa) aa.addEventListener('click', function () { Q.pick.forEach(function (id) { if (BY[id].inStock) addToCart(id); }); openCart(); });
+    var bk = $('#qBack', box); if (bk) bk.addEventListener('click', function () { Q.step--; renderFinder(); });
+    track('finder_step:' + (n + 1));
+  }
+  $('#qsteps').addEventListener('click', function (e) {
+    var o = e.target.closest('.qopt'); if (!o) return;
+    if (o.dataset.cls) Q.cls = o.dataset.cls; if (o.dataset.size) Q.size = o.dataset.size; if (o.dataset.band) Q.band = o.dataset.band;
+    LS.set('pc-finder', JSON.stringify({ cls: Q.cls, size: Q.size, band: Q.band }));
+    $$('.qopt', o.parentNode).forEach(function (x) { x.setAttribute('aria-pressed', String(x === o)); });
+    setTimeout(function () { Q.step = Math.min(3, Q.step + 1); renderFinder(); }, RM ? 0 : 260);
+  });
+
+  /* ================= LOT PASSPORT (sample only until Grace confirms) ================= */
+  $('#passport').addEventListener('submit', function (e) {
+    e.preventDefault(); var v = (this.lot.value || '').trim().toUpperCase(), out = $('#ppOut');
+    out.innerHTML = '<dl><dt>LOT</dt><dd>' + esc(v || 'SAMPLE-001') + ' · SAMPLE</dd><dt>MADE</dt><dd>[Placeholder: date from a real lot record]</dd><dt>CERTIFICATE</dt><dd>[Placeholder: shown only once a real testing partner exists]</dd><dt>STORAGE</dt><dd>[Placeholder: storage note to be confirmed]</dd></dl>';
+    track('hook_interact:passport');
+  });
+
+  /* ================= refer ================= */
+  $('#copyLink').addEventListener('click', function () {
+    var inp = $('.ref-form input'), ok = $('.ref-form .ok'), code = 'team'; try { if (member && member.email) code = 'team-' + btoa(member.email).replace(/[^a-z0-9]/gi, '').slice(0, 6).toLowerCase(); } catch (e) {}
+    inp.value = 'pepticity.ca/invite/' + code;
+    var done = function () { ok.textContent = 'Link copied. Preview only: nothing was sent.'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(inp.value).then(done, done); else done();
+  });
+
+  /* ================= sticky bar, rail, nav over photos ================= */
+  var sticky = $('#sticky'), stickyBtn = $('#stickyBtn'), rail = $$('#rail li'), stops = ['hero', 'mission', 'story', 'age', 'city', 'doors', 'lab', 'store', 'network'], stickyMode = '';
+  gsap.ticker.add(function () {
+    var y = window.scrollY || 0, vh = innerHeight, ag = D.classList.contains('age-gated'), dg = D.classList.contains('gated');
+    var jr = $('#journey').getBoundingClientRect(), lr = $('#lab').getBoundingClientRect(), d2r = $('#doors2').getBoundingClientRect(), agr = ageSec.getBoundingClientRect();
+    var overPhoto = (!ag && jr.top <= 40 && jr.bottom > 60) || (!dg && !ag && ((lr.top <= 40 && lr.bottom > 60) || (d2r.top <= 40 && d2r.bottom > 60))) || (agr.top <= 40 && agr.bottom > 60);
+    nav.classList.toggle('over-photo', overPhoto); D.classList.toggle('over-photo', overPhoto);
+    var formFocus = document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
+    var footR = $('#foot').getBoundingClientRect(), inSales = !ag && jr.top < vh * 0.5;
+    /* sticky (phones): Grace's letter on the landing, the team offer in the sales zones; never over the gate, the doors, a form or the footer */
+    var mode = inSales && OFFER && !joined() ? 'join' : (!LS.get('pc-letter') ? 'letter' : '');
+    if (mode !== stickyMode) { stickyMode = mode; if (mode) { stickyBtn.dataset.open = mode; $('.pc-btn__label', stickyBtn).textContent = mode === 'join' ? 'JOIN · 15% OFF FIRST ORDER' : 'GET GRACE\'S LETTER'; } }
+    var overGate = (agr.top < vh * 0.75 && agr.bottom > vh * 0.25) || (!ag && jr.top < 0 && jr.bottom > vh && J.p > 0.85) || (!dg && d2r.top < vh && d2r.bottom > 0) || HOLO.some(function (h) { return h.on; });
+    sticky.classList.toggle('show', !!mode && y > vh * 0.9 && !formFocus && !overGate && footR.top > vh && $('#modal').hidden && !introLive);
+    /* rail: real position */
+    var cur = 'hero';
+    [['mission', '#mission'], ['story', '#story'], ['age', '#age']].forEach(function (s) { if ($(s[1]).getBoundingClientRect().top <= vh * 0.4) cur = s[0]; });
+    if (!ag && jr.top <= vh * 0.3) cur = J.p > 0.86 ? 'doors' : 'city';
+    if (!dg && !ag) {
+      [['lab', '#lab'], ['store', '#doors2'], ['network', '#network']].forEach(function (s) { var el = $(s[1]); if (el && el.getBoundingClientRect().top <= vh * 0.4) cur = s[0]; });
+    }
+    if (++botTick % 12 === 0) syncBot();
+    if (!sellGreeted && botMode === 'sell' && !dg && storeSec.getBoundingClientRect().top < vh * 0.55 && window.PEPBOT && PEPBOT.greet) { sellGreeted = true; PEPBOT.greet(); track('bot_greet:sell'); }
+    var ci = stops.indexOf(cur);
+    rail.forEach(function (li, k) { li.classList.toggle('now', k === ci); li.classList.toggle('seen', k < ci); });
+  });
+
+  /* ================= SAVE MY CART (exit card, only with a cart) + tab-title cue ================= */
+  var exitEl = $('#exit'), exitArmed = false, exitTimer;
+  setTimeout(function () { exitArmed = true; }, 8000);
+  function exitAllowed() {
+    if (!pass || !cart.length || joined() || SS.get('pc-exit')) return false;
+    var n = +(LS.get('pc-exit-n') || 0); return n < 3 && $('#modal').hidden && $('#cart').hidden && !busy;
+  }
+  function fireExit() { if (!exitArmed || !exitAllowed()) return; SS.set('pc-exit', '1'); LS.set('pc-exit-n', String(+(LS.get('pc-exit-n') || 0) + 1)); exitEl.hidden = false; requestAnimationFrame(function () { exitEl.classList.add('show'); }); track('form_view'); }
+  function closeExit() { exitEl.classList.remove('show'); setTimeout(function () { exitEl.hidden = true; }, 500); }
+  $('.x', exitEl).addEventListener('click', closeExit);
+  D.addEventListener('mouseleave', function (e) { if (e.clientY > 20) return; exitTimer = setTimeout(fireExit, 250); });
+  D.addEventListener('mouseenter', function () { clearTimeout(exitTimer); });
+  var lastY = 0, lastT = 0;
+  addEventListener('scroll', function () {   /* phones: fast upward flick after half the page */
+    if (matchMedia('(pointer: fine)').matches) return;
+    var y = scrollY, t = performance.now(), docH = D.scrollHeight - innerHeight;
+    if (lastY - y > innerHeight * 0.3 && t - lastT < 300 && lastY > docH * 0.5) fireExit();
+    if (t - lastT > 300) { lastY = y; lastT = t; }
+  }, { passive: true });
+  var realTitle = document.title;
+  document.addEventListener('visibilitychange', function () { document.title = document.hidden && cart.length && pass ? 'YOUR CART IS SAVED · PEPTICITY' : realTitle; });
+
+  /* ================= WELCOME BACK ================= */
+  (function () {
+    var last = +(LS.get('pc-last') || 0), now = Date.now();
+    LS.set('pc-last', String(now));
+    var hasCart = cart.length && pass;   /* the cart is a sales-zone thing: only mentioned past the 19+ gate */
+    if (last && now - last < 30 * 864e5 && (hasCart || joined())) {
+      var wb = $('#wback'); wb.hidden = false;
+      $('#wbackT').textContent = 'WELCOME BACK' + (member && member.name ? ', ' + member.name.toUpperCase() : '') + '.' + (hasCart ? ' YOUR CART IS WHERE YOU LEFT IT.' : '');
+      $('#wbackCart').hidden = !hasCart;
+      $('#wbackCart').addEventListener('click', openCart);
+      $('#wbackClear').addEventListener('click', function () { ['pc-member', 'pc-cart', 'pc-finder', 'pc-last', 'pc-age-pass', 'pc-letter', 'pc-sms'].forEach(LS.del); location.reload(); });
+    }
+  })();
+
+  /* the concierge bot hands its cart adds to this cart */
+  window.PEPCART = { add: function (item) { var p = PRODUCTS.find(function (x) { return x.slug === item.slug; }); if (!p || !p.inStock || !listed(p) || !pass) return; for (var i = 0; i < (item.qty || 1); i++) addToCart(p.id); } };
+  window.addEventListener('pep:checkout', function () { openModal('checkout'); });
+
+  /* ================= load the catalogue: ONLY after the 19+ gate (nothing from it is in the page before that) ================= */
+  var catState = 0;   /* 0 not asked, 1 loading, 2 ready */
+  function boot(data) {
+    if (!data || !Array.isArray(data.products)) return;
+    DATA = data; CLS = Array.isArray(data.classes) ? data.classes : [];
+    PRODUCTS = data.products; PRODUCTS.forEach(function (p) { BY[p.id] = p; });
+    catState = 2;
+    renderStore(); renderCart(); renderMemberBits(); renderFinder();
+    var sold = PRODUCTS.filter(function (p) { return listed(p) && !p.inStock; }).map(function (p) { return p.slug; });
+    window.PEPBOT_CONFIG = window.PEPBOT_CONFIG || {}; window.PEPBOT_CONFIG.soldOut = sold;
+    if (window.PEPBOT && PEPBOT.configure) PEPBOT.configure({ soldOut: sold });
+    ScrollTrigger.refresh(); dirty = true;
+    document.dispatchEvent(new Event('pc-catalogue'));
+  }
+  function loadCatalogue() {
+    if (!pass || catState) return; catState = 1;
+    fetch(CFG.products).then(function (r) { return r.json(); }).then(boot).catch(function (e) { catState = 0; console.warn('catalogue', e); });
+  }
+
+  /* ================= 3 · THE AGE GATE ================= */
+  var agePanel = $('#agePanel'), ageStatus = $('#ageStatus'), ageForm = $('#ageForm'), ageProv = $('#ageProv');
+  function ageDate(t) { try { return new Date(t).toLocaleDateString('en-CA', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return ''; } }
+  function renderAge() {
+    if (pass) { agePanel.dataset.state = 'ok'; ageStatus.textContent = 'PASS SAVED · ' + pass.prov;
+      $('#ageOkT').textContent = 'Welcome in. Your 19+ pass for ' + PROV[pass.prov] + ' is saved on this device until ' + ageDate(pass.exp) + '.'; }
+    else if (agePanel.dataset.state === 'ok') agePanel.dataset.state = 'ask';
+    $$('.menu-sales a').forEach(function (a) { if (pass) a.removeAttribute('aria-disabled'); else a.setAttribute('aria-disabled', 'true'); });
+  }
+  function openSales(go) {
+    D.classList.remove('age-gated'); dirty = true;
+    requestAnimationFrame(function () { pW.resize(); ScrollTrigger.refresh(); dirty = true; layoutDoors(); });
+    loadCatalogue(); syncBot();
+    if (go) setTimeout(function () { glide(absTop($('#journey')) + 2, RM ? 0.01 : 2.4); }, RM ? 0 : 900);
+  }
+  function grantPass(prov) {
+    var now = Date.now(); pass = { ok: true, prov: prov, at: now, exp: now + (CFG.agePassDays || 30) * 864e5 };
+    LS.set('pc-age-pass', JSON.stringify(pass)); track('age_pass');
+    agePanel.classList.add('passing'); setTimeout(function () { agePanel.classList.remove('passing'); }, 1100);
+    renderAge(); ageStatus.textContent = 'VERIFIED · ' + prov; openSales(true);
+  }
+  ageForm.addEventListener('submit', function (e) {
+    e.preventDefault(); var v = ageProv.value, err = $('.err', ageForm); err.textContent = ''; ageProv.removeAttribute('aria-invalid');
+    if (!v) { err.textContent = 'Choose your province or territory first.'; ageProv.setAttribute('aria-invalid', 'true'); ageProv.focus(); return; }
+    if (v === 'XX') { agePanel.dataset.state = 'no'; ageStatus.textContent = 'CANADA ONLY'; $('#ageNoT').textContent = 'The PEPTICITY collection serves Canada only. The rest of PEPTICITY is here for you to read.'; track('age_outside'); return; }
+    if (!PROV[v]) return;
+    grantPass(v);
+  });
+  $('#ageLeave').addEventListener('click', function () {   /* LEAVE keeps the visitor on the landing page */
+    agePanel.dataset.state = 'no'; ageStatus.textContent = 'COLLECTION CLOSED'; track('age_leave');
+    $('#ageNoT').textContent = 'Understood. The collection stays closed, and the rest of PEPTICITY is here for you.';
+    setTimeout(function () { glide(absTop($('#mission')) - 20, 1.8); }, RM ? 0 : 500);
+  });
+  $('#ageBack').addEventListener('click', function () { glide(absTop($('#story')), 1.8); });
+  $('#ageRetry').addEventListener('click', function () { agePanel.dataset.state = 'ask'; ageStatus.textContent = 'AGE CHECK · CANADA'; ageProv.focus({ preventScroll: true }); });
+  $('#ageEnter').addEventListener('click', function () { glide(absTop($('#journey')) + 2, 2.2); });
+  $('#ageForget').addEventListener('click', function () { LS.del('pc-age-pass'); location.href = location.pathname + '?nointro#age'; });
+  renderAge();
+  if (pass) openSales(false);
+  window.addEventListener('pep:guide-enter', function () { goTo('age'); });
+
+  /* ================= the concierge: GUIDE on the landing, SELL in the sales zones (needs a valid 19+ pass) ================= */
+  var botMode = 'guide', botTick = 0, sellGreeted = false;
+  function wantMode() {
+    if (!pass || D.classList.contains('age-gated')) return 'guide';
+    return $('#journey').getBoundingClientRect().top < innerHeight * 0.5 ? 'sell' : 'guide';
+  }
+  function syncBot() {
+    if (!window.PEPBOT || !PEPBOT.setMode) return;
+    var m = wantMode(); if (m !== botMode || (PEPBOT.mode && PEPBOT.mode() !== m)) { botMode = m; PEPBOT.setMode(m); track('bot_mode:' + m); }
+  }
+  document.addEventListener('pc-bot-ready', syncBot);
+
+  /* ================= the offer's end date: a FIXED stored date only (honest-urgency) ================= */
+  function renderOfferEnd() {
+    var el = $('#offerEnd'); if (!el) return;
+    var end = CFG.offerEndsAt ? Date.parse(CFG.offerEndsAt) : NaN;
+    if (!isFinite(end)) { el.textContent = '[End date: Grace and counsel to set]'; return; }
+    var left = end - Date.now();
+    if (left <= 0) { el.textContent = 'THIS OFFER HAS ENDED'; return; }
+    var d = Math.floor(left / 864e5), h = Math.floor(left % 864e5 / 36e5);
+    el.textContent = 'ENDS ' + new Date(end).toLocaleDateString('en-CA', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase() + ' · ' + d + (d === 1 ? ' DAY ' : ' DAYS ') + h + ' HRS LEFT';
+  }
+  renderOfferEnd(); setInterval(renderOfferEnd, 60000);
+
+  /* phones and reduced motion: story panes reveal as they enter (no pin) */
+  (function () {
+    $$('.pane-p').forEach(function (p) { p.innerHTML = p.innerHTML.split(/(<span class="ph">[\s\S]*?<\/span>)/).map(function (part) {
+      return /^<span class="ph">/.test(part) ? part.replace('<span class="ph">', '<span class="ph lw">') : part.trim() ? part.trim().split(/\s+/).map(function (w) { return '<span class="lw">' + w + '</span>'; }).join(' ') : part; }).join(' '); });
+    if (!('IntersectionObserver' in window)) { panes.forEach(function (el) { el.classList.add('in'); $$('.lw', el).forEach(function (w) { w.classList.add('lit'); }); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting && (!WIDE() || RM)) { en.target.classList.add('in'); $$('.lw', en.target).forEach(function (w) { w.classList.add('lit'); }); } }); }, { threshold: 0.3 });
+    panes.forEach(function (el) { io.observe(el); });
+  })();
+  if (RM) $$('.holo').forEach(function (h) { var st = $('.st[data-st="' + h.dataset.st + '"]'); if (st) st.appendChild(h); });
+
+  if (RM) D.classList.remove('gated');
+  document.fonts && document.fonts.ready.then(function () { $$('.x3d').forEach(function (el) { el.dataset.text = el.textContent; }); ScrollTrigger.refresh(); });
+  window.__pc = { J: J, L: L, X: X, S: S, D2: D2, HOLO: HOLO, get pass() { return pass; }, grantPass: grantPass, get botMode() { return botMode; }, get catState() { return catState; }, syncBot: syncBot, get lenis() { return lenis; }, dive: function () { dive(); return introTl; }, setVersion: setVersion, scan: scan, guest: guestEnter, liftIntro: liftIntro, goTo: goTo, openCart: openCart, addToCart: addToCart, events: events,
+    get cart() { return cart; }, get products() { return PRODUCTS; }, totals: totals, labState: labState, openModal: openModal, fireExit: function () { exitArmed = true; fireExit(); },
+    loaded: function () { return { weave: seq('weave').loaded() + '/' + seq('weave').m.files, lab: seq('lab').loaded() + '/' + seq('lab').m.files, kind: kind }; } };
+})();

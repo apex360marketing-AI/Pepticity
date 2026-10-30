@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SCR-04 · SIDEWAYS GALLERY · PEPTICITY</title>
+<meta name="fx-code" content="SCR-04"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* SCR-04 SIDEWAYS GALLERY: scrolling down walks you sideways along a curved wall of five framed rooms from the PEPTICITY
+   films. The frames lean with your speed, the pictures drift inside them, and the one in the middle lights up. */
+.ground{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 58%,#141419 0%,#0b0b0c 60%,#060607 100%)}
+.floor{position:absolute;left:-10%;right:-10%;bottom:0;height:40%;background:radial-gradient(55% 70% at 50% 30%,color-mix(in srgb,var(--acc) 8%,transparent),transparent 72%);-webkit-mask-image:linear-gradient(180deg,transparent,#000 45%);mask-image:linear-gradient(180deg,transparent,#000 45%)}
+.head{position:absolute;left:clamp(18px,5vw,72px);top:clamp(52px,8vh,84px);z-index:3;display:grid;gap:14px;max-width:min(820px,84vw)}
+.head .fx-h{font-size:clamp(24px,2.9vw,42px)}
+.view{position:absolute;inset:0;perspective:1600px;perspective-origin:50% 54%}
+.track{position:absolute;left:0;top:58%;display:flex;gap:var(--gap);padding:0 var(--pad);transform-style:preserve-3d;will-change:transform;--gap:clamp(22px,3.4vw,60px);--pad:calc(50vw - var(--pw) / 2);--pw:clamp(260px,30vw,470px)}
+.panel{position:relative;flex:none;width:var(--pw);transform-style:preserve-3d;will-change:transform}
+.frame{--c:18px;position:relative;height:clamp(280px,47vh,520px);overflow:hidden;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
+  background:#08080a;transition:transform .6s var(--e-out)}
+.frame img{position:absolute;top:0;left:-18%;width:136%;max-width:none;height:100%;object-fit:cover;will-change:transform;transition:scale .9s var(--e-out)}
+.frame .vialbox{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(60% 46% at 50% 62%,rgba(220,226,240,.14),transparent 70%),linear-gradient(180deg,#0d0d11,#050506)}
+.frame .vialbox img{position:absolute;left:50%;top:12%;width:auto;height:74%;max-width:none;object-fit:contain;transform:translateX(-50%) !important;filter:drop-shadow(0 30px 40px rgba(0,0,0,.8))}
+.frame .vialbox::after{content:"";position:absolute;left:20%;right:20%;bottom:9%;height:10%;background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 30%,rgba(230,236,255,.4)),transparent);filter:blur(8px);opacity:.7}
+.rim{position:absolute;inset:0;pointer-events:none;z-index:2}
+.rim svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.rim polygon{fill:none;stroke:rgba(230,234,240,.4);stroke-width:1;vector-effect:non-scaling-stroke;transition:stroke .5s,filter .5s}
+.panel.on .rim polygon{stroke:var(--acc-line);filter:drop-shadow(0 0 6px var(--acc-bloom))}
+.sweep{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.16) 48%,rgba(255,255,255,.04) 56%,transparent 70%);transform:translateX(-120%)}
+.panel:hover .sweep{animation:sw 1.3s var(--e-io) 1 both}
+@keyframes sw{to{transform:translateX(120%)}}
+.panel:hover .frame img{scale:1.04}
+.num{position:absolute;left:-.12em;bottom:calc(100% - .55em);z-index:3;font:400 clamp(70px,9vw,150px)/1 var(--fh);color:transparent;-webkit-text-stroke:1px rgba(236,240,246,.42);pointer-events:none;will-change:transform}
+.panel.on .num{-webkit-text-stroke-color:var(--acc-line)}
+.meta{display:grid;gap:6px;margin-top:18px;padding-right:12px}
+.meta b{font:400 clamp(13px,1.15vw,16px)/1.1 var(--fh);letter-spacing:.16em}
+.meta span{font-size:13.5px;color:var(--ink2);max-width:40ch}
+.bar{position:absolute;left:50%;bottom:clamp(20px,5vh,46px);transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:18px;font:400 9px/1 var(--fh);letter-spacing:.3em;color:var(--mute)}
+.bar .ticks{display:flex;gap:6px}
+.bar .ticks i{width:26px;height:2px;background:rgba(236,240,246,.18);transition:background .4s,box-shadow .4s}
+.bar .ticks i.on{background:var(--acc);box-shadow:0 0 8px var(--acc-bloom)}
+.bar b{font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:700px){.track{--pw:72vw;top:58%}.frame{height:50vh}.head{top:56px}.meta span{font-size:13px}.num{font-size:64px}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>SCR-04</b><span>SIDEWAYS GALLERY</span></div>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="Sideways gallery: scroll down to walk along five rooms of PEPTICITY">
+  <section class="fx-pin" style="--len:560vh">
+    <div class="fx-sticky">
+      <div class="ground" aria-hidden="true"></div><div class="floor" aria-hidden="true"></div>
+      <header class="head"><p class="fx-eyebrow">A WALK THROUGH PEPTICITY</p><h2 class="fx-h fx-chrome">FIVE ROOMS, ONE STORE</h2></header>
+      <div class="view"><div class="track" id="track">
+        <article class="panel"><span class="num" aria-hidden="true">01</span><div class="frame"><img src="../_assets/stills/city.webp" alt="The PEPTICITY city at night, black towers lit in silver"><i class="sweep"></i><span class="rim"></span></div>
+          <div class="meta"><b>THE CITY</b><span>Where every visit starts: high above the towers, at night.</span></div></article>
+        <article class="panel"><span class="num" aria-hidden="true">02</span><div class="frame"><img src="../_assets/stills/doors.webp" alt="Polished steel doors at the top of lit stone steps"><i class="sweep"></i><span class="rim"></span></div>
+          <div class="meta"><b>THE DOORS</b><span>Heavy steel doors at street level, the way into the store.</span></div></article>
+        <article class="panel"><span class="num" aria-hidden="true">03</span><div class="frame"><img src="../_assets/stills/lab-dropper.webp" alt="A glass dropper over a clear vial on a lit glass bench"><i class="sweep"></i><span class="rim"></span></div>
+          <div class="meta"><b>THE LAB</b><span>The PEPTICITY lab, told in glass, steel and light.</span></div></article>
+        <article class="panel"><span class="num" aria-hidden="true">04</span><div class="frame"><img src="../_assets/stills/chest.webp" alt="The black PEPTICITY case in cold smoke"><i class="sweep"></i><span class="rim"></span></div>
+          <div class="meta"><b>THE CASE</b><span>The black case from the entrance film, wrapped in cold smoke.</span></div></article>
+        <article class="panel"><span class="num" aria-hidden="true">05</span><div class="frame"><div class="vialbox"><img src="../_assets/vial/vial.webp" alt="The PEPTICITY vial with its see-through label"></div><i class="sweep"></i><span class="rim"></span></div>
+          <div class="meta"><b>THE VIAL</b><span>See-through label, PEPTICITY up the side, lit from below.</span></div></article>
+      </div></div>
+      <div class="bar" aria-hidden="true"><b id="cnt">01 / 05</b><span class="ticks" id="ticks"><i class="on"></i><i></i><i></i><i></i><i></i></span><span>SCROLL</span></div>
+    </div>
+  </section>
+</main>
+<script src="../_shared/fx-kit.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var sc = FX.scroller($('#sc'), { ease: 4.5, tourPeriod: 20 }); FX.rail(sc); FX.hint('scroll');
+  var track = $('#track'), panels = [].slice.call(document.querySelectorAll('.panel')), ticks = [].slice.call(document.querySelectorAll('#ticks i')), cnt = $('#cnt');
+  /* the chrome hairline follows the cut corner (fixed 18px chamfer at any size) */
+  function rims() {
+    panels.forEach(function (P) {
+      var f = P.querySelector('.frame'), w = f.clientWidth, h = f.clientHeight, c = 18;
+      P.querySelector('.rim').innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none"><polygon points="' +
+        [[c + .5, .5], [w - .5, .5], [w - .5, h - c - .5], [w - c - .5, h - .5], [.5, h - .5], [.5, c + .5]].map(function (q) { return q.join(','); }).join(' ') + '"/></svg>';
+    });
+  }
+  var span = 0, PW = 0, GAP = 0, PADL = 0;
+  function measure() { rims(); var cs = getComputedStyle(track); PW = panels[0].offsetWidth; GAP = parseFloat(cs.columnGap || cs.gap) || 40; span = (panels.length - 1) * (PW + GAP); PADL = parseFloat(cs.paddingLeft) || 0; FX.wake(); }
+  measure(); addEventListener('resize', measure);
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(measure);
+  var skew = 0, cur = -1;
+  FX.loop(function (dt, t, now, live) {
+    var p = sc.p, x = -p * span;
+    skew = FX.damp(skew, FX.rm ? 0 : FX.clamp(-sc.v * 5.5, -7, 7), 6, dt);
+    track.style.transform = 'translate3d(' + x.toFixed(1) + 'px,-50%,0)';
+    var mid = innerWidth / 2, best = 0, bd = 1e9;
+    panels.forEach(function (P, i) {
+      var c = PADL + i * (PW + GAP) + PW / 2 + x;
+      var d = (c - mid) / Math.max(innerWidth * 0.55, 1), ad = Math.min(Math.abs(d), 1.6);
+      if (Math.abs(c - mid) < bd) { bd = Math.abs(c - mid); best = i; }
+      var ry = FX.rm ? 0 : FX.clamp(-d * 16, -26, 26), z = FX.rm ? 0 : -ad * ad * 160, sc2 = 1 - Math.min(ad, 1) * 0.06;
+      var bob = FX.rm ? 0 : Math.sin(t * 0.7 + i * 1.3) * 4;
+      P.style.transform = 'translate3d(0,' + bob.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(' + ry.toFixed(2) + 'deg) skewX(' + skew.toFixed(2) + 'deg) scale(' + sc2.toFixed(4) + ')';
+      var img = P.querySelector('.frame > img'); if (img) img.style.transform = 'translate3d(' + (FX.rm ? 0 : FX.clamp(-d * 11, -13, 13)).toFixed(2) + '%,0,0)';
+      P.querySelector('.num').style.transform = 'translate3d(' + (FX.rm ? 0 : -d * 40).toFixed(1) + 'px,0,40px)';
+    });
+    if (best !== cur) { cur = best; panels.forEach(function (P, i) { P.classList.toggle('on', i === best); }); ticks.forEach(function (T, i) { T.classList.toggle('on', i <= best); }); cnt.textContent = '0' + (best + 1) + ' / 05'; }
+    return Math.abs(skew) > 0.01;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-EMB-01 · THE SPINNING COIN · PEPTICITY</title>
+<meta name="fx-code" content="PEP-EMB-01"><meta name="fx-interact" content="drag">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<style>
+/* PEP-EMB-01 THE SPINNING COIN: the PEPTICITY emblem coin (as built for the dashboards) on display against the matte
+   gunmetal wall: it turns slowly on its stand, speeds up and leans when you point at it, spins on when you flick it, and a tap
+   turns it to the other face. Every few turns one sweep of light crosses its metal. */
+body{background:#1e1d1f}
+.wall{position:fixed;inset:0;background:radial-gradient(80% 70% at 50% 34%,#3b3a3c 0%,#2c2b2d 46%,#1b1a1c 100%)}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:2;touch-action:none;cursor:grab}
+#gl:active{cursor:grabbing}
+.shadow{position:fixed;z-index:1;left:50%;top:var(--sy,78%);width:var(--sw,300px);height:calc(var(--sw,300px) * .12);transform:translate(-50%,-50%) scaleX(var(--sk,1));border-radius:50%;
+  background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);filter:blur(6px);pointer-events:none}
+.lock{position:fixed;z-index:3;left:50%;bottom:clamp(28px,7vh,64px);transform:translateX(-50%);display:grid;justify-items:center;gap:10px;text-align:center;pointer-events:none;width:min(560px,92vw)}
+.lock .word{font:400 clamp(18px,2.2vw,28px)/1 var(--fh);letter-spacing:.42em;padding-left:.42em}
+.lock .fx-p{font-size:13.5px;color:var(--ink2)}
+.sweep{position:fixed;z-index:3;left:0;top:0;border-radius:50%;pointer-events:none;overflow:hidden;opacity:0;mix-blend-mode:screen;
+  -webkit-mask-image:radial-gradient(circle closest-side,#000 97%,transparent 99%);mask-image:radial-gradient(circle closest-side,#000 97%,transparent 99%)}
+.sweep i{position:absolute;inset:-10% -60%;background:linear-gradient(100deg,transparent 30%,color-mix(in srgb,var(--acc) 22%,transparent) 42%,color-mix(in srgb,var(--acc-hi) 70%,#fff) 50%,color-mix(in srgb,var(--acc) 22%,transparent) 58%,transparent 70%);transform:translateX(-70%)}
+.sweep.go{opacity:1}.sweep.go i{animation:sw 1.6s cubic-bezier(.65,0,.35,1) 1 both}
+@keyframes sw{to{transform:translateX(70%)}}
+.fb{position:fixed;inset:0;display:grid;place-items:center;z-index:2}
+.fb img{width:min(52vmin,460px);filter:brightness(.55) contrast(1.1)}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-EMB-01</b><span>THE SPINNING COIN</span></div>
+<div class="wall" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
+<div class="shadow" id="shadow" aria-hidden="true"></div>
+<canvas id="gl" role="img" aria-label="The PEPTICITY emblem coin turning on display. Drag to spin it, tap to turn it over."></canvas>
+<div class="fb" id="fb" hidden><img src="../_assets/logo/emblem.svg" alt="The PEPTICITY emblem"></div>
+<div class="sweep" id="sweep" aria-hidden="true"><i></i></div>
+<div class="lock"><span class="word fx-chrome">PEPTICITY</span><p class="fx-p">Point at it and it speeds up. Flick it to spin, tap to turn it over.</p></div>
+<script src="../_shared/fx-kit.js"></script>
+<script type="module">
+import { THREE, stage3d, buildCoin, coinLights, accentEdges } from '../_shared/fx3d.mjs';
+FX.hint('drag');
+const canvas = document.getElementById('gl'), sweep = document.getElementById('sweep'), shadow = document.getElementById('shadow');
+const st = stage3d(canvas, { dpr: FX.mobile ? 1.5 : 2, shadows: false });
+if (!st) document.getElementById('fb').hidden = false;
+else {
+  const scene = new THREE.Scene(); scene.environment = st.envRT.texture; coinLights(scene, [1.8, 2.6, 3.4]);
+  const { coin, edge } = buildCoin(st); accentEdges([edge], 0.35);
+  const rig = new THREE.Group(); rig.add(coin); scene.add(rig);
+  const cam = new THREE.PerspectiveCamera(26, 1, 0.1, 60);
+  const TAU = Math.PI * 2;
+  let yaw = 0, vel = 0.55, lean = 0, hov = 0, drag = null, flipT = 0, flip = 0, flipV = 0, sweeping = false, nextSweep = TAU * 2;
+  sweep.addEventListener('animationend', () => { sweep.classList.remove('go'); sweeping = false; });
+  canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, lx: e.clientX, lt: performance.now(), v: 0, moved: false }; canvas.setPointerCapture(e.pointerId); FX.wake(); });
+  canvas.addEventListener('pointermove', e => { if (!drag) return; const now = performance.now(), dx = e.clientX - drag.lx; if (Math.abs(e.clientX - drag.x) > 6) drag.moved = true;
+    yaw += dx * 0.012; drag.v = dx * 0.012 / Math.max(8, now - drag.lt) * 1000; drag.lx = e.clientX; drag.lt = now; FX.wake(); });
+  const up = () => { if (!drag) return; if (drag.moved) vel = FX.clamp(drag.v, -16, 16); else { flipT += Math.PI; } drag = null; FX.wake(); };
+  canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+  canvas.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { flipT += Math.PI; FX.wake(); } });
+  canvas.tabIndex = 0;
+  const v3 = new THREE.Vector3();
+  FX.loop((dt, t, now, live) => {
+    st.size(); cam.aspect = st.aspect();
+    const fov = cam.fov * Math.PI / 180, phone = innerWidth < 700, fill = phone ? 0.5 : 0.56;
+    const d = Math.max(2.1 / fill / (2 * Math.tan(fov / 2)), 2.1 / 0.78 / (2 * Math.tan(fov / 2) * cam.aspect));
+    cam.position.set(0, -0.14, d); cam.lookAt(0, -0.14, 0); cam.updateProjectionMatrix();
+    const P = FX.pointer, r = canvas.getBoundingClientRect();
+    const near = P.inside && !FX.coarse && Math.hypot(P.x - innerWidth / 2, P.y - innerHeight * 0.45) < Math.min(innerWidth, innerHeight) * 0.36;
+    hov = FX.damp(hov, near ? 1 : 0, 4, dt);
+    /* idle turn when playing; faster when pointed at; a flick carries on and settles back to the idle speed */
+    const idle = live ? 0.55 + hov * 1.6 : 0;
+    /* paused: it coasts to a stop a little quicker, then the loop sleeps */
+    if (!drag) { vel = FX.rm ? 0 : vel + (idle - vel) * (1 - Math.exp(-(live ? 1.2 : 2.6) * dt)); if (Math.abs(vel - idle) < 0.004) vel = idle; yaw += vel * dt; }
+    if (FX.rm) { flip = flipT; } else { flipV += ((flipT - flip) * 50 - flipV * 9) * dt; flip += flipV * dt; }
+    lean = FX.damp(lean, near ? P.ny * 0.18 : 0, 4, dt);
+    coin.rotation.set(0.06 + lean, yaw + flip, 0);
+    rig.position.y = FX.rm ? 0 : Math.sin(t * 0.8) * 0.025;
+    st.draw(scene, cam);
+    /* floor shadow follows the coin's width as it turns */
+    v3.set(0, 0, 0).project(cam);
+    const R = 1.0 / (2 * Math.tan(fov / 2) * d) * innerHeight, cx = (v3.x + 1) / 2 * innerWidth, cy = (1 - v3.y) / 2 * innerHeight;
+    shadow.style.setProperty('--sw', (R * 1.7).toFixed(0) + 'px'); shadow.style.setProperty('--sy', (cy + R * 1.18).toFixed(0) + 'px');
+    shadow.style.setProperty('--sk', (0.25 + 0.75 * Math.abs(Math.cos(yaw + flip))).toFixed(3));
+    sweep.style.width = sweep.style.height = (R * 2).toFixed(0) + 'px'; sweep.style.transform = 'translate3d(' + (cx - R).toFixed(0) + 'px,' + (cy - R).toFixed(0) + 'px,0)';
+    /* a sweep of light every two turns, when the face is toward you */
+    const face = Math.cos(yaw + flip);
+    if (live && !sweeping && yaw > nextSweep && face > 0.97) { sweeping = true; nextSweep = yaw + TAU * 2; sweep.classList.remove('go'); void sweep.offsetWidth; sweep.classList.add('go'); }
+    if (yaw > nextSweep + TAU * 3) nextSweep = yaw + TAU;
+    return !!drag || Math.abs(flipT - flip) > 1e-3 || Math.abs(vel - idle) > 1e-3 || hov > 1e-3 && hov < 0.999;
+  });
+  window.__fx3d = { st, get yaw() { return yaw; } };
+}
+</script>
+</body>
+</html>

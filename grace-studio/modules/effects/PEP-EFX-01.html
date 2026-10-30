@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEP-EFX-01 · SCROLL-LIT GLASS · PEPTICITY</title>
+<meta name="fx-code" content="PEP-EFX-01"><meta name="fx-interact" content="scroll">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<style>
+/* PEP-EFX-01 SCROLL-LIT GLASS (from the colour dashboards): see-through chamfered glass cards over the moving silver smoke.
+   As each card reaches the middle of the screen it catches the light on the edge nearest the middle, glows in your colour,
+   and one bright streak runs round its outline. Point at a card for one more streak. */
+#smoke{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+#smoke.pc-nogl{display:none}
+.ground{position:fixed;inset:0;z-index:0;background:linear-gradient(118deg,#0b0b0c 0%,#0b0b0c 46%,#0d0b13 54%,#0d0b13 100%)}
+#sc{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 110px,#000 calc(100% - 50px),transparent);mask-image:linear-gradient(180deg,transparent 0,#000 110px,#000 calc(100% - 50px),transparent)}
+.col{position:relative;z-index:2;width:min(1080px,100%);margin:0 auto;padding:clamp(80px,22vh,220px) clamp(18px,5vw,56px) 40vh}
+.intro{display:grid;gap:16px;max-width:600px;margin-bottom:clamp(60px,16vh,150px)}
+.intro .fx-h{font-size:clamp(28px,4vw,58px)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(22px,4vw,56px) clamp(18px,3vw,40px)}
+.cw{position:relative;min-width:0}
+.grid .cw:nth-child(even){transform:translateY(clamp(40px,14vh,140px))}
+.card{--c:22px;position:relative;min-height:clamp(200px,30vh,280px);padding:clamp(22px,2.6vw,34px);display:grid;align-content:space-between;gap:20px;cursor:default}
+.card.fx-glass{--c:22px;background-color:rgba(10,10,13,.18)}
+.card .n{font:400 10px/1 var(--fh);letter-spacing:.34em;color:var(--mute);transition:color .5s}
+.card h3{margin:14px 0 10px;font:400 clamp(17px,1.8vw,24px)/1.1 var(--fh);letter-spacing:.12em}
+.card p{margin:0;color:var(--ink2);font-size:14.5px;max-width:36ch}
+.card .ft{display:flex;justify-content:space-between;align-items:center;font:400 8.5px/1 var(--fh);letter-spacing:.3em;color:var(--dim)}
+.card .ft i{width:44px;height:1px;background:linear-gradient(90deg,var(--acc),transparent);opacity:var(--lit,0);box-shadow:0 0 6px var(--acc-bloom)}
+.card.on .n{color:var(--acc-text)}
+.edge{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.edge .base{fill:none;stroke:rgba(230,234,240,.16);stroke-width:1}
+.edge .lit{fill:none;stroke-width:1.2}
+.edge .glow{fill:none;stroke-width:5;opacity:.6}
+.edge .streak{fill:none;stroke:#fff;stroke-width:1.6;stroke-dasharray:110 890;stroke-dashoffset:110;opacity:0;stroke-linecap:round}
+.edge .streakb{fill:none;stroke-width:6;stroke-dasharray:150 850;stroke-dashoffset:130;opacity:0}
+.cw.go .streak{animation:st 1.3s cubic-bezier(.45,0,.25,1) 1 both}
+.cw.go .streakb{animation:stb 1.3s cubic-bezier(.45,0,.25,1) 1 both}
+@keyframes st{0%{stroke-dashoffset:110;opacity:0}10%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:-890;opacity:0}}
+@keyframes stb{0%{stroke-dashoffset:130;opacity:0}10%{opacity:.8}85%{opacity:.8}100%{stroke-dashoffset:-870;opacity:0}}
+.outro{margin-top:clamp(120px,24vh,240px);text-align:center;display:grid;gap:10px;justify-items:center}
+.outro .fx-p{color:var(--mute)}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.grid .cw:nth-child(even){transform:none}.card{min-height:180px}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>PEP-EFX-01</b><span>SCROLL-LIT GLASS</span></div>
+<div class="ground" aria-hidden="true"></div>
+<canvas id="smoke" aria-hidden="true"></canvas>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="bl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter></defs></svg>
+<main class="fx-scroller" id="sc" tabindex="0" aria-label="Glass cards that light up as you scroll">
+  <div class="col">
+    <header class="intro"><p class="fx-eyebrow">SCROLL-LIT GLASS</p><h2 class="fx-h fx-chrome">THE LIGHT FOLLOWS YOU DOWN</h2><p class="fx-p">Each card catches the light as it reaches the middle of the screen, and a streak runs round its edge.</p></header>
+    <div class="grid" id="grid">
+      <article class="card fx-glass"><div><span class="n">01 · GRAND OPENING</span><h3>15% OFF YOUR FIRST ORDER</h3><p>Join the PEPTICITY Team and the grand-opening discount is yours on your first order.</p></div><div class="ft"><span>PEPTICITY TEAM</span><i></i></div></article>
+      <article class="card fx-glass"><div><span class="n">02 · THE LETTER</span><h3>A LETTER FROM GRACE</h3><p>Once a month, to the team. Short, plain and useful.</p></div><div class="ft"><span>MONTHLY</span><i></i></div></article>
+      <article class="card fx-glass"><div><span class="n">03 · RESTOCKS</span><h3>FIRST WORD ON RESTOCKS</h3><p>When something comes back on the shelf, the team hears first.</p></div><div class="ft"><span>EMAIL</span><i></i></div></article>
+      <article class="card fx-glass"><div><span class="n">04 · MEMBERS PRICE</span><h3>ONE PLAIN PRICE</h3><p>[Members price details: to be set by Grace]</p></div><div class="ft"><span>PLACEHOLDER</span><i></i></div></article>
+      <article class="card fx-glass"><div><span class="n">05 · CERTIFICATES</span><h3>PURITY CERTIFICATES</h3><p>[Certificate details: to be confirmed]</p></div><div class="ft"><span>PLACEHOLDER</span><i></i></div></article>
+      <article class="card fx-glass"><div><span class="n">06 · SHIPPING</span><h3>SHIPPED FROM CANADA</h3><p>[Shipping times and costs: to be confirmed]</p></div><div class="ft"><span>PLACEHOLDER</span><i></i></div></article>
+    </div>
+    <footer class="outro"><p class="fx-eyebrow">ONE MORE STREAK</p><p class="fx-p">Point at any card and the light runs round it again.</p></footer>
+  </div>
+</main>
+<script src="../_shared/fx-kit.js"></script>
+<script src="../_shared/smoke.js"></script>
+<script>
+(function () {
+  var smoke = window.PCSmoke ? PCSmoke(document.getElementById('smoke'), { mode: 'black', offset: 8, held: !FX.playing || FX.rm }) : null;
+  addEventListener('fx:play', function () { if (smoke && smoke.play && !FX.rm) smoke.play(); });
+  addEventListener('fx:pause', function () { if (smoke && smoke.pause) smoke.pause(); });
+  var sc = FX.scroller(document.getElementById('sc'), { ease: 7, tourPeriod: 26 }); FX.rail(sc); FX.hint('scroll');
+  var cards = [].slice.call(document.querySelectorAll('.card')).map(function (el, i) {
+    var id = 'g' + i, cw = document.createElement('div'); cw.className = 'cw'; el.parentNode.insertBefore(cw, el); cw.appendChild(el);
+    cw.insertAdjacentHTML('beforeend', '<svg class="edge" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s0"/><stop offset=".5" class="s1"/><stop offset="1" class="s2"/></linearGradient></defs>' +
+      '<polygon class="base"/><polygon class="glow" filter="url(#bl)" stroke="url(#' + id + ')"/><polygon class="lit" stroke="url(#' + id + ')"/><polygon class="streakb" pathLength="1000" filter="url(#bl)"/><polygon class="streak" pathLength="1000"/></svg>');
+    var svg = cw.querySelector('.edge');
+    var C = { el: el, cw: cw, svg: svg, polys: [].slice.call(svg.querySelectorAll('polygon')), stops: [].slice.call(svg.querySelectorAll('stop')), lit: 0, on: false, i: i };
+    cw.addEventListener('pointerenter', function () { fire(C); });
+    svg.querySelector('.streak').addEventListener('animationend', function () { cw.classList.remove('go'); });
+    return C;
+  });
+  function shape() {
+    cards.forEach(function (C) {
+      var w = C.el.offsetWidth, h = C.el.offsetHeight, c = 22;
+      C.svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      /* starts at the top-left cut so the streak runs left to right along the top first */
+      var pts = [[c, .5], [w - .5, .5], [w - .5, h - c], [w - c, h - .5], [.5, h - .5], [.5, c]].map(function (q) { return q.join(','); }).join(' ');
+      C.polys.forEach(function (p) { p.setAttribute('points', pts); });
+    });
+  }
+  shape(); addEventListener('resize', shape); (document.fonts ? document.fonts.ready : Promise.resolve()).then(shape);
+  function fire(C) { if (FX.rm) return; C.cw.classList.remove('go'); void C.cw.offsetWidth; C.cw.classList.add('go'); }
+  function paintAcc() { var a = FX.acc.hex; cards.forEach(function (C) { C.svg.querySelectorAll('.streakb').forEach(function (p) { p.style.stroke = a; }); }); }
+  FX.onAcc(paintAcc);
+  FX.loop(function (dt) {
+    var mid = innerHeight / 2, busy = false;
+    cards.forEach(function (C) {
+      var r = C.el.getBoundingClientRect(), d = (r.top + r.height / 2 - mid) / (innerHeight / 2);
+      var lit = 1 - FX.ss(0.08, 0.62, Math.abs(d));
+      var lv = FX.damp(C.lit, lit, 8, dt); if (Math.abs(lv - C.lit) > 1e-3) busy = true; C.lit = lv;
+      var below = d > 0, a = FX.acc.hex;
+      /* the light sits on the middle of the screen: a card below it lights its top edge, a card above it its bottom edge */
+      C.stops[0].setAttribute('stop-color', below ? a : '#e6e9ef'); C.stops[0].setAttribute('stop-opacity', (below ? lv : lv * 0.25).toFixed(3));
+      C.stops[1].setAttribute('stop-color', a); C.stops[1].setAttribute('stop-opacity', (lv * 0.18).toFixed(3));
+      C.stops[2].setAttribute('stop-color', below ? '#e6e9ef' : a); C.stops[2].setAttribute('stop-opacity', (below ? lv * 0.25 : lv).toFixed(3));
+      C.el.style.setProperty('--lit', lv.toFixed(3));
+      var on = lit > 0.6;
+      if (on && !C.on) fire(C);
+      C.on = on; C.el.classList.toggle('on', on);
+    });
+    return busy;
+  });
+})();
+</script>
+</body>
+</html>

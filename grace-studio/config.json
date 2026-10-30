@@ -1,0 +1,107 @@
+{
+  "_about": "SELECTION STUDIO config. Change this file (and the module manifests) to re-skin the studio for another client. See TEMPLATE.md.",
+  "client": {
+    "name": "PEPTICITY",
+    "person": "GRACE",
+    "email": "Gracet@live.ca",
+    "studioName": "SELECTION STUDIO",
+    "signedBy": "MAVERICK",
+    "agency": "APEX 360"
+  },
+  "brand": {
+    "logo": "assets/p-mark-gunmetal.svg",
+    "font": "assets/PepticityBlack.woff2",
+    "glyphs": "assets/glyphs.json",
+    "type3dEngine": "assets/type3d-engine.js",
+    "type3d": true,
+    "signature": "assets/sig-page.webp",
+    "smoke": true
+  },
+  "accents": [
+    { "slug": "platinum",   "name": "PLATINUM",   "hex": "#E6E8EC", "note": "No colour. The grey metal on its own." },
+    { "slug": "chartreuse", "name": "CHARTREUSE", "hex": "#D4FF3A", "note": "A sharp neon glow on charcoal." },
+    { "slug": "blue",       "name": "BLUE",       "hex": "#0066FF", "note": "Electric blue under-glow." },
+    { "slug": "cyan",       "name": "CYAN",       "hex": "#0FFFFF", "note": "Cool edge-lit cyan." },
+    { "slug": "red",        "name": "RED",        "hex": "#FF004F", "note": "A thin, confident red line." },
+    { "slug": "violet",     "name": "VIOLET",     "hex": "#6F00FF", "note": "Deep violet sheen." },
+    { "slug": "orchid",     "name": "ORCHID",     "hex": "#8D029B", "note": "Rich orchid edges." },
+    { "slug": "copper",     "name": "COPPER",     "hex": "#C46210", "note": "Warm copper hairlines." },
+    { "slug": "salmon",     "name": "SALMON",     "hex": "#FA8072", "note": "Soft salmon light." }
+  ],
+  "defaultAccent": "chartreuse",
+  "accentStorageKey": "pep-acc",
+  "submit": {
+    "mode": "formsubmit",
+    "endpoint": "https://formsubmit.co/ajax/apex360marketing@gmail.com",
+    "subject": "PEPTICITY · GRACE'S FINAL SELECTION",
+    "template": "table"
+  },
+  "storageKey": "pep-studio-grace",
+  "importPicksKey": "pep-grace-picks",
+  "manifests": ["modules/manifest-a.json", "modules/manifest-b.json"],
+  "modulesBase": "modules/",
+  "sets": {
+    "src": "data/sets.json",
+    "base": ["../grace/", "../grace-review/"]
+  },
+  "review": {
+    "src": ["../grace-review/index.html", "../grace/"],
+    "storageKey": "pep-grace-feedback",
+    "questions": 12
+  },
+  "live": {
+    "maxPlaying": 4,
+    "maxPlayingPhone": 2,
+    "maxLoaded": 8,
+    "maxLoadedPhone": 3,
+    "loadMargin": "600px 0px",
+    "virtualWidth": 760
+  },
+  "chapters": [
+    { "id": "start", "title": "START", "kind": "start", "short": "START" },
+
+    { "id": "colour", "title": "YOUR COLOUR", "short": "COLOUR", "kind": "accents", "group": "THE LOOK", "code": "COL",
+      "lead": "Pick the one accent colour for PEPTICITY. Tap USE THIS COLOUR and every live design in the studio changes to it." },
+    { "id": "type", "title": "TYPE", "short": "TYPE", "kind": "modules", "group": "THE LOOK", "cats": ["type", "font", "fonts", "typography"], "expect": 6, "vw": 760,
+      "lead": "The lettering for your headings. Each one is live, so move over it and watch it react." },
+    { "id": "buttons", "title": "BUTTONS", "short": "BUTTONS", "kind": "modules", "group": "THE LOOK", "cats": ["buttons", "button", "btn"], "expect": 15, "vw": 520,
+      "lead": "{n} buttons, each with its own hover. Point at them, press them, pick the one that feels right." },
+    { "id": "cards", "title": "GLASS CARDS", "short": "CARDS", "kind": "modules", "group": "THE LOOK", "cats": ["cards", "card", "glass"], "expect": 12, "vw": 640,
+      "lead": "See-through glass cards, including the newest ones. Hover, tilt and scroll them." },
+
+    { "id": "effects", "title": "EFFECTS", "short": "EFFECTS", "kind": "modules", "group": "THE MOTION", "cats": ["effects", "effect", "fx"], "expect": 10, "vw": 860,
+      "lead": "Spinning, scroll-to-spin, sideways scroll and more. Try each one and keep the ones that feel like you." },
+    { "id": "logo", "title": "LOGO MOTION", "short": "LOGO", "kind": "modules", "group": "THE MOTION", "cats": ["emblems", "emblem", "logo", "coin"], "expect": 6, "vw": 640,
+      "lead": "Ways your P can move: spinning coins, reveals and light. Drag or hover to play with each one." },
+    { "id": "backgrounds", "title": "BACKGROUNDS", "short": "GROUNDS", "kind": "modules", "group": "THE MOTION", "cats": ["backgrounds", "background", "bg"], "expect": 6, "vw": 960,
+      "lead": "The moving ground that sits behind your pages. Move your mouse across each one." },
+    { "id": "entrances", "title": "ENTRANCES", "short": "ENTRANCES", "kind": "modules", "group": "THE MOTION", "cats": ["entrances", "entrance", "loader", "intro", "transition", "transitions"], "expect": 6, "vw": 960, "replay": true,
+      "lead": "How your site opens, and how one page hands over to the next. Open TRY IT to watch each one big." },
+
+    { "id": "bizcards", "title": "BUSINESS CARDS", "short": "BIZ CARDS", "kind": "set", "group": "PRINT AND PACK", "set": "cards", "code": "CARD",
+      "lead": "{n} business card designs. Tap a card to see it up close, then LOVE as many as you like and crown one." },
+    { "id": "labels", "title": "LABELS", "short": "LABELS", "kind": "set", "group": "PRINT AND PACK", "set": "labels", "code": "LABEL",
+      "lead": "{n} label designs. Tap a label to see it up close, then crown the one for your bottles." },
+    { "id": "bottles", "title": "BOTTLES", "short": "BOTTLES", "kind": "set", "group": "PRINT AND PACK", "set": "bottles", "code": "BOTTLE",
+      "lead": "All {n} bottles made so far. The one marked CURRENT PICK is the bottle chosen so far. LOVE any you would like more of, including that one.",
+      "fine": "The round 1 and round 2 drafts had their lettering drawn by the image tool, so it isn't the exact PEPTICITY font. Judge the bottle and label, not the letters." },
+
+    { "id": "site", "title": "YOUR SITE", "short": "YOUR SITE", "kind": "review", "group": "WRAP UP",
+      "lead": "Your website, your dashboard, the client side and the colours, with twelve short questions beside them. They send on their own when you finish." },
+    { "id": "finish", "title": "FINISH", "short": "FINISH", "kind": "finish", "group": "WRAP UP",
+      "lead": "Here is your PEPTICITY: every final pick, every love and every note. Check it, save it as a PDF, then send it to us." }
+  ],
+  "board": {
+    "slots": [
+      { "ch": "logo",     "area": "logo" },
+      { "ch": "type",     "area": "type" },
+      { "ch": "buttons",  "area": "btn" },
+      { "ch": "cards",    "area": "card" },
+      { "ch": "bizcards", "area": "biz" },
+      { "ch": "labels",   "area": "label" },
+      { "ch": "bottles",  "area": "bottle" },
+      { "ch": "colour",   "area": "colour" }
+    ],
+    "chips": ["effects", "backgrounds", "entrances"]
+  }
+}

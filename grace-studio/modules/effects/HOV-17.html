@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HOV-17 · EARTH AND NETWORK · PEPTICITY</title>
+<meta name="fx-code" content="HOV-17"><meta name="fx-interact" content="hover">
+<link rel="icon" href="data:,">
+<link rel="preload" href="../_assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../_shared/fx-kit.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<style>
+/* HOV-17 EARTH AND NETWORK: a lit earth turns slowly with Canada facing you. PEPTICITY cities glow on the surface, joined by
+   arcs that carry little pulses of light; an outer web of nodes and edges lights up around your pointer. Point at a city and
+   it lights every city it links to. Drag to turn the earth. */
+body{background:radial-gradient(80% 70% at 62% 50%,#121118 0%,#09090b 60%,#050506 100%)}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:1;touch-action:none;cursor:grab}
+#gl:active{cursor:grabbing}
+.stars{position:fixed;inset:0;z-index:0;opacity:.5;background-image:radial-gradient(1px 1px at 12% 22%,#fff,transparent),radial-gradient(1px 1px at 72% 12%,#dfe4ee,transparent),radial-gradient(1px 1px at 86% 64%,#fff,transparent),radial-gradient(1px 1px at 32% 78%,#cfd6e4,transparent),radial-gradient(1.5px 1.5px at 54% 40%,#fff,transparent),radial-gradient(1px 1px at 8% 60%,#e8ecf4,transparent),radial-gradient(1px 1px at 94% 30%,#fff,transparent)}
+.copy{position:fixed;z-index:3;left:clamp(20px,6vw,96px);top:50%;transform:translateY(-50%);width:min(400px,36vw);display:grid;gap:16px;pointer-events:none}
+.copy .fx-h{font-size:clamp(26px,3.2vw,48px)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:6px;font:400 9px/1 var(--fh);letter-spacing:.28em;color:var(--mute)}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:8px;height:8px;border-radius:50%;background:var(--acc-hi);box-shadow:0 0 8px var(--acc)}
+.legend i.w{background:#e6e9ef;box-shadow:0 0 6px rgba(230,233,239,.7);width:5px;height:5px}
+.tip{position:fixed;z-index:4;left:0;top:0;pointer-events:none;opacity:0;transition:opacity .25s var(--e-out);padding:12px 14px 11px;min-width:170px}
+.tip.on{opacity:1}
+.tip.fx-glass{background-color:rgba(8,8,11,.55)}
+.tip b{display:block;font:400 13px/1 var(--fh);letter-spacing:.16em;margin-bottom:7px}
+.tip span{display:block;font-size:12px;color:var(--ink2)}
+.tip em{display:block;margin-top:6px;font:400 8.5px var(--fh);letter-spacing:.28em;color:var(--acc-text);font-style:normal}
+.fb{position:fixed;inset:0;z-index:1;display:grid;place-items:center}
+.fb img{width:min(70vmin,620px);border-radius:50%;opacity:.8}
+@media (max-width:760px){.copy{top:clamp(54px,9vh,80px);transform:none;width:auto;right:20px}.copy .fx-p{font-size:14px}.legend{display:none}}
+</style>
+</head>
+<body>
+<div class="fx-tag"><i></i><b>HOV-17</b><span>EARTH AND NETWORK</span></div>
+<div class="stars" aria-hidden="true"></div>
+<canvas id="gl" aria-label="A turning earth with the PEPTICITY network of Canadian cities. Point at a city to light its links; drag to turn the earth." role="img"></canvas>
+<div class="fb" id="fb" hidden><img src="../_assets/earth/earth-lights.webp" alt="The earth at night"></div>
+<section class="copy">
+  <p class="fx-eyebrow">THE PEPTICITY NETWORK</p>
+  <h2 class="fx-h fx-chrome">ONE TEAM, COAST TO COAST</h2>
+  <p class="fx-p">Point at a city and it lights every city it links to. Drag to turn the earth.</p>
+  <div class="legend" aria-hidden="true"><span><i></i>CITY</span><span><i class="w"></i>NODE</span></div>
+</section>
+<div class="tip fx-glass" id="tip" role="status" aria-live="polite"><b id="tipN">TORONTO</b><span id="tipS">Linked to 3 cities</span><em>SAMPLE NETWORK</em></div>
+<script src="../_shared/fx-kit.js"></script>
+<script type="module">
+import { THREE, stage3d, accentColor } from '../_shared/fx3d.mjs';
+FX.hint('hover', FX.coarse ? 'TAP' : 'HOVER');
+const canvas = document.getElementById('gl');
+const st = stage3d(canvas, { dpr: FX.mobile ? 1.5 : 2, shadows: false });
+if (!st) document.getElementById('fb').hidden = false;
+else {
+  st.renderer.toneMappingExposure = 1.05;
+  const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(28, 1, 0.1, 60);
+  const key = new THREE.DirectionalLight(0xffffff, 3.0); key.position.set(-3.2, 2.2, 3.6); scene.add(key);
+  scene.add(new THREE.AmbientLight(0xdfe4ee, 0.42));
+  const tilt = new THREE.Group(), spin = new THREE.Group(); tilt.add(spin); scene.add(tilt);
+  const tl = new THREE.TextureLoader();
+  const land = tl.load('../_assets/earth/earth-land.webp', () => FX.wake()), lights = tl.load('../_assets/earth/earth-lights.webp', () => FX.wake()), bump = tl.load('../_assets/earth/earth-bump.webp', () => FX.wake());
+  land.colorSpace = THREE.SRGBColorSpace; lights.colorSpace = THREE.SRGBColorSpace;
+  [land, lights, bump].forEach(t => t.anisotropy = 8);
+  const earthMat = new THREE.MeshStandardMaterial({ map: land, bumpMap: bump, bumpScale: 2.4, roughness: 0.74, metalness: 0.1, color: 0xd6dbe4,
+    emissiveMap: lights, emissive: new THREE.Color(0xeef2ff), emissiveIntensity: 1.6 });
+  const earth = new THREE.Mesh(new THREE.SphereGeometry(1, FX.mobile ? 72 : 112, FX.mobile ? 48 : 80), earthMat); spin.add(earth);
+  /* atmosphere: a soft lit halo that starts exactly at the limb (camera-facing), plus a rim of light on the surface itself */
+  const haloTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 512; const x = c.getContext('2d'); const g = x.createRadialGradient(256, 256, 0, 256, 256, 256);
+    const e = 1 / 1.32; g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(e - 0.02, 'rgba(255,255,255,0)'); g.addColorStop(e, 'rgba(255,255,255,.95)');
+    g.addColorStop(e + 0.035, 'rgba(255,255,255,.42)'); g.addColorStop(e + 0.1, 'rgba(255,255,255,.12)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 512, 512);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+  const atmo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xdfe5ff, opacity: 0.55, toneMapped: false }));
+  atmo.scale.setScalar(2.64); atmo.renderOrder = -1; scene.add(atmo);
+  const fres = new THREE.Mesh(new THREE.SphereGeometry(1.003, 64, 48), new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { c: { value: new THREE.Color(0xdfe5ff) }, k: { value: 0.7 } },
+    vertexShader: 'varying vec3 vN;varying vec3 vP;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vP=mv.xyz;gl_Position=projectionMatrix*mv;}',
+    fragmentShader: 'uniform vec3 c;uniform float k;varying vec3 vN;varying vec3 vP;void main(){float f=pow(1.-max(dot(vN,normalize(-vP)),0.),3.2)*k;gl_FragColor=vec4(c*f,f);}' }));
+  tilt.add(fres);
+
+  /* cities (lat, lon): placed on the real map */
+  const C = [['VANCOUVER', 49.28, -123.12], ['WHITEHORSE', 60.72, -135.06], ['CALGARY', 51.05, -114.07], ['EDMONTON', 53.55, -113.49], ['YELLOWKNIFE', 62.45, -114.37],
+    ['SASKATOON', 52.13, -106.67], ['REGINA', 50.45, -104.61], ['WINNIPEG', 49.9, -97.14], ['TORONTO', 43.65, -79.38], ['OTTAWA', 45.42, -75.7],
+    ['MONTREAL', 45.5, -73.57], ['QUEBEC CITY', 46.81, -71.21], ['HALIFAX', 44.65, -63.57], ["ST. JOHN'S", 47.56, -52.71], ['IQALUIT', 63.75, -68.52]];
+  const LINKS = [[0, 2], [0, 1], [2, 3], [3, 4], [3, 5], [2, 6], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 12], [12, 13], [10, 14], [4, 14], [0, 3], [8, 10]];
+  const ll = (lat, lon, r) => { const ph = (lon + 180) * Math.PI / 180, la = lat * Math.PI / 180; return new THREE.Vector3(-Math.cos(ph) * Math.cos(la) * r, Math.sin(la) * r, Math.sin(ph) * Math.cos(la) * r); };
+  const glowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.18, 'rgba(255,255,255,.75)'); g.addColorStop(0.45, 'rgba(255,255,255,.16)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+  const net = new THREE.Group(); spin.add(net);
+  const accMats = [];
+  const cities = C.map(([n, la, lo], i) => {
+    const pos = ll(la, lo, 1.012);
+    const core = new THREE.Mesh(new THREE.SphereGeometry(0.011, 12, 10), new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }));
+    core.position.copy(pos); net.add(core);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.8, toneMapped: false }));
+    halo.position.copy(pos); halo.scale.setScalar(0.09); net.add(halo); accMats.push(halo.material);
+    return { n, pos, core, halo, glow: 0, links: [] };
+  });
+  const arcs = LINKS.map(([a, b], k) => {
+    const A = cities[a].pos, B = cities[b].pos, mid = A.clone().add(B).multiplyScalar(0.5), h = 1 + A.distanceTo(B) * 0.42;
+    const curve = new THREE.QuadraticBezierCurve3(A, mid.normalize().multiplyScalar(h), B);
+    const pts = curve.getPoints(48);
+    const mat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.32, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat); net.add(line);
+    const pulse = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+    pulse.scale.setScalar(0.05); net.add(pulse); accMats.push(pulse.material);
+    cities[a].links.push(b); cities[b].links.push(a);
+    return { a, b, curve, line, mat, pulse, off: k * 0.37 % 1, speed: 0.16 + (k % 4) * 0.03, glow: 0 };
+  });
+  /* the outer web: nodes on a shell joined to their nearest neighbours (v2 network), lit by the pointer */
+  const SN = FX.mobile ? 34 : 60, sp = [];
+  for (let i = 0; i < SN; i++) { const y = 1 - (i + 0.5) / SN * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963, R = 1.34 + ((i * 37) % 11) / 11 * 0.2; sp.push(new THREE.Vector3(Math.cos(th) * r * R, y * R, Math.sin(th) * r * R)); }
+  const edges = [];
+  sp.forEach((a, i) => sp.map((b, j) => [j, a.distanceTo(b)]).filter(([j]) => j !== i).sort((x, y) => x[1] - y[1]).slice(0, 3).forEach(([j]) => { if (!edges.some(e => (e[0] === i && e[1] === j) || (e[0] === j && e[1] === i))) edges.push([i, j]); }));
+  const ePos = new Float32Array(edges.length * 6), eCol = new Float32Array(edges.length * 6);
+  edges.forEach(([i, j], k) => ePos.set([sp[i].x, sp[i].y, sp[i].z, sp[j].x, sp[j].y, sp[j].z], k * 6));
+  const eGeo = new THREE.BufferGeometry(); eGeo.setAttribute('position', new THREE.BufferAttribute(ePos, 3)); eGeo.setAttribute('color', new THREE.BufferAttribute(eCol, 3));
+  const shell = new THREE.Group(); tilt.add(shell);
+  shell.add(new THREE.LineSegments(eGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false })));
+  const sGeo = new THREE.BufferGeometry(); sGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(sp.flatMap(v => [v.x, v.y, v.z])), 3));
+  const sCol = new Float32Array(SN * 3); sGeo.setAttribute('color', new THREE.BufferAttribute(sCol, 3));
+  shell.add(new THREE.Points(sGeo, new THREE.PointsMaterial({ size: 0.035, map: glowTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true })));
+  const sGlow = new Float32Array(SN);
+
+  /* accent */
+  let acc = accentColor();
+  FX.onAcc(() => { acc = accentColor(); const w = new THREE.Color(0xdfe5ff); atmo.material.color.copy(w).lerp(acc, 0.3); fres.material.uniforms.c.value.copy(w).lerp(acc, 0.22); FX.wake(); });
+
+  /* Canada faces the camera; the earth swings gently around it, and you can drag it */
+  const home = ll(56, -96, 1); const baseY = -Math.atan2(home.x, home.z);
+  tilt.rotation.x = 0.62; tilt.rotation.z = 0.06;
+  let dragY = 0, dragV = 0, dragX = 0, drag = null, hover = -1, hoverT = 0;
+  canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, y0: dragY, x0: dragX, lx: e.clientX, lt: performance.now() }; canvas.setPointerCapture(e.pointerId); FX.wake(); });
+  canvas.addEventListener('pointermove', e => { if (!drag) return; const now = performance.now(); dragY = drag.y0 + (e.clientX - drag.x) * 0.006; dragX = FX.clamp(drag.x0 + (e.clientY - drag.y) * 0.003, -0.35, 0.35);
+    dragV = (e.clientX - drag.lx) * 0.006 / Math.max(8, now - drag.lt) * 1000; drag.lx = e.clientX; drag.lt = now; FX.wake(); });
+  const up = () => { drag = null; FX.wake(); }; canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+  const tip = document.getElementById('tip'), tipN = document.getElementById('tipN'), tipS = document.getElementById('tipS');
+  const v = new THREE.Vector3(), cpos = new THREE.Vector3(), camDir = new THREE.Vector3();
+  let gx = 0;
+  FX.loop((dt, t, now, live) => {
+    st.size(); cam.aspect = st.aspect();
+    const wide = innerWidth > 760, A = cam.aspect;
+    const fov = cam.fov * Math.PI / 180, size = wide ? 3.05 : 3.0, dist = Math.max(size / (2 * Math.tan(fov / 2)), size / (2 * Math.tan(fov / 2) * A * (wide ? 0.62 : 1)));
+    gx = wide ? Math.min(1.25, (dist * Math.tan(fov / 2) * A) * 0.33) : 0;
+    cam.position.set(-gx, wide ? 0 : 0.5, dist); cam.lookAt(-gx, wide ? 0 : 0.5, 0); cam.updateProjectionMatrix();
+    if (!drag) { dragY += dragV * dt; dragV *= Math.pow(0.04, dt); dragX *= Math.pow(0.3, dt); }
+    const sway = FX.rm ? 0 : Math.sin(t * 0.09) * 0.55 + t * 0.012;
+    spin.rotation.y = baseY + sway + dragY; tilt.rotation.x = 0.62 + dragX;
+    shell.rotation.y = (FX.rm ? 0 : t * 0.03) + dragY * 0.6;
+    earthMat.emissiveIntensity = 1.5 + (FX.rm ? 0 : 0.15 * Math.sin(t * 0.7)) + hoverT * 0.4;
+    atmo.material.opacity = 0.5 + (FX.rm ? 0 : 0.06 * Math.sin(t * 0.8)) + hoverT * 0.2; fres.material.uniforms.k.value = 0.65 + hoverT * 0.3;
+    atmo.position.set(0, 0, 0);
+    /* hover: nearest visible city within 28px */
+    scene.updateMatrixWorld(); camDir.copy(cam.position).normalize();
+    let best = -1, bd = 28;
+    if (FX.pointer.inside && !drag) cities.forEach((c, i) => { c.core.getWorldPosition(cpos); const facing = cpos.clone().sub(new THREE.Vector3(0, 0, 0)).normalize().dot(cam.position.clone().sub(cpos).normalize()); if (facing < 0.15) return;
+      v.copy(cpos).project(cam); const sx = (v.x + 1) / 2 * innerWidth, sy = (1 - v.y) / 2 * innerHeight, d = Math.hypot(sx - FX.pointer.x, sy - FX.pointer.y); if (d < bd) { bd = d; best = i; } });
+    if (best !== hover) { hover = best; if (hover > -1) { const c = cities[hover]; tipN.textContent = c.n; tipS.textContent = 'Linked to ' + c.links.length + (c.links.length === 1 ? ' city' : ' cities'); } }
+    hoverT = FX.damp(hoverT, hover > -1 ? 1 : 0, 6, dt);
+    if (hover > -1) { cities[hover].core.getWorldPosition(cpos); v.copy(cpos).project(cam); const sx = (v.x + 1) / 2 * innerWidth, sy = (1 - v.y) / 2 * innerHeight;
+      tip.style.transform = 'translate3d(' + Math.min(innerWidth - 200, sx + 18).toFixed(0) + 'px,' + Math.max(10, sy - 70).toFixed(0) + 'px,0)'; tip.classList.add('on'); } else tip.classList.remove('on');
+    cities.forEach((c, i) => { const tgt = i === hover ? 1 : (hover > -1 && cities[hover].links.includes(i)) ? 0.7 : 0.25 + (FX.rm ? 0 : 0.1 * Math.sin(t * 1.3 + i));
+      c.glow = FX.damp(c.glow, tgt, 7, dt); c.halo.scale.setScalar(0.07 + c.glow * 0.13); c.halo.material.color.copy(acc).lerp(new THREE.Color(1, 1, 1), 0.35 - c.glow * 0.25); c.halo.material.opacity = 0.55 + c.glow * 0.45; });
+    arcs.forEach(a => { const on = hover > -1 && (a.a === hover || a.b === hover); a.glow = FX.damp(a.glow, on ? 1 : 0, 6, dt);
+      a.mat.color.copy(new THREE.Color(0.9, 0.92, 0.96)).lerp(acc, 0.25 + a.glow * 0.6); a.mat.opacity = 0.22 + a.glow * 0.6;
+      const u = FX.rm ? 0.5 : (t * a.speed * (1 + a.glow * 1.5) + a.off) % 1; a.curve.getPoint(u, a.pulse.position);
+      a.pulse.material.color.copy(acc).lerp(new THREE.Color(1, 1, 1), 0.3); a.pulse.material.opacity = (0.35 + a.glow * 0.65) * Math.sin(u * Math.PI); a.pulse.scale.setScalar(0.035 + a.glow * 0.03); });
+    /* the outer web lights around the pointer (and with the hovered city) */
+    for (let i = 0; i < SN; i++) {
+      v.copy(sp[i]).applyMatrix4(shell.matrixWorld).project(cam); const sx = (v.x + 1) / 2 * innerWidth, sy = (1 - v.y) / 2 * innerHeight;
+      const d = FX.pointer.inside ? Math.hypot(sx - FX.pointer.x, sy - FX.pointer.y) : 9999, near = Math.max(0, 1 - d / 220);
+      sGlow[i] = FX.damp(sGlow[i], 0.09 + near * 0.91 + (FX.rm ? 0 : 0.06 * Math.sin(t * 1.4 + i)), 6, dt);
+      const g = sGlow[i], mix = Math.min(1, near * 1.2); sCol[i * 3] = g * (0.9 + (acc.r - 0.9) * mix); sCol[i * 3 + 1] = g * (0.92 + (acc.g - 0.92) * mix); sCol[i * 3 + 2] = g * (0.96 + (acc.b - 0.96) * mix);
+    }
+    sGeo.attributes.color.needsUpdate = true;
+    edges.forEach(([i, j], k) => { const g = Math.min(sGlow[i], sGlow[j]) * 0.6; for (let q = 0; q < 2; q++) { eCol[k * 6 + q * 3] = sCol[(q ? j : i) * 3] * 0.5; eCol[k * 6 + q * 3 + 1] = sCol[(q ? j : i) * 3 + 1] * 0.5; eCol[k * 6 + q * 3 + 2] = sCol[(q ? j : i) * 3 + 2] * 0.5 + g * 0; } });
+    eGeo.attributes.color.needsUpdate = true;
+    st.draw(scene, cam);
+    return !!drag || Math.abs(dragV) > 1e-3 || hoverT > 1e-3 && hoverT < 0.999;
+  });
+  window.__fx3d = { st, get hover() { return hover; }, cityXY(i) { cities[i].core.getWorldPosition(cpos); v.copy(cpos).project(cam); return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]; } };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en" data-version="black" class="js-pending">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>PEPTICITY</title>
+<meta name="description" content="PEPTICITY is a peptide house built on research. Read our mission and story, and get Grace's monthly letter.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<link rel="preload" href="brand/font/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="brand/logo/p-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="brand/ui/button.css">
+<link rel="stylesheet" href="v3.css">
+<script>
+/* ---- ONE place for swap points and switches (v3: research-first landing, 19+ gate, three sales zones) ---- */
+window.PC_CONFIG = {
+  /* counsel switch: the 15% offer and restock alerts show only while true (the owner keeps them in the sales zones) */
+  counselCleared: { offer: true },
+  /* FIXED end date for the grand-opening offer, e.g. '2026-12-31T23:59:00-05:00'. The countdown reads only this stored date,
+     never the page-load time, so it never resets. null = shows "[End date: Grace and counsel to set]". */
+  offerEndsAt: null,
+  /* the three listings flagged highRisk in data/products.json stay hidden (store, finder, city cards, concierge) until this is true */
+  showHighRisk: false,
+  /* the 19+ pass is remembered on this device for this many days */
+  agePassDays: 30,
+  /* SWAP POINT: the lab -> product line film. Set to e.g. 'media/doors2-' and drop in doors2-<white|black>.mp4/.webm:
+     the film is then scrubbed by scroll. null = the built transition (glass wipe + the existing door photo opening). */
+  secondDoorsFilm: null,
+  /* SWAP POINT: chest film. A new film drops in as media/chest-<white|black>.mp4/.webm (+ -poster.jpg) */
+  intro: 'chest',
+  chest: { base: 'media/chest-', diveAt: 9.1, focus: [49, 46] },
+  /* SWAP POINT: city + lab frame atlases (HD). man = a copy of media/frames-hd/manifest.json */
+  frames: { dir: 'media/frames-hd/', man: {"white-weave":{"d":{"n":195,"tw":1920,"th":1080,"cols":2,"rows":2,"files":49},"m":{"n":195,"tw":608,"th":1080,"cols":4,"rows":2,"files":25}},"black-weave":{"d":{"n":226,"tw":1920,"th":1080,"cols":2,"rows":2,"files":57},"m":{"n":226,"tw":608,"th":1080,"cols":4,"rows":2,"files":29}},"white-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}},"black-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}}} },
+  /* SWAP POINT: the vial art used for every product */
+  bottle: 'assets/vial-pepticity.webp',
+  /* the catalogue: fetched ONLY after the 19+ gate is passed (nothing from it is in this page's source) */
+  products: 'data/products.json',
+  foundingRate: 0.15
+};
+(function(){var d=document.documentElement,v='black',seen=false,ok=false;
+try{v=localStorage.getItem('pc-version')||'black'}catch(e){}
+/* the chest film plays on every visit (owner, 29 Oct); SKIP INTRO is always there */
+if(/[?&]v=black/.test(location.search))v='black';if(/[?&]v=white/.test(location.search))v='white';
+if(/[?&]nointro/.test(location.search))seen=true;
+if(v!=='white')v='black';d.setAttribute('data-version',v);
+/* the 19+ pass (30 days, this device only) */
+if(/[?&]resetage/.test(location.search)){try{localStorage.removeItem('pc-age-pass')}catch(e){}}
+try{var p=JSON.parse(localStorage.getItem('pc-age-pass')||'null');ok=!!(p&&p.ok===true&&typeof p.prov==='string'&&/^[A-Z]{2}$/.test(p.prov)&&+p.exp>Date.now()&&p.prov!=='XX');}catch(e){}
+if(!ok)d.classList.add('age-gated');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');
+else if(!seen)d.classList.add('intro-on');
+d.classList.add('gated');d.classList.remove('js-pending');})();
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+},
+  "integrity": {
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js": "sha384-61S/Nu32S3E5+n+KpCOTb2eRYps6fVKm+9Gz1QBvSePFthb46f063Aa/qe/lykFZ",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js": "sha384-ZGqh+dJjt6z9NHsWYYt+TPDFj8y+2If7naI6a6AkkyNZyH51CVS3HTWFh0njp4k6",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js": "sha384-jHGXS4+FuVOBnZkNme2ury3Ccg5DWDLYK22xX/WGdZCZsjRM4J+3n6Qc4CXx1Hjf"
+  } }
+</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="g-plat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".46" stop-color="#b9bec5"/><stop offset=".54" stop-color="#6b7077"/><stop offset="1" stop-color="#e6e9ed"/></linearGradient>
+    <symbol id="pmark" viewBox="-0.708 -0.58 1.416 1.16"><path d="M-0.6282 0.5000 L-0.4425 0.5000 L-0.4424 0.1459 L-0.4402 0.1339 L-0.4335 0.1191 L-0.4228 0.1069 L-0.4128 0.0999 L-0.4015 0.0951 L-0.3854 0.0929 L0.3325 0.0929 L0.3746 0.0899 L0.4161 0.0809 L0.4556 0.0660 L0.4928 0.0459 L0.5266 0.0204 L0.5565 -0.0094 L0.5819 -0.0433 L0.6021 -0.0804 L0.6102 -0.1000 L0.6222 -0.1406 L0.6282 -0.1824 L0.6282 -0.2247 L0.6259 -0.2457 L0.6169 -0.2871 L0.6021 -0.3267 L0.5926 -0.3456 L0.5698 -0.3813 L0.5565 -0.3977 L0.5266 -0.4276 L0.5102 -0.4409 L0.4745 -0.4637 L0.4556 -0.4731 L0.4161 -0.4880 L0.3746 -0.4970 L0.3536 -0.4993 L-0.4282 -0.5000 L-0.4566 -0.4980 L-0.4708 -0.4954 L-0.4981 -0.4874 L-0.5241 -0.4756 L-0.5481 -0.4601 L-0.5696 -0.4414 L-0.5794 -0.4310 L-0.5965 -0.4081 L-0.6038 -0.3959 L-0.6156 -0.3699 L-0.6236 -0.3426 L-0.6276 -0.3143ZM0.3325 -0.0929 L-0.4425 -0.0929 L-0.4425 -0.3143 L0.3325 -0.3143 L0.3482 -0.3131 L0.3636 -0.3099 L0.3785 -0.3043 L0.3988 -0.2921 L0.4108 -0.2819 L0.4256 -0.2634 L0.4332 -0.2496 L0.4406 -0.2271 L0.4432 -0.2036 L0.4421 -0.1879 L0.4362 -0.1649 L0.4296 -0.1506 L0.4211 -0.1373 L0.4051 -0.1199 L0.3924 -0.1104 L0.3712 -0.0999 L0.3482 -0.0940Z" fill-rule="evenodd"/></symbol>
+  </defs>
+</svg>
+
+<!-- GROUND: APEX Arsenal moving black/silver smoke (BG-P01, R136) + 30-degree pattern watermark (R093) + OBJ-08 spinning emblem -->
+<div class="ground" aria-hidden="true">
+  <canvas id="smoke"></canvas>
+  <div class="wm30"></div>
+  <div class="emblem-wm" id="emblemWm" data-effect="OBJ-08"><img src="brand/logo/emblem.svg" alt="" id="emblemFlat"></div>
+  <div class="vig"></div>
+</div>
+<canvas id="gl-back" aria-hidden="true"></canvas>
+
+<!-- 1 · LOADER (R-ENTRANCE): the WHITE / BLACK chest film as it is, then the camera pushes through the bottle's light into the landing -->
+<div id="intro" role="region" aria-label="Entrance">
+  <div class="film" id="film" aria-hidden="true">
+    <video id="chest" muted playsinline preload="auto"></video>
+  </div>
+  <div class="intro-bloom" id="introBloom" aria-hidden="true"></div>
+  <button class="pc-btn intro-tap" id="introTap" type="button" hidden><span class="pc-btn__face"><span class="pc-btn__label">TAP TO OPEN</span></span></button>
+  <div class="intro-skip"><button class="pc-btn pc-btn--sm" id="skipIntro" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SKIP INTRO</span></span></button></div>
+</div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="PEPTICITY, back to the top"><svg class="brand-p"><use href="#pmark"/></svg><span class="wordmark x3d">PEPTICITY</span></a>
+  <nav class="nav-r" aria-label="Site">
+    <div class="pc-seg pc-seg--sm" role="radiogroup" aria-label="Choose the look" id="vSeg">
+      <span class="pc-seg__thumb" aria-hidden="true"></span>
+      <button class="pc-seg__opt" type="button" role="radio" aria-checked="true" data-value="white">WHITE</button>
+      <button class="pc-seg__opt" type="button" role="radio" aria-checked="false" data-value="black">BLACK</button>
+    </div>
+    <!-- STORE and CART exist only past the 19+ gate -->
+    <button class="pc-btn pc-btn--sm hide-s sales-only" id="toStore" type="button"><span class="pc-btn__face"><span class="pc-btn__label">COLLECTION</span></span></button>
+    <button class="pc-btn pc-btn--sm sales-only" id="cartBtn" type="button" aria-haspopup="dialog" aria-controls="cart"><span class="pc-btn__face"><span class="pc-btn__label">CART <b class="cart-n" id="cartN">0</b></span></span></button>
+    <button class="pc-btn pc-btn--sm" id="menuBtn" type="button" aria-haspopup="dialog" aria-controls="menu" aria-expanded="false"><span class="pc-btn__face"><span class="pc-btn__label">MENU</span></span></button>
+  </nav>
+</header>
+
+<!-- progress map (stay-and-explore): real position, lit stops -->
+<ol class="rail" id="rail" aria-label="Where you are">
+  <li data-stop="hero"><span>WHO WE ARE</span></li><li data-stop="mission"><span>OUR MISSION</span></li><li data-stop="story"><span>OUR STORY</span></li>
+  <li data-stop="age"><span>THE THRESHOLD · 19+</span></li><li data-stop="city"><span>THE CITY</span></li><li data-stop="doors"><span>THE DOORS</span></li>
+  <li data-stop="lab"><span>THE BIO LAB</span></li><li data-stop="store"><span>THE COLLECTION</span></li><li data-stop="network"><span>THE NETWORK</span></li>
+</ol>
+
+<main id="main" tabindex="-1">
+
+  <!-- ===================== 2 · THE LANDING (public: no prices, no product names, no offer) ===================== -->
+
+  <!-- 2a · WHO WE ARE -->
+  <section class="hero" id="top" data-stop-id="hero" aria-labelledby="heroTitle" data-no-cover>
+    <div class="hero-card glass" id="heroCard">
+      <span class="hc-light" aria-hidden="true"></span>
+      <p class="eyebrow"><i></i><span>WHO WE ARE</span><i></i></p>
+      <p class="wback" id="wback" data-hook="H52" hidden><span id="wbackT">WELCOME BACK.</span> <button class="linkish" type="button" id="wbackCart" hidden>OPEN MY CART</button> <button class="linkish" type="button" id="wbackClear">NOT YOU?</button></p>
+      <div class="w3d w3d-hero" data-word3d="PEPTICITY" data-funky=".22" data-fill=".8" data-aspect="4.6" aria-hidden="true"></div>
+      <div class="w3d w3d-h1" data-word3d="BUILT ON|RESEARCH" data-funky="0" data-fill=".86" data-aspect="10" aria-hidden="true"></div>
+      <h1 class="h1 x3d" id="heroTitle">BUILT ON RESEARCH</h1>
+      <p class="hero-lede">PEPTICITY is a peptide house founded by Grace in <span class="ph">[city, year: Grace to confirm]</span>. We read the research before we say a word, show how things are made, and never promise what the evidence can't.</p>
+      <ul class="perks">
+        <li><b>RESEARCH</b><span>BEFORE ANY CLAIM</span></li>
+        <li><b>CLARITY</b><span>PLAIN WORDS, NO HYPE</span></li>
+        <li><b>STANDARDS</b><span>NOTHING WE CAN'T STAND BEHIND</span></li>
+      </ul>
+      <!-- the landing's one soft ask: Grace's letter (A15 wording, one purpose, unticked) -->
+      <form class="cap-form hero-form" data-hook="H18a" data-effect="FRM-103" data-consent="required" novalidate>
+        <div class="row">
+          <label class="field"><span class="lbl">EMAIL FOR GRACE'S LETTER</span><input type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com"></label>
+          <button class="pc-btn pc-btn--lg morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">JOIN GRACE'S LETTER</span></span></button>
+        </div>
+        <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+        <p class="err" role="alert"></p>
+        <p class="ok" role="status" aria-live="polite"></p>
+      </form>
+      <div class="hero-alt">
+        <button class="pc-btn pc-btn--sm" id="toStory" type="button"><span class="pc-btn__face"><span class="pc-btn__label">READ OUR STORY</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+      </div>
+    </div>
+    <p class="scroll-cue" aria-hidden="true"><span>SCROLL FOR OUR MISSION</span><i></i></p>
+  </section>
+
+  <!-- 2b · OUR MISSION: TXT-04 scroll highlight -->
+  <section class="sect promise mission" id="mission" data-stop-id="mission" aria-labelledby="promiseT">
+    <div class="wrap">
+      <p class="eyebrow"><i></i><span>OUR MISSION</span><i></i></p>
+      <h2 class="sr-only" id="promiseT">OUR MISSION</h2>
+      <p class="promise-p" id="promiseP" data-effect="TXT-04" data-hl>PEPTICITY exists to make peptide research clear, calm and honest. We read before we speak, we show how things are made, and we hold ourselves to standards we can show you.</p>
+      <p class="fine center">[Final mission wording: Grace to confirm.]</p>
+    </div>
+  </section>
+
+  <!-- 2c · OUR STORY: SCR-21 liquid-glass panes in depth (desktop pin; phones stack and reveal) -->
+  <section class="story" id="story" data-stop-id="story" data-effect="SCR-21" aria-labelledby="storyT">
+    <div class="story-stage" data-no-cover>
+      <header class="story-head">
+        <p class="eyebrow"><i></i><span>OUR STORY</span><i></i></p>
+        <h2 class="sr-only" id="storyT">OUR STORY</h2>
+        <div class="story-rail" aria-hidden="true"><i id="storyBar"></i></div>
+      </header>
+      <ol class="panes" id="panes">
+        <li class="pane lq" data-i="0"><span class="pane-n" aria-hidden="true">01</span>
+          <p class="eyebrow"><span>WHERE IT BEGAN</span></p><h3 class="h2s x3d">WHY PEPTICITY EXISTS</h3>
+          <p class="pane-p">Grace started PEPTICITY to bring order and honesty to a subject full of noise. <span class="ph">[Founding story: Grace to confirm when, where and why it began.]</span></p></li>
+        <li class="pane lq" data-i="1"><span class="pane-n" aria-hidden="true">02</span>
+          <p class="eyebrow"><span>HOW WE WORK</span></p><h3 class="h2s x3d">WE READ FIRST</h3>
+          <p class="pane-p">Who ran a study, how many people took part, and whether anyone repeated it. Then we write it down in plain words. If the evidence is early, we say so.</p></li>
+        <li class="pane lq" data-i="2"><span class="pane-n" aria-hidden="true">03</span>
+          <p class="eyebrow"><span>THE PEPTICITY STANDARD</span></p><h3 class="h2s x3d">NOTHING WE CAN'T STAND BEHIND</h3>
+          <p class="pane-p">Clear names and clear strengths. <span class="ph">[Quality and testing standards: Grace to confirm the lab, the method and what each report shows.]</span></p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3 · THE AGE GATE: the threshold into the city. Passing it fetches the catalogue. -->
+  <section class="age photo" id="age" data-stop-id="age" aria-labelledby="ageT">
+    <div class="age-stage">
+      <canvas id="cvAge" class="frames tone" aria-hidden="true"></canvas>
+      <div class="age-vig" aria-hidden="true"></div>
+      <div class="age-panel lq" id="agePanel" data-state="ask" role="group" aria-labelledby="ageT" data-no-cover>
+        <span class="age-scan" aria-hidden="true"></span>
+        <svg class="age-mark" aria-hidden="true"><use href="#pmark"/></svg>
+        <p class="eyebrow"><span>THE THRESHOLD</span><i></i><span class="age-status" id="ageStatus">AGE CHECK · CANADA</span></p>
+        <h2 class="h2s x3d" id="ageT">THE PEPTICITY COLLECTION IS FOR ADULTS 19+ IN CANADA</h2>
+        <div class="age-step" data-step="ask">
+          <p>Past this point the city opens: the collection, prices and the PEPTICITY Team offer. Tell us where you live and confirm your age to enter.</p>
+          <form class="age-form" id="ageForm" novalidate>
+            <label class="field"><span class="lbl">PROVINCE OR TERRITORY</span>
+              <select name="prov" id="ageProv" required>
+                <option value="">Choose one</option>
+                <option value="AB">Alberta</option><option value="BC">British Columbia</option><option value="MB">Manitoba</option>
+                <option value="NB">New Brunswick</option><option value="NL">Newfoundland and Labrador</option><option value="NS">Nova Scotia</option>
+                <option value="NT">Northwest Territories</option><option value="NU">Nunavut</option><option value="ON">Ontario</option>
+                <option value="PE">Prince Edward Island</option><option value="QC">Quebec</option><option value="SK">Saskatchewan</option>
+                <option value="YT">Yukon</option><option value="XX">I live outside Canada</option>
+              </select></label>
+            <div class="btn-row">
+              <button class="pc-btn pc-btn--lg" type="submit" id="ageYes"><span class="pc-btn__face"><span class="pc-btn__label">I'M 19 OR OLDER</span></span></button>
+              <button class="pc-btn pc-btn--lg" type="button" id="ageLeave"><span class="pc-btn__face"><span class="pc-btn__label">LEAVE</span></span></button>
+            </div>
+            <p class="err" role="alert"></p>
+            <p class="fine">Your answer stays on this device for 30 days, so we won't ask again. Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</p>
+          </form>
+        </div>
+        <div class="age-step" data-step="ok">
+          <p id="ageOkT">Welcome in. Your 19+ pass is saved on this device.</p>
+          <div class="btn-row">
+            <button class="pc-btn pc-btn--lg" type="button" id="ageEnter"><span class="pc-btn__face"><span class="pc-btn__label">ENTER THE CITY</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+            <button class="linkish" type="button" id="ageForget">FORGET MY ANSWER</button>
+          </div>
+        </div>
+        <div class="age-step" data-step="no">
+          <p id="ageNoT">Understood. The collection stays closed, and the rest of PEPTICITY is here for you.</p>
+          <div class="btn-row"><button class="linkish" type="button" id="ageBack">BACK TO OUR STORY</button><button class="linkish" type="button" id="ageRetry">CHANGE MY ANSWER</button></div>
+        </div>
+      </div>
+      <p class="age-cue" aria-hidden="true"><span>THE CITY OF PEPTICITY</span></p>
+    </div>
+    <div class="age-legal" id="privacy">
+      <p>PEPTICITY is for adults 19 and over in Canada. <a href="#privacy" class="ph-link">[Privacy policy]</a> · <a href="#privacy" class="ph-link">[Privacy promise]</a> · [Mailing address] · [Contact]</p>
+      <p>Preview build. Every form on this page is a preview: nothing is sent.</p>
+      <p>[Final legal copy to be approved by counsel.]</p>
+    </div>
+  </section>
+
+  <div class="past-age" id="pastAge">
+
+  <!-- ===================== 4 · SALES ZONE 1: THE CITY (portal SCR-17 + weave SCR-07 + member card and doors) ===================== -->
+  <section class="journey photo" id="journey" data-stop-id="city" aria-label="The city">
+    <div class="stage" id="jStage">
+      <div class="cam" id="cam">
+        <canvas id="cvWeave" class="frames tone"></canvas>
+        <div class="doorbox" id="doorbox" aria-hidden="true">
+          <div class="doorway"><img class="peek tone" alt="" src="media/white-lab.jpg"><span class="rays"></span></div>
+          <div class="leaf l"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
+          <div class="leaf r"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
+          <span class="seam"></span>
+          <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
+          <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
+          <span class="spill"></span>
+          <span class="beams"></span>
+        </div>
+        <span class="door-sign" id="doorSign" aria-hidden="true"><svg><use href="#pmark"/></svg><b>PEPTICITY</b></span>
+      </div>
+      <div class="scrim" aria-hidden="true"></div>
+
+      <!-- SCR-17 word portal: fly through PEPTICITY into the city -->
+      <div class="portal" id="portal" data-effect="SCR-17" aria-hidden="true">
+        <svg id="portalSvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+          <defs><mask id="portalMask" maskUnits="userSpaceOnUse" x="-20000" y="-20000" width="40000" height="40000">
+            <rect x="-20000" y="-20000" width="40000" height="40000" fill="#fff"/>
+            <text x="800" y="505" text-anchor="middle" class="portal-word" textLength="1320" lengthAdjust="spacingAndGlyphs">PEPTICITY</text>
+          </mask></defs>
+          <g id="portalG"><rect x="-20000" y="-20000" width="40000" height="40000" class="portal-fill" mask="url(#portalMask)"/></g>
+        </svg>
+        <p class="portal-cap">THE CITY OF PEPTICITY</p>
+      </div>
+
+      <!-- scroll-reveal hooks (R094): fully see-through liquid glass, one ask per ~1.2 screens, never two on screen -->
+      <div class="sr-hooks">
+        <aside class="sr lq" data-at=".14" data-side="r" data-hook="H41" data-reveal>
+          <p class="eyebrow"><span>GRAND OPENING</span></p><h3 class="h3 x3d">15% OFF YOUR FIRST ORDER</h3>
+          <p class="sr-join">For the PEPTICITY Team. One email and it's saved to your cart.</p>
+          <button class="pc-btn pc-btn--sm sr-join" type="button" data-open="join"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button>
+          <p class="sr-joined" hidden>Your 15% is saved on this device and applies in the cart.</p>
+          <p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>
+        </aside>
+        <aside class="sr lq" data-at=".33" data-side="l" data-hook="H42" data-feature="city-0" data-reveal>
+          <p class="eyebrow"><span>ON THE SHELF</span></p><div class="sr-prod"></div>
+        </aside>
+        <aside class="sr lq" data-at=".53" data-side="r" data-hook="H43" data-reveal>
+          <p class="eyebrow"><span>FIRST WORD BY TEXT</span></p><h3 class="h3 x3d">NEW LOTS, BY TEXT</h3>
+          <p>One text when a sold-out lot is back on the shelf. Up to [2] texts a month, and STOP ends them.</p>
+          <button class="pc-btn pc-btn--sm" type="button" data-open="sms"><span class="pc-btn__face"><span class="pc-btn__label">TEXT ME</span></span></button>
+        </aside>
+        <aside class="sr lq" data-at=".73" data-side="l" data-hook="H42b" data-feature="city-1" data-reveal>
+          <p class="eyebrow"><span>FROM THE COLLECTION</span></p><div class="sr-prod"></div>
+        </aside>
+      </div>
+
+      <!-- 5 · THE CARD + THE DOORS (R138): glass member card, scanner plate; JOIN or ENTER AS GUEST -->
+      <div class="gate glass" id="gate" data-state="choose" data-hook="H34" data-effect="FRM-02" data-no-cover>
+        <p class="eyebrow"><span>MEMBERS' ENTRANCE</span><i></i><span class="status" id="gateStatus">CHOOSE HOW YOU ENTER</span><button class="linkish snd" id="sndBtn" type="button" aria-pressed="false">SOUND OFF</button></p>
+        <div class="gate-grid">
+          <div class="mcard-wrap">
+            <div class="pad" id="pad" aria-hidden="true">
+              <span class="pl-tilt">
+                <span class="pl-glass"></span>
+                <span class="pl-ticks"><i></i><i></i><i></i><i></i></span>
+                <svg class="pl-mark"><use href="#pmark"/></svg>
+                <span class="pl-line"></span>
+                <span class="pl-bloom"></span>
+              </span>
+              <span class="pl-cap"><b class="c-idle">TAP THE CARD TO TURN IT</b><b class="c-tap">PLACE YOUR CARD HERE</b><b class="c-scan">READING</b></span>
+            </div>
+            <button class="mcard" id="mcard" type="button" aria-label="Your PEPTICITY member card">
+              <span class="mc-flip">
+                <span class="mc-face mc-front">
+                  <span class="mc-liquid" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="mc-sheen" aria-hidden="true"></span>
+                  <span class="mc-top"><svg class="mc-p"><use href="#pmark"/></svg><span class="mc-word">PEPTICITY</span></span>
+                  <span class="mc-chip" aria-hidden="true"></span>
+                  <span class="mc-tier" id="mcTier">MEMBER CARD</span>
+                  <span class="mc-name" id="mcName">GUEST</span>
+                  <span class="mc-notch" id="mcNotch" data-hook="H51" aria-label="Member progress"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span class="mc-scan" aria-hidden="true"></span>
+                </span>
+                <span class="mc-face mc-back" aria-hidden="true"><span class="mc-stripe"></span><svg class="mc-p big"><use href="#pmark"/></svg><span class="mc-back-t">PEPTICITY TEAM · FOUNDING</span></span>
+              </span>
+            </button>
+          </div>
+          <div class="gate-steps">
+            <div class="step" data-step="choose">
+              <h2 class="h2s x3d">THE DOORS ARE AHEAD</h2>
+              <p>Join the PEPTICITY Team and your card is issued on the spot, with 15% off your first order saved to this device. Or step inside as a guest.</p>
+              <div class="btn-row">
+                <button class="pc-btn" type="button" id="choJoin"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button>
+                <button class="pc-btn" type="button" id="choGuest"><span class="pc-btn__face"><span class="pc-btn__label">ENTER AS GUEST</span></span></button>
+              </div>
+              <p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>
+            </div>
+            <form class="step cap-form" data-step="email" data-hook="H34" data-effect="FRM-103" data-offer novalidate>
+              <p class="stepno">STEP 1 OF 2</p>
+              <label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+              <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+              <p class="err" role="alert"></p>
+              <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">ISSUE MY CARD</span></span></button>
+            </form>
+            <form class="step cap-form" data-step="name" data-hook="H34" novalidate>
+              <p class="stepno">STEP 2 OF 2 · WATCH YOUR CARD</p>
+              <label class="field"><span class="lbl">NAME ON YOUR CARD</span><input type="text" name="name" autocomplete="given-name" maxlength="22" required></label>
+              <p class="err" role="alert"></p>
+              <button class="pc-btn" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">PRINT MY CARD</span></span></button>
+              <button class="linkish" type="button" data-skip>SKIP</button>
+            </form>
+            <div class="step" data-step="tap">
+              <h2 class="h2s x3d">TAP YOUR CARD</h2>
+              <p id="tapHint">Your card is ready. Tap it on the scanner to open the doors.</p>
+              <ol class="locks" aria-label="Door locks"><li>LOCK I</li><li>LOCK II</li><li>LOCK III</li></ol>
+              <p class="ok">Preview only: nothing was sent.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flood" id="flood" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div class="after-gate" id="afterGate">
+
+    <!-- ===================== 6 · SALES ZONE 2: THE BIO LAB (five stations, two holograms) ===================== -->
+    <section class="lab photo" id="lab" data-stop-id="lab" aria-label="How peptides are generally made (an illustration)">
+      <div class="stage" id="lStage">
+        <div class="lab-cam" id="labCam"><canvas id="cvLab" class="frames tone"></canvas>
+          <!-- exhibit sign over the film's wall sign (audit A18: no claim that PEPTICITY owns a lab) -->
+          <div class="lab-plaque" id="labPlaque" aria-hidden="true"><b>HOW IT'S MADE</b></div></div>
+        <div class="lab-fade" aria-hidden="true"></div>
+        <p class="lab-label"><span>THE BIO LAB</span> An illustration of how peptides are generally made.</p>
+        <ol class="stations" id="stations" aria-label="Stations">
+          <li class="st glass" data-st="0"><p class="eyebrow"><span>STATION 01 OF 05</span></p><h2 class="h2s x3d">THE CHAIN IS BUILT</h2><p>Amino acids are joined one at a time, in an exact order, on tiny resin beads: solid-phase synthesis.</p>
+            <p class="st-ask" data-hook="H18c">A note from Grace each month, with what's new in the collection. <button class="linkish" type="button" data-open="letter">GET GRACE'S LETTER</button></p></li>
+          <li class="st glass" data-st="1"><p class="eyebrow"><span>STATION 02 OF 05</span></p><h2 class="h2s x3d">PURIFICATION</h2><p>The raw chain is run through high-performance liquid chromatography, separating the target sequence from everything else.</p></li>
+          <li class="st glass" data-st="2"><p class="eyebrow"><span>STATION 03 OF 05</span></p><h2 class="h2s x3d">THE DROPPER FILLS THE VIAL</h2><p>The purified solution is measured into clean glass vials under controlled conditions.</p></li>
+          <li class="st glass" data-st="3"><p class="eyebrow"><span>STATION 04 OF 05</span></p><h2 class="h2s x3d">FREEZE-DRYING</h2><p>Lyophilisation removes the water at low temperature and pressure, leaving a dry, stable cake in the vial.</p></li>
+          <li class="st glass" data-st="4"><p class="eyebrow"><span>STATION 05 OF 05</span></p><h2 class="h2s x3d">SEALED AND CRIMPED</h2><p>A stopper goes in and an aluminium crimp seals it.</p></li>
+        </ol>
+        <!-- HOLOGRAMS (hologram-panels): project up from the dropper tip (station 03) and the vial rack (station 05) -->
+        <div class="holo" id="holoA" data-st="2" data-hook="H44a" role="group" aria-label="The vial on this bench">
+          <span class="holo-beam" aria-hidden="true"></span>
+          <div class="holo-print"><div class="holo-panel lq">
+            <span class="holo-scan" aria-hidden="true"></span>
+            <button class="x holo-x" type="button" aria-label="Fold the hologram away">×</button>
+            <p class="eyebrow"><span>ON THIS BENCH</span></p>
+            <div class="holo-body" id="holoProd"></div>
+          </div></div>
+        </div>
+        <div class="holo" id="holoB" data-st="4" data-hook="H44b" role="group" aria-label="The PEPTICITY Team offer">
+          <span class="holo-beam" aria-hidden="true"></span>
+          <div class="holo-print"><div class="holo-panel lq">
+            <span class="holo-scan" aria-hidden="true"></span>
+            <button class="x holo-x" type="button" aria-label="Fold the hologram away">×</button>
+            <form class="cap-form holo-join" data-hook="H44b" data-effect="FRM-103" data-offer novalidate>
+              <p class="eyebrow"><span>THE PEPTICITY TEAM</span></p>
+              <p class="holo-t">15% OFF YOUR FIRST ORDER</p>
+              <div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+              <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">JOIN</span></span></button></div>
+              <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+              <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+              <p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>
+            </form>
+            <form class="cap-form holo-sms" data-hook="H44c" data-effect="FRM-103" data-consent="sms" novalidate hidden>
+              <p class="eyebrow"><span>FIRST WORD BY TEXT</span></p>
+              <p class="holo-t">NEW LOTS, BY TEXT</p>
+              <div class="row"><label class="field"><span class="lbl">MOBILE NUMBER</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label>
+              <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">TEXT ME</span></span></button></div>
+              <label class="consent"><input type="checkbox" name="consent_sms"><span>Yes, PEPTICITY may text me about new lots and restocks at this number. Up to [2] texts a month. Message and data rates may apply. Reply STOP to stop, HELP for help. Consent is not a condition of any purchase. <a href="#privacy" class="ph-link">[Privacy promise]</a></span></label>
+              <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+            </form>
+          </div></div>
+        </div>
+        <div class="st-nav">
+          <button class="pc-btn pc-btn--sm" type="button" id="stNext"><span class="pc-btn__face"><span class="pc-btn__label">NEXT STATION</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button>
+          <button class="pc-btn pc-btn--sm" type="button" data-go="store"><span class="pc-btn__face"><span class="pc-btn__label">SEE EVERY PRODUCT</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 7 · THE SECOND DOORS: lab -> product line (glass wipe + the door photo opening, scrubbed by scroll) ===================== -->
+    <section class="doors2 photo" id="doors2" data-stop-id="doors2" data-effect="SCR-22" aria-label="The second doors, into the PEPTICITY collection">
+      <div class="stage d2-stage" id="d2Stage">
+        <div class="d2-cam" id="d2Cam">
+          <img class="d2-from tone" id="d2From" alt="" src="media/white-lab.jpg">
+          <div class="d2-scene" id="d2Scene">
+            <img class="d2-bg tone" id="d2Bg" alt="" src="media/white-doors.jpg">
+            <div class="doorbox d2box" id="d2box" aria-hidden="true">
+              <div class="doorway"><span class="rays"></span></div>
+              <div class="leaf l"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
+              <div class="leaf r"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
+              <span class="seam"></span>
+              <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
+              <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
+              <span class="spill"></span>
+              <span class="beams"></span>
+            </div>
+            <span class="door-sign d2-sign" id="d2Sign" aria-hidden="true"><svg><use href="#pmark"/></svg><b>THE COLLECTION</b></span>
+          </div>
+          <video class="d2-film" id="d2Film" muted playsinline preload="none" hidden></video>
+        </div>
+        <div class="d2-pane" id="d2Pane" aria-hidden="true"><i></i></div>
+        <div class="d2-veil" id="d2Veil" aria-hidden="true"></div>
+        <p class="d2-cap" id="d2Cap" aria-hidden="true"><span>THE SECOND DOORS</span>THE PEPTICITY COLLECTION</p>
+        <div class="flood" id="d2Flood" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 8 · SALES ZONE 3: THE PRODUCT LINE ===================== -->
+    <section class="sect store" id="store" data-stop-id="store" aria-labelledby="storeT">
+      <div class="store-veil" id="storeVeil" aria-hidden="true"></div>
+      <div class="wrap">
+        <header class="sect-head">
+          <p class="eyebrow"><i></i><span id="storeCount">THE PEPTICITY COLLECTION</span><i></i></p>
+          <div class="w3d" data-word3d="THE PEPTICITY|COLLECTION" aria-hidden="true"></div>
+          <h2 class="h2 x3d" id="storeT">THE PEPTICITY COLLECTION</h2>
+          <p class="sub" data-hl>Name, strength and price for every product. Members save 15% on their first order, applied in the cart.</p>
+        </header>
+        <div class="offer-band lq" id="offerBand" data-hook="H47b">
+          <div class="ob-t"><p class="eyebrow"><span>GRAND OPENING</span></p><p class="ob-h">15% OFF YOUR FIRST ORDER FOR THE PEPTICITY TEAM</p>
+            <p class="ob-end" id="offerEnd">[End date: Grace and counsel to set]</p></div>
+          <button class="pc-btn ob-join" type="button" data-open="join"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button>
+          <p class="terms ob-terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>
+        </div>
+        <div class="int-head"><p class="eyebrow"><i></i><span>SHOP BY INTEREST</span><i></i></p></div>
+        <ul class="int-grid" id="intGrid"></ul>
+        <div class="filters" id="filters" role="toolbar" aria-label="Filter the collection"></div>
+        <ul class="shelf" id="shelf"></ul>
+        <div class="anc" id="ancLane" hidden>
+          <p class="eyebrow"><i></i><span>SUPPLIES</span><i></i></p>
+          <ul class="shelf" id="shelfAnc"></ul>
+        </div>
+        <p class="fine center">Prices in CAD. [Product listings and final legal copy to be approved by counsel.]</p>
+      </div>
+    </section>
+
+    <!-- SCR-16 exploded vial -->
+    <section class="explode" id="explode" data-effect="SCR-16" aria-labelledby="exT">
+      <div class="ex-stage">
+        <div class="wrap ex-wrap">
+          <header class="ex-head">
+            <p class="eyebrow"><span>THE VIAL, TAKEN APART</span></p>
+            <div class="w3d" data-word3d="INSIDE EVERY|PEPTICITY VIAL" aria-hidden="true"></div>
+            <h2 class="h2 x3d" id="exT">INSIDE EVERY PEPTICITY VIAL</h2>
+            <p class="sub">Four parts. Scroll to take it apart.</p>
+          </header>
+          <div class="ex-vial" id="exVial" aria-hidden="true">
+            <div class="ex-l ex-cap"></div><div class="ex-l ex-neck"></div><div class="ex-l ex-label"><span class="x3d">PEPTICITY</span></div><div class="ex-l ex-body"></div><div class="ex-pool"></div>
+          </div>
+          <ul class="ex-calls">
+            <li data-i="0"><b>CAP + CRIMP</b><span>Aluminium crimp over a rubber stopper.</span></li>
+            <li data-i="1"><b>CLEAR GLASS</b><span>Clear glass, sealed under a rubber stopper.</span></li>
+            <li data-i="2"><b>SEE-THROUGH LABEL</b><span>Name and strength on the front.</span></li>
+            <li data-i="3"><b>THE BACK LABEL</b><span>Full details on the back. [Final label copy to be approved by counsel.]</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCR-18 card stack · LAY-23 mercury vials: membership -->
+    <section class="sect tiers" id="tiers" data-stop-id="team" aria-labelledby="tierT">
+      <div class="wrap">
+        <header class="sect-head">
+          <p class="eyebrow"><i></i><span>MEMBERSHIP</span><i></i></p>
+          <div class="w3d" data-word3d="THREE WAYS|TO BELONG" aria-hidden="true"></div>
+          <h2 class="h2 x3d" id="tierT">THREE WAYS TO BELONG</h2>
+          <p class="sub">Scroll through the stack. The vial fills as you go further in.</p>
+        </header>
+        <ol class="stack" data-effect="SCR-18">
+          <li class="tier glass" style="--i:0"><div class="tier-v" data-effect="LAY-23"><span class="merc" style="--f:.25"></span></div>
+            <div class="tier-t"><p class="eyebrow"><span>TIER I</span></p><h3 class="h3 x3d">GUEST</h3><ul><li>Browse the whole collection</li><li>See every price</li><li>Join any time</li></ul>
+            <button class="pc-btn pc-btn--sm" type="button" data-go="store"><span class="pc-btn__face"><span class="pc-btn__label">KEEP BROWSING</span></span></button></div></li>
+          <li class="tier glass" style="--i:1"><div class="tier-v" data-effect="LAY-23"><span class="merc" style="--f:.6"></span></div>
+            <div class="tier-t"><p class="eyebrow"><span>TIER II · FREE</span></p><h3 class="h3 x3d">PEPTICITY TEAM</h3><ul><li>15% off your first order <span class="ph">[terms: counsel to approve]</span></li><li>Grace's monthly letter, if you tick the box</li><li>First word on restocks, if you ask for it</li></ul>
+            <button class="pc-btn pc-btn--sm" type="button" data-open="join" data-hook="H01c"><span class="pc-btn__face"><span class="pc-btn__label">JOIN THE TEAM</span></span></button></div></li>
+          <li class="tier glass" style="--i:2"><div class="tier-v" data-effect="LAY-23"><span class="merc" style="--f:.92"></span></div>
+            <div class="tier-t"><p class="eyebrow"><span>TIER III</span></p><h3 class="h3 x3d">FOUNDING CIRCLE</h3><ul><li>[Founding perks: to be set by Grace]</li><li>[Members' pricing: counsel first]</li><li>Your name on a founding card</li></ul>
+            <button class="pc-btn pc-btn--sm" type="button" data-open="quiz"><span class="pc-btn__face"><span class="pc-btn__label">FIND YOUR STARTING POINT</span></span></button></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- CRD-124 fog wipe + FRM-104 sentence sign-up: two equal cards -->
+    <section class="sect twoway" aria-labelledby="twoT">
+      <div class="wrap">
+        <header class="sect-head">
+          <p class="eyebrow"><i></i><span>TWO WAYS IN</span><i></i></p>
+          <div class="w3d" data-word3d="YOUR WELCOME|YOUR WAY" aria-hidden="true"></div>
+          <h2 class="h2 x3d" id="twoT">YOUR WELCOME, YOUR WAY</h2>
+        </header>
+        <div class="pair">
+          <article class="gift glass" data-effect="CRD-124" data-hook="H48" id="gift">
+            <p class="eyebrow"><span>SEALED ENVELOPE · BREAK THE SEAL</span></p>
+            <div class="fog-box">
+              <div class="gift-under"><svg class="gift-p"><use href="#pmark"/></svg><b class="x3d">WELCOME GIFT</b><span>15% off your first order, saved to this device. The same gift for everyone who opens it.</span></div>
+              <canvas class="fog" id="fog" aria-hidden="true"></canvas>
+              <button class="fog-key linkish" type="button" id="fogKey">SKIP · SHOW MY GIFT</button>
+            </div>
+            <form class="cap-form gift-form" data-hook="H48" data-effect="FRM-103" data-offer novalidate hidden>
+              <div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+              <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">CLAIM MY GIFT</span></span></button></div>
+              <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+              <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+              <p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>
+            </form>
+          </article>
+          <article class="sentence glass" data-effect="FRM-104" data-hook="H36">
+            <p class="eyebrow"><span>SAY IT IN ONE LINE</span></p>
+            <form class="cap-form sent-form" data-hook="H36" data-effect="FRM-103" data-consent="required" novalidate>
+              <p class="sent">My name is <label><span class="sr-only">First name</span><input name="name" autocomplete="given-name" placeholder="first name" size="9"></label>, I'd like
+                <label><span class="sr-only">What to receive</span><select name="want"><option value="Grace's monthly letter">Grace's monthly letter</option><option value="first word on restocks">first word on restocks</option></select></label>
+                and you can reach me at <label><span class="sr-only">Email</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="email" size="14" required></label>.</p>
+              <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me what I picked above. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+              <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+              <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">THAT'S ME</span></span></button>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRM-102 stepper: FIND YOUR STARTING POINT (preferences only, never health). Step 1 is the 19+ gate the visitor already passed. -->
+    <section class="sect quiz" id="quiz" aria-labelledby="quizT">
+      <div class="wrap">
+        <div class="quiz-card glass" data-effect="FRM-102" data-hook="H49">
+          <header class="quiz-head">
+            <p class="eyebrow"><span>COLLECTION FINDER · THREE TAPS</span></p>
+            <div class="w3d" data-word3d="FIND YOUR|STARTING POINT" aria-hidden="true"></div>
+            <h2 class="h2 x3d" id="quizT">FIND YOUR STARTING POINT</h2>
+            <div class="qbar" aria-hidden="true"><i id="qbar"></i></div>
+            <p class="stepno" id="qStepNo">STEP 1 OF 4</p>
+          </header>
+          <div class="qsteps" id="qsteps"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sect pp-sect" aria-label="Lot passport (placeholder)">
+      <div class="wrap">
+        <form class="passport glass" id="passport" data-hook="H56" novalidate>
+          <p class="mini-t">LOT PASSPORT · PLACEHOLDER</p>
+          <p class="pp-note">This is a placeholder. Real lot records and certificates appear here only once a real testing partner and real lots exist.</p>
+          <div class="row"><label class="field"><span class="lbl">LOT NUMBER (SAMPLE)</span><input name="lot" autocomplete="off" placeholder="e.g. SAMPLE-001"></label>
+          <button class="pc-btn" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">OPEN THE SAMPLE</span></span></button></div>
+          <div class="pp-out" id="ppOut" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- HOV-17: the elongated EARTH + NODES-AND-EDGES section -->
+    <section class="network" id="network" data-stop-id="network" data-effect="HOV-17" aria-labelledby="netT">
+      <div class="net-stage">
+        <div class="wrap net-wrap">
+          <div class="net-copy">
+            <p class="eyebrow"><span>THE PEPTICITY NETWORK</span></p>
+            <div class="w3d" data-word3d="ONE TEAM|COAST TO COAST" aria-hidden="true"></div>
+            <h2 class="h2 x3d" id="netT">ONE TEAM, COAST TO COAST</h2>
+            <p class="sub" data-hl>Hover the network. Every node lights the ones it connects to. Join it and Grace will write when PEPTICITY has news for your province.</p>
+          </div>
+          <div class="earth" id="earth" data-slot3d="earth" aria-hidden="true"><div class="earth-fb"></div></div>
+          <form class="cap-form net-form glass" data-hook="H45" data-effect="FRM-103" data-consent="required" novalidate>
+            <p class="mini-t">JOIN THE NETWORK</p>
+            <label class="field"><span class="lbl">FIRST NAME</span><input name="name" autocomplete="given-name"></label>
+            <label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+            <label class="field"><span class="lbl">MOBILE (OPTIONAL, FOR TEXTS)</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel"></label>
+            <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me news for my province from Grace. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+            <label class="consent"><input type="checkbox" name="consent_sms"><span>Optional: yes, PEPTICITY may text me about new lots and restocks at this number. Up to [2] texts a month. Message and data rates may apply. Reply STOP to stop, HELP for help. Consent is not a condition of any purchase. <a href="#privacy" class="ph-link">[Privacy promise]</a></span></label>
+            <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+            <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">SEAL ME IN</span></span></button>
+            <span class="seal" aria-hidden="true"><svg><use href="#pmark"/></svg></span>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFER A FRIEND -->
+    <section class="sect refer" aria-labelledby="refT">
+      <div class="wrap">
+        <div class="refer-card glass" data-hook="H46">
+          <div><p class="eyebrow"><span>SHARE PEPTICITY</span></p><h2 class="h2s x3d" id="refT">BRING A FRIEND IN</h2>
+            <p>Know someone who'd like PEPTICITY? Send them your link. [Referral reward and terms: counsel first.]</p></div>
+          <form class="cap-form ref-form" data-hook="H46" novalidate>
+            <label class="field"><span class="lbl">YOUR INVITE LINK</span><input name="link" readonly value="pepticity.ca/invite/team"></label>
+            <button class="pc-btn" type="button" id="copyLink"><span class="pc-btn__face"><span class="pc-btn__label">COPY MY LINK</span></span></button>
+            <p class="ok" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRACE'S LETTER footer + TXT-13 rising wordmark -->
+    <footer class="foot" id="foot">
+      <div class="wrap">
+        <div class="letter glass" data-hook="H18">
+          <div><p class="eyebrow"><span>GRACE'S LETTER</span></p><h2 class="h2s x3d">ONE LETTER A MONTH</h2><p>What's new in the collection, what's back, and a note from Grace. [Grace photo and signature: placeholder]</p></div>
+          <form class="cap-form" data-hook="H18" data-effect="FRM-103" data-consent="required" novalidate>
+            <div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+            <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">GET GRACE'S LETTER</span></span></button></div>
+            <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+            <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+        <div class="foot-mark" data-effect="TXT-13" aria-hidden="true"><span class="rise" id="riseWord"><span class="rm-matte">PEPTICITY</span><span class="rm-glow">PEPTICITY</span></span></div>
+        <div class="foot-legal">
+          <p>PEPTICITY is for adults 19 and over in Canada. The collection opens only after the age and province check.</p>
+          <p>[Mailing address] · <a href="#privacy" class="ph-link">[Privacy policy]</a> · <a href="#privacy" class="ph-link">[Privacy promise]</a> · [Contact]</p>
+          <p>Preview build. Every form on this page is a preview: nothing is sent. Stock states shown are samples.</p>
+          <p>[Final legal copy to be approved by counsel.]</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+  </div>
+</main>
+
+<!-- overlay 3D canvas (icons, hero word, earth) -->
+<canvas id="gl-front" aria-hidden="true"></canvas>
+
+<!-- sticky bar (phones only): Grace's letter on the landing, the team offer past the gate -->
+<div class="sticky" id="sticky" data-hook="H01b"><button class="pc-btn pc-btn--block" type="button" data-open="letter" id="stickyBtn"><span class="pc-btn__face"><span class="pc-btn__label">GET GRACE'S LETTER</span></span></button></div>
+
+<!-- CART DRAWER -->
+<div class="scrimx" id="scrimx" hidden></div>
+<aside class="drawer glass" id="cart" role="dialog" aria-modal="true" aria-labelledby="cartT" hidden>
+  <header class="dr-head"><h2 class="h3 x3d" id="cartT">YOUR CART</h2><button class="x" type="button" data-close aria-label="Close the cart">×</button></header>
+  <ul class="lines" id="lines"></ul>
+  <p class="empty" id="cartEmpty">Your cart is empty. The collection is one scroll away.</p>
+  <div class="totals" id="totals"></div>
+  <form class="cap-form cart-join" id="cartJoin" data-hook="H47" data-offer novalidate>
+    <p class="mini-t">JOIN THE TEAM FOR 15% OFF THIS ORDER</p>
+    <div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+    <button class="pc-btn pc-btn--sm morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">APPLY 15%</span></span></button></div>
+    <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+    <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+    <p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>
+  </form>
+  <div class="dr-foot">
+    <button class="pc-btn pc-btn--block pc-btn--lg" type="button" id="checkout"><span class="pc-btn__face"><span class="pc-btn__label">CHECKOUT</span></span></button>
+    <button class="linkish" type="button" data-close>CONTINUE SHOPPING</button>
+  </div>
+</aside>
+
+<!-- MODAL (join, letter, text alerts, restock, checkout preview) -->
+<div class="modal-wrap" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalT" hidden>
+  <div class="modal glass">
+    <button class="x" type="button" data-close aria-label="Close">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- MENU: full-screen map -->
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <button class="x" type="button" data-close aria-label="Close the menu">×</button>
+  <ol class="menu-list">
+    <li><a href="#top" data-go="hero"><i>01</i><span class="x3d">WHO WE ARE</span></a></li>
+    <li><a href="#mission" data-go="mission"><i>02</i><span class="x3d">OUR MISSION</span></a></li>
+    <li><a href="#story" data-go="story"><i>03</i><span class="x3d">OUR STORY</span></a></li>
+    <li><a href="#age" data-go="age"><i>04</i><span class="x3d">THE THRESHOLD · 19+</span></a></li>
+    <li class="menu-sales"><a href="#journey" data-go="city"><i>05</i><span class="x3d">THE CITY</span></a></li>
+    <li class="menu-sales"><a href="#lab" data-go="lab"><i>06</i><span class="x3d">THE BIO LAB</span></a></li>
+    <li class="menu-sales"><a href="#store" data-go="store"><i>07</i><span class="x3d">THE COLLECTION</span></a></li>
+    <li class="menu-sales"><a href="#network" data-go="network"><i>08</i><span class="x3d">THE NETWORK</span></a></li>
+  </ol>
+  <p class="menu-note" id="menuNote">THE CITY, THE LAB AND THE COLLECTION OPEN AFTER THE 19+ CHECK.</p>
+  <div class="menu-foot"><button class="pc-btn pc-btn--sm" id="replay" type="button"><span class="pc-btn__face"><span class="pc-btn__label">REPLAY INTRO</span></span></button></div>
+</div>
+
+<!-- SAVE MY CART: the only exit hook, only when the cart has items (exit-and-return-hooks) -->
+<aside class="exit glass" id="exit" data-hook="H48b" hidden aria-labelledby="exitT">
+  <button class="x" type="button" data-close aria-label="Close">×</button>
+  <p class="eyebrow"><span>BEFORE YOU GO</span></p><h2 class="h3 x3d" id="exitT">WANT THIS CART EMAILED TO YOU?</h2>
+  <form class="cap-form" data-hook="H48b" data-effect="FRM-103" novalidate data-transactional>
+    <label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+    <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may also email me its monthly letter from Grace. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
+    <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
+    <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">EMAIL MY CART</span></span></button>
+  </form>
+</aside>
+
+<div class="hl-prog" id="hlProg" aria-hidden="true"><span>READING</span><i><b></b></i></div>
+<p class="toast" id="toast" role="status" aria-live="polite"></p>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="brand/ui/smoke-bg.js"></script>
+<script src="brand/ui/button.js"></script>
+<script src="v3.js"></script>
+<script type="module" src="gl3d.js"></script>
+<script type="module" src="card3d.js"></script>
+<script>
+/* PEPTICITY concierge (BOT-P01, shared/bot/pep-bot.js, loads its own pep-bot.css).
+   GUIDE mode on the landing (no products, no prices, no selling); v3.js switches it to SELL mode past the 19+ gate. */
+(function () {
+  /* held listings: the bot's own default holds the three high-risk items; showHighRisk clears the list */
+  var C = window.PC_CONFIG;
+  window.PEPBOT_CONFIG = { mode: 'guide', greetDelay: 45000, offer: (C.counselCleared.offer ? 'on' : 'off'), weightShelf: 'off', qtyBreaks: 'off' };
+  if (C.showHighRisk) window.PEPBOT_CONFIG.held = [];
+  if (/[?&]nobot/.test(location.search)) return;
+  fetch('shared/bot/pep-bot.js', { method: 'HEAD' }).then(function (r) { if (!r.ok) return;
+    var s = document.createElement('script'); s.src = 'shared/bot/pep-bot.js'; s.defer = true;
+    s.dataset.mode = 'guide'; s.dataset.offer = (C.counselCleared.offer ? 'on' : 'off'); s.dataset.weightShelf = 'off'; s.dataset.qtyBreaks = 'off'; s.dataset.greetDelay = '45000';
+    s.onload = function () { document.dispatchEvent(new Event('pc-bot-ready')); };
+    document.body.appendChild(s); }).catch(function () {});
+})();
+</script>
+</body>
+</html>
