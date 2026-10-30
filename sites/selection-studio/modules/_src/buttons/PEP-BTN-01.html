@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP-BTN-01 · THE PEPTICITY BUTTON</title>
+<!--@meta {"order":1,"code":"PEP-BTN-01","name":"THE PEPTICITY BUTTON","interact":"hover","weight":"Light",
+ "desc":"The approved PEPTICITY button: see-through glass with cut corners and one slow light sweep from left to right when you point at it. In your colour it gains a lit edge and a soft glow.",
+ "source":"PEPTICITY brand/ui/button.css + button.js (BTN-P01, approved) with the accent hover layer from sites/dashboard-color"}-->
+<!--@head-->
+<!--@btnp01-->
+<style>
+:root{--pc-font:var(--fh)}
+.pc-btn{--pc-ring:var(--acc-text)}
+/* large stage size of the approved button */
+.pm-duo .pc-btn{--c:16px;--h:74px;--px:56px;--fs:14px;--ls:.3em}
+.pm-duo .pc-btn.sec{--c:13px;--h:62px;--px:42px;--fs:12.5px;--ls:.28em}
+@media (max-width:520px){.pm-duo .pc-btn{--h:64px;--px:34px;--fs:12px;--ls:.24em}.pm-duo .pc-btn.sec{--h:56px;--px:30px;--fs:11px}}
+
+/* PRIMARY: the accent layer from the colour dashboard (hairline, outer glow, accent sweep) + a lit base line at rest */
+.pri::before{content:"";position:absolute;inset:2px;z-index:-1;pointer-events:none;opacity:0;
+  box-shadow:0 0 8px color-mix(in srgb,var(--acc) 55%,transparent),0 0 22px color-mix(in srgb,var(--acc) 28%,transparent);transition:opacity var(--pc-dur-4) var(--pc-ease-out)}
+.pri:hover::before,.pri:focus-visible::before{opacity:1;transition-duration:var(--pc-dur-3)}
+.pri:hover .pc-btn__face,.pri:focus-visible .pc-btn__face{--pc-rim-hot:var(--acc-hi);--pc-rim-t:var(--acc-line);--pc-rim-s:color-mix(in srgb,var(--acc) 40%,transparent);
+  --pc-glow:color-mix(in srgb,var(--acc) 15%,transparent);--pc-sweep:color-mix(in srgb,var(--acc-hi) 55%,#fff);--pc-sweep-soft:color-mix(in srgb,var(--acc) 22%,transparent)}
+.pri .base{position:absolute;left:18%;right:18%;bottom:0;height:1px;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--acc-hi),transparent);box-shadow:0 0 8px var(--acc),0 0 16px var(--acc-bloom);opacity:.85;
+  animation:baseBreath 4.8s var(--e-io) infinite alternate;animation-play-state:var(--play)}
+@keyframes baseBreath{from{opacity:.45;transform:scaleX(.82)}to{opacity:1;transform:scaleX(1)}}
+.pri:hover .base,.pri:focus-visible .base{opacity:1;transform:scaleX(1.25);transition:transform .6s var(--e-out)}
+.pri .pc-btn__icon{color:var(--acc-text)}
+/* idle cue while playing: the sweep passes by itself every few seconds so a still tile still looks alive */
+.is-playing .pc-btn.idle .pc-btn__face::before{animation-name:pc-sweep;animation-duration:calc(var(--pc-dur-sweep) * var(--pc-motion));animation-timing-function:var(--pc-ease-inout);animation-fill-mode:both;animation-iteration-count:1}
+.state{margin:18px 0 0;font:400 9px/1 var(--fh);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;height:9px}
+@media (prefers-reduced-motion:reduce){.pri .base{animation:none;opacity:.8}}
+</style>
+</head>
+<body data-code="PEP-BTN-01" data-name="THE PEPTICITY BUTTON" data-hint="HOVER">
+<!--@stage-->
+<main class="pm-main">
+  <section class="pm-duo" aria-label="Button states">
+    <figure class="pm-cell is-primary">
+      <figcaption class="pm-cap">PRIMARY</figcaption>
+      <button class="pc-btn pc-btn--lg pri" type="button"><span class="pc-btn__face"><span class="pc-btn__label">VIEW THE RANGE</span><i class="pc-btn__icon" aria-hidden="true"></i></span><span class="base" aria-hidden="true"></span></button>
+    </figure>
+    <figure class="pm-cell">
+      <figcaption class="pm-cap">SECONDARY</figcaption>
+      <button class="pc-btn sec" type="button"><span class="pc-btn__face"><span class="pc-btn__label">LEARN MORE</span></span></button>
+    </figure>
+  </section>
+</main>
+<!--@tail-->
+<script>
+(function(){
+  /* idle sweep: every 5.5 s while playing, one button at a time, never while the pointer is on it */
+  var btns=[].slice.call(document.querySelectorAll('.pc-btn')),i=0,acc=0,hot=false;
+  btns.forEach(function(b){b.addEventListener('pointerenter',function(){hot=true;b.classList.remove('idle')});b.addEventListener('pointerleave',function(){hot=false})});
+  PM.ambient(function(dt){acc+=dt;if(acc<5.5)return;acc=0;if(hot)return;var b=btns[i++%btns.length];b.classList.remove('idle');void b.offsetWidth;b.classList.add('idle');setTimeout(function(){b.classList.remove('idle')},1700)});
+  btns.forEach(function(b){b.addEventListener('click',function(){b.blur()})});
+})();
+</script>
+</body>
+</html>

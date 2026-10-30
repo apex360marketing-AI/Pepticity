@@ -191,7 +191,7 @@
       if (!PM.playing || PM.RM) still.kick();
     }, { passive: true });
     /* when paused, pointer ripples still settle with a short burst so the ground answers the hand */
-    var stillUntil = 0, still = PM.loop(function (now, dt) { if (PM.playing && !PM.RM) return false; draw(0); return now - lastMove < 1200; });
+    var still = PM.loop(function (now) { if (PM.RM || PM.playing) return false; draw(0); return now - lastMove < 1200; });
     cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cv.classList.add('pc-nogl'); });
     PM.ambient(function (dt) { draw(dt); });
     PM.on('acc', function () { if (!PM.playing || PM.RM) draw(0); });
