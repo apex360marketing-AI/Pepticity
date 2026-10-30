@@ -697,3 +697,16 @@ html.intro-on main,html.intro-on .rail{display:none}
 html.intro-on .pb-root{display:none!important}
 #introTap{position:absolute!important;left:50%;bottom:18%;top:auto;transform:translateX(-50%);z-index:6}
 #introTap[hidden]{display:none!important}
+
+/* new PEPTICITY bottle (Higgsfield cut-out): light rises from the base as the card comes into view, and again on hover */
+.vial img{height:200px}
+.vial .shine{position:absolute;z-index:2;left:50%;bottom:18px;height:200px;aspect-ratio:305/760;transform:translateX(-50%);pointer-events:none;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mix-blend-mode:screen;
+  background:linear-gradient(to top,transparent 0%,transparent 46%,rgba(225,235,255,.35) 48.4%,rgba(255,255,255,.85) 50%,rgba(225,235,255,.35) 51.6%,transparent 54%,transparent 100%);
+  background-size:100% 300%;background-position:0 0%;opacity:0;transition:transform .8s var(--ease-out)}
+.prod.lit .vial .shine{animation:vialShine 1.6s cubic-bezier(.3,.1,.2,1) .15s both}
+.prod:hover .vial .shine{animation:vialShine 1.3s cubic-bezier(.3,.1,.2,1) both;transform:translate(-50%,-8px)}
+.prod.lit .pool{opacity:.9}
+@keyframes vialShine{0%{background-position:0 0%;opacity:0}12%{opacity:1}88%{opacity:1}100%{background-position:0 100%;opacity:0}}
+@media (max-width:760px){.vial img{height:156px}.vial .shine{height:156px}}
+@media (prefers-reduced-motion:reduce){.vial .shine{display:none}}

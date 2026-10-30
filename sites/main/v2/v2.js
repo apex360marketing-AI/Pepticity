@@ -602,9 +602,12 @@
     { k: 'nonpep', t: 'NON-PEPTIDES', d: 'NAD+, 5-Amino-1MQ', keys: ['nad', '5amino1mq'] }
   ];
   var filter = 'all';
+  /* the bottle lights up from the bottom as its card reaches the screen (owner, 30 Oct) */
+  var vialIO = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('lit', e.isIntersecting); }); }, { threshold: 0.55 }) : null;
+  function watchVials(root) { if (!vialIO) return; (root || D).querySelectorAll('.prod').forEach(function (el) { vialIO.observe(el); }); }
   function bottle(p, cls) {
-    return '<div class="vial ' + (cls || '') + '"><span class="pool" aria-hidden="true"></span><img src="' + CFG.bottle + '" alt="" width="175" height="380" loading="lazy">' +
-      '<span class="vl" aria-hidden="true"><b>' + esc(p.name) + '</b><i>' + esc(p.strength) + '</i></span></div>';
+    return '<div class="vial ' + (cls || '') + '"><span class="pool" aria-hidden="true"></span><img src="' + CFG.bottle + '" alt="" width="305" height="760" loading="lazy">' +
+      '<span class="shine" aria-hidden="true" style="-webkit-mask-image:url(' + CFG.bottle + ');mask-image:url(' + CFG.bottle + ')"></span></div>';
   }
   function prodCard(p) {
     var more = p.more.map(function (m) { return '<div><h4>' + m[0] + '</h4><p>' + esc(m[1]) + '</p></div>'; }).join('');
@@ -628,7 +631,7 @@
     $('#storeCount').textContent = 'EVERY PRODUCT · ' + vis.length + ' LISTINGS';
     var fl = $('#filters');
     fl.innerHTML = '<button class="chip" type="button" data-f="all" aria-pressed="true">ALL</button>' + INTERESTS.map(function (i) { return '<button class="chip" type="button" data-f="' + i.k + '" aria-pressed="false">' + i.t + '</button>'; }).join('');
-    observeProds();
+    observeProds(); watchVials();
     fillMini();
   }
   function applyFilter(k) {

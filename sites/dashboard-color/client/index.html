@@ -1476,19 +1476,19 @@ html.p3d .mark{isolation:isolate}
 /* status dots, unread badges, progress lines */
 .live .pd{background:var(--acc);animation-name:accPing}
 @keyframes accPing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--acc) 60%,transparent)}100%{box-shadow:0 0 0 12px color-mix(in srgb,var(--acc) 0%,transparent)}}
-.statepill i{background:var(--acc);box-shadow:0 0 10px var(--acc-bloom)}
+.statepill i{background:var(--acc-hi);box-shadow:0 0 4px var(--acc),0 0 10px color-mix(in srgb,var(--acc) 35%,transparent)}
 .statepill.off i{background:var(--dim);box-shadow:none}
-.th .ub{background:var(--acc);box-shadow:0 0 10px var(--acc)}
-.unread{color:var(--acc-text);border-color:color-mix(in srgb,var(--acc) 55%,transparent);box-shadow:0 0 10px -3px var(--acc-bloom)}
-.st.cur .bd{border-color:var(--acc);box-shadow:0 0 0 4px var(--acc-soft),0 0 18px var(--acc-bloom)}
+.th .ub{background:var(--acc-hi);box-shadow:0 0 4px var(--acc),0 0 10px color-mix(in srgb,var(--acc) 40%,transparent)}
+.unread{color:var(--acc-text);border-color:color-mix(in srgb,var(--acc) 60%,transparent);box-shadow:0 0 6px -1px var(--acc-bloom)}
+.st.cur .bd{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft),0 0 6px var(--acc-bloom),0 0 14px color-mix(in srgb,var(--acc) 22%,transparent)}
 .st.cur .bd::after{background:var(--acc)}
-.steps .prog{background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 35%,#8d929c),var(--acc-hi));box-shadow:0 0 12px var(--acc-bloom)}
-.timeline li:first-child::before{background:var(--acc);border-color:var(--acc-hi);box-shadow:0 0 12px var(--acc)}
+.steps .prog{background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 35%,#8d929c),var(--acc-hi));box-shadow:0 0 4px var(--acc),0 0 10px color-mix(in srgb,var(--acc) 30%,transparent)}
+.timeline li:first-child::before{background:var(--acc-hi);border-color:var(--acc-hi);box-shadow:0 0 5px var(--acc),0 0 12px color-mix(in srgb,var(--acc) 35%,transparent)}
 .rung .meter i{background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 35%,#8d929c),var(--acc-hi))}
 /* TODAY'S WORD shine + a slow breath on its edge */
 .dw>.dw-shine{background:linear-gradient(100deg,transparent 0%,color-mix(in srgb,var(--acc) 7%,transparent) 30%,color-mix(in srgb,var(--acc-hi) 22%,transparent) 50%,color-mix(in srgb,var(--acc) 7%,transparent) 70%,transparent 100%)}
 .dw>.acc-breath{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.22;
-  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 34%,transparent),inset 0 0 42px -14px var(--acc-bloom);animation:accBreath 6.5s ease-in-out infinite alternate}
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,transparent),inset 0 0 14px -6px var(--acc-bloom);animation:accBreath 6.5s ease-in-out infinite alternate}
 @keyframes accBreath{to{opacity:.72}}
 /* PEPTICITY PULSE equaliser */
 .eq{filter:drop-shadow(0 0 5px var(--acc-bloom))}
@@ -1499,9 +1499,10 @@ html.p3d .mark{isolation:isolate}
 .mark-sweep i{background:linear-gradient(100deg,transparent 0%,color-mix(in srgb,var(--acc) 16%,transparent) 30%,color-mix(in srgb,var(--acc-hi) 70%,transparent) 50%,color-mix(in srgb,var(--acc) 16%,transparent) 70%,transparent 100%)}
 
 /* ---------- hover + focus: accent hairline and a soft outer glow ---------- */
-.pc-btn::before{content:"";position:absolute;inset:3px;z-index:-1;pointer-events:none;opacity:0;box-shadow:0 0 22px -3px var(--acc-bloom);transition:opacity var(--pc-dur-4) var(--pc-ease-out)}
+.pc-btn::before{content:"";position:absolute;inset:2px;z-index:-1;pointer-events:none;opacity:0;box-shadow:0 0 6px color-mix(in srgb,var(--acc) 50%,transparent),0 0 14px color-mix(in srgb,var(--acc) 26%,transparent);transition:opacity var(--pc-dur-4) var(--pc-ease-out)}
 .pc-btn:hover::before,.pc-btn:focus-visible::before{opacity:1;transition-duration:var(--pc-dur-3)}
-.pc-btn:hover .pc-btn__face,.pc-btn:focus-visible .pc-btn__face{--pc-rim-hot:var(--acc-hi);--pc-rim-t:var(--acc-line);--pc-rim-s:color-mix(in srgb,var(--acc) 40%,transparent);--pc-glow:color-mix(in srgb,var(--acc) 15%,transparent)}
+.pc-btn:hover .pc-btn__face,.pc-btn:focus-visible .pc-btn__face{--pc-rim-hot:var(--acc-hi);--pc-rim-t:var(--acc-line);--pc-rim-s:color-mix(in srgb,var(--acc) 40%,transparent);--pc-glow:color-mix(in srgb,var(--acc) 15%,transparent);--pc-sweep:color-mix(in srgb,var(--acc-hi) 55%,#fff);--pc-sweep-soft:color-mix(in srgb,var(--acc) 22%,transparent)}
+.tabs .tab:hover::before,.tabs .tab:focus-visible::before{background:linear-gradient(100deg,transparent 0%,color-mix(in srgb,var(--acc) 18%,transparent) 30%,color-mix(in srgb,var(--acc-hi) 55%,#fff) 50%,color-mix(in srgb,var(--acc) 18%,transparent) 70%,transparent 100%)}
 .pc-btn:disabled::before,.pc-btn[aria-disabled="true"]::before{display:none}
 .tabs .tab{transition:opacity var(--pc-dur-3) var(--pc-ease-out),text-shadow var(--pc-dur-3) var(--pc-ease-out),box-shadow var(--pc-dur-3) var(--pc-ease-out)}
 .tabs .tab:hover,.tabs .tab:focus-visible{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 36%,transparent),inset 0 -12px 18px -14px var(--acc-bloom)}
@@ -1517,22 +1518,34 @@ html.p3d .mark{isolation:isolate}
 .acc-halo[hidden]{display:none}
 /* the light sits on the middle of the screen: a card below it catches it on its top edge, a card above it on its bottom edge */
 .acc-halo .ht,.acc-halo .hb{position:absolute;inset:0;opacity:0;will-change:opacity}
-.acc-halo .hg{position:absolute;inset:0;filter:blur(12px)}
+.acc-halo .hg{position:absolute;inset:0;filter:blur(3.5px)}
 .acc-halo .hg i,.acc-halo .hl{position:absolute;inset:0}
-.acc-halo .hg i{clip-path:var(--ring-g);opacity:.42}
+.acc-halo .hg i{clip-path:var(--ring-g);opacity:.55}
 .acc-halo .hl{clip-path:var(--ring-l);opacity:.82}
 .acc-halo .ht .hg i{background:linear-gradient(180deg,var(--acc) 0,color-mix(in srgb,var(--acc) 50%,transparent) 38%,color-mix(in srgb,var(--acc) 12%,transparent) 80%,transparent)}
 .acc-halo .hb .hg i{background:linear-gradient(0deg,var(--acc) 0,color-mix(in srgb,var(--acc) 50%,transparent) 38%,color-mix(in srgb,var(--acc) 12%,transparent) 80%,transparent)}
 .acc-halo .ht .hl{background:linear-gradient(180deg,var(--acc-hi) 0,var(--acc) 16%,color-mix(in srgb,var(--acc) 42%,transparent) 50%,color-mix(in srgb,var(--acc) 10%,transparent) 85%,transparent)}
 .acc-halo .hb .hl{background:linear-gradient(0deg,var(--acc-hi) 0,var(--acc) 16%,color-mix(in srgb,var(--acc) 42%,transparent) 50%,color-mix(in srgb,var(--acc) 10%,transparent) 85%,transparent)}
-@media (max-width:900px){.acc-halo .hg{filter:blur(9px)}}
+@media (max-width:900px){.acc-halo .hg{filter:blur(2.5px)}}
+/* the signature: a narrow bright streak runs left to right along the card's edge as it lights up */
+.acc-halo .hs{position:absolute;inset:0;pointer-events:none;opacity:0}
+.acc-halo .hs .sc,.acc-halo .hs .sb{position:absolute;inset:0;overflow:hidden}
+.acc-halo .hs .sc{clip-path:var(--ring-s)}
+.acc-halo .hs .sb{clip-path:var(--ring-g);filter:blur(2.5px);opacity:.75}
+.acc-halo .hs i{position:absolute;top:0;bottom:0;left:0;width:150px;transform:translateX(-150px)}
+.acc-halo .hs .sc i{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--acc) 70%,transparent) 32%,#fff 50%,color-mix(in srgb,var(--acc) 70%,transparent) 68%,transparent)}
+.acc-halo .hs .sb i{background:linear-gradient(90deg,transparent,var(--acc) 50%,transparent)}
+.acc-halo .hs.go{animation:accStreakO 1.25s linear 1 both}
+.acc-halo .hs.go i{animation:accStreak 1.25s cubic-bezier(.45,0,.25,1) 1 both}
+@keyframes accStreak{from{transform:translateX(-150px)}to{transform:translateX(var(--hw,1200px))}}
+@keyframes accStreakO{0%{opacity:0}10%,82%{opacity:1}100%{opacity:0}}
 
 /* ---------- HEADING LIGHT PASS ---------- */
 .acc-pass{position:absolute;left:-.3em;right:-.3em;top:-.2em;bottom:-.2em;overflow:hidden;pointer-events:none;z-index:2;contain:paint}
 .acc-pass b{position:absolute;inset:0;transform:translateX(-100%);
-  -webkit-mask-image:linear-gradient(90deg,transparent 28%,#000 46%,#000 54%,transparent 72%);mask-image:linear-gradient(90deg,transparent 28%,#000 46%,#000 54%,transparent 72%)}
+  -webkit-mask-image:linear-gradient(90deg,transparent 36%,#000 48%,#000 52%,transparent 64%);mask-image:linear-gradient(90deg,transparent 36%,#000 48%,#000 52%,transparent 64%)}
 .acc-pass i{position:absolute;inset:0;padding:.2em .3em;font-style:normal;transform:translateX(100%);white-space:inherit}
-.acc-pass i::after{content:attr(data-t);color:var(--acc-hi);-webkit-text-fill-color:var(--acc-hi);text-shadow:0 0 .55em var(--acc-bloom);filter:none}
+.acc-pass i::after{content:attr(data-t);color:color-mix(in srgb,var(--acc-hi) 70%,#fff);-webkit-text-fill-color:color-mix(in srgb,var(--acc-hi) 70%,#fff);text-shadow:0 0 3px var(--acc),0 0 9px var(--acc-bloom);filter:none}
 .eyebrow .acc-pass i{display:flex;gap:10px;align-items:center}
 .eyebrow .acc-pass i::before{content:"";width:26px;height:1px;flex:none;background:linear-gradient(90deg,var(--acc-hi),var(--acc));box-shadow:0 0 6px var(--acc)}
 .refer-h .acc-pass i::after{white-space:pre-line}
@@ -1548,7 +1561,7 @@ html.p3d .mark{isolation:isolate}
   background:linear-gradient(180deg,transparent 0%,color-mix(in srgb,var(--acc) 40%,transparent) 55%,var(--acc) 100%)}
 .acc-rail .rh{position:absolute;left:0;right:0;top:0;height:100%;transform:translateY(0)}
 .acc-rail .rh i{position:absolute;left:50%;top:0;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--acc-hi);box-shadow:0 0 6px var(--acc),0 0 14px var(--acc-bloom)}
-.acc-rail .rh b{position:absolute;left:50%;top:0;width:24px;height:48px;margin:-40px 0 0 -12px;border-radius:50%;opacity:.35;
+.acc-rail .rh b{position:absolute;left:50%;top:0;width:10px;height:44px;margin:-38px 0 0 -5px;border-radius:50%;opacity:.35;
   background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 55%,transparent),transparent)}
 @supports (animation-timeline:scroll()){
   .acc-rail .rf{animation:accRailF linear both;animation-timeline:scroll(root block)}
@@ -1666,7 +1679,7 @@ html.p3d .mark{isolation:isolate}
 /* ---------- reduced motion: soft static accents, nothing moves with the scroll ---------- */
 @media (prefers-reduced-motion:reduce){
   :root{transition:none}
-  .acc-pass,.acc-rail .rh b{display:none}
+  .acc-pass,.acc-rail .rh b,.acc-halo .hs{display:none}
   .dw>.acc-breath{animation:none;opacity:.45}
   .accsw-led b{animation:none;opacity:.7}
   .accsw-knob{transition:none}
@@ -3603,9 +3616,9 @@ function offsetPoly(pts,d){       // convex polygon, outward offset by d
 function ring(outer,inner){var f=function(p){return (p[0]+PAD).toFixed(2)+'px '+(p[1]+PAD).toFixed(2)+'px'};
   return 'polygon(evenodd,'+outer.map(f).join(',')+','+f(outer[0])+','+inner.map(f).join(',')+','+f(inner[0])+')'}
 function addRec(card,frag){
-  var h=D.createElement('div');h.className='acc-halo';h.hidden=true;h.innerHTML='<div class="ht"><div class="hg"><i></i></div><div class="hl"></div></div><div class="hb"><div class="hg"><i></i></div><div class="hl"></div></div>';frag.appendChild(h);
-  var r={card:card,halo:h,ht:h.firstChild,hb:h.lastChild,w:0,h:0,cp:'',x:-1e5,y:-1e5,tf:'',heat:0,tgt:0,ot:-1,ob:-1,hov:false,vis:false,armed:true};
-  var on=function(){r.hov=true;kick(900)},off=function(){r.hov=card.matches(':focus-within');kick(900)};
+  var h=D.createElement('div');h.className='acc-halo';h.hidden=true;h.innerHTML='<div class="ht"><div class="hg"><i></i></div><div class="hl"></div></div><div class="hb"><div class="hg"><i></i></div><div class="hl"></div></div><div class="hs"><div class="sb"><i></i></div><div class="sc"><i></i></div></div>';frag.appendChild(h);
+  var r={card:card,halo:h,ht:h.firstChild,hb:h.children[1],hs:h.lastChild,w:0,h:0,cp:'',x:-1e5,y:-1e5,tf:'',heat:0,tgt:0,ot:-1,ob:-1,hov:false,vis:false,armed:true,sArm:true};
+  var on=function(){if(!r.hov&&!RM)r.wantStreak=true;r.hov=true;kick(900)},off=function(){r.hov=card.matches(':focus-within');kick(900)};
   card.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')on()});card.addEventListener('pointerleave',off);
   card.addEventListener('focusin',on);card.addEventListener('focusout',function(){setTimeout(off,0)});
   recs.set(card,r);io?io.observe(card):(r.vis=true,vis.add(r));
@@ -3616,7 +3629,8 @@ function measure(r,lr,H){
   var cp=getComputedStyle(c).clipPath;
   if(w!==r.w||h!==r.h||cp!==r.cp){r.w=w;r.h=h;r.cp=cp;
     var base=ptsOf(cp,w,h);r.halo.style.width=(w+PAD*2)+'px';r.halo.style.height=(h+PAD*2)+'px';r.halo.style.transformOrigin=(PAD+w/2)+'px '+(PAD+h/2)+'px';
-    r.halo.style.setProperty('--ring-g',ring(offsetPoly(base,6),base));r.halo.style.setProperty('--ring-l',ring(offsetPoly(base,1.15),offsetPoly(base,.05)));r.x=-1e5}
+    r.halo.style.setProperty('--ring-g',ring(offsetPoly(base,3.5),base));r.halo.style.setProperty('--ring-l',ring(offsetPoly(base,1.15),offsetPoly(base,.05)));
+    r.halo.style.setProperty('--ring-s',ring(offsetPoly(base,1.7),offsetPoly(base,-.1)));r.halo.style.setProperty('--hw',(w+PAD*2)+'px');r.x=-1e5}
   var b=c.getBoundingClientRect(),tf='',cx=0,cy=0;
   if(c.classList.contains('tilt')){var t=getComputedStyle(c).transform;if(t&&t!=='none'){tf=t;try{var M=new DOMMatrixReadOnly(t),q=M.m44||1;cx=M.m41/q;cy=M.m42/q}catch(e){}}}
   var x=b.left+b.width/2-cx-w/2-lr.left,y=b.top+b.height/2-cy-h/2-lr.top;
@@ -3652,13 +3666,16 @@ ticks.push(function(dt){
     if(r.hov){ot=ob=+(r.heat*.85).toFixed(3)}
     if(ot!==r.ot){r.ot=ot;r.ht.style.opacity=ot}if(ob!==r.ob){r.ob=ob;r.hb.style.opacity=ob}
     if(!show&&!r.halo.hidden)r.halo.hidden=true;
+    /* the light streak: once each time the card lights up (and on hover) */
+    if(!RM&&show){if((r.sArm&&r.heat>.5)||r.wantStreak){r.sArm=false;r.wantStreak=false;r.hs.classList.remove('go');void r.hs.offsetWidth;r.hs.classList.add('go')}}
+    if(!r.sArm&&r.heat<.2)r.sArm=true;
     /* the KPI delta chip glows briefly when its card reaches the middle */
     if(!RM){if(r.armed&&r.heat>.82&&!r.hov){var dl=r.card.querySelector('.delta');if(dl&&dl.textContent.trim()){r.armed=false;dl.classList.remove('acc-flare');void dl.offsetWidth;dl.classList.add('acc-flare')}}
       else if(!r.armed&&r.heat<.3)r.armed=true}
   });
   return busy;
 });
-D.addEventListener('animationend',function(e){if(e.target.classList&&e.target.classList.contains('acc-flare')&&e.animationName==='accFlareG')e.target.classList.remove('acc-flare')});
+D.addEventListener('animationend',function(e){var t=e.target;if(!t.classList)return;if(t.classList.contains('acc-flare')&&e.animationName==='accFlareG')t.classList.remove('acc-flare');if(e.animationName==='accStreakO')t.classList.remove('go')});
 
 /* ---------------- heading light pass ---------------- */
 var HSEL='.app .h2,.app .h3,.app .eyebrow',pio=RM||!('IntersectionObserver' in window)?null:new IntersectionObserver(function(es){
@@ -3690,7 +3707,7 @@ function chartScan(){
   ch.svg=svg;if(!svg)return;ch.ln=svg.querySelector('.ln');ch.dots=Array.prototype.slice.call(svg.querySelectorAll('.pt'));
   var vb=svg.viewBox.baseVal,W=vb&&vb.width||720;ch.W=W;ch.xs=ch.dots.map(function(d){return +d.getAttribute('cx')});
   ch.x0=ch.xs[0]||0;ch.x1=ch.xs[ch.xs.length-1]||W;ch.p=0;ch.lit=-1;
-  var r=svg.getBoundingClientRect();ch.intro=r.top<innerHeight*.9&&r.bottom>0;   // already on screen when it renders: it draws in by itself
+  var r=svg.getBoundingClientRect();ch.intro=r.top<innerHeight*.9&&r.bottom>0;ch.t0=0;   // already on screen when it renders: it draws in by itself
   paintChart();cio&&cio.observe(svg);kick(1600);
 }
 function paintChart(){
@@ -3699,15 +3716,16 @@ function paintChart(){
   var n=-1;for(var i=0;i<ch.xs.length;i++)if(ch.xs[i]<=x+.5)n=i;
   if(n!==ch.lit){for(var j=0;j<ch.dots.length;j++){var on=j<=n,d=ch.dots[j];if(on!==d.classList.contains('on')){d.classList.toggle('on',on);if(on&&!RM){d.classList.remove('pop');void d.getBBox();d.classList.add('pop')}}}ch.lit=n}
 }
-ticks.push(function(dt){
+ticks.push(function(dt,now){
   if(!ch.svg||!ch.ln)return false;
   if(RM){if(ch.p!==1){ch.p=1;paintChart()}return false}
   if(!ch.vis&&!ch.intro)return false;
   var r=ch.svg.getBoundingClientRect(),H=innerHeight,e=clamp01((H-(r.top+r.height*.3))/(H*.42));
-  var tgt=ch.intro?1:Math.max(ch.p,e);     // it draws forward as you scroll in, and stays drawn until it leaves the screen
-  var np=damp(ch.p,tgt,ch.intro?2.6:5,dt);if(Math.abs(np-tgt)<.001)np=tgt;
+  var tgt,np;
+  if(ch.intro){       // on screen when it renders: it draws itself in over 1.6 s (time based, so slow frames never stall it)
+    if(!ch.t0)ch.t0=now;var u=clamp01((now-ch.t0)/1600);tgt=1;np=Math.max(ch.p,u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2);if(u>=1){np=1;ch.intro=false;ch.t0=0}
+  }else{tgt=Math.max(ch.p,e);np=damp(ch.p,tgt,5,dt);if(Math.abs(np-tgt)<.001)np=tgt}   // draws forward as you scroll in; stays drawn until it leaves the screen
   if(np!==ch.p){ch.p=np;paintChart()}
-  if(ch.intro&&np>=1)ch.intro=false;
   return np!==tgt||ch.intro;
 });
 D.addEventListener('animationend',function(e){if(e.animationName==='accDot')e.target.classList.remove('pop')});
