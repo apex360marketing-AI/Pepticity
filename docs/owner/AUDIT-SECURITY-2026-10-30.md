@@ -150,20 +150,35 @@ The coordinator froze v2 mid-audit. These were already done, and nothing has bee
 - One expected exception: the review page's `../site/` frame returns 404 in the source folder layout, the same as before. That folder only exists on gh-pages.
 
 **Staged gh-pages layout.** I built a folder in the gh-pages layout:
-- grace/picks.html: zero errors and zero CSP violations, and the FormSubmit post is allowed.
-- grace/ with all four viewer tabs: see NOT VERIFIED.
+- grace/ with all four viewer tabs (WEBSITE, STUDIO, CLIENT, COLOURS): zero errors and zero CSP violations, and each framed page loads under its own CSP.
+- A full review run to the thank-you state: the FormSubmit post is allowed and the status shows SENT. The post was intercepted, so nothing was sent.
+- grace/picks.html: the same, with the post allowed.
+
+**Integrity checking works.** A test page with a wrong three.js hash was blocked ("Failed to find a valid digest"). The real hash loads three r160. So the check is enforced, not ignored.
 
 **Saved data still works.** Real saved state survives a reload:
 - a dashboard reply and a published drop
 - review answers, including colour dots and follow-ups
 - website cart (3 items) and member name
 
-**Screenshots.** BEFORE and AFTER at the same scroll positions (dashboards at 0, 1400 and 3000 px; the other pages at 0 and 1400) show the same layout. The only differences are moving smoke, the spinning coin and text that animates in.
+**Screenshots.** BEFORE and AFTER at the same scroll positions (dashboards at 0, 1400 and 3000 px; picks and arsenal at 0 and 1400; the other pages at 0) show the same layout. The only differences are moving smoke, the spinning coin and text that animates in.
 
 Where the screenshots are:
 - /tmp/claude-0/-home-user/eecc84f9-3433-5e66-a3b7-3250d2f0d2ac/scratchpad/audit/out/before/
 - /tmp/claude-0/-home-user/eecc84f9-3433-5e66-a3b7-3250d2f0d2ac/scratchpad/audit/out/after/
 - Side by side: /tmp/claude-0/-home-user/eecc84f9-3433-5e66-a3b7-3250d2f0d2ac/scratchpad/audit/out/cmp-dash.png, cmp-pages.png and cmp-more.png in the same folder
+
+### 9. Files to copy to gh-pages at the next deploy (not done by me)
+
+- sites/dashboard/index.html → dashboard/ and graces-dashboard/
+- sites/dashboard-client/index.html → client/
+- sites/dashboard-color/index.html and client/index.html → dashboard-color/ and dashboard-color/client/
+- sites/grace-review/index.html and picks.html → grace/
+- sites/grace-arsenal/index.html → arsenal/
+- sites/grace-research/index.html → research/
+- sites/bot-demo/index.html → concierge/ (with the usual ../../shared → ../shared path change)
+- shared/bot/pep-bot.js → shared/bot/
+- The website (site/) waits for v3. Carry the section 6 edits into v3.
 
 ---
 
@@ -203,7 +218,6 @@ Where the screenshots are:
 
 - **Live site.** Nothing was deployed. Every test ran on a local server and a staged gh-pages folder. After deploy, re-run the console check on the live URLs.
 - **Real FormSubmit delivery with `_honey`.** The post was intercepted so nothing reached the inbox. Send one real test after deploy.
-- **The review viewer with all four tabs (grace/) in the staged layout.** The run was too slow under software WebGL. The CSP allows `frame-src 'self'`, and each framed page passed on its own.
 - **Other browsers.** Integrity checking was confirmed in Chromium only. Older Safari and Firefox ignore the `integrity` key: nothing breaks, but there is no protection. iOS, Safari and Firefox were not tested.
 - **Real GPU and phone screens.** Headless Chromium used software WebGL, and phone widths were not re-shot. No CSS changed.
 - **dashboard-color's load event.** It never fires in headless Chromium, the same before and after. That page was tested at page-ready plus 6 seconds.

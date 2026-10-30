@@ -26,7 +26,10 @@
 - Fixed-date countdowns only.
 
 ## Products
-- Fresh full inventory of northernpeptides.st (names, sizes, prices, full descriptions, stock) in docs/inventory/ (CSV, XLSX, MD), with a first-pass claims flag for the audit.
+- DONE: full inventory of northernpeptides.st in docs/inventory/ (CSV, XLSX, MD, JSON) with an AUDIT column.
+  - 30 products, 37 sizes, $30–$275 CAD, all in stock, no price changes since 29 Oct.
+  - One hidden but buyable listing found: SLU-PP-332 ($80, 10mg).
+  - Every listing is flagged: 34 make health claims, 34 give dosing, 21 have copy mistakes (template text, copied descriptions, HGH 100iu vs 1000iu).
 - Bottles: Grace picks a design in her Selection Studio. Then every product's bottle is made in that design (Higgsfield plus exact font). Until then the store uses the approved bottle.
 
 ## Skills used
@@ -34,8 +37,8 @@
 - pepticity-brand-lock, peptide-regulatory, verify-before-done
 - NEW: hologram-panels
 
-## Higgsfield (needs owner OK, cost first)
-- Second doors film, lab → product line: about 17.5 credits each, white + black = about 35.
+## Higgsfield (owner OK 30 Oct: "you have my okay on Higgsfield")
+- Second doors film, lab → product line: 17.5 credits each, white + black = 35, plus 2 end stills at 2.75 each. IN PROGRESS (one white test first, then black).
 - Optional: a product-line "gallery room" still for behind the second doors: about 0.25–0.5 credits each.
 - Bottles for every product after Grace picks a design: about 0.25 per image; the count depends on the final product list.
 

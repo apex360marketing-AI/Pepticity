@@ -22,9 +22,18 @@
      data-catalogue="url"          optional fresh catalogue.json (same shape) to refresh prices
      data-css="url"                override the stylesheet location
      data-surface="light|dark"     force the glass tint (default: read from the host page background)
-   Host events (window): pep:add-to-cart, pep:checkout, pep:capture (consent record included).
+     data-mode="store|guide|sell"  MODE SWITCH (2026-10-30). store = the original behaviour (default, unchanged).
+                                   guide = research and PEPTICITY only: no product names, no prices, no cart, no selling,
+                                           no proactive greeting (used on the public landing before the 19+ gate).
+                                   sell  = the store behaviour after the 19+ gate, with single-purpose consent wording,
+                                           no "researched in the context of" shelf wording, closed shelves hidden,
+                                           and a proactive greeting only when the host calls PEPBOT.greet().
+     data-qty-breaks="on|off"      the "3 VIALS · SAVE [X%]" row (default on; it also needs data-offer on)
+   Host events (window): pep:add-to-cart, pep:checkout, pep:capture (consent record included), pep:guide-enter.
    If window.PEPCART.add(item) exists it is called too.
    API: PEPBOT.open() .close() .ask(text) .configure(obj) .setBackend(fn) .brain.respond(text)
+        .setMode('guide'|'sell'|'store') .greet()  (greet = once per session per mode)
+   Safety order is the same in every mode: emergency, rules, minors, sexual, dosing, promises come first.
    ===================================================================== */
 (function (root, factory) {
   var api = factory(root);
@@ -142,8 +151,11 @@
     weightShelf: false,   // WEIGHT GOALS shelf held until counsel rules on Schedule A.1 [VERIFY]
     code: 'TEAM15',       // demo code: Grace sets the real one
     phone: '[phone number]', email: '[email address]',
-    css: null, catalogue: null
+    css: null, catalogue: null,
+    mode: 'store',        // store (original) | guide (no products, no prices, no selling) | sell (after the 19+ gate)
+    qtyBreaks: true       // "3 VIALS · SAVE [X%]" row; v3 turns it off
   };
+  var MODES = { store: 1, guide: 1, sell: 1 };
   var STATE = { cart: {}, joined: false, interests: [], greeted: false, open: false };
   var BY_SLUG = {};
   function index() { BY_SLUG = {}; ROWS.forEach(function (r) { BY_SLUG[r[0]] = r; }); }
@@ -154,8 +166,9 @@
     Object.keys(o).forEach(function (k) {
       var v = o[k];
       if (k === 'soldOut' || k === 'held') v = Array.isArray(v) ? v : String(v || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-      if (k === 'offer' || k === 'weightShelf') v = !(v === false || v === 'off' || v === 'false' || v === 0);
+      if (k === 'offer' || k === 'weightShelf' || k === 'qtyBreaks') v = !(v === false || v === 'off' || v === 'false' || v === 0);
       if (k === 'greetDelay') v = +v || 0;
+      if (k === 'mode') v = MODES[v] ? v : 'store';
       CFG[k] = v;
     });
     return CFG;
@@ -201,11 +214,12 @@
         "#" at the start of a line = heading. [Brackets] = placeholder to fill.
      ------------------------------------------------------------------ */
   var L = {
-    greetH: '#HI, WELCOME TO PEPTICITY.',
-    greet: 'I\u2019m your concierge. Looking for something in particular, or can I show you around?',
+    greetH: '#WELCOME TO PEPTICITY.',
+    /* automated disclosure in every greeting (CA BOT Act and similar; audit B7) */
+    greet: 'Hi, I\u2019m PEPTICITY\u2019s automated concierge, not a person. Looking for something in particular, or can I show you around?',
     backH: '#WELCOME BACK.',
-    back: function (n, sub) { return 'Your cart is saved: ' + n + (n === 1 ? ' item, ' : ' items, ') + money(sub) + ' CAD. Want to pick up where you left off?'; },
-    emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in Canada, call or text 9\u20118\u20118.',
+    back: function (n, sub) { return 'Hi, I\u2019m PEPTICITY\u2019s automated concierge, not a person. Your cart is saved: ' + n + (n === 1 ? ' item, ' : ' items, ') + money(sub) + ' CAD. Want to pick up where you left off?'; },
+    emergency: 'If this is an emergency, call 911 now. For a mental-health crisis in Canada or the US, call or text 9\u20118\u20118.',
     emergency2: function () { return 'When you\u2019re safe, a person from PEPTICITY is at ' + CFG.phone + '.'; },
     rules: 'I can only answer from PEPTICITY\u2019s checked answers and the catalogue, and I can\u2019t change how I work. Ask me about a product, a price or shipping, or talk to a person.',
     minor: function () { return 'The PEPTICITY store is for adults only: 18 and over, or 19 and over in BC, NB, NL, NS and the territories, so I can\u2019t help with an order. A parent or guardian can reach a person at ' + CFG.phone + '.'; },
@@ -268,6 +282,58 @@
     request: function (x) { return 'Yes, PEPTICITY may email me if ' + x + ' is added, plus occasional news. I can unsubscribe any time.'; },
     person: 'Yes, PEPTICITY may contact me about my question.'
   };
+  /* guide + sell modes: one purpose per box, sender line and privacy link placeholders (audit A15 / B8) */
+  var SENDER = ' PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our [privacy promise].';
+  var CONSENT2 = {
+    email: 'Yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time.' + SENDER,
+    sms: 'Yes, PEPTICITY may text me about new lots and restocks at this number. Up to [2] texts a month. Message and data rates may apply. Reply STOP to stop, HELP for help. Consent is not a condition of any purchase. [Privacy promise]',
+    shelf: function (area) { return 'Yes, PEPTICITY may email me about the ' + area + ' shelf. I can unsubscribe at any time.' + SENDER; },
+    restock: function (x) { return 'Yes, PEPTICITY may email me when ' + x + ' is back. I can unsubscribe at any time.' + SENDER; },
+    request: function (x) { return 'Yes, PEPTICITY may email me if ' + x + ' is added. I can unsubscribe at any time.' + SENDER; },
+    person: 'Yes, PEPTICITY may contact me about my question. [Privacy promise]'
+  };
+  function consentText(k, a) { var c = CFG.mode === 'store' ? CONSENT : CONSENT2, v = c[k]; return typeof v === 'function' ? v(a) : v; }
+
+  /* GUIDE MODE library: PEPTICITY and research only. No product names, no prices, no cart, no selling. */
+  var GL = {
+    greet: 'Hi, I’m PEPTICITY’s automated concierge, not a person. I can tell you about PEPTICITY, our mission and how peptide research works, or connect you with a person.',
+    rules: 'I can only answer from PEPTICITY’s checked answers, and I can’t change how I work. Ask me about PEPTICITY or how peptide research works, or talk to a person.',
+    sexual: 'That’s not a topic I can help with. I can tell you about PEPTICITY and how research works, or put you in touch with a person.',
+    dosing: 'I can’t give dosing, mixing or how-to-use information for anything. That’s the same answer for everyone. I can tell you how research works, or put you in touch with a person.',
+    promise: 'Nobody can promise a result, and PEPTICITY won’t. I can tell you how research works and where the evidence stands.',
+    medical: 'I can’t give medical advice or say what anything does in the body. For anything about your own health, please speak with a health professional you trust.',
+    effect: 'I can’t say what anything does in the body or promise a result. I can explain how research on peptides works.',
+    mood: 'I can’t point you to anything for mood, focus or the mind. I can tell you how peptide research works.',
+    minor: function () { return 'PEPTICITY is for adults only, 19 and over in Canada, so this isn’t the place for you. A parent or guardian can reach a person at ' + CFG.phone + '.'; },
+    noShop: 'On this part of the site I only talk about PEPTICITY and research, so I can’t share product names or prices here. The PEPTICITY collection opens past the age check at the end of this page, for adults 19+ in Canada.',
+    about: 'PEPTICITY is a peptide house founded by Grace in [city, year: Grace to confirm]. We read the research before we say a word, show how things are made, and never promise what the evidence can’t.',
+    mission: 'Our mission: make peptide research clear, calm and honest, and hold ourselves to standards we can show you. [Final mission wording: Grace to confirm]',
+    research: 'Research usually moves in steps: lab studies on cells first, then animal studies, then human trials. Each step is slower and stricter than the last, and most peptides are still early on that road.',
+    made: 'In general, a peptide chain is built one amino acid at a time, purified, measured into vials, freeze-dried and sealed. The BIO LAB further on shows an illustration of those steps.',
+    peptide: 'A peptide is a short chain of amino acids, the building blocks of proteins. The body makes many of its own. Want to know how research on them works?',
+    testing: 'PEPTICITY will publish its quality and testing standards here once they’re confirmed. [Quality and testing standards: Grace to confirm]',
+    legal: function () { return 'Many peptides are not authorised as medicines in Canada, and I can’t give legal advice. A person can help at ' + CFG.email + '.'; },
+    researchUse: 'PEPTICITY doesn’t sell anything “for research use”, and I can’t say how anyone uses anything.',
+    age: 'The PEPTICITY collection is for adults 19 and over in Canada. You confirm your age and province at the threshold at the end of this page.',
+    who: 'I’m PEPTICITY’s automated concierge, not a person and not a health professional. I can’t give medical advice. I can tell you about PEPTICITY and how research works.',
+    enter: 'The age check sits at the end of this page. Confirm you’re 19 or older and your province, and the city opens.',
+    letterH: '#GRACE’S LETTER.',
+    letter: 'One letter a month from Grace, with founding-list news. Leave your email and tick the box if you’d like it.',
+    thanks: 'You’re welcome. Anything else about PEPTICITY I can tell you?',
+    fallback: 'I don’t have a checked answer for that yet, and I won’t guess. I can tell you about PEPTICITY and peptide research, or put you in touch with a person.'
+  };
+  /* SELL MODE overrides (after the 19+ gate) */
+  var SL = {
+    greet: 'Hi, I’m PEPTICITY’s automated concierge, not a person. How can I help today? I can find a product, check a price, open a shelf or put you in touch with a person.',
+    shelf1: function (I) { return 'Here’s the ' + I.t + ' shelf in the PEPTICITY collection.'; },
+    shelf2: 'I can’t say what any product does for you, but every name, size and price is below.',
+    research: 'PEPTICITY doesn’t sell anything “for research use”. I can tell you what a product is, its size and its price. I can’t say how anyone uses it.'
+  };
+  function line(k, a) {
+    var src = CFG.mode === 'guide' && GL[k] != null ? GL[k] : CFG.mode === 'sell' && SL[k] != null ? SL[k] : L[k];
+    return typeof src === 'function' ? src(a) : src;
+  }
+  function openShelf(k) { var I = INTEREST[k]; return !!I && !(I.gated && !CFG[I.gated]); }
 
   /* ------------------------------------------------------------------
      4. THE BRAIN (pure: no DOM, same in the page and in Node tests)
@@ -430,7 +496,7 @@
     if (I.gated && !CFG[I.gated]) return R('interest:' + key, [L.weightClosed], { form: { type: 'interest', interest: key }, chips: ['interest', 'catalogue'] });
     if (I.thin) return R('interest:' + key, [L.sleepThin], { form: { type: 'interest', interest: key }, chips: ['p:epitalon-10mg', 'interest'] });
     var slugs = I.slugs.filter(function (s) { return visibleRow(BY_SLUG[s]); });
-    return R('interest:' + key, [L.shelf1(I), L.shelf2], { shelf: { title: I.t, area: I.area }, cards: slugs, chips: salesChips(['mail:' + key]) });
+    return R('interest:' + key, [line('shelf1', I), line('shelf2')], { shelf: { title: I.t, area: I.area }, cards: slugs, chips: salesChips(['mail:' + key]) });
   }
   function productReply(famKeys, n, mode) {
     var lines = [], rows = [], soldOne = null;
@@ -463,19 +529,63 @@
     return R('cart', [], { cart: true, chips: CFG.offer && !STATE.joined ? ['offer', 'interest'] : ['interest'] });
   }
   function menuReply(first) {
+    if (CFG.mode === 'guide') return R(first ? 'greet' : 'menu', [L.greetH, GL.greet], { chips: GUIDE_CHIPS.slice() });
     var back = cartCount() > 0;
-    var lines = back ? [L.backH, L.back(cartCount(), cartSubtotal())] : [L.greetH, L.greet];
+    var lines = back ? [L.backH, L.back(cartCount(), cartSubtotal())] : [L.greetH, line('greet')];
     var chips = back ? ['cart', 'checkout', 'offer', 'interest'] : ['interest', 'find', 'prices', 'ship', 'offer', 'person'];
     if (!CFG.offer) chips = chips.map(function (c) { return c === 'offer' ? 'join' : c; });
     return R(first ? 'greet' : 'menu', lines, { chips: chips });
   }
 
+  /* ---------- guide mode (no product names, no prices, no cart, no selling) ---------- */
+  var GUIDE_CHIPS = ['g:about', 'g:research', 'g:made', 'g:enter', 'person'];
+  function interestChips() { return INTEREST_ORDER.filter(function (x) { return CFG.mode === 'store' || openShelf(x); }).map(function (x) { return 'i:' + x; }); }
+  function GR(kind, lines, chips, x) { var o = { chips: chips || GUIDE_CHIPS.slice(0, 4) }; if (x) Object.keys(x).forEach(function (k) { o[k] = x[k]; }); return R('guide:' + kind, lines, o); }
+  function guideNoShop() { return GR('noshop', [GL.noShop], ['g:enter', 'g:research', 'letter', 'person']); }
+  function guideIntent(k, a) {
+    switch (k) {
+      case 'g': {
+        if (a === 'about') return GR('about', [GL.about], ['g:mission', 'g:research', 'letter', 'person']);
+        if (a === 'mission') return GR('mission', [GL.mission], ['g:about', 'g:made', 'letter', 'person']);
+        if (a === 'research') return GR('research', [GL.research], ['g:made', 'g:about', 'person']);
+        if (a === 'made') return GR('made', [GL.made], ['g:research', 'g:enter', 'person']);
+        if (a === 'enter') { try { W.dispatchEvent(new CustomEvent('pep:guide-enter')); } catch (e) {} return GR('enter', [GL.enter], ['g:about', 'g:research', 'person']); }
+        return null;
+      }
+      case 'letter': case 'offer': case 'join': return GR('letter', [GL.letterH, GL.letter], ['g:about', 'person'], { form: { type: 'letter' } });
+      case 'person': return null;   /* same person flow as every mode */
+      case 'menu': case 'greet': return null;
+      case 'find': case 'catalogue': case 'prices': case 'ship': case 'cart': case 'checkout': case 'i': case 'p': case 'mail': case 'restock': case 'notify': return guideNoShop();
+    }
+    return null;
+  }
+  function guideRespond(n, both) {
+    if (RX.peptide.test(n)) return GR('peptide', [GL.peptide], ['g:research', 'g:made', 'person']);
+    if (RX.who.test(n)) return GR('who', [GL.who]);
+    if (/(mission|who are (you guys|pepticity)|about (you|pepticity|the company)|your story|the company|founder|grace\b)/.test(n) && !RX.person.test(n.replace(/grace/g, ''))) return GR('about', [GL.about, GL.mission], ['g:research', 'letter', 'person']);
+    if (/(how (are|is) (it|they|peptides?) made|manufactur|synthes|how it'?s made|the lab\b|bio ?lab)/.test(n)) return GR('made', [GL.made]);
+    if (RX.research.test(n)) return GR('research-use', [GL.researchUse]);
+    if (/(how (does )?research work|studies|study|clinical|trials?|evidence)/.test(n)) return GR('research', [GL.research]);
+    if (RX.testing.test(both)) return GR('testing', [GL.testing]);
+    if (RX.legal.test(n)) return GR('legal', [GL.legal()]);
+    if (RX.age.test(n) || /(19 ?plus|nineteen|age (check|gate))/.test(n)) return GR('age', [GL.age], ['g:enter', 'g:about', 'person']);
+    if (/(letter|newsletter|email list|mailing list|subscribe)/.test(n)) return guideIntent('letter');
+    if (RX.mood.test(n)) return GR('mood', [GL.mood]);
+    if (RX.recommend.test(n) || RX.catalogue.test(n) || RX.prices.test(n) || RX.cart.test(n) || RX.checkout.test(n) || RX.offer.test(n) || RX.ship.test(n) ||
+        RX.order.test(n) || RX.payment.test(n) || RX.returns.test(n) || RX.discreet.test(n) || RX.interestMenu.test(n) || RX.find.test(n) || detectInterest(n)) return guideNoShop();
+    if (RX.person.test(n)) return byIntent('person');
+    if (RX.greet.test(n) || RX.help.test(n)) return menuReply(false);
+    if (RX.thanks.test(n)) return GR('thanks', [GL.thanks]);
+    return GR('fallback', [GL.fallback], ['g:about', 'g:research', 'person']);
+  }
+
   function byIntent(id) {
     var p = id.split(':'), k = p[0], a = p.slice(1).join(':');
+    if (CFG.mode === 'guide') { var g = guideIntent(k, a); if (g) return g; }
     switch (k) {
       case 'menu': return menuReply(false);
       case 'greet': return menuReply(true);
-      case 'interest': return R('interest-menu', [L.interestAsk], { chips: INTEREST_ORDER.map(function (x) { return 'i:' + x; }) });
+      case 'interest': if (CFG.mode === 'guide') return guideNoShop(); return R('interest-menu', [L.interestAsk], { chips: interestChips() });
       case 'find': return R('find', [L.find], { chips: ['catalogue', 'interest'] });
       case 'catalogue': return catalogueReply();
       case 'prices': return R('prices', [L.prices()], { chips: salesChips(['catalogue']) });
@@ -501,11 +611,19 @@
     if (!n.trim()) return R('empty', []);
     // safety first, in a fixed order; nothing commercial outranks these
     if (RX.emerg.test(both)) return R('emergency', [L.emergency, L.emergency2()], { chips: ['person'], safety: true });
-    if (RX.inject.test(both)) return R('rules', [L.rules], { chips: ['find', 'prices', 'person'] });
-    if (RX.minor.test(both)) return R('minor', [L.minor()], { chips: ['person'] });
-    if (RX.sex.test(both)) return R('sexual', [L.sexual()], { chips: ['find', 'interest', CFG.offer ? 'offer' : 'join'] });
-    if (RX.dose.test(both)) return R('dosing', [L.dosing], { chips: ['find', 'prices', 'person'] });
-    if (RX.promise.test(both)) return R('promise', [L.promise], { chips: ['interest', 'find', 'person'] });
+    var G = CFG.mode === 'guide';
+    if (RX.inject.test(both)) return R('rules', [line('rules')], { chips: G ? ['g:about', 'g:research', 'person'] : ['find', 'prices', 'person'] });
+    if (RX.minor.test(both)) return R('minor', [line('minor')], { chips: ['person'] });
+    if (RX.sex.test(both)) return R('sexual', [line('sexual')], { chips: G ? ['g:about', 'g:research', 'person'] : ['find', 'interest', CFG.offer ? 'offer' : 'join'] });
+    if (RX.dose.test(both)) return R('dosing', [line('dosing')], { chips: G ? ['g:research', 'person'] : ['find', 'prices', 'person'] });
+    if (RX.promise.test(both)) return R('promise', [line('promise')], { chips: G ? ['g:research', 'person'] : ['interest', 'find', 'person'] });
+    if (G) {   /* guide mode: medical and effect questions keep their refusals, then research and PEPTICITY only */
+      if (RX.med.test(both)) return R('medical', [GL.medical], { chips: ['g:research', 'person'] });
+      if (RX.effect.test(both)) return R('effect', [GL.effect], { chips: ['g:research', 'g:made', 'person'] });
+      if (RX.same.test(both) && /(medicine|brand|approved)/.test(n)) return R('same', [GL.noShop], { chips: ['g:research', 'person'] });
+      if (findFamilies(n, s).length || RX.unlisted.test(n)) return guideNoShop();
+      return guideRespond(n, both);
+    }
     var fams = findFamilies(n, s), um = n.match(RX.unlisted);
     if (RX.same.test(both) && (um || fams.length || /(medicine|brand|approved)/.test(n))) return R('same', [L.same], { chips: ['catalogue', 'person'] });
     var held = fams.filter(function (f) { return isHeldFam(f.k); });
@@ -533,8 +651,8 @@
     if (RX.mood.test(n)) return R('mood', [L.mood], { chips: ['catalogue', 'interest'] });
     if (RX.peptide.test(n)) return R('peptide', [L.peptide], { chips: ['catalogue', 'interest'] });
     if (RX.who.test(n)) return R('who', [L.who], { chips: ['find', 'interest', 'person'] });
-    if (RX.recommend.test(n)) return R('recommend', [L.recommend], { chips: INTEREST_ORDER.map(function (x) { return 'i:' + x; }) });
-    if (RX.research.test(n)) return R('research', [L.research], { chips: ['catalogue', 'person'] });
+    if (RX.recommend.test(n)) return R('recommend', [L.recommend], { chips: interestChips() });
+    if (RX.research.test(n)) return R('research', [line('research')], { chips: ['catalogue', 'person'] });
     if (RX.legal.test(n)) return R('legal', [L.legal], { chips: ['catalogue', 'person'] });
     if (RX.testing.test(n)) return R('testing', [L.testing], { chips: ['catalogue', 'person'] });
     if (RX.checkout.test(n)) return byIntent('checkout');
@@ -611,7 +729,7 @@
   (function readConfig() {
     var pre = W.PEPBOT_CONFIG || {};
     var ds = SCRIPT ? SCRIPT.dataset : {};
-    var map = { dock: ds.dock, greetDelay: ds.greetDelay, soldOut: ds.soldOut, offer: ds.offer, weightShelf: ds.weightShelf, catalogue: ds.catalogue, css: ds.css, phone: ds.phone, email: ds.email, code: ds.code, held: ds.held, surface: ds.surface };
+    var map = { dock: ds.dock, greetDelay: ds.greetDelay, soldOut: ds.soldOut, offer: ds.offer, weightShelf: ds.weightShelf, catalogue: ds.catalogue, css: ds.css, phone: ds.phone, email: ds.email, code: ds.code, held: ds.held, surface: ds.surface, mode: ds.mode, qtyBreaks: ds.qtyBreaks };
     Object.keys(map).forEach(function (k) { if (map[k] == null) delete map[k]; });
     configure(pre); configure(map);
   })();
@@ -697,7 +815,7 @@
     if (UI.root) return;
     loadCss();
     var root = el('div', 'pb-root pb-dock-' + (CFG.dock === 'center' ? 'center' : 'right'));
-    root.setAttribute('data-state', 'docked');
+    root.setAttribute('data-state', 'docked'); root.setAttribute('data-mode', CFG.mode);
     if (REDUCED) root.classList.add('pb-reduced');
     // light host pages (the white PEPTICITY version): deepen the smoke in the glass so white text keeps its contrast
     if (CFG.surface === 'light' || (CFG.surface !== 'dark' && hostIsLight())) root.classList.add('pb-on-light');
@@ -733,7 +851,7 @@
     head.appendChild(emblem(46));
     var ht = el('div', 'pb-head__text');
     ht.appendChild(el('div', 'pb-head__word', 'PEPTICITY'));
-    var st = el('div', 'pb-head__status'); st.appendChild(el('i', 'pb-dot')); st.appendChild(D.createTextNode('CONCIERGE \u00b7 HERE 24/7'));
+    var st = el('div', 'pb-head__status'); st.appendChild(el('i', 'pb-dot')); st.appendChild(D.createTextNode('AUTOMATED CONCIERGE \u00b7 HERE 24/7'));
     ht.appendChild(st); head.appendChild(ht);
     UI.cartBtn = el('button', 'pb-iconbtn pb-cartbtn', null, { type: 'button', 'aria-label': 'View cart' });
     UI.cartBtn.appendChild(el('span', 'pb-cartbtn__l', 'CART'));
@@ -752,12 +870,13 @@
     var menu = el('button', 'pb-iconbtn pb-menu', null, { type: 'button', 'aria-label': 'Show the menu' });
     menu.appendChild(el('i')); menu.appendChild(el('i')); menu.appendChild(el('i'));
     form.appendChild(menu);
-    UI.input = el('input', 'pb-input', null, { type: 'text', maxlength: '300', 'aria-label': 'Ask the PEPTICITY concierge', placeholder: 'Ask about a product, price or shipping', enterkeyhint: 'send' });
+    UI.input = el('input', 'pb-input', null, { type: 'text', maxlength: '300', 'aria-label': 'Ask the PEPTICITY concierge', placeholder: CFG.mode === 'guide' ? 'Ask about PEPTICITY or peptide research' : 'Ask about a product, price or shipping', enterkeyhint: 'send' });
     form.appendChild(UI.input);
     var send = btn('SEND', 'pc-btn--sm pb-send', { type: 'submit' });
     form.appendChild(send);
     base.appendChild(form);
-    base.appendChild(el('div', 'pb-fine', 'Automated \u00b7 Not medical advice \u00b7 Prices in CAD'));
+    UI.fine = el('div', 'pb-fine', CFG.mode === 'guide' ? 'Automated \u00b7 Not a person \u00b7 Not medical advice' : 'Automated \u00b7 Not medical advice \u00b7 Prices in CAD');
+    base.appendChild(UI.fine);
     panel.appendChild(base);
     edge(panel, 16);
 
@@ -778,20 +897,22 @@
 
     updateCartUi();
     rotateHints();
-    scheduleGreet();
+    if (CFG.mode === 'store') scheduleGreet();   /* guide: never proactive; sell: only when the host calls PEPBOT.greet() */
     if (CFG.catalogue && W.fetch) W.fetch(CFG.catalogue).then(function (r) { return r.json(); }).then(loadCatalogue).catch(function () {});
   }
 
   /* bar hint rotation (ambient) */
   function rotateHints() {
-    var hints = ['HOW CAN I HELP?', 'FIND A PRODUCT OR A PRICE', CFG.offer ? '15% OFF YOUR FIRST ORDER' : 'JOIN THE PEPTICITY TEAM', 'SHOP BY INTEREST'];
+    var sellHints = ['HOW CAN I HELP?', 'FIND A PRODUCT OR A PRICE', CFG.offer ? '15% OFF YOUR FIRST ORDER' : 'JOIN THE PEPTICITY TEAM', 'SHOP BY INTEREST'];
+    var guideHints = ['HOW CAN I HELP?', 'ASK ABOUT PEPTICITY', 'HOW RESEARCH WORKS', 'TALK TO A PERSON'];
     var i = 0;
     if (REDUCED) return;
     setInterval(function () {
       if (STATE.open || D.hidden) return;
+      var hints = CFG.mode === 'guide' ? guideHints : sellHints;
       i = (i + 1) % hints.length;
       UI.hint.classList.add('is-out');
-      setTimeout(function () { UI.hint.textContent = cartCount() && i === 2 ? 'YOUR CART IS SAVED' : hints[i]; UI.hint.classList.remove('is-out'); }, 380);
+      setTimeout(function () { UI.hint.textContent = CFG.mode !== 'guide' && cartCount() && i === 2 ? 'YOUR CART IS SAVED' : hints[i]; UI.hint.classList.remove('is-out'); }, 380);
     }, 3800);
   }
 
@@ -807,9 +928,10 @@
     W.addEventListener('scroll', onScroll, { passive: true });
     setTimeout(fire, Math.max(800, CFG.greetDelay));
   }
+  function greetKey() { return CFG.mode === 'store' ? 'greeted' : 'greeted-' + CFG.mode; }
   function showPeek() {
-    if (STATE.open || SS.get('greeted')) return;
-    SS.set('greeted', '1');
+    if (STATE.open || SS.get(greetKey())) return;
+    SS.set(greetKey(), '1');
     var g = menuReply(true);
     UI.peekText.innerHTML = '';
     g.lines.forEach(function (l) { UI.peekText.appendChild(l.charAt(0) === '#' ? el('div', 'pb-h', l.slice(1)) : richText(el('p', 'pb-p'), l)); });
@@ -823,7 +945,7 @@
   function openPanel() {
     if (!UI.root) mount();
     if (STATE.open) return;
-    STATE.open = true; SS.set('greeted', '1');
+    STATE.open = true; SS.set('greeted', '1'); SS.set(greetKey(), '1');
     UI.peek.setAttribute('aria-hidden', 'true');
     UI.panel.setAttribute('aria-hidden', 'false');
     UI.bar.setAttribute('aria-expanded', 'true');
@@ -843,7 +965,9 @@
   /* chips: chamfered glass quick replies (BTN-P01 small) */
   var CHIP = {
     interest: 'SHOP BY INTEREST', find: 'FIND A PRODUCT', prices: 'PRICES', ship: 'SHIPPING', offer: '15% OFF', join: 'JOIN THE TEAM',
-    person: 'TALK TO A PERSON', catalogue: 'SEE THE FULL CATALOGUE', cart: 'VIEW CART', checkout: 'CHECKOUT', menu: 'MENU'
+    person: 'TALK TO A PERSON', catalogue: 'SEE THE FULL CATALOGUE', cart: 'VIEW CART', checkout: 'CHECKOUT', menu: 'MENU',
+    letter: 'GRACE\u2019S LETTER', 'g:about': 'WHAT IS PEPTICITY', 'g:mission': 'OUR MISSION', 'g:research': 'HOW RESEARCH WORKS',
+    'g:made': 'HOW PEPTIDES ARE MADE', 'g:enter': 'THE AGE CHECK (19+)'
   };
   function chipLabel(id) {
     var p = id.split(':'), k = p[0], a = p.slice(1).join(':');
@@ -913,7 +1037,7 @@
     if (r.shelf) {
       var sh = el('div', 'pb-shelf');
       sh.appendChild(el('div', 'pb-shelf__t', r.shelf.title));
-      sh.appendChild(el('div', 'pb-shelf__a', 'Researched in the context of ' + r.shelf.area));
+      sh.appendChild(el('div', 'pb-shelf__a', CFG.mode === 'store' ? 'Researched in the context of ' + r.shelf.area : 'Name, size and price only'));
       m.appendChild(sh);
     }
     if (r.cards && r.cards.length) {
@@ -956,7 +1080,7 @@
     else acts.appendChild(btn('ADD TO CART', 'pc-btn--sm pb-add', { 'data-add': slug, 'aria-label': 'Add ' + f[0] + ' ' + r[3] + ' to cart' }));
     acts.appendChild(el('button', 'pb-what', 'WHAT IT IS', { type: 'button', 'data-what': '1', 'aria-expanded': whatOpen ? 'true' : 'false' }));
     c.appendChild(acts);
-    if (CFG.offer && !sold) {
+    if (CFG.offer && CFG.qtyBreaks && !sold) {
       var qb = el('div', 'pb-card__qb');
       qb.appendChild(richText(el('span'), '3 VIALS \u00b7 SAVE [X%]'));
       var a3 = el('button', 'pb-add3', 'ADD 3', { type: 'button', 'data-add': slug, 'data-n': '3', 'aria-label': 'Add 3 of ' + f[0] + ' ' + r[3] });
@@ -1017,7 +1141,8 @@
   function refreshCarts() { UI.log.querySelectorAll('.pb-cart').forEach(fillCart); }
 
   function updateCartUi() {
-    var n = cartCount();
+    var n = CFG.mode === 'guide' ? 0 : cartCount();
+    UI.cartBtn.hidden = CFG.mode === 'guide';
     UI.cartN.textContent = String(n);
     UI.cartBtn.classList.toggle('has-items', n > 0);
     UI.barCart.textContent = n ? 'CART ' + n : '';
@@ -1025,7 +1150,7 @@
   }
   var addTimer = null, addPending = null;
   function addToCart(slug, q, src) {
-    var r = BY_SLUG[slug]; if (!visibleRow(r) || isSoldOut(slug)) return;
+    var r = BY_SLUG[slug]; if (!visibleRow(r) || isSoldOut(slug) || CFG.mode === 'guide') return;
     STATE.cart[slug] = (STATE.cart[slug] || 0) + q;
     LS.set('cart', STATE.cart);
     updateCartUi(); refreshCarts();
@@ -1060,11 +1185,12 @@
   function capture(f) {
     var I = f.interest ? INTEREST[f.interest] : null, r = f.slug ? BY_SLUG[f.slug] : null;
     var cfg = {
-      join: { t: CFG.offer ? 'JOIN THE PEPTICITY TEAM' : 'JOIN THE PEPTICITY TEAM', b: CFG.offer ? 'GET MY 15%' : 'JOIN THE TEAM', box: CONSENT.email, phone: true, need: false },
-      interest: { t: I ? (I.gated || I.thin ? 'SEND ME ' + I.t + ' NEWS' : 'SEND ME THE ' + I.t + ' SHELF') : '', b: I && (I.gated || I.thin) ? 'SEND ME ' + I.t + ' NEWS' : 'SEND ME THE SHELF', box: I ? CONSENT.shelf(I.t.toLowerCase().replace('55+ and ', '55+ and ')) : '', need: true },
-      restock: { t: CFG.offer ? 'TELL ME WHEN IT\u2019S BACK' : 'PEPTICITY NEWS', b: CFG.offer ? 'ADD ME TO THE LIST' : 'SEND ME NEWS', box: r ? (CFG.offer ? CONSENT.restock(rowName(r)) : CONSENT.email) : '', need: true },
-      request: { t: 'TELL ME IF IT\u2019S ADDED', b: 'TELL ME', box: CONSENT.request(f.name || 'it'), need: true },
-      person: { t: 'ASK A PERSON TO GET BACK TO ME', b: 'REQUEST A REPLY', box: CONSENT.person, phone: true, need: false, either: true }
+      join: { t: CFG.offer ? 'JOIN THE PEPTICITY TEAM' : 'JOIN THE PEPTICITY TEAM', b: CFG.offer ? 'GET MY 15%' : 'JOIN THE TEAM', box: consentText('email'), phone: true, need: false },
+      letter: { t: 'GRACE\u2019S MONTHLY LETTER', b: 'JOIN GRACE\u2019S LETTER', box: consentText('email'), need: true },
+      interest: { t: I ? (I.gated || I.thin ? 'SEND ME ' + I.t + ' NEWS' : 'SEND ME THE ' + I.t + ' SHELF') : '', b: I && (I.gated || I.thin) ? 'SEND ME ' + I.t + ' NEWS' : 'SEND ME THE SHELF', box: I ? consentText('shelf', I.t.toLowerCase()) : '', need: true },
+      restock: { t: CFG.offer ? 'TELL ME WHEN IT\u2019S BACK' : 'PEPTICITY NEWS', b: CFG.offer ? 'ADD ME TO THE LIST' : 'SEND ME NEWS', box: r ? (CFG.offer ? consentText('restock', rowName(r)) : consentText('email')) : '', need: true },
+      request: { t: 'TELL ME IF IT\u2019S ADDED', b: 'TELL ME', box: consentText('request', f.name || 'it'), need: true },
+      person: { t: 'ASK A PERSON TO GET BACK TO ME', b: 'REQUEST A REPLY', box: consentText('person'), phone: true, need: false, either: true }
     }[f.type];
     var form = el('form', 'pb-form', null, { novalidate: 'novalidate' });
     form.appendChild(el('div', 'pb-form__t', cfg.t));
@@ -1084,7 +1210,7 @@
     }
     var b1 = box(cfg.box, id + 'c'); form.appendChild(b1.lab);
     if (cfg.phone && f.type === 'join') {
-      var b2 = box(CONSENT.sms, id + 's'); smsWrap = b2.lab; smsBox = b2.cb; smsWrap.hidden = true; form.appendChild(smsWrap);
+      var b2 = box(consentText('sms'), id + 's'); smsWrap = b2.lab; smsBox = b2.cb; smsWrap.hidden = true; form.appendChild(smsWrap);
       ph.addEventListener('input', function () { smsWrap.hidden = !ph.value.trim(); });
     }
     var err = el('div', 'pb-form__err', '', { role: 'alert' });
@@ -1104,11 +1230,12 @@
       var payload = {
         hook: 'BOT-' + f.type.toUpperCase(), at: now, page: W.location ? W.location.pathname : '',
         email: okEmail ? email : null, phone: okPhone ? phone : null,
-        tags: STATE.interests.slice().concat(I ? [I.tag] : []).filter(function (x, i, a) { return a.indexOf(x) === i; }),
+        /* store mode keeps the old tagging; guide/sell only tag the shelf the visitor asked for (audit B11) */
+        tags: (CFG.mode === 'store' ? STATE.interests.slice() : []).concat(I ? [I.tag] : []).filter(function (x, i, a) { return a.indexOf(x) === i; }),
         product: r ? r[0] : (f.name || null),
         consent: {
           email: { given: b1.cb.checked, text: cfg.box, at: now },
-          sms: smsBox ? { given: smsBox.checked && !!phone, text: CONSENT.sms, at: now } : null
+          sms: smsBox ? { given: smsBox.checked && !!phone, text: consentText('sms'), at: now } : null
         },
         preview: true
       };
@@ -1117,7 +1244,10 @@
       try { W.dispatchEvent(new CustomEvent('pep:capture', { detail: payload })); } catch (e2) {}
       form.classList.add('is-done');
       var done = el('div', 'pb-form__done', null, { role: 'status' });
-      if (f.type === 'join') {
+      if (f.type === 'letter') {
+        done.appendChild(el('div', 'pb-form__t', 'YOU\u2019RE ON GRACE\u2019S LIST.'));
+        done.appendChild(el('p', 'pb-p', 'The next letter comes to your inbox.'));
+      } else if (f.type === 'join') {
         STATE.joined = true; LS.set('joined', true); refreshCarts();
         if (CFG.offer) {
           done.appendChild(el('div', 'pb-form__t', 'WELCOME TO THE PEPTICITY TEAM.'));
@@ -1139,7 +1269,7 @@
       form.parentNode.insertBefore(done, form.nextSibling);
       form.remove();
       setTimeout(function () {
-        var next = f.type === 'join' ? (cartCount() ? ['cart', 'checkout'] : ['interest', 'find']) : salesChips();
+        var next = CFG.mode === 'guide' ? ['g:about', 'g:research', 'person'] : f.type === 'join' ? (cartCount() ? ['cart', 'checkout'] : ['interest', 'find']) : salesChips();
         botSays(R('next', ['Anything else I can help you with?'], { chips: next }));
       }, 700);
     });
@@ -1152,7 +1282,26 @@
   API.chip = function (id) { if (!UI.root) mount(); userSays(chipLabel(id), { intent: id }); };
   API.reset = function () { STATE.cart = {}; STATE.joined = false; STATE.interests = []; LS.set('cart', {}); LS.set('joined', false); LS.set('interests', []); try { W.sessionStorage.removeItem('pepbot:greeted'); } catch (e) {} if (UI.log) UI.log.innerHTML = ''; if (UI.root) updateCartUi(); };
   API.cart = function () { return cartLines().map(function (l) { return { slug: l.row[0], qty: l.qty, price: l.row[4] }; }); };
-  API.peek = function () { if (!UI.root) mount(); try { W.sessionStorage.removeItem('pepbot:greeted'); } catch (e) {} showPeek(); };
+  API.peek = function () { if (!UI.root) mount(); try { W.sessionStorage.removeItem('pepbot:' + greetKey()); } catch (e) {} showPeek(); };
+  /* MODE SWITCH: guide <-> sell (store = original). The log gets one quiet line so the visitor sees the change. */
+  API.setMode = function (m) {
+    if (!MODES[m] || m === CFG.mode) return CFG.mode;
+    var was = CFG.mode; CFG.mode = m;
+    if (!UI.root) return m;
+    UI.root.setAttribute('data-mode', m);
+    UI.input.setAttribute('placeholder', m === 'guide' ? 'Ask about PEPTICITY or peptide research' : 'Ask about a product, price or shipping');
+    UI.fine.textContent = m === 'guide' ? 'Automated \u00b7 Not a person \u00b7 Not medical advice' : 'Automated \u00b7 Not medical advice \u00b7 Prices in CAD';
+    UI.hint.textContent = 'HOW CAN I HELP?';
+    if (m === 'guide') { hidePeek(); UI.log.querySelectorAll('.pb-cards,.pb-list,.pb-cart,.pb-railhint,.pb-card__qb').forEach(function (n) { n.remove(); }); }
+    updateCartUi();
+    if (UI.log.childNodes.length) {
+      if (m === 'sell') botSays(R('mode', ['#YOU\u2019RE IN THE PEPTICITY COLLECTION.', 'I can find products, prices and shelves for you now. How can I help?'], { chips: ['interest', 'find', CFG.offer ? 'offer' : 'join', 'person'] }));
+      else if (m === 'guide' && was !== 'guide') botSays(R('mode', ['Back on the PEPTICITY story. Here I\u2019ll stick to PEPTICITY and research.'], { chips: GUIDE_CHIPS.slice(0, 4) }));
+    }
+    return m;
+  };
+  API.greet = function () { if (!UI.root) mount(); if (CFG.mode !== 'guide') showPeek(); };
+  API.mode = function () { return CFG.mode; };
 
   if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', mount); else mount();
   return API;
