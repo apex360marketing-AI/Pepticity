@@ -28,7 +28,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       p.on('requestfailed', r => R.errs.push(where + ' RF ' + r.url().slice(0, 120)));
     };
     const scrollTo = (p, y) => p.evaluate(y => { const s = document.querySelector('.fx-scroller'); if (s) s.scrollTop = y * (s.scrollHeight - s.clientHeight); return !!s; }, y);
-    const shot = (p, n) => p.screenshot({ path: SHOTS + m.code + '-' + n + '.png' });
+    const shot = (p, n) => p.screenshot({ path: SHOTS + m.code + '-' + n + '.jpg', quality: 88 });
     try {
       /* ---------- 1. standalone desktop ---------- */
       {
@@ -153,7 +153,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const s1 = await fr.evaluate(() => ({ playing: FX.playing, acc: FX.acc.slug }));
         ok('iframe-play-and-acc', s1.playing && s1.acc === 'violet');
         if (m.interact === 'scroll') { const tp = await fr.evaluate(() => document.querySelector('.fx-scroller').scrollTop); ok('iframe-tile-tours-itself', tp > 0, 'scrollTop=' + tp); }
-        await p.screenshot({ path: SHOTS + m.code + '-iframe.png', clip: { x: 0, y: 0, width: 920, height: 600 } });
+        await p.screenshot({ path: SHOTS + m.code + '-iframe.jpg', quality: 88, clip: { x: 0, y: 0, width: 920, height: 600 } });
         await ctx.close();
       }
       /* ---------- 4. reduced motion ---------- */
