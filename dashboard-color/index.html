@@ -1,6 +1,9 @@
+<html lang="en">
 <title>GRACE'S DASHBOARD · PEPTICITY</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <script>/* ACCENT (30 Oct) · YOUR COLOUR is chosen before first paint: a ?acc=<slug> link, else the saved choice, else chartreuse */
 (function(){var L=['chartreuse','blue','cyan','red','violet','orchid','copper','salmon'],a=null;
 try{var q=(new URLSearchParams(location.search).get('acc')||'').toLowerCase();if(L.indexOf(q)>-1){a=q;try{localStorage.setItem('pep-acc',a)}catch(e){}}}catch(e){}
@@ -9,7 +12,7 @@ document.documentElement.setAttribute('data-acc',a||'chartreuse');})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"},"integrity":{"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js":"sha384-8/hf5tabFfIo0BPku31TKUvGIKpWGYaMwNtlSNqNyZzXgZCMd4lnOGWbJElML9dv","https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js":"sha384-ZGqh+dJjt6z9NHsWYYt+TPDFj8y+2If7naI6a6AkkyNZyH51CVS3HTWFh0njp4k6","https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js":"sha384-jHGXS4+FuVOBnZkNme2ury3Ccg5DWDLYK22xX/WGdZCZsjRM4J+3n6Qc4CXx1Hjf"}}</script>
 <style>
 /* the owner's font (brand/font/PepticityBlack.woff2, rebuilt 29 Oct), inlined */
 @font-face{font-family:"PEPTICITY BLACK";src:url(data:font/woff2;base64,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) format("woff2");font-display:block}
@@ -419,7 +422,7 @@ html.cc #cur{display:block}
 #cur.press .lens{width:16px;height:16px;margin:-8px 0 0 -8px}
 
 
-/* ---------- ARCHIVE CHAMFER: chipped-off top-right corner on every card ---------- */
+/* ---------- APEX ARCHIVE CHAMFER: chipped-off top-right corner on every card ---------- */
 .card,.order,.prod,.inbox,.plat,.sheet{--c:22px;border-radius:3px!important;clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
 .prod,.plat{--c:16px}
 .card.glass::after,.order.glass::after,.prod.glass::after,.inbox.glass::after,.plat.glass::after,.sheet.glass::after{left:auto;top:0;right:calc(var(--c) * -0.4142);width:calc(var(--c) * 1.4142);height:1px;transform-origin:0 0;transform:rotate(45deg);
@@ -555,7 +558,7 @@ html.cc #cur{display:block}
 }
 
 /* =====================================================================
-   V3 · STANDARD LAYER
+   V3 · APEX STANDARD LAYER
    motion tokens · see-through glass · chamfered silhouettes · no pills
    ===================================================================== */
 :root{
@@ -1059,7 +1062,7 @@ html[data-motion="off"]{--pc-motion:0}
 /* =====================================================================
    V4 · PEPTICITY BRAND LAYER (R127–R135)
    · the owner's PEPTICITY BLACK font for every display word (CSS extrusion here, real three.js extrusion on the hero words)
-   · Arsenal silver smoke ground (BG-P01) under the 30° lattice
+   · APEX Arsenal silver smoke ground (BG-P01) under the 30° lattice
    · spinning 3D emblem watermark (OBJ-08) + P mark in the top bar
    · BTN-P01: the ONE button and the ONE toggle, everywhere (no pills, one slow left-to-right sweep)
    · glass fully see-through, chamfered corners
@@ -2254,7 +2257,7 @@ html.cm-bot[data-cm-view="owner"] .pb-root{display:none!important}
 /* ---- segmented toggle: same glass, same hairline, a glass thumb slides between options ---- */
 .pc-seg{
   --c:11px; --h:50px; --n:2; --i:0; --fs:11px; --ls:.26em;
-  display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:auto; height:var(--h); padding:5px; gap:0;
+  display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:auto; height:var(--h); padding:5px; gap:0; align-items:stretch;
   color:var(--pc-ink); font:700 var(--fs)/1 var(--pc-font); letter-spacing:var(--ls); text-transform:uppercase; isolation:isolate;
 }
 .pc-seg--sm{--c:8px; --h:38px; --fs:9.5px; --ls:.22em}
@@ -2683,7 +2686,7 @@ html[data-motion="off"]{--pc-motion:0}
         <button class="accsw-more" type="button" id="accMore" aria-haspopup="listbox" aria-expanded="false" aria-controls="accPop" aria-label="Show all colours"></button>
       </div>
     </div>
-    <button type="button" class="sndbtn" id="sndBtn" aria-pressed="false" aria-label="Interface sound, currently off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 9.5l5 5m0-5l-5 5"/></svg><span class="snd-t">SOUND OFF</span></button>
+    <button type="button" class="sndbtn" id="sndBtn" aria-pressed="false" aria-label="Sound off · interface sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 9.5l5 5m0-5l-5 5"/></svg><span class="snd-t">SOUND OFF</span></button>
   </header>
   <canvas id="gl3d" aria-hidden="true"></canvas>
   <canvas id="type3d" aria-hidden="true"></canvas>
@@ -3289,7 +3292,7 @@ html[data-motion="off"]{--pc-motion:0}
 /* PEPTICITY · BG-P01 · SILVER SMOKE
    Moving black-and-silver smoke ground in two modes: 'black' (matte + UV black, silver smoke)
    and 'white' (crisp cool white, soft platinum smoke). Adapted from the liquid-chrome ground in
-   the Arsenal artifact (raw WebGL at low resolution, pointer ripples it).
+   the APEX Arsenal artifact (raw WebGL at low resolution, pointer ripples it).
    Usage: const bg = PCSmoke(canvasEl, {mode:'black'}); bg.setMode('white');
    No chartreuse spark, no warm tones: every output colour is neutral or slightly cool. */
 (function () {
@@ -3530,7 +3533,7 @@ var KEY='pepticity-studio-demo-v1';
 var S = {eta:{'Retatrutide':'2026-11-06','TB-500':'2026-11-04','PT-141':'2026-11-12'},mail:{'Retatrutide':true},msgs:JSON.parse(JSON.stringify(SEED_MSGS)), exp:SEED_EXP.slice(), alerts:{}, letter:true, unread:{owner:{jordan:1,elena:1},client:0}, view:'owner', tab:{owner:'sales',client:'orders'},
   auto:{every:6,next:'2026-11-12',on:true,basket:['BPC-157','GHK-Cu','NAD+'],skips:[]}, remind:null, perks:null, drops:[], labs:{}, sent:{}, reserved:{}, snd:false};
 var SKEYS=['msgs','exp','alerts','letter','unread','tab','eta','mail','auto','remind','perks','drops','labs','sent','reserved','snd'];
-try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); SKEYS.forEach(function(k){if(L[k]!==undefined&&L[k]!==null)S[k]=L[k]});}}catch(e){}
+try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); SKEYS.forEach(function(k){var v=L[k],d=S[k];if(v!==undefined&&v!==null&&typeof v===(d===null?'object':typeof d)&&Array.isArray(v)===Array.isArray(d)&&(k!=='auto'||Array.isArray(v.basket)&&Array.isArray(v.skips)))S[k]=v});}}catch(e){}
 function save(){try{var o={};SKEYS.forEach(function(k){o[k]=S[k]});
   o.exp=S.exp.map(function(x){var y=Object.assign({},x);if(y.file)y.file={name:y.file.name,type:y.file.type};return y});
   o.labs={};Object.keys(S.labs).forEach(function(k){var f=S.labs[k];o.labs[k]={name:f.name,type:f.type,size:f.size,at:f.at}});
@@ -3624,7 +3627,7 @@ function drawRev(){
   for(var i=0;i<pts.length-1;i++){var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;var t=.18;
     d+=' C'+(p1[0]+(p2[0]-p0[0])*t)+','+(p1[1]+(p2[1]-p0[1])*t)+' '+(p2[0]-(p3[0]-p1[0])*t)+','+(p2[1]-(p3[1]-p1[1])*t)+' '+p2[0]+','+p2[1]}
   var area=d+' L'+pts[n-1][0]+','+y(0)+' L'+pts[0][0]+','+y(0)+' Z';
-  var dots=pts.map(function(p,i){return '<circle class="pt" tabindex="0" r="'+(i===n-1?5:3.6)+'" cx="'+p[0]+'" cy="'+p[1]+'" data-i="'+i+'" aria-label="'+MONTHS[i]+' '+cad.format(MREV[i])+'"/>'}).join('');
+  var dots=pts.map(function(p,i){return '<circle class="pt" tabindex="0" r="'+(i===n-1?5:3.6)+'" cx="'+p[0]+'" cy="'+p[1]+'" data-i="'+i+'" role="img" aria-label="'+MONTHS[i]+' '+cad.format(MREV[i])+'"/>'}).join('');
   $('#revChart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Revenue by month, January to October 2026">'+g+'<path d="'+area+'" fill="url(#gArea)"/><path class="ln" d="'+d+'" style="--len:2000"/>'+dots+'</svg>';
   var tip=$('#tip'),box=$('#revChart').parentNode;
   $$('#revChart .pt').forEach(function(c){
@@ -3797,7 +3800,7 @@ RENDER.orders=function(){
   $('#orderList').innerHTML=ORDERS_C.map(function(o,oi){var dates=oi===0?['Oct 25','Oct 27','Today','Expected today']:['','','',''];
     return '<article class="glass order '+(oi%2?'r-b':'r-a')+' tilt"><div class="order-top"><div><div class="id">ORDER '+o.id+'</div><div class="d">'+o.date+' · '+o.items.length+' items</div></div><div><div class="tot">'+cad2.format(o.total)+'</div><div class="d" style="text-align:right">'+(o.step===3?'Delivered':STEPS[o.step].charAt(0)+STEPS[o.step].slice(1).toLowerCase())+'</div></div></div>'+
     '<div class="steps s4"><span class="prog" data-w="'+(o.step/3*75)+'"></span>'+STEPS.map(function(s,i){return '<div class="st '+(i<o.step||o.step===3?'done':i===o.step?'cur':'')+'"><span class="bd">'+tk+'</span><span class="sl">'+s+'</span><span class="sd">'+dates[i]+'</span></div>'}).join('')+'</div>'+
-    '<div class="shelf" role="list" aria-label="Bottles in order '+o.id+'">'+o.items.map(function(it,i){var p=findP(it);return p?bottle(p,{sm:1,owned:1,i:i}):'<span class="it">'+esc(it)+'</span>'}).join('')+'</div></article>'}).join('');
+    '<div class="shelf" role="group" aria-label="Bottles in order '+o.id+'">'+o.items.map(function(it,i){var p=findP(it);return p?bottle(p,{sm:1,owned:1,i:i}):'<span class="it">'+esc(it)+'</span>'}).join('')+'</div></article>'}).join('');
   $('#trkShelf').innerHTML=ORDERS_C[0].items.map(function(it,i){var p=findP(it);return p?bottle(p,{sm:1,owned:1,i:i}):''}).join('');
   requestAnimationFrame(function(){requestAnimationFrame(function(){$$('#orderList .prog').forEach(function(p){p.style.width=p.dataset.w+'%'})})});
   $('#trkId').textContent='#PT-1088 · Canada Post (sample)';
@@ -3826,7 +3829,7 @@ var VIALS=window.PEP_VIALS||{};
 function slug(n){return String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
 function shortName(n){return String(n).replace(/\s*\(.*?\)/,'').replace(/^Bacteriostatic water/,'Bac water')}
 function findP(item){var n=item.split(' · ')[0];return P.find(function(p){return p.name===n})||P.find(function(p){return p.name.indexOf(n)===0})}
-function fmtDay(iso){if(!iso)return '';var d=new Date(iso+'T12:00:00');return isNaN(d)?iso:d.toLocaleDateString('en-CA',{month:'short',day:'numeric'})}
+function fmtDay(iso){if(!iso)return '';var d=new Date(iso+'T12:00:00');return isNaN(d)?esc(iso):d.toLocaleDateString('en-CA',{month:'short',day:'numeric'})}
 function bottle(p,o){o=o||{};
   var cls='btl'+(o.sm?' sm':'')+(o.coming?' wide':'')+(p.status==='out'&&!o.owned&&!o.coming?' out':'');
   var chipH=o.owned?'':(p.status==='out'?(o.coming?'':'<span class="chip out">SOLD OUT</span>'):p.status==='low'?'<span class="chip low">LOW</span>':'');
@@ -3853,7 +3856,7 @@ function renderShelves(q){
    .sort(function(a,b){return b.list.length-a.list.length});
   $('#shelves').innerHTML=rows.map(function(r,ri){
     return '<div class="glass card shelf-card" data-row="'+r.k+'"><div class="card-h"><h2 class="h3d h2" data-t="'+r.t+'">'+r.t+'</h2><span style="display:flex;gap:10px;align-items:center"><span class="sub">'+r.s+'</span><span class="count">'+r.list.length+'</span></span></div>'+
-     (r.list.length?'<div class="shelf" role="list" aria-label="'+r.t+'">'+r.list.map(function(p,i){return bottle(p,{units:r.k==='in',i:i,coming:r.k==='back'})}).join('')+'</div>':'<p class="muted" style="padding:6px 0 16px">Nothing here'+(q?' for that search':'')+'.</p>')+'</div>'}).join('');
+     (r.list.length?'<div class="shelf" role="group" aria-label="'+r.t+'">'+r.list.map(function(p,i){return bottle(p,{units:r.k==='in',i:i,coming:r.k==='back'})}).join('')+'</div>':'<p class="muted" style="padding:6px 0 16px">Nothing here'+(q?' for that search':'')+'.</p>')+'</div>'}).join('');
 }
 $('#shelves').addEventListener('change',function(e){
   var t=e.target,n;
@@ -4055,7 +4058,7 @@ function pad2(n){return (n<10?'0':'')+n}
 var actx=null;
 function sfx(f){if(!S.snd)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();var o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=f||1800;
   g.gain.setValueAtTime(.03,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.06);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.07)}catch(e){}}
-function sndUI(){var b=$('#sndBtn');b.setAttribute('aria-pressed',String(!!S.snd));$('.snd-t',b).textContent=S.snd?'SOUND ON':'SOUND OFF';b.setAttribute('aria-label','Interface sound, currently '+(S.snd?'on':'off'));$('.w',b).style.display=S.snd?'none':''}
+function sndUI(){var b=$('#sndBtn');b.setAttribute('aria-pressed',String(!!S.snd));$('.snd-t',b).textContent=S.snd?'SOUND ON':'SOUND OFF';b.setAttribute('aria-label','Sound '+(S.snd?'on':'off')+' · interface sound');$('.w',b).style.display=S.snd?'none':''}
 $('#sndBtn').addEventListener('click',function(){S.snd=!S.snd;save();sndUI();sfx(1400);toast(S.snd?'Sound on · quiet ticks on taps':'Sound off')});
 document.addEventListener('click',function(e){if(e.target.closest('.btn,.tab,.qa,.pick button,.seg button,.vswitch button,.tierb'))sfx()});
 
@@ -4127,13 +4130,13 @@ $('#remindForm').addEventListener('submit',function(e){e.preventDefault();var d=
 /* ---------- PRIVATE DROPS (client sees, Grace publishes) ---------- */
 var T0=Date.now();
 var SEED_DROPS=[{id:'d1',p:'TB-500',q:12,h:48,open:T0-10*3600e3,tiers:['RESERVE','PRIVATE']},{id:'d2',p:'PT-141',q:8,h:48,open:T0+20*3600e3,tiers:['PRIVATE']},{id:'d3',p:'Glutathione',q:15,h:48,open:T0-40*3600e3,tiers:['RESERVE','PRIVATE']}];
-function allDrops(){return S.drops.concat(SEED_DROPS)}
+function allDrops(){return (Array.isArray(S.drops)?S.drops:[]).filter(function(d){return d&&typeof d.id==='string'&&/^[\w-]{1,40}$/.test(d.id)&&typeof d.p==='string'&&isFinite(d.q)&&isFinite(d.open)&&isFinite(d.h)&&Array.isArray(d.tiers)}).concat(SEED_DROPS)}
 function dropState(d,now){var close=d.open+d.h*3600e3;return now<d.open?{k:'soon',ms:d.open-now}:now<close?{k:'live',ms:close-now}:{k:'public',ms:0}}
 function cdHtml(ms){var s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return '<span><b>'+pad2(h)+'</b><i>HRS</i></span><span><b>'+pad2(m)+'</b><i>MIN</i></span><span><b>'+pad2(x)+'</b><i>SEC</i></span>'}
 RENDER.drops=function(){
   var now=Date.now();
   $('#dropGrid').innerHTML=allDrops().map(function(d,i){var p=findP(d.p);if(!p)return '';var st=dropState(d,now),res=S.reserved[d.id];
-    return '<div class="glass drop-card tilt" data-drop="'+d.id+'">'+bottle(p,{sm:1,owned:1,nocap:1,i:i})+'<div><span class="tag-s">'+(st.k==='live'?'MEMBERS-ONLY · LIVE':st.k==='soon'?'OPENS SOON':'NOW PUBLIC')+'</span><div class="pn2" style="margin-top:8px">'+esc(p.name)+'<small>'+esc(p.size)+' · '+d.q+' units held for '+d.tiers.join(' + ')+'</small></div>'+
+    return '<div class="glass drop-card tilt" data-drop="'+d.id+'">'+bottle(p,{sm:1,owned:1,nocap:1,i:i})+'<div><span class="tag-s">'+(st.k==='live'?'MEMBERS-ONLY · LIVE':st.k==='soon'?'OPENS SOON':'NOW PUBLIC')+'</span><div class="pn2" style="margin-top:8px">'+esc(p.name)+'<small>'+esc(p.size)+' · '+d.q+' units held for '+esc(d.tiers.join(' + '))+'</small></div>'+
      '<div class="when" style="margin-top:10px">'+(st.k==='live'?'MEMBERS-ONLY WINDOW CLOSES IN':st.k==='soon'?'MEMBERS-ONLY WINDOW OPENS IN':'MEMBERS-ONLY WINDOW HAS CLOSED')+'</div>'+(st.k!=='public'?'<div class="cd" data-cd="'+d.id+'">'+cdHtml(st.ms)+'</div>':'')+'</div>'+
      '<div class="act"><span class="pr" style="font:700 18px var(--fh);color:var(--chrome)">'+cad.format(p.price)+'</span>'+
      (res?'<span class="statepill"><i></i><span>RESERVED FOR YOU</span></span>':st.k==='live'?morphBtn('RESERVE MINE','','sm').replace('type="button"','type="button" data-res="'+d.id+'"'):st.k==='soon'?'<button class="btn sm" type="button" data-remind="'+d.id+'">REMIND ME</button>':'<span class="muted">In the shop</span>')+'</div></div>'}).join('');
@@ -4246,7 +4249,7 @@ RENDER.odrops=function(){
     var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset()+60);$('#dpOpen').value=d.toISOString().slice(0,16)}
   dpPreview();
   var now=Date.now(),all=allDrops();$('#dpCount').textContent=all.length+' drops';
-  $('#dpList').innerHTML=all.map(function(d){var st=dropState(d,now);return '<div class="iss"><b>'+esc(d.p)+' · '+d.q+' units</b><span>'+(st.k==='live'?'live · members-only':st.k==='soon'?'opens '+new Date(d.open).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'now public')+' · '+d.tiers.join(' + ')+'</span></div>'}).join('');
+  $('#dpList').innerHTML=all.map(function(d){var st=dropState(d,now);return '<div class="iss"><b>'+esc(d.p)+' · '+d.q+' units</b><span>'+(st.k==='live'?'live · members-only':st.k==='soon'?'opens '+new Date(d.open).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'now public')+' · '+esc(d.tiers.join(' + '))+'</span></div>'}).join('');
   var pk=perks();
   $('#perkCols').innerHTML=TIERS.map(function(t){return '<div class="perkcol"><h3 class="h3">'+t.k+'</h3><div class="cnt">'+(t.min?'from '+cad.format(t.min):'on joining')+'</div>'+PERK_CAT.map(function(n,i){return '<label class="sq"><input type="checkbox" data-pk="'+t.k+'" value="'+i+'"'+(pk[t.k].indexOf(i)>-1?' checked':'')+'><span class="bx"></span>'+esc(n)+'</label>'}).join('')+'</div>'}).join('');
   $('#thrTxt').textContent='MEMBER on joining · RESERVE '+cad.format(TIERS[1].min)+' · PRIVATE '+cad.format(TIERS[2].min);
@@ -7366,8 +7369,11 @@ try { startType(); } catch (e) { console.warn(e); HTML.classList.remove('t3d'); 
     configure(pre); configure(map);
   })();
   STATE.cart = LS.get('cart', {}) || {};
+  if (typeof STATE.cart !== 'object' || Array.isArray(STATE.cart)) STATE.cart = {};   /* stored data is untrusted: whole-number quantities only */
+  Object.keys(STATE.cart).forEach(function (s) { var n = parseInt(STATE.cart[s], 10); if (n > 0 && n < 1000) STATE.cart[s] = n; else delete STATE.cart[s]; });
   STATE.joined = !!LS.get('joined', false);
   STATE.interests = LS.get('interests', []) || [];
+  if (!Array.isArray(STATE.interests)) STATE.interests = [];
 
   var EMBLEM = '<svg class="pb-em" viewBox="-1.04 -1.04 2.08 2.08" focusable="false"><defs><linearGradient id="__ID__g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".46" stop-color="#b9bec5"/><stop offset=".54" stop-color="#6b7077"/><stop offset="1" stop-color="#e6e9ed"/></linearGradient><linearGradient id="__ID__s" gradientUnits="userSpaceOnUse" x1="-1" y1="-1" x2="1" y2="1"><stop offset=".38" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><animateTransform attributeName="gradientTransform" type="translate" values="-2 -2;2 2;2 2" keyTimes="0;.42;1" dur="6s" repeatCount="indefinite"/></linearGradient></defs><g class="pb-em__ring"><path fill-rule="evenodd" fill="url(#__ID__g)" d="M1.0 0 A1.0 1.0 0 1 0 -1.0 0 A1.0 1.0 0 1 0 1.0 0ZM0.935 0 A0.935 0.935 0 1 1 -0.935 0 A0.935 0.935 0 1 1 0.935 0ZM0.655 0 A0.655 0.655 0 1 0 -0.655 0 A0.655 0.655 0 1 0 0.655 0ZM0.62 0 A0.62 0.62 0 1 1 -0.62 0 A0.62 0.62 0 1 1 0.62 0Z"/><path fill="url(#__ID__g)" d="M-0.6564 -0.4873 L-0.5827 -0.4212 L-0.5606 -0.4458 L-0.6098 -0.4898 L-0.5619 -0.5434 L-0.5580 -0.5493 L-0.5563 -0.5525 L-0.5537 -0.5590 L-0.5521 -0.5659 L-0.5515 -0.5729 L-0.5519 -0.5800 L-0.5525 -0.5835 L-0.5543 -0.5903 L-0.5571 -0.5968 L-0.5609 -0.6028 L-0.5654 -0.6082 L-0.5706 -0.6129 L-0.5735 -0.6150 L-0.5797 -0.6185 L-0.5862 -0.6210 L-0.5931 -0.6226 L-0.6001 -0.6233 L-0.6072 -0.6229 L-0.6141 -0.6215 L-0.6208 -0.6191 L-0.6270 -0.6159 L-0.6328 -0.6117 L-0.6378 -0.6068 L-0.7055 -0.5314 L-0.6605 -0.5321 L-0.6133 -0.5848 L-0.6106 -0.5872 L-0.6086 -0.5884 L-0.6054 -0.5897 L-0.6031 -0.5901 L-0.6007 -0.5903 L-0.5984 -0.5901 L-0.5950 -0.5891 L-0.5928 -0.5881 L-0.5900 -0.5861 L-0.5876 -0.5834 L-0.5864 -0.5814 L-0.5851 -0.5782 L-0.5846 -0.5759 L-0.5846 -0.5723 L-0.5849 -0.5700 L-0.5861 -0.5667 L-0.5873 -0.5646 L-0.5887 -0.5628 L-0.6326 -0.5138 L-0.6342 -0.5117 L-0.6343 -0.5119ZM-0.3952 -0.6360 L-0.4535 -0.5959 L-0.4600 -0.5514 L-0.3513 -0.6263ZM-0.4514 -0.7176 L-0.4449 -0.7621 L-0.5536 -0.6872 L-0.5096 -0.6775ZM-0.4319 -0.6909 L-0.4917 -0.6497 L-0.4959 -0.6268 L-0.4730 -0.6226 L-0.4132 -0.6638 L-0.4089 -0.6867ZM-0.3622 -0.7328 L-0.3268 -0.6404 L-0.2959 -0.6523 L-0.3196 -0.7139 L-0.2525 -0.7398 L-0.2464 -0.7432 L-0.2435 -0.7453 L-0.2382 -0.7499 L-0.2336 -0.7553 L-0.2299 -0.7613 L-0.2270 -0.7677 L-0.2259 -0.7711 L-0.2245 -0.7780 L-0.2240 -0.7851 L-0.2246 -0.7921 L-0.2262 -0.7990 L-0.2287 -0.8056 L-0.2303 -0.8087 L-0.2342 -0.8146 L-0.2389 -0.8199 L-0.2443 -0.8245 L-0.2502 -0.8283 L-0.2567 -0.8311 L-0.2635 -0.8331 L-0.2705 -0.8340 L-0.2775 -0.8339 L-0.2845 -0.8329 L-0.2913 -0.8308 L-0.3859 -0.7945 L-0.3455 -0.7746 L-0.2795 -0.8000 L-0.2760 -0.8009 L-0.2737 -0.8011 L-0.2702 -0.8007 L-0.2679 -0.8001 L-0.2658 -0.7991 L-0.2638 -0.7979 L-0.2612 -0.7955 L-0.2598 -0.7936 L-0.2581 -0.7905 L-0.2572 -0.7871 L-0.2570 -0.7847 L-0.2574 -0.7812 L-0.2580 -0.7790 L-0.2596 -0.7758 L-0.2610 -0.7739 L-0.2635 -0.7715 L-0.2655 -0.7702 L-0.2676 -0.7692 L-0.3290 -0.7456 L-0.3314 -0.7445 L-0.3314 -0.7447ZM-0.0250 -0.8830 L-0.1786 -0.8651 L-0.1443 -0.8359 L-0.0516 -0.8467ZM-0.1138 -0.8343 L-0.0991 -0.7083 L-0.0663 -0.7121 L-0.0810 -0.8381ZM0.0270 -0.7147 L0.0600 -0.7127 L0.0700 -0.8774 L0.0371 -0.8794ZM0.2786 -0.8381 L0.1892 -0.8596 L0.1851 -0.8604 L0.1809 -0.8610 L0.1767 -0.8612 L0.1725 -0.8611 L0.1683 -0.8608 L0.1641 -0.8601 L0.1600 -0.8592 L0.1560 -0.8579 L0.1521 -0.8564 L0.1483 -0.8546 L0.1446 -0.8525 L0.1411 -0.8502 L0.1378 -0.8476 L0.1347 -0.8448 L0.1317 -0.8418 L0.1290 -0.8386 L0.1265 -0.8352 L0.1243 -0.8316 L0.1223 -0.8279 L0.1206 -0.8240 L0.1192 -0.8201 L0.1181 -0.8160 L0.1063 -0.7661 L0.1057 -0.7619 L0.1055 -0.7577 L0.1056 -0.7535 L0.1059 -0.7493 L0.1066 -0.7451 L0.1076 -0.7410 L0.1088 -0.7370 L0.1103 -0.7331 L0.1121 -0.7293 L0.1142 -0.7256 L0.1165 -0.7221 L0.1191 -0.7188 L0.1219 -0.7157 L0.1249 -0.7127 L0.1281 -0.7100 L0.1315 -0.7076 L0.1351 -0.7053 L0.1388 -0.7034 L0.1427 -0.7017 L0.1466 -0.7003 L0.1507 -0.6991 L0.2401 -0.6777 L0.2180 -0.7169 L0.1502 -0.7332 L0.1465 -0.7348 L0.1443 -0.7363 L0.1423 -0.7382 L0.1398 -0.7413 L0.1381 -0.7450 L0.1374 -0.7476 L0.1370 -0.7516 L0.1373 -0.7543 L0.1519 -0.8152 L0.1532 -0.8190 L0.1545 -0.8213 L0.1562 -0.8234 L0.1592 -0.8261 L0.1615 -0.8276 L0.1653 -0.8290 L0.1679 -0.8295 L0.1706 -0.8297 L0.1746 -0.8291 L0.2411 -0.8132ZM0.2698 -0.6624 L0.3000 -0.6492 L0.3658 -0.8005 L0.3355 -0.8137ZM0.5475 -0.6933 L0.4182 -0.7781 L0.4257 -0.7337 L0.5037 -0.6825ZM0.4481 -0.7128 L0.3785 -0.6068 L0.4061 -0.5887 L0.4757 -0.6947ZM0.5753 -0.5457 L0.5178 -0.4933 L0.5400 -0.4689 L0.5976 -0.5213 L0.5995 -0.5191 L0.7055 -0.5322 L0.6794 -0.5609 L0.5734 -0.5479ZM0.6080 -0.5574 L0.6226 -0.6234 L0.5964 -0.6521 L0.5746 -0.5532ZM-0.6318 0.4653 L-0.7055 0.5314 L-0.6835 0.5559 L-0.6343 0.5119 L-0.5863 0.5653 L-0.5808 0.5698 L-0.5779 0.5718 L-0.5716 0.5751 L-0.5650 0.5774 L-0.5581 0.5788 L-0.5510 0.5792 L-0.5475 0.5790 L-0.5405 0.5779 L-0.5338 0.5758 L-0.5274 0.5727 L-0.5215 0.5688 L-0.5162 0.5641 L-0.5139 0.5615 L-0.5098 0.5558 L-0.5065 0.5495 L-0.5041 0.5429 L-0.5027 0.5359 L-0.5024 0.5289 L-0.5030 0.5218 L-0.5046 0.5150 L-0.5072 0.5084 L-0.5107 0.5022 L-0.5150 0.4967 L-0.5827 0.4212 L-0.5868 0.4660 L-0.5396 0.5187 L-0.5375 0.5216 L-0.5365 0.5237 L-0.5356 0.5271 L-0.5354 0.5294 L-0.5355 0.5318 L-0.5359 0.5341 L-0.5372 0.5374 L-0.5385 0.5394 L-0.5408 0.5420 L-0.5437 0.5441 L-0.5458 0.5451 L-0.5492 0.5460 L-0.5516 0.5462 L-0.5551 0.5459 L-0.5574 0.5453 L-0.5605 0.5437 L-0.5624 0.5424 L-0.5641 0.5407 L-0.6080 0.4918 L-0.6099 0.4900 L-0.6098 0.4898ZM-0.4514 0.7176 L-0.5096 0.6775 L-0.5536 0.6872 L-0.4449 0.7621ZM-0.3952 0.6360 L-0.3513 0.6263 L-0.4600 0.5514 L-0.4535 0.5959ZM-0.4132 0.6638 L-0.4730 0.6226 L-0.4959 0.6268 L-0.4917 0.6497 L-0.4319 0.6909 L-0.4089 0.6867ZM-0.3504 0.7020 L-0.3859 0.7945 L-0.3551 0.8063 L-0.3314 0.7447 L-0.2643 0.7703 L-0.2574 0.7719 L-0.2539 0.7723 L-0.2468 0.7724 L-0.2398 0.7714 L-0.2330 0.7695 L-0.2266 0.7666 L-0.2235 0.7649 L-0.2178 0.7607 L-0.2128 0.7558 L-0.2085 0.7501 L-0.2051 0.7440 L-0.2025 0.7374 L-0.2016 0.7340 L-0.2005 0.7270 L-0.2005 0.7199 L-0.2014 0.7129 L-0.2033 0.7061 L-0.2062 0.6997 L-0.2100 0.6937 L-0.2146 0.6883 L-0.2198 0.6836 L-0.2257 0.6798 L-0.2321 0.6768 L-0.3268 0.6404 L-0.3100 0.6822 L-0.2440 0.7076 L-0.2408 0.7092 L-0.2389 0.7106 L-0.2366 0.7132 L-0.2353 0.7152 L-0.2344 0.7174 L-0.2337 0.7196 L-0.2334 0.7231 L-0.2336 0.7255 L-0.2345 0.7289 L-0.2361 0.7320 L-0.2375 0.7339 L-0.2401 0.7363 L-0.2421 0.7375 L-0.2454 0.7388 L-0.2477 0.7393 L-0.2512 0.7394 L-0.2535 0.7391 L-0.2558 0.7384 L-0.3172 0.7148 L-0.3197 0.7141 L-0.3196 0.7139ZM-0.0059 0.7191 L-0.1595 0.7013 L-0.1329 0.7376 L-0.0402 0.7484ZM-0.1035 0.7462 L-0.1182 0.8722 L-0.0854 0.8760 L-0.0707 0.7500ZM0.0371 0.8794 L0.0700 0.8774 L0.0600 0.7127 L0.0270 0.7147ZM0.2401 0.6777 L0.1507 0.6991 L0.1466 0.7003 L0.1427 0.7017 L0.1388 0.7034 L0.1351 0.7053 L0.1315 0.7076 L0.1281 0.7100 L0.1249 0.7127 L0.1219 0.7157 L0.1191 0.7188 L0.1165 0.7221 L0.1142 0.7256 L0.1121 0.7293 L0.1103 0.7331 L0.1088 0.7370 L0.1076 0.7410 L0.1066 0.7451 L0.1059 0.7493 L0.1056 0.7535 L0.1055 0.7577 L0.1057 0.7619 L0.1063 0.7661 L0.1071 0.7702 L0.1192 0.8201 L0.1206 0.8240 L0.1223 0.8279 L0.1243 0.8316 L0.1265 0.8352 L0.1290 0.8386 L0.1317 0.8418 L0.1347 0.8448 L0.1378 0.8476 L0.1411 0.8502 L0.1446 0.8525 L0.1483 0.8546 L0.1521 0.8564 L0.1560 0.8579 L0.1600 0.8592 L0.1641 0.8601 L0.1683 0.8608 L0.1725 0.8611 L0.1767 0.8612 L0.1809 0.8610 L0.1851 0.8604 L0.1892 0.8596 L0.2786 0.8381 L0.2411 0.8132 L0.1733 0.8294 L0.1693 0.8296 L0.1666 0.8293 L0.1640 0.8286 L0.1603 0.8269 L0.1571 0.8244 L0.1553 0.8224 L0.1532 0.8190 L0.1522 0.8165 L0.1376 0.7556 L0.1370 0.7516 L0.1372 0.7489 L0.1377 0.7463 L0.1392 0.7425 L0.1406 0.7402 L0.1433 0.7372 L0.1454 0.7356 L0.1477 0.7342 L0.1515 0.7329 L0.2180 0.7169ZM0.3355 0.8137 L0.3658 0.8005 L0.3000 0.6492 L0.2698 0.6624ZM0.4569 0.5554 L0.3277 0.6402 L0.3714 0.6510 L0.4494 0.5998ZM0.3994 0.6388 L0.4690 0.7448 L0.4966 0.7267 L0.4270 0.6206ZM0.5823 0.5520 L0.6399 0.6044 L0.6621 0.5799 L0.6045 0.5276 L0.6065 0.5254 L0.5835 0.4211 L0.5573 0.4499 L0.5803 0.5542ZM0.5676 0.5206 L0.5005 0.5123 L0.4743 0.5411 L0.5749 0.5535ZM0.8255 -0.0000 L0.7975 0.0280 L0.7695 0.0000 L0.7975 -0.0280ZM-0.8255 -0.0000 L-0.7975 -0.0280 L-0.7695 -0.0000 L-0.7975 0.0280Z"/></g><path class="pb-em__p" fill="url(#__ID__g)" d="M-0.3380 -0.0740 L-0.3380 0.3700 L-0.1900 0.3700 L-0.1900 0.0740 L0.1324 0.0735 L0.1637 0.0689 L0.1791 0.0650 L0.2087 0.0539 L0.2365 0.0388 L0.2619 0.0198 L0.2843 -0.0026 L0.2943 -0.0150 L0.3114 -0.0417 L0.3246 -0.0704 L0.3335 -0.1009 L0.3380 -0.1321 L0.3380 -0.1639 L0.3363 -0.1796 L0.3296 -0.2106 L0.3185 -0.2402 L0.3033 -0.2680 L0.2843 -0.2934 L0.2619 -0.3158 L0.2365 -0.3348 L0.2087 -0.3499 L0.1791 -0.3610 L0.1482 -0.3678 L0.1166 -0.3700 L-0.3380 -0.3700 L-0.2006 -0.2220 L0.1166 -0.2220 L0.1323 -0.2203 L0.1424 -0.2173 L0.1565 -0.2103 L0.1650 -0.2039 L0.1725 -0.1964 L0.1788 -0.1880 L0.1859 -0.1739 L0.1889 -0.1638 L0.1905 -0.1480 L0.1889 -0.1322 L0.1859 -0.1221 L0.1788 -0.1080 L0.1725 -0.0996 L0.1608 -0.0888 L0.1520 -0.0831 L0.1374 -0.0770 L0.1271 -0.0747 L0.1166 -0.0740 L-0.1784 -0.0740 L-0.1900 -0.0729 L-0.1900 -0.0740Z"/><path class="pb-em__sheen" fill="url(#__ID__s)" d="M-0.3380 -0.0740 L-0.3380 0.3700 L-0.1900 0.3700 L-0.1900 0.0740 L0.1324 0.0735 L0.1637 0.0689 L0.1791 0.0650 L0.2087 0.0539 L0.2365 0.0388 L0.2619 0.0198 L0.2843 -0.0026 L0.2943 -0.0150 L0.3114 -0.0417 L0.3246 -0.0704 L0.3335 -0.1009 L0.3380 -0.1321 L0.3380 -0.1639 L0.3363 -0.1796 L0.3296 -0.2106 L0.3185 -0.2402 L0.3033 -0.2680 L0.2843 -0.2934 L0.2619 -0.3158 L0.2365 -0.3348 L0.2087 -0.3499 L0.1791 -0.3610 L0.1482 -0.3678 L0.1166 -0.3700 L-0.3380 -0.3700 L-0.2006 -0.2220 L0.1166 -0.2220 L0.1323 -0.2203 L0.1424 -0.2173 L0.1565 -0.2103 L0.1650 -0.2039 L0.1725 -0.1964 L0.1788 -0.1880 L0.1859 -0.1739 L0.1889 -0.1638 L0.1905 -0.1480 L0.1889 -0.1322 L0.1859 -0.1221 L0.1788 -0.1080 L0.1725 -0.0996 L0.1608 -0.0888 L0.1520 -0.0831 L0.1374 -0.0770 L0.1271 -0.0747 L0.1166 -0.0740 L-0.1784 -0.0740 L-0.1900 -0.0729 L-0.1900 -0.0740Z"/></svg>';
 
@@ -7460,12 +7466,12 @@ try { startType(); } catch (e) { console.warn(e); HTML.classList.remove('t3d'); 
     peek.appendChild(peekIn); edge(peek, 12);
 
     /* -- the slim docked bar -- */
-    var bar = el('div', 'pb-bar', null, { role: 'button', tabindex: '0', 'aria-label': 'Open the PEPTICITY concierge', 'aria-expanded': 'false' });
+    var bar = el('div', 'pb-bar', null, { role: 'button', tabindex: '0', 'aria-labelledby': 'pbBarT pbBarH', 'aria-expanded': 'false' });   /* the name is the words on the bar (WCAG 2.5.3) */
     var barIn = el('div', 'pb-bar__in');
     barIn.appendChild(emblem(34));
     var bt = el('div', 'pb-bar__text');
-    bt.appendChild(el('div', 'pb-bar__title', 'PEPTICITY CONCIERGE'));
-    UI.hint = el('div', 'pb-bar__hint', 'HOW CAN I HELP?');
+    bt.appendChild(el('div', 'pb-bar__title', 'PEPTICITY CONCIERGE', { id: 'pbBarT' })); bt.appendChild(D.createTextNode(' '));   /* a word gap for text readers; the column layout ignores it */
+    UI.hint = el('div', 'pb-bar__hint', 'HOW CAN I HELP?', { id: 'pbBarH' });
     bt.appendChild(UI.hint); barIn.appendChild(bt);
     UI.barCart = el('span', 'pb-bar__cart', '', { 'aria-live': 'polite' });
     barIn.appendChild(UI.barCart);
@@ -7859,7 +7865,7 @@ try { startType(); } catch (e) { console.warn(e); HTML.classList.remove('t3d'); 
         },
         preview: true
       };
-      var q = LS.get('captures', []) || []; q.push(payload); LS.set('captures', q.slice(-50));
+      var q = LS.get('captures', []); if (!Array.isArray(q)) q = []; q.push(payload); LS.set('captures', q.slice(-50));
       LS.set('interests', STATE.interests);
       try { W.dispatchEvent(new CustomEvent('pep:capture', { detail: payload })); } catch (e2) {}
       form.classList.add('is-done');
