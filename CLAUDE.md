@@ -16,6 +16,11 @@ These are final. Do not change any of them unless the owner asks in so many word
 - The owner's BLACK image is the source of truth for colour. Wall #323232; metal runs #080807 to #8E8D85.
 - Bottle = brand/vial-sample (see-through, PEPTICITY vertical and off-centre, small peptide swirl with dots beside it). Make the rest of the bottles from it only after the owner says so.
 
+## Dashboards (owner, 30 Oct)
+- The dashboard look is FINAL and loved. Never change layout, spacing, fonts, cards, background, 3D type or copy. Only add colour accents or new cards that look native when asked.
+- The watermark coin that floats down and lands as the footer stays exactly as it is.
+- Prove every dashboard change with BEFORE/AFTER screenshots at the same scroll positions.
+
 ## How to work
 - Small, exact edits only. Change ONLY what was asked. Never rebuild a whole piece to make a tweak.
 - Before touching the font, logo, bottle or a published page: show ONE sample, wait for OK.
