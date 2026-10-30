@@ -14,7 +14,7 @@ const TARGET = {
   'PEP-CRD-07': '.cw', 'PEP-CRD-08': '#lg', 'PEP-CRD-09': '#scene', 'CRD-127': '#deck', 'CRD-124': '#pane', 'CRD-130': '.door.l',
   'PEP-TYP-01': '#sheet', 'PEP-TYP-02': '#wm', 'PEP-TYP-03': '#hl', 'PEP-TYP-04': '#wm', 'PEP-TYP-05': '.slot.hl'
 };
-const CONTROL = { buttons: '.pm-cap', cards: '.pm-tag', type: '.pm-tag' };
+const CONTROL = { buttons: '.pm-tag', cards: '.pm-tag', type: '.pm-tag' };   // far from every target (magnet / tilt modules react to a nearby pointer by design)
 const CLICKY = new Set(['PEP-BTN-04', 'BTN-101', 'PEP-BTN-10', 'PEP-CRD-03', 'PEP-CRD-06', 'CRD-127', 'CRD-130', 'PEP-CRD-05']);
 const arg = process.argv[2] || '';
 const list = man.filter(e => !arg || e.cat === arg || arg.split(',').includes(e.code));

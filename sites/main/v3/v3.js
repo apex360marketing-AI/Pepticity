@@ -273,13 +273,14 @@
   function heroUI() {
     if (RM || introLive || !heroCard) return;
     var y = window.scrollY || 0;
-    if (y > 2 && y < innerHeight * 1.4) { var k = clamp(y / innerHeight, 0, 1); heroCard.style.transform = 'translate3d(0,' + (k * innerHeight * 0.22).toFixed(1) + 'px,0) scale(' + (1 - k * 0.05).toFixed(4) + ')'; heroMoved = true; }
+    if (y > 2 && y < innerHeight * 1.4) { var k = clamp(y / innerHeight, 0, 1); heroCard.style.transform = 'translate3d(0,' + (-k * innerHeight * 0.1).toFixed(1) + 'px,0) scale(' + (1 - k * 0.06).toFixed(4) + ')'; heroMoved = true; }
     else if (y <= 2 && heroMoved) { heroCard.style.transform = ''; heroMoved = false; }
   }
   /* SCR-21: three liquid-glass panes fly in from depth, hold while their words light, then pass the camera */
+  var lastSp = -1;
   function storyUI() {
     if (RM || !WIDE()) return;
-    var sp = S.p;
+    var sp = S.p; if (Math.abs(sp - lastSp) < 0.0002) return; lastSp = sp;
     if (storyBar) storyBar.style.transform = 'scaleX(' + sp.toFixed(4) + ')';
     panes.forEach(function (el, i) {
       var T = PANE_T[i], kin = T[0] < 0 ? 1 : ss(T[0], T[1], sp), kout = ss(T[2], T[3], sp), o = kin * (1 - kout);
@@ -317,7 +318,7 @@
     var p = RM ? 0.42 : D2.p; if (Math.abs(p - d2Last) < 0.0004) return; d2Last = p;
     d2.veil.style.opacity = RM ? 0 : (1 - ss(0, 0.07, p)).toFixed(3);
     d2.flood.style.opacity = RM ? 0 : ss(0.82, 0.97, p).toFixed(3);
-    d2.cap.style.opacity = (ss(0.3, 0.4, p) * (1 - ss(0.58, 0.68, p))).toFixed(3);
+    d2.cap.style.opacity = (ss(0.27, 0.35, p) * (1 - ss(0.46, 0.53, p))).toFixed(3);
     if (d2Film) {
       var v = d2.film; if (v.duration && isFinite(v.duration)) { var t = ss(0.04, 0.9, p) * (v.duration - 0.05); if (Math.abs(v.currentTime - t) > 1 / 30) v.currentTime = t; }
       return;
@@ -406,7 +407,7 @@
   function onResize() {
     var k = innerWidth / innerHeight < 0.95 ? 'm' : 'd';
     if (k !== kind) { kind = k; want(seq('weave'), [Math.floor(weaveFrame(J.p) / seq('weave').per)], true); if (!introLive) loadAll(); }
-    pW.resize(); pL.resize(); pA.resize(); dirty = true; lastGate = -1; d2Last = -1; layoutD2();
+    pW.resize(); pL.resize(); pA.resize(); dirty = true; lastGate = -1; d2Last = -1; lastSp = -1; layoutD2();
   }
   var rT; addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(onResize, 120); });
 
@@ -747,7 +748,7 @@
   $('#stNext').addEventListener('click', function () {
     var ls = labState(L.p), lab = $('#lab'), span = lab.offsetHeight - innerHeight;
     var next = Math.min(ST.length - 1, ls.i + (ls.holding ? 1 : 0));
-    if (ls.i === ST.length - 1 && ls.holding) return goTo('interests');
+    if (ls.i === ST.length - 1 && ls.holding) return glide(absTop($('#doors2')) + innerHeight * 0.4, 2.4);
     glide(absTop(lab) + span * ((next + 0.55) / ST.length), 2.4);
   });
   var settleT;
@@ -896,8 +897,8 @@
     if (e.key !== 'Tab') return; var f = $$('a,button:not([disabled]),input,select,[tabindex="0"]', el).filter(function (x) { return x.offsetParent !== null; }); if (!f.length) return;
     if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
   }
-  function openCart() { lastFocus = document.activeElement; renderCart(); $('#scrimx').hidden = false; $('#cart').hidden = false; stopScroll(); setTimeout(function () { $('#cart .x').focus(); }, 30); track('cart_open'); }
-  function closeCart() { $('#cart').hidden = true; $('#scrimx').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
+  function openCart() { lastFocus = document.activeElement; renderCart(); D.classList.add('drawer-open'); $('#scrimx').hidden = false; $('#cart').hidden = false; stopScroll(); setTimeout(function () { $('#cart .x').focus(); }, 30); track('cart_open'); }
+  function closeCart() { D.classList.remove('drawer-open'); $('#cart').hidden = true; $('#scrimx').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
   $('#cartBtn').addEventListener('click', openCart);
   $('#cart').addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeCart(); });
   $('#cart').addEventListener('keydown', function (e) { trap($('#cart'), e); });
@@ -906,31 +907,32 @@
   $('#checkout').addEventListener('click', function () { closeCart(); openModal('checkout'); });
 
   /* ================= modal ================= */
-  function capForm(hook, btn, consentWhat, extra) {
-    return '<form class="cap-form" data-hook="' + hook + '" data-offer novalidate>' + (extra || '') +
-      '<div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>' +
+  /* one purpose per box, sender line + privacy link placeholders (audit A15) */
+  var SENDER = ' PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.';
+  var C_LETTER = 'Yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time.' + SENDER;
+  var C_SMS = 'Yes, PEPTICITY may text me about new lots and restocks at this number. Up to [2] texts a month. Message and data rates may apply. Reply STOP to stop, HELP for help. Consent is not a condition of any purchase. <a href="#privacy" class="ph-link">[Privacy promise]</a>';
+  var TERMS = '<p class="terms">[Offer terms: applies to, minimum, one per person, end date. Counsel to approve.]</p>';
+  function capForm(hook, btn, consentHtml, opts) {
+    opts = opts || {};
+    return '<form class="cap-form" data-hook="' + hook + '"' + (opts.offer ? ' data-offer' : '') + (opts.need ? ' data-consent="' + opts.need + '"' : '') + ' novalidate>' +
+      '<div class="row"><label class="field"><span class="lbl">' + (opts.sms ? 'MOBILE NUMBER' : 'EMAIL') + '</span>' +
+      (opts.sms ? '<input type="tel" name="phone" autocomplete="tel" inputmode="tel" required>' : '<input type="email" name="email" autocomplete="email" inputmode="email" required>') + '</label>' +
       '<button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">' + btn + '</span></span></button></div>' +
-      '<label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me ' + consentWhat + ' and occasional news. I can unsubscribe any time.</span></label>' +
-      '<p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p></form>';
+      '<label class="consent"><input type="checkbox" name="' + (opts.sms ? 'consent_sms' : 'consent_email') + '"><span>' + consentHtml + '</span></label>' +
+      '<p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>' + (opts.offer && OFFER ? TERMS : '') + '</form>';
   }
   function openModal(kind, arg) {
     var b = $('#modalBody'), html = '';
-    if (kind === 'join') html = '<p class="eyebrow"><span>GRAND OPENING</span></p><h2 class="h2s x3d" id="modalT">JOIN THE PEPTICITY TEAM</h2><p>15% off your first order, Grace\'s monthly letter and first word on restocks.</p>' + capForm('H01b', 'CLAIM MY 15% OFF', 'the founding offer, the monthly letter, restock alerts');
-    if (kind === 'letter') html = '<p class="eyebrow"><span>GRACE\'S LETTER</span></p><h2 class="h2s x3d" id="modalT">ONE LETTER A MONTH</h2><p>What\'s new, what\'s back, and a note from Grace.</p>' + capForm('H18', 'GET THE LETTER', 'Grace\'s monthly letter');
+    if (kind === 'join' && (!OFFER || D.classList.contains('age-gated'))) kind = 'letter';   /* the offer never shows before the 19+ gate */
+    if (kind === 'join') html = '<p class="eyebrow"><span>GRAND OPENING</span></p><h2 class="h2s x3d" id="modalT">JOIN THE PEPTICITY TEAM</h2><p>15% off your first order, saved to this device and applied in the cart.</p>' +
+      capForm('H01b', 'CLAIM MY 15% OFF', 'Optional: ' + C_LETTER.charAt(0).toLowerCase() + C_LETTER.slice(1), { offer: true });
+    if (kind === 'letter') html = '<p class="eyebrow"><span>GRACE\'S LETTER</span></p><h2 class="h2s x3d" id="modalT">ONE LETTER A MONTH</h2><p>A note from Grace, once a month, with founding-list news.</p>' + capForm('H18b', 'GET THE LETTER', C_LETTER, { need: 'required' });
+    if (kind === 'sms') html = '<p class="eyebrow"><span>FIRST WORD BY TEXT</span></p><h2 class="h2s x3d" id="modalT">NEW LOTS, BY TEXT</h2><p>One text when a sold-out lot is back. Up to [2] texts a month. Reply STOP any time.</p>' + capForm('H43', 'TEXT ME', C_SMS, { sms: true, need: 'sms' });
     if (kind === 'quiz') { closeModal(); return goTo('quiz'); }
-    if (kind === 'interest') {
-      var I = arg, list = PRODUCTS.filter(function (p) { return !p.hidden && !p.ancillary && inInterest(I, p); });
-      html = '<p class="eyebrow"><span>' + I.shelf + '</span></p><h2 class="h2s x3d" id="modalT">' + I.t + '</h2>' +
-        '<p>' + esc(I.d) + ' Name, size and price only. No product here is presented as treating, preventing or improving anything.</p>' +
-        (list.length ? '<ul class="int-list">' + list.map(function (p) { return '<li><b>' + esc(p.name) + ' ' + esc(p.strength) + '</b><span>' + money(p.price) + '</span></li>'; }).join('') + '</ul>' : '<p class="mini-t">THIS SHELF OPENS SOON</p>') +
-        (list.length < 2 ? '<p class="fine">More compounds for this area are coming. We\'ll tell you first.</p>' : '') +
-        '<p class="mini-t">SEND ME THE ' + esc(I.t) + ' SHELF · PLUS 15% OFF</p>' + capForm('H42', 'SEND ME THE SHELF', 'the ' + I.t.toLowerCase() + ' shelf, the founding offer') +
-        (list.length ? '<button class="pc-btn pc-btn--sm" type="button" data-go="store"><span class="pc-btn__face"><span class="pc-btn__label">OPEN THE SHELF IN THE STORE</span></span></button>' : '');
-    }
     if (kind === 'restock') {
       var P = arg;
-      html = '<p class="eyebrow"><span>SOLD OUT · RESTOCK QUEUE</span></p><h2 class="h2s x3d" id="modalT">' + esc(P.name + ' ' + P.strength) + '</h2><p>Join the queue and we\'ll email you the moment the next lot lands, before the shelf goes public.</p>' +
-        capForm('H50', 'JOIN THE QUEUE', 'when ' + P.name + ' ' + P.strength + ' is back');
+      html = '<p class="eyebrow"><span>SOLD OUT · RESTOCK QUEUE</span></p><h2 class="h2s x3d" id="modalT">' + esc(P.name + ' ' + P.strength) + '</h2><p>Join the queue and we\'ll email you when the next lot lands.</p>' +
+        capForm('H50', 'JOIN THE QUEUE', 'Yes, PEPTICITY may email me when ' + esc(P.name + ' ' + P.strength) + ' is back. I can unsubscribe at any time.' + SENDER, { need: 'required' });
     }
     if (kind === 'checkout') {
       var T = totals();
@@ -939,14 +941,14 @@
         (T.disc ? '<div style="display:flex;justify-content:space-between"><span>PEPTICITY TEAM · 15%</span><span>−' + money(T.disc) + '</span></div>' : '') +
         '<div style="display:flex;justify-content:space-between"><span>Shipping' + (CFG.shipping.placeholder ? ' [placeholder]' : '') + '</span><span>' + (T.ship ? money(T.ship) : 'FREE') + '</span></div>' +
         '<div style="display:flex;justify-content:space-between;font-family:var(--display)"><span>TOTAL</span><span>' + money(T.total) + ' CAD</span></div></div>' +
-        '<p>[Age and province check, payment and the real store backend connect here.]</p>' +
+        '<p>19+ PASS · ' + (pass ? esc(PROV[pass.prov]).toUpperCase() : '[province]') + '. [Payment and the real store backend connect here.]</p>' +
         '<button class="pc-btn pc-btn--block" type="button" id="placeOrder"><span class="pc-btn__face"><span class="pc-btn__label">PLACE ORDER (PREVIEW)</span></span></button>';
     }
     if (kind === 'thanks') {
       html = '<p class="eyebrow"><span>THANK YOU</span></p><h2 class="h2s x3d" id="modalT">ORDER RECEIVED</h2><p>Preview only: no order was placed.</p>' +
         '<form class="cap-form" data-hook="H53" id="acctForm" novalidate><p class="mini-t">SAVE YOUR DETAILS FOR NEXT TIME</p><label class="field"><span class="lbl">CHOOSE A PASSWORD</span><input type="password" name="pw" autocomplete="new-password" minlength="8"></label>' +
-        '<label class="field"><span class="lbl">MOBILE FOR SHIPPING UPDATES (OPTIONAL)</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel"></label>' +
-        '<label class="consent"><input type="checkbox" name="consent_sms"><span>Also text me about new lots. Message and data rates may apply. Reply STOP to stop.</span></label>' +
+        '<label class="field"><span class="lbl">MOBILE FOR SHIPPING UPDATES ON THIS ORDER (OPTIONAL)</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel"></label>' +
+        '<label class="consent"><input type="checkbox" name="consent_sms"><span>Optional, separate: ' + C_SMS + '</span></label>' +
         '<p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p><button class="pc-btn" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">SAVE MY DETAILS</span></span></button></form>';
     }
     if (!html) return;
@@ -956,10 +958,10 @@
       wireForm(f, f.dataset.hook === 'H50' ? function () { var ok = $('.ok', f); ok.textContent = 'You\'re in the queue: #[REAL POSITION] in line for the next lot. ' + ok.textContent; } : null); });
     var po = $('#placeOrder', b); if (po) po.addEventListener('click', function () { cart = []; saveCart(); openModal('thanks'); });
     var af = $('#acctForm', b); if (af) af.addEventListener('submit', function (e) { e.preventDefault(); $('.ok', af).textContent = 'Saved. Preview only: nothing was sent.'; });
-    $('#modal').hidden = false; stopScroll(); track('form_view');
+    $('#modal').hidden = false; D.classList.add('modal-open'); stopScroll(); track('form_view');
     setTimeout(function () { var i = $('input', b) || $('.x', $('#modal')); i.focus({ preventScroll: true }); }, 40);
   }
-  function closeModal() { $('#modal').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
+  function closeModal() { D.classList.remove('modal-open'); $('#modal').hidden = true; startScroll(); if (lastFocus) lastFocus.focus({ preventScroll: true }); }
   $('#modal').addEventListener('click', function (e) { if (e.target.closest('[data-close]') || e.target === $('#modal') || e.target.closest('[data-go]')) closeModal(); });
   $('#modal').addEventListener('keydown', function (e) { trap($('.modal'), e); });
   document.addEventListener('keydown', function (e) {
@@ -969,8 +971,8 @@
 
   /* ================= menu ================= */
   var menu = $('#menu');
-  function openMenu() { lastFocus = document.activeElement; menu.hidden = false; requestAnimationFrame(function () { menu.classList.add('open'); }); $('#menuBtn').setAttribute('aria-expanded', 'true'); stopScroll(); $('.x', menu).focus(); }
-  function closeMenu() { if (menu.hidden) return; menu.classList.remove('open'); menu.hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); startScroll(); }
+  function openMenu() { lastFocus = document.activeElement; menu.hidden = false; D.classList.add('menu-open'); requestAnimationFrame(function () { menu.classList.add('open'); }); $('#menuBtn').setAttribute('aria-expanded', 'true'); stopScroll(); $('.x', menu).focus(); }
+  function closeMenu() { if (menu.hidden) return; D.classList.remove('menu-open'); menu.classList.remove('open'); menu.hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); startScroll(); }
   $('#menuBtn').addEventListener('click', openMenu);
   menu.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) { closeMenu(); if (lastFocus) lastFocus.focus(); } });
   menu.addEventListener('keydown', function (e) { trap(menu, e); });
@@ -979,18 +981,18 @@
   /* ================= interests (cards + 3D icon slots) ================= */
   function renderInterests() {
     $('#intGrid').innerHTML = INTERESTS.map(function (i) {
-      return '<li><button class="int-card glass" type="button" data-int="' + i.k + '">' +
+      var n = PRODUCTS.filter(function (p) { return inInterest(i, p); }).length;
+      return '<li><button class="int-card glass" type="button" data-int="' + i.k + '" data-hook="H42c">' +
         '<span class="int-ico" data-slot3d="icon-' + i.icon + '" aria-hidden="true"><span class="fb">' + '◆' + '</span></span>' +
-        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>' + i.d + '</p><span class="go">OPEN THE SHELF + 15%</span></span></button></li>';
+        '<span><span class="h3 x3d" data-text="' + i.t + '">' + i.t + '</span><p>Names, sizes and prices on this shelf.</p><span class="n">' + n + (n === 1 ? ' LISTING' : ' LISTINGS') + '</span><span class="go">OPEN THE SHELF</span></span></button></li>';
     }).join('');
     document.dispatchEvent(new Event('pc-slots'));
   }
-  renderInterests();
   $('#intGrid').addEventListener('click', function (e) {
     var c = e.target.closest('[data-int]'); if (!c) return;
     var I = INTERESTS.find(function (i) { return i.k === c.dataset.int; });
     $$('.int-card').forEach(function (x) { x.classList.toggle('on', x === c); });
-    applyFilter(I.k); track('cta_click:interest'); openModal('interest', I);
+    applyFilter(I.k); track('cta_click:interest'); setTimeout(function () { glide(absTop($('#filters')) - 90, 1.2); }, 60);
   });
 
   /* ================= TXT-04 scroll highlight + the little bottom progress ================= */
@@ -1081,13 +1083,13 @@
   /* ================= CATALOGUE FINDER (FRM-102 stepper; product-finder-quiz) ================= */
   var Q = { step: 0, cls: null, size: null, band: null };
   try { var qs = JSON.parse(LS.get('pc-finder') || 'null'); if (qs) { Q.cls = qs.cls; Q.size = qs.size; Q.band = qs.band; } } catch (e) {}
-  function inCls() { var c = CLS.find(function (x) { return x.k === Q.cls; }); return PRODUCTS.filter(function (p) { return !p.hidden && !p.ancillary && c && c.keys.indexOf(p.key) > -1; }); }
+  function inCls() { var c = CLS.find(function (x) { return x.k === Q.cls; }); return PRODUCTS.filter(function (p) { return listed(p) && !p.ancillary && c && c.keys.indexOf(p.key) > -1; }); }
   function mg(p) { return parseFloat(p.strength) || 0; }
   function bands(list) { var ps = list.map(function (p) { return p.price; }).sort(function (a, b) { return a - b; }); var lo = ps[0], hi = ps[ps.length - 1], m = Math.round((lo + hi) / 2); return lo === hi ? [{ k: 'all', t: money(lo), a: lo, b: hi }] : [{ k: 'lo', t: money(lo) + ' – ' + money(m), a: lo, b: m }, { k: 'hi', t: money(m) + ' – ' + money(hi), a: m, b: hi }, { k: 'all', t: 'ANY PRICE', a: lo, b: hi }]; }
   function renderFinder() {
     var box = $('#qsteps'), html = '', n = Q.step;
     $('#qbar').style.width = (25 + n * 25) + '%'; $('#qStepNo').textContent = 'STEP ' + (n + 1) + ' OF 4';
-    if (n === 0) html = '<div class="qstep"><h3 class="h3">WHAT ARE YOU BROWSING?</h3><div class="qopts">' + CLS.map(function (c) { return '<button class="qopt" type="button" data-cls="' + c.k + '" aria-pressed="' + (Q.cls === c.k) + '">' + c.t + '<small>' + c.d + '</small></button>'; }).join('') + '</div></div>';
+    if (n === 0) html = '<div class="qstep"><h3 class="h3">WHAT ARE YOU BROWSING?</h3><div class="qopts">' + CLS.filter(function (c) { return PRODUCTS.some(function (p) { return listed(p) && c.keys.indexOf(p.key) > -1; }); }).map(function (c) { return '<button class="qopt" type="button" data-cls="' + c.k + '" aria-pressed="' + (Q.cls === c.k) + '">' + c.t + '<small>' + c.d + '</small></button>'; }).join('') + '</div></div>';
     if (n === 1) html = '<div class="qstep"><h3 class="h3">WHICH SIZE SUITS YOU?</h3><div class="qopts">' + [['small', 'SMALLER VIALS', 'Up to 10 mg'], ['large', 'LARGER VIALS', 'Over 10 mg'], ['any', 'ANY SIZE', 'Show them all']].map(function (s) { return '<button class="qopt" type="button" data-size="' + s[0] + '" aria-pressed="' + (Q.size === s[0]) + '">' + s[1] + '<small>' + s[2] + '</small></button>'; }).join('') + '</div></div>';
     if (n === 2) html = '<div class="qstep"><h3 class="h3">YOUR PRICE RANGE?</h3><div class="qopts">' + bands(inCls()).map(function (b) { return '<button class="qopt" type="button" data-band="' + b.k + '" aria-pressed="' + (Q.band === b.k) + '">' + b.t + '<small>CAD, from the real prices</small></button>'; }).join('') + '</div></div>';
     if (n === 3) {
@@ -1099,11 +1101,11 @@
       Q.pick = pick.map(function (p) { return p.id; });
       html = '<div class="qstep"><h3 class="h3">YOUR SHORTLIST</h3><ul class="shelf qres">' + pick.map(prodCard).join('') + '</ul>' +
         '<div class="btn-row" style="justify-content:center"><button class="pc-btn" type="button" id="addAll"><span class="pc-btn__face"><span class="pc-btn__label">ADD ALL TO CART</span></span></button></div>' +
-        '<form class="cap-form" data-hook="H49" novalidate data-offer><p class="mini-t">SAVE THIS SHORTLIST</p><div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>' +
+        '<form class="cap-form" data-hook="H49" novalidate data-offer><p class="mini-t">EMAIL THIS SHORTLIST' + (OFFER ? ' · JOIN FOR 15%' : '') + '</p><div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>' +
         '<button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">EMAIL MY SHORTLIST</span></span></button></div>' +
-        '<label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me this shortlist, the founding offer and occasional news. I can unsubscribe any time.</span></label><p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p></form></div>';
+        '<label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace. I can unsubscribe at any time.' + SENDER + '</span></label><p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>' + (OFFER ? TERMS : '') + '</form></div>';
     }
-    html += '<div class="qnav">' + (n > 0 ? '<button class="linkish" type="button" id="qBack">BACK</button>' : '<span></span>') + '<button class="linkish" type="button" data-go="store">SKIP TO THE STORE</button></div>';
+    html += '<div class="qnav">' + (n > 0 ? '<button class="linkish" type="button" id="qBack">BACK</button>' : '<span></span>') + '<button class="linkish" type="button" data-go="store">SKIP TO THE COLLECTION</button></div>';
     box.innerHTML = html;
     $$('.prod', box).forEach(function (el) { el.classList.add('in'); });
     $$('form', box).forEach(function (f) { if (f.classList.contains('rs')) wireForm(f); else wireForm(f); });
@@ -1122,7 +1124,7 @@
   /* ================= LOT PASSPORT (sample only until Grace confirms) ================= */
   $('#passport').addEventListener('submit', function (e) {
     e.preventDefault(); var v = (this.lot.value || '').trim().toUpperCase(), out = $('#ppOut');
-    out.innerHTML = '<dl><dt>LOT</dt><dd>' + esc(v || 'SAMPLE-001') + ' [sample]</dd><dt>MADE</dt><dd>[Date from the real lot record]</dd><dt>CERTIFICATE</dt><dd>[Certificate appears only when Grace confirms it is real]</dd><dt>STORAGE</dt><dd>[Storage note from the supplier]</dd></dl>';
+    out.innerHTML = '<dl><dt>LOT</dt><dd>' + esc(v || 'SAMPLE-001') + ' · SAMPLE</dd><dt>MADE</dt><dd>[Placeholder: date from a real lot record]</dd><dt>CERTIFICATE</dt><dd>[Placeholder: shown only once a real testing partner exists]</dd><dt>STORAGE</dt><dd>[Placeholder: storage note to be confirmed]</dd></dl>';
     track('hook_interact:passport');
   });
 
@@ -1135,21 +1137,28 @@
   });
 
   /* ================= sticky bar, rail, nav over photos ================= */
-  var sticky = $('#sticky'), rail = $$('#rail li'), stops = ['hero', 'city', 'doors', 'lab', 'interests', 'store', 'team', 'network'];
+  var sticky = $('#sticky'), stickyBtn = $('#stickyBtn'), rail = $$('#rail li'), stops = ['hero', 'mission', 'story', 'age', 'city', 'doors', 'lab', 'store', 'network'], stickyMode = '';
   gsap.ticker.add(function () {
-    var y = window.scrollY || 0, vh = innerHeight;
-    var jr = $('#journey').getBoundingClientRect(), lr = $('#lab').getBoundingClientRect();
-    var overPhoto = (jr.top <= 40 && jr.bottom > 60) || (!D.classList.contains('gated') && lr.top <= 40 && lr.bottom > 60);
+    var y = window.scrollY || 0, vh = innerHeight, ag = D.classList.contains('age-gated'), dg = D.classList.contains('gated');
+    var jr = $('#journey').getBoundingClientRect(), lr = $('#lab').getBoundingClientRect(), d2r = $('#doors2').getBoundingClientRect(), agr = ageSec.getBoundingClientRect();
+    var overPhoto = (!ag && jr.top <= 40 && jr.bottom > 60) || (!dg && !ag && ((lr.top <= 40 && lr.bottom > 60) || (d2r.top <= 40 && d2r.bottom > 60))) || (agr.top <= 40 && agr.bottom > 60);
     nav.classList.toggle('over-photo', overPhoto); D.classList.toggle('over-photo', overPhoto);
     var formFocus = document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
-    var footR = $('#foot').getBoundingClientRect();
-    sticky.classList.toggle('show', y > vh * 0.9 && !formFocus && !joined() && !(jr.top < 0 && jr.bottom > vh && J.p > 0.85) && footR.top > vh && $('#modal').hidden);
+    var footR = $('#foot').getBoundingClientRect(), inSales = !ag && jr.top < vh * 0.5;
+    /* sticky (phones): Grace's letter on the landing, the team offer in the sales zones; never over the gate, the doors, a form or the footer */
+    var mode = inSales && OFFER && !joined() ? 'join' : (!LS.get('pc-letter') ? 'letter' : '');
+    if (mode !== stickyMode) { stickyMode = mode; if (mode) { stickyBtn.dataset.open = mode; $('.pc-btn__label', stickyBtn).textContent = mode === 'join' ? 'JOIN · 15% OFF FIRST ORDER' : 'GET GRACE\'S LETTER'; } }
+    var overGate = (agr.top < vh * 0.75 && agr.bottom > vh * 0.25) || (!ag && jr.top < 0 && jr.bottom > vh && J.p > 0.85) || (!dg && d2r.top < vh && d2r.bottom > 0) || HOLO.some(function (h) { return h.on; });
+    sticky.classList.toggle('show', !!mode && y > vh * 0.9 && !formFocus && !overGate && footR.top > vh && $('#modal').hidden && !introLive);
     /* rail: real position */
     var cur = 'hero';
-    if (jr.top <= vh * 0.3) cur = J.p > 0.86 ? 'doors' : 'city';
-    if (!D.classList.contains('gated')) {
-      [['lab', '#lab'], ['interests', '#interests'], ['store', '#store'], ['team', '#tiers'], ['network', '#network']].forEach(function (s) { var el = $(s[1]); if (el && el.getBoundingClientRect().top <= vh * 0.4) cur = s[0]; });
+    [['mission', '#mission'], ['story', '#story'], ['age', '#age']].forEach(function (s) { if ($(s[1]).getBoundingClientRect().top <= vh * 0.4) cur = s[0]; });
+    if (!ag && jr.top <= vh * 0.3) cur = J.p > 0.86 ? 'doors' : 'city';
+    if (!dg && !ag) {
+      [['lab', '#lab'], ['store', '#doors2'], ['network', '#network']].forEach(function (s) { var el = $(s[1]); if (el && el.getBoundingClientRect().top <= vh * 0.4) cur = s[0]; });
     }
+    if (++botTick % 12 === 0) syncBot();
+    if (!sellGreeted && botMode === 'sell' && !dg && storeSec.getBoundingClientRect().top < vh * 0.55 && window.PEPBOT && PEPBOT.greet) { sellGreeted = true; PEPBOT.greet(); track('bot_greet:sell'); }
     var ci = stops.indexOf(cur);
     rail.forEach(function (li, k) { li.classList.toggle('now', k === ci); li.classList.toggle('seen', k < ci); });
   });
@@ -1158,7 +1167,7 @@
   var exitEl = $('#exit'), exitArmed = false, exitTimer;
   setTimeout(function () { exitArmed = true; }, 8000);
   function exitAllowed() {
-    if (!cart.length || joined() || SS.get('pc-exit')) return false;
+    if (!pass || !cart.length || joined() || SS.get('pc-exit')) return false;
     var n = +(LS.get('pc-exit-n') || 0); return n < 3 && $('#modal').hidden && $('#cart').hidden && !busy;
   }
   function fireExit() { if (!exitArmed || !exitAllowed()) return; SS.set('pc-exit', '1'); LS.set('pc-exit-n', String(+(LS.get('pc-exit-n') || 0) + 1)); exitEl.hidden = false; requestAnimationFrame(function () { exitEl.classList.add('show'); }); track('form_view'); }
@@ -1174,18 +1183,19 @@
     if (t - lastT > 300) { lastY = y; lastT = t; }
   }, { passive: true });
   var realTitle = document.title;
-  document.addEventListener('visibilitychange', function () { document.title = document.hidden && cart.length ? 'YOUR CART IS SAVED · PEPTICITY' : realTitle; });
+  document.addEventListener('visibilitychange', function () { document.title = document.hidden && cart.length && pass ? 'YOUR CART IS SAVED · PEPTICITY' : realTitle; });
 
   /* ================= WELCOME BACK ================= */
   (function () {
     var last = +(LS.get('pc-last') || 0), now = Date.now();
     LS.set('pc-last', String(now));
-    if (last && now - last < 30 * 864e5 && (cart.length || joined())) {
+    var hasCart = cart.length && pass;   /* the cart is a sales-zone thing: only mentioned past the 19+ gate */
+    if (last && now - last < 30 * 864e5 && (hasCart || joined())) {
       var wb = $('#wback'); wb.hidden = false;
-      $('#wbackT').textContent = 'WELCOME BACK' + (member && member.name ? ', ' + member.name.toUpperCase() : '') + '.' + (cart.length ? ' YOUR CART IS WHERE YOU LEFT IT.' : '');
-      $('#wbackCart').hidden = !cart.length;
+      $('#wbackT').textContent = 'WELCOME BACK' + (member && member.name ? ', ' + member.name.toUpperCase() : '') + '.' + (hasCart ? ' YOUR CART IS WHERE YOU LEFT IT.' : '');
+      $('#wbackCart').hidden = !hasCart;
       $('#wbackCart').addEventListener('click', openCart);
-      $('#wbackClear').addEventListener('click', function () { ['pc-member', 'pc-cart', 'pc-finder', 'pc-last'].forEach(LS.del); location.reload(); });
+      $('#wbackClear').addEventListener('click', function () { ['pc-member', 'pc-cart', 'pc-finder', 'pc-last', 'pc-age-pass', 'pc-letter', 'pc-sms'].forEach(LS.del); location.reload(); });
     }
   })();
 
@@ -1193,17 +1203,103 @@
   window.PEPCART = { add: function (item) { var p = PRODUCTS.find(function (x) { return x.slug === item.slug; }); if (!p || !p.inStock || !listed(p) || !pass) return; for (var i = 0; i < (item.qty || 1); i++) addToCart(p.id); } };
   window.addEventListener('pep:checkout', function () { openModal('checkout'); });
 
-  /* ================= load the catalogue ================= */
+  /* ================= load the catalogue: ONLY after the 19+ gate (nothing from it is in the page before that) ================= */
+  var catState = 0;   /* 0 not asked, 1 loading, 2 ready */
   function boot(data) {
+    if (!data || !Array.isArray(data.products)) return;
+    DATA = data; CLS = Array.isArray(data.classes) ? data.classes : [];
     PRODUCTS = data.products; PRODUCTS.forEach(function (p) { BY[p.id] = p; });
+    catState = 2;
     renderStore(); renderCart(); renderMemberBits(); renderFinder();
-    ScrollTrigger.refresh();
+    var sold = PRODUCTS.filter(function (p) { return listed(p) && !p.inStock; }).map(function (p) { return p.slug; });
+    window.PEPBOT_CONFIG = window.PEPBOT_CONFIG || {}; window.PEPBOT_CONFIG.soldOut = sold;
+    if (window.PEPBOT && PEPBOT.configure) PEPBOT.configure({ soldOut: sold });
+    ScrollTrigger.refresh(); dirty = true;
+    document.dispatchEvent(new Event('pc-catalogue'));
   }
-  fetch(CFG.products).then(function (r) { return r.json(); }).then(boot).catch(function (e) { console.warn('catalogue', e); });
+  function loadCatalogue() {
+    if (!pass || catState) return; catState = 1;
+    fetch(CFG.products).then(function (r) { return r.json(); }).then(boot).catch(function (e) { catState = 0; console.warn('catalogue', e); });
+  }
+
+  /* ================= 3 · THE AGE GATE ================= */
+  var agePanel = $('#agePanel'), ageStatus = $('#ageStatus'), ageForm = $('#ageForm'), ageProv = $('#ageProv');
+  function ageDate(t) { try { return new Date(t).toLocaleDateString('en-CA', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return ''; } }
+  function renderAge() {
+    if (pass) { agePanel.dataset.state = 'ok'; ageStatus.textContent = 'PASS SAVED · ' + pass.prov;
+      $('#ageOkT').textContent = 'Welcome in. Your 19+ pass for ' + PROV[pass.prov] + ' is saved on this device until ' + ageDate(pass.exp) + '.'; }
+    else if (agePanel.dataset.state === 'ok') agePanel.dataset.state = 'ask';
+    $$('.menu-sales a').forEach(function (a) { if (pass) a.removeAttribute('aria-disabled'); else a.setAttribute('aria-disabled', 'true'); });
+  }
+  function openSales(go) {
+    D.classList.remove('age-gated'); dirty = true;
+    requestAnimationFrame(function () { pW.resize(); ScrollTrigger.refresh(); dirty = true; layoutDoors(); });
+    loadCatalogue(); syncBot();
+    if (go) setTimeout(function () { glide(absTop($('#journey')) + 2, RM ? 0.01 : 2.4); }, RM ? 0 : 900);
+  }
+  function grantPass(prov) {
+    var now = Date.now(); pass = { ok: true, prov: prov, at: now, exp: now + (CFG.agePassDays || 30) * 864e5 };
+    LS.set('pc-age-pass', JSON.stringify(pass)); track('age_pass');
+    agePanel.classList.add('passing'); setTimeout(function () { agePanel.classList.remove('passing'); }, 1100);
+    renderAge(); ageStatus.textContent = 'VERIFIED · ' + prov; openSales(true);
+  }
+  ageForm.addEventListener('submit', function (e) {
+    e.preventDefault(); var v = ageProv.value, err = $('.err', ageForm); err.textContent = ''; ageProv.removeAttribute('aria-invalid');
+    if (!v) { err.textContent = 'Choose your province or territory first.'; ageProv.setAttribute('aria-invalid', 'true'); ageProv.focus(); return; }
+    if (v === 'XX') { agePanel.dataset.state = 'no'; ageStatus.textContent = 'CANADA ONLY'; $('#ageNoT').textContent = 'The PEPTICITY collection serves Canada only. The rest of PEPTICITY is here for you to read.'; track('age_outside'); return; }
+    if (!PROV[v]) return;
+    grantPass(v);
+  });
+  $('#ageLeave').addEventListener('click', function () {   /* LEAVE keeps the visitor on the landing page */
+    agePanel.dataset.state = 'no'; ageStatus.textContent = 'COLLECTION CLOSED'; track('age_leave');
+    $('#ageNoT').textContent = 'Understood. The collection stays closed, and the rest of PEPTICITY is here for you.';
+    setTimeout(function () { glide(absTop($('#mission')) - 20, 1.8); }, RM ? 0 : 500);
+  });
+  $('#ageBack').addEventListener('click', function () { glide(absTop($('#story')), 1.8); });
+  $('#ageRetry').addEventListener('click', function () { agePanel.dataset.state = 'ask'; ageStatus.textContent = 'AGE CHECK · CANADA'; ageProv.focus({ preventScroll: true }); });
+  $('#ageEnter').addEventListener('click', function () { glide(absTop($('#journey')) + 2, 2.2); });
+  $('#ageForget').addEventListener('click', function () { LS.del('pc-age-pass'); location.href = location.pathname + '?nointro#age'; });
+  renderAge();
+  if (pass) openSales(false);
+  window.addEventListener('pep:guide-enter', function () { goTo('age'); });
+
+  /* ================= the concierge: GUIDE on the landing, SELL in the sales zones (needs a valid 19+ pass) ================= */
+  var botMode = 'guide', botTick = 0, sellGreeted = false;
+  function wantMode() {
+    if (!pass || D.classList.contains('age-gated')) return 'guide';
+    return $('#journey').getBoundingClientRect().top < innerHeight * 0.5 ? 'sell' : 'guide';
+  }
+  function syncBot() {
+    if (!window.PEPBOT || !PEPBOT.setMode) return;
+    var m = wantMode(); if (m !== botMode || (PEPBOT.mode && PEPBOT.mode() !== m)) { botMode = m; PEPBOT.setMode(m); track('bot_mode:' + m); }
+  }
+  document.addEventListener('pc-bot-ready', syncBot);
+
+  /* ================= the offer's end date: a FIXED stored date only (honest-urgency) ================= */
+  function renderOfferEnd() {
+    var el = $('#offerEnd'); if (!el) return;
+    var end = CFG.offerEndsAt ? Date.parse(CFG.offerEndsAt) : NaN;
+    if (!isFinite(end)) { el.textContent = '[End date: Grace and counsel to set]'; return; }
+    var left = end - Date.now();
+    if (left <= 0) { el.textContent = 'THIS OFFER HAS ENDED'; return; }
+    var d = Math.floor(left / 864e5), h = Math.floor(left % 864e5 / 36e5);
+    el.textContent = 'ENDS ' + new Date(end).toLocaleDateString('en-CA', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase() + ' · ' + d + (d === 1 ? ' DAY ' : ' DAYS ') + h + ' HRS LEFT';
+  }
+  renderOfferEnd(); setInterval(renderOfferEnd, 60000);
+
+  /* phones and reduced motion: story panes reveal as they enter (no pin) */
+  (function () {
+    $$('.pane-p').forEach(function (p) { p.innerHTML = p.innerHTML.split(/(<span class="ph">[\s\S]*?<\/span>)/).map(function (part) {
+      return /^<span class="ph">/.test(part) ? part.replace('<span class="ph">', '<span class="ph lw">') : part.trim() ? part.trim().split(/\s+/).map(function (w) { return '<span class="lw">' + w + '</span>'; }).join(' ') : part; }).join(' '); });
+    if (!('IntersectionObserver' in window)) { panes.forEach(function (el) { el.classList.add('in'); $$('.lw', el).forEach(function (w) { w.classList.add('lit'); }); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting && (!WIDE() || RM)) { en.target.classList.add('in'); $$('.lw', en.target).forEach(function (w) { w.classList.add('lit'); }); } }); }, { threshold: 0.3 });
+    panes.forEach(function (el) { io.observe(el); });
+  })();
+  if (RM) $$('.holo').forEach(function (h) { var st = $('.st[data-st="' + h.dataset.st + '"]'); if (st) st.appendChild(h); });
 
   if (RM) D.classList.remove('gated');
   document.fonts && document.fonts.ready.then(function () { $$('.x3d').forEach(function (el) { el.dataset.text = el.textContent; }); ScrollTrigger.refresh(); });
-  window.__pc = { J: J, L: L, X: X, get lenis() { return lenis; }, dive: function () { dive(); return introTl; }, setVersion: setVersion, scan: scan, guest: guestEnter, liftIntro: liftIntro, goTo: goTo, openCart: openCart, addToCart: addToCart, events: events,
+  window.__pc = { J: J, L: L, X: X, S: S, D2: D2, HOLO: HOLO, get pass() { return pass; }, grantPass: grantPass, get botMode() { return botMode; }, get catState() { return catState; }, syncBot: syncBot, get lenis() { return lenis; }, dive: function () { dive(); return introTl; }, setVersion: setVersion, scan: scan, guest: guestEnter, liftIntro: liftIntro, goTo: goTo, openCart: openCart, addToCart: addToCart, events: events,
     get cart() { return cart; }, get products() { return PRODUCTS; }, totals: totals, labState: labState, openModal: openModal, fireExit: function () { exitArmed = true; fireExit(); },
     loaded: function () { return { weave: seq('weave').loaded() + '/' + seq('weave').m.files, lab: seq('lab').loaded() + '/' + seq('lab').m.files, kind: kind }; } };
 })();

@@ -386,19 +386,23 @@ html[data-motion="off"]{--pc-motion:0}
 .door{position:absolute;top:0;bottom:0;width:50%;transform-style:preserve-3d;transition:transform 1.25s cubic-bezier(.7,0,.2,1);will-change:transform;cursor:pointer}
 .door.l{left:0;transform-origin:0 50%}.door.r{right:0;transform-origin:100% 50%}
 .frame.open .door.l{transform:rotateY(-108deg)}.frame.open .door.r{transform:rotateY(108deg)}
+/* hover: the doors come ajar and the light at the seam brightens, an invitation to open them */
+.frame.ajar:not(.open) .door{transition:transform .6s var(--e-out)}
+.frame.ajar:not(.open) .door.l{transform:rotateY(-9deg)}.frame.ajar:not(.open) .door.r{transform:rotateY(9deg)}
+.frame.ajar:not(.open) .seam{opacity:1;animation:none;box-shadow:0 0 14px var(--acc),0 0 32px var(--acc-bloom)}
 .pane{position:absolute;inset:0;overflow:hidden;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);
   background:linear-gradient(180deg,rgba(255,255,255,.10),transparent 46%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.015)),rgba(16,15,20,.5)}
 .door.l .pane{--k:26px;clip-path:polygon(var(--k) 0,100% 0,100% 100%,0 100%,0 var(--k));box-shadow:inset 1px 0 0 rgba(236,240,245,.6),inset 0 1px 0 rgba(236,240,245,.7),inset 0 -1px 0 rgba(120,127,137,.5),inset -1px 0 0 rgba(236,240,245,.25)}
 .door.r .pane{--k:26px;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--k)),calc(100% - var(--k)) 100%,0 100%);box-shadow:inset -1px 0 0 rgba(120,127,137,.5),inset 0 1px 0 rgba(236,240,245,.7),inset 0 -1px 0 rgba(120,127,137,.5),inset 1px 0 0 rgba(236,240,245,.25)}
 .door.l .pane::before{content:"";position:absolute;left:0;top:var(--k);width:calc(var(--k) * 1.4142);height:1px;transform-origin:0 0;transform:rotate(-45deg);background:rgba(236,240,245,.6)}
-.pp{position:absolute;top:50%;width:200%;height:34%;transform:translateY(-58%);pointer-events:none;opacity:.8}
+.pp{position:absolute;top:36%;width:200%;height:30%;transform:translateY(-50%);pointer-events:none;opacity:.85}
 .door.l .pp{left:0}.door.r .pp{right:0}
 .pp svg{width:100%;height:100%;overflow:visible}
 .pp use{fill:url(#gGun);stroke:rgba(220,214,255,.6);stroke-width:.006}
 .hinge{position:absolute;width:6px;height:44px;background:linear-gradient(90deg,#3a3d42,#f4f6f8 40%,#9aa1aa 60%,#2a2d31);box-shadow:0 1px 3px rgba(0,0,0,.6)}
 .door.l .hinge{left:-3px}.door.r .hinge{right:-3px}
 .hinge.a{top:16%}.hinge.b{bottom:16%}
-.handle{position:absolute;top:50%;width:4px;height:70px;margin-top:-35px;background:linear-gradient(180deg,#f4f6f8,#9aa1aa 50%,#e6e9ed);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 4px 8px rgba(0,0,0,.5)}
+.handle{position:absolute;top:70%;width:4px;height:52px;margin-top:-26px;background:linear-gradient(180deg,#f4f6f8,#9aa1aa 50%,#e6e9ed);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 4px 8px rgba(0,0,0,.5)}
 .door.l .handle{right:16px}.door.r .handle{left:16px}
 .door .lbl{position:absolute;bottom:22px;font:400 8.5px/1 var(--fh);letter-spacing:.32em;color:var(--ink2)}
 .door.l .lbl{right:30px}.door.r .lbl{left:30px}
@@ -648,7 +652,10 @@ html[data-motion="off"]{--pc-motion:0}
   var fr=document.getElementById('fr'),room=document.getElementById('room'),cue=document.getElementById('cue'),dl=fr.querySelector('.door.l'),nt=document.getElementById('nt');
   function set(open){fr.classList.toggle('open',open);if(open){room.removeAttribute('inert');dl.setAttribute('aria-label','Doors open')}else{room.setAttribute('inert','');dl.setAttribute('aria-label','Open the doors')}
     cue.innerHTML=open?'<b>TAP</b> × TO CLOSE':'<b>TAP</b> TO OPEN'}
-  fr.querySelectorAll('.door').forEach(function(d){d.addEventListener('click',function(){touched=true;set(!fr.classList.contains('open'))})});
+  fr.querySelectorAll('.door').forEach(function(d){d.addEventListener('click',function(){touched=true;fr.classList.remove('ajar');set(!fr.classList.contains('open'))});
+    d.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse'&&!fr.classList.contains('open'))fr.classList.add('ajar')});
+    d.addEventListener('pointerleave',function(){fr.classList.remove('ajar')})});
+  dl.addEventListener('focus',function(){if(dl.matches(':focus-visible')&&!fr.classList.contains('open'))fr.classList.add('ajar')});dl.addEventListener('blur',function(){fr.classList.remove('ajar')});
   dl.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();touched=true;set(true);setTimeout(function(){document.getElementById('em').focus({preventScroll:true})},PM.RM?0:900)}});
   document.getElementById('cl').addEventListener('click',function(){touched=true;set(false);dl.focus({preventScroll:true})});
   document.getElementById('fm').addEventListener('submit',function(e){e.preventDefault();var v=document.getElementById('em').value.trim();

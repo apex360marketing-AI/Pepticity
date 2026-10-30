@@ -371,7 +371,7 @@ html[data-motion="off"]{--pc-motion:0}
 .mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(230,233,237,.13)}
 .slot{position:relative}
 .slot.wm{width:min(260px,44%);aspect-ratio:5.4/1}
-.slot.hl{width:100%;aspect-ratio:4.6/1;margin:clamp(2px,1vh,10px) 0}
+.slot.hl{width:100%;aspect-ratio:4.6/1;margin:clamp(2px,1vh,10px) 0;cursor:pointer}
 .mono{font:500 10.5px/1.5 var(--mono);letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
 .mono b{font-weight:500;color:var(--acc-text)}
 .cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,.8fr);gap:clamp(16px,3vw,40px);align-items:start}
@@ -872,6 +872,8 @@ if (stage) {
   const replay = () => { [A, B].forEach(o => { if (!o.st || REDUCED) return; o.st.intro = 0; o.st.t0 = performance.now(); o.st.l.forEach(s => { s.ry = -1.4; }); }); wake(3200); };
   PM.on('play', replay);
   addEventListener('pointermove', () => wake(900), { passive: true });
+  /* tap or click the headline: the letters turn in again */
+  slotEl('hl').addEventListener('pointerdown', replay);
   if (PM.playing) wake(3200);
   let acc = 0; PM.ambient(dt => { acc += dt; if (acc > 11) { acc = 0; replay(); } });
 }

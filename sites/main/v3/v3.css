@@ -897,3 +897,24 @@ html.rm .doors2{height:auto} html.rm .d2-stage{position:relative;height:100vh}
 @media (max-width:640px){.int-grid>li,.int-grid>li:nth-child(n+5),.int-grid>li:last-child{grid-column:1/-1}}
 .int-card .n{display:block;margin-top:8px;font:400 9px var(--display);letter-spacing:.24em;color:var(--muted)}
 .pp-note{margin:0;font-size:13px;color:var(--ink-2)}
+.lab-fade{background:var(--light)}
+.lab.holo-on .lab-label{opacity:0;transition:opacity .4s}
+.lab-label{transition:opacity .4s}
+html.rm .holo{position:relative;left:auto!important;top:auto!important;width:auto;height:auto;visibility:visible;margin-top:14px;z-index:auto}
+html.rm .holo-beam{display:none} html.rm .holo-print{position:relative;bottom:auto;left:auto;width:auto;transform:none;clip-path:none;opacity:1}
+html.rm .holo-x{display:none}
+.sr.lq{position:absolute}
+.eyebrow span{white-space:nowrap}
+@media (max-height:980px){.hero .scroll-cue{display:none}}
+.lab-plaque{width:auto;padding:0 1.2em}
+.lab-plaque b{font-size:.82em;letter-spacing:.16em;white-space:nowrap}
+/* hologram legibility over bright footage (hologram-panels: scrim inside the panel when needed) */
+.photo .holo-panel{background-color:rgba(6,8,12,.36)}
+[data-version="white"] .photo .holo-panel{background-color:rgba(255,255,255,.34)}
+/* the concierge steps aside while the cart, a dialog or the menu is open */
+html.drawer-open .pb-root,html.modal-open .pb-root,html.menu-open .pb-root{display:none!important}
+/* WHITE glass stays cool and neutral: no warm cast from the city or lab behind it (brand-lock colour check) */
+[data-version="white"] .lq{-webkit-backdrop-filter:blur(14px) saturate(.8) brightness(var(--lq-dim));backdrop-filter:blur(14px) saturate(.8) brightness(var(--lq-dim))}
+[data-version="white"] .photo .lq{-webkit-backdrop-filter:blur(14px) saturate(.45) brightness(var(--lq-dim));backdrop-filter:blur(14px) saturate(.45) brightness(var(--lq-dim))}
+[data-version="white"] .photo .lq .x3d{--chrome:linear-gradient(180deg,#3a3e44 0%,#111214 46%,#5b6067 54%,#2a2d31 100%);--ext:#9aa0a8;--ext-2:#c9cdd3;--ext-sh:rgba(40,44,50,.22)}
+[data-version="white"] .d2-pane{-webkit-backdrop-filter:blur(9px) saturate(.6) brightness(1.12);backdrop-filter:blur(9px) saturate(.6) brightness(1.12)}
