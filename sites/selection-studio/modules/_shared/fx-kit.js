@@ -69,6 +69,7 @@
     for (var i = 0; i < subs.length; i++) { try { if (subs[i](dt, FX.t, now, live)) busy = true; } catch (e) { console.error(e); } }
     if (live || busy || woke) { woke = false; raf = requestAnimationFrame(frame); }
   }
+  FX.idle = function () { return !raf; };   /* true when the module's loop has gone to sleep (paused and settled) */
   FX.wake = function () { woke = true; if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
 
   /* ---------------- play / pause ---------------- */

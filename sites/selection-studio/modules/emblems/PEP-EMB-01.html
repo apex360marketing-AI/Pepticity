@@ -73,7 +73,8 @@ else {
     hov = FX.damp(hov, near ? 1 : 0, 4, dt);
     /* idle turn when playing; faster when pointed at; a flick carries on and settles back to the idle speed */
     const idle = live ? 0.55 + hov * 1.6 : 0;
-    if (!drag) { vel = FX.rm ? 0 : vel + (idle - vel) * (1 - Math.exp(-1.2 * dt)); yaw += vel * dt; }
+    /* paused: it coasts to a stop a little quicker, then the loop sleeps */
+    if (!drag) { vel = FX.rm ? 0 : vel + (idle - vel) * (1 - Math.exp(-(live ? 1.2 : 2.6) * dt)); if (Math.abs(vel - idle) < 0.004) vel = idle; yaw += vel * dt; }
     if (FX.rm) { flip = flipT; } else { flipV += ((flipT - flip) * 50 - flipV * 9) * dt; flip += flipV * dt; }
     lean = FX.damp(lean, near ? P.ny * 0.18 : 0, 4, dt);
     coin.rotation.set(0.06 + lean, yaw + flip, 0);

@@ -11,6 +11,7 @@
 <!--@pmark-->
 <style>
 .scene{perspective:1000px;width:min(470px,86vw);aspect-ratio:.8;max-height:calc(100vh - 150px)}
+.scene:focus{outline:none}.scene:focus-visible .plate{box-shadow:inset 0 0 0 2px var(--acc-text)}
 .rig{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
 .L{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
 .plate{--c:30px;transform:translateZ(0);clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));
@@ -47,7 +48,7 @@
 <!--@stage-->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a3a29b"/><stop offset=".46" stop-color="#6b6a64"/><stop offset=".54" stop-color="#2a2a28"/><stop offset="1" stop-color="#8e8d85"/></linearGradient></defs></svg>
 <main class="pm-main">
-  <div class="scene" id="scene" aria-label="PEPTICITY layered glass card" role="img">
+  <div class="scene" id="scene" aria-label="PEPTICITY layered glass card. Use the arrow keys to tilt it." role="img" tabindex="0">
     <div class="rig" id="rig">
       <span class="shadow" aria-hidden="true"></span>
       <div class="L plate"></div>
@@ -74,6 +75,9 @@
   sc.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'&&!PM.RM)at(e.clientX,e.clientY)});
   sc.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse'){hot=false;tx=ty=0;loop.kick()}});
   document.addEventListener('pointerleave',function(){hot=false;tx=ty=0;loop.kick()});
+  sc.addEventListener('keydown',function(e){var m={ArrowLeft:[0,-6],ArrowRight:[0,6],ArrowUp:[5,0],ArrowDown:[-5,0]}[e.key];if(!m||PM.RM)return;e.preventDefault();hot=true;tx=PM.clamp(tx+m[0],-15,15);ty=PM.clamp(ty+m[1],-18,18);gl.style.setProperty('--go','1');loop.kick()});
+  sc.addEventListener('focus',function(){if(PM.RM)return;hot=true;tx=-6;ty=10;gl.style.setProperty('--go','1');loop.kick()});
+  sc.addEventListener('blur',function(){hot=false;tx=ty=0;gl.style.setProperty('--go','.5');loop.kick()});
   /* idle sway while playing so the depth reads even in a still tile */
   PM.ambient(function(dt){if(hot)return;t+=dt;ty=Math.sin(t*.6)*9;tx=Math.sin(t*.43+1)*4.5;loop.kick()});
   PM.on('pause',function(){if(!hot){tx=ty=0;loop.kick()}});

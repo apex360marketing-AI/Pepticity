@@ -20,6 +20,7 @@
     linear-gradient(rgba(220,226,234,.4),rgba(150,156,166,.4)) 100% 0/1px calc(100% - var(--c)) no-repeat,
     radial-gradient(120% 70% at 10% -10%,rgba(255,255,255,.16),transparent 50%),
     linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,0) 40%,rgba(255,255,255,.03))}
+.lg:focus{outline:none}.lg:focus-visible{box-shadow:inset 0 0 0 2px var(--acc-text)}
 .lg::before{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 26px rgba(255,255,255,.06),inset 0 -18px 30px -18px color-mix(in srgb,var(--acc) 30%,transparent)}
 .lg .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .kick{font:400 9px/1 var(--fh);letter-spacing:.34em;color:var(--ink2);text-shadow:0 1px 6px rgba(0,0,0,.7)}
@@ -40,7 +41,7 @@ p{margin:0;max-width:34ch;font-size:14.5px;line-height:1.55;color:#e3e6ea;text-s
 <body data-code="PEP-CRD-08" data-name="LIQUID GLASS" data-hint="HOVER">
 <!--@stage-->
 <main class="pm-main">
-  <article class="lg" id="lg">
+  <article class="lg" id="lg" tabindex="0" aria-label="Liquid glass demo. Focus or point at it to drop a lens.">
     <div class="top"><span class="kick">CLEAR GLASS · REAL REFRACTION</span><span class="tag">LIVE</span></div>
     <div><h2>LIQUID GLASS</h2><p>The smoke behind bends through the glass, most at the cut edges. Move over it to drop a lens.</p></div>
     <span class="ring" id="ring" aria-hidden="true"></span><span class="dot" id="dot" aria-hidden="true"></span>
@@ -90,6 +91,9 @@ p{margin:0;max-width:34ch;font-size:14.5px;line-height:1.55;color:#e3e6ea;text-s
   lg.addEventListener('pointerenter',function(e){at(e);dx=tx;dy=ty;hot=true;lg.classList.add('hot');TR=Math.min(92,lg.offsetHeight*.3);loop.kick()});
   lg.addEventListener('pointermove',function(e){at(e);loop.kick()});
   lg.addEventListener('pointerleave',function(){hot=false;lg.classList.remove('hot');TR=0;loop.kick()});
+  lg.addEventListener('focus',function(){if(hot)return;tx=lg.offsetWidth*.5;ty=lg.offsetHeight*.45;dx=tx;dy=ty;lg.classList.add('hot');TR=Math.min(92,lg.offsetHeight*.3);loop.kick()});
+  lg.addEventListener('blur',function(){if(hot)return;lg.classList.remove('hot');TR=0;loop.kick()});
+  lg.addEventListener('keydown',function(e){var m={ArrowLeft:[-24,0],ArrowRight:[24,0],ArrowUp:[0,-24],ArrowDown:[0,24]}[e.key];if(!m)return;e.preventDefault();tx=PM.clamp(tx+m[0],0,lg.offsetWidth);ty=PM.clamp(ty+m[1],0,lg.offsetHeight);loop.kick()});
   lg.addEventListener('pointerdown',function(e){at(e);TR=Math.min(130,lg.offsetHeight*.42);loop.kick()});
   lg.addEventListener('pointerup',function(){TR=hot?Math.min(92,lg.offsetHeight*.3):0;loop.kick()});
   /* the edge bend eases in when the module starts */

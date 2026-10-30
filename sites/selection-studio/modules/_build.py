@@ -100,7 +100,9 @@ def build(path):
         s = s.replace(extra.group(0), "")
     gf = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
           '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?%s&display=swap">') % "&".join(fams)
-    head = '<link rel="icon" href="data:,">' + gf + FONTS + "<style>\n" + RUNTIME_CSS + "</style>"
+    early = ('<script>/* accent before first paint (no fade from the default) */(function(){try{var a=(new URLSearchParams(location.search).get("acc")||"").toLowerCase();'
+             'if(["chartreuse","blue","cyan","red","violet","orchid","copper","salmon","platinum"].indexOf(a)>-1)document.documentElement.setAttribute("data-acc",a)}catch(e){}})();</script>')
+    head = '<link rel="icon" href="data:,">' + early + gf + FONTS + "<style>\n" + RUNTIME_CSS + "</style>"
     s = s.replace("<!--@head-->", head)
     s = s.replace("<!--@stage-->", STAGE)
     s = s.replace("<!--@tail-->", "<script>\n" + RUNTIME_JS + "</script>")

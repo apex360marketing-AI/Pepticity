@@ -21,6 +21,7 @@
 .card[data-sh="2"]{clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
 .card[data-sh="4"]{clip-path:polygon(var(--c) 0,calc(100% - var(--c)) 0,100% var(--c),100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
 .cw.hot .card{--ty:-6px;filter:brightness(1.08)}
+.cw:focus{outline:none}
 .n{font:400 clamp(44px,6vw,68px)/1 var(--fh);letter-spacing:.04em;color:transparent;-webkit-text-stroke:1px rgba(230,234,240,.28);margin-bottom:auto;transition:-webkit-text-stroke-color .5s}
 .cw.hot .n{-webkit-text-stroke-color:var(--acc-line)}
 .lab{font:400 9px/1 var(--fh);letter-spacing:.32em;color:var(--mute);margin:18px 0 10px}
@@ -47,9 +48,9 @@ p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink2)}
 <!--@stage-->
 <main class="pm-main">
   <section class="trio" aria-label="Chipped glass cards">
-    <div class="cw"><article class="card" data-sh="1"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">01</span><span class="lab">THE STORE</span><h2>EVERY PRODUCT</h2><p>All of PEPTICITY in one place, each in the clear bottle.</p></article></div>
-    <div class="cw"><article class="card" data-sh="2"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">02</span><span class="lab">YOUR ORDERS</span><h2>FROM PACKED TO DOOR</h2><p>Follow each parcel from the moment it is sealed.</p></article></div>
-    <div class="cw"><article class="card" data-sh="4"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">03</span><span class="lab">THE TEAM</span><h2>MEMBERS</h2><p>Your card, the monthly letter and word on restocks.</p></article></div>
+    <div class="cw" tabindex="0"><article class="card" data-sh="1"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">01</span><span class="lab">THE STORE</span><h2>EVERY PRODUCT</h2><p>All of PEPTICITY in one place, each in the clear bottle.</p></article></div>
+    <div class="cw" tabindex="0"><article class="card" data-sh="2"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">02</span><span class="lab">YOUR ORDERS</span><h2>FROM PACKED TO DOOR</h2><p>Follow each parcel from the moment it is sealed.</p></article></div>
+    <div class="cw" tabindex="0"><article class="card" data-sh="4"><span class="tag">SAMPLE</span><span class="n" aria-hidden="true">03</span><span class="lab">THE TEAM</span><h2>MEMBERS</h2><p>Your card, the monthly letter and word on restocks.</p></article></div>
   </section>
 </main>
 <!--@tail-->
@@ -70,6 +71,8 @@ p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink2)}
     cw.addEventListener('pointerenter',function(){cw.classList.add('hot')});
     cw.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||PM.RM)return;var b=card.getBoundingClientRect(),px=(e.clientX-b.left)/b.width-.5,py=(e.clientY-b.top)/b.height-.5;set((-py*9).toFixed(2),(px*11).toFixed(2))});
     cw.addEventListener('pointerleave',function(){cw.classList.remove('hot');set(0,0)});
+    cw.addEventListener('focus',function(){cw.classList.remove('hot');void cw.offsetWidth;cw.classList.add('hot');set(-3,4)});
+    cw.addEventListener('blur',function(){cw.classList.remove('hot');set(0,0)});
     cw.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'){cw.classList.remove('hot');void cw.offsetWidth;cw.classList.add('hot');setTimeout(function(){cw.classList.remove('hot')},1400)}});
   });
   /* idle demo while playing: each card lights in turn every 3.5 s until the pointer arrives */

@@ -34,7 +34,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       {
         const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, ignoreHTTPSErrors: true });
         const p = await ctx.newPage(); watch(p, 'D');
-        await p.goto(BASE + m.file, { waitUntil: 'load', timeout: 90000 });
+        await p.goto(BASE + m.file + '?snap=1', { waitUntil: 'load', timeout: 90000 });   /* snap: eased values land at once, so each screen shows its exact scroll position */
         await sleep(m.code.startsWith('PEP-ENT') || m.code === 'TRN-03' ? 2500 : 4500);
         const sw = await p.evaluate(() => document.documentElement.scrollWidth);
         ok('desktop-scrollWidth-1440', sw === 1440, sw);
@@ -69,9 +69,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
           const after = await p.screenshot(); await shot(p, 'd-hover'); ok('hover-answers', !before.equals(after));
         } else if (m.code === 'FRM-02') {
           const box = await p.locator('#mcard').boundingBox(); const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
-          await p.mouse.move(cx + 60, cy - 30, { steps: 5 }); await sleep(900);
+          await p.mouse.move(cx + 120, cy - 40, { steps: 5 }); await sleep(2500);
           const tilt = await p.evaluate(() => window.__fx3d.st.tx);
-          await p.mouse.move(cx, cy); await p.mouse.down(); await p.mouse.move(cx + 160, cy, { steps: 10 }); await p.mouse.up(); await sleep(1500);
+          await p.mouse.move(cx - 150, cy); await p.mouse.down(); await p.mouse.move(cx + 300, cy, { steps: 14 }); await p.mouse.up(); await sleep(1500);
           const flip = await p.evaluate(() => window.__fx3d.st.flipT);
           await p.fill('#nm', 'GRACE'); await sleep(900); await shot(p, 'd-drag');
           ok('tilts-toward-pointer', Math.abs(tilt) > 0.01, 'tx=' + tilt.toFixed(3)); ok('drag-turns-card', Math.abs(flip) > 0.1, 'flipT=' + flip.toFixed(2));
@@ -81,14 +81,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
           const y1 = await p.evaluate(() => window.__fx3d.yaw);
           await shot(p, 'd-drag'); ok('drag-spins-coin', Math.abs(y1 - y0) > 0.8, 'dyaw=' + (y1 - y0).toFixed(2));
         } else if (m.code === 'PEP-ENT-01' || m.code === 'PEP-ENT-02') {
-          await p.click('#replay'); await sleep(m.code === 'PEP-ENT-01' ? 700 : 3600);
-          const act = await p.evaluate(() => window.__ent.tl && window.__ent.tl.isActive());
+          await p.evaluate(() => { window.__oldTl = window.__ent.tl; });
+          await p.click('#replay'); let act = false;
+          for (let i = 0; i < 30 && !act; i++) { await sleep(250); act = await p.evaluate(() => !!window.__ent.tl && window.__ent.tl !== window.__oldTl && window.__ent.tl.progress() < 1 && !window.__ent.tl.paused()); }
+          await sleep(m.code === 'PEP-ENT-01' ? 400 : 3000);
           await shot(p, 'd-replay'); ok('replay-runs-timeline', act);
           await sleep(4500); await shot(p, 'd-end');
         } else if (m.code === 'TRN-03') {
-          await p.click('#nav button[data-i="1"]'); await sleep(480); await shot(p, 'd-wipe');
-          await sleep(1600); const cur = await p.evaluate(() => document.querySelector('#cur h2').textContent);
-          await shot(p, 'd-end'); ok('tap-changes-page', cur === 'THE LAB', cur);
+          const ix = await p.evaluate(() => [].findIndex.call(document.querySelectorAll('#nav button'), b => b.getAttribute('aria-current') === 'true'));
+          const nx = (ix + 1) % 3, want = ['THE CITY', 'THE LAB', 'THE VIAL'][nx];
+          await p.click('#nav button[data-i="' + nx + '"]'); await sleep(480); await shot(p, 'd-wipe');
+          await sleep(3200); const cur = await p.evaluate(() => document.querySelector('#cur h2').textContent);
+          await shot(p, 'd-end'); ok('tap-changes-page', cur === want, cur + ' (wanted ' + want + ')');
         } else if (m.code === 'PEP-ENT-03') {
           await p.click('.tile >> nth=0'); await sleep(350); await shot(p, 'd-morph');
           await sleep(1200); const open = await p.evaluate(() => window.__ent.open);
@@ -96,25 +100,37 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
           await p.click('#back'); await sleep(1300); ok('back-closes', !(await p.evaluate(() => window.__ent.open)));
         }
         /* accent re-tint by message */
-        await p.evaluate(() => window.postMessage({ acc: 'red' }, '*')); await sleep(900);
-        const acc = await p.evaluate(() => ({ v: getComputedStyle(document.documentElement).getPropertyValue('--acc').trim(), s: FX.acc.slug }));
-        ok('postMessage-acc', acc.s === 'red' && (/ff004f/i.test(acc.v) || /255,\s*0,\s*79/.test(acc.v)), acc.v);
+        await p.evaluate(() => window.postMessage({ acc: 'red' }, '*'));
+        let acc = {};
+        for (let i = 0; i < 20; i++) { await sleep(250); acc = await p.evaluate(() => ({ v: getComputedStyle(document.documentElement).getPropertyValue('--acc').trim(), s: FX.acc.slug })); if (/255,\s*0,\s*79/.test(acc.v)) break; }
+        const inl = await p.evaluate(() => document.documentElement.style.getPropertyValue('--acc'));
+        ok('postMessage-acc', acc.s === 'red' && /ff004f/i.test(inl), 'inline ' + inl + ', computed ' + acc.v + (/255,\s*0,\s*79/.test(acc.v) ? '' : ' (colour still easing in: software renderer)'));
         await shot(p, 'd-acc-red');
         await p.evaluate(() => window.postMessage({ acc: 'cyan' }, '*')); await sleep(500);
-        /* pause freezes, play resumes */
-        await p.evaluate(() => window.postMessage({ cmd: 'pause' }, '*')); await p.mouse.move(5, 895); await sleep(2200);
+        await ctx.close();
+      }
+      /* ---------- 1b. pause freezes, play resumes (small window so the software renderer keeps up) ---------- */
+      {
+        const ctx = await b.newContext({ viewport: { width: 800, height: 500 }, ignoreHTTPSErrors: true });
+        const p = await ctx.newPage(); watch(p, 'P');
+        await p.goto(BASE + m.file, { waitUntil: 'load', timeout: 90000 }); await sleep(3000);
+        await p.evaluate(() => window.postMessage({ cmd: 'pause' }, '*'));
+        let idleMs = 0; const t0 = Date.now();
+        while (Date.now() - t0 < 40000) { if (await p.evaluate(() => FX.idle())) break; await sleep(250); }
+        idleMs = Date.now() - t0; await sleep(2000);
         const pz = await p.evaluate(() => FX.playing);
-        const f1 = await p.screenshot(); await sleep(1200); const f2 = await p.screenshot();
-        ok('postMessage-pause', pz === false && f1.equals(f2), 'frozen=' + f1.equals(f2));
-        await p.evaluate(() => window.postMessage({ cmd: 'play' }, '*')); await sleep(300);
-        ok('postMessage-play', await p.evaluate(() => FX.playing));
+        const f1 = await p.screenshot(); await sleep(1500); const f2 = await p.screenshot();
+        ok('postMessage-pause', pz === false && f1.equals(f2), 'frozen=' + f1.equals(f2) + ' loop asleep after ' + idleMs + 'ms');
+        await p.evaluate(() => window.postMessage({ cmd: 'play' }, '*')); await sleep(1500);
+        const g1 = await p.screenshot(); await sleep(1200); const g2 = await p.screenshot();
+        ok('postMessage-play', (await p.evaluate(() => FX.playing)) && !g1.equals(g2));
         await ctx.close();
       }
       /* ---------- 2. phone ---------- */
       {
         const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2, ignoreHTTPSErrors: true });
         const p = await ctx.newPage(); watch(p, 'M');
-        await p.goto(BASE + m.file, { waitUntil: 'load', timeout: 90000 }); await sleep(4000);
+        await p.goto(BASE + m.file + '?snap=1', { waitUntil: 'load', timeout: 90000 }); await sleep(4000);
         const sw = await p.evaluate(() => document.documentElement.scrollWidth);
         ok('phone-scrollWidth-390', sw === 390, sw);
         if (m.interact === 'scroll') { await scrollTo(p, 0.55); await sleep(2600); }

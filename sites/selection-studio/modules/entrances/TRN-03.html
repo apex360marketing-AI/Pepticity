@@ -52,13 +52,14 @@ body{background:#060607}
 (function () {
   FX.hint('tap', 'TAP A PAGE');
   var $ = function (s) { return document.querySelector(s); };
-  var cur = $('#cur'), nxt = $('#nxt'), scan = $('#scan'), D = document.documentElement, idx = 0, busy = false, auto = 0;
+  var cur = $('#cur'), nxt = $('#nxt'), scan = $('#scan'), D = document.documentElement, idx = 0, busy = false, auto = 0, pending = -1;
   var btns = [].slice.call(document.querySelectorAll('#nav button'));
   function fill(el, i) { el.className = 'pg' + (i === 2 ? ' vial' : ''); el.innerHTML = document.getElementById('p' + i).innerHTML; }
   fill(cur, 0);
   var anim = null;
   function go(i) {
-    if (busy || i === idx) return; busy = true;
+    if (busy) { pending = i; return; }   /* tapped during a wipe: it runs straight after */
+    if (i === idx) return; busy = true;
     fill(nxt, i); btns.forEach(function (b, k) { b.setAttribute('aria-current', String(k === i)); });
     var H = innerHeight;
     if (FX.rm) { fill(cur, i); idx = i; busy = false; return; }
@@ -66,6 +67,7 @@ body{background:#060607}
     scan.style.opacity = '1'; FX.wake();
   }
   btns.forEach(function (b) { b.addEventListener('click', function () { auto = performance.now(); go(+b.dataset.i); }); });
+  auto = performance.now();
   addEventListener('fx:replay', function () { go((idx + 1) % 3); });
   var lastAuto = performance.now();
   FX.loop(function (dt, t, now, live) {
@@ -79,11 +81,14 @@ body{background:#060607}
     D.style.setProperty('--dim', (1 - 0.45 * Math.sin(Math.min(1, q * 1.2) * Math.PI / 2)).toFixed(3));
     if (q >= 1) {
       fill(cur, anim.i); idx = anim.i; nxt.style.clipPath = 'inset(0 0 100% 0)'; nxt.innerHTML = ''; D.style.setProperty('--dim', '1');
-      scan.style.opacity = '0'; anim = null; busy = false; lastAuto = now; return false;
+      scan.style.opacity = '0'; anim = null; busy = false; lastAuto = now;
+      if (pending > -1) { var nx = pending; pending = -1; go(nx); return true; }
+      return false;
     }
     return true;
   });
-  window.__ent = { go: go, seek: function (s) { if (!anim) go((idx + 1) % 3); if (anim) anim.t0 = performance.now() - s * 1000; } };
+  window.__ent = { go: go, seek: function (s) { if (!anim) go((idx + 1) % 3); if (anim) anim.t0 = performance.now() - s * 1000; },
+    freeze: function (q) { if (!anim) go((idx + 1) % 3); if (anim) { anim.dur = 1e7; anim.t0 = performance.now() - q * 1e7; FX.wake(); } } };   /* test hook: hold the wipe at q (0..1) */
 })();
 </script>
 </body>

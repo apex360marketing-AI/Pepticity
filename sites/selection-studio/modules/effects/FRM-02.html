@@ -234,7 +234,7 @@ if (renderer) {
     rig.rotation.set(fl2 * 0.035 * m, Math.sin(t * 0.5) * 0.05 * m, 0);
     tiltG.rotation.set(st.ty + st.dragX, st.tx, 0);
     card.rotation.y = st.flip;
-    st.flare = Math.max(0, st.flare - dt * 0.9);
+    st.flare = FX.rm ? 0 : Math.max(0, st.flare - dt * 0.9);
     const breathe = FX.rm ? 0.6 : 0.5 + 0.5 * Math.sin(t * 1.5), f = Math.min(1.4, st.flare);
     halo.material.opacity = 0.34 + breathe * 0.3 + f * 0.9; halo.scale.setScalar(1 + breathe * 0.08 + f * 0.35);
     uvSide.emissiveIntensity = 0.12 + breathe * 0.25 + f * 1.4; chipRim.material.opacity = 0.35 + breathe * 0.35 + f * 0.6;

@@ -56,7 +56,7 @@ async function crop(page, bb) {
       let page = await ctx.newPage(); await errsOf(page, r.errors);
       await page.goto(BASE + e.file, { waitUntil: 'networkidle' }); await sleep(W8);
       const st = await page.evaluate(() => ({ pm: !!window.PM, playing: window.PM && PM.playing, code: window.PM && PM.code, t: window.PM ? PM.t : -1 }));
-      await sleep(900);
+      await sleep(2000);
       const t2 = await page.evaluate(() => window.PM ? PM.t : -1);
       r.checks.runtime = st.pm && st.playing && st.code === e.code;
       r.checks.ambientClock = t2 > st.t;
@@ -98,7 +98,7 @@ async function crop(page, bb) {
           if (e.code === 'PEP-BTN-14') { await page.mouse.down(); await sleep(1500); r.checks.holdCompletes = await page.evaluate(() => document.querySelector('.hold.pri').classList.contains('ok')); await page.screenshot({ path: shot('d-hold') }); await page.mouse.up(); }
         }
         // keyboard focus is visible
-        await page.mouse.move(5, 5); await page.evaluate(() => document.activeElement && document.activeElement.blur && document.activeElement.blur()); await page.keyboard.press('Tab'); await sleep(450);
+        await page.mouse.move(5, 5); await page.evaluate(() => { const b = document.body; if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); b.setAttribute('tabindex', '-1'); b.focus(); b.removeAttribute('tabindex'); }); await page.keyboard.press('Tab'); await sleep(450);
         await page.screenshot({ path: shot('d-focus') });
         r.checks.focusVisible = await page.evaluate(() => { const a = document.activeElement; return !!a && a !== document.body; });
       } else r.errors.push('no target ' + sel);

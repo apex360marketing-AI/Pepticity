@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' data: https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>PEPTICITY ARSENAL · THE BRAND BOOK</title>
 <meta name="description" content="PEPTICITY ARSENAL: the PEPTICITY font, colours, rules, button, glass, background and every effect on the site, in one place.">
 <link rel="icon" href="@B64:brand/logo/p-mark.svg@" type="image/svg+xml">
@@ -10,7 +12,13 @@
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-} }
+},
+  "integrity": {
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js": "sha384-61S/Nu32S3E5+n+KpCOTb2eRYps6fVKm+9Gz1QBvSePFthb46f063Aa/qe/lykFZ",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js": "sha384-ZGqh+dJjt6z9NHsWYYt+TPDFj8y+2If7naI6a6AkkyNZyH51CVS3HTWFh0njp4k6",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js": "sha384-jHGXS4+FuVOBnZkNme2ury3Ccg5DWDLYK22xX/WGdZCZsjRM4J+3n6Qc4CXx1Hjf",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/SVGLoader.js": "sha384-9bjPxggmiDnjr/OACK/AtBAq85KJBJ8uSxAccTaM1brUeoDRXfcC1wAo3l6hRsfZ"
+  } }
 </script>
 <style>
 @FONTFACE@
@@ -752,7 +760,7 @@ setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},1500
             <div class="state"><span>NOT AVAILABLE</span><button class="pc-btn" type="button" disabled><span class="pc-btn__face"><span class="pc-btn__label">SOLD OUT</span></span></button></div>
             <div class="state"><span>WITH ARROW</span><button class="pc-btn" type="button" tabindex="-1"><span class="pc-btn__face"><span class="pc-btn__label">CONTINUE</span><i class="pc-btn__icon" aria-hidden="true"></i></span></button></div>
           </div>
-<pre class="code-blk" aria-label="Button markup">&lt;button class="pc-btn" type="button"&gt;
+<pre class="code-blk" tabindex="0" role="region" aria-label="Button markup">&lt;button class="pc-btn" type="button"&gt;
   &lt;span class="pc-btn__face"&gt;
     &lt;span class="pc-btn__label"&gt;VIEW THE RANGE&lt;/span&gt;
   &lt;/span&gt;
@@ -1015,7 +1023,7 @@ setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},1500
                 <label class="consent"><input type="checkbox" name="c"><span>Yes, PEPTICITY may email me restock alerts and occasional news. I can unsubscribe any time.</span></label>
                 <p class="err" role="alert"></p>
                 <div class="seal-row">
-                  <button class="seal" type="submit" id="seal" aria-label="Seal me in (preview, nothing is sent)">
+                  <button class="seal" type="submit" id="seal" aria-label="PEPTICITY TEAM - SEAL ME IN (preview, nothing is sent)">
                     <svg viewBox="0 0 100 100" aria-hidden="true">
                       <defs><path id="sealPath" d="M50 50 m-38 0 a38 38 0 1 1 76 0 a38 38 0 1 1 -76 0"/></defs>
                       <circle class="disc" cx="50" cy="50" r="31"/>
@@ -1125,7 +1133,7 @@ setTimeout(function(){if(!window.__type3d)window.type3dFallback('timeout')},1500
 <footer data-effect="TXT-13" aria-label="Footer">
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center;margin-bottom:18px"><i></i><span>TXT-13 · RISING WORDMARK</span><i></i></p>
-    <div class="rise" id="rise" aria-label="PEPTICITY"></div>
+    <div class="rise" id="rise" role="img" aria-label="PEPTICITY"></div>
     <div class="foot-row">
       <span><b>PEPTICITY ARSENAL</b> &nbsp; The brand book, prepared for Grace.</span>
       <span>Every form on this page is a preview: nothing is sent. Sample content is marked as sample.</span>

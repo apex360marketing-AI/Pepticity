@@ -74,7 +74,7 @@
   var $ = function (s) { return document.querySelector(s); };
   var sc = FX.scroller($('#sc'), { ease: 4.2 }); FX.hint('scroll');
   var N = 121, FPS = 12;
-  var film = FX.frames({ canvas: $('#film'), n: N, focus: [0.62, 0.5], url: function (i) { return '../_assets/chest/c-' + ('00' + i).slice(-3) + '.webp'; } });
+  var film = FX.frames({ canvas: $('#film'), n: N, focus: innerHeight > innerWidth ? [0.5, 0.36] : [0.62, 0.5], url: function (i) { return '../_assets/chest/c-' + ('00' + i).slice(-3) + '.webp'; } });
   /* split each chapter word into letters for the rise */
   var beats = [].slice.call(document.querySelectorAll('.beat')).map(function (b) {
     var h = b.querySelector('h2'), t = h.textContent; h.setAttribute('aria-label', t);
@@ -91,7 +91,9 @@
     var f = FX.rm ? (p < 0.3 ? 0 : p < 0.6 ? Math.round((N - 1) * 0.66) : N - 1) : u * (N - 1);
     /* wide screens: the case sits right of centre so the chapter words have their own dark side */
     var wide = innerWidth / innerHeight > 1.15;
-    var zoom = (wide ? 0.92 : 1.02) + (FX.rm ? 0 : 0.012 * Math.sin(t * 0.5));
+    /* portrait phones: the whole case across the width (a touch cropped), sitting in the upper part of the frame */
+    var zoomP = innerHeight > innerWidth ? 1.3 * innerWidth * 720 / (1280 * innerHeight) : 1.02;
+    var zoom = (wide ? 0.92 : zoomP) + (FX.rm ? 0 : 0.012 * Math.sin(t * 0.5));
     if (film.draw(f, zoom, wide ? 0.15 : 0)) busy = true;
     strip.style.setProperty('--p', p.toFixed(4));
     var secs = f / FPS * (241 / 242); tc.textContent = '00:' + pad(Math.floor(secs)) + ':' + pad(Math.floor((secs % 1) * 24));

@@ -255,7 +255,7 @@ function t3layer() {
 }
 function t3replay(el, delay) { el.__t3reset = 1; el.__t3delay = delay || 0; T3.stage && T3.stage.kick(); }
 var ACCPOP = false;
-function layerOK(el) { return el.__layer === T3.layer || (el.__layer === 'chrome' && (T3.layer === 'page' || T3.layer === 'pop')); }
+function layerOK(el) { return el.__layer === T3.layer || (el.__layer === 'chrome' && (T3.layer === 'page' || T3.layer === 'pop' || (T3.layer === 'board' && !PHONE.matches))); }
 function inBand(r) {
   var topB = PHONE.matches ? 60 : 72, botB = innerHeight - (PHONE.matches ? 70 : 0), mid = (r.top + r.bottom) / 2;
   return mid > topB + 2 && mid < botB;
@@ -393,7 +393,9 @@ function show(id, first) {
     { opacity: 0, transform: 'translateX(' + (-dir * 36) + 'px) scale(.985)', filter: PHONE.matches ? 'blur(0px)' : 'blur(6px)' }],
     { duration: 260, easing: EASE_IN, fill: 'forwards' });
   setTimeout(function () {
-    swap(); enter(el, c, 0.3); busy = false;
+    try { swap(); enter(el, c, 0.3); }
+    catch (e) { console.error('[studio] chapter change:', e); }
+    finally { busy = false; }
     if (pending) { var p = pending; pending = null; if (p !== cur.id) show(p); }
   }, 290);
 }
@@ -453,7 +455,7 @@ function render(c) {
 }
 function mount(c, el) {
   if (crownable(c)) { paintCbar(c); liveOpts(c).forEach(function (o) { paintOpt(o.code, true); }); }
-  if (c.kind === 'modules') lvScan(el);
+  if (c.kind === 'modules') { lvScan(el); lvSchedule(); setTimeout(lvSchedule, 120); }
   if (c.kind === 'set') $$('.tl__img img', el).forEach(function (im) { if (im.complete && im.naturalWidth) im.classList.add('ok'); else { im.addEventListener('load', function () { im.classList.add('ok'); }, { once: true }); im.addEventListener('error', function () { im.classList.add('ok'); }, { once: true }); } });
   if (c.kind === 'accents') setAccent(S.acc, true);
   if (c.kind === 'review') REV.start(el);
@@ -536,8 +538,7 @@ function over(o, hint, isMod) {
   return '<div class="tl__over"><div class="tl__row"><span style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip gx chip--code">' + esc(o.code) + '</span>' +
     (o.current ? '<span class="chip gx chip--cur">CURRENT PICK</span>' : '') + '<span class="chip gx chip--final">' + ico('i-crown') + 'FINAL PICK</span></span>' + tryB + '</div>' +
     '<div class="tl__row">' + (hint ? '<span class="chip gx">' + ico(hint.i) + hint.t + '</span>' : '<span></span>') +
-    (isMod ? '<span style="display:flex;gap:6px">' + (CH[o.ch] && CH[o.ch].replay ? '<button class="chip gx chip--btn" type="button" data-replay aria-label="Replay ' + esc(o.code) + '">' + ico('i-replay') + 'REPLAY</button>' : '') +
-      '<span class="chip gx chip--live"><i></i><span data-livet>PAUSED</span></span></span>' : '') + '</div></div>';
+    (isMod ? '<span style="display:flex;gap:6px">' + '<span class="chip gx chip--live"><i></i><span data-livet>PAUSED</span></span></span>' : '') + '</div></div>';
 }
 
 /* ---------------------------------------------------------------- picking */
@@ -625,8 +626,15 @@ function lvSchedule() { if (!LV.raf) LV.raf = requestAnimationFrame(lvEval); }
 function lvCaps() {
   return { play: PHONE.matches ? C.live.maxPlayingPhone : C.live.maxPlaying, load: PHONE.matches ? C.live.maxLoadedPhone : C.live.maxLoaded };
 }
+function lvMeasure(t) {      // geometry straight from the layout, so loading never waits on observer timing
+  var r = t.getBoundingClientRect(), vh = innerHeight, m = LV.margin;
+  t.__near = r.width > 0 && r.bottom > -m && r.top < vh + m;
+  t.__vis = r.height > 0 ? Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)) / r.height : 0;
+}
 function lvEval() {
   LV.raf = 0;
+  if (LV.margin == null) LV.margin = parseInt(C.live.loadMargin, 10) || 600;
+  LV.tiles.forEach(lvMeasure);
   var caps = lvCaps(), mid = innerHeight / 2;
   var dist = function (t) { var r = t.getBoundingClientRect(); return Math.abs((r.top + r.bottom) / 2 - mid); };
   // 1. what should be loaded: visible first, then nearest

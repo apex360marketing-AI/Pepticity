@@ -61,9 +61,9 @@
       </svg>
       <div class="shade" aria-hidden="true"></div>
       <div class="intro" id="intro"><p class="fx-eyebrow">INTO THE CITY OF PEPTICITY</p><p class="fx-p">Scroll and fly straight through the word.</p></div>
-      <figure class="cap fx-glass" data-a=".17" data-b=".42"><em>01</em><b>HIGH ABOVE THE CITY</b><span>The ride starts above the towers and drifts slowly down.</span></figure>
-      <figure class="cap fx-glass" data-a=".42" data-b=".7"><em>02</em><b>BETWEEN THE TOWERS</b><span>It weaves between the buildings at walking pace, never rushed.</span></figure>
-      <figure class="cap fx-glass" data-a=".7" data-b="1.1"><em>03</em><b>THE PEPTICITY DOORS</b><span>And it lands at street level, in front of the doors to the store.</span></figure>
+      <figure class="cap fx-glass" data-a=".17" data-b=".37"><em>01</em><b>HIGH ABOVE THE CITY</b><span>The ride starts above the towers and drifts slowly down.</span></figure>
+      <figure class="cap fx-glass" data-a=".37" data-b=".53"><em>02</em><b>BETWEEN THE TOWERS</b><span>It weaves between the buildings at walking pace, never rushed.</span></figure>
+      <figure class="cap fx-glass" data-a=".53" data-b="1.1"><em>03</em><b>THE PEPTICITY DOORS</b><span>And it lands at street level, in front of the doors to the store.</span></figure>
       <div class="load" id="load">LOADING THE CITY</div>
     </div>
   </section>
@@ -79,7 +79,7 @@
   var P_END = 0.16, W_IN = 0.12, W_OUT = 0.93;
   /* the film's own door sign (an old serif) is covered by a lit PEPTICITY plaque, tracked frame by frame
      (table measured on this film for the live site, sites/main/v2/v2.js SIGN.black: [u, x, y, width] in frame fractions) */
-  var SIGN = [[0.6, 0.49, 0.615, 0.12], [0.649, 0.494, 0.514, 0.137], [0.702, 0.496, 0.42, 0.16], [0.751, 0.498, 0.337, 0.19], [0.8, 0.5, 0.27, 0.21],
+  var SIGN = [[0.5625, 0.486, 0.696, 0.107], [0.571, 0.488, 0.681, 0.11], [0.589, 0.489, 0.643, 0.115], [0.6, 0.49, 0.615, 0.12],   /* first three: measured on these frames (w-063..066), where the sign fades in */ [0.649, 0.494, 0.514, 0.137], [0.702, 0.496, 0.42, 0.16], [0.751, 0.498, 0.337, 0.19], [0.8, 0.5, 0.27, 0.21],
     [0.853, 0.502, 0.2, 0.238], [0.902, 0.502, 0.15, 0.27], [0.951, 0.5, 0.12, 0.283], [1, 0.502, 0.108, 0.29]];
   var zoomG = $('#zoom'), portal = $('#portal'), glow = $('#glow'), mt = $('#mt'), plaque = $('#plaque'), intro = $('#intro');
   var caps = [].slice.call(document.querySelectorAll('.cap'));
@@ -131,7 +131,7 @@
       var w = L(3) * r.w * 1.08;
       plaque.style.left = (r.x + L(1) * r.w) + 'px'; plaque.style.top = (r.y + L(2) * r.h) + 'px';
       plaque.style.width = w + 'px'; plaque.style.height = (w * 0.27) + 'px'; plaque.style.fontSize = (w * 0.068) + 'px';
-      plaque.style.opacity = String(FX.ss(0.6, 0.64, u));
+      plaque.style.opacity = String(FX.ss(0.556, 0.566, u));
     } else plaque.style.opacity = '0';
     /* captions */
     caps.forEach(function (c) {

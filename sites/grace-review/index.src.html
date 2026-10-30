@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://formsubmit.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>REVIEW · YOUR SITE, YOUR WAY · PEPTICITY</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0b0b0c">
@@ -30,7 +32,7 @@ var VIEWS = {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"},"integrity":{"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js":"sha384-8/hf5tabFfIo0BPku31TKUvGIKpWGYaMwNtlSNqNyZzXgZCMd4lnOGWbJElML9dv","https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js":"sha384-ZGqh+dJjt6z9NHsWYYt+TPDFj8y+2If7naI6a6AkkyNZyH51CVS3HTWFh0njp4k6","https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js":"sha384-jHGXS4+FuVOBnZkNme2ury3Ccg5DWDLYK22xX/WGdZCZsjRM4J+3n6Qc4CXx1Hjf"}}</script>
 <style>
 /* the owner's font (brand/font/PepticityBlack.woff2), inlined */
 @font-face{font-family:"PEPTICITY BLACK";src:url(@FONT_B64@) format("woff2");font-display:block}
@@ -479,7 +481,7 @@ html.t3d .lg .pfb{visibility:hidden}
 </svg>
 
 <header class="top gx">
-  <a class="brand" href="#" id="home" aria-label="PEPTICITY · back to the start of the review">
+  <a class="brand" href="#" id="home" aria-label="PEPTICITY FOR GRACE · back to the start of the review">
     <span class="lg" data-type3d="P" role="img" aria-label="PEPTICITY P mark"><svg class="pfb" viewBox="-0.708 -0.58 1.416 1.16" aria-hidden="true"><use href="#pep-pmark"/></svg></span>
     <span class="wm"><span class="h3d" data-type3d>PEPTICITY</span><small>FOR GRACE</small></span>
   </a>
@@ -503,7 +505,7 @@ html.t3d .lg .pfb{visibility:hidden}
       </div>
       <span class="sp"></span>
       <span class="vnow" id="vnow"></span>
-      <a class="pc-btn icon-btn" id="vOpen" href="../site/" target="_blank" rel="noopener" aria-label="Open this page in a new tab" title="Open in a new tab"><span class="pc-btn__face"><span class="pc-btn__label"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"/></svg></span></span></a>
+      <a class="pc-btn icon-btn" id="vOpen" href="../site/" target="_blank" rel="noopener noreferrer" aria-label="Open this page in a new tab" title="Open in a new tab"><span class="pc-btn__face"><span class="pc-btn__label"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"/></svg></span></span></a>
     </div>
     <div class="vframe frame" id="vframe">
       <div class="vload" id="vload" aria-hidden="true"><p id="vloadT">LOADING</p><i></i></div>
@@ -658,7 +660,8 @@ var EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 
 /* ---------- state (saved as she goes) ---------- */
 var S={step:0,a:{},seen:{},email:'',text:'',done:null,view:'site'};
-try{var sv=JSON.parse(localStorage.getItem(KEY)||'null'); if(sv&&typeof sv==='object'){S.step=sv.step===0||typeof sv.step==='number'?sv.step:0;S.a=sv.a||{};S.seen=sv.seen||{};S.email=sv.email||'';S.text=sv.text||'';S.done=sv.done||null;S.view=VIEWS[sv.view]?sv.view:'site'}}catch(e){}
+function cleanA(o){var r={};if(!o||typeof o!=='object')return r;Q.forEach(function(q){var a=o[q.id];if(!a||typeof a!=='object')return;var ix=function(x,n){return Array.isArray(x)?x.filter(function(i){return typeof i==='number'&&i%1===0&&i>=0&&i<n}):[]};r[q.id]={picks:ix(a.picks,(q.opts||[]).length),dots:ix(a.dots,(q.dots||[]).length),follow:ix(a.follow,(q.follow||[]).length*10).filter(function(i){var g=q.follow[Math.floor(i/10)];return g&&i%10<g.opts.length}),note:typeof a.note==='string'?a.note:''}});return r}
+try{var sv=JSON.parse(localStorage.getItem(KEY)||'null'); if(sv&&typeof sv==='object'){S.step=sv.step===0||typeof sv.step==='number'?sv.step:0;S.a=cleanA(sv.a);S.seen=sv.seen&&typeof sv.seen==='object'?sv.seen:{};S.email=typeof sv.email==='string'?sv.email:'';S.text=typeof sv.text==='string'?sv.text:'';S.done=sv.done||null;S.view=VIEWS[sv.view]?sv.view:'site'}}catch(e){}
 if(typeof S.step!=='number'||S.step<0||S.step>N) S.step=0;
 var qEmail=''; try{qEmail=(new URLSearchParams(location.search).get('email')||'').trim()}catch(e){}
 if(qEmail) S.email=qEmail; else if(!S.email) S.email=DEFAULT_EMAIL;
@@ -740,7 +743,7 @@ Q.forEach(function(q,qi){
       '<span class="fld-box gx" style="--c:13px"><textarea class="ta" id="finalText" rows="6" placeholder="A colour, a word, a page, a feeling. Anything goes."></textarea></span>'+
       '<div class="fld" id="emFld"><label class="fl" for="em">SEND MY THANK-YOU TO</label>'+
       '<span class="fld-box gx"><input class="in" id="em" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required aria-describedby="emErr"></span>'+
-      '<p class="err" id="emErr" hidden></p></div>';
+      '<p class="err" id="emErr" hidden></p><input type="text" id="hpot" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" hidden style="display:none!important"></div>';
   } else if(q.type==='colour'){
     hint='Pick one, then any accent that catches your eye.';
     body=group('How much colour','single','',q.opts.map(function(o,k){return tile({t:o[0],s:o[1]},k,'single')}).join(''))+
@@ -953,7 +956,7 @@ function extras(q){
 function buildPayload(){
   var when=new Date(), email=emI.value.trim();
   var lines=["PEPTICITY · GRACE'S FEEDBACK",'Sent: '+when.toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short'}),'Grace: '+email,''];
-  var fields={_subject:"PEPTICITY · GRACE'S FEEDBACK",_template:'table',_captcha:'false',_replyto:email,grace_email:email};
+  var fields={_subject:"PEPTICITY · GRACE'S FEEDBACK",_template:'table',_captcha:'false',_honey:(($('#hpot')||{}).value||''),_replyto:email,grace_email:email};
   var json={form:"PEPTICITY · GRACE'S FEEDBACK",submitted_at:when.toISOString(),grace_email:email,answers:[]};
   Q.forEach(function(q,qi){
     var n=pad(qi+1), main=answerText(q), x=extras(q), key=n+' · '+q.topic;

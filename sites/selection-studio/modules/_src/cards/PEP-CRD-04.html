@@ -18,6 +18,8 @@
 .kc::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(120% 60% at 12% -8%,rgba(255,255,255,.14),transparent 46%),radial-gradient(70% 50% at 90% 110%,color-mix(in srgb,var(--acc) 10%,transparent),transparent 70%)}
 .kc::after{content:"";position:absolute;left:0;top:var(--c);width:calc(var(--c) * 1.4142);height:1px;transform-origin:0 0;transform:rotate(-45deg);background:rgba(255,255,255,.4)}
 .kc.hot{--ty:-4px}
+.kc:focus{outline:none}
+.wrapk:focus-within .kc-lit{opacity:.7}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
 .lab{font:400 9.5px/1 var(--fh);letter-spacing:.32em;color:var(--mute);text-transform:uppercase}
 .tag{font:400 8px/1 var(--fh);letter-spacing:.26em;padding:6px 8px 5px;border:1px dashed var(--hair2);color:var(--ink2);white-space:nowrap}
@@ -71,7 +73,7 @@
 <main class="pm-main">
   <div class="wrapk" id="wk">
     <span class="kc-lit" aria-hidden="true"><i></i></span>
-    <article class="kc" id="kc">
+    <article class="kc" id="kc" tabindex="0" role="group" aria-label="Revenue this month, sample data. Press Enter to replay the chart; use the arrow keys to read each month.">
       <div class="top"><span class="lab">REVENUE · THIS MONTH</span><span class="tag">SAMPLE DATA</span></div>
       <div class="val" id="val" aria-live="off">$0</div>
       <div class="foot"><span class="delta" id="dl"></span>vs last month</div>
@@ -114,6 +116,11 @@
     dots.forEach(function(c,i){c.classList.toggle('on',i===best)});ch.classList.add('hov')});
   ch.addEventListener('pointerleave',function(){ch.classList.remove('hov');dots.forEach(function(c){c.classList.remove('on')})});
   kc.addEventListener('click',play);
+  /* keyboard: Enter replays, arrows walk the months (the same read-out as the pointer) */
+  var ki=-1;function showMonth(i){var b=ch.getBoundingClientRect(),px=P[i][0]/W*b.width,py=P[i][1]/H*b.height;xh.style.transform='translateX('+px.toFixed(1)+'px)';tip.style.left=px+'px';tip.style.top=py+'px';
+    tip.firstChild.textContent=M[i]+' 2026'+(i===9?' · TO DATE':'');tip.lastChild.textContent=cad.format(V[i]);dots.forEach(function(c,j){c.classList.toggle('on',j===i)});ch.classList.add('hov')}
+  kc.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();play()}else if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();ki=PM.clamp((ki<0?9:ki)+(e.key==='ArrowRight'?1:-1),0,9);showMonth(ki)}});
+  kc.addEventListener('blur',function(){ki=-1;ch.classList.remove('hov');dots.forEach(function(c){c.classList.remove('on')})});
   wk.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||PM.RM)return;var b=kc.getBoundingClientRect(),px=(e.clientX-b.left)/b.width-.5,py=(e.clientY-b.top)/b.height-.5;
     kc.style.setProperty('--ry',(px*5).toFixed(2)+'deg');kc.style.setProperty('--rx',(-py*4).toFixed(2)+'deg')});
   wk.addEventListener('pointerenter',function(){wk.classList.add('hot');kc.classList.add('hot')});

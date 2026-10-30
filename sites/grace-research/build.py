@@ -62,7 +62,8 @@ for i, p in enumerate(files, 1):
     slug = f"c{i:02d}"
     body = markdown.markdown(md, extensions=["tables", "sane_lists", "toc"], extension_configs={"toc": {"slugify": lambda v, s: re.sub(r"[^a-z0-9]+", "-", v.lower()).strip("-")}})
     body = re.sub(r'id="([^"]+)"', lambda m: f'id="{slug}-{m.group(1)}"', body)
-    body = body.replace("<table>", '<div class="tbl"><table>').replace("</table>", "</table></div>")
+    # wide tables scroll sideways on phones: tabindex lets keyboard users scroll them (WCAG 2.1.1, axe scrollable-region-focusable)
+    body = body.replace("<table>", '<div class="tbl" tabindex="0" role="region" aria-label="Table, scrolls sideways"><table>').replace("</table>", "</table></div>")
     body = re.sub(r'<a href="(https?://[^"]+)"', r'<a href="\1" target="_blank" rel="noopener noreferrer"', body)
     subs = re.findall(r'<h2 id="([^"]+)">(.*?)</h2>', body)
     words = len(re.findall(r"\w+", md))

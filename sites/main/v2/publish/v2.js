@@ -33,6 +33,8 @@
 
   /* ================= member state ================= */
   var member = J_('pc-member', null);   /* {email,name,joinedAt,notches} */
+  if (!member || typeof member !== 'object' || Array.isArray(member)) member = null;   /* stored data is untrusted: keep only well-typed fields */
+  else { member.email = typeof member.email === 'string' ? member.email : ''; member.name = typeof member.name === 'string' ? member.name.slice(0, 22) : ''; if (member.notches != null) member.notches = Math.max(0, Math.min(10, +member.notches || 0)); }
   function joined() { return !!(member && member.email); }
   function saveMember() { LS.set('pc-member', JSON.stringify(member)); renderMemberBits(); }
   function join(email, name) {
@@ -610,7 +612,7 @@
       '<span class="shine" aria-hidden="true" style="-webkit-mask-image:url(' + CFG.bottle + ');mask-image:url(' + CFG.bottle + ')"></span></div>';
   }
   function prodCard(p) {
-    var more = p.more.map(function (m) { return '<div><h4>' + m[0] + '</h4><p>' + esc(m[1]) + '</p></div>'; }).join('');
+    var more = p.more.map(function (m) { return '<div><h4>' + esc(m[0]) + '</h4><p>' + esc(m[1]) + '</p></div>'; }).join('');
     var act = p.inStock
       ? '<button class="pc-btn pc-btn--sm" type="button" data-add="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">ADD TO CART</span></span></button>'
       : '<span class="soldout">SOLD OUT</span><button class="pc-btn pc-btn--sm" type="button" data-rs="' + p.id + '"><span class="pc-btn__face"><span class="pc-btn__label">TELL ME WHEN IT\'S BACK</span></span></button>';
@@ -671,6 +673,7 @@
 
   /* ================= cart (offer-to-checkout) ================= */
   var cart = J_('pc-cart', []);   /* [{id,q}] */
+  cart = (Array.isArray(cart) ? cart : []).filter(function (l) { return l && isFinite(l.id); }).map(function (l) { return { id: +l.id, q: Math.max(1, Math.min(999, parseInt(l.q, 10) || 1)) }; });   /* numbers only */
   function saveCart() { LS.set('pc-cart', JSON.stringify(cart)); renderCart(); }
   function addToCart(id, btn) {
     var l = cart.find(function (x) { return x.id === id; }); if (l) l.q++; else cart.push({ id: id, q: 1 });
@@ -950,7 +953,7 @@
 
   /* ================= refer ================= */
   $('#copyLink').addEventListener('click', function () {
-    var inp = $('.ref-form input'), ok = $('.ref-form .ok'), code = (member && member.email) ? 'team-' + btoa(member.email).replace(/[^a-z0-9]/gi, '').slice(0, 6).toLowerCase() : 'team';
+    var inp = $('.ref-form input'), ok = $('.ref-form .ok'), code = 'team'; try { if (member && member.email) code = 'team-' + btoa(member.email).replace(/[^a-z0-9]/gi, '').slice(0, 6).toLowerCase(); } catch (e) {}
     inp.value = 'pepticity.ca/invite/' + code;
     var done = function () { ok.textContent = 'Link copied. Preview only: nothing was sent.'; };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(inp.value).then(done, done); else done();

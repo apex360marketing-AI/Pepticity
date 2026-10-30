@@ -96,7 +96,8 @@ else {
     st.size(); cam.aspect = st.aspect();
     const fill = 0.44 + 0.2 * FX.ease(p / 0.8) + 0.1 * land, fov = cam.fov * Math.PI / 180;
     const dH = 2.1 / fill / (2 * Math.tan(fov / 2)), dW = 2.1 / Math.min(0.92, fill * 1.15) / (2 * Math.tan(fov / 2) * cam.aspect);
-    const d = Math.max(dH, wide ? dH : dW);
+    const dWp = 2.1 / Math.min(0.9, fill * 1.75) / (2 * Math.tan(fov / 2) * cam.aspect);
+    const d = wide ? dH : Math.max(dH * 0.9, dWp);
     cam.position.set(0, 0, d); cam.lookAt(0, 0, 0); cam.updateProjectionMatrix();
     st.draw(scene, cam);
     /* chapters + ending */
