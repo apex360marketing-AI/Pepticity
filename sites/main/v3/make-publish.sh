@@ -5,7 +5,7 @@
 set -e
 cd "$(dirname "$0")"
 rm -rf publish && mkdir -p publish/brand/font publish/brand/logo publish/brand/ui publish/brand/src/dash publish/media publish/vendor publish/data publish/assets publish/shared/bot
-cp index.html v3.css v3.js gl3d.js card3d.js publish/
+cp index.html v3.css v3.js gl3d.js card3d.js vibe.css publish/
 cp data/products.json publish/data/
 cp assets/*.webp publish/assets/
 cp -L brand/font/PepticityBlack.woff2 brand/font/glyphs.json brand/font/type3d-engine.js publish/brand/font/

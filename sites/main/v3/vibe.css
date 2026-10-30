@@ -1,0 +1,37 @@
+/* PEPTICITY v3 · COLOUR VIBES (accent layer only, skill accent-colorways).
+   Loaded only with ?vibe=chartreuse|blue|cyan|red|violet (see the head script in index.html).
+   With no ?vibe this file never loads, so the site is exactly as before.
+   Tokens: --v (the hex), --v-rgb, --v-t (text tint: 35% white mixed in for dark accents), --v-soft, --v-glow.
+   Only glows, edges, hover, focus and scroll-lit details take the colour. Grounds, type, glass and copy stay as they are. */
+html[data-vibe="chartreuse"]{--v:#D4FF3A;--v-rgb:212,255,58;--v-t:#D4FF3A}
+html[data-vibe="blue"]{--v:#0066FF;--v-rgb:0,102,255;--v-t:#59A0FF}
+html[data-vibe="cyan"]{--v:#0FFFFF;--v-rgb:15,255,255;--v-t:#0FFFFF}
+html[data-vibe="red"]{--v:#FF004F;--v-rgb:255,0,79;--v-t:#FF598C}
+html[data-vibe="violet"]{--v:#6F00FF;--v-rgb:111,0,255;--v-t:#A659FF}
+html[data-vibe]{--v-soft:rgba(var(--v-rgb),.16);--v-glow:0 0 28px rgba(var(--v-rgb),.45)}
+
+/* 1 · buttons and the WHITE/BLACK switch: hover/focus rim + label glow, selected thumb edge */
+html[data-vibe] .pc-btn,html[data-vibe] .pc-seg{--pc-rim-hot:var(--v-t);--pc-label-glow:rgba(var(--v-rgb),.6);--pc-ring:var(--v-t)}
+html[data-vibe] .pc-seg__thumb{box-shadow:inset 0 -1px 0 var(--v-t),0 0 14px rgba(var(--v-rgb),.28)}
+
+/* 2 · section-label dashes and the right-hand rail */
+html[data-vibe] .eyebrow i{background:linear-gradient(90deg,transparent,var(--v),transparent)}
+html[data-vibe] .rail li.seen::before{border-color:rgba(var(--v-rgb),.55)}
+html[data-vibe] .rail li.now::before{border-color:var(--v-t);box-shadow:0 0 12px rgba(var(--v-rgb),.7)}
+
+/* 3 · scroll-lit details: the bottom progress line, the holograms */
+html[data-vibe] .hl-prog i b{background:var(--v-t);box-shadow:0 0 8px rgba(var(--v-rgb),.6)}
+html[data-vibe] .holo-beam::after{box-shadow:0 0 8px rgba(var(--v-rgb),.9)}
+
+/* 4 · glass cards, interest cards, product cards, filter chips: hairline + soft glow on hover only */
+html[data-vibe] .int-card:hover,html[data-vibe] .prod:hover,html[data-vibe] .sr:hover{box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.5),var(--v-glow)}
+html[data-vibe] .chip:hover{box-shadow:inset 0 0 0 1px var(--v-t),0 0 14px rgba(var(--v-rgb),.3)}
+html[data-vibe] .chip[aria-pressed="true"]{box-shadow:0 0 14px rgba(var(--v-rgb),.35)}
+
+/* 5 · keyboard focus */
+html[data-vibe] :focus-visible{outline-color:var(--v-t)!important}
+
+/* 6 · at rest (small): button lower rim, lab station card edge, glass/product card top hairline */
+html[data-vibe] .pc-btn,html[data-vibe] .pc-seg{--pc-rim-b:rgba(var(--v-rgb),.55)}
+html[data-vibe] .st{box-shadow:inset 2px 0 0 rgba(var(--v-rgb),.85),-6px 0 18px -10px rgba(var(--v-rgb),.7)}
+html[data-vibe] .sr,html[data-vibe] .prod,html[data-vibe] .int-card{box-shadow:inset 0 1px 0 rgba(var(--v-rgb),.55)}
