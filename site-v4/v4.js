@@ -318,7 +318,7 @@
     tl.to(film, { scale: 2.6, duration: 2.1, ease: 'power3.in' }, 0)
       .to('#introBloom', { opacity: 1, scale: 1.35, duration: 1.0, ease: 'power2.in' }, 1.0)
       .add(function () {                                   /* we pass through the light: the hero is already there behind it */
-        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false;
+        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false; mountFx();
         startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
         if (!RM) gsap.fromTo('.hero-card', { opacity: 0, scale: 0.74, y: 24 },
           { opacity: 1, scale: 1, y: 0, duration: 1.9, ease: 'expo.out', clearProps: 'transform' });
@@ -332,7 +332,7 @@
     introTimers.forEach(clearTimeout); introTimers = [];
     SS.set('pc-intro', '1'); intro.classList.add('lift');
     setTimeout(function () {
-      D.classList.remove('intro-on'); introLive = false; intro.classList.remove('lift'); vid.pause();
+      D.classList.remove('intro-on'); introLive = false; intro.classList.remove('lift'); vid.pause(); mountFx();
       startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
       heroIn();
     }, 1050);
