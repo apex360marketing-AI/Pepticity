@@ -195,6 +195,8 @@ main{position:relative}
 .set__h .h3d{--fs:clamp(34px,5.4vw,78px)}
 .set__lead{margin:0;max-width:40em;font-size:clamp(15.5px,1.2vw,17.5px);color:var(--ink2)}
 .set__lead b{color:var(--ink);font-weight:600}
+.set__fine{display:flex;gap:10px;align-items:baseline;margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--mute)}
+.set__fine::before{content:"";width:5px;height:5px;flex:none;transform:translateY(-2px) rotate(45deg);background:rgb(var(--acc) / .7)}
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
     .ghost{animation:ghostDrift linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
@@ -221,6 +223,7 @@ main{position:relative}
 .grid--land{grid-template-columns:repeat(3,minmax(0,1fr))}
 .grid--port{grid-template-columns:repeat(4,minmax(0,1fr))}
 .grid--sq{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pk--wide{grid-column:span 2}
 
 /* the option card */
 .pk{--c:16px;position:relative;min-width:0;translate:0 34px;
@@ -460,6 +463,8 @@ footer b{font:400 9px/1.6 var(--fh);letter-spacing:.3em;color:var(--ink2)}
   .grid--port .pk__n,.grid--sq .pk__n{font-size:17px}
   .grid--port .pk__t,.grid--sq .pk__t{font-size:10px;letter-spacing:.12em;margin:0}
   .grid--port .pk__d,.grid--sq .pk__d{display:none}
+  .grid .pk--wide .pk__d{display:block;font-size:12.5px}
+  .grid .pk--wide .pk__meta{grid-template-columns:auto minmax(0,1fr);gap:12px}
   .grid--port .pk-seg,.grid--sq .pk-seg{--fs:8px;--ls:.1em;--h:42px;padding:4px}
   .grid--port .pk-seg .pc-seg__opt,.grid--sq .pk-seg .pc-seg__opt{padding:0 1px;--c:6px}
   .grid--port .nt-l b,.grid--sq .nt-l b{display:none}
@@ -672,8 +677,9 @@ var LEAD={
   labels:function(s){var t={},o=[];s.items.forEach(function(i){if(i.tag)t[i.tag]=(t[i.tag]||0)+1});
     Object.keys(t).forEach(function(k){o.push(num(t[k]).toLowerCase()+' '+k.toLowerCase())});
     return num(s.items.length)+' label designs'+(o.length?': '+o.join(' and '):'')+'. Tap a picture to see it up close, then <b>LOVE</b> as many as you like.'},
-  bottles:function(s){var c=s.items.filter(function(i){return i.current})[0];
-    return 'Every bottle made so far.'+(c?' The one marked <b>CURRENT PICK</b> is the bottle chosen so far.':'')+' <b>LOVE</b> any you would like to see more of, including that one.'}
+  bottles:function(s){var c=s.items.filter(function(i){return i.current})[0], lt=(s.fine||[]).some(function(x){return /lettering/i.test(x)});
+    return 'All '+s.items.length+' bottles made so far.'+(c?' The one marked <b>CURRENT PICK</b> is the bottle chosen so far.':'')+' <b>LOVE</b> any you would like to see more of, including that one.'+
+      (lt?'<span class="set__fine">The round 1 and round 2 drafts had their lettering drawn by the image tool, so it isn\u2019t the exact PEPTICITY font. Judge the bottle and label, not the letters.</span>':'')}
 };
 function num(n){var w=['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty'];return w[n]||String(n)}
 var ITEMS={};
@@ -701,7 +707,7 @@ function label(it){return it.s.unit+' '+it.n+', '+it.name.toUpperCase()}
 function card(s,it,k){
   var tags=(it.current?'<span class="tag tag--cur">CURRENT PICK</span>':'')+(it.tag?'<span class="tag">'+esc(it.tag)+'</span>':'');
   var id=idOf(it.key);
-  return '<article class="pk" data-key="'+it.key+'" data-pick="" style="--k:'+k+'">'+
+  return '<article class="pk'+(it.wide?' pk--wide':'')+'" data-key="'+it.key+'" data-pick="" style="--k:'+k+(it.wide?';--ar:'+(it.w/it.h).toFixed(4):'')+'">'+
     '<span class="pk__glow" aria-hidden="true"><i></i></span>'+
     '<div class="pk__face gx">'+
       '<button class="pk__img" type="button" data-open="'+it.key+'" aria-label="See '+esc(label(it))+' full screen">'+

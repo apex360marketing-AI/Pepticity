@@ -156,10 +156,10 @@ html.t3d .lg .pfb{visibility:hidden}
 .vload i{position:relative;display:block;width:160px;height:1px;background:rgba(255,255,255,.1);overflow:hidden}
 .vload i::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,rgb(var(--acc)),transparent);animation:loadRun 1.4s var(--ease-io) infinite}
 @keyframes loadRun{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
-.vnote{position:absolute;z-index:3;left:50%;top:16px;--c:8px;display:flex;align-items:center;gap:10px;padding:10px 16px;transform:translateX(-50%);
-  font:400 9.5px/1.3 var(--fh);letter-spacing:.24em;color:var(--ink);text-transform:uppercase;white-space:nowrap;background-color:rgba(10,10,12,.55)}
+.vnote{position:absolute;z-index:3;left:18px;bottom:18px;--c:8px;display:flex;align-items:center;gap:10px;padding:11px 16px;max-width:calc(100% - 36px);
+  font:400 9.5px/1.4 var(--fh);letter-spacing:.22em;color:var(--ink);text-transform:uppercase;background-color:rgba(10,10,12,.8)}
 .vnote i{width:6px;height:6px;flex:none;transform:rotate(45deg);background:rgb(var(--acc));box-shadow:0 0 10px rgb(var(--acc))}
-.vtoast{position:absolute;z-index:3;left:50%;bottom:20px;--c:8px;padding:11px 18px;transform:translate(-50%,12px);opacity:0;pointer-events:none;
+.vtoast{position:absolute;z-index:3;left:50%;top:18px;--c:8px;padding:11px 18px;transform:translate(-50%,12px);opacity:0;pointer-events:none;
   font:400 9.5px/1 var(--fh);letter-spacing:.28em;color:var(--ink);background-color:rgba(10,10,12,.55);transition:opacity .45s var(--ease),transform .6s var(--ease)}
 .vtoast b{font-weight:400;color:var(--acc-ink)}
 .vtoast.on{opacity:1;transform:translate(-50%,0)}
@@ -423,8 +423,8 @@ html.t3d .lg .pfb{visibility:hidden}
   .vnow{display:none}
   .icon-btn.pc-btn{--h:40px;--c:8px;width:40px}
   .vframe{--c:14px}
-  .vnote{top:10px;font-size:8.5px;letter-spacing:.18em;padding:9px 12px}
-  .vtoast{bottom:12px;font-size:8.5px;letter-spacing:.2em}
+  .vnote{left:10px;bottom:10px;font-size:8.5px;letter-spacing:.16em;padding:9px 12px;max-width:calc(100% - 20px)}
+  .vtoast{bottom:auto;top:12px;font-size:8.5px;letter-spacing:.2em}
   .panel{position:fixed;z-index:10;left:8px;right:8px;bottom:0;height:min(80vh,calc(100vh - 128px));height:min(80svh,calc(100svh - 128px));--c:16px;
     clip-path:polygon(var(--c) 0,100% 0,100% 100%,0 100%,0 var(--c));
     transform:translateY(calc(100% - 76px - env(safe-area-inset-bottom)));transition:transform .7s var(--ease);

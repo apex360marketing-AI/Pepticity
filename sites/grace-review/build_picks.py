@@ -122,6 +122,9 @@ def build_set(cfg):
             or status in ("approved", "current", "current pick", "current_pick") \
             or "current pick" in blob or "current-pick" in blob
         desc = re.sub(r"\s*#[0-9A-Fa-f]{6}\b", "", long_t[0] if long_t else "").strip()
+        desc = re.sub(r",?\s*(?:brand|sites|assets)/[\w./-]+", "", desc)          # no file paths in what Grace reads
+        if current and re.fullmatch(r"\s*current pick\s*", str(name), re.I) and desc:   # the badge already says CURRENT PICK
+            name = re.split(r"[(:,.]", desc)[0].strip().upper() or name
         sents = [x for x in re.split(r"(?<=\.)\s+", desc) if x and not re.match(r"current pick\.?$", x.strip(), re.I)]
         items.append(dict(
             n=n, name=title_case(name), sents=sents,
@@ -134,7 +137,7 @@ def build_set(cfg):
     # a sentence repeated on most items is said once for the whole set, not on every card
     from collections import Counter
     cnt = Counter(x for i in items for x in set(i["sents"]))
-    common = [x for x, c in cnt.items() if c >= max(3, 0.4 * len(items))]
+    common = [x for x, c in cnt.items() if c >= max(3, 0.6 * len(items))]
     for it in items:
         it["desc"] = " ".join(x for x in it.pop("sents") if x not in common)
         # landscape pictures in a portrait set span two columns so they are not shrunk
