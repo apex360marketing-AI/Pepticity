@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en-CA" data-acc="cyan">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:,">
+<title>NEW TAB · APEX 360</title>
+<!-- APEX 360 START PAGE · SAMPLE (30 Oct). Plain local files, no network calls, no external scripts.
+     Ground = existing Higgsfield still (sites/main/media/black-city.jpg, re-encoded only) moved by code,
+     plus the approved BG-P01 smoke code as a faint haze. Type = brand/font/PepticityBlack.woff2. -->
+<link rel="preload" href="assets/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/InstrumentSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/city.webp" as="image" fetchpriority="high">
+<link rel="stylesheet" href="start.css">
+</head>
+<body>
+
+<div class="ground" aria-hidden="true">
+  <div class="city" id="city"><div class="drift"><img src="assets/city.webp" alt="" width="1600" height="904" decoding="async" fetchpriority="high"></div></div>
+  <canvas id="haze"></canvas>
+  <div class="pass"></div>
+  <div class="shade"></div>
+</div>
+
+<div class="app">
+  <header class="bar">
+    <div class="wordmark" aria-label="APEX 360"><span class="wm-a">APEX</span><span class="wm-n">360</span></div>
+    <div class="bar-r">
+      <div class="accsw" id="accSw">
+        <button class="accsw-lab" type="button" id="accLab" aria-haspopup="listbox" aria-expanded="false" aria-controls="accPop" aria-label="YOUR COLOUR · show all colours"><span>YOUR</span> <span>COLOUR</span></button>
+        <div class="accsw-body">
+          <div class="accsw-sw" id="accSwBtn" role="slider" tabindex="0" aria-label="YOUR COLOUR" aria-valuemin="1" aria-valuemax="8" aria-valuenow="3" aria-valuetext="ICE CYAN">
+            <span class="accsw-dial" aria-hidden="true"><span class="accsw-ticks"></span><span class="accsw-well"></span><span class="accsw-knobw"><span class="accsw-knob"></span><span class="accsw-gloss"></span></span></span>
+            <span class="accsw-led" aria-hidden="true"><b></b><i></i></span>
+          </div>
+          <button class="accsw-more" type="button" id="accMore" aria-haspopup="listbox" aria-expanded="false" aria-controls="accPop" aria-label="Show all colours"></button>
+        </div>
+      </div>
+      <button class="gbtn setbtn sweep" type="button" id="setBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="settings"><span class="gbtn-l">SETTINGS</span></button>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="clockH">
+    <p class="greet" id="greet">GOOD MORNING, MAVERICK</p>
+    <h1 class="clock" id="clockH" aria-label="">
+      <span class="dg" id="hh"><span class="b">9</span><span class="f" aria-hidden="true">9</span><span class="g" aria-hidden="true">9</span></span><span class="colon" aria-hidden="true"><i></i><i></i></span><span class="dg" id="mm"><span class="b">41</span><span class="f" aria-hidden="true">41</span><span class="g" aria-hidden="true">41</span></span><span class="ap" id="ap" aria-hidden="true">AM</span>
+    </h1>
+    <div class="sec" aria-hidden="true"><i id="secBar"></i></div>
+    <p class="date" id="date"></p>
+    <p class="word"><span class="word-k">TODAY'S WORD</span><span class="word-t" id="word"></span></p>
+  </section>
+
+  <div class="search-wrap" id="searchWrap">
+    <form class="search glass" id="search" role="search" autocomplete="off">
+      <button class="eng" type="button" id="engBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="engPop" aria-label="Search engine: GOOGLE. Change"><span id="engName">GOOGLE</span><i aria-hidden="true"></i></button>
+      <label class="sr" for="q">Search the web or type a web address</label>
+      <input id="q" name="q" type="search" enterkeyhint="search" spellcheck="false" placeholder="Search Google or type a web address">
+      <kbd class="kbd hint" aria-hidden="true">/</kbd>
+      <button class="go" type="submit" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6"/></svg></button>
+    </form>
+  </div>
+
+  <main class="band">
+    <article class="card things glass" id="things" aria-labelledby="thingsH">
+      <header class="card-h"><h2 id="thingsH">TODAY'S 3 THINGS</h2><span class="count" id="tCount" aria-live="polite">0 / 3 DONE</span></header>
+      <ol class="tlist" id="tlist">
+        <li class="task" data-i="0"><kbd class="kbd">1</kbd><button class="chk" type="button" role="checkbox" aria-checked="false" aria-label="Tick thing 1"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.6 3.4 7.4-8"/></svg></button><span class="tline"><label class="sr" for="t0">Thing 1</label><input id="t0" type="text" maxlength="120" placeholder="The one that matters most"><span class="streak" aria-hidden="true"><b></b></span></span></li>
+        <li class="task" data-i="1"><kbd class="kbd">2</kbd><button class="chk" type="button" role="checkbox" aria-checked="false" aria-label="Tick thing 2"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.6 3.4 7.4-8"/></svg></button><span class="tline"><label class="sr" for="t1">Thing 2</label><input id="t1" type="text" maxlength="120" placeholder="Second thing"><span class="streak" aria-hidden="true"><b></b></span></span></li>
+        <li class="task" data-i="2"><kbd class="kbd">3</kbd><button class="chk" type="button" role="checkbox" aria-checked="false" aria-label="Tick thing 3"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.6 3.4 7.4-8"/></svg></button><span class="tline"><label class="sr" for="t2">Thing 3</label><input id="t2" type="text" maxlength="120" placeholder="Third thing"><span class="streak" aria-hidden="true"><b></b></span></span></li>
+      </ol>
+      <footer class="card-f"><span class="tip">PRESS 1, 2 OR 3 TO TICK</span><button class="ghost" type="button" id="tClear">CLEAR TICKED</button></footer>
+    </article>
+
+    <article class="card timer glass" id="timer" data-phase="focus" aria-labelledby="timerH">
+      <header class="card-h"><h2 id="timerH">FOCUS TIMER</h2><button class="ghost chime" type="button" id="chimeBtn" aria-pressed="false">CHIME OFF</button></header>
+      <div class="ring" id="ring">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <g class="ticks" id="ticks"></g>
+          <circle class="track" cx="100" cy="100" r="82"/>
+          <circle class="arc arc-glow" id="arcGlow" cx="100" cy="100" r="82" pathLength="1000"/>
+          <circle class="arc" id="arc" cx="100" cy="100" r="82" pathLength="1000"/>
+        </svg>
+        <span class="head" id="head" aria-hidden="true"><i></i></span>
+        <div class="ring-c">
+          <span class="phase" id="tPhase">FOCUS</span>
+          <span class="tnum" id="tNum" role="timer" aria-live="off"><span id="tMin">25</span><span class="colon sm" aria-hidden="true"><i></i><i></i></span><span id="tSec">00</span></span>
+          <span class="round" id="tRound">ROUND 1 · 25 / 5</span>
+        </div>
+      </div>
+      <div class="tctl">
+        <button class="gbtn primary sweep" type="button" id="tGo"><span class="gbtn-l" id="tGoL">START</span><kbd class="kbd">T</kbd></button>
+        <button class="gbtn sweep" type="button" id="tReset"><span class="gbtn-l">RESET</span></button>
+        <div class="tmode" role="radiogroup" aria-label="Timer mode">
+          <button type="button" role="radio" aria-checked="true" data-ph="focus" id="mFocus">25</button>
+          <button type="button" role="radio" aria-checked="false" data-ph="break" id="mBreak">5</button>
+        </div>
+      </div>
+    </article>
+
+    <section class="tiles" id="tiles" aria-labelledby="tilesH">
+      <header class="card-h bare"><h2 id="tilesH">QUICK TILES</h2><button class="ghost" type="button" id="tEdit" aria-pressed="false">EDIT</button></header>
+      <div class="tgrid" id="tgrid"></div>
+    </section>
+  </main>
+
+  <footer class="keys" aria-label="Keyboard shortcuts">
+    <span><kbd class="kbd">/</kbd>SEARCH</span>
+    <span><kbd class="kbd">T</kbd>TIMER</span>
+    <span><kbd class="kbd">1</kbd><kbd class="kbd">2</kbd><kbd class="kbd">3</kbd>TICK</span>
+    <span><kbd class="kbd">ESC</kbd>CLOSE</span>
+  </footer>
+</div>
+
+<!-- popovers, settings, toast -->
+<div class="pop acc-pop" id="accPop" hidden><p class="pop-h" id="accPopT">YOUR COLOUR</p><ul role="listbox" aria-labelledby="accPopT" id="accList"></ul></div>
+<div class="pop eng-pop" id="engPop" hidden><p class="pop-h" id="engPopT">SEARCH WITH</p><ul role="listbox" aria-labelledby="engPopT" id="engList"></ul></div>
+
+<div class="settings glass" id="settings" role="dialog" aria-modal="false" aria-labelledby="setH" hidden>
+  <header class="card-h"><h2 id="setH">SETTINGS</h2><button class="ghost" type="button" id="setClose">CLOSE</button></header>
+  <div class="srow"><label for="sName">YOUR NAME</label><input class="field" id="sName" type="text" maxlength="24" autocomplete="off"></div>
+  <div class="srow"><span class="slab" id="sEngL">SEARCH WITH</span><div class="seg wrap" id="sEng" role="radiogroup" aria-labelledby="sEngL"></div></div>
+  <div class="srow"><span class="slab" id="sClockL">CLOCK</span><div class="seg" id="sClock" role="radiogroup" aria-labelledby="sClockL"><button type="button" role="radio" data-v="12">12 HOUR</button><button type="button" role="radio" data-v="24">24 HOUR</button></div></div>
+  <div class="srow two"><label for="sFocus">FOCUS MINUTES</label><input class="field num" id="sFocus" type="number" min="1" max="120" inputmode="numeric"><label for="sBreak">BREAK MINUTES</label><input class="field num" id="sBreak" type="number" min="1" max="60" inputmode="numeric"></div>
+  <div class="srow"><span class="slab" id="sChimeL">CHIME WHEN TIME IS UP</span><div class="seg" id="sChime" role="radiogroup" aria-labelledby="sChimeL"><button type="button" role="radio" data-v="0">OFF</button><button type="button" role="radio" data-v="1">ON</button></div></div>
+  <div class="srow"><span class="slab" id="sHazeL">MOVING SMOKE</span><div class="seg" id="sHaze" role="radiogroup" aria-labelledby="sHazeL"><button type="button" role="radio" data-v="1">ON</button><button type="button" role="radio" data-v="0">OFF</button></div></div>
+  <div class="srow last"><button class="ghost" type="button" id="sTilesReset">RESET TILES</button><span class="snote">Saved on this computer only.</span></div>
+</div>
+
+<div class="toast glass" id="toast" role="status" aria-live="polite" hidden><span id="toastT"></span><button class="ghost" type="button" id="toastUndo" hidden>UNDO</button></div>
+
+<script src="start.js"></script>
+</body>
+</html>
