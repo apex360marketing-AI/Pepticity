@@ -662,6 +662,9 @@
     buyCards().forEach(function (c) {
       var pr = prodOf(c); if (!pr) return;
       var row = $('.cm-rmrow', c);
+      /* no reorder prompts for bacteriostatic water: a supply sold beside peptides is the risk the
+         peptide-regulatory skill flags first (adjacency = intended use), so it gets no extra nudges */
+      if (/bacteriostatic|bac water/i.test(pr.p)) { if (row) row.remove(); return; }
       if (!row) { row = D.createElement('div'); row.className = 'cm-rmrow'; c.appendChild(row); }
       row.setAttribute('data-cm-p', pr.p); row.setAttribute('data-cm-size', pr.size);
       var r = remFor(pr.p), sig = r ? r.id + r.due + '|' + daysLeft(r.due) : 'none';

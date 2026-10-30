@@ -99,22 +99,13 @@ def build_set(cfg):
         dst = out_dir / src.name
         if src.resolve() != dst.resolve():
             shutil.copy2(src, dst)
-        im = Image.open(dst); w, h = im.size
-        thumb = out_dir / "thumbs" / (dst.stem + ".webp")
-        if w > THUMB_W * 1.15:
-            if not thumb.exists() or thumb.stat().st_mtime < dst.stat().st_mtime:
-                t = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
-                t = t.resize((THUMB_W, round(h * THUMB_W / w)), Image.LANCZOS)
-                t.save(thumb, "WEBP", quality=82, method=6)
-            thumb_rel = f"assets/{cfg['id']}/thumbs/{thumb.name}"
-        else:
-            thumb_rel = f"assets/{cfg['id']}/{dst.name}"
+        w, h = Image.open(dst).size
         n = first(it, "n", "num", "number", "id", "index", default=i + 1)
         m = re.search(r"\d+", str(n))
         n = f"{int(m.group()):02d}" if m else f"{i + 1:02d}"
         name = first(it, "name", "title", "label", default=f"{cfg['unit'].title()} {n}")
-        # short words become a tag chip on the picture, long ones the one-line description under the name
-        texts = [str(it[k]).strip() for k in ("desc", "description", "finish", "style", "blurb", "summary", "caption", "material")
+        # short words become a tag chip on the picture, long ones the description under the name
+        texts = [str(it[k]).strip() for k in ("desc", "description", "finish", "style", "note", "blurb", "summary", "caption", "material")
                  if isinstance(it.get(k), str) and it[k].strip()]
         long_t = [t for t in texts if len(t) > 18]
         tag = first(it, "type", "kind", "group", "base", "variant", default="")
@@ -126,17 +117,41 @@ def build_set(cfg):
         if len(str(tag)) > 18:
             tag = ""
         status = str(first(it, "status", "state", default="")).lower()
+        blob = " ".join([str(name), str(f)] + texts).lower()
         current = bool(first(it, "current", "approved", "current_pick", "currentPick", "is_current", "pick", default=False)) \
-            or status in ("approved", "current", "current pick", "current_pick")
+            or status in ("approved", "current", "current pick", "current_pick") \
+            or "current pick" in blob or "current-pick" in blob
+        desc = re.sub(r"\s*#[0-9A-Fa-f]{6}\b", "", long_t[0] if long_t else "").strip()
+        sents = [x for x in re.split(r"(?<=\.)\s+", desc) if x and not re.match(r"current pick\.?$", x.strip(), re.I)]
         items.append(dict(
-            n=n, name=title_case(name), desc=re.sub(r"\s*#[0-9A-Fa-f]{6}\b", "", long_t[0] if long_t else "").strip(),
+            n=n, name=title_case(name), sents=sents,
             tag=str(tag).replace("_", " ").upper().strip() if tag else "",
-            src=f"assets/{cfg['id']}/{dst.name}", thumb=thumb_rel, w=w, h=h, current=current))
+            src=f"assets/{cfg['id']}/{dst.name}", w=w, h=h, current=current, _dst=dst))
     if not items:
         return None
     r = sorted(i["w"] / i["h"] for i in items)[len(items) // 2]
     orient = "land" if r > 1.15 else ("port" if r < 0.87 else "sq")
-    return dict(id=cfg["id"], title=cfg["title"], short=cfg["short"], unit=cfg["unit"],
+    # a sentence repeated on most items is said once for the whole set, not on every card
+    from collections import Counter
+    cnt = Counter(x for i in items for x in set(i["sents"]))
+    common = [x for x, c in cnt.items() if c >= max(3, 0.4 * len(items))]
+    for it in items:
+        it["desc"] = " ".join(x for x in it.pop("sents") if x not in common)
+        # landscape pictures in a portrait set span two columns so they are not shrunk
+        it["wide"] = orient != "land" and it["w"] / it["h"] > 1.15
+        tw = 1280 if it["wide"] else THUMB_W
+        dst = it.pop("_dst")
+        thumb = out_dir / "thumbs" / (dst.stem + ".webp")
+        if it["w"] > tw * 1.15:
+            if not thumb.exists() or thumb.stat().st_mtime < dst.stat().st_mtime or Image.open(thumb).size[0] != tw:
+                im = Image.open(dst)
+                t = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
+                t = t.resize((tw, round(it["h"] * tw / it["w"])), Image.LANCZOS)
+                t.save(thumb, "WEBP", quality=82, method=6)
+            it["thumb"] = f"assets/{cfg['id']}/thumbs/{thumb.name}"
+        else:
+            it["thumb"] = it["src"]
+    return dict(id=cfg["id"], title=cfg["title"], short=cfg["short"], unit=cfg["unit"], fine=common,
                 ratio=round(r, 4), orient=orient, items=items)
 
 
