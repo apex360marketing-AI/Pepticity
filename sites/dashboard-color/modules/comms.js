@@ -362,7 +362,7 @@
     var s = D.createElement('section'); s.id = 'cmAnn'; s.className = 'glass card cm-annc'; s.setAttribute('aria-labelledby', 'cmAnnT');
     var opts = (N.clients || []).map(function (c) { return '<option value="' + esc(c.k) + '">' + esc(c.name) + (c.k === ME.k ? ' (sample client)' : '') + '</option>'; }).join('');
     s.innerHTML = '<div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">TO YOUR CLIENTS</p>' + H('ANNOUNCEMENTS', 'h2', 'cmAnnT') + '</div><span class="sub">preview · nothing is sent</span></div>' +
-      '<form class="fgrid cm-annf" id="cmAnnF" novalidate>' +
+      '<form class="fgrid cm-annf" id="cmAnF" novalidate>' +
       '<div class="field w3"><label for="cmAnTi">TITLE</label><input class="inp" id="cmAnTi" maxlength="70" autocomplete="off" placeholder="e.g. Restock lands this Friday"></div>' +
       '<div class="field w3"><label for="cmAnBo">MESSAGE</label><textarea class="inp cm-ta" id="cmAnBo" rows="3" maxlength="400" placeholder="Keep it short: one or two lines."></textarea></div>' +
       '<div class="field w3"><label id="cmAnAudL">WHO SEES IT</label><div class="pick pc-seg pc-seg--sm cm-pick" id="cmAnAud" role="group" aria-labelledby="cmAnAudL">' +

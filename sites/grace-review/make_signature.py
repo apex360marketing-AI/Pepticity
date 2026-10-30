@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PEPTICITY · Grace's feedback: signature assets, all cut from the owner's Higgsfield signature
+"""PEPTICITY · Grace review: signature assets, all cut from the owner's Higgsfield signature
 (brand/signature/sig-final.png, falls back to sig-a.png). Nothing is redrawn or recoloured:
   email/signature.png      tight crop, 1000 px wide, black ground kept (email fallback + Outlook)
   email/signature.gif      900 px, 27 frames: frame 0 = the signature as is (held 2.4 s), then a narrow
@@ -9,13 +9,13 @@
   assets/sig-page.webp     page copy: the same pixels with the black made transparent (alpha = brightness,
                            colour un-premultiplied), so it sits on the smoke with no black box
   assets/sig-mask.png      stroke mask for the CSS streak (white, alpha = the signature's luminance)
-Run: python3 sites/grace-feedback/make_signature.py   (needs Pillow + numpy; ImageMagick optional for GIF optimise)"""
+Run: python3 sites/grace-review/make_signature.py   (needs Pillow + numpy; ImageMagick optional for GIF optimise)"""
 import os, pathlib, shutil, subprocess
 import numpy as np
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SITE = ROOT / "sites/grace-feedback"
+SITE = ROOT / "sites/grace-review"
 SRC = ROOT / "brand/signature/sig-final.png"
 if not SRC.exists():
     SRC = ROOT / "brand/signature/sig-a.png"
