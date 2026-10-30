@@ -13,12 +13,12 @@
      @PMARK@        path of brand/logo/p-mark.svg (2D fallback of the P mark only)
 Only three.js r160 loads from jsDelivr (pinned), plus Instrument Sans from Google Fonts, as on the dashboards.
 Run: python3 sites/grace-review/build_picks.py"""
-import base64, json, pathlib, re, shutil, sys
+import base64, json, os, pathlib, re, shutil, sys
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SITE = ROOT / "sites/grace-review"
-SRC_ASSETS = ROOT / "sites/grace-picks/assets"
+SITE = pathlib.Path(os.environ.get("PICKS_SITE", ROOT / "sites/grace-review"))      # overrides are for testing only
+SRC_ASSETS = pathlib.Path(os.environ.get("PICKS_SRC", ROOT / "sites/grace-picks/assets"))
 OUT_ASSETS = SITE / "assets"
 THUMB_W = 760
 
@@ -51,13 +51,23 @@ def items_of(raw):
     raise SystemExit("cannot find the item list in JSON")
 
 
+KEEP_UP = {"UV", "PVD", "P", "GHK", "NAD", "BPC", "TB", "MG", "CU", "MOTS", "SS", "KPV", "CJC", "DAC", "AOD", "II", "III", "IV"}
+SMALL = {"AND", "OR", "OF", "THE", "A", "ON", "IN", "WITH", "ON"}
+
+
 def title_case(s):
+    """'SOFT-TOUCH SPOT UV' -> 'Soft-Touch Spot UV' (names arrive in capitals; the email reads them in title case)."""
     s = str(s).strip()
-    if s.isupper():
-        small = {"AND", "OR", "OF", "THE", "A", "ON", "IN", "WITH"}
-        return " ".join(w if any(c.isdigit() for c in w) else (w.lower() if (w in small and i) else w.capitalize())
-                        for i, w in enumerate(s.split()))
-    return s
+    if not s.isupper():
+        return s
+    def part(w):
+        if w in KEEP_UP or any(c.isdigit() for c in w):
+            return w
+        return w.capitalize()
+    out = []
+    for i, w in enumerate(s.split()):
+        out.append(w.lower() if (w in SMALL and i) else "-".join(part(x) for x in w.split("-")))
+    return " ".join(out)
 
 
 def build_set(cfg):
@@ -74,6 +84,11 @@ def build_set(cfg):
         if isinstance(it, str):
             it = {"file": it}
         f = first(it, "file", "image", "src", "webp", "path", "filename")
+        if not f:                     # {"id": "card-01", ...} -> card-01.webp
+            iid = str(first(it, "id", "slug", default=""))
+            for cand in ([f"{iid}.webp", f"{iid}.png", f"{iid}.jpg"] if iid else []) + [f"{cfg['unit'].lower()}-{i + 1:02d}.webp"]:
+                if (folder / cand).exists():
+                    f = cand; break
         if not f:
             print(f"  ! {cfg['id']} item {i}: no image file, skipped", file=sys.stderr); continue
         src = (folder / f) if not pathlib.Path(f).is_absolute() else pathlib.Path(f)
@@ -98,13 +113,18 @@ def build_set(cfg):
         m = re.search(r"\d+", str(n))
         n = f"{int(m.group()):02d}" if m else f"{i + 1:02d}"
         name = first(it, "name", "title", "label", default=f"{cfg['unit'].title()} {n}")
-        tag = first(it, "type", "kind", "finish", "material", "style", "group", default="")
+        tag = first(it, "type", "kind", "material", "style", "group", "base", "variant", default="")
+        fin = str(first(it, "finish", default="")).strip()
+        if not tag and fin and len(fin) <= 18:
+            tag, fin = fin, ""
+        if len(str(tag)) > 18:
+            tag = ""
         status = str(first(it, "status", "state", default="")).lower()
         current = bool(first(it, "current", "approved", "current_pick", "currentPick", "is_current", "pick", default=False)) \
             or status in ("approved", "current", "current pick", "current_pick")
         items.append(dict(
-            n=n, name=title_case(name), desc=str(first(it, "desc", "description", "blurb", "note", "summary", "caption", default="")).strip(),
-            tag=str(tag).replace("_", " ").replace("-", " ").upper().strip() if tag else "",
+            n=n, name=title_case(name), desc=re.sub(r"\s*#[0-9A-Fa-f]{6}\b", "", str(first(it, "desc", "description", "blurb", "summary", "caption", default=fin))).strip(),
+            tag=str(tag).replace("_", " ").upper().strip() if tag else "",
             src=f"assets/{cfg['id']}/{dst.name}", thumb=thumb_rel, w=w, h=h, current=current))
     if not items:
         return None
@@ -125,7 +145,7 @@ for cfg in SETS:
 if "--allow-missing" not in sys.argv and len(sets) < len(SETS):
     raise SystemExit("not all sets are ready; run again when every JSON file exists (or pass --allow-missing)")
 
-src = (SITE / "picks.src.html").read_text()
+src = (ROOT / "sites/grace-review/picks.src.html").read_text()
 
 
 def _inl(m):

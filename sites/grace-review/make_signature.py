@@ -8,7 +8,6 @@
                            (mask = the signature's own luminance), so it stays tight to the lettering.
   assets/sig-page.webp     page copy: the same pixels with the black made transparent (alpha = brightness,
                            colour un-premultiplied), so it sits on the smoke with no black box
-  assets/sig-mask.png      stroke mask for the CSS streak (white, alpha = the signature's luminance)
 Run: python3 sites/grace-review/make_signature.py   (needs Pillow + numpy; ImageMagick optional for GIF optimise)"""
 import os, pathlib, shutil, subprocess
 import numpy as np
@@ -44,14 +43,12 @@ def mask_of(img, lo=26, hi=150):
 png = sized(1000)
 png.save(SITE / "email/signature.png", optimize=True)
 
-# 2) page copy with alpha + stroke mask
+# 2) page copy with alpha (the CSS streak screens a second copy of these same pixels through a moving gradient mask)
 f = np.asarray(png).astype(float)
 al = f.max(axis=2)
 al[al < 3] = 0
 rgb = np.where(al[..., None] > 0, np.clip(f / np.maximum(al[..., None], 1) * 255, 0, 255), 0)
 Image.fromarray(np.dstack([rgb, al]).astype(np.uint8), "RGBA").save(SITE / "assets/sig-page.webp", "WEBP", quality=90, alpha_quality=90, method=6)
-mk = mask_of(png)
-Image.fromarray(np.dstack([np.full(mk.shape, 255, np.uint8)] * 3 + [(mk * 255).astype(np.uint8)]), "RGBA").save(SITE / "assets/sig-mask.png", optimize=True)
 
 # 3) email GIF: one light streak, left to right, masked to the strokes
 g = sized(900)
@@ -84,6 +81,6 @@ if shutil.which("convert"):
     else:
         tmp.unlink()
 
-for p in ["email/signature.png", "email/signature.gif", "assets/sig-page.webp", "assets/sig-mask.png"]:
+for p in ["email/signature.png", "email/signature.gif", "assets/sig-page.webp"]:
     print(f"{p:24s} {os.path.getsize(SITE / p):>8,d} bytes")
 print("source:", SRC.relative_to(ROOT), "| gif", W, "x", H, "|", len(frames), "frames")

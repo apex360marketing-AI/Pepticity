@@ -20,6 +20,16 @@
    Accent: var(--acc) / var(--acc-rgb) from the colour layer, falling back to #D4FF3A.
    Needs notes.js (window.PEP_COMMS_NOTES) loaded first. Safe to load before or after the dashboard
    scripts: it waits for DOMContentLoaded and re-attaches when the dashboard re-renders a list.
+
+   HOW TO INLINE (coordinator)
+     1 comms.css  → a <style> placed AFTER the dashboard's main <style> (so equal selectors resolve to it).
+     2 notes.js, then comms.js → <script> blocks at the end of <body> (after the dashboard scripts).
+     3 Concierge: inline shared/bot/pep-bot.css as a <style> and shared/bot/pep-bot.js as a <script>
+       (an inlined bot has no src, so it cannot fetch its own CSS), then call PEPComms.mountConcierge().
+       Or, unbundled: PEPComms.mountConcierge({ src: '<path>/pep-bot.js' }) loads it (CSS comes along).
+       The bot only shows on the CLIENT view; its store greeting is kept quiet unless { greet: true }.
+   API: PEPComms.mountConcierge(opts) · .askAboutOrder() · .refresh() · .labNoteFor(date) · .previewLab(days)
+        · .reset() (clears the pep-comms-* demo state) · .keys
    ===================================================================== */
 (function (W, D) {
   'use strict';
@@ -49,6 +59,7 @@
   function weekStart(ms) { var d = new Date(midnight(ms)); var k = (d.getDay() + 6) % 7; d.setDate(d.getDate() - k); return d.getTime(); }
   function up(s) { return String(s || '').toUpperCase(); }
   function visible(el) { return !!(el && el.getClientRects().length); }
+  function setHTML(el, h) { if (el && el._cmh !== h) { el.innerHTML = h; el._cmh = h; } } // write only when the markup changed, so entrance animations do not replay on every refresh
 
   /* storage: localStorage when allowed, memory otherwise */
   var MEM = {};
@@ -273,9 +284,9 @@
         if (e.target.closest('.cm-toast__go')) { var f = t._view; hideToast(); if (f) f(); }
       });
     }
-    $('.cm-toast__t', t).textContent = title; $('.cm-toast__m', t).textContent = text; t._view = onView;
+    $('.cm-toast__t', t).innerHTML = String(title).split(' · ').map(function (x) { return '<span class="cm-nw">' + esc(x) + '</span>'; }).join(' · '); $('.cm-toast__m', t).textContent = text; t._view = onView;
     t.hidden = false; void t.offsetWidth; t.classList.add('on');
-    clearTimeout(rtT); rtT = setTimeout(hideToast, 7000);
+    clearTimeout(rtT); rtT = setTimeout(hideToast, 8000);
   }
   function hideToast() { var t = $('#cmToast'); if (!t) return; clearTimeout(rtT); t.classList.remove('on'); setTimeout(function () { if (!t.classList.contains('on')) t.hidden = true; }, RM ? 0 : 500); }
 
@@ -338,12 +349,12 @@
   function renderInbox() {
     var L = $('#cmAnnL'); if (!L) return;
     var A = getAnn().filter(forMe);
-    L.innerHTML = A.length ? A.map(function (a) {
+    setHTML(L, A.length ? A.map(function (a) {
       var on = !!openAnn[a.id], unread = !isRead(a);
       return '<li class="cm-annli' + (unread ? ' is-new' : '') + (on ? ' is-open' : '') + '"><button type="button" class="cm-annb" data-cm-ann="' + esc(a.id) + '" aria-expanded="' + on + '">' +
         '<span class="cm-dot" aria-hidden="true"></span><span class="cm-annb__t">' + esc(up(a.title)) + (a.sample ? ' <span class="tag-s">SAMPLE</span>' : '') + '</span><span class="cm-annb__d">' + esc(fDay(a.at)) + '</span></button>' +
         (on ? '<p class="cm-annli__body">' + esc(a.body) + '</p>' : '') + '</li>';
-    }).join('') : '<li class="cm-empty">No announcements yet. When Grace posts one, it shows here and at the top of your dashboard.</li>';
+    }).join('') : '<li class="cm-empty">No announcements yet. When Grace posts one, it shows here and at the top of your dashboard.</li>');
     var T = getThreads(), O = knownOrders();
     var rows = O.map(function (o) {
       var ms = msgsOf(T[o]), last = ms[ms.length - 1], u = unreadIn(o, 'client');
@@ -351,7 +362,7 @@
         '<span class="cm-orb__pv">' + (last ? (last.f === 'c' ? 'You: ' : 'Grace: ') + esc(clip(last.t, 70)) : 'No messages yet') + '</span>' +
         (u ? '<span class="unread on cm-ub" aria-label="' + u + ' unread">' + u + '</span>' : '<span class="cm-orb__go" aria-hidden="true">OPEN</span>') + '</button></li>';
     });
-    $('#cmOrdL').innerHTML = rows.length ? rows.join('') : '<li class="cm-empty">No orders yet.</li>';
+    setHTML($('#cmOrdL'), rows.length ? rows.join('') : '<li class="cm-empty">No orders yet.</li>');
     var nu = unreadAnn().length + unreadAll('client');
     $('#cmInbSub').textContent = nu ? nu + ' unread' : 'all caught up';
   }
@@ -401,11 +412,11 @@
     var L = $('#cmSentL'); if (!L) return;
     var A = getAnn();
     $('#cmSentN').textContent = A.length ? A.length + (A.length === 1 ? ' announcement' : ' announcements') : '';
-    L.innerHTML = A.length ? A.map(function (a) {
+    setHTML(L, A.length ? A.map(function (a) {
       var st = forMe(a) ? (isRead(a) ? '<span class="cm-rc is-read">' + IC.dbl + 'READ · ' + esc(up(ME.name)) + '</span>' : '<span class="cm-rc">' + IC.tick + 'SENT</span>') : '<span class="cm-rc">' + IC.tick + 'SENT · PREVIEW</span>';
       return '<li><div class="cm-sent__b"><b>' + esc(up(a.title)) + (a.sample ? ' <span class="tag-s">SAMPLE</span>' : '') + '</b><p>' + esc(a.body) + '</p>' +
         '<span class="cm-sent__m">TO ' + esc(audLabel(a)) + ' · ' + esc(fTime(a.at)) + '</span></div><div class="cm-sent__s">' + st + X('Withdraw announcement', ' data-cm-unsend="' + esc(a.id) + '"') + '</div></li>';
-    }).join('') : '<li class="cm-empty">Nothing sent yet.</li>';
+    }).join('') : '<li class="cm-empty">Nothing sent yet.</li>');
   }
 
   /* ================================================================
@@ -509,7 +520,7 @@
       if (u) { if (!badge) { badge = D.createElement('span'); badge.className = 'unread on cm-ub'; b.appendChild(badge); } badge.textContent = String(u); badge.setAttribute('aria-label', u + ' unread'); }
       else if (badge) badge.remove();
       var st = $('#cmSt-' + id);
-      if (st) st.innerHTML = last ? (last.f === 'g' ? (u ? '<span class="cm-new">NEW REPLY</span> · ' : 'Grace replied · ') + esc(fDay(last.at)) : 'You · ' + esc(fDay(last.at)) + ' ' + receipt(last)) : 'Grace answers every order question herself';
+      setHTML(st, last ? (last.f === 'g' ? (u ? '<span class="cm-new">NEW REPLY</span> · ' : 'Grace replied · ') + esc(fDay(last.at)) : 'You · ' + esc(fDay(last.at)) + ' ' + receipt(last)) : 'Questions about this order go straight to Grace');
       renderMsgs($('#cmMs-' + id), ms, 'c', 'GRACE', 'Ask anything about this order: delivery, packaging, a change of address. Grace replies here.');
     });
     updateTyping();
@@ -534,7 +545,7 @@
         return;
       }
       var r = dr.rating || (done ? done.rating : 0);
-      box.innerHTML = '<div class="cm-ci__h"><h3 class="h3">HOW WAS YOUR ORDER?</h3><span class="sub">Delivered · ten seconds, all optional</span></div>' + marksHtml(r, true, o) +
+      box.innerHTML = '<div class="cm-ci__h"><h3 class="h3">HOW WAS YOUR ORDER?</h3><span class="sub">Delivered · optional</span></div>' + marksHtml(r, true, o) +
         '<div class="cm-marks__lab" aria-hidden="true"><span>NOT GREAT</span><span>LOVED IT</span></div>' +
         '<div class="cm-ci__more"' + (r ? '' : ' hidden') + '><div class="field"><label for="cmCi-' + domId(o) + '">ADD A NOTE (OPTIONAL)</label>' +
         '<textarea class="inp cm-ta" id="cmCi-' + domId(o) + '" rows="2" maxlength="400" placeholder="Delivery, packaging, anything we can do better">' + esc(dr.note != null ? dr.note : (done ? done.note : '')) + '</textarea></div>' +
@@ -583,7 +594,7 @@
       '<div class="cm-ot__grid"><div class="cm-ot__list" id="cmOTL" role="tablist" aria-label="Order threads"></div>' +
       '<div class="cm-ot__conv"><div class="conv-h cm-ot__h" id="cmOTH"></div><div class="cm-msgs" id="cmOTM" aria-live="polite"></div>' + typingRow(up(ME.first)) +
       '<form class="compose cm-compose" id="cmOTF"><label class="sr" for="cmOTI">Reply about this order</label><input class="inp" id="cmOTI" maxlength="600" autocomplete="off" placeholder="Reply about this order…">' + B('SEND', { cls: 'chrome', type: 'submit', icon: IC.send }) + '</form></div></div>' +
-      '<p class="note">Opening a thread marks it READ on the client’s side. Replies show as NEW REPLY in their dashboard. ' + esc(LN.phoneAlerts || '') + '</p>';
+      '<p class="note">When you open a thread, the client sees READ on their messages. Your replies reach them as a NEW REPLY alert. ' + esc(LN.phoneAlerts || '') + '</p>';
     host.appendChild(s);
     $('#cmOTL', s).addEventListener('click', function (e) { var b = e.target.closest('[data-cm-ot]'); if (!b) return; activeOT = b.dataset.cmOt; syncRead(); refresh(); });
     $('#cmOTF', s).addEventListener('submit', function (e) {
@@ -601,20 +612,20 @@
     sub.textContent = tot ? tot + ' unread' : (O.length ? 'all read' : 'no messages yet');
     if (!O.length) {
       grid.classList.add('is-empty'); activeOT = null;
-      L.innerHTML = '<p class="cm-empty">No order messages yet. When a client taps MESSAGE ABOUT THIS ORDER, the thread lands here under its order number.</p>';
-      $('#cmOTH').innerHTML = ''; renderMsgs($('#cmOTM'), [], 'g', '', 'Pick a thread on the left.'); $('#cmOTF').hidden = true; return;
+      setHTML(L, '<p class="cm-empty">No order messages yet. When a client taps MESSAGE ABOUT THIS ORDER, the thread lands here under its order number.</p>');
+      setHTML($('#cmOTH'), ''); renderMsgs($('#cmOTM'), [], 'g', '', 'Pick a thread on the left.'); $('#cmOTF').hidden = true; return;
     }
     grid.classList.remove('is-empty'); $('#cmOTF').hidden = false;
     if (!activeOT || O.indexOf(activeOT) < 0) activeOT = O[0];
-    L.innerHTML = O.map(function (o) {
+    setHTML(L, O.map(function (o) {
       var th = T[o], ms = msgsOf(th), last = ms[ms.length - 1], u = unreadIn(o, 'owner'), nm = str(th.name, 40) || ME.name;
       var ini = nm.split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase();
       return '<button type="button" class="th cm-th" role="tab" aria-selected="' + (o === activeOT) + '" data-cm-ot="' + esc(o) + '"><span class="av">' + esc(ini) + '</span>' +
         '<span class="cm-th__b"><span class="nm">ORDER ' + esc(o) + '</span><span class="cm-th__pv">' + esc(nm) + ' · ' + (last.f === 'g' ? 'You: ' : '') + esc(clip(last.t, 60)) + '</span></span>' +
         '<span class="cm-th__r"><span class="cm-th__t">' + esc(fDay(last.at)) + '</span>' + (u ? '<span class="unread on cm-ub" aria-label="' + u + ' unread">' + u + '</span>' : '') + '</span></button>';
-    }).join('');
+    }).join(''));
     var th = T[activeOT], nm = str(th.name, 40) || ME.name;
-    $('#cmOTH').innerHTML = '<span class="av">' + esc(nm.split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase()) + '</span><div><b>ORDER ' + esc(activeOT) + ' · ' + esc(up(nm)) + '</b><div class="s">' + (th.client === ME.k ? 'Sample client · also open the CLIENT view to see this thread from their side' : 'Client') + '</div></div>';
+    setHTML($('#cmOTH'), '<span class="av">' + esc(nm.split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase()) + '</span><div><b>ORDER ' + esc(activeOT) + ' · ' + esc(up(nm)) + '</b><div class="s">' + (th.client === ME.k ? 'Sample client · also open the CLIENT view to see this thread from their side' : 'Client') + '</div></div>');
     renderMsgs($('#cmOTM'), msgsOf(th), 'g', up(nm), '');
     updateTyping();
   }
@@ -630,11 +641,11 @@
     var L = $('#cmPulseL'); if (!L) return;
     var A = getCI().sort(function (a, b) { return b.at - a.at; });
     var avg = A.length ? A.reduce(function (s, x) { return s + x.rating; }, 0) / A.length : 0;
-    $('#cmPulseS').innerHTML = A.length ? '<b class="cm-pulse__avg">' + avg.toFixed(1) + '</b><div>' + marksHtml(Math.round(avg), false) + '<span>AVERAGE FROM ' + A.length + (A.length === 1 ? ' CHECK-IN' : ' CHECK-INS') + (A.some(function (x) { return x.sample; }) ? ' · INCLUDES SAMPLES' : '') + '</span></div>' : '<span class="muted">No check-ins yet.</span>';
-    L.innerHTML = A.slice(0, 6).map(function (x, i) {
+    setHTML($('#cmPulseS'), A.length ? '<b class="cm-pulse__avg">' + avg.toFixed(1) + '</b><div>' + marksHtml(Math.round(avg), false) + '<span>AVERAGE FROM ' + A.length + (A.length === 1 ? ' CHECK-IN' : ' CHECK-INS') + (A.some(function (x) { return x.sample; }) ? ' · INCLUDES SAMPLES' : '') + '</span></div>' : '<span class="muted">No check-ins yet.</span>');
+    setHTML(L, A.slice(0, 6).map(function (x, i) {
       return '<li class="' + (i === 0 && !x.sample ? 'is-new' : '') + '"><div class="cm-pulse__top">' + marksHtml(x.rating, false) + '<span class="cm-pulse__who">' + esc(x.client) + ' · ORDER ' + esc(x.order) + '</span>' + (x.sample ? '<span class="tag-s">SAMPLE</span>' : '') + '<span class="cm-pulse__t">' + esc(fDay(x.at)) + '</span></div>' +
         (x.note ? '<p>' + rich(x.note) + '</p>' : '<p class="cm-dim">No note.</p>') + '</li>';
-    }).join('');
+    }).join(''));
   }
 
   /* ================================================================
@@ -711,13 +722,13 @@
     var L = $('#cmRemL'); if (!L) return;
     var A = getRem().sort(function (a, b) { return a.due - b.due; });
     $('#cmRemSub').textContent = A.length ? A.length + ' active' : 'none yet';
-    L.innerHTML = A.length ? A.map(function (r) {
+    setHTML(L, A.length ? A.map(function (r) {
       var left = daysLeft(r.due), due = left <= 0;
       return '<li class="cm-remi' + (due ? ' is-due' : '') + '">' + ring(r) + '<div class="cm-remi__b"><b>' + esc(up(r.p)) + (r.size ? ' <small>' + esc(r.size) + '</small>' : '') + (r.sample ? ' <span class="tag-s">SAMPLE</span>' : '') + '</b>' +
-        '<span>' + (due ? 'Due ' + (left === 0 ? 'today' : esc(fLong(r.due))) + ' · you asked us to remind you' : 'Reminds you on ' + esc(fLong(r.due))) + '</span></div>' +
+        '<span class="cm-remi__d">' + (due ? 'Due ' + (left === 0 ? 'today' : esc(fLong(r.due))) + ' · you asked us to remind you' : 'Reminds you on ' + esc(fLong(r.due))) + '</span></div>' +
         '<div class="cm-remi__a">' + (due ? B('REORDER NOW', { cls: 'sm chrome', attrs: ' data-cm-reorder="' + esc(r.p) + '"' }) : '') +
         '<button type="button" class="cm-link" data-cm-remind data-cm-p="' + esc(r.p) + '" data-cm-size="' + esc(r.size || '') + '">CHANGE</button>' + X('Remove reminder', ' data-cm-remdel="' + esc(r.p) + '"') + '</div></li>';
-    }).join('') : '<li class="cm-empty">Tap REMIND ME on anything you’ve ordered before. We remind you once, on the day you pick.</li>';
+    }).join('') : '<li class="cm-empty">Tap REMIND ME on anything you’ve ordered before. We remind you once, on the day you pick.</li>');
   }
   function reorderNow(p, btn) {
     if (btn) { setLabel(btn, 'ADDED'); btn.classList.add('cm-done'); }
@@ -742,7 +753,7 @@
     var A = dueRems();
     if (!A.length) { s.hidden = true; s.dataset.sig = ''; return; }
     var r = A[0], sig = r.id + r.due + A.length; if (s.dataset.sig === sig && !s.hidden) return; s.dataset.sig = sig;
-    s.innerHTML = ring(r, 'cm-ring--md') + '<div class="cm-due__b"><p class="eyebrow">REMINDER · DUE ' + (daysLeft(r.due) === 0 ? 'TODAY' : 'SINCE ' + esc(up(fDay(r.due)))) + (r.sample ? ' · <span class="cm-ban__s">SAMPLE</span>' : '') + '</p>' +
+    s.innerHTML = ring(r, 'cm-ring--md') + '<div class="cm-due__b"><p class="eyebrow"><span>REMINDER · DUE ' + (daysLeft(r.due) === 0 ? 'TODAY' : 'SINCE ' + esc(up(fDay(r.due)))) + (r.sample ? ' · <span class="cm-ban__s">SAMPLE</span>' : '') + '</span></p>' +
       '<b class="cm-due__t">TIME TO REORDER ' + esc(up(r.p)) + '?</b><span class="cm-due__s">You set this reminder on ' + esc(fDay(r.start)) + (A.length > 1 ? ' · <button type="button" class="cm-link" data-cm-seeall>' + (A.length - 1) + ' MORE DUE</button>' : '') + '</span></div>' +
       '<div class="cm-due__a">' + B('REORDER NOW', { cls: 'sm chrome', attrs: ' data-cm-reorder="' + esc(r.p) + '"' }) + '<button type="button" class="cm-link" data-cm-later="' + esc(r.p) + '">REMIND ME IN 3 DAYS</button></div>';
     s.hidden = false; reveal(s);
@@ -807,7 +818,7 @@
         '<div class="cm-try"><span class="cm-try__k">TRY TODAY</span><span class="cm-try__t">' + esc(n.tryToday) + '</span></div></div>';
     }
     s.innerHTML = '<span class="cm-shine" aria-hidden="true"></span>' +
-      '<div class="cm-lab__head"><div><p class="eyebrow cm-lab__k">DAILY LAB NOTE · <span>' + (n.kind === 'pep' ? 'PEPTIDE OF THE DAY' : 'WELLNESS TIP · ' + esc(n.cat)) + '</span></p>' + H(n.title, 'h2', 'cmLabT', 'cm-lab__h') +
+      '<div class="cm-lab__head"><div><p class="eyebrow cm-lab__k"><span>DAILY LAB NOTE · <b>' + (n.kind === 'pep' ? 'PEPTIDE OF THE DAY' : 'WELLNESS TIP · ' + esc(n.cat)) + '</b></span></p>' + H(n.title, 'h2', 'cmLabT', 'cm-lab__h') +
       (n.kind === 'pep' ? '<p class="cm-lab__cls">' + esc(n.cls) + ' · ' + esc(n.sizes) + '</p>' : '') + '</div><time class="dw-date" datetime="' + iso(labDate) + '">' + esc(dateTxt) + '</time></div>' + body +
       '<div class="cm-lab__acts">' + B('SAVE', { cls: 'sm dw-save', icon: IC.heart, attrs: ' data-cm-labsave aria-pressed="false"' }) + B('SHARE', { cls: 'sm', icon: IC.share, attrs: ' data-cm-labshare' }) +
       '<button class="dw-sv-btn" type="button" data-cm-labopen aria-expanded="false" aria-controls="cmLabSaved">SAVED NOTES<b id="cmLabN">0</b></button></div>' +
@@ -853,6 +864,9 @@
   }
   function mountConcierge(opts) {
     opts = opts || {};
+    /* quiet by default inside the dashboard: the docked bar stays, the store's proactive sales greeting
+       does not pop over a client's own dashboard (pass { greet: true } to keep it) */
+    if (!opts.greet) { try { W.sessionStorage.setItem('pepbot:greeted', '1'); } catch (e) {} }
     function go() {
       var Bt = W.PEPBOT; if (!Bt) return false;
       try { if (Bt.brain && Bt.brain.L) Bt.brain.L.order = orderAnswer; } catch (e) {}
@@ -883,10 +897,13 @@
     var cOrd = unreadAll('client'), cAnn = unreadAnn().length, o = unreadAll('owner');
     tabBadge('client', 'orders', cOrd); tabBadge('client', 'cmsg', cOrd + cAnn); tabBadge('owner', 'omsg', o);
   }
+  /* a thread only counts as READ when its messages are actually on screen in a visible tab */
+  function inView(el) { if (!el || D.hidden || !visible(el)) return false; var r = el.getBoundingClientRect(); return r.bottom > 70 && r.top < (W.innerHeight || 800) - 40; }
+  function clientBox(o) { return D.getElementById('cmMs-' + domId(o)); }
   function syncRead() {
     var ch = false, v = curView();
-    if (v === 'client' && panelOn('orders')) Object.keys(openC).forEach(function (o) { if (openC[o] && markRead(o, 'client')) ch = true; });
-    if (v === 'owner' && panelOn('omsg') && activeOT && visible($('#cmOT'))) { if (markRead(activeOT, 'owner')) ch = true; }
+    if (v === 'client' && panelOn('orders')) Object.keys(openC).forEach(function (o) { if (openC[o] && inView(clientBox(o)) && markRead(o, 'client')) ch = true; });
+    if (v === 'owner' && panelOn('omsg') && activeOT && inView($('#cmOTM'))) { if (markRead(activeOT, 'owner')) ch = true; }
     return ch;
   }
   function notify() {
@@ -901,10 +918,10 @@
     if (ch) { var ks = Object.keys(n); if (ks.length > 400) ks.slice(0, ks.length - 400).forEach(function (k) { delete n[k]; }); store.set(K.seen, { n: n }); }
     if (!cand) return;
     if (v === 'client') {
-      if (openC[cand.o] && panelOn('orders')) return;
+      if (openC[cand.o] && panelOn('orders') && inView(clientBox(cand.o))) return;
       replyToast('NEW REPLY · ORDER ' + cand.o, 'Grace: ' + clip(cand.m.t, 90), function () { goClient('orders', function () { openClientThread(cand.o, true); }); });
     } else {
-      if (activeOT === cand.o && panelOn('omsg')) return;
+      if (activeOT === cand.o && panelOn('omsg') && inView($('#cmOTM'))) return;
       var nm = str((T[cand.o] || {}).name, 40) || ME.name;
       replyToast('NEW MESSAGE · ORDER ' + cand.o, nm + ': ' + clip(cand.m.t, 90), function () { activeOT = cand.o; goOwner('omsg', function () { syncRead(); refresh(); var el = $('#cmOT'); if (el) el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); }); });
     }
@@ -952,6 +969,7 @@
       refresh();
     });
     setInterval(function () { if (!D.hidden) updateTyping(); }, 1000);
+    var scT = 0; W.addEventListener('scroll', function () { if (scT) return; scT = setTimeout(function () { scT = 0; if (syncRead()) refresh(); }, 220); }, { passive: true });
     D.addEventListener('visibilitychange', function () { if (!D.hidden) { if (labDate && dayNum(new Date(labDate)) !== dayNum(new Date())) renderLab(); refresh(); } });
   }
   function mount() {

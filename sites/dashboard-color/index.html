@@ -3600,7 +3600,8 @@ ticks.push(function(){
 /* ---------------- card halos ---------------- */
 var app=D.querySelector('.app'),layer=D.createElement('div');layer.className='acc-halos';layer.setAttribute('aria-hidden','true');app.insertBefore(layer,app.firstChild);
 var PAD=26,recs=new Map(),vis=new Set(),SEL='.glass:not(.top):not(.tabs):not(.tip):not(.toast)';
-var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){var r=recs.get(e.target);if(!r)return;r.vis=e.isIntersecting;if(r.vis)vis.add(r);else vis.delete(r)});kick(60)},{rootMargin:'30% 0px'}):null;
+function rest(r){r.heat=0;r.tgt=0;r.ot=r.ob=0;r.ht.style.opacity=0;r.hb.style.opacity=0;r.hs.classList.remove('go');r.sArm=true;r.armed=true;r.halo.hidden=true}
+var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){var r=recs.get(e.target);if(!r)return;r.vis=e.isIntersecting;if(r.vis)vis.add(r);else{vis.delete(r);rest(r)}});kick(60)},{rootMargin:'30% 0px'}):null;
 function ptsOf(cp,w,h){
   var m=/polygon\((.*)\)/.exec(cp||'');if(!m)return [[0,0],[w,0],[w,h],[0,h]];
   var ev=function(tok,dim){var s=0,sg=1;tok.replace(/calc\(|\)/g,' ').trim().split(/\s+/).forEach(function(q){if(q==='-'){sg=-1;return}if(q==='+'){sg=1;return}var mm=/^(-?[\d.]+)(px|%)?$/.exec(q);if(mm){s+=sg*parseFloat(mm[1])*(mm[2]==='%'?dim/100:1);sg=1}});return s};
@@ -3724,7 +3725,7 @@ ticks.push(function(dt,now){
   var tgt,np;
   if(ch.intro){       // on screen when it renders: it draws itself in over 1.6 s (time based, so slow frames never stall it)
     if(!ch.t0)ch.t0=now;var u=clamp01((now-ch.t0)/1600);tgt=1;np=Math.max(ch.p,u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2);if(u>=1){np=1;ch.intro=false;ch.t0=0}
-  }else{tgt=Math.max(ch.p,e);np=damp(ch.p,tgt,5,dt);if(Math.abs(np-tgt)<.001)np=tgt}   // draws forward as you scroll in; stays drawn until it leaves the screen
+  }else{tgt=Math.max(ch.p,e);np=damp(ch.p,tgt,5,dt);if(Math.abs(np-tgt)<.006)np=tgt}   // draws forward as you scroll in; stays drawn until it leaves the screen
   if(np!==ch.p){ch.p=np;paintChart()}
   return np!==tgt||ch.intro;
 });
