@@ -4,7 +4,7 @@ These are final. Do not change any of them unless the owner asks in so many word
 
 ## Sharing
 - Anything for Grace goes out as a PUBLIC no-login link on GitHub Pages: https://apex360marketing-ai.github.io/Pepticity/<page>/ (gh-pages branch). Never send a private Claude Artifact link for Grace.
-- Live pages: site/, dashboard/, client/, previous/, previous-client/, concierge/, arsenal/, research/.
+- Live pages: site/, graces-dashboard/ (one link, owner+client switch), dashboard/, client/, dashboard-color/, previous/, previous-client/, concierge/, arsenal/, research/, grace/ (review + picks).
 
 ## Brand (approved 29 Oct)
 - FONT = the "PEPTICITY STUDIO" look on sites/brand-font (section 02):
@@ -14,7 +14,7 @@ These are final. Do not change any of them unless the owner asks in so many word
 - A: dark matte grey chevron (0x55544f) with the light inner bar.
 - LOGO P = the approved P mark (brand/logo/p-mark.svg from commit ca61e2b; LOGO_P glyph in the dashboard). Never the font's cut-out P. Never white or platinum: matte gunmetal.
 - The owner's BLACK image is the source of truth for colour. Wall #323232; metal runs #080807 to #8E8D85.
-- Bottle = brand/vial-sample (see-through, PEPTICITY vertical and off-centre, small peptide swirl with dots beside it). Make the rest of the bottles from it only after the owner says so.
+- Bottle = brand/vial-hf (Higgsfield, approved 30 Oct): see-through smoked label, etched peptide swirl, PEPTICITY vertical + logo P on the front, full info on the back, lit from below. Used in the store as assets/vial-pepticity.webp with a rising shine.
 
 ## Dashboards (owner, 30 Oct)
 - The dashboard look is FINAL and loved. Never change layout, spacing, fonts, cards, background, 3D type or copy. Only add colour accents or new cards that look native when asked.
