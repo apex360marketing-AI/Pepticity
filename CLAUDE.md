@@ -25,5 +25,6 @@ These are final. Do not change any of them unless the owner asks in so many word
 - Small, exact edits only. Change ONLY what was asked. Never rebuild a whole piece to make a tweak.
 - Before touching the font, logo, bottle or a published page: show ONE sample, wait for OK.
 - Use skill reference-pixel-kit whenever the owner says "exact" or "same" about an image.
-- No Higgsfield spend without the owner's explicit OK.
+- ALL imagery and video (photos, product shots, bottles, films, backgrounds, textures, illustrations) is made with Higgsfield, never drawn or composited by hand in code (PIL/three.js drawings) (owner, 30 Oct). Code only animates or places Higgsfield assets; the owner's font/logo files may be layered on exactly.
+- Before a Higgsfield spend, state the cost in the message; films and batches need the owner's OK.
 - Owner preferences: point form, recommendations, multiple-choice questions, pictures plus links, verify in a browser before showing.
