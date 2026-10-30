@@ -33,7 +33,7 @@ window.PC_CONFIG = {
   /* FIXED end date for the grand-opening offer, e.g. '2026-12-31T23:59:00-05:00'. Only this stored date is read, so it never resets.
      null = "[End date: Grace and counsel to set]". */
   offerEndsAt: null,
-  /* HGH, Melanotan II and bacteriostatic water (highRisk in data/products.json) stay hidden everywhere until this is true */
+  /* the three listings flagged highRisk in data/products.json stay hidden everywhere until this is true */
   showHighRisk: false,
   /* the 19+ pass is remembered on this device for this many days */
   agePassDays: 30,
@@ -130,7 +130,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
   <section class="hero" id="top" data-stop-id="hero" aria-labelledby="heroTitle" data-no-cover>
     <div class="hero-card glass" data-hook="H01">
       <span class="hc-light" aria-hidden="true"></span>
-      <p class="eyebrow"><i></i><span>GRAND OPENING · A GUIDED TOUR IN 8 STOPS</span><i></i></p>
+      <p class="eyebrow"><i></i><span>GRAND OPENING<span class="eb-tour"> · A GUIDED TOUR IN 8 STOPS</span></span><i></i></p>
       <p class="wback" id="wback" data-hook="H52" hidden><span id="wbackT">WELCOME BACK.</span> <button class="linkish" type="button" id="wbackGo">PICK UP WHERE I LEFT OFF</button> <button class="linkish" type="button" id="wbackCart" hidden>OPEN MY CART</button> <button class="linkish" type="button" id="wbackClear">NOT YOU?</button></p>
       <div class="w3d w3d-hero" data-word3d="PEPTICITY" data-funky=".22" data-fill=".8" data-aspect="4.6" aria-hidden="true"></div>
       <div class="w3d w3d-h1" data-word3d="JOIN THE|PEPTICITY TEAM" data-funky="0" data-fill=".86" data-aspect="10" aria-hidden="true"></div>
@@ -391,7 +391,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       <!-- scroll-reveal hooks on the way (fade in / out, R094) -->
       <div class="sr-hooks">
         <aside class="sr glass" data-at=".14" data-side="r" data-hook="H41">
-          <p class="eyebrow"><span>FOUNDING MEMBERS</span></p><h3 class="h3 x3d"><span class="offer-only">15% OFF YOUR FIRST ORDER</span><span class="offer-off">YOUR FOUNDING TICKET</span></h3>
+          <p class="eyebrow"><span>FOUNDING MEMBERS</span></p><h3 class="h3 x3d offer-only">15% OFF YOUR FIRST ORDER</h3><h3 class="h3 x3d offer-off">YOUR FOUNDING TICKET</h3>
           <p><span class="offer-only">Reserved for the PEPTICITY Team. One email and it's yours.</span><span class="offer-off">One email and your founding ticket is saved: Grace's letter and first word when new lots land.</span></p>
           <button class="pc-btn pc-btn--sm" type="button" data-open="join"><span class="pc-btn__face"><span class="pc-btn__label">CLAIM MY TICKET</span></span></button>
         </aside>
@@ -496,7 +496,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
               <p class="mini-t">JOIN THE TEAM<span class="offer-only"> · 15% OFF YOUR FIRST ORDER</span><span class="offer-off"> · CLAIM YOUR FOUNDING TICKET</span></p>
               <div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
               <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">JOIN</span></span></button></div>
-              <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me the founding offer and occasional news. I can unsubscribe any time.</span></label>
+              <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me Grace's monthly letter. Unsubscribe any time. <a href="#privacy" class="ph-link">[Privacy promise]</a></span></label>
               <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
             </form></li>
         </ol>
@@ -762,7 +762,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 <canvas id="gl-front" aria-hidden="true"></canvas>
 
 <!-- sticky bar (phones only) -->
-<div class="sticky" id="sticky" data-hook="H01b"><button class="pc-btn pc-btn--block" type="button" id="stickyBtn" data-open="join"><span class="pc-btn__face"><span class="pc-btn__label" id="stickyT">CLAIM YOUR FOUNDING TICKET</span></span></button><button class="pc-btn sticky-sms" type="button" data-open="sms" data-hook="H43s" aria-label="Text me when new lots land"><span class="pc-btn__face"><span class="pc-btn__label">TEXT ME</span></span></button></div>
+<div class="sticky" id="sticky" data-hook="H01b"><button class="pc-btn pc-btn--block" type="button" id="stickyBtn" data-open="join"><span class="pc-btn__face"><span class="pc-btn__label" id="stickyT">CLAIM MY TICKET</span></span></button><button class="pc-btn sticky-sms" type="button" data-open="sms" data-hook="H43s" aria-label="Text me when new lots land"><span class="pc-btn__face"><span class="pc-btn__label">TEXT ME</span></span></button></div>
 
 <!-- CART DRAWER -->
 <div class="scrimx" id="scrimx" hidden></div>

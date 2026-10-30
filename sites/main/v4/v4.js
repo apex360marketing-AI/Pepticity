@@ -19,7 +19,7 @@
   var money = function (n) { return '$' + n.toFixed(2); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var OFFER = !!(CFG.counselCleared && CFG.counselCleared.offer);
-  var HIGH = !!CFG.showHighRisk;   /* HGH, Melanotan II, bacteriostatic water stay hidden unless PC_CONFIG.showHighRisk is true */
+  var HIGH = !!CFG.showHighRisk;   /* highRisk listings stay hidden unless PC_CONFIG.showHighRisk is true */
   var events = [];
   /* ================= the 19+ pass (this device only, PC_CONFIG.agePassDays) ================= */
   var PROV = { AB: 'Alberta', BC: 'British Columbia', MB: 'Manitoba', NB: 'New Brunswick', NL: 'Newfoundland and Labrador', NS: 'Nova Scotia', NT: 'Northwest Territories', NU: 'Nunavut', ON: 'Ontario', PE: 'Prince Edward Island', QC: 'Quebec', SK: 'Saskatchewan', YT: 'Yukon' };
@@ -381,7 +381,7 @@
     H18: function () { return 'You\'re on Grace\'s list. The next letter comes to your inbox.'; },
     H47: function () { return '15% applied to this order.'; },
     H50: function () { return 'You\'re on the list for this lot.'; },
-    H60: function (f) { return 'Your shortlist is on its way' + (f.phone && f.phone.value.trim() ? ' by text and email' : '') + '. Next: the threshold, then the city.'; },
+    H60: function (f) { var em = f.email.value.trim(), ph = f.phone.value.trim(); return 'Your shortlist is on its way' + (em && ph ? ' by email and text' : ph ? ' by text' : '') + '. Next: ' + (pass ? 'enter the city.' : 'the threshold, then the city.'); },
     H61: function () { return 'Grace will reply by email. [Reply time: Grace to confirm] Please keep health details out of messages.'; },
     H42w: function () { return 'Noted. Grace will write the moment this shelf opens.'; }
   };
@@ -414,7 +414,7 @@
       consent_email: ce ? { given: ce.checked, text: ce.nextElementSibling.textContent, at: new Date().toISOString() } : { given: false },
       consent_sms: cs ? { given: cs.checked, text: cs.nextElementSibling.textContent, at: new Date().toISOString() } : { given: false },
       utm: {}, created_at: new Date().toISOString(), version: version };
-    /* lead quality: every form carries the tour answers. The market (it can read as health-adjacent) rides along only when the visitor ticks the box. */
+    /* answer quality: every form carries the tour answers. The market (it can read as health-adjacent) rides along only when the visitor ticks the box. */
     if (TOUR) { d.tour = { experience: TOUR.experience, priority: TOUR.priority, updates: TOUR.updates }; if (ct && ct.checked) d.tour.market = TOUR.market; }
     if (form.dataset.interest && ct && ct.checked) d.interest = form.dataset.interest;
     return d;
@@ -729,7 +729,10 @@
   }
   function markPicks() {
     var ids = tourPicks().map(function (p) { return p.id; });
-    $$('#shelf .prod').forEach(function (li) { li.classList.toggle('pick', ids.indexOf(+li.dataset.id) > -1); });
+    $$('#shelf .prod').forEach(function (li) {
+      var on = ids.indexOf(+li.dataset.id) > -1, tg = $('.pick-tag', li); li.classList.toggle('pick', on);
+      if (on && !tg) li.insertAdjacentHTML('afterbegin', '<span class="pick-tag">YOUR SHORTLIST</span>'); else if (!on && tg) tg.remove();
+    });
   }
 
   /* ================= cart (offer-to-checkout) ================= */
@@ -1013,7 +1016,7 @@
 
   /* ================= sticky bar, rail, nav over photos, concierge mode ================= */
   var sticky = $('#sticky'), rail = $$('#rail li'), stops = ['hero', 'markets', 'tour', 'age', 'city', 'doors', 'lab', 'store'], tick = 0;
-  if (OFFER) $('#stickyT').textContent = 'JOIN · 15% OFF FIRST ORDER';
+  if (OFFER) $('#stickyT').textContent = 'JOIN · 15% OFF';
   gsap.ticker.add(function () {
     var y = window.scrollY || 0, vh = innerHeight, ag = D.classList.contains('age-gated');
     var jr = $('#journey').getBoundingClientRect(), lr = $('#lab').getBoundingClientRect(), agr = ageSec.getBoundingClientRect();

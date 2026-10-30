@@ -51,7 +51,7 @@ html.age-gated .past-age,html.age-gated .sales-only{display:none!important}
 
 /* ---------- 5 · STOP 02 · WHAT BRINGS YOU HERE (LAY-102 Panel Accordion) ---------- */
 .markets .wrap{width:min(1320px,100% - 2 * var(--gut))}
-.mk{--apx-lay102-h:560px;--apx-lay102-spine:74px;--apx-lay102-spine-v:62px;--apx-lay102-hv:1180px;position:relative;z-index:2}
+.mk{--apx-lay102-h:560px;--apx-lay102-spine:74px;--apx-lay102-spine-v:62px;--apx-lay102-hv:980px;position:relative;z-index:2}
 .mk .apx-lay102__panel{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);
   background:linear-gradient(160deg,var(--g-a),var(--g-b))}
 .mk .apx-lay102__panel::before{box-shadow:inset 0 0 0 1px var(--rim-s)}
@@ -264,7 +264,6 @@ html.apx-n102-lock #gl-front{opacity:0}
 /* ---------- 13 · the collection: the visitor's shortlist + the offer band ---------- */
 .store-count{justify-content:center;margin-top:14px}
 .prod.pick{box-shadow:inset 0 0 0 1px var(--rim-t),0 0 26px var(--glow)}
-.prod.pick::after{content:"YOUR SHORTLIST";position:absolute;left:18px;top:14px;font:400 8.5px var(--display);letter-spacing:.28em;color:var(--ink);z-index:3}
 .offer-band{--c:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 26px;align-items:center;width:min(980px,100%);margin:0 auto clamp(30px,4vh,48px);padding:20px clamp(18px,2.4vw,30px)}
 .ob-end{margin:6px 0 0;font:400 10px var(--display);letter-spacing:.24em;color:var(--muted)}
 @media (max-width:640px){.offer-band{grid-template-columns:1fr}}
@@ -282,3 +281,25 @@ html.apx-n102-lock #gl-front{opacity:0}
 /* ---------- 15 · reduced motion: every module still looks finished ---------- */
 html.rm .say{height:auto}
 html.rm .mk .apx-lay102__art{animation:none}
+
+/* ---------- 16 · fixes from the first walk ---------- */
+.lab-plaque b{font-size:1.05em;white-space:nowrap;letter-spacing:.14em}
+.perks-card .fogcard{width:100%}
+.sms-card{width:100%;max-width:560px;justify-self:center}
+.pick-tag{position:absolute;left:14px;top:12px;z-index:6;padding:5px 8px;font:400 8.5px var(--display);letter-spacing:.26em;color:var(--ink);background:color-mix(in srgb,var(--bg) 60%,transparent);box-shadow:inset 0 0 0 1px var(--rim-t)}
+/* the shortlist sits on the page ground (not a photo): ink follows the version */
+.to-picks .mini-prod{box-shadow:inset 0 0 0 1px var(--rim-s)}
+.to-picks .mini-prod b{color:var(--ink)}
+.to-picks .mini-prod span{color:var(--ink-2)}
+.to-picks .mini-prod em{color:var(--muted)}
+/* CLS: reserve the hero's 3D word space before the 3D layer is ready (it used to push the card down when it arrived) */
+html:not(.gl-front-on):not(.gl-fail) .hero-card{container-type:inline-size}
+html:not(.gl-front-on):not(.gl-fail) .hero-card .w3d{display:block;visibility:hidden}
+html:not(.gl-front-on):not(.gl-fail) .hero-card .h1{margin-top:calc(-100cqw / 10 - 6px);min-height:calc(100cqw / 10);display:flex;align-items:center;justify-content:center;font-size:clamp(18px,4.2cqw,46px)}
+@media (max-width:640px){.eb-tour{display:none}}
+/* the stub's label must never set the card's width on phones */
+.hero-card>*{min-width:0;max-width:100%}
+.hero-form{width:100%}
+@media (max-width:640px){
+  .apx-b101 .apx-b101__l{white-space:normal;text-align:center;padding:0 62px 0 16px;letter-spacing:.12em;line-height:1.35}
+}

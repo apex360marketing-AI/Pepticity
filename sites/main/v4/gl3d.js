@@ -233,4 +233,4 @@ async function main() {
   D.classList.add('gl-front-on');
   window.__gl = { front, ok: true };
 }
-main().catch(e => { console.warn('[gl3d] 3D layer unavailable, flat fallbacks stay', e); window.__gl = { ok: false, err: String(e) }; });
+main().catch(e => { document.documentElement.classList.add('gl-fail'); console.warn('[gl3d] 3D layer unavailable, flat fallbacks stay', e); window.__gl = { ok: false, err: String(e) }; });
