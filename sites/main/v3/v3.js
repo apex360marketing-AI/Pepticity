@@ -418,7 +418,7 @@
     version = v === 'black' ? 'black' : 'white';
     D.setAttribute('data-version', version);
     if (!quiet) LS.set('pc-version', version);
-    if (vSeg.pcSelect) { var idx = version === 'black' ? 1 : 0; $$('.pc-seg__opt', vSeg).forEach(function (o, k) { o.setAttribute('aria-checked', String(k === idx)); }); vSeg.style.setProperty('--i', idx); }
+    if (vSeg.pcSelect) vSeg.pcSelect(version === 'black' ? 1 : 0);   /* keeps the switch's own record in step (first arrow key works) */
     $$('.leaf img').forEach(function (i) { i.src = 'media/' + version + '-doors.jpg'; });
     $('#doorbox .doorway .peek').src = 'media/' + version + '-lab.jpg';
     $('#d2Bg').src = 'media/' + version + '-doors.jpg'; $('#d2From').src = 'media/' + version + '-lab.jpg'; if (d2Film) setD2Film(); d2Last = -1;
