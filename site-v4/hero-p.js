@@ -87,10 +87,10 @@ function start() {
   function size() {
     W = canvas.clientWidth; H = canvas.clientHeight; if (!W || !H) return;
     renderer.setSize(W, H, false); camera.aspect = W / H;
-    /* the whole P sits inside the hero: by height on desktop, nearly edge to edge on phones (sitting behind the headline) */
-    const span = 1.48, tanH = Math.tan(camera.fov * Math.PI / 360);
-    const dist = (span / 2) / tanH, distW = (1.416 * (MOBILE ? 1.04 : 1.3) / 2) / (tanH * camera.aspect);
-    camera.position.set(0, MOBILE ? -0.12 : 0, Math.max(dist, distW));
+    /* the whole P always fits its own frame beside (desktop) or above (phone) the card, with room to turn and lean */
+    const tanH = Math.tan(camera.fov * Math.PI / 360);
+    const distH = (1.16 * 1.42 / 2) / tanH, distW = (1.416 * (MOBILE ? 1.32 : 1.1) / 2) / (tanH * camera.aspect);
+    camera.position.set(0, 0, Math.max(distH, distW));
     camera.updateProjectionMatrix();
   }
   size(); addEventListener('resize', () => { size(); kick(); });
@@ -120,7 +120,7 @@ function start() {
     st.ry = damp(st.ry, ptr.x * 0.28, 2.4, dt); st.rx = damp(st.rx, ptr.y * 0.16, 2.4, dt);
     const idle = REDUCED ? 0 : Math.sin(clock * 0.32) * 0.32;
     P.rotation.set(0.06 + st.rx + leave * 0.25, (1 - rise) * -1.1 + idle + st.ry + leave * 1.4, (1 - rise) * 0.12);
-    P.position.set(0, (1 - rise) * -1.15 + leave * 0.6 + (REDUCED ? 0 : Math.sin(clock * 0.8) * 0.012), (1 - rise) * -0.8);
+    P.position.set(0, (1 - rise) * -1.15 + leave * 0.12 + (REDUCED ? 0 : Math.sin(clock * 0.8) * 0.012), (1 - rise) * -0.8);
     P.scale.setScalar(0.86 + rise * 0.14);
     const rk = ss(0.9, 1.5, e) * (1 - ss(1.9, 2.7, e));
     rake.intensity = rk * 26; rake.position.x = -3.4 + ss(0.9, 2.6, e) * 6.8; rake.target.position.set(rake.position.x * 0.2, 0, 0);
