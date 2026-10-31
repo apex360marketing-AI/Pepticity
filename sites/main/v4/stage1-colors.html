@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · THE P IN YOUR COLOURS</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(14px,1.4vw,18px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1240px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:28px}
+.row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cell{display:grid;gap:6px;padding:12px;box-shadow:inset 0 0 0 1px var(--line)}
+.slot{aspect-ratio:1/1;width:100%}
+.hex{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.08em}
+.hex i{width:10px;height:10px;display:inline-block;background:var(--c);box-shadow:0 0 10px var(--c)}
+p{margin:0;color:#c4cad2;font-size:14px}
+@media (max-width:860px){.row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">STEP 1 · THE P IN YOUR COLOURS · NOTHING ON THE SITE HAS CHANGED</p><h1>THE NEW P, LIT IN EACH COLOUR</h1>
+    <p>The same P in every box. Each colour lights the P's edge and its sides, with a soft glow behind it. The front stays gunmetal. It moves only a little: it turns slightly, comes toward you as it turns, and never shows its back.</p></div>
+  <div class="row" id="row"></div>
+</div>
+<script type="module">
+const COLOURS = [
+  ['CHARTREUSE', '#d4ff3a'], ['ELECTRIC BLUE', '#0066FF'], ['ICE CYAN', '#0FFFFF'], ['NEON RED', '#FF004F'],
+  ['ULTRAVIOLET', '#6F00FF'], ['DEEP MAGENTA', '#8D029B'], ['BURNT COPPER', '#C46210'], ['SALMON', '#FA8072']];
+const row = document.getElementById('row');
+COLOURS.forEach(([n, c]) => { const d = document.createElement('div'); d.className = 'cell';
+  d.innerHTML = `<div class="slot" data-c="${c}"></div><h2>${n}</h2><span class="hex" style="--c:${c}"><i></i>${c}</span>`; row.appendChild(d); });
+
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+/* the new P: A with the back cut kept, stretched to 1.15 x its height (between A2 and A3) */
+const base = glyphs.regular.P, H = 700, dx = 1.15 * H - (684.5 - 45), mv = ([x, y]) => [x > 300 ? x + dx : x, y];
+glyphs.np = { P: { adv: base.adv + dx, p: base.p.map(q => ({ o: q.o.map(mv), h: q.h.map(h => h.map(mv)) })) } };
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+
+const glowTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d');
+  const g = x.createRadialGradient(128, 128, 0, 128, 128, 128); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.35, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(cv); })();
+const depth = 0.24, bevel = 0.024, geo = glyphGeometries('np', 'P', { depth, bevel });
+let a = Infinity, b = -Infinity; geo.parts.forEach(p => { p.g.computeBoundingBox(); a = Math.min(a, p.g.boundingBox.min.x); b = Math.max(b, p.g.boundingBox.max.x); });
+/* the back outline too, so the edge light wraps both rims of the sides */
+const backLines = geo.parts.map(p => { const g = p.lg.clone(); g.translate(0, 0, -depth - 0.001); return g; });
+
+document.querySelectorAll('[data-c]').forEach((el, i) => {
+  const acc = new THREE.Color(el.dataset.c);
+  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(26, 1, 0.1, 80);
+  const key = new THREE.DirectionalLight(0xffffff, 1.45); key.position.set(2.2, 2.8, 4); scene.add(key);
+  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.42));
+  const rimL = new THREE.PointLight(acc, 2.2, 6, 2); rimL.position.set(-1.1, 0.2, -0.5); scene.add(rimL);     /* accent from behind-left: lights the sides */
+  const under = new THREE.PointLight(acc, 0.9, 4, 2); under.position.set(0.3, -0.9, 0.7); scene.add(under);      /* a touch from below on the risers */
+  const sides = M.uv.clone(); sides.emissive = acc.clone(); sides.emissiveIntensity = 0.16; sides.sheenColor = acc.clone().lerp(new THREE.Color(0x0e0c14), 0.35);
+  const edge = new THREE.LineBasicMaterial({ color: acc.clone().lerp(new THREE.Color(0xffffff), 0.25), transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false });
+  const edgeBack = edge.clone(); edgeBack.opacity = 0.55;
+  const P = new THREE.Group(), inner = new THREE.Group(); P.add(inner);
+  geo.parts.forEach((p, k) => { inner.add(new THREE.Mesh(p.g, [M.gunmetal, sides])); inner.add(new THREE.LineSegments(p.lg, edge)); inner.add(new THREE.LineSegments(backLines[k], edgeBack)); });
+  inner.position.set(-(a + b) / 2, -0.35, -depth / 2); scene.add(P);
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: acc, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false }));
+  glow.scale.set(1.5, 1.2, 1); glow.position.z = -0.5; scene.add(glow);
+  stage.addSlot(el, { scene, camera, fit: asp => fitCamera(camera, 1.15, 1.15, asp, 0.78),
+    update(dt, t) {
+      const s = Math.sin(t * 0.42 + i * 0.7);                         /* slow, small turn: about 12 degrees each way, never the back */
+      P.rotation.set(0.05, s * 0.21, 0);
+      P.position.z = Math.abs(s) * 0.09;                               /* comes toward you as it turns */
+      const pulse = 0.5 + 0.5 * Math.sin(t * 0.9 + i);                 /* the light breathes, subtly */
+      edge.opacity = 0.78 + pulse * 0.2; glow.material.opacity = 0.16 + pulse * 0.1; sides.emissiveIntensity = 0.12 + pulse * 0.08;
+    } });
+});
+window.__colours = true;
+</script>
+</body>
+</html>
