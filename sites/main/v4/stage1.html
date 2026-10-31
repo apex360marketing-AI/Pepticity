@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-version="black">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · STAGE 1 · THE P AND THE COIN</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.14)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(16px,1.8vw,22px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1200px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:34px}
+.row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.cell{display:grid;gap:10px;padding:14px;box-shadow:inset 0 0 0 1px var(--line)}
+.slot{aspect-ratio:1/1;width:100%}
+.coinbox{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:center}
+.coin{aspect-ratio:1/1;width:100%}
+p{margin:0;color:#c4cad2}
+@media (max-width:760px){.row{grid-template-columns:repeat(2,minmax(0,1fr))}.coinbox{grid-template-columns:1fr}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pmark" viewBox="-0.708 -0.58 1.416 1.16"><path d="M-0.6282 0.5000 L-0.4425 0.5000 L-0.4424 0.1459 L-0.4402 0.1339 L-0.4335 0.1191 L-0.4228 0.1069 L-0.4128 0.0999 L-0.4015 0.0951 L-0.3854 0.0929 L0.3325 0.0929 L0.3746 0.0899 L0.4161 0.0809 L0.4556 0.0660 L0.4928 0.0459 L0.5266 0.0204 L0.5565 -0.0094 L0.5819 -0.0433 L0.6021 -0.0804 L0.6102 -0.1000 L0.6222 -0.1406 L0.6282 -0.1824 L0.6282 -0.2247 L0.6259 -0.2457 L0.6169 -0.2871 L0.6021 -0.3267 L0.5926 -0.3456 L0.5698 -0.3813 L0.5565 -0.3977 L0.5266 -0.4276 L0.5102 -0.4409 L0.4745 -0.4637 L0.4556 -0.4731 L0.4161 -0.4880 L0.3746 -0.4970 L0.3536 -0.4993 L-0.4282 -0.5000 L-0.4566 -0.4980 L-0.4708 -0.4954 L-0.4981 -0.4874 L-0.5241 -0.4756 L-0.5481 -0.4601 L-0.5696 -0.4414 L-0.5794 -0.4310 L-0.5965 -0.4081 L-0.6038 -0.3959 L-0.6156 -0.3699 L-0.6236 -0.3426 L-0.6276 -0.3143ZM0.3325 -0.0929 L-0.4425 -0.0929 L-0.4425 -0.3143 L0.3325 -0.3143 L0.3482 -0.3131 L0.3636 -0.3099 L0.3785 -0.3043 L0.3988 -0.2921 L0.4108 -0.2819 L0.4256 -0.2634 L0.4332 -0.2496 L0.4406 -0.2271 L0.4432 -0.2036 L0.4421 -0.1879 L0.4362 -0.1649 L0.4296 -0.1506 L0.4211 -0.1373 L0.4051 -0.1199 L0.3924 -0.1104 L0.3712 -0.0999 L0.3482 -0.0940Z" fill-rule="evenodd"/></symbol></svg>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">STAGE 1 · SAMPLES ONLY · NOTHING ON THE SITE HAS CHANGED</p><h1>WHICH P IS OUR P?</h1>
+    <p>All four in the same 3D finish: matte gunmetal faces, UV-black sides with a faint violet sheen, a hairline of light on the edges. Pick one letter.</p></div>
+  <div class="row">
+    <div class="cell"><div class="slot" data-p="regular"></div><h2>A · THE P IN OUR PEPTICITY WORDMARK</h2><p>From the PEPTICITY STUDIO font (regular cut), as it reads in the logo word.</p></div>
+    <div class="cell"><div class="slot" data-p="split"></div><h2>B · THE SPLIT CUT P</h2><p>Same font family, split cut.</p></div>
+    <div class="cell"><div class="slot" data-p="condensed"></div><h2>C · THE CONDENSED CUT P</h2><p>Same font family, condensed cut.</p></div>
+    <div class="cell"><div class="slot" data-p="mark"></div><h2>D · THE P ON THE SITE NOW</h2><p>brand/logo/p-mark.svg: the P in the header, the doors and the new hero.</p></div>
+  </div>
+  <div class="coinbox">
+    <div class="coin" data-coin></div>
+    <div style="display:grid;gap:12px"><p class="k">THE COIN, BY ITSELF</p><h1>THE SPINNING COIN</h1>
+      <p>The coin from the site's background, alone, turning so you see the front and the back. Both faces are real 3D: PEPTICITY raised round the ring, a 3D P in the centre (the P in the centre now is A).</p>
+      <p>On phones the site shows a flat picture of this coin instead of the 3D one.</p></div>
+  </div>
+</div>
+<script type="module">
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+function lit() { const scene = new THREE.Scene(); const k = new THREE.DirectionalLight(0xffffff, 1.6); k.position.set(2.5, 3, 4); scene.add(k);
+  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.5)); const r = new THREE.PointLight(0x9a8cff, 0.4, 8, 2); r.position.set(-2.4, -1, 1.5); scene.add(r);
+  return { scene, camera: new THREE.PerspectiveCamera(26, 1, 0.1, 80) }; }
+function fontP(cut, depth = 0.16, bevel = 0.02, face = 'gunmetal') {
+  const geo = glyphGeometries(cut, 'P', { depth, bevel }); if (!geo) return null;
+  const g = new THREE.Group(), inner = new THREE.Group(); g.add(inner); let a = Infinity, b = -Infinity;
+  geo.parts.forEach(p => { p.g.computeBoundingBox(); a = Math.min(a, p.g.boundingBox.min.x); b = Math.max(b, p.g.boundingBox.max.x);
+    inner.add(new THREE.Mesh(p.g, [M[face], M.uv])); inner.add(new THREE.LineSegments(p.lg, M.edge)); });
+  inner.position.set(-(a + b) / 2, -0.35, -depth / 2); return g; }
+function markP() {
+  const d = document.querySelector('#pmark path').getAttribute('d');
+  const loops = d.split(/Z/i).map(s => s.trim()).filter(Boolean).map(seg => seg.replace(/[ML]/g, ' ').trim().split(/\s+/).map(Number).reduce((a, v, i, arr) => i % 2 ? a : a.concat([new THREE.Vector2(arr[i], -arr[i + 1])]), []));
+  const sh = new THREE.Shape(loops[0]); loops.slice(1).forEach(h => sh.holes.push(new THREE.Path(h)));
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.2, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.02, bevelSegments: 3 }); geo.translate(0, 0, -0.1);
+  const g = new THREE.Group(); g.add(new THREE.Mesh(geo, [M.gunmetal, M.uv])); g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 40), M.edge)); g.scale.setScalar(0.62); return g; }
+document.querySelectorAll('[data-p]').forEach((el, i) => {
+  const { scene, camera } = lit(); const obj = el.dataset.p === 'mark' ? markP() : fontP(el.dataset.p); if (!obj) { el.textContent = '(not in this cut)'; return; }
+  scene.add(obj);
+  stage.addSlot(el, { scene, camera, fit: a => fitCamera(camera, 1.0, 1.0, a, 0.8), update(dt, t) { obj.rotation.set(0.08, Math.sin(t * 0.6 + i) * 0.55, 0); } });
+});
+/* the coin: the same build as the site's background coin (gl3d.js) */
+const coinEl = document.querySelector('[data-coin]'); const { scene, camera } = lit(); scene.children[0].intensity = 1.8;
+const ringGeo = (r0, r1, depth, bevel) => { const s = new THREE.Shape(); s.absarc(0, 0, r1, 0, Math.PI * 2, false); const h = new THREE.Path(); h.absarc(0, 0, r0, 0, Math.PI * 2, true); s.holes.push(h);
+  return new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * .8, bevelOffset: -bevel * .8, bevelSegments: 2, curveSegments: 96 }); };
+const coin = new THREE.Group(); const dS = new THREE.Shape(); dS.absarc(0, 0, 0.985, 0, Math.PI * 2, false);
+const disc = new THREE.Mesh(new THREE.ExtrudeGeometry(dS, { depth: 0.07, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 2, curveSegments: 96 }), [M.uv, M.platinum]); disc.position.z = -0.035; coin.add(disc);
+const word = 'PEPTICITY', RC = 0.8, arc = 1.05;
+function face(z, flip) { const f = new THREE.Group();
+  [[0.935, 1.0], [0.62, 0.655]].forEach(([a, b]) => f.add(new THREE.Mesh(ringGeo(a, b, 0.035, 0.008), [M.platinum, M.uv])));
+  [0, 1].forEach(up => [...word].forEach((ch, i) => { const geo = glyphGeometries('regular', ch, { depth: 0.2, bevel: 0.03 }); if (!geo) return;
+    const o = new THREE.Group(), inner = new THREE.Group(); o.add(inner); geo.parts.forEach(p => inner.add(new THREE.Mesh(p.g, [M.gunmetal, M.uv])));
+    inner.position.set(-geo.adv / 2, -0.35, 0); o.scale.setScalar(0.2); const t = (i / (word.length - 1) - 0.5) * arc * 2, phi = up ? Math.PI / 2 - t : -Math.PI / 2 + t;
+    o.position.set(RC * Math.cos(phi), RC * Math.sin(phi), 0); o.rotation.z = up ? phi - Math.PI / 2 : phi + Math.PI / 2; f.add(o); }));
+  const P = fontP('regular', 0.042, 0.006, 'platinum'); P.scale.setScalar(0.72 / 0.7); P.position.z = 0.025; f.add(P);
+  f.position.z = z; if (flip) f.rotation.y = Math.PI; coin.add(f); }
+face(0.047, false); face(-0.047, true); scene.add(coin);
+stage.addSlot(coinEl, { scene, camera, fit: a => fitCamera(camera, 2.15, 2.15, a, 0.82), update(dt, t) { coin.rotation.set(0.12, t * 0.55, 0); } });
+window.__stage1 = true;
+</script>
+</body>
+</html>

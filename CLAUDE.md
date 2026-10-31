@@ -1,3 +1,8 @@
+# THE OWNER'S TWO TOP RULES (31 Oct 2026, read before anything else)
+
+1. **LOCKED MEANS LOCKED.** When the owner says something is "done and locked" (or "lock that in"), it never changes again, not by one pixel, word or timing, unless the owner himself says to change it. Every locked item is listed in docs/owner/LOCKED.md with the date and his words.
+2. **CLAUDE MAKES NO DECISIONS.** The owner decides everything. Claude may suggest ideas and recommend, but must bring every choice to the owner as numbered options and wait for his pick before building, changing, removing or moving anything. No choices made alone, ever.
+
 # PEPTICITY: LOCKED DECISIONS (read first, every session)
 
 These are final. Do not change any of them unless the owner asks in so many words.
