@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · HONEYCOMB MEDALLION</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(14px,1.4vw,18px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1240px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:28px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cell{display:grid;gap:6px;padding:12px;box-shadow:inset 0 0 0 1px var(--line)}
+.slot{aspect-ratio:1/1;width:100%}
+.hex{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.08em}
+.hex i{width:10px;height:10px;display:inline-block;background:var(--c);box-shadow:0 0 10px var(--c)}
+p{margin:0;color:#c4cad2;font-size:14px}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">HONEYCOMB INSIDE A HONEYCOMB · SAMPLES ONLY · NOTHING ON THE SITE HAS CHANGED</p><h1>THE HONEYCOMB MEDALLION</h1>
+    <p>No circle. An outer hexagon, PEPTICITY running round the outside along the hexagon's edges, an inner hexagon, and a honeycomb inside it under the new P. Every layer is built at a different height, so the rims, the letters and the P stand out from the plate. Each version has its own colour, its own lighting and its own movement.</p></div>
+  <div class="row" id="row"></div>
+</div>
+<script type="module">
+const FRONT = location.search.includes('front');
+const V = [
+  ['01 · CHARTREUSE', '#d4ff3a', 'EDGE NEON: every edge glows and slowly pulses', 'Gentle turn so you see the depth', 'neon', 'turn'],
+  ['02 · ELECTRIC BLUE', '#0066FF', 'BACKLIGHT: a halo spills out round the hexagon', 'The honeycomb cells rise in a slow wave', 'halo', 'wave'],
+  ['03 · ICE CYAN', '#0FFFFF', 'GAP GLOW: light leaks up between the cells', 'The cells light up one ring at a time', 'gap', 'seq'],
+  ['04 · NEON RED', '#FF004F', 'UNDERLIGHT: light rakes up the letters from below', 'The layers lift apart, then settle back', 'under', 'explode'],
+  ['05 · ULTRAVIOLET', '#6F00FF', 'INNER CORE: the P’s sides glow from inside', 'It floats slowly', 'core', 'float'],
+  ['06 · DEEP MAGENTA', '#8D029B', 'TWO-TONE: magenta key light with an ultraviolet fill', 'Tilts toward your mouse or finger', 'split', 'tilt'],
+  ['07 · BURNT COPPER', '#C46210', 'SWEEP: a light crosses the face every few seconds', 'Turns as you scroll', 'sweep', 'scroll'],
+  ['08 · SALMON', '#FA8072', 'RIM LIGHT: the two hexagon rims glow, the rest stays metal', 'Breathes in and out slowly', 'rims', 'breathe']];
+const row = document.getElementById('row');
+V.forEach(([n, c, l, e]) => { const d = document.createElement('div'); d.className = 'cell';
+  d.innerHTML = `<div class="slot" data-c="${c}"></div><h2>${n}</h2><span class="hex" style="--c:${c}"><i></i>${c}</span><p>LIGHT · ${l}</p><p>MOVE · ${e}</p>`; row.appendChild(d); });
+
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+const base = glyphs.regular.P, dxP = 1.15 * 700 - (684.5 - 45), mv = ([x, y]) => [x > 300 ? x + dxP : x, y];
+glyphs.np = { P: { adv: base.adv + dxP, p: base.p.map(q => ({ o: q.o.map(mv), h: q.h.map(h => h.map(mv)) })) } };
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+
+/* ---- shared geometry (built once) ---- */
+const hexPts = (R, rot = 0) => [...Array(6)].map((_, i) => { const a = rot + i * Math.PI / 3; return new THREE.Vector2(R * Math.cos(a), R * Math.sin(a)); });
+const hexShape = R => new THREE.Shape(hexPts(R));
+const ring = (R1, R0, d, bv = 0.012) => { const s = hexShape(R1); s.holes.push(new THREE.Path(hexPts(R0).reverse()));
+  return new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: true, bevelThickness: bv, bevelSize: bv, bevelOffset: -bv, bevelSegments: 1 }); };
+const G = {
+  plate: new THREE.ExtrudeGeometry(hexShape(1.0), { depth: 0.16, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelOffset: -0.03, bevelSegments: 1 }).translate(0, 0, -0.16),
+  outer: ring(1.0, 0.9, 0.12), inner: ring(0.52, 0.45, 0.19),
+  cell: new THREE.ExtrudeGeometry(hexShape(0.056), { depth: 0.05, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelOffset: -0.008, bevelSegments: 1 }),
+  floor: new THREE.ShapeGeometry(hexShape(0.45)),
+};
+['plate', 'outer', 'inner'].forEach(k => G[k + 'E'] = new THREE.EdgesGeometry(G[k], 25));
+/* honeycomb cell centres inside the inner hexagon (flat-top tiling) */
+const cells = []; const s = 0.066;
+for (let c = -8; c <= 8; c++) for (let r = -8; r <= 8; r++) { const x = 1.5 * s * c, y = Math.sqrt(3) * s * (r + (c & 1) / 2);
+  const ap = 0.45 * Math.cos(Math.PI / 6) - 0.05; const inHex = [0, 1, 2].every(k => Math.abs(x * Math.cos(Math.PI / 6 + k * Math.PI / 3) + y * Math.sin(Math.PI / 6 + k * Math.PI / 3)) <= ap);
+  if (inHex) cells.push([x, y, Math.hypot(x, y)]); }
+/* PEPTICITY along the hexagon edges: top run over the three upper edges, bottom run over the three lower edges, 3 letters per edge */
+const word = 'PEPTICITY', AP = 0.675, OFF = 0.19, LS = 0.27, LD = 0.11;
+const placements = [];
+[[150, 90, 30], [-150, -90, -30]].forEach((edges, up) => edges.forEach((deg, e) => { const t = deg * Math.PI / 180;
+  const nx = Math.cos(t), ny = Math.sin(t), tx = up ? -ny : ny, ty = up ? nx : -nx;
+  [-1, 0, 1].forEach((k, j) => placements.push({ ch: word[e * 3 + j], x: nx * AP + tx * OFF * k, y: ny * AP + ty * OFF * k, rz: up ? t + Math.PI / 2 : t - Math.PI / 2 })); }));
+const glowTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d');
+  const g = x.createRadialGradient(128, 128, 0, 128, 128, 128); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.4, 'rgba(255,255,255,.3)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(cv); })();
+const pGeo = glyphGeometries('np', 'P', { depth: 0.24, bevel: 0.022 });
+let pa = Infinity, pb = -Infinity; pGeo.parts.forEach(p => { p.g.computeBoundingBox(); pa = Math.min(pa, p.g.boundingBox.min.x); pb = Math.max(pb, p.g.boundingBox.max.x); });
+
+function build(el, i) {
+  const [, hex, , , light, move] = V[i]; const acc = new THREE.Color(hex), white = new THREE.Color(0xffffff);
+  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(26, 1, 0.1, 80);
+  const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(2.2, 2.8, 4); scene.add(key);
+  const hemi = new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.42); scene.add(hemi);
+  const sides = M.uv.clone(); sides.emissive = acc.clone(); sides.emissiveIntensity = 0.025; sides.sheenColor = acc.clone().lerp(new THREE.Color(0x0e0c14), 0.4);
+  const edge = new THREE.LineBasicMaterial({ color: acc.clone().lerp(white, 0.3), transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
+  const plateMat = M.uv.clone(); plateMat.color.set(0x111015); plateMat.sheenColor = acc.clone().lerp(new THREE.Color(0x0e0c14), 0.6);
+  const rimMat = M.gunmetal.clone();
+  if (light === 'rims') { rimMat.emissive = acc.clone(); rimMat.emissiveIntensity = 0.35; }
+
+  const med = new THREE.Group(); scene.add(med);
+  const L = { plate: new THREE.Group(), outer: new THREE.Group(), word: new THREE.Group(), inner: new THREE.Group(), comb: new THREE.Group(), P: new THREE.Group() };
+  Object.values(L).forEach(g => med.add(g));
+  L.plate.add(new THREE.Mesh(G.plate, [plateMat, sides])); L.plate.add(new THREE.LineSegments(G.plateE, edge));
+  L.outer.add(new THREE.Mesh(G.outer, [rimMat, sides])); L.outer.add(new THREE.LineSegments(G.outerE, edge));
+  L.inner.add(new THREE.Mesh(G.inner, [rimMat, sides])); L.inner.add(new THREE.LineSegments(G.innerE, edge));
+  placements.forEach(pl => { const geo = glyphGeometries('regular', pl.ch, { depth: LD, bevel: 0.012 }); if (!geo) return;
+    const o = new THREE.Group(), inn = new THREE.Group(); o.add(inn);
+    geo.parts.forEach(p => { inn.add(new THREE.Mesh(p.g, [M.gunmetal, sides])); inn.add(new THREE.LineSegments(p.lg, edge)); });
+    inn.position.set(-geo.adv / 2, -0.35, 0); o.scale.set(LS, LS, 1); o.position.set(pl.x, pl.y, 0); o.rotation.z = pl.rz; L.word.add(o); });
+  /* honeycomb: one instanced mesh, a glowing floor under it that shows through the gaps */
+  const floorMat = new THREE.MeshBasicMaterial({ color: acc, transparent: true, opacity: light === 'gap' ? 0.85 : 0.35 });
+  const floor = new THREE.Mesh(G.floor, floorMat); floor.position.z = 0.003; L.comb.add(floor);
+  const cellMat = M.gunmetal.clone(); const comb = new THREE.InstancedMesh(G.cell, cellMat, cells.length);
+  const m4 = new THREE.Matrix4(), col = new THREE.Color();
+  cells.forEach(([x, y], k) => { m4.makeTranslation(x, y, 0.005); comb.setMatrixAt(k, m4); comb.setColorAt(k, col.set(0xffffff)); }); L.comb.add(comb);
+  /* the new P, standing highest */
+  const pSides = light === 'core' ? sides.clone() : sides; if (light === 'core') pSides.emissiveIntensity = 0.5;
+  const pin = new THREE.Group(); L.P.add(pin);
+  pGeo.parts.forEach(p => { pin.add(new THREE.Mesh(p.g, [M.gunmetal, pSides])); pin.add(new THREE.LineSegments(p.lg, edge)); });
+  pin.position.set(-(pa + pb) / 2, -0.35, 0); L.P.scale.set(0.84, 0.84, 1); L.P.position.z = 0.13;
+
+  /* lighting rigs */
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: acc, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+  glow.position.z = -0.6; glow.scale.set(3.2, 3.2, 1); scene.add(glow);
+  const rig = {};
+  if (light === 'neon') { edge.opacity = 0.9; glow.material.opacity = 0.12; }
+  if (light === 'halo') { glow.material.opacity = 0.55; rig.back = new THREE.PointLight(acc, 3, 5, 2); rig.back.position.set(0, 0, -0.9); scene.add(rig.back); }
+  if (light === 'gap') { glow.material.opacity = 0.15; }
+  if (light === 'under') { rig.u = new THREE.PointLight(acc, 4, 3.5, 2); rig.u.position.set(0, -1.25, 0.55); scene.add(rig.u); glow.material.opacity = 0.12; glow.position.y = -0.7; }
+  if (light === 'core') { glow.material.opacity = 0.2; glow.scale.set(1.6, 1.6, 1); glow.position.z = 0.02; }
+  if (light === 'split') { key.color.set(acc).lerp(white, 0.55); rig.f = new THREE.PointLight(0x6F00FF, 3, 5, 2); rig.f.position.set(-1.3, 0.4, 1); scene.add(rig.f); glow.material.opacity = 0.18; }
+  if (light === 'sweep') { rig.sp = new THREE.SpotLight(acc.clone().lerp(white, 0.35), 0, 9, 0.2, 0.5, 1.2); rig.sp.position.set(-3, 1, 3); scene.add(rig.sp); scene.add(rig.sp.target); glow.material.opacity = 0.1; }
+  if (light === 'rims') { glow.material.opacity = 0.16; }
+  if (light !== 'halo' && light !== 'under') { rig.side = new THREE.PointLight(acc, 0.9, 5, 2); rig.side.position.set(-1.3, 0.3, 0.2); scene.add(rig.side); }
+
+  const st = { rx: 0, ry: 0 };
+  stage.addSlot(el, { scene, camera, fit: a => fitCamera(camera, 2.25, 2.25, a, 0.86),
+    update(dt, t, prog, ptr) {
+      let rx = 0.2, ry = -0.3; /* a resting three-quarter angle so the depth reads */
+      const k = 1 - Math.exp(-3 * dt);
+      if (move === 'turn') ry = -0.3 + Math.sin(t * 0.4) * 0.25;
+      if (move === 'float') { med.position.y = Math.sin(t * 0.7) * 0.04; ry = -0.3 + Math.sin(t * 0.3) * 0.12; }
+      if (move === 'tilt') { st.rx += (0.25 + ptr.y * 0.3 - st.rx) * k; st.ry += (-0.2 + ptr.x * 0.5 - st.ry) * k; rx = st.rx; ry = st.ry; }
+      if (move === 'scroll') ry = -0.6 + prog * 1.0;
+      if (move === 'breathe') { const b = 1 + Math.sin(t * 0.8) * 0.02; med.scale.setScalar(b); ry = -0.32 + Math.sin(t * 0.25) * 0.1; }
+      if (move === 'explode') { const e = Math.max(0, Math.sin(t * 0.5)) ** 2; L.word.position.z = e * 0.12; L.inner.position.z = e * 0.22; L.P.position.z = 0.13 + e * 0.4; L.outer.position.z = e * 0.06; ry = -0.45 + Math.sin(t * 0.3) * 0.12; }
+      if (move === 'wave' || move === 'seq') cells.forEach(([x, y, d], c) => {
+        const w = Math.sin(t * 1.6 - d * 14); m4.makeTranslation(x, y, 0.005 + (move === 'wave' ? Math.max(0, w) * 0.07 : 0)); comb.setMatrixAt(c, m4);
+        if (move === 'seq') comb.setColorAt(c, col.set(0xffffff).lerp(acc, Math.max(0, w) ** 3 * 0.8));
+      });
+      if (move === 'wave' || move === 'seq') { comb.instanceMatrix.needsUpdate = true; if (comb.instanceColor) comb.instanceColor.needsUpdate = true; ry = -0.38 + Math.sin(t * 0.3) * 0.12; }
+      if (FRONT) { rx = 0; ry = 0; }
+      med.rotation.set(rx, ry, 0);
+      const pulse = 0.5 + 0.5 * Math.sin(t * 0.9 + i);
+      if (light === 'neon') edge.opacity = 0.65 + pulse * 0.35;
+      if (light === 'gap') floorMat.opacity = 0.6 + pulse * 0.35;
+      if (light === 'core') pSides.emissiveIntensity = 0.35 + pulse * 0.35;
+      if (light === 'rims') rimMat.emissiveIntensity = 0.22 + pulse * 0.25;
+      if (light === 'sweep') { const ph = (t % 5) / 5; rig.sp.intensity = Math.sin(Math.min(1, ph * 1.6) * Math.PI) * 30; rig.sp.position.x = -3 + ph * 1.6 * 6; rig.sp.target.position.set(rig.sp.position.x * 0.15, 0, 0); }
+    } });
+}
+document.querySelectorAll('[data-c]').forEach(build);
+window.__comb = true;
+</script>
+</body>
+</html>
