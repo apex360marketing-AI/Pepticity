@@ -4,7 +4,7 @@
 set -e
 cd "$(dirname "$0")"
 rm -rf publish && mkdir -p publish/brand/font publish/brand/logo publish/brand/ui publish/brand/src/dash publish/media publish/vendor publish/data publish/assets publish/fx
-cp index.html v4.css v4-tour.css v4.js gl3d.js card3d.js publish/
+cp index.html v4.css v4-tour.css v4.js gl3d.js hero-p.js card3d.js publish/
 for c in fx/*/; do mkdir -p "publish/$c"; cp "$c"module.css "$c"module.js "publish/$c"; done
 cp data/products.json publish/data/
 cp assets/*.webp publish/assets/

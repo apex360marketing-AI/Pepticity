@@ -105,12 +105,14 @@ async function main() {
     const place = () => { const lt = !isBlack(); if (lt && !light) light = make(true); const ws = lt ? light : dark; ws.scene.add(group); slot.scene = ws.scene; ws.camera = camera; };
     place(); document.addEventListener('pc-version', () => { place(); front.kick(); });
     const st = { ry: 0, rx: 0, l: letters.map(() => ({ ry: funky ? 1.2 : 0, z: 0 })) };
+    const touch = matchMedia('(hover: none)').matches, maxRy = touch ? 0 : Math.min(0.16, 0.16 / Math.max(1, width / 2)), maxRx = touch ? 0 : Math.min(0.1, 0.16 / Math.max(1, H / 2));
     slot.fit = a => fitCamera(camera, width, H, a, fill, 0);
     slot.update = (dt, t, prog, p) => {
-      st.ry = damp(st.ry, p.x * 0.16, 3, dt); st.rx = damp(st.rx, p.y * 0.1, 3, dt);
+      /* the tilt never pushes the far letters behind the wall (owner 31 Oct: headings were cut off): limit by the word's half-width */
+      st.ry = damp(st.ry, p.x * maxRy, 3, dt); st.rx = damp(st.rx, p.y * maxRx, 3, dt);
       group.rotation.set(st.rx, st.ry, 0);
       if (funky) {
-        const local = clampN((prog - 0.62) * 2.6, -1, 0), n = letters.length;   /* letters turn into place as the panel rises, then stay facing you */
+        const local = clampN((prog - 0.3) * 3.2, -1, 0), n = letters.length;   /* letters turn into place as the panel enters, and face you fully while it is readable (owner 31 Oct: no clipped headings) */
         letters.forEach((L, i) => { const s = st.l[i], phase = (i - (n - 1) / 2) / n;
           s.ry = damp(s.ry, -local * (1.15 + phase * 1.4) * funky + Math.sin(t * 0.7 + i * 0.6) * 0.035, 5, dt);
           s.z = damp(s.z, Math.abs(local) * 0.07 * Math.sin(i * 1.7 + 1), 5, dt); L.rotation.y = s.ry; L.position.z = s.z; });

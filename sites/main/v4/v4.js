@@ -318,10 +318,10 @@
     tl.to(film, { scale: 2.6, duration: 2.1, ease: 'power3.in' }, 0)
       .to('#introBloom', { opacity: 1, scale: 1.35, duration: 1.0, ease: 'power2.in' }, 1.0)
       .add(function () {                                   /* we pass through the light: the hero is already there behind it */
-        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false; mountFx();
+        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false; mountFx(); document.dispatchEvent(new Event('pc-hero-in'));
         startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
-        if (!RM) gsap.fromTo('.hero-card', { opacity: 0, scale: 0.74, y: 24 },
-          { opacity: 1, scale: 1, y: 0, duration: 1.9, ease: 'expo.out', clearProps: 'transform' });
+        if (!RM) gsap.fromTo('.hero-card', { opacity: 0, scale: 0.92, y: 28 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.9, delay: 1.1, ease: 'expo.out', clearProps: 'transform' });
       }, 1.85)
       .to(intro, { opacity: 0, duration: 1.1, ease: 'power2.out' }, 1.95)
       .add(function () { intro.classList.remove('dive'); gsap.set(intro, { clearProps: 'opacity' }); gsap.set(film, { clearProps: 'transform' }); gsap.set('#introBloom', { opacity: 0, scale: 1 }); vid.pause(); }, 3.15);
@@ -332,7 +332,7 @@
     introTimers.forEach(clearTimeout); introTimers = [];
     SS.set('pc-intro', '1'); intro.classList.add('lift');
     setTimeout(function () {
-      D.classList.remove('intro-on'); introLive = false; intro.classList.remove('lift'); vid.pause(); mountFx();
+      D.classList.remove('intro-on'); introLive = false; intro.classList.remove('lift'); vid.pause(); mountFx(); document.dispatchEvent(new Event('pc-hero-in'));
       startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
       heroIn();
     }, 1050);
@@ -362,7 +362,7 @@
   $('#skipIntro').addEventListener('click', liftIntro);
   addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.classList.contains('intro-on')) liftIntro(); });
   $('#replay').addEventListener('click', function () { closeMenu(); runIntro(); });
-  function heroIn() { if (RM) return; gsap.fromTo('.hero-card', { opacity: 0, y: 40, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: 'expo.out' }); }
+  function heroIn() { if (RM) return; gsap.fromTo('.hero-card', { opacity: 0, y: 40, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.4, delay: 1.1, ease: 'expo.out' }); }
   if (introLive) runIntro(); else { loadAll(); heroIn(); }
 
   /* ================= forms (capture-forms; preview only) ================= */
@@ -1172,6 +1172,15 @@
   }
   mountFx();
   document.addEventListener('pc-version', function () { window.dispatchEvent(new Event('apx:tokens')); });
+
+  /* TRN-01 Soft Rise: each section's content rises into place once as it scrolls into view (nothing moves position for good) */
+  (function () {
+    var els = $$('.sect-head, .tour-card, .offer-band, .texts-wrap, .pair, .refer-card, .letter, .net-copy, .net-form');
+    els.forEach(function (el) { el.setAttribute('data-effect', el.getAttribute('data-effect') || 'TRN-01'); el.classList.add('fx-rise'); });
+    if (RM || !('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  })();
 
   if (RM) D.classList.remove('gated');
   document.fonts && document.fonts.ready.then(function () { $$('.x3d').forEach(function (el) { el.dataset.text = el.textContent; }); ScrollTrigger.refresh(); });
