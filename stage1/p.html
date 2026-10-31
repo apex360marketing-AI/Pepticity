@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · THE NEW P</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.14)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(14px,1.5vw,19px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1240px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:30px}
+.row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.cell{display:grid;gap:8px;padding:12px;box-shadow:inset 0 0 0 1px var(--line);align-content:start}
+.cell.pick{box-shadow:inset 0 0 0 1px rgba(236,239,243,.5)}
+.slot{aspect-ratio:1/1;width:100%}
+.big{aspect-ratio:16/7;width:100%}
+p{margin:0;color:#c4cad2;font-size:14px}
+@media (max-width:860px){.row{grid-template-columns:repeat(2,minmax(0,1fr))}.big{aspect-ratio:4/3}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pmark" viewBox="-0.708 -0.58 1.416 1.16"><path d="M-0.6282 0.5000 L-0.4425 0.5000 L-0.4424 0.1459 L-0.4402 0.1339 L-0.4335 0.1191 L-0.4228 0.1069 L-0.4128 0.0999 L-0.4015 0.0951 L-0.3854 0.0929 L0.3325 0.0929 L0.3746 0.0899 L0.4161 0.0809 L0.4556 0.0660 L0.4928 0.0459 L0.5266 0.0204 L0.5565 -0.0094 L0.5819 -0.0433 L0.6021 -0.0804 L0.6102 -0.1000 L0.6222 -0.1406 L0.6282 -0.1824 L0.6282 -0.2247 L0.6259 -0.2457 L0.6169 -0.2871 L0.6021 -0.3267 L0.5926 -0.3456 L0.5698 -0.3813 L0.5565 -0.3977 L0.5266 -0.4276 L0.5102 -0.4409 L0.4745 -0.4637 L0.4556 -0.4731 L0.4161 -0.4880 L0.3746 -0.4970 L0.3536 -0.4993 L-0.4282 -0.5000 L-0.4566 -0.4980 L-0.4708 -0.4954 L-0.4981 -0.4874 L-0.5241 -0.4756 L-0.5481 -0.4601 L-0.5696 -0.4414 L-0.5794 -0.4310 L-0.5965 -0.4081 L-0.6038 -0.3959 L-0.6156 -0.3699 L-0.6236 -0.3426 L-0.6276 -0.3143ZM0.3325 -0.0929 L-0.4425 -0.0929 L-0.4425 -0.3143 L0.3325 -0.3143 L0.3482 -0.3131 L0.3636 -0.3099 L0.3785 -0.3043 L0.3988 -0.2921 L0.4108 -0.2819 L0.4256 -0.2634 L0.4332 -0.2496 L0.4406 -0.2271 L0.4432 -0.2036 L0.4421 -0.1879 L0.4362 -0.1649 L0.4296 -0.1506 L0.4211 -0.1373 L0.4051 -0.1199 L0.3924 -0.1104 L0.3712 -0.0999 L0.3482 -0.0940Z" fill-rule="evenodd"/></symbol></svg>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">STEP 1 · THE P ONLY · NOTHING ON THE SITE HAS CHANGED</p><h1>A, STRETCHED LONGER</h1>
+    <p>Same P as A: same angled cut at the back, same stem, same stroke thickness. Only the bowl and bars are made longer, so it gets that long, sharp look. A on the left, D on the right so you can compare.</p></div>
+  <div class="row">
+    <div class="cell"><div class="slot" data-p="regular"></div><h2>A · AS IT IS</h2><p>Width 0.91 × height</p></div>
+    <div class="cell pick"><div class="slot" data-p="e1"></div><h2>A1 · A BIT LONGER</h2><p>Width 1.05 × height</p></div>
+    <div class="cell pick"><div class="slot" data-p="e2"></div><h2>A2 · LONGER</h2><p>Width 1.12 × height</p></div>
+    <div class="cell pick"><div class="slot" data-p="e3"></div><h2>A3 · ALMOST D</h2><p>Width 1.18 × height</p></div>
+    <div class="cell"><div class="slot" data-p="mark"></div><h2>D · FOR COMPARISON</h2><p>Width 1.26 × height</p></div>
+  </div>
+  <div class="cell"><div class="big" data-big="e2"></div><h2>A2, BIG, TURNING SO YOU SEE IT STAND OUT IN 3D</h2><p>Deep extrusion so the P sits out off the screen: front face, angled back cut, side walls and edge light all visible.</p></div>
+</div>
+<script type="module">
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+/* A stretched: keep the stem (x ≤ 185) and the angled back cut exactly; push everything right of the stem further right */
+const base = glyphs.regular.P, H = 700, x0 = 45;
+const stretch = ratio => { const dx = ratio * H - (684.5 - x0); const mv = ([x, y]) => [x > 300 ? x + dx : x, y];
+  return { adv: base.adv + dx, p: base.p.map(q => ({ o: q.o.map(mv), h: q.h.map(h => h.map(mv)) })) }; };
+glyphs.e1 = { P: stretch(1.05) }; glyphs.e2 = { P: stretch(1.12) }; glyphs.e3 = { P: stretch(1.18) };
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+function lit() { const scene = new THREE.Scene(); const k = new THREE.DirectionalLight(0xffffff, 1.6); k.position.set(2.5, 3, 4); scene.add(k);
+  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.5)); const r = new THREE.PointLight(0x9a8cff, 0.5, 8, 2); r.position.set(-2.4, -1, 1.5); scene.add(r);
+  return { scene, camera: new THREE.PerspectiveCamera(26, 1, 0.1, 80) }; }
+function fontP(cut, depth = 0.22, bevel = 0.022) {
+  const geo = glyphGeometries(cut, 'P', { depth, bevel }); const g = new THREE.Group(), inner = new THREE.Group(); g.add(inner); let a = Infinity, b = -Infinity;
+  geo.parts.forEach(p => { p.g.computeBoundingBox(); a = Math.min(a, p.g.boundingBox.min.x); b = Math.max(b, p.g.boundingBox.max.x);
+    inner.add(new THREE.Mesh(p.g, [M.gunmetal, M.uv])); inner.add(new THREE.LineSegments(p.lg, M.edge)); });
+  inner.position.set(-(a + b) / 2, -0.35, -depth / 2); g.userData.w = b - a; return g; }
+function markP() {
+  const d = document.querySelector('#pmark path').getAttribute('d');
+  const loops = d.split(/Z/i).map(s => s.trim()).filter(Boolean).map(seg => seg.replace(/[ML]/g, ' ').trim().split(/\s+/).map(Number).reduce((a, v, i, arr) => i % 2 ? a : a.concat([new THREE.Vector2(arr[i], -arr[i + 1])]), []));
+  const sh = new THREE.Shape(loops[0]); loops.slice(1).forEach(h => sh.holes.push(new THREE.Path(h)));
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.3, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.02, bevelSegments: 3 }); geo.translate(0, 0, -0.15);
+  const g = new THREE.Group(); g.add(new THREE.Mesh(geo, [M.gunmetal, M.uv])); g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 40), M.edge)); g.scale.setScalar(0.7); g.userData.w = 0.88; return g; }
+document.querySelectorAll('[data-p]').forEach((el, i) => {
+  const { scene, camera } = lit(); const obj = el.dataset.p === 'mark' ? markP() : fontP(el.dataset.p); scene.add(obj);
+  stage.addSlot(el, { scene, camera, fit: a => fitCamera(camera, 1.05, 1.05, a, 0.82), update(dt, t) { obj.rotation.set(0.1, -0.38 + Math.sin(t * 0.5 + i * 0.4) * 0.22, 0); } });
+});
+const bigEl = document.querySelector('[data-big]'); const B = lit(); const big = fontP(bigEl.dataset.big, 0.26, 0.026); B.scene.add(big);
+stage.addSlot(bigEl, { scene: B.scene, camera: B.camera, fit: a => fitCamera(B.camera, 1.25, 0.85, a, 0.8), update(dt, t, prog, ptr) { big.rotation.set(0.12 + ptr.y * 0.08, Math.sin(t * 0.45) * 0.75 + ptr.x * 0.15, 0); } });
+window.__pstage = true;
+</script>
+</body>
+</html>
