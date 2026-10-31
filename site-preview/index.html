@@ -27,12 +27,12 @@ window.PC_CONFIG = {
   agePassDays: 30,
   /* SWAP POINT: the lab -> product line film. Set to e.g. 'media/doors2-' and drop in doors2-<white|black>.mp4/.webm:
      the film is then scrubbed by scroll. null = the built transition (glass wipe + the existing door photo opening). */
-  secondDoorsFilm: null,
+  secondDoorsFilm: 'media/doors2-',
   /* SWAP POINT: chest film. A new film drops in as media/chest-<white|black>.mp4/.webm (+ -poster.jpg) */
   intro: 'chest',
   chest: { base: 'media/chest-', diveAt: 9.1, focus: [49, 46] },
   /* SWAP POINT: city + lab frame atlases (HD). man = a copy of media/frames-hd/manifest.json */
-  frames: { dir: 'media/frames-hd/', man: {"white-weave":{"d":{"n":195,"tw":1920,"th":1080,"cols":2,"rows":2,"files":49},"m":{"n":195,"tw":608,"th":1080,"cols":4,"rows":2,"files":25}},"black-weave":{"d":{"n":226,"tw":1920,"th":1080,"cols":2,"rows":2,"files":57},"m":{"n":226,"tw":608,"th":1080,"cols":4,"rows":2,"files":29}},"white-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}},"black-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}}} },
+  frames: { dir: 'media/frames-hd3/', man: {"white-weave":{"d":{"n":195,"tw":1920,"th":1080,"cols":2,"rows":2,"files":49},"m":{"n":195,"tw":608,"th":1080,"cols":4,"rows":2,"files":25}},"black-weave":{"d":{"n":226,"tw":1920,"th":1080,"cols":2,"rows":2,"files":57},"m":{"n":226,"tw":608,"th":1080,"cols":4,"rows":2,"files":29}},"white-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}},"black-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}}} },
   /* SWAP POINT: the vial art used for every product */
   bottle: 'assets/vial-pepticity.webp',
   /* the catalogue: fetched ONLY after the 19+ gate is passed (nothing from it is in this page's source) */
@@ -245,8 +245,8 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
         <canvas id="cvWeave" class="frames tone"></canvas>
         <div class="doorbox" id="doorbox" aria-hidden="true">
           <div class="doorway"><img class="peek tone" alt="" src="media/white-lab.jpg"><span class="rays"></span></div>
-          <div class="leaf l"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
-          <div class="leaf r"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
+          <div class="leaf l"><img class="tone" alt="" src="media/white-doors3.jpg"><span class="edge"></span><span class="shade"></span></div>
+          <div class="leaf r"><img class="tone" alt="" src="media/white-doors3.jpg"><span class="edge"></span><span class="shade"></span></div>
           <span class="seam"></span>
           <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
           <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
@@ -424,11 +424,11 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
         <div class="d2-cam" id="d2Cam">
           <img class="d2-from tone" id="d2From" alt="" src="media/white-lab.jpg">
           <div class="d2-scene" id="d2Scene">
-            <img class="d2-bg tone" id="d2Bg" alt="" src="media/white-doors.jpg">
+            <img class="d2-bg tone" id="d2Bg" alt="" src="media/white-doors3.jpg">
             <div class="doorbox d2box" id="d2box" aria-hidden="true">
               <div class="doorway"><span class="rays"></span></div>
-              <div class="leaf l"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
-              <div class="leaf r"><img class="tone" alt="" src="media/white-doors.jpg"><span class="edge"></span><span class="shade"></span></div>
+              <div class="leaf l"><img class="tone" alt="" src="media/white-doors3.jpg"><span class="edge"></span><span class="shade"></span></div>
+              <div class="leaf r"><img class="tone" alt="" src="media/white-doors3.jpg"><span class="edge"></span><span class="shade"></span></div>
               <span class="seam"></span>
               <svg class="dial l" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>
               <svg class="dial r" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 6"/><path d="M50 4V20M50 80V96M4 50H20M80 50H96"/><circle cx="50" cy="50" r="24"/></svg>

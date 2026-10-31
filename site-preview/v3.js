@@ -237,8 +237,8 @@
       var r = pL.rect;
       if (r.w) {   /* the illuminated plaque covers the back-wall sign, in frame space inside the lab camera */
         var fw = r.w / CROP[kind].w, fx = r.x - CROP[kind].x * fw;
-        plaque.style.left = (fx + fw * (0.494 + ls.f * 0.00012)) + 'px'; plaque.style.top = (r.y + r.h * 0.372) + 'px';
-        plaque.style.fontSize = (fw * 0.0168) + 'px';
+        plaque.style.left = (fx + fw * (0.494 + ls.f * 0.00004)) + 'px'; plaque.style.top = (r.y + r.h * 0.373) + 'px';
+        plaque.style.fontSize = (fw * 0.0204) + 'px';   /* new lab film (R172): the sign is about 20% wider than in the old film */
       }
       plaque.style.opacity = 1;
       stations.forEach(function (s, k) {
@@ -419,9 +419,9 @@
     D.setAttribute('data-version', version);
     if (!quiet) LS.set('pc-version', version);
     if (vSeg.pcSelect) vSeg.pcSelect(version === 'black' ? 1 : 0);   /* keeps the switch's own record in step (first arrow key works) */
-    $$('.leaf img').forEach(function (i) { i.src = 'media/' + version + '-doors.jpg'; });
+    $$('.leaf img').forEach(function (i) { i.src = 'media/' + version + '-doors3.jpg'; });
     $('#doorbox .doorway .peek').src = 'media/' + version + '-lab.jpg';
-    $('#d2Bg').src = 'media/' + version + '-doors.jpg'; $('#d2From').src = 'media/' + version + '-lab.jpg'; if (d2Film) setD2Film(); d2Last = -1;
+    $('#d2Bg').src = 'media/' + version + '-doors3.jpg'; $('#d2From').src = 'media/' + version + '-lab.jpg'; if (d2Film) setD2Film(); d2Last = -1;
     var w = seq('weave'); want(w, [Math.floor(weaveFrame(J.p) / w.per), 0, w.m.files - 1], true);
     var l = seq('lab'); want(l, [Math.floor(labState(L.p).f / l.per)], true);
     if (!introLive) loadAll();
