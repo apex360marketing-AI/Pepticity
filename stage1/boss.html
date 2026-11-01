@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · THE BOSS</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(15px,1.5vw,20px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1240px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:28px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cell{display:grid;gap:6px;padding:12px;box-shadow:inset 0 0 0 1px var(--line);align-content:start;transition:box-shadow .4s}
+.cell:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 55%,transparent)}
+.slot{aspect-ratio:1/1;width:100%}
+.sw{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.sw button{font:400 12px/1 "PEPTICITY BLACK",system-ui;letter-spacing:.2em;color:#eceff3;background:rgba(255,255,255,.04);border:0;box-shadow:inset 0 0 0 1px rgba(230,233,237,.18);padding:12px 16px;cursor:pointer;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);transition:box-shadow .3s}.sw button[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--b),0 0 18px -6px var(--b)}.sw button::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;background:var(--b);box-shadow:0 0 8px var(--b)}
+.hex{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.08em}
+.hex i{width:10px;height:10px;display:inline-block;background:var(--c);box-shadow:0 0 10px var(--c)}
+p{margin:0;color:#c4cad2;font-size:14px}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">C · THE BOSS · 8 PEPTIDES · SAMPLES ONLY · NOTHING ON THE SITE HAS CHANGED</p><h1>THE BOSS</h1>
+    <p>PEPTICITY is off the medallion. The P stands out further with a chrome edge. Shiny UV-black body, matte-black rims, and only a hint of colour at rest. Hover (or tap) and the P comes out and lights up. Switch the colour here:</p>
+    <div class="sw"><button data-acc="chartreuse" style="--b:#d4ff3a">CHARTREUSE</button><button data-acc="blue" style="--b:#0066FF">ELECTRIC BLUE</button></div></div>
+  <div class="row" id="row"></div>
+</div>
+<script type="module">
+const D = [
+  ['01 · RING', 'The hexagon peptide ring you liked, refined.'],
+  ['02 · CHAIN', 'A peptide chain: linked beads in a zigzag.'],
+  ['03 · HELIX', 'A single helix swirl, lying on its side.'],
+  ['04 · DOUBLE HELIX', 'Two strands with rungs between them.'],
+  ['05 · SWIRL', 'A flat peptide swirl that winds out from the centre.'],
+  ['06 · TWIN RING', 'Two hexagon rings joined side by side.'],
+  ['07 · BACKBONE', 'A peptide backbone with side branches up and down.'],
+  ['08 · TRIPEPTIDE', 'Three small hexagon rings linked in a row.']];
+const row = document.getElementById('row');
+D.forEach(([n, b]) => { const d = document.createElement('div'); d.className = 'cell';
+  d.innerHTML = `<div class="slot" data-i></div><h2>${n}</h2><p>PEPTIDE · ${b}</p>`; row.appendChild(d); });
+const ACCENTS = { chartreuse: '#d4ff3a', blue: '#0066FF' };
+let accKey = 'chartreuse'; try { accKey = localStorage.getItem('pc-boss-acc') || 'chartreuse'; } catch (e) {}
+document.querySelectorAll('[data-acc]').forEach(b => { b.setAttribute('aria-pressed', b.dataset.acc === accKey);
+  b.addEventListener('click', () => { accKey = b.dataset.acc; try { localStorage.setItem('pc-boss-acc', accKey); } catch (e) {}
+    document.querySelectorAll('[data-acc]').forEach(x => x.setAttribute('aria-pressed', x === b)); document.documentElement.style.setProperty('--c', ACCENTS[accKey]); }); });
+document.documentElement.style.setProperty('--c', ACCENTS[accKey]);
+
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+const base = glyphs.regular.P, dxP = 1.15 * 700 - (684.5 - 45), mv = ([x, y]) => [x > 300 ? x + dxP : x, y];
+glyphs.np = { P: { adv: base.adv + dxP, p: base.p.map(q => ({ o: q.o.map(mv), h: q.h.map(h => h.map(mv)) })) } };
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+const W = new THREE.Color(0xffffff), clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* ---------- materials: the blacks ---------- */
+const mk = (o) => { const m = new THREE.MeshPhysicalMaterial(o); m.polygonOffset = true; m.polygonOffsetFactor = 1; m.polygonOffsetUnits = 1; return m; };
+const MATTE = () => mk({ color: 0x121214, metalness: 0.3, roughness: 0.68, clearcoat: 0.15, clearcoatRoughness: 0.8, envMapIntensity: 0.45 });
+const CHAR = () => mk({ color: 0x2c2d31, metalness: 0.55, roughness: 0.45, envMapIntensity: 0.6 });
+const UVB = (c) => { const m = M.uv.clone(); if (c) m.sheenColor = new THREE.Color(c).lerp(new THREE.Color(0x0e0c14), 0.5); return m; };
+const DCHROME = () => mk({ color: 0x80868e, metalness: 1, roughness: 0.14, envMapIntensity: 1.05 });
+const CHROME = () => mk({ color: 0xc9ced5, metalness: 1, roughness: 0.16, envMapIntensity: 1.05 });
+const sides = (c, e = 0.04) => { const m = M.uv.clone(); m.emissive = new THREE.Color(c); m.emissiveIntensity = e; m.sheenColor = new THREE.Color(c).lerp(new THREE.Color(0x0e0c14), 0.4); return m; };
+const edgeMat = (c, o = 0.7) => new THREE.LineBasicMaterial({ color: new THREE.Color(c).lerp(W, 0.25), transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false });
+const lit = (c, k = 1) => new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), transparent: true, opacity: 1 });
+
+/* ---------- hexagon shapes (L stretches it while keeping 60-degree corners) ---------- */
+function hexPts(R, { L = 0, vertical = false, rot = 0 } = {}) {
+  const h = R * Math.sqrt(3) / 2;
+  let p = [[R + L, 0], [R / 2 + L, h], [-R / 2 - L, h], [-R - L, 0], [-R / 2 - L, -h], [R / 2 + L, -h]];
+  if (vertical) p = p.map(([x, y]) => [y, x]).reverse();
+  return p.map(([x, y]) => new THREE.Vector2(x * Math.cos(rot) - y * Math.sin(rot), x * Math.sin(rot) + y * Math.cos(rot)));
+}
+const ext = (shape, d, bv, seg = 1) => new THREE.ExtrudeGeometry(shape, { depth: d, bevelEnabled: bv > 0, bevelThickness: bv, bevelSize: bv, bevelOffset: -bv, bevelSegments: seg, curveSegments: 1 });
+const body = (R, d, bv, o = {}, seg = 1) => ext(new THREE.Shape(hexPts(R, o)), d, bv, seg);
+const ring = (R1, R0, d, bv, o = {}) => { const s = new THREE.Shape(hexPts(R1, o)); s.holes.push(new THREE.Path(hexPts(R0, o).reverse())); return ext(s, d, bv); };
+const lines = (geo, mat, a = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, a), mat);
+function mesh(geo, face, side, z = 0, edge = null) { const g = new THREE.Group(); g.add(new THREE.Mesh(geo, side ? [face, side] : face)); if (edge) g.add(lines(geo, edge)); g.position.z = z; return g; }
+
+/* ---------- type ---------- */
+function P3(depth, scale, face, side, edge) {
+  const geo = glyphGeometries('np', 'P', { depth, bevel: depth * 0.1 }); const g = new THREE.Group(), inn = new THREE.Group(); g.add(inn); let a = Infinity, b = -Infinity;
+  geo.parts.forEach(p => { p.g.computeBoundingBox(); a = Math.min(a, p.g.boundingBox.min.x); b = Math.max(b, p.g.boundingBox.max.x);
+    inn.add(new THREE.Mesh(p.g, [face, side])); if (edge) inn.add(new THREE.LineSegments(p.lg, edge)); });
+  inn.position.set(-(a + b) / 2, -0.35, 0); g.scale.set(scale, scale, 1); return g; }
+function letter(ch, cut, depth, face, side, edge) {
+  const geo = glyphGeometries(cut, ch, { depth, bevel: Math.min(0.02, depth * 0.15) }); const o = new THREE.Group(), inn = new THREE.Group(); o.add(inn); if (!geo) return { o, adv: 0.3 };
+  geo.parts.forEach(p => { inn.add(new THREE.Mesh(p.g, [face, side])); if (edge) inn.add(new THREE.LineSegments(p.lg, edge)); }); inn.position.set(-geo.adv / 2, -0.35, 0); return { o, adv: geo.adv }; }
+function word(text, s, depth, face, side, edge, { cut = 'regular', track = 0.08 } = {}) {
+  const g = new THREE.Group(), L = [...text].map(ch => letter(ch, cut, depth, face, side, edge)); const tot = L.reduce((a, l) => a + l.adv + track, -track); let x = -tot / 2;
+  L.forEach(l => { l.o.position.x = x + l.adv / 2; x += l.adv + track; g.add(l.o); }); g.scale.set(s, s, 1); return g; }
+/* PEPTICITY round the three upper edges of a flat-top hexagon, three letters per edge, each letter standing on its edge */
+function track(text, AP, s, off, depth, face, side, edge, cut = 'regular') {
+  const g = new THREE.Group(); [150, 90, 30].forEach((deg, e) => { const t = deg * Math.PI / 180, nx = Math.cos(t), ny = Math.sin(t), tx = ny, ty = -nx;
+    [-1, 0, 1].forEach((k, j) => { const ch = text[e * 3 + j]; if (!ch) return; const { o } = letter(ch, cut, depth, face, side, edge);
+      o.scale.set(s, s, 1); o.position.set(nx * AP + tx * off * k, ny * AP + ty * off * k, 0); o.rotation.z = t - Math.PI / 2; g.add(o); }); }); return g; }
+const glowTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d');
+  const g = x.createRadialGradient(128, 128, 0, 128, 128, 128); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.4, 'rgba(255,255,255,.28)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(cv); })();
+const glow = (c, s, o) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: c, transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false })); sp.scale.set(s, s, 1); return sp; };
+const pt = (c, i, d, x, y, z) => { const l = new THREE.PointLight(c, i, d, 2); l.position.set(x, y, z); return l; };
+const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
+
+const ACC = new THREE.Color(ACCENTS[accKey]);
+const GLOSS_UV = () => { const m = M.uv.clone(); m.color.set(0x0c0a12); m.roughness = 0.2; m.clearcoat = 1; m.clearcoatRoughness = 0.08; m.envMapIntensity = 0.95; return m; };
+/* ---------- molecule parts ---------- */
+const beadGeo = new THREE.SphereGeometry(1, 22, 16);
+const bond = (a, b, r, mat) => { const d = new THREE.Vector3().subVectors(b, a), m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.length(), 10), mat);
+  m.position.copy(a).addScaledVector(d, 0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); return m; };
+function kit() { const glowM = []; const bead = (p, s, lit = false) => { const m = CHROME(); m.emissive = new THREE.Color(0); if (lit) glowM.push(m); const o = new THREE.Mesh(beadGeo, m); o.scale.setScalar(s); o.position.copy(p); return o; };
+  const tube = (pts, r, lit = false) => { const m = CHROME(); m.emissive = new THREE.Color(0); if (lit) glowM.push(m); return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), pts.length * 3, r, 8), m); };
+  return { glowM, bead, tube }; }
+const V3 = (x, y, z = 0) => new THREE.Vector3(x, y, z);
+const hexV = (r, cx = 0, cy = 0) => hexPts(r, { rot: Math.PI / 6 }).map(v => V3(v.x + cx, v.y + cy));
+const MOTIFS = [
+  /* ring */ () => { const k = kit(), g = new THREE.Group(), p = hexV(0.09); p.forEach((a, i) => { g.add(k.bead(a, 0.025, i % 2 === 0)); g.add(bond(a, p[(i + 1) % 6], 0.008, M.gunmetal)); });
+    [0, 2, 4].forEach(i => { const o = p[i].clone().multiplyScalar(1.75); g.add(bond(p[i], o, 0.007, M.gunmetal)); g.add(k.bead(o, 0.018, true)); }); return { g, glowM: k.glowM }; },
+  /* chain */ () => { const k = kit(), g = new THREE.Group(), p = [...Array(6)].map((_, i) => V3(-0.25 + i * 0.1, i % 2 ? 0.035 : -0.035)); p.forEach((a, i) => { g.add(k.bead(a, 0.03, true)); if (i) g.add(bond(p[i - 1], a, 0.009, M.gunmetal)); }); return { g, glowM: k.glowM }; },
+  /* helix */ () => { const k = kit(), g = new THREE.Group(); g.add(k.tube([...Array(61)].map((_, i) => { const x = -0.26 + i * 0.52 / 60, a = x * 30; return V3(x, Math.sin(a) * 0.045, Math.cos(a) * 0.045); }), 0.011, true)); return { g, glowM: k.glowM, spin: 'x' }; },
+  /* double helix */ () => { const k = kit(), g = new THREE.Group(); [0, Math.PI].forEach((ph, s) => g.add(k.tube([...Array(61)].map((_, i) => { const x = -0.26 + i * 0.52 / 60, a = x * 30 + ph; return V3(x, Math.sin(a) * 0.045, Math.cos(a) * 0.045); }), 0.01, s === 0)));
+    for (let i = 0; i < 9; i++) { const x = -0.24 + i * 0.06, a = x * 30; g.add(bond(V3(x, Math.sin(a) * 0.045, Math.cos(a) * 0.045), V3(x, -Math.sin(a) * 0.045, -Math.cos(a) * 0.045), 0.005, M.gunmetal)); } return { g, glowM: k.glowM, spin: 'x' }; },
+  /* swirl */ () => { const k = kit(), g = new THREE.Group(), pts = [...Array(90)].map((_, i) => { const a = i / 89 * Math.PI * 5, r = 0.012 + i / 89 * 0.085; return V3(Math.cos(a) * r, Math.sin(a) * r, i / 89 * 0.03); });
+    g.add(k.tube(pts, 0.009, true)); g.add(k.bead(pts[89], 0.02)); return { g, glowM: k.glowM, spin: 'z' }; },
+  /* twin ring */ () => { const k = kit(), g = new THREE.Group(), r = 0.07, dx = r * Math.sqrt(3) / 2; [hexV(r, -dx), hexV(r, dx)].forEach((p, s) => p.forEach((a, i) => { g.add(k.bead(a, 0.02, s === 0 ? i % 2 === 0 : i % 2 === 1)); g.add(bond(a, p[(i + 1) % 6], 0.007, M.gunmetal)); })); return { g, glowM: k.glowM }; },
+  /* backbone */ () => { const k = kit(), g = new THREE.Group(), p = [...Array(7)].map((_, i) => V3(-0.27 + i * 0.09, i % 2 ? 0.025 : -0.025)); p.forEach((a, i) => { g.add(k.bead(a, 0.022)); if (i) g.add(bond(p[i - 1], a, 0.008, M.gunmetal));
+      if (i % 2 === 0) { const o = V3(a.x, a.y + (i % 4 ? 0.07 : -0.07), 0.02); g.add(bond(a, o, 0.006, M.gunmetal)); g.add(k.bead(o, 0.017, true)); } }); return { g, glowM: k.glowM }; },
+  /* tripeptide */ () => { const k = kit(), g = new THREE.Group(), r = 0.045; const cs = [-0.17, 0, 0.17]; cs.forEach((cx, s) => { const p = hexV(r, cx); p.forEach((a, i) => { g.add(k.bead(a, 0.013, i === 0)); g.add(bond(a, p[(i + 1) % 6], 0.005, M.gunmetal)); });
+      if (s) g.add(bond(V3(cs[s - 1] + r, 0), V3(cx - r, 0), 0.006, M.gunmetal)); }); return { g, glowM: k.glowM }; },
+];
+
+/* ---------- THE BOSS, no PEPTICITY: glossy UV-black body, matte-black rim, faceted boss, the P standing proud ---------- */
+const TOP = 0.05;
+function boss(S, motifIx) {
+  const g = new THREE.Group(), edgeRest = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
+  g.add(mesh(body(1, 0.26, 0.05).translate(0, 0, -0.26), GLOSS_UV(), M.uv));
+  g.add(mesh(ring(1.0, 0.87, 0.14, 0.025), MATTE(), M.uv, TOP - 0.02, edgeRest));
+  g.add(mesh(ring(0.62, 0.57, 0.07, 0.012), MATTE(), M.uv, TOP, edgeRest));
+  const bossG = new THREE.ExtrudeGeometry(new THREE.Shape(hexPts(0.4)), { depth: 0.06, bevelEnabled: true, bevelThickness: 0.15, bevelSize: 0.15, bevelSegments: 1, curveSegments: 1 });
+  const bossEdge = edgeRest.clone(); g.add(mesh(bossG, GLOSS_UV(), null, TOP + 0.15, bossEdge));
+  /* the P: deeper, chrome-edged, a hairline of accent light that wakes on hover */
+  const pSide = M.uv.clone(); pSide.emissive = ACC.clone(); pSide.emissiveIntensity = 0.04;
+  const pEdge = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
+  const P = P3(0.3, 0.6, M.gunmetal, pSide, pEdge); g.add(P);
+  const halo = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(hexPts(0.27))), new THREE.MeshBasicMaterial({ color: ACC, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); halo.position.z = TOP + 0.365; g.add(halo);
+  const mo = MOTIFS[motifIx](); mo.g.position.set(0, -0.655, TOP + 0.06); mo.g.scale.setScalar(motifIx === 0 ? 0.8 : 1.1); g.add(mo.g);
+  const accL = new THREE.PointLight(ACC, 0, 3, 2); accL.position.set(0, 0, 0.9); g.add(accL);
+  S.add(g); S.add(pt(0xffffff, 0.9, 6, 1.6, 1.4, 1.6)); S.add(pt(0x9a8cff, 0.6, 6, -1.6, -0.6, 1));
+  return { fit: [2.15, 2.15], update(t, dt, H) {
+    const k = H.k, a = 0.08 + k * 0.92;                                   /* a little accent at rest, full on hover */
+    g.rotation.set(0.17 + H.y * 0.16 * k, -0.2 + Math.sin(t * 0.4) * 0.08 * (1 - k) + H.x * 0.25 * k, 0);
+    P.position.z = TOP + 0.37 + k * 0.22 + Math.sin(t * 0.8) * 0.006;    /* the P comes out */
+    pSide.emissive.copy(ACC); pSide.emissiveIntensity = 0.015 + k * 0.4;
+    pEdge.color.set(0xffffff).lerp(ACC, a * 0.8); pEdge.opacity = 0.5 + k * 0.45;
+    bossEdge.color.set(0xffffff).lerp(ACC, a); bossEdge.opacity = 0.22 + k * 0.5;
+    halo.material.color.copy(ACC); halo.material.opacity = k * 0.18;
+    accL.color.copy(ACC); accL.intensity = k * 2.2;
+    mo.glowM.forEach(m => { m.emissive.copy(ACC); m.emissiveIntensity = 0.06 + k * 0.7; });
+    if (mo.spin === 'x') mo.g.rotation.x = t * (0.3 + k * 2); if (mo.spin === 'z') mo.g.rotation.z = -t * (0.3 + k * 2);
+  } };
+}
+const BUILD = MOTIFS.map((_, i) => S => boss(S, i));
+
+document.querySelectorAll('[data-i]').forEach((el, i) => {
+  const c = '#ffffff', scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(26, 1, 0.1, 80);
+  const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(2.2, 2.8, 4); scene.add(key);
+  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.45));
+  const d = BUILD[i](scene);
+  const card = el.parentElement, H = { on: false, x: 0, y: 0, k: 0 };
+  const at = e => { const r = card.getBoundingClientRect(); H.x = clamp((e.clientX - r.left) / r.width * 2 - 1, -1, 1); H.y = clamp((e.clientY - r.top) / r.height * 2 - 1, -1, 1); };
+  card.addEventListener('pointerenter', e => { H.on = true; at(e); stage.kick(); });
+  card.addEventListener('pointermove', e => { at(e); stage.kick(); });
+  card.addEventListener('pointerleave', () => { H.on = false; stage.kick(); });
+  window.__hover = window.__hover || []; window.__hover[i] = H;
+  stage.addSlot(el, { scene, camera, fit: a => fitCamera(camera, d.fit[0], d.fit[1], a, 0.88), update(dt, t) { ACC.lerp(new THREE.Color(ACCENTS[accKey]), 1 - Math.exp(-6 * dt)); H.k = damp(H.k, H.on ? 1 : 0, 4, dt); d.update(t, dt, H); } });
+});
+window.__med = true; window.__boss = true; window.__setAcc = k => document.querySelector(`[data-acc=${k}]`).click();
+</script>
+</body>
+</html>
