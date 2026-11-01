@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · GLASS MEDALLION</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(15px,1.5vw,20px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1240px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:28px}
+.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.cell{display:grid;gap:6px;padding:12px;box-shadow:inset 0 0 0 1px var(--line);align-content:start;transition:box-shadow .4s}
+.cell:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 55%,transparent)}
+.slot{aspect-ratio:1/1;width:100%}
+.sw{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.sw button{font:400 12px/1 "PEPTICITY BLACK",system-ui;letter-spacing:.2em;color:#eceff3;background:rgba(255,255,255,.04);border:0;box-shadow:inset 0 0 0 1px rgba(230,233,237,.18);padding:12px 16px;cursor:pointer;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);transition:box-shadow .3s}.sw button[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--b),0 0 18px -6px var(--b)}.sw button::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;background:var(--b);box-shadow:0 0 8px var(--b)}
+.hex{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.08em}
+.hex i{width:10px;height:10px;display:inline-block;background:var(--c);box-shadow:0 0 10px var(--c)}
+p{margin:0;color:#c4cad2;font-size:14px}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">THE GLASS MEDALLION · 3 VERSIONS · SAMPLES ONLY · NOTHING ON THE SITE HAS CHANGED</p><h1>THE GLASS MEDALLION</h1>
+    <p>Matte-black frame, liquid glass set inside it, the light in the seam between them (half strength at rest), the inner hexagon rising a little, and the P and the peptide standing out together in deep 3D. Hover (or tap): they come forward and the seam lights up. Pick a colour:</p>
+    <div class="sw"></div></div>
+  <div class="row" id="row"></div>
+</div>
+<script type="module">
+const D = [
+  ['GLASS 1 · FLUSH LENS', 'A flat liquid-glass lens set flush into the matte-black hexagon. Frosted inner hexagon. Chrome peptide ring.'],
+  ['GLASS 2 · RAISED LENS', 'A thicker glass lens that sits slightly proud of the matte black. Satin-black inner hexagon. Chrome double helix.'],
+  ['GLASS 3 · CUT-GLASS LENS', 'Glass with a cut, chamfered edge like a watch crystal. Gunmetal inner hexagon. A peptide of glass beads on chrome bonds.']];
+const row = document.getElementById('row');
+D.forEach(([n, b]) => { const d = document.createElement('div'); d.className = 'cell';
+  d.innerHTML = `<div class="slot" data-i></div><h2>${n}</h2><p>${b}</p>`; row.appendChild(d); });
+const ACCENTS = { chartreuse: '#d4ff3a', blue: '#0066FF', cyan: '#0FFFFF', red: '#FF004F', violet: '#6F00FF', magenta: '#8D029B', copper: '#C46210', salmon: '#FA8072' };
+let accKey = 'chartreuse'; try { accKey = localStorage.getItem('pc-glass-acc') || 'chartreuse'; } catch (e) {}
+const sw = document.querySelector('.sw');
+Object.entries(ACCENTS).forEach(([k, v]) => { const b = document.createElement('button'); b.dataset.acc = k; b.style.setProperty('--b', v); b.textContent = k.toUpperCase(); b.setAttribute('aria-pressed', k === accKey);
+  b.addEventListener('click', () => { accKey = k; try { localStorage.setItem('pc-glass-acc', k); } catch (e) {} sw.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); }); sw.appendChild(b); });
+
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+const base = glyphs.regular.P, dxP = 1.15 * 700 - (684.5 - 45), mv = ([x, y]) => [x > 300 ? x + dxP : x, y];
+glyphs.np = { P: { adv: base.adv + dxP, p: base.p.map(q => ({ o: q.o.map(mv), h: q.h.map(h => h.map(mv)) })) } };
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+const W = new THREE.Color(0xffffff), clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* ---------- materials: the blacks ---------- */
+const mk = (o) => { const m = new THREE.MeshPhysicalMaterial(o); m.polygonOffset = true; m.polygonOffsetFactor = 1; m.polygonOffsetUnits = 1; return m; };
+const MATTE = () => mk({ color: 0x121214, metalness: 0.3, roughness: 0.68, clearcoat: 0.15, clearcoatRoughness: 0.8, envMapIntensity: 0.45 });
+const CHAR = () => mk({ color: 0x2c2d31, metalness: 0.55, roughness: 0.45, envMapIntensity: 0.6 });
+const UVB = (c) => { const m = M.uv.clone(); if (c) m.sheenColor = new THREE.Color(c).lerp(new THREE.Color(0x0e0c14), 0.5); return m; };
+const DCHROME = () => mk({ color: 0x80868e, metalness: 1, roughness: 0.14, envMapIntensity: 1.05 });
+const CHROME = () => mk({ color: 0xc9ced5, metalness: 1, roughness: 0.16, envMapIntensity: 1.05 });
+const sides = (c, e = 0.04) => { const m = M.uv.clone(); m.emissive = new THREE.Color(c); m.emissiveIntensity = e; m.sheenColor = new THREE.Color(c).lerp(new THREE.Color(0x0e0c14), 0.4); return m; };
+const edgeMat = (c, o = 0.7) => new THREE.LineBasicMaterial({ color: new THREE.Color(c).lerp(W, 0.25), transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false });
+const lit = (c, k = 1) => new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), transparent: true, opacity: 1 });
+
+/* ---------- hexagon shapes (L stretches it while keeping 60-degree corners) ---------- */
+function hexPts(R, { L = 0, vertical = false, rot = 0 } = {}) {
+  const h = R * Math.sqrt(3) / 2;
+  let p = [[R + L, 0], [R / 2 + L, h], [-R / 2 - L, h], [-R - L, 0], [-R / 2 - L, -h], [R / 2 + L, -h]];
+  if (vertical) p = p.map(([x, y]) => [y, x]).reverse();
+  return p.map(([x, y]) => new THREE.Vector2(x * Math.cos(rot) - y * Math.sin(rot), x * Math.sin(rot) + y * Math.cos(rot)));
+}
+const ext = (shape, d, bv, seg = 1) => new THREE.ExtrudeGeometry(shape, { depth: d, bevelEnabled: bv > 0, bevelThickness: bv, bevelSize: bv, bevelOffset: -bv, bevelSegments: seg, curveSegments: 1 });
+const body = (R, d, bv, o = {}, seg = 1) => ext(new THREE.Shape(hexPts(R, o)), d, bv, seg);
+const ring = (R1, R0, d, bv, o = {}) => { const s = new THREE.Shape(hexPts(R1, o)); s.holes.push(new THREE.Path(hexPts(R0, o).reverse())); return ext(s, d, bv); };
+const lines = (geo, mat, a = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, a), mat);
+function mesh(geo, face, side, z = 0, edge = null) { const g = new THREE.Group(); g.add(new THREE.Mesh(geo, side ? [face, side] : face)); if (edge) g.add(lines(geo, edge)); g.position.z = z; return g; }
+
+/* ---------- type ---------- */
+function P3(depth, scale, face, side, edge) {
+  const geo = glyphGeometries('np', 'P', { depth, bevel: depth * 0.1 }); const g = new THREE.Group(), inn = new THREE.Group(); g.add(inn); let a = Infinity, b = -Infinity;
+  geo.parts.forEach(p => { p.g.computeBoundingBox(); a = Math.min(a, p.g.boundingBox.min.x); b = Math.max(b, p.g.boundingBox.max.x);
+    inn.add(new THREE.Mesh(p.g, [face, side])); if (edge) inn.add(new THREE.LineSegments(p.lg, edge)); });
+  inn.position.set(-(a + b) / 2, -0.35, 0); g.scale.set(scale, scale, 1); return g; }
+function letter(ch, cut, depth, face, side, edge) {
+  const geo = glyphGeometries(cut, ch, { depth, bevel: Math.min(0.02, depth * 0.15) }); const o = new THREE.Group(), inn = new THREE.Group(); o.add(inn); if (!geo) return { o, adv: 0.3 };
+  geo.parts.forEach(p => { inn.add(new THREE.Mesh(p.g, [face, side])); if (edge) inn.add(new THREE.LineSegments(p.lg, edge)); }); inn.position.set(-geo.adv / 2, -0.35, 0); return { o, adv: geo.adv }; }
+function word(text, s, depth, face, side, edge, { cut = 'regular', track = 0.08 } = {}) {
+  const g = new THREE.Group(), L = [...text].map(ch => letter(ch, cut, depth, face, side, edge)); const tot = L.reduce((a, l) => a + l.adv + track, -track); let x = -tot / 2;
+  L.forEach(l => { l.o.position.x = x + l.adv / 2; x += l.adv + track; g.add(l.o); }); g.scale.set(s, s, 1); return g; }
+/* PEPTICITY round the three upper edges of a flat-top hexagon, three letters per edge, each letter standing on its edge */
+function track(text, AP, s, off, depth, face, side, edge, cut = 'regular') {
+  const g = new THREE.Group(); [150, 90, 30].forEach((deg, e) => { const t = deg * Math.PI / 180, nx = Math.cos(t), ny = Math.sin(t), tx = ny, ty = -nx;
+    [-1, 0, 1].forEach((k, j) => { const ch = text[e * 3 + j]; if (!ch) return; const { o } = letter(ch, cut, depth, face, side, edge);
+      o.scale.set(s, s, 1); o.position.set(nx * AP + tx * off * k, ny * AP + ty * off * k, 0); o.rotation.z = t - Math.PI / 2; g.add(o); }); }); return g; }
+const glowTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d');
+  const g = x.createRadialGradient(128, 128, 0, 128, 128, 128); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.4, 'rgba(255,255,255,.28)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(cv); })();
+const glow = (c, s, o) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: c, transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false })); sp.scale.set(s, s, 1); return sp; };
+const pt = (c, i, d, x, y, z) => { const l = new THREE.PointLight(c, i, d, 2); l.position.set(x, y, z); return l; };
+const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
+
+const ACC = new THREE.Color(ACCENTS[accKey]);
+/* soft rounded hexagon (neumorphic) */
+function roundHex(R, r) { const s = new THREE.Shape(), p = hexPts(R);
+  for (let i = 0; i < 6; i++) { const a = p[i], b = p[(i + 1) % 6], c = p[(i + 2) % 6];
+    const ab = new THREE.Vector2().subVectors(b, a).normalize(), bc = new THREE.Vector2().subVectors(c, b).normalize();
+    const p1 = b.clone().addScaledVector(ab, -r), p2 = b.clone().addScaledVector(bc, r);
+    if (i === 0) s.moveTo(p1.x, p1.y); else s.lineTo(p1.x, p1.y); s.quadraticCurveTo(b.x, b.y, p2.x, p2.y); }
+  s.closePath(); return s; }
+const NEU = () => mk({ color: 0x17181b, metalness: 0.1, roughness: 0.78, clearcoat: 0.05, envMapIntensity: 0.35 });
+const GLASS = (o = {}) => { const m = new THREE.MeshPhysicalMaterial({ color: 0xdfe8ee, metalness: 0, roughness: 0.03, transparent: true, opacity: 0.07, clearcoat: 1, clearcoatRoughness: 0.02,
+  envMapIntensity: 1.6, specularIntensity: 1, depthWrite: false, side: THREE.DoubleSide, ...o }); return m; };
+const beadGeo = new THREE.SphereGeometry(1, 28, 20);
+const bond = (a, b, r, mat) => { const d = new THREE.Vector3().subVectors(b, a), m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.length(), 12), mat);
+  m.position.copy(a).addScaledVector(d, 0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); return m; };
+const V3 = (x, y, z = 0) => new THREE.Vector3(x, y, z);
+/* peptides, built deep like the P so they share its 3D level */
+function pepRing() { const g = new THREE.Group(), p = hexPts(0.075, { rot: Math.PI / 6 }).map(v => V3(v.x, v.y)), ch = CHROME();
+  p.forEach((a, i) => { const b = new THREE.Mesh(beadGeo, ch); b.scale.setScalar(0.022); b.position.copy(a); g.add(b); g.add(bond(a, p[(i + 1) % 6], 0.008, ch)); });
+  [0, 2, 4].forEach(i => { const o = p[i].clone().multiplyScalar(1.7); g.add(bond(p[i], o, 0.007, ch)); const b = new THREE.Mesh(beadGeo, ch); b.scale.setScalar(0.016); b.position.copy(o); g.add(b); });
+  return g; }
+function pepHelix() { const g = new THREE.Group(), ch = CHROME();
+  [0, Math.PI].forEach(ph => g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([...Array(61)].map((_, i) => { const x = -0.2 + i * 0.4 / 60, a = x * 36 + ph; return V3(x, Math.sin(a) * 0.04, Math.cos(a) * 0.04); })), 180, 0.009, 10), ch)));
+  for (let i = 0; i < 8; i++) { const x = -0.18 + i * 0.052, a = x * 36; g.add(bond(V3(x, Math.sin(a) * 0.04, Math.cos(a) * 0.04), V3(x, -Math.sin(a) * 0.04, -Math.cos(a) * 0.04), 0.004, ch));
+    [1, -1].forEach(s => { const b = new THREE.Mesh(beadGeo, ch); b.scale.setScalar(0.011); b.position.set(x, s * Math.sin(a) * 0.04, s * Math.cos(a) * 0.04); g.add(b); }); }
+  return { g, spin: true }; }
+function pepGlass() { const g = new THREE.Group(), ch = CHROME(), gl = GLASS({ opacity: 0.35, color: 0xffffff }), p = [...Array(5)].map((_, i) => V3(-0.18 + i * 0.09, i % 2 ? 0.032 : -0.032));
+  const cores = []; p.forEach((a, i) => { const b = new THREE.Mesh(beadGeo, gl); b.scale.setScalar(0.032); b.position.copy(a); g.add(b);
+    const core = new THREE.Mesh(beadGeo, new THREE.MeshBasicMaterial({ color: 0xffffff })); core.scale.setScalar(0.009); core.position.copy(a); g.add(core); cores.push(core.material);
+    if (i) g.add(bond(p[i - 1], a, 0.006, ch)); });
+  return { g, cores }; }
+
+/* ---------- the glass medallion: matte-black neumorphic frame, glass set inside it, light in the seam between them ---------- */
+function glassMed(S, v) {
+  const g = new THREE.Group(), FD = 0.22;
+  /* 1 · matte-black neumorphic frame with a hexagon opening */
+  const fs = roundHex(1, 0.12); fs.holes.push(new THREE.Path(hexPts(0.7).reverse()));
+  const frame = new THREE.ExtrudeGeometry(fs, { depth: FD, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.06, bevelOffset: -0.06, bevelSegments: 6, curveSegments: 6 }); frame.translate(0, 0, -FD);
+  g.add(new THREE.Mesh(frame, [NEU(), NEU()]));
+  const floor = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(hexPts(0.72))), NEU()); floor.position.z = -FD + 0.02; g.add(floor);
+  /* 2 · the seam light: between the matte black and the glass (half strength at rest) */
+  const seamM = new THREE.MeshBasicMaterial({ color: ACC, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
+  const seam = new THREE.Mesh(ring(0.7, 0.672, 0.01, 0), seamM); seam.position.z = -0.04; g.add(seam);
+  const seamGlow = new THREE.Mesh(ring(0.74, 0.64, 0.002, 0), new THREE.MeshBasicMaterial({ color: ACC, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false })); seamGlow.position.z = -0.03; g.add(seamGlow);
+  /* 3 · the glass, set inside the frame */
+  const glassZ = v === 1 ? 0.03 : -0.02, gd = v === 1 ? 0.14 : 0.1;
+  const glassGeo = v === 2 ? new THREE.ExtrudeGeometry(new THREE.Shape(hexPts(0.6)), { depth: 0.04, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.06, bevelSegments: 1, curveSegments: 1 })
+                           : new THREE.ExtrudeGeometry(roundHex(0.665, 0.03), { depth: gd, bevelEnabled: true, bevelThickness: v === 1 ? 0.04 : 0.015, bevelSize: 0.015, bevelOffset: -0.015, bevelSegments: v === 1 ? 6 : 2, curveSegments: 4 });
+  glassGeo.translate(0, 0, -gd); const glass = new THREE.Mesh(glassGeo, GLASS()); glass.position.z = glassZ; glass.renderOrder = 5; g.add(glass);
+  { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d'); const gr = x.createLinearGradient(0, 0, 256, 256);
+    gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.36, 'rgba(255,255,255,0)'); gr.addColorStop(0.42, 'rgba(255,255,255,.55)'); gr.addColorStop(0.47, 'rgba(255,255,255,.08)'); gr.addColorStop(0.62, 'rgba(255,255,255,.18)'); gr.addColorStop(0.66, 'rgba(255,255,255,0)'); x.fillStyle = gr; x.fillRect(0, 0, 256, 256);
+    const tx = new THREE.CanvasTexture(cv); tx.repeat.set(1 / 1.34, 1 / 1.34); tx.offset.set(0.5, 0.5);
+    const sheen = new THREE.Mesh(new THREE.ShapeGeometry(roundHex(0.66, 0.03)), new THREE.MeshBasicMaterial({ map: tx, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }));
+    sheen.position.z = glassZ + 0.025; sheen.renderOrder = 6; g.add(sheen); }
+  { const gl = new THREE.LineSegments(new THREE.EdgesGeometry(glassGeo, 30), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.32, blending: THREE.AdditiveBlending, depthWrite: false })); gl.position.copy(glass.position); g.add(gl); }
+  /* 4 · the inner honeycomb: rises a little (less than the P) */
+  const innerMat = v === 0 ? GLASS({ opacity: 0.18, roughness: 0.3, color: 0xc9ced3 }) : v === 1 ? mk({ color: 0x101113, metalness: 0.4, roughness: 0.35, clearcoat: 0.6, envMapIntensity: 0.6 }) : mk({ color: 0x3a3c41, metalness: 0.85, roughness: 0.4, envMapIntensity: 0.55 });
+  const innerGeo = new THREE.ExtrudeGeometry(new THREE.Shape(hexPts(0.4)), { depth: 0.05, bevelEnabled: true, bevelThickness: 0.07, bevelSize: 0.07, bevelSegments: 1, curveSegments: 1 });
+  const inner = new THREE.Group(); inner.add(new THREE.Mesh(innerGeo, innerMat)); inner.add(new THREE.LineSegments(new THREE.EdgesGeometry(innerGeo, 30), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false }))); g.add(inner);
+  /* 5 · the P and the peptide: one group, same 3D level, they move together */
+  const hero = new THREE.Group(); g.add(hero);
+  const pSide = M.uv.clone(); pSide.emissive = ACC.clone(); pSide.emissiveIntensity = 0;
+  const P = P3(0.42, 0.56, M.gunmetal, pSide, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }));
+  P.position.set(0, 0.035, 0); hero.add(P);
+  const pep = v === 0 ? { g: pepRing() } : v === 1 ? pepHelix() : pepGlass(); pep.g.position.set(0, -0.44, 0.21); pep.g.scale.setScalar(v === 0 ? 0.66 : 0.88); hero.add(pep.g);
+  const accL = new THREE.PointLight(ACC, 0, 3, 2); accL.position.set(0, 0, 0.7); g.add(accL);
+  S.add(g); S.add(pt(0xffffff, 1.1, 6, -1.6, 1.6, 1.8)); S.add(pt(0xffffff, 0.4, 6, 1.8, -1, 1.4));
+  return { fit: [2.2, 2.2], update(t, dt, H) {
+    const k = H.k;
+    g.rotation.set(0.24 + H.y * 0.16 * k, -0.16 + Math.sin(t * 0.4) * 0.06 * (1 - k) + H.x * 0.28 * k, 0);
+    inner.position.z = glassZ - 0.06 + 0.05 + k * 0.08;                    /* inner hexagon: a little */
+    hero.position.z = 0.12 + k * 0.24 + Math.sin(t * 0.8) * 0.006;          /* P + peptide: more */
+    { const zc = hero.position.z + 0.21; hero.position.x = -zc * Math.tan(g.rotation.y); hero.position.y = zc * Math.tan(g.rotation.x); }  /* keep the P optically centred while its depth shows */
+    seamM.color.copy(ACC); seamM.opacity = 0.5 + k * 0.4; seamGlow.material.color.copy(ACC); seamGlow.material.opacity = 0.06 + k * 0.12;
+    pSide.emissive.copy(ACC); pSide.emissiveIntensity = k * 0.22; accL.color.copy(ACC); accL.intensity = k * 0.5;
+    if (pep.spin) pep.g.rotation.x = t * (0.4 + k * 1.6);
+    if (pep.cores) pep.cores.forEach((m, i) => m.color.set(0xffffff).lerp(ACC, 0.3 + k * 0.7 * Math.max(0, Math.sin(t * 3 - i))));
+  } };
+}
+const BUILD = [0, 1, 2].map(v => S => glassMed(S, v));
+
+document.querySelectorAll('[data-i]').forEach((el, i) => {
+  const c = '#ffffff', scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(26, 1, 0.1, 80);
+  const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(2.2, 2.8, 4); scene.add(key);
+  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.45));
+  const d = BUILD[i](scene);
+  const card = el.parentElement, H = { on: false, x: 0, y: 0, k: 0 };
+  const at = e => { const r = card.getBoundingClientRect(); H.x = clamp((e.clientX - r.left) / r.width * 2 - 1, -1, 1); H.y = clamp((e.clientY - r.top) / r.height * 2 - 1, -1, 1); };
+  card.addEventListener('pointerenter', e => { H.on = true; at(e); stage.kick(); });
+  card.addEventListener('pointermove', e => { at(e); stage.kick(); });
+  card.addEventListener('pointerleave', () => { H.on = false; stage.kick(); });
+  window.__hover = window.__hover || []; window.__hover[i] = H;
+  stage.addSlot(el, { scene, camera, fit: a => fitCamera(camera, d.fit[0], d.fit[1], a, 0.88), update(dt, t) { ACC.lerp(new THREE.Color(ACCENTS[accKey]), 1 - Math.exp(-6 * dt)); H.k = damp(H.k, H.on ? 1 : 0, 4, dt); d.update(t, dt, H); } });
+});
+window.__med = true; window.__boss = true; window.__glass = true; window.__setAcc = k => document.querySelector(`[data-acc=${k}]`).click();
+</script>
+</body>
+</html>
