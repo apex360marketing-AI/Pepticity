@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PEPTICITY · THE CLASSIC, FIVE WAYS</title>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("brand/font/PepticityBlack.woff2") format("woff2")}
+:root{--bg:#0b0b0c;--ink:#eceff3;--muted:#959ca6;--line:rgba(230,233,237,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif}
+h1,h2,.k{font-family:"PEPTICITY BLACK",system-ui;font-weight:400;text-transform:uppercase;letter-spacing:.06em;margin:0}
+h1{font-size:clamp(22px,3vw,34px)} h2{font-size:clamp(15px,1.5vw,20px)}
+.k{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+.wrap{width:min(1240px,100% - 32px);margin:0 auto;padding:40px 0 60px;display:grid;gap:28px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cell{display:grid;gap:6px;padding:12px;box-shadow:inset 0 0 0 1px var(--line);align-content:start;transition:box-shadow .4s}
+.cell:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 55%,transparent)}
+.slot{aspect-ratio:1/1;width:100%}
+.hex{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.08em}
+.hex i{width:10px;height:10px;display:inline-block;background:var(--c);box-shadow:0 0 10px var(--c)}
+p{margin:0;color:#c4cad2;font-size:14px}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+<div class="wrap">
+  <div><p class="k">01 THE CLASSIC · 5 VERSIONS · SAMPLES ONLY · NOTHING ON THE SITE HAS CHANGED</p><h1>THE CLASSIC, FIVE WAYS</h1>
+    <p>Your pick, 01, in five versions. Each centre stands further out in 3D (classier than the steps in 05), PEPTICITY stands out round the top, and the little dots are replaced by a peptide shape. Move your mouse over each one, or tap it on a phone, to see its hover.</p></div>
+  <div class="row" id="row"></div>
+</div>
+<script type="module">
+const D = [
+  ['A · THE DAIS', '#d4ff3a', 'The centre rises on a two-step chamfered dais. A short peptide chain (linked beads) sits at the bottom.', 'Spins a full coin turn; the peptide beads light up one after another.'],
+  ['B · THE TERRACE', '#d4ff3a', 'Three slim stepped hexagons in the centre (gunmetal, charcoal, matte black), classier and lower than 05. A small helix swirl at the bottom.', 'The steps lift apart a little; the helix turns on its axis.'],
+  ['C · THE BOSS', '#d4ff3a', 'The centre is one bold faceted hexagon boss, like a cut stone, with the P on its top. A hexagon peptide ring at the bottom.', 'Tilts toward your pointer; the ring turns and the edges brighten.'],
+  ['D · THE FLOATING CORE', '#d4ff3a', 'The centre plate floats off the coin with chartreuse light in the gap under it. A double helix at the bottom.', 'The core floats further out and the light in the gap grows.'],
+  ['E · THE CROWN', '#d4ff3a', 'A tall inner hexagon wall like a crown, the P rising out of it, PEPTICITY raised on its own band. A peptide swirl at the bottom.', 'The P rises out of the crown and the swirl spins.']];
+const row = document.getElementById('row');
+D.forEach(([n, c, b, h]) => { const d = document.createElement('div'); d.className = 'cell'; d.style.setProperty('--c', c);
+  d.innerHTML = `<div class="slot" data-i></div><h2>${n}</h2><span class="hex"><i></i>${c}</span><p>LOOK · ${b}</p><p>HOVER · ${h}</p>`; row.appendChild(d); });
+
+const glyphs = await fetch('brand/font/glyphs.json').then(r => r.json());
+const base = glyphs.regular.P, dxP = 1.15 * 700 - (684.5 - 45), mv = ([x, y]) => [x > 300 ? x + dxP : x, y];
+glyphs.np = { P: { adv: base.adv + dxP, p: base.p.map(q => ({ o: q.o.map(mv), h: q.h.map(h => h.map(mv)) })) } };
+const tag = document.createElement('script'); tag.type = 'application/json'; tag.id = 'glyph-data'; tag.textContent = JSON.stringify(glyphs); document.head.appendChild(tag);
+const THREE = await import('three');
+const { createStage, glyphGeometries, fitCamera } = await import('./brand/font/type3d-engine.js');
+const stage = createStage(document.getElementById('gl')); const M = stage.MAT;
+const W = new THREE.Color(0xffffff), clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* ---------- materials: the blacks ---------- */
+const mk = (o) => { const m = new THREE.MeshPhysicalMaterial(o); m.polygonOffset = true; m.polygonOffsetFactor = 1; m.polygonOffsetUnits = 1; return m; };
+const MATTE = () => mk({ color: 0x121214, metalness: 0.3, roughness: 0.68, clearcoat: 0.15, clearcoatRoughness: 0.8, envMapIntensity: 0.45 });
+const CHAR = () => mk({ color: 0x2c2d31, metalness: 0.55, roughness: 0.45, envMapIntensity: 0.6 });
+const UVB = (c) => { const m = M.uv.clone(); if (c) m.sheenColor = new THREE.Color(c).lerp(new THREE.Color(0x0e0c14), 0.5); return m; };
+const DCHROME = () => mk({ color: 0x80868e, metalness: 1, roughness: 0.14, envMapIntensity: 1.05 });
+const CHROME = () => mk({ color: 0xc9ced5, metalness: 1, roughness: 0.16, envMapIntensity: 1.05 });
+const sides = (c, e = 0.04) => { const m = M.uv.clone(); m.emissive = new THREE.Color(c); m.emissiveIntensity = e; m.sheenColor = new THREE.Color(c).lerp(new THREE.Color(0x0e0c14), 0.4); return m; };
+const edgeMat = (c, o = 0.7) => new THREE.LineBasicMaterial({ color: new THREE.Color(c).lerp(W, 0.25), transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false });
+const lit = (c, k = 1) => new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), transparent: true, opacity: 1 });
+
+/* ---------- hexagon shapes (L stretches it while keeping 60-degree corners) ---------- */
+function hexPts(R, { L = 0, vertical = false, rot = 0 } = {}) {
+  const h = R * Math.sqrt(3) / 2;
+  let p = [[R + L, 0], [R / 2 + L, h], [-R / 2 - L, h], [-R - L, 0], [-R / 2 - L, -h], [R / 2 + L, -h]];
+  if (vertical) p = p.map(([x, y]) => [y, x]).reverse();
+  return p.map(([x, y]) => new THREE.Vector2(x * Math.cos(rot) - y * Math.sin(rot), x * Math.sin(rot) + y * Math.cos(rot)));
+}
+const ext = (shape, d, bv, seg = 1) => new THREE.ExtrudeGeometry(shape, { depth: d, bevelEnabled: bv > 0, bevelThickness: bv, bevelSize: bv, bevelOffset: -bv, bevelSegments: seg, curveSegments: 1 });
+const body = (R, d, bv, o = {}, seg = 1) => ext(new THREE.Shape(hexPts(R, o)), d, bv, seg);
+const ring = (R1, R0, d, bv, o = {}) => { const s = new THREE.Shape(hexPts(R1, o)); s.holes.push(new THREE.Path(hexPts(R0, o).reverse())); return ext(s, d, bv); };
+const lines = (geo, mat, a = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, a), mat);
+function mesh(geo, face, side, z = 0, edge = null) { const g = new THREE.Group(); g.add(new THREE.Mesh(geo, side ? [face, side] : face)); if (edge) g.add(lines(geo, edge)); g.position.z = z; return g; }
+
+/* ---------- type ---------- */
+function P3(depth, scale, face, side, edge) {
+  const geo = glyphGeometries('np', 'P', { depth, bevel: depth * 0.1 }); const g = new THREE.Group(), inn = new THREE.Group(); g.add(inn); let a = Infinity, b = -Infinity;
+  geo.parts.forEach(p => { p.g.computeBoundingBox(); a = Math.min(a, p.g.boundingBox.min.x); b = Math.max(b, p.g.boundingBox.max.x);
+    inn.add(new THREE.Mesh(p.g, [face, side])); if (edge) inn.add(new THREE.LineSegments(p.lg, edge)); });
+  inn.position.set(-(a + b) / 2, -0.35, 0); g.scale.set(scale, scale, 1); return g; }
+function letter(ch, cut, depth, face, side, edge) {
+  const geo = glyphGeometries(cut, ch, { depth, bevel: Math.min(0.02, depth * 0.15) }); const o = new THREE.Group(), inn = new THREE.Group(); o.add(inn); if (!geo) return { o, adv: 0.3 };
+  geo.parts.forEach(p => { inn.add(new THREE.Mesh(p.g, [face, side])); if (edge) inn.add(new THREE.LineSegments(p.lg, edge)); }); inn.position.set(-geo.adv / 2, -0.35, 0); return { o, adv: geo.adv }; }
+function word(text, s, depth, face, side, edge, { cut = 'regular', track = 0.08 } = {}) {
+  const g = new THREE.Group(), L = [...text].map(ch => letter(ch, cut, depth, face, side, edge)); const tot = L.reduce((a, l) => a + l.adv + track, -track); let x = -tot / 2;
+  L.forEach(l => { l.o.position.x = x + l.adv / 2; x += l.adv + track; g.add(l.o); }); g.scale.set(s, s, 1); return g; }
+/* PEPTICITY round the three upper edges of a flat-top hexagon, three letters per edge, each letter standing on its edge */
+function track(text, AP, s, off, depth, face, side, edge, cut = 'regular') {
+  const g = new THREE.Group(); [150, 90, 30].forEach((deg, e) => { const t = deg * Math.PI / 180, nx = Math.cos(t), ny = Math.sin(t), tx = ny, ty = -nx;
+    [-1, 0, 1].forEach((k, j) => { const ch = text[e * 3 + j]; if (!ch) return; const { o } = letter(ch, cut, depth, face, side, edge);
+      o.scale.set(s, s, 1); o.position.set(nx * AP + tx * off * k, ny * AP + ty * off * k, 0); o.rotation.z = t - Math.PI / 2; g.add(o); }); }); return g; }
+const glowTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d');
+  const g = x.createRadialGradient(128, 128, 0, 128, 128, 128); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.4, 'rgba(255,255,255,.28)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(cv); })();
+const glow = (c, s, o) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: c, transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false })); sp.scale.set(s, s, 1); return sp; };
+const pt = (c, i, d, x, y, z) => { const l = new THREE.PointLight(c, i, d, 2); l.position.set(x, y, z); return l; };
+const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
+
+/* ---------- peptide motifs ---------- */
+const bond = (a, b, r, mat) => { const d = new THREE.Vector3().subVectors(b, a), m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.length(), 10), mat);
+  m.position.copy(a).addScaledVector(d, 0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); return m; };
+const beadGeo = new THREE.SphereGeometry(1, 20, 14);
+function chain(c) { const g = new THREE.Group(), beads = [], pts = [];
+  for (let i = 0; i < 6; i++) pts.push(new THREE.Vector3(-0.25 + i * 0.1, (i % 2 ? 0.035 : -0.035), 0));
+  pts.forEach((p, i) => { const m = new THREE.Mesh(beadGeo, sides(c, 0.05).clone()); m.material = CHROME(); m.material.emissive = new THREE.Color(c); m.material.emissiveIntensity = 0; m.scale.setScalar(0.032); m.position.copy(p); g.add(m); beads.push(m);
+    if (i) g.add(bond(pts[i - 1], p, 0.009, M.gunmetal)); });
+  return { g, beads }; }
+function helix(c, strands = 1) { const g = new THREE.Group();
+  for (let s = 0; s < strands; s++) { const ph = s * Math.PI; const curve = new THREE.CatmullRomCurve3([...Array(61)].map((_, i) => { const x = -0.26 + i * 0.52 / 60, a = x * 30 + ph; return new THREE.Vector3(x, Math.sin(a) * 0.045, Math.cos(a) * 0.045); }));
+    g.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 160, 0.011, 8), s ? CHROME() : (() => { const m = CHROME(); m.emissive = new THREE.Color(c); m.emissiveIntensity = 0.35; return m; })())); }
+  if (strands === 2) for (let i = 0; i < 9; i++) { const x = -0.24 + i * 0.06, a = x * 30; g.add(bond(new THREE.Vector3(x, Math.sin(a) * 0.045, Math.cos(a) * 0.045), new THREE.Vector3(x, -Math.sin(a) * 0.045, -Math.cos(a) * 0.045), 0.005, M.gunmetal)); }
+  return g; }
+function ringMol(c) { const g = new THREE.Group(), pts = hexPts(0.085, { rot: Math.PI / 6 }).map(v => new THREE.Vector3(v.x, v.y, 0));
+  pts.forEach((p, i) => { const m = new THREE.Mesh(beadGeo, CHROME()); m.scale.setScalar(0.024); m.position.copy(p); g.add(m); g.add(bond(p, pts[(i + 1) % 6], 0.008, M.gunmetal)); });
+  const inner = new THREE.Mesh(ring(0.05, 0.04, 0.01, 0, { rot: Math.PI / 6 }), lit(c, 1)); inner.position.z = -0.005; g.add(inner);
+  [0, 2, 4].forEach(k => { const o = pts[k].clone().multiplyScalar(1.7); g.add(bond(pts[k], o, 0.007, M.gunmetal)); const m = new THREE.Mesh(beadGeo, CHROME()); m.scale.setScalar(0.018); m.position.copy(o); g.add(m); });
+  return g; }
+function swirl(c) { const curve = new THREE.CatmullRomCurve3([...Array(90)].map((_, i) => { const a = i / 89 * Math.PI * 5, r = 0.012 + i / 89 * 0.085; return new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, i / 89 * 0.03); }));
+  const m = CHROME(); m.emissive = new THREE.Color(c); m.emissiveIntensity = 0.3; const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 200, 0.009, 8), m));
+  const end = new THREE.Mesh(beadGeo, CHROME()); end.scale.setScalar(0.02); end.position.copy(curve.getPoint(1)); g.add(end); return g; }
+
+/* ---------- the shared classic coin (01): matte-black body, charcoal rim, PEPTICITY standing out round the top ---------- */
+const TOP = 0.05;
+function classic(S, c, { trackAP = 0.69, trackZ = TOP, band = false } = {}) {
+  const g = new THREE.Group(), e = edgeMat(c, 0.6);
+  g.add(mesh(body(1, 0.26, 0.05).translate(0, 0, -0.26), MATTE(), M.uv));
+  g.add(mesh(ring(1.0, 0.86, 0.16, 0.025), CHAR(), M.uv, TOP - 0.02, e));
+  if (band) g.add(mesh(ring(0.84, 0.56, 0.08, 0.015), CHAR(), sides(c, 0.03), TOP, edgeMat(0xffffff, 0.15)));
+  const tr = track('PEPTICITY', trackAP, 0.21, 0.2, 0.16, M.gunmetal, sides(c, 0.04), edgeMat(0xffffff, 0.4)); tr.position.z = trackZ; g.add(tr);
+  S.add(g); S.add(pt(c, 0.55, 5, -1.4, 0.8, 0.8)); S.add(pt(0xffffff, 0.9, 6, 1.6, 1.4, 1.6));
+  return { g, e }; }
+const spinCtl = () => { let spin = 0, target = 0, was = false; return (H, dt) => { if (H.on && !was) target += Math.PI * 2; was = H.on; spin = damp(spin, target, 3.2, dt); return spin; }; };
+const rest = (g, t, H, extra = 0) => g.rotation.set(0.17 + H.y * 0.16 * H.k, -0.2 + extra + Math.sin(t * 0.4) * 0.08 * (1 - H.k) + H.x * 0.25 * H.k, 0);
+
+const BUILD = [
+  /* A · THE DAIS */ (S, c) => {
+    const { g } = classic(S, c);
+    g.add(mesh(ring(0.58, 0.51, 0.16, 0.015), M.gunmetal, sides(c, 0.04), TOP, edgeMat(c, 0.9)));
+    g.add(mesh(body(0.47, 0.08, 0.02), CHAR(), sides(c, 0.05), TOP, edgeMat(0xffffff, 0.2)));
+    g.add(mesh(body(0.39, 0.08, 0.02), MATTE(), sides(c, 0.06), TOP + 0.1, edgeMat(c, 0.6)));
+    const P = P3(0.24, 0.5, M.gunmetal, sides(c, 0.06), edgeMat(0xffffff, 0.45)); P.position.z = TOP + 0.2; g.add(P);
+    const { g: ch, beads } = chain(c); ch.position.set(0, -0.68, TOP + 0.05); g.add(ch);
+    const spin = spinCtl();
+    return { fit: [2.2, 2.2], update(t, dt, H) { const s = spin(H, dt); rest(g, t, H, s);
+      beads.forEach((b, i) => { b.material.emissiveIntensity = (0.15 + H.k * 0.9) * Math.max(0, Math.sin(t * 3 - i * 0.7)) ** 2; }); } }; },
+  /* B · THE TERRACE */ (S, c) => {
+    const { g } = classic(S, c); const steps = [];
+    g.add(mesh(ring(0.58, 0.53, 0.1, 0.012), M.gunmetal, sides(c, 0.04), TOP, edgeMat(c, 0.8)));
+    [[0.5, M.gunmetal], [0.41, CHAR()], [0.32, MATTE()]].forEach(([R, m], k) => { const st = mesh(body(R, 0.06, 0.012), m, sides(c, 0.04), TOP + k * 0.07, edgeMat(k === 2 ? c : 0xffffff, k === 2 ? 0.7 : 0.18)); g.add(st); steps.push(st); });
+    const P = P3(0.2, 0.36, M.gunmetal, sides(c, 0.06), edgeMat(0xffffff, 0.45)); steps[2].add(P); P.position.z = 0.07;
+    const hx = helix(c, 1); hx.position.set(0, -0.68, TOP + 0.07); g.add(hx);
+    return { fit: [2.2, 2.2], update(t, dt, H) { rest(g, t, H); steps.forEach((st, k) => st.position.z = TOP + k * (0.07 + H.k * 0.07)); hx.rotation.x = t * (0.4 + H.k * 2.2); } }; },
+  /* C · THE BOSS */ (S, c) => {
+    const { g, e } = classic(S, c);
+    const boss = new THREE.ExtrudeGeometry(new THREE.Shape(hexPts(0.36)), { depth: 0.06, bevelEnabled: true, bevelThickness: 0.14, bevelSize: 0.14, bevelSegments: 1, curveSegments: 1 });
+    const bm = mesh(boss, CHAR(), null, TOP + 0.14, edgeMat(c, 0.5)); g.add(bm);
+    g.add(mesh(ring(0.58, 0.53, 0.08, 0.012), M.gunmetal, sides(c, 0.04), TOP, edgeMat(0xffffff, 0.25)));
+    const P = P3(0.18, 0.44, M.gunmetal, sides(c, 0.06), edgeMat(0xffffff, 0.45)); P.position.z = TOP + 0.34; g.add(P);
+    const rm = ringMol(c); rm.position.set(0, -0.67, TOP + 0.05); g.add(rm);
+    const bl = bm.children[1].material;
+    return { fit: [2.2, 2.2], update(t, dt, H) { rest(g, t, H); rm.rotation.z = t * (0.3 + H.k * 1.5); bl.opacity = 0.4 + H.k * 0.6; e.opacity = 0.6 + H.k * 0.4; } }; },
+  /* D · THE FLOATING CORE */ (S, c) => {
+    const { g } = classic(S, c);
+    g.add(mesh(ring(0.58, 0.52, 0.1, 0.012), M.gunmetal, sides(c, 0.04), TOP, edgeMat(0xffffff, 0.25)));
+    const pool = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(hexPts(0.5))), lit(c, 0.18)); pool.position.z = TOP + 0.002; g.add(pool);
+    const core = new THREE.Group(); core.add(mesh(body(0.46, 0.08, 0.02), MATTE(), sides(c, 0.08), 0, edgeMat(c, 0.8)));
+    const P = P3(0.22, 0.48, M.gunmetal, sides(c, 0.06), edgeMat(0xffffff, 0.45)); P.position.z = 0.1; core.add(P); g.add(core);
+    const gp = pt(c, 1.5, 1.2, 0, 0, TOP + 0.05); g.add(gp);
+    const dh = helix(c, 2); dh.position.set(0, -0.68, TOP + 0.07); g.add(dh);
+    return { fit: [2.2, 2.2], update(t, dt, H) { rest(g, t, H); core.position.z = TOP + 0.12 + H.k * 0.16 + Math.sin(t * 0.9) * 0.012;
+      pool.material.color.set(c).multiplyScalar(0.18 + H.k * 0.8); gp.intensity = 1.2 + H.k * 3; dh.rotation.x = t * 0.6; } }; },
+  /* E · THE CROWN */ (S, c) => {
+    const { g } = classic(S, c, { trackZ: TOP + 0.08, band: true });
+    const crown = mesh(ring(0.52, 0.45, 0.3, 0.015), M.gunmetal, sides(c, 0.05), TOP, edgeMat(c, 0.85)); g.add(crown);
+    g.add(mesh(body(0.45, 0.04, 0), MATTE(), null, TOP));
+    const glowIn = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(hexPts(0.44))), lit(c, 0.08)); glowIn.position.z = TOP + 0.045; g.add(glowIn);
+    const P = P3(0.22, 0.46, M.gunmetal, sides(c, 0.06), edgeMat(0xffffff, 0.45)); g.add(P);
+    const sw = swirl(c); sw.position.set(0, -0.69, TOP + 0.08); g.add(sw);
+    return { fit: [2.2, 2.2], update(t, dt, H) { rest(g, t, H); P.position.z = TOP + 0.16 + H.k * 0.3; glowIn.material.color.set(c).multiplyScalar(0.08 + H.k * 0.6); sw.rotation.z = -t * (0.5 + H.k * 2); } }; },
+];
+
+document.querySelectorAll('[data-i]').forEach((el, i) => {
+  const c = D[i][1], scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(26, 1, 0.1, 80);
+  const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(2.2, 2.8, 4); scene.add(key);
+  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.45));
+  const d = BUILD[i](scene, c);
+  const card = el.parentElement, H = { on: false, x: 0, y: 0, k: 0 };
+  const at = e => { const r = card.getBoundingClientRect(); H.x = clamp((e.clientX - r.left) / r.width * 2 - 1, -1, 1); H.y = clamp((e.clientY - r.top) / r.height * 2 - 1, -1, 1); };
+  card.addEventListener('pointerenter', e => { H.on = true; at(e); stage.kick(); });
+  card.addEventListener('pointermove', e => { at(e); stage.kick(); });
+  card.addEventListener('pointerleave', () => { H.on = false; stage.kick(); });
+  window.__hover = window.__hover || []; window.__hover[i] = H;
+  stage.addSlot(el, { scene, camera, fit: a => fitCamera(camera, d.fit[0], d.fit[1], a, 0.88), update(dt, t) { H.k = damp(H.k, H.on ? 1 : 0, 4, dt); d.update(t, dt, H); } });
+});
+window.__med = true; window.__classic = true;
+</script>
+</body>
+</html>
