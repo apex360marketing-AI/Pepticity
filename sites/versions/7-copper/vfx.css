@@ -5,7 +5,9 @@
 /* ---------- MENU · NAV-17 Timeline Scrubber (THE TOUR along the bottom) ---------- */
 .tl{--apx-accent:var(--v);--apx-ink:var(--ink);--apx-muted:var(--muted);--apx-bg:var(--bg);--apx-line:var(--rim-s);--apx-font-text:var(--body);
   z-index:46;background:none;transition:opacity .45s ease,transform .55s cubic-bezier(.2,.9,.25,1)}
-.tl .apx-nav17__in{--c:16px;margin:0 auto 12px;padding:12px 18px;
+.tl .apx-nav17__in{--c:16px;position:relative;isolation:isolate;margin:0 auto 12px;padding:12px 18px}
+/* the smoked cut-corner glass sits on its own layer, so the preview frame above the track is never clipped */
+.tl .apx-nav17__in::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),color-mix(in srgb,var(--bg) 72%,transparent);
   -webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);
   clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)));
@@ -14,7 +16,8 @@
 .tl .apx-nav17__tc b{color:var(--v-t)}
 .tl .apx-nav17__tc i{border-radius:0;transform:rotate(45deg);background:var(--v);box-shadow:0 0 8px var(--v)}
 .tl .apx-nav17__ch{font:400 9.5px/1.2 var(--display);letter-spacing:.2em;min-width:170px}
-.tl .apx-nav17__mark span{font:400 8.5px/1 var(--display);letter-spacing:.18em}
+.tl .apx-nav17__mark span{font:400 8.5px/1 var(--display);letter-spacing:.18em;opacity:0;transition:opacity .3s}
+.tl .apx-nav17__mark.is-on span,.tl .apx-nav17__mark.is-near span{opacity:1}   /* close-set stops: only the current and pointed-at numbers show */
 .tl .apx-nav17__btn{clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
 .tl .apx-nav17__btn:hover,.tl .apx-nav17__btn:focus-visible{color:var(--v-t);border-color:rgba(var(--v-rgb),.7);box-shadow:0 0 14px -4px rgba(var(--v-rgb),.7)}
 .tl .apx-nav17__btn:focus-visible,.tl .apx-nav17__track:focus-visible{outline:2px solid var(--v-t);outline-offset:3px}
@@ -22,7 +25,8 @@
 .tl .apx-nav17__frame b{font:400 26px/1 var(--display);color:var(--v-t)}
 .tl .apx-nav17__frame em{font:400 10.5px/1.25 var(--display);letter-spacing:.14em}
 .tl .apx-nav17__cap{font:400 9px/1 var(--display);letter-spacing:.2em}
-html.intro-on .tl,html.gated.age-gated .tl.tl-hide{opacity:0;pointer-events:none}
+html.intro-on .tl,.tl.tl-away{opacity:0;pointer-events:none;transform:translate3d(0,24px,0)}
+.tl.tl-away .apx-nav17__in{visibility:hidden;transition:visibility 0s .45s}
 @media (min-width:900px){.tl{left:184px;right:470px}}
 @media (max-width:899px){.tl{left:8px;right:8px;bottom:84px}.tl .apx-nav17__in{margin-bottom:0;padding:26px 10px 10px}}
 
@@ -104,8 +108,8 @@ html.intro-on .tl,html.gated.age-gated .tl.tl-hide{opacity:0;pointer-events:none
   clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
 .doors .apx-c130__glass,.doors .apx-c130__door,.doors .apx-c130__door.l,.doors .apx-c130__door.r{border-radius:0}
 .doors .apx-c130__glass{box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 rgba(var(--v-rgb),.5)}
-.doors .apx-c130__door{box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px var(--rim-s)}
-.doors .apx-c130__label{font:400 clamp(19px,2vw,27px)/1.15 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.doors .apx-c130__door{background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.03) 60%),color-mix(in srgb,var(--bg) 90%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px var(--rim-s)}
+.doors .apx-c130__label{font:400 clamp(16px,1.6vw,22px)/1.2 var(--display);translate:0 -78%;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
 .doors .apx-c130__label small{font:400 9.5px/1 var(--display);letter-spacing:.3em;color:var(--v-t)}
 .doors .apx-c130__handle,.doors .apx-c130__hinge{border-radius:1px}
 .doors .apx-c130__open{--c2:10px;border:0;border-radius:0;min-height:46px;padding:0 34px;font:400 10.5px/1 var(--display);letter-spacing:.26em;color:var(--ink);
@@ -122,6 +126,9 @@ html.intro-on .tl,html.gated.age-gated .tl.tl-hide{opacity:0;pointer-events:none
   -webkit-backdrop-filter:none;backdrop-filter:none;font:inherit;letter-spacing:inherit;color:inherit;cursor:inherit;transition:none}
 .apx-b125__l.apx-h102{height:56px;padding:0 38px}
 .pc-btn .pc-btn__label.apx-h102::before{content:"";position:absolute;inset:-16px -20px}
+/* the brand label paints its text through a gradient clip; rolled letters carry their own solid ink instead */
+.pc-btn .pc-btn__label.apx-h102{background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:currentColor;color:var(--pc-ink)}
+.pc-btn .apx-h102 .apx-h102__c>span+span{-webkit-text-fill-color:var(--v-t)}
 .pc-btn .pc-btn__label.apx-h102:active,.apx-b125__l.apx-h102:active{transform:none}
 .linkish.apx-h102{display:inline-flex;align-items:center;min-height:44px;padding:8px 2px;gap:0;background:none;border:0;border-radius:0;-webkit-backdrop-filter:none;backdrop-filter:none;
   font:400 var(--t-xs)/1 var(--display);letter-spacing:.24em;color:var(--muted);text-decoration:none;box-shadow:inset 0 -1px 0 var(--rim-s);transition:color .3s,box-shadow .3s}
@@ -137,3 +144,4 @@ html.intro-on .tl,html.gated.age-gated .tl.tl-hide{opacity:0;pointer-events:none
 .relic .relic-cta{margin-top:22px}
 .relic .apx-obj101__hint{display:flex;font:400 9.5px/1 var(--display);letter-spacing:.24em}
 .tl-doors{position:absolute;left:0;top:calc(100% - 100vh - 4px);width:1px;height:1px;pointer-events:none}
+@media (max-width:899px){.relic.is-compact .apx-obj101__card{bottom:184px}}   /* phones: clear of the timeline and the sticky bar */

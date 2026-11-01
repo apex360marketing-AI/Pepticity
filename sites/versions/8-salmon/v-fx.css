@@ -1,0 +1,129 @@
+/* PEPTICITY · VERSION 08 · SALMON "SOFT"
+   The seven slot effects of this version, made native to the PEPTICITY shape (same fonts, gunmetal glass, cut corners, one ground).
+   MENU NAV-101 (soft) · BUTTON BTN-119 · CARD CRD-111 · SCROLL SCR-19 · READING TXT-104 · HOVER HOV-105 · EXTRA GLS-105.
+   The colour is the accent only (--v / --v-t from ../_kit/accent.css): glows, edges, hover, focus, key phrases. Salmon stays salmon: never peach, never orange. */
+
+/* ================= MENU · NAV-101 Curtain Letters, SOFT variant (THE TOUR) ================= */
+.tourmenu{--apx-accent:var(--v);--apx-accent-ink:#0b0b0c;--apx-radius:0px;--apx-line:var(--line);z-index:80;pointer-events:none}
+/* soft: slower, rounder timing and gentler easing on the curtain and the letters */
+.tourmenu.soft{--apx-motion:1.45;--_ease:cubic-bezier(.45,0,.2,1);--_out:cubic-bezier(.22,1,.36,1)}
+html.rm .tourmenu.soft{--apx-motion:0}
+.tourmenu.is-open{pointer-events:auto}
+.tourmenu .apx-n101__bar{justify-content:flex-end;padding:14px var(--gut);opacity:0;visibility:hidden;transition:opacity .4s,visibility 0s .4s}
+.tourmenu.is-open .apx-n101__bar{opacity:1;visibility:visible;transition-delay:0s}
+.tourmenu .apx-n101__brand{display:none}
+.tourmenu .apx-n101__toggle{border-radius:0;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  font:400 11px/1 var(--display);letter-spacing:.24em;color:var(--ink);background:linear-gradient(160deg,var(--g-a),var(--g-b)),var(--bg);border-color:var(--rim-s)}
+.tourmenu .apx-n101__toggle:hover{border-color:var(--v-t);box-shadow:inset 0 0 16px -6px rgba(var(--v-rgb),.8)}
+.tourmenu .apx-n101__toggle:focus-visible{outline:2px solid var(--v-t);outline-offset:-5px}
+/* a gentle curtain: a thin, slightly sheer line of salmon leads it down */
+.tourmenu .apx-n101__veil{background:rgba(var(--v-rgb),.85);transition-delay:calc(var(--_m) * .02s)}
+.tourmenu.is-open .apx-n101__panel{transition-delay:calc(var(--_m) * .026s),0s}
+.tourmenu .apx-n101__panel{background:var(--bg)}
+.tourmenu.soft .apx-n101__ch{transform:translateY(100%) rotate(2deg);transition:transform calc(var(--_m) * .45s) cubic-bezier(.4,0,.6,1)}
+.tourmenu.soft.is-open .apx-n101__ch{transform:none;transition:transform calc(var(--_m) * .95s) var(--_out) calc(var(--_m) * (var(--li) * 80ms + var(--i) * 22ms + 260ms))}
+.tourmenu .apx-n101__list li{border-color:var(--line)}
+.tourmenu .apx-n101__word{font:400 clamp(24px,min(4.3cqi,5.2vh),56px)/1.05 var(--display);letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tourmenu .apx-n101__num{font:400 10px/1 var(--display);letter-spacing:.3em;color:var(--muted)}
+.tourmenu .apx-n101__ch>i{-webkit-text-fill-color:currentColor}
+.tourmenu .apx-n101__list a:hover .apx-n101__ch>i,.tourmenu .apx-n101__list a:focus-visible .apx-n101__ch>i{color:var(--v-t)}
+.tourmenu .apx-n101__list a:hover .apx-n101__num,.tourmenu .apx-n101__list a:focus-visible .apx-n101__num{color:var(--v-t)}
+.tourmenu .apx-n101__arrow{color:var(--v-t);filter:drop-shadow(0 0 6px rgba(var(--v-rgb),.6))}
+.tourmenu .apx-n101__ghost{font-family:var(--display);text-transform:uppercase;-webkit-text-stroke:1px rgba(236,238,242,.16);--_go:1}
+.tourmenu .apx-n101__aside .tm-k{margin:0}
+@media (max-width:560px){.tourmenu .apx-n101__word{font-size:clamp(15px,5vw,22px)}}
+.tourmenu .apx-n101__aside .linkish{color:var(--ink);padding:8px 0}
+html.age-gated .tourmenu .apx-n101__list li:nth-child(n+5) a{opacity:.55}
+html.apx-n101-lock #gl-front{opacity:0}
+[data-version="white"] .tourmenu .apx-n101__list a:hover .apx-n101__ch>i,[data-version="white"] .tourmenu .apx-n101__list a:focus-visible .apx-n101__ch>i{color:var(--ink)}
+[data-version="white"] .tourmenu .apx-n101__ghost{-webkit-text-stroke-color:rgba(17,18,20,.14)}
+
+/* ================= BUTTON · BTN-119 Jelly Press (the main sign-up buttons) ================= */
+.stub-slot{display:flex}
+.apx-b119{--apx-accent:var(--v);min-height:60px;font:400 11.5px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase}
+.apx-b119__sz,.apx-b119__l{padding:0 40px}
+.apx-b119__body .apx-b119__l{padding:0}
+.apx-b119.is-hot .apx-b119__g{background:linear-gradient(155deg,rgba(var(--v-rgb),.2),rgb(255 255 255/.035) 48%,rgb(255 255 255/.07)),linear-gradient(var(--_fill),var(--_fill)),var(--_scrim)}
+.apx-b119.is-hot .apx-b119__edge{stroke:rgba(var(--v-rgb),.85)}
+.apx-b119.is-hot .apx-b119__l{text-shadow:0 0 14px rgba(var(--v-rgb),.6)}
+.apx-b119:focus-visible{outline:2px solid var(--v-t);outline-offset:5px}
+.apx-b119.busy{opacity:.75}
+@media (max-width:640px){
+  .stub-slot,.stub-slot .apx-b119{width:100%}
+  .apx-b119{font-size:10.5px;letter-spacing:.14em}
+  .apx-b119__sz,.apx-b119__l{white-space:normal;text-align:center;line-height:1.35;padding:0 24px}
+  .apx-b119__body .apx-b119__l{padding:0 24px}
+}
+
+/* ================= CARD · CRD-111 Etched Bubble (text alerts) ================= */
+.sms-card.apx-c111{--apx-accent:var(--v);--apx-radius:0px;width:100%;max-width:560px;padding:34px 34px 72px}
+.sms-card.apx-c111:not([data-apx-mounted]){border-radius:0}
+.sms-card .apx-c111__chip{border-radius:0;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+  font:400 9.5px/1 var(--display);letter-spacing:.24em;color:var(--muted);border-color:var(--rim-s);margin-bottom:38px}
+.sms-card .apx-c111__etch,.sms-card .apx-c111__glow{font-family:Georgia,"Times New Roman",serif}
+.sms-card .apx-c111__glow{color:var(--v)}
+.sms-card .sms-title{clear:both;margin:0 0 16px;font:400 clamp(24px,2.8vw,40px)/1.08 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.sms-card .sms-title strong{font-weight:400;color:var(--v-t);text-shadow:0 0 18px rgba(var(--v-rgb),.4)}
+.sms-card blockquote{clear:both;font:500 clamp(17px,1.5vw,21px)/1.45 var(--body);letter-spacing:0;color:var(--ink)}
+.sms-card figcaption{font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.sms-card figcaption::before{flex:none;background:var(--v);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+[data-version="white"] .sms-card .sms-title strong{color:var(--ink);text-shadow:0 0 14px rgba(var(--v-rgb),.8)}
+@media (max-width:640px){.sms-card.apx-c111{padding:28px 24px 66px}}
+
+/* ================= SCROLL SECTION · SCR-19 Skew Gallery (HOW WE CHOOSE) ================= */
+.choose19{--apx-accent:var(--v);--apx-scr19-max:1320px;background:transparent;position:relative;z-index:2}
+.choose19 .apx-scr19__stage{background:none}
+.choose19 .apx-scr19__kicker{font:400 10.5px/1.4 var(--display);letter-spacing:.32em;color:var(--muted)}
+.choose19 .apx-scr19__kicker::before{background:var(--v);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+.choose19 .apx-scr19__head h2{margin-top:16px;font-size:var(--t-h2);font-weight:400;letter-spacing:.03em}
+.choose19 .ch-side{display:flex;align-items:center;gap:22px}
+.choose19 .apx-scr19__count{font:400 12px/1 var(--display);letter-spacing:.24em;color:var(--muted)}
+.choose19 .apx-scr19__count b{color:var(--v-t)}
+.choose19 .apx-scr19__tile b{font:400 17px/1.2 var(--display);letter-spacing:.08em;color:var(--ink)}
+.choose19 .apx-scr19__tile small{margin-top:10px;font:400 14px/1.5 var(--body);letter-spacing:0;color:var(--ink-2);white-space:normal}
+.choose19 .apx-scr19__tile small .ph{color:var(--muted)}
+.choose19 .apx-scr19__meta{font:400 10px/1 var(--display);letter-spacing:.24em}
+.choose19 .apx-scr19__tile:focus-visible{outline:2px solid var(--v-t);outline-offset:4px}
+.choose19 .apx-scr19__rail b{background:var(--v);box-shadow:0 0 10px rgba(var(--v-rgb),.6)}
+.choose19 .apx-scr19__bar{min-height:12px}
+.choose19.is-compact .apx-scr19__stage{padding-top:86px}
+.choose19.is-compact .apx-scr19__tile small{font-size:13.5px}
+@media (max-width:640px){.choose19 .ch-side{width:100%;justify-content:space-between}}
+
+/* ================= READING TEXT · TXT-104 Scatter Assemble (the two big statements) ================= */
+.say104{position:relative;z-index:2;padding:clamp(120px,24vh,260px) var(--gut)}
+.say104 .say-in{max-width:1120px;margin:0 auto;display:grid;gap:clamp(18px,3vh,34px);container-type:inline-size}
+.say104 .say-k{display:flex;align-items:center;gap:14px;margin:0;font:400 11px/1 var(--display);letter-spacing:.34em;color:var(--muted)}
+.say104 .say-k::before{content:"";flex:none;width:34px;height:1px;background:var(--v);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+.say104 .say-t{--apx-ink:var(--read-lit);margin:0;font:500 clamp(25px,4cqi,52px)/1.2 var(--body);letter-spacing:-.01em;color:var(--read-lit)}
+/* key phrases: the accent, a glow and an underline that sweeps in once the letters have landed */
+.say104 .say-t em{--apx-accent:var(--read-key);font-style:normal;color:var(--read-key);text-shadow:var(--read-key-glow);
+  background:linear-gradient(90deg,var(--v),rgba(var(--v-rgb),.3)) 0 96%/0% 2px no-repeat;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:background-size 1.3s var(--ease-out) .25s}
+.say104.is-lit .say-t em{background-size:100% 2px}
+.say104 .say-notes{display:flex;flex-wrap:wrap;gap:8px 30px;color:var(--ink-2);font-size:15px}
+.say104 .say-notes p{margin:0}
+[data-version="white"] .say104 .say-t{--apx-ink:var(--ink);color:var(--ink)}
+[data-version="white"] .say104 .say-t em{--apx-accent:var(--ink);color:var(--ink);text-shadow:none;background-size:0% 4px;background-image:linear-gradient(90deg,var(--v),var(--v))}
+[data-version="white"] .say104.is-lit .say-t em{background-size:100% 4px}
+html.rm .say104 .say-t em{transition:none}
+
+/* ================= HOVER · HOV-105 Plucked String (buttons, cards, choices, links) ================= */
+:where(.linkish,.chip,.apx-f102__opt,.apx-f102__back,.apx-f102__next,.apx-c124__clear,.apx-lay102__tab,.mini-prod,.pc-btn).hv-str{position:relative}
+.hv-str>.apx-h105__str{left:14px;right:14px;bottom:5px;color:var(--v);opacity:0;transition:opacity .35s var(--ease-out)}
+.pc-btn.hv-str>.apx-h105__str{left:16px;right:16px;bottom:6px}
+.hv-str:hover>.apx-h105__str,.hv-str:focus-visible>.apx-h105__str,.hv-str:focus-within>.apx-h105__str,.hv-str.is-live>.apx-h105__str{opacity:.95}
+.hv-str>.apx-h105__str i{height:1.5px;box-shadow:0 0 6px rgba(var(--v-rgb),.55)}
+.hv-str>.apx-h105__str.is-idle{background-size:100% 1.5px}
+.linkish.hv-str>.apx-h105__str{left:2px;right:2px;bottom:4px}
+.linkish.hv-str:hover{text-decoration-color:transparent}
+
+/* ================= EXTRA · GLS-105 Living Condensation (Grace's letter behind fogged glass) ================= */
+.letter.apx-g105{--apx-accent:var(--v);--apx-bg:var(--bg);min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:center;
+  padding:clamp(26px,3.4vw,48px);clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+.letter.apx-g105 .apx-g105__behind{max-width:none;gap:0}
+.letter.apx-g105 .apx-g105__behind .h2s{color:var(--ink)}
+.letter.apx-g105 .apx-g105__front{display:grid;gap:12px;margin-top:0;-webkit-user-select:text;user-select:text}
+.letter.apx-g105 .apx-g105__hint{font:400 10px/1.3 var(--display);letter-spacing:.26em;color:var(--muted)}
+.letter.apx-g105 .apx-g105__hint::before{background:var(--v);opacity:.9}
+@media (max-width:860px){.letter.apx-g105{grid-template-columns:1fr}}

@@ -48,6 +48,8 @@
     on(a, 'pointerenter', function (e) {
       if (e.pointerType !== 'mouse') return;
       rect = a.getBoundingClientRect(); W = rect.width; base = rect.bottom - 4;
+      /* PEPTICITY v08: buttons and cards are plucked as the pointer comes in, so every hover moves the string */
+      if (opts.pluckOnEnter && motion()) pluck(5 * motion(), Math.max(0.1, Math.min(0.9, (e.clientX - rect.left) / W)));
     });
     on(a, 'pointermove', function (e) {
       if (e.pointerType !== 'mouse') return;

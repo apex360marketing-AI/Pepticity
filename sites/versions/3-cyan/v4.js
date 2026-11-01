@@ -875,8 +875,10 @@
   /* the corner button fans the 8 stops (+ REPLAY INTRO) along an arc; THE TOUR in the top bar opens the same arc */
   var tm = $('#tourMenu'), tmToggle = $('.apx-n104__trigger', tm), menuOpen = false;
   if (window.APX && APX.NAV104) {
-    var tmN = $$('.apx-n104__actions a', tm).length, tmStep = Math.round(clamp((innerHeight - (innerWidth < 761 ? 250 : 190)) / tmN, 46, 62));
-    APX.NAV104.mount(tm, { step: tmStep, radius: Math.max(430, tmStep * tmN * 0.92) });
+    /* fit the arc to the screen: step from the height, radius from how far the top stop may reach sideways */
+    var tmN = $$('.apx-n104__actions a', tm).length, tmStep = Math.round(clamp((innerHeight - (innerWidth < 761 ? 200 : 190)) / tmN, 44, 62));
+    var tmY = tmStep * tmN, tmX = Math.min(innerWidth * 0.3, 520);
+    APX.NAV104.mount(tm, { step: tmStep, radius: Math.round((tmY * tmY + tmX * tmX) / (2 * tmX)) });
     /* the stop number sits in the glass tile in place of a stock icon */
     $$('.apx-n104__actions a', tm).forEach(function (a) { var sv = $('svg', a); if (sv) { var t = document.createElement('span'); t.className = 'tm-tile'; t.setAttribute('aria-hidden', 'true'); t.innerHTML = '<b class="tm-n">' + esc(a.dataset.n || '') + '</b>'; sv.replaceWith(t); } });
   }

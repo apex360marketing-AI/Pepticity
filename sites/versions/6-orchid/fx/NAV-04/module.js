@@ -139,11 +139,14 @@
     function floorAt(y) { var q = clamp((y - geo.first) / Math.max(1, geo.last - geo.first), 0, 1), f = Math.round(FROM * (1 - q)); return f <= 0 ? GROUND : (f < 10 ? '0' : '') + f; }
     function measure() {
       var sy = W.scrollY;
-      items.forEach(function (it) { it.top = it.t ? Math.round(it.t.getBoundingClientRect().top + sy) : 0; });
-      var tops = items.filter(function (it) { return it.t; }).map(function (it) { return it.top; });
+      /* PEPTICITY version: a stop that is not on the page yet (behind the 19+ gate) has no floor position */
+      items.forEach(function (it) { it.top = it.t && it.t.getClientRects().length ? Math.round(it.t.getBoundingClientRect().top + sy) : Infinity; });
+      /* two stops in one pinned section (THE CITY, THE DOORS): the second one starts where the pin ends */
+      items.forEach(function (it, i) { var pv = items[i - 1]; if (pv && it.t && pv.t === it.t && isFinite(it.top)) it.top = pv.top + Math.max(0, it.t.offsetHeight - W.innerHeight); });
+      var tops = items.filter(function (it) { return it.t && isFinite(it.top); }).map(function (it) { return it.top; });
       geo.first = tops.length ? Math.min.apply(null, tops) : 0; geo.last = tops.length ? Math.max.apply(null, tops) : 1;
       items.forEach(function (it, i) {
-        var k = it.key || (it.t ? floorAt(it.top) : '–');
+        var k = it.key || (it.t && isFinite(it.top) ? floorAt(it.top) : '–');
         it.a.querySelector('.apx-nav04__key').textContent = k;
         marks[i].forEach(function (m) { m.textContent = k; });
       });
@@ -156,7 +159,10 @@
       var y = W.scrollY, vh = W.innerHeight;
       if (Math.abs(y - st.lastY) > 2) { var d = y > st.lastY ? 1 : -1; if (d !== st.dir) { st.dir = d; dirs.forEach(function (e) { e.classList.toggle('is-up', d < 0); }); } }
       st.lastY = y;
-      var f = floorAt(y);
+      var here = -1;
+      items.forEach(function (it, i) { if (it.t && it.top <= y + vh * .45) here = i; });
+      /* PEPTICITY version: the readout shows the floor of the stop you are on, so it always matches its button */
+      var f = here >= 0 && items[here].key ? items[here].key : floorAt(y);
       if (f !== st.floor || force) {
         var roll = !force && st.floor && st.motion;
         st.floor = f;
@@ -166,8 +172,6 @@
         });
       }
       if (car) { var q = Math.round(clamp((y - geo.first) / Math.max(1, geo.last - geo.first), 0, 1) * 200) / 200; if (q !== st.car) { st.car = q; car.style.transform = 'translate3d(0,' + (q * 100).toFixed(1) + '%,0)'; } }
-      var here = -1;
-      items.forEach(function (it, i) { if (it.t && it.top <= y + vh * .45) here = i; });
       if (here !== st.here) {
         st.here = here;
         items.forEach(function (it, i) {

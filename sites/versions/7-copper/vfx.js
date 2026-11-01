@@ -24,6 +24,15 @@
   tlMount();
   new MutationObserver(function () { setTimeout(tlMount, 60); }).observe(H, { attributes: true, attributeFilter: ['class'] });
 
+  /* phones: the timeline steps aside on the welcome screen and while you type in a form, so it never sits on a field */
+  if (tl) {
+    var typing = false;
+    function tlAway() { tl.classList.toggle('tl-away', innerWidth < 900 && (scrollY < innerHeight * 0.6 || typing)); }
+    D.addEventListener('focusin', function (e) { typing = !!(e.target.matches && e.target.matches('input,select,textarea')); tlAway(); });
+    D.addEventListener('focusout', function () { typing = false; setTimeout(tlAway, 50); });
+    addEventListener('scroll', tlAway, { passive: true }); addEventListener('resize', tlAway); tlAway();
+  }
+
   /* ---------- 2 · SCR-101 flipbook from the lab atlases ---------- */
   var flip = D.getElementById('choose'), flipKill = null, flipVer = '', flipBusy = false, flipNear = false;
   var CFG = window.PC_CONFIG || {}, SD_DIR = '../_common/media/frames/';
@@ -55,11 +64,14 @@
       flipBusy = false;
       if (flipKill) { flipKill(); flipKill = null; }
       flipVer = ver; flipKill = A.SCR101.mount(flip, { frames: frames });
+      [80, 500].forEach(function (t) { setTimeout(function () { dispatchEvent(new Event('scroll')); }, t); });   /* wake its scroll driver so the current check shows straight away */
       if (window.ScrollTrigger) ScrollTrigger.refresh();
     }, function () { flipBusy = false; });
   }
   if (flip && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (es) { if (es[0].isIntersecting) { flipNear = true; flipMount(); } }, { rootMargin: '150% 0px' }).observe(flip);
+    /* each time the section comes into view, wake its scroll driver once more (a jump from the menu lands with the right check showing) */
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting) [60, 400].forEach(function (t) { setTimeout(function () { dispatchEvent(new Event('scroll')); }, t); }); }).observe(flip);
   }
   D.addEventListener('pc-version', function () { setTimeout(flipMount, 30); });
   new MutationObserver(function () { setTimeout(flipMount, 80); }).observe(H, { attributes: true, attributeFilter: ['class'] });

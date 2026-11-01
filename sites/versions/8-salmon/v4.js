@@ -1,8 +1,8 @@
 /* PEPTICITY main site v4 = v2's look with a guided tour that sells (owner R173 + R174).
-   Chest film -> 01 WELCOME (founding ticket, BTN-101) -> TXT-04 -> 02 WHAT BRINGS YOU (LAY-102) -> 03 FOUR QUESTIONS (FRM-102 on BGD-102)
+   Chest film -> 01 WELCOME (founding ticket, BTN-119) -> TXT-104 -> 02 WHAT BRINGS YOU (LAY-102) -> 03 FOUR QUESTIONS (FRM-102)
    -> 04 THE THRESHOLD (19+ gate; the catalogue loads only after a pass) -> 05 CITY (SCR-17 + SCR-07, cards picked from the answers)
-   -> 06 DOORS (FRM-02) -> 07 LAB -> SCR-102 HOW WE CHOOSE -> TXT-04 promise -> SCR-16 vial -> 08 COLLECTION + cart -> LAY-101 WHAT YOU GET
-   -> SCR-18 tiers -> CRD-124 perks + FRM-104 -> CRD-118 text alerts -> HOV-17 network -> refer -> letter + TXT-13. Menu = NAV-102.
+   -> 06 DOORS (FRM-02) -> 07 LAB -> SCR-19 HOW WE CHOOSE -> TXT-104 promise -> SCR-16 vial -> 08 COLLECTION + cart -> LAY-101 WHAT YOU GET
+   -> SCR-18 tiers -> CRD-124 perks + FRM-104 -> CRD-111 text alerts -> HOV-17 network -> refer -> letter (GLS-105) + TXT-13. Menu = NAV-101 soft. Hover = HOV-105.
    GSAP ScrollTrigger + Lenis on one ticker. Every form is preview only: nothing is sent. */
 (function () {
   'use strict';
@@ -419,9 +419,9 @@
     if (form.dataset.interest && ct && ct.checked) d.interest = form.dataset.interest;
     return d;
   }
-  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-101 stub) */
+  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-119 jelly button) */
     if (!btn) { cb && cb(); return; }
-    var lab = $('.pc-btn__label', btn) || $('.apx-b101__l', btn) || btn, w = btn.offsetWidth;
+    var lab = $('.pc-btn__label', btn) || $('.apx-b119__l', btn) || btn, w = btn.offsetWidth;
     btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; lab.textContent = 'SENDING';
     setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); lab.textContent = label || 'DONE ✓'; cb && cb(); }, RM ? 10 : 650);
   }
@@ -864,12 +864,12 @@
   $('#modal').addEventListener('keydown', function (e) { trap($('.modal'), e); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   /* the NAV-102 menu handles its own Esc and hands focus back */
+    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   /* the NAV-101 menu handles its own Esc and hands focus back */
   });
 
-  /* ================= THE TOUR menu (NAV-102 Split Preview) ================= */
-  var tm = $('#tourMenu'), tmToggle = $('.apx-n102__toggle', tm), menuOpen = false;
-  if (window.APX && APX.NAV102) APX.NAV102.mount(tm, { lockScroll: true });
+  /* ================= THE TOUR menu (NAV-101 Curtain Letters, soft) ================= */
+  var tm = $('#tourMenu'), tmToggle = $('.apx-n101__toggle', tm), menuOpen = false;
+  if (window.APX && APX.NAV101) APX.NAV101.mount(tm, { lockScroll: true });
   function syncMenu() {
     var o = tm.classList.contains('is-open'); if (o === menuOpen) return; menuOpen = o;
     $('#menuBtn').setAttribute('aria-expanded', String(o));
@@ -892,7 +892,7 @@
   }
   $('#mkPanels').addEventListener('click', function (e) { var b = e.target.closest('[data-start]'); if (b) startTour(b.dataset.start); });
 
-  /* ================= TXT-04 scroll highlight + the little bottom progress ================= */
+  /* ================= [data-hl] scroll highlight + the little bottom progress ================= */
   var HL = $$('[data-hl]');
   HL.forEach(function (p) { p.innerHTML = p.textContent.trim().split(/\s+/).map(function (w) { return '<span class="w">' + esc(w) + '</span>'; }).join(' '); });
   var hlProg = $('#hlProg'), hlBar = $('b', hlProg);
@@ -1160,8 +1160,8 @@
   if (OFFER) { renderOfferEnd(); setInterval(renderOfferEnd, 60000); }
 
   /* ================= the 10 effect picks: mount each module once its section is on the page (some sit past the gates) ================= */
-  var FX = [['NAV102', null], ['LAY102', '#mkPanels'], ['BGD102', '.tour-plex'], ['TXT04', '.apx-txt04'], ['BTN101', '[data-apx="BTN-101"]'],
-    ['SCR102', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD118', '.apx-c118']];
+  var FX = [['NAV101', null], ['LAY102', '#mkPanels'], ['TXT104', '.say .apx-txt104'], ['BTN119', '[data-apx="BTN-119"]'],
+    ['SCR19', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD111', '.apx-c111'], ['GLS105', '.apx-g105']];
   function mountFx() {
     if (!window.APX) return;
     FX.forEach(function (f) {

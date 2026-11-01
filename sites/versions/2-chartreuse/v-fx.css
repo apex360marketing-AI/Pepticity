@@ -26,6 +26,7 @@
 .tourmenu .apx-n101__arrow{color:var(--v-t);filter:drop-shadow(0 0 6px rgba(var(--v-rgb),.6))}
 .tourmenu .apx-n101__ghost{font-family:var(--display);text-transform:uppercase;-webkit-text-stroke:1px rgba(236,238,242,.16);--_go:1}
 .tourmenu .apx-n101__aside .tm-k{margin:0}
+@media (max-width:560px){.tourmenu .apx-n101__word{font-size:clamp(15px,5vw,22px)}}
 .tourmenu .apx-n101__aside .linkish{color:var(--ink);padding:8px 0}
 html.age-gated .tourmenu .apx-n101__list li:nth-child(n+5) a{opacity:.55}
 html.apx-n101-lock #gl-front{opacity:0}
@@ -95,7 +96,11 @@ html.apx-n101-lock #gl-front{opacity:0}
 .apx-gls103{--apx-accent:var(--v);--apx-font-display:var(--display);--apx-gls103-weight:400;--apx-gls103-tracking:.04em}
 .ch-num{font-size:clamp(64px,8.4vw,132px)}
 .choose16.is-static .ch-step{display:none}
-@media (max-width:899px){.ch-step{top:auto;bottom:max(36px,calc(env(safe-area-inset-bottom,0px) + 28px));left:20px}.ch-num{font-size:64px}}
+@media (max-width:899px){.ch-step{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 104px);left:20px}.ch-num{font-size:60px}}
+/* phones: the page's top bar and the sticky ticket bar stay clear of the step bar, the note and the copy */
+.choose16.is-compact .apx-scr16__layers{top:calc(max(18px,env(safe-area-inset-top,0px)) + 58px)}
+.choose16.is-compact .apx-scr16__note{top:calc(max(16px,env(safe-area-inset-top,0px)) + 96px)}
+@media (max-width:760px){.choose16.is-compact .apx-scr16__copy{bottom:calc(env(safe-area-inset-bottom,0px) + 96px)}}
 /* the lab: the station number in molten chrome */
 .lab-step{position:absolute;z-index:5;right:var(--gut);top:clamp(96px,14vh,140px);display:flex;align-items:flex-end;gap:12px;pointer-events:none;
   opacity:0;transition:opacity .6s var(--ease-out)}

@@ -171,7 +171,8 @@
     rim.innerHTML = '<path fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.1"/>';
     k.size(root, function (w, h) {
       var hb = h - 30, r = 28, f = k.f2;
-      var d = 'M' + r + ' 0H' + (w - r) + 'Q' + w + ' 0 ' + w + ' ' + r + 'V' + (hb - r) + 'Q' + w + ' ' + hb + ' ' + (w - r) + ' ' + hb + 'H96L46 ' + h + 'L58 ' + hb + 'H' + r + 'Q0 ' + hb + ' 0 ' + (hb - r) + 'V' + r + 'Q0 0 ' + r + ' 0Z';
+      /* PEPTICITY v08: the brand's cut corners (top-right, bottom-left) on the speech bubble; the tail and the etched mark are unchanged */
+      var c = 22, d = 'M0 0H' + (w - c) + 'L' + w + ' ' + c + 'V' + hb + 'H96L46 ' + h + 'L58 ' + hb + 'H' + c + 'L0 ' + (hb - c) + 'Z';
       k.clip(glass, d, false, w, h); rim.setAttribute('viewBox', '0 0 ' + w + ' ' + h); rim.querySelector('path').setAttribute('d', d); void f;
     });
     k.tilt(root, { max: 5 });

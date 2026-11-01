@@ -82,7 +82,20 @@
     upd();
   }
   syncNum('#choose .apx-scr16__layers', ':scope > li', 'is-now', '#choose .ch-step', '#choose .ch-num');
-  syncNum('#stations', ':scope > .st', 'on', '#lab .lab-step', '#lab .lab-num');
+  /* the lab: the number follows the station on screen and stays up while the lab holds the screen */
+  (function () {
+    var lab = D.getElementById('lab'), list = D.getElementById('stations'), wrap = D.querySelector('#lab .lab-step'), num = D.querySelector('#lab .lab-num');
+    if (!lab || !list || !wrap || !num || RM) return;
+    var sts = [].slice.call(list.querySelectorAll(':scope > .st')), last = num.getAttribute('data-value'), inView = false;
+    function upd() {
+      var k = -1, best = 0.02;
+      sts.forEach(function (el, i) { var o = parseFloat(el.style.opacity) || 0; if (o > best) { best = o; k = i; } });
+      wrap.classList.toggle('on', inView);
+      if (k >= 0) { var v = two(k); if (v !== last) { last = v; num.setAttribute('data-value', v); } }
+    }
+    new MutationObserver(upd).observe(list, { subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+    new IntersectionObserver(function (es) { inView = es[es.length - 1].intersectionRatio > 0.5; upd(); }, { threshold: [0, 0.5, 1] }).observe(lab.querySelector('.stage') || lab);
+  })();
 
   /* ---------- TXT-104: the key phrases' underline sweeps in once the letters have landed (mid-screen) ---------- */
   var says = [].slice.call(D.querySelectorAll('.say104'));

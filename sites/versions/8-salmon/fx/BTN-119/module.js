@@ -98,15 +98,8 @@
     var l = ctx.label(); body.appendChild(l); el.appendChild(sz);
     var r = ctx.rim(body);
     ctx.size(function (w, h) {
-      var pts = [], n = 4, N = 72;
-      for (var i = 0; i < N; i++) {
-        var t = i / N * Math.PI * 2, c = Math.cos(t), s = Math.sin(t);
-        pts.push([(w / 2) * (1 + Math.sign(c) * Math.pow(Math.abs(c), 2 / n)) , (h / 2) * (1 + Math.sign(s) * Math.pow(Math.abs(s), 2 / n))]);
-      }
-      // the long sides stay straight: squash the superellipse only near the ends
-      var k = h / 2, d = '';
-      pts = pts.map(function (p) { var x = p[0]; if (x > k && x < w - k) return p; return p; });
-      d = 'M' + pts.map(function (p) { return p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('L') + 'Z';
+      /* PEPTICITY v08: the brand's cut-corner glass (top-right and bottom-left) instead of a squircle; the jelly squash and wobble are unchanged */
+      var c = Math.min(14, h / 3), d = 'M0 0H' + (w - c).toFixed(1) + 'L' + w.toFixed(1) + ' ' + c.toFixed(1) + 'V' + h.toFixed(1) + 'H' + c.toFixed(1) + 'L0 ' + (h - c).toFixed(1) + 'Z';
       g.style.clipPath = "path('" + d + "')"; r.set(d, w, h);
     });
     var sx = 1, sy = 1, vx = 0, vy = 0, tx = 1, ty = 1, lx = 0, tlx = 0, st;
