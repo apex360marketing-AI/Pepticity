@@ -2,12 +2,15 @@
 .apx-h103{--_m:var(--apx-motion,1);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px;
   font-family:var(--apx-font-text,system-ui,sans-serif);color:var(--apx-ink,#efe9e6)}
 @media (prefers-reduced-motion:reduce){.apx-h103{--_m:0}}
-.apx-h103__card{position:relative;isolation:isolate;padding:clamp(18px,2.4vw,26px);border-radius:var(--apx-radius,14px);
+/* PEPTICITY site: the edge light rides on the site's own cards (which keep their own position, padding and glass);
+   the module's stand-alone card look applies only inside its own .apx-h103 grid */
+.apx-h103__card{isolation:isolate}
+.apx-h103>.apx-h103__card{position:relative;padding:clamp(18px,2.4vw,26px);border-radius:var(--apx-radius,14px);
   background:var(--apx-surface,rgba(255,255,255,.06));border:1px solid var(--apx-line,rgba(255,255,255,.14));
   -webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
   transition:transform calc(var(--_m)*.5s) cubic-bezier(.34,1.56,.64,1)}
-.apx-h103__card:has(a:focus-visible),.apx-h103__card:focus-visible{outline:2px solid var(--apx-accent,#cf7f88);outline-offset:3px}
-.apx-h103__card:active{transform:scale(.985)}
+.apx-h103>.apx-h103__card:has(a:focus-visible),.apx-h103__card:focus-visible{outline:2px solid var(--apx-accent,#cf7f88);outline-offset:3px}
+.apx-h103>.apx-h103__card:active{transform:scale(.985)}
 /* edge ring: only the 1px border band shows the moving light */
 .apx-h103__ring,.apx-h103__wash{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;overflow:hidden}
 .apx-h103__ring{z-index:2;padding:1.5px;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
@@ -23,6 +26,6 @@
 .apx-h103__k{margin:0 0 14px;font:500 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--apx-muted,#a8a09e)}
 .apx-h103__h{margin:0 0 8px;font:500 clamp(1.1rem,1.8vw,1.35rem)/1.2 var(--apx-font-display,Georgia,serif);letter-spacing:-.005em}
 .apx-h103__t{margin:0;color:var(--apx-muted,#a8a09e);font-size:14.5px;line-height:1.55}
-.apx-h103__card a{color:inherit;text-decoration:none}
-.apx-h103__card a::after{content:"";position:absolute;inset:0;z-index:3;border-radius:inherit}
-.apx-h103__card a:focus-visible{outline:none}
+.apx-h103>.apx-h103__card a{color:inherit;text-decoration:none}
+.apx-h103>.apx-h103__card a::after{content:"";position:absolute;inset:0;z-index:3;border-radius:inherit}
+.apx-h103>.apx-h103__card a:focus-visible{outline:none}

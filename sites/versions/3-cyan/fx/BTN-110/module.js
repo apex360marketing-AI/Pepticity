@@ -98,16 +98,22 @@
     var r = ctx.rim(wrap, 0);
     var W = 0, H = 0, base = [], perim = 0, amp = 0, vel = 0, tAmp = 0, P = { x: 0, y: 0 }, idx = 0, inside = false;
     var cx = -1e4, cy = -1e4, rect = null, st;
+    /* PEPTICITY version: the glass is the house's chamfered slab (cut top-left and bottom-right, like THE ONE BUTTON), not a pill */
+    var CUT = 12;
     function build() {
-      base = []; var rr = H / 2, L = W - H; perim = 2 * L + 2 * Math.PI * rr;
-      for (var i = 0; i < N; i++) {
-        var s = i / N * perim, x, y, nx, ny, a;
-        if (s < L) { x = rr + s; y = 0; nx = 0; ny = -1; }
-        else if (s < L + Math.PI * rr) { a = -Math.PI / 2 + (s - L) / rr; x = W - rr + Math.cos(a) * rr; y = rr + Math.sin(a) * rr; nx = Math.cos(a); ny = Math.sin(a); }
-        else if (s < 2 * L + Math.PI * rr) { x = W - rr - (s - L - Math.PI * rr); y = H; nx = 0; ny = 1; }
-        else { a = Math.PI / 2 + (s - 2 * L - Math.PI * rr) / rr; x = rr + Math.cos(a) * rr; y = rr + Math.sin(a) * rr; nx = Math.cos(a); ny = Math.sin(a); }
-        base.push({ x: x, y: y, nx: nx, ny: ny, s: s });
-      }
+      base = []; var c = Math.min(CUT, H / 3), q = Math.SQRT1_2;
+      var V = [[c, 0, 0, -1], [W, 0, 1, 0], [W, H - c, q, q], [W - c, H, 0, 1], [0, H, -1, 0], [0, c, -q, -q]];
+      var lens = V.map(function (v, i) { var n = V[(i + 1) % 6]; return Math.hypot(n[0] - v[0], n[1] - v[1]); });
+      perim = lens.reduce(function (a, b) { return a + b; }, 0);
+      var acc = 0;
+      V.forEach(function (v, i) {
+        var nx2 = V[(i + 1) % 6], k = Math.max(1, Math.round(lens[i] / perim * N));
+        for (var j = 0; j < k && base.length < N; j++) {
+          var t = j / k; base.push({ x: v[0] + (nx2[0] - v[0]) * t, y: v[1] + (nx2[1] - v[1]) * t, nx: v[2], ny: v[3], s: acc + lens[i] * t });
+        }
+        acc += lens[i];
+      });
+      while (base.length < N) base.push(base[base.length - 1]);
     }
     function path() {
       var sig = 30, pts = [], c = base[idx];
@@ -130,11 +136,11 @@
       if (!W) return;
       if (!ctx.motion()) { tAmp = 0; return; }
       if (st && st.press && !(cx > -1e3)) { return; }
-      if (cx < -1e3) { if (st && st.hot) { P.x = W + 30; P.y = H / 2; inside = false; idx = Math.round(((W - H) + Math.PI * H / 4) / perim * N) % N; tAmp = 16; } else tAmp = 0; return; }
+      if (cx < -1e3) { if (st && st.hot) { P.x = W + 30; P.y = H / 2; inside = false; var cc = Math.min(CUT, H / 3); idx = Math.round(((W - cc) + (H - cc) / 2) / perim * N) % N; tAmp = 16; } else tAmp = 0; return; }
       var px = cx - rect.left, py = cy - rect.top, best = 0, bd = 1e9;
       for (var i = 0; i < N; i++) { var dx = px - base[i].x, dy = py - base[i].y, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } }
-      var d = Math.sqrt(bd), rr = H / 2, qx = clamp(px, rr, W - rr);
-      inside = Math.hypot(px - qx, py - rr) <= rr;
+      var d = Math.sqrt(bd);
+      inside = px >= 0 && px <= W && py >= 0 && py <= H;
       if (inside) { idx = best; P.x = px; P.y = py; tAmp = st && st.press ? 2 : 8; }
       else if (d < 84) { idx = best; P.x = px; P.y = py; tAmp = Math.min(8 + Math.min(d, 34) * (1 - d / 84) * 1.5, d + 6, 36); }
       else tAmp = 0;

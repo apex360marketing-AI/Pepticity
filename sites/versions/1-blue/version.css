@@ -1,0 +1,41 @@
+/* PEPTICITY · VERSION 01 · ORIGINAL PICKS (blue #0066FF). Loaded after ../_kit/accent.css.
+   Accent layer only: glows, edges, hover, focus and the reading text take the colour. Grounds, type, glass, copy stay as they are. */
+
+/* the module glints: [data-version="black"] in v4-tour.css pinned them to chartreuse (it outranks accent.css's html rule) */
+html[data-version]{--apx-glint:var(--v-t)}
+
+/* ---- TXT-04 · the big reading statements: lit words go white, key phrases take the accent and POP ---- */
+.say{--apx-accent:var(--v-t)}
+.say .apx-txt04__w.is-lit{color:var(--read-lit)}
+[data-version="white"] .say .apx-txt04__w.is-lit{color:var(--ink)}
+.say .apx-txt04__w.is-hl{color:var(--read-key);text-shadow:var(--read-key-glow)}
+.say .apx-txt04__w.is-hl::after{height:3px;background:linear-gradient(90deg,var(--v),var(--v-t));box-shadow:0 0 14px rgba(var(--v-rgb),.8)}
+.say .apx-txt04__kicker::before{background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.7)}
+.say .apx-txt04__fill{background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.7)}
+.say .apx-txt04__notes>*{border-left-color:rgba(var(--v-rgb),.6)}
+
+/* ---- BTN-101 Torn Stub: accent rim glow + focus ---- */
+.stub-slot{--apx-accent:var(--v-t)}
+.apx-b101.is-hot{filter:drop-shadow(0 0 14px rgba(var(--v-rgb),.45))}
+
+/* ---- FRM-102 + BGD-102 · the four questions: progress line and the plexus in the accent ---- */
+[data-version] .tour-plex{--apx-accent:var(--v-t)}
+[data-version="black"] .tour-form .apx-f102__fill{background:linear-gradient(90deg,var(--v),var(--v-t));box-shadow:0 0 10px rgba(var(--v-rgb),.55)}
+.tour-form .apx-f102__opt input:checked+span{box-shadow:inset 0 0 0 1px var(--v-t),0 0 22px rgba(var(--v-rgb),.35)}
+.tour-form .apx-f102__opt input:focus-visible+span{outline-color:var(--v-t)}
+
+/* ---- SCR-102 Fan Deck: progress ring + the active card's edge ---- */
+.deck .apx-scr102__ring circle:last-child{stroke:var(--v-t);filter:drop-shadow(0 0 4px rgba(var(--v-rgb),.8))}
+.deck .apx-scr102__face:focus-visible{outline:2px solid var(--v-t);outline-offset:3px}
+
+/* ---- CRD-118 Squircle Stack: the key words of the title ---- */
+.sms-card .apx-c118__title strong{color:var(--v-t);-webkit-text-fill-color:var(--v-t);text-shadow:0 0 22px rgba(var(--v-rgb),.45)}
+
+/* ---- NAV-102 Split Preview: hover line + current stop ---- */
+.tourmenu .apx-n102__list a::before{background:var(--v-t);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+.tourmenu .apx-n102__list a:hover i,.tourmenu .apx-n102__list a:focus-visible i{color:var(--v-t)}
+.tourmenu .apx-n102__toggle:hover,.tourmenu .apx-n102__toggle:focus-visible{box-shadow:inset 0 0 0 1px var(--v-t),0 0 16px rgba(var(--v-rgb),.4)}
+
+/* ---- HOV-103 Edge Light: the light that runs along the edges is the accent ---- */
+.apx-h103__ring,.apx-h103__wash{--apx-accent:var(--v-t)}
+.apx-h103__card.is-lit .apx-h103__ring{background:var(--v-t)}

@@ -170,8 +170,9 @@
     [ra, rb].forEach(function (s) { s.innerHTML = '<path fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.1"/>'; });
     k.size(root, function (w, h) {
       var g = 5, yl = h * .54, yr = h * .44;
-      var A = k.rpoly([[0, 0], [w, 0], [w, yr - g], [0, yl - g]], [38, 6, 3, 3]);
-      var B = k.rpoly([[0, yl + g], [w, yr + g], [w, h], [0, h]], [3, 3, 38, 6]);
+      /* PEPTICITY: cut corners (the site's chamfer) instead of rounded ones */
+      var C = 22, A = k.rpoly([[0, C], [C, 0], [w, 0], [w, yr - g], [0, yl - g]], 0);
+      var B = k.rpoly([[0, yl + g], [w, yr + g], [w, h - C], [w - C, h], [0, h]], 0);
       k.clip(pa, A, false, w, h); k.clip(pb, B, false, w, h);
       [ra, rb].forEach(function (s) { s.setAttribute('viewBox', '0 0 ' + w + ' ' + h); });
       ra.querySelector('path').setAttribute('d', A); rb.querySelector('path').setAttribute('d', B);

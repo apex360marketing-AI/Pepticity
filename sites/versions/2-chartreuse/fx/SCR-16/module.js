@@ -368,7 +368,7 @@
       gl.uniformMatrix4fv(f.u('uM'), false, mul(mT(devX * .6, floorY, 0), [3.4 * ringS, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2.2 * ringS, 0, 0, 0, 0, 1]));
       gl.uniform1f(f.u('uMode'), 1);
       if (L) { gl.uniform3fv(f.u('uCol'), mix3(C.ink, C.bg, .2)); gl.uniform1f(f.u('uOp'), .2 + e * .04); gl.uniform1f(f.u('uAdd'), 0); }
-      else { gl.uniform3fv(f.u('uCol'), C.acc.slice(0, 3)); gl.uniform1f(f.u('uOp'), (.2 + Math.sin(now * 1.2) * .06 * wob)); gl.uniform1f(f.u('uAdd'), 1); }
+      else { gl.uniform3fv(f.u('uCol'), C.acc.slice(0, 3)); gl.uniform1f(f.u('uOp'), (.1 + Math.sin(now * 1.2) * .03 * wob)); gl.uniform1f(f.u('uAdd'), 1); }   /* PEPTICITY v02: a hint of floor glow, not a pool of colour */
       attribs(f, B.pool.vb, [['aP', 3]], 3); gl.drawArrays(gl.TRIANGLES, 0, 6);
       /* transparent pass, back to front: glass slab + every label */
       var order = Ms.map(function (M, i) { var pc = xform(M, [0, 0, 0]); return { i: i, d: Math.hypot(pc[0] - eye[0], pc[1] - eye[1], pc[2] - eye[2]) }; }).sort(function (a, b2) { return b2.d - a.d; });

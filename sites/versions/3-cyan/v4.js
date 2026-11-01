@@ -1,8 +1,9 @@
 /* PEPTICITY main site v4 = v2's look with a guided tour that sells (owner R173 + R174).
-   Chest film -> 01 WELCOME (founding ticket, BTN-101) -> TXT-04 -> 02 WHAT BRINGS YOU (LAY-102) -> 03 FOUR QUESTIONS (FRM-102 on BGD-102)
+   Chest film -> 01 WELCOME (founding ticket, BTN-110) -> TXT-103 -> 02 WHAT BRINGS YOU (LAY-102) -> 03 FOUR QUESTIONS (FRM-102)
    -> 04 THE THRESHOLD (19+ gate; the catalogue loads only after a pass) -> 05 CITY (SCR-17 + SCR-07, cards picked from the answers)
    -> 06 DOORS (FRM-02) -> 07 LAB -> SCR-102 HOW WE CHOOSE -> TXT-04 promise -> SCR-16 vial -> 08 COLLECTION + cart -> LAY-101 WHAT YOU GET
-   -> SCR-18 tiers -> CRD-124 perks + FRM-104 -> CRD-118 text alerts -> HOV-17 network -> refer -> letter + TXT-13. Menu = NAV-102.
+   -> SCR-18 tiers -> CRD-124 perks + FRM-104 -> CRD-109 text alerts -> HOV-17 network -> refer (ILL-102) -> letter + TXT-13. Menu = NAV-104. Hover = HOV-101.
+   VERSION 03 · CYAN · LIQUID: SCR-103 frame tunnel replaces the fan deck (HOW WE CHOOSE).
    GSAP ScrollTrigger + Lenis on one ticker. Every form is preview only: nothing is sent. */
 (function () {
   'use strict';
@@ -361,7 +362,7 @@
   }
   $('#skipIntro').addEventListener('click', liftIntro);
   addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.classList.contains('intro-on')) liftIntro(); });
-  $('#replay').addEventListener('click', function () { closeMenu(); runIntro(); });
+  $('#replay').addEventListener('click', function (e) { e.preventDefault(); closeMenu(false); runIntro(); });
   function heroIn() { if (RM) return; gsap.fromTo('.hero-card', { opacity: 0, y: 40, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.4, delay: 1.1, ease: 'expo.out' }); }
   if (introLive) runIntro(); else { loadAll(); heroIn(); }
 
@@ -419,11 +420,14 @@
     if (form.dataset.interest && ct && ct.checked) d.interest = form.dataset.interest;
     return d;
   }
-  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-101 stub) */
+  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-110 button) */
     if (!btn) { cb && cb(); return; }
-    var lab = $('.pc-btn__label', btn) || $('.apx-b101__l', btn) || btn, w = btn.offsetWidth;
-    btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; lab.textContent = 'SENDING';
-    setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); lab.textContent = label || 'DONE ✓'; cb && cb(); }, RM ? 10 : 650);
+    /* every copy of the label (HOV-101 keeps a coloured copy inside its tide) follows the text */
+    var labs = $$('.pc-btn__label', btn); if (!labs.length) labs = [$('.apx-b110__l', btn) || btn];
+    function setL(t) { labs.forEach(function (l) { if (l.classList.contains('apx-b110__l')) { var tn = [].filter.call(l.childNodes, function (n) { return n.nodeType === 3 && n.textContent.trim(); })[0]; if (tn) tn.textContent = t; else l.textContent = t; } else l.textContent = t; }); }
+    var w = btn.offsetWidth;
+    btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; setL('SENDING');
+    setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); setL(label || 'DONE ✓'); cb && cb(); }, RM ? 10 : 650);
   }
   function wireForm(form, after) {
     form.addEventListener('focusin', function () { if (!form.__started) { form.__started = true; track('form_start'); } });
@@ -867,19 +871,24 @@
     if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   /* the NAV-102 menu handles its own Esc and hands focus back */
   });
 
-  /* ================= THE TOUR menu (NAV-102 Split Preview) ================= */
-  var tm = $('#tourMenu'), tmToggle = $('.apx-n102__toggle', tm), menuOpen = false;
-  if (window.APX && APX.NAV102) APX.NAV102.mount(tm, { lockScroll: true });
+  /* ================= THE TOUR menu (NAV-104 Thumb Arc) ================= */
+  /* the corner button fans the 8 stops (+ REPLAY INTRO) along an arc; THE TOUR in the top bar opens the same arc */
+  var tm = $('#tourMenu'), tmToggle = $('.apx-n104__trigger', tm), menuOpen = false;
+  if (window.APX && APX.NAV104) {
+    var tmN = $$('.apx-n104__actions a', tm).length, tmStep = Math.round(clamp((innerHeight - (innerWidth < 761 ? 250 : 190)) / tmN, 46, 62));
+    APX.NAV104.mount(tm, { step: tmStep, radius: Math.max(430, tmStep * tmN * 0.92) });
+    /* the stop number sits in the glass tile in place of a stock icon */
+    $$('.apx-n104__actions a', tm).forEach(function (a) { var sv = $('svg', a); if (sv) { var t = document.createElement('span'); t.className = 'tm-tile'; t.setAttribute('aria-hidden', 'true'); t.innerHTML = '<b class="tm-n">' + esc(a.dataset.n || '') + '</b>'; sv.replaceWith(t); } });
+  }
   function syncMenu() {
     var o = tm.classList.contains('is-open'); if (o === menuOpen) return; menuOpen = o;
     $('#menuBtn').setAttribute('aria-expanded', String(o));
     if (o) { stopScroll(); track('menu_open'); } else startScroll();
   }
   new MutationObserver(syncMenu).observe(tm, { attributes: true, attributeFilter: ['class'] });
-  function openMenu() { if (!tm.classList.contains('is-open')) tmToggle.click(); }
+  function openMenu() { if (!tm.classList.contains('is-open')) { tmToggle.focus({ preventScroll: true }); tmToggle.click(); setTimeout(function () { var a = $('.apx-n104__actions a', tm); if (a) a.focus({ preventScroll: true }); }, 80); } }
   function closeMenu(returnFocus) { if (!tm.classList.contains('is-open')) return; tmToggle.click(); if (returnFocus === false) $('#menuBtn').blur(); else $('#menuBtn').focus({ preventScroll: true }); }
   $('#menuBtn').addEventListener('click', openMenu);
-  tm.addEventListener('keydown', function (e) { if (e.key === 'Escape') setTimeout(function () { $('#menuBtn').focus({ preventScroll: true }); }, 0); });
 
   /* ================= 02 · WHAT BRINGS YOU HERE (LAY-102) -> into the four questions ================= */
   function startTour(k) {
@@ -1160,16 +1169,36 @@
   if (OFFER) { renderOfferEnd(); setInterval(renderOfferEnd, 60000); }
 
   /* ================= the 10 effect picks: mount each module once its section is on the page (some sit past the gates) ================= */
-  var FX = [['NAV102', null], ['LAY102', '#mkPanels'], ['BGD102', '.tour-plex'], ['TXT04', '.apx-txt04'], ['BTN101', '[data-apx="BTN-101"]'],
-    ['SCR102', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD118', '.apx-c118']];
+  /* VERSION 03 · TXT-103 Tide Fill: every word of each reading statement is its own little tide, so the lines fill top to bottom
+     in reading order as they scroll up (outline -> white). Key phrases (<mark>) fill in the accent. */
+  $$('[data-tide]').forEach(function (p) {
+    var out = [];
+    [].forEach.call(p.childNodes, function (n) {
+      var key = n.nodeType === 1 && n.tagName === 'MARK', ws = (n.textContent || '').split(/(\s+)/);
+      ws.forEach(function (w) { if (!w) return; if (/^\s+$/.test(w)) { out.push(' '); return; }
+        out.push('<span class="apx-txt103 tw' + (key ? ' key' : '') + '">' + (key ? '<em>' + esc(w) + '</em>' : esc(w)) + '</span>'); });
+    });
+    p.innerHTML = out.join('').replace(/ +/g, ' ');
+    p.setAttribute('data-tide-on', '');
+  });
+  var FX = [['LAY102', '#mkPanels'], ['TXT103', '.say .tw'], ['BTN110', '[data-apx="BTN-110"]'],
+    ['SCR103', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD109', '.apx-c109'], ['ILL102', '.apx-ill102']];
   function mountFx() {
     if (!window.APX) return;
     FX.forEach(function (f) {
       if (!f[1] || !APX[f[0]]) return;
       $$(f[1]).forEach(function (el) { if (el.__fx || !el.getClientRects().length) return; el.__fx = 1; try { APX[f[0]].mount(el); } catch (e) { console.warn(f[0], e); } });
     });
+    hovAll();
     ScrollTrigger.refresh();
   }
+  /* HOV-101 Rising Tide: every glass button (and every tour stop on the arc) fills with the accent from the bottom on hover / focus */
+  function hovAll() {
+    if (!window.APX || !APX.HOV101) return;
+    $$('.pc-btn__face:not(.apx-h101), .tm-tile:not(.apx-h101)').forEach(function (f) { f.classList.add('apx-h101'); APX.HOV101.mount(f); });
+  }
+  var hovT = 0;
+  new MutationObserver(function () { if (!hovT) hovT = setTimeout(function () { hovT = 0; hovAll(); }, 60); }).observe(document.body, { childList: true, subtree: true });
   mountFx();
   document.addEventListener('pc-version', function () { window.dispatchEvent(new Event('apx:tokens')); });
 

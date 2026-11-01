@@ -1,0 +1,136 @@
+/* PEPTICITY · VERSION 05 · PRISM (violet #6F00FF). Loaded after ../_kit/accent.css.
+   Accent layer + the native look for this version's modules (NAV-105, BTN-111, BTN-106, CRD-110, SCR-17, HOV-103).
+   Same fonts, gunmetal glass and cut corners as the rest of the site. Grounds, type, copy and the site's shape stay as they are. */
+
+/* the module glints: [data-version="black"] in v4-tour.css pinned them to chartreuse (it outranks accent.css's html rule) */
+html[data-version]{--apx-glint:var(--v-t)}
+/* the prism: violet light split toward blue and white (no warm hues) */
+html{--prism:linear-gradient(100deg,var(--v-t) 0%,color-mix(in oklab,var(--v-t),#7cc0ff 70%) 22%,#f3efff 40%,color-mix(in oklab,var(--v-t),#ffffff 15%) 58%,var(--v-t) 76%,color-mix(in oklab,var(--v-t),#7cc0ff 60%) 100%);
+  --prism-b:color-mix(in oklab,var(--v-t),#6fb4ff 60%)}
+@keyframes prismRun{from{background-position:0% 0}to{background-position:-320% 0}}
+
+/* ---------- TXT-04 · reading statements: lit words go white, key phrases light in the prism ---------- */
+.say{--apx-accent:var(--v-t)}
+.say .apx-txt04__w.is-lit{color:var(--read-lit)}
+[data-version="white"] .say .apx-txt04__w.is-lit{color:var(--ink)}
+.say .apx-txt04__w.is-hl{color:var(--read-key);text-shadow:none;background:var(--prism);background-size:160% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 14px rgba(var(--v-rgb),.6));animation:prismRun 7s linear infinite}
+.say .apx-txt04__w.is-hl::after{height:3px;background:var(--prism);background-size:250% 100%;box-shadow:0 0 14px rgba(var(--v-rgb),.85);animation:prismRun 7s linear infinite}
+.say .apx-txt04__kicker::before,.say .apx-txt04__fill{background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.8)}
+.say .apx-txt04__notes>*{border-left-color:rgba(var(--v-rgb),.65)}
+html.rm .say .apx-txt04__w.is-hl,html.rm .say .apx-txt04__w.is-hl::after{animation:none}
+@media (prefers-reduced-motion:reduce){.say .apx-txt04__w.is-hl,.say .apx-txt04__w.is-hl::after{animation:none}}
+
+/* ---------- NAV-105 Chapter Roll · THE TOUR (top right) ---------- */
+.chroll{position:relative;top:auto;z-index:2;container:none;font-family:var(--display);--apx-accent:var(--v-t)}
+.chroll .apx-n105__bar{padding:0;gap:0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+.chroll .apx-n105__now{position:relative;height:38px;gap:10px;padding:0 14px 0 16px;border:0;border-radius:0;font-family:var(--display);color:var(--ink);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  -webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);
+  background:linear-gradient(90deg,rgba(var(--v-rgb),.0),rgba(var(--v-rgb),.0)),linear-gradient(180deg,rgba(255,255,255,.1),transparent 60%),linear-gradient(145deg,var(--g-a),var(--g-b));
+  box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 var(--rim-t);transition:box-shadow .3s,transform .4s cubic-bezier(.34,1.56,.64,1)}
+.chroll .apx-n105__now:hover,.chroll.is-open .apx-n105__now{box-shadow:inset 0 0 0 1px var(--v-t),inset 0 1px 0 var(--rim-hot),0 0 18px rgba(var(--v-rgb),.45)}
+.chroll .apx-n105__now:focus-visible{outline:2px solid var(--v-t);outline-offset:3px}
+.chroll .apx-n105__k{font:400 9px/1 var(--display);letter-spacing:.24em;color:var(--muted)}
+.chroll .apx-n105__win{font:400 10px/1.25 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.chroll .apx-n105__count{margin:0;gap:4px;white-space:nowrap;flex:none;font:400 9px/1 var(--display);letter-spacing:.14em;color:var(--muted)}
+.chroll .apx-n105__count .apx-n105__win{font:inherit;line-height:1.5;height:1.5em;color:var(--v-t);letter-spacing:.14em;-webkit-mask-image:none;mask-image:none}
+.chroll .apx-n105__count .apx-n105__reel span{height:1.5em}
+.chroll .apx-n105__chev{color:var(--v-t)}
+.chroll .apx-n105__prog{left:8px;right:8px;bottom:-4px;height:1px;background:linear-gradient(90deg,var(--v),var(--v-t));box-shadow:0 0 10px rgba(var(--v-rgb),.9)}
+.chroll .apx-n105__list{left:auto;right:0;top:calc(100% + 10px);width:min(380px,calc(100vw - 24px));padding:10px;border:0;border-radius:0;
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));transform-origin:calc(100% - 24px) 0;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 40%),color-mix(in srgb,var(--bg) 92%,transparent);
+  box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 var(--rim-t),0 30px 60px -24px rgba(0,0,0,.6)}
+.chroll .apx-n105__list a{position:relative;border-radius:0;padding:12px 12px;font:400 13px/1.2 var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);cursor:pointer;
+  transition:background-color .25s,color .25s,transform .35s cubic-bezier(.16,1,.3,1)}
+.chroll .apx-n105__list a::before{font:400 9.5px/1 var(--display);letter-spacing:.2em;color:var(--muted);width:3ch}
+.chroll .apx-n105__list a::after{border-radius:0;transform:rotate(45deg) scale(0);background:var(--v-t);box-shadow:0 0 10px var(--v-t)}
+.chroll .apx-n105__list a[aria-current="true"]::after{transform:rotate(45deg) scale(1)}
+.chroll .apx-n105__list a:hover,.chroll .apx-n105__list a:focus-visible{background:linear-gradient(90deg,rgba(var(--v-rgb),.22),transparent 80%);color:#fff;transform:translateX(4px)}
+.chroll .apx-n105__list a:focus-visible{outline:2px solid var(--v-t);outline-offset:-2px}
+.chroll .apx-n105__list a[aria-disabled]{opacity:.55}
+.chroll-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:6px;padding:8px 12px 2px;border-top:1px solid var(--line)}
+.chroll-meta .tm-note{font:400 12px/1.4 var(--body);letter-spacing:0;color:var(--muted)}
+html:not(.age-gated) .chroll-meta .tm-note{display:none}
+.ch-mark{position:absolute;left:0;top:calc(100% - 215vh);width:1px;height:1px;pointer-events:none}
+html.rm .ch-mark{top:calc(100% - 100vh)}
+@media (max-width:760px){
+  .chroll .apx-n105__k,.chroll .apx-n105__now>.apx-n105__win{display:none}
+  .chroll .apx-n105__now{padding:0 10px;gap:8px}
+  .chroll .apx-n105__list{position:fixed;left:12px;right:12px;top:60px;width:auto}
+}
+
+/* ---------- BTN-106 Hex Bloom · the main CTA (hero) ---------- */
+.hex-slot{--apx-accent:var(--v-t)}
+.apx-b106{font:400 11.5px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase;min-height:54px;color:var(--ink)}
+.apx-b106 .apx-b106__l{padding:0 46px}
+.apx-b106 .apx-b106__rim .apx-b106__edge{stroke:color-mix(in srgb,var(--v-t) 55%,var(--rim-t))}
+.apx-b106.is-hot{filter:drop-shadow(0 0 16px rgba(var(--v-rgb),.55))}
+.apx-b106.is-hot .apx-b106__l{text-shadow:0 0 14px rgba(var(--v-rgb),.9)}
+.apx-b106.busy{opacity:.75}
+@media (max-width:640px){
+  .hex-slot,.hex-slot .apx-b106{width:100%}
+  .apx-b106{font-size:10.5px;letter-spacing:.14em}
+  .apx-b106 .apx-b106__l{white-space:normal;text-align:center;line-height:1.3;padding:0 30px}
+}
+
+/* ---------- BTN-111 Prism Edge · sign-up buttons (shortlist, Grace's letter) ---------- */
+.prism-slot{--apx-accent:var(--v-t)}
+.apx-b111{font:400 11px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.apx-b111 .apx-b111__l,.apx-b111 .apx-b111__lc{padding:0 52px 0 30px}
+.apx-b111__band--r{background:linear-gradient(90deg,var(--v-t),transparent)}
+.apx-b111__band--b{background:linear-gradient(90deg,var(--prism-b),transparent)}
+.apx-b111__lc--r{color:var(--v-t)}
+.apx-b111__lc--b{color:var(--prism-b)}
+.apx-b111.is-hot{filter:drop-shadow(0 0 14px rgba(var(--v-rgb),.45))}
+.apx-b111.busy{opacity:.75}
+.letter .row{align-items:end}
+@media (max-width:640px){.prism-slot,.prism-slot .apx-b111{width:100%}.apx-b111{font-size:10.5px;letter-spacing:.14em}}
+
+/* ---------- CRD-110 Prism Facets · text alerts ---------- */
+.sms-card.apx-c110{--apx-accent:var(--v-t);width:100%;max-width:560px;justify-self:center;padding:92px clamp(34px,7%,60px) 64px}
+.sms-card .apx-c110__beam{background:linear-gradient(180deg,transparent,rgba(var(--v-rgb),.6),rgba(240,236,255,.65),color-mix(in srgb,var(--prism-b) 60%,transparent),transparent)}
+.sms-card .apx-c110__title{font:400 clamp(24px,2.8vw,40px)/1.08 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.sms-card .apx-c110__title strong{font-weight:400;background:var(--prism);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 12px rgba(var(--v-rgb),.55));animation:prismRun 7s linear infinite}
+.sms-card .apx-c110__text{font-size:15.5px;color:var(--ink-2);max-width:40ch;margin-inline:auto}
+.c110-alert{display:flex;gap:12px;align-items:flex-start;margin:0 auto 18px;max-width:380px;padding:12px 14px;text-align:left;font-size:13.5px;line-height:1.45;color:var(--ink-2);
+  background:color-mix(in srgb,var(--bg) 45%,transparent);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));box-shadow:inset 0 0 0 1px var(--rim-s)}
+.c110-alert i{flex:none;width:8px;height:8px;margin-top:5px;transform:rotate(45deg);background:var(--v-t);box-shadow:0 0 10px var(--v-t)}
+.c110-alert b{display:block;margin-bottom:3px;font:400 9.5px var(--display);letter-spacing:.24em;color:var(--ink)}
+html.rm .sms-card .apx-c110__title strong{animation:none}
+@media (max-width:640px){.sms-card.apx-c110{padding:78px 26px 52px}}
+
+/* ---------- SCR-17 Word Portal · HOW WE CHOOSE ---------- */
+.portal2{--apx-accent:var(--v-t);--apx-scr17-length:260vh;--apx-scr17-length-compact:220vh;position:relative;z-index:2;background:transparent}
+.portal2 .apx-scr17__scene{background:radial-gradient(46% 46% at 50% 50%,rgba(var(--v-rgb),.12),transparent 70%)}
+.portal2 .apx-scr17__ring{border-color:rgba(var(--v-rgb),.45);box-shadow:0 0 90px -20px rgba(var(--v-rgb),.7),inset 0 0 60px -30px rgba(var(--v-rgb),.7)}
+.portal2 .apx-scr17__kicker{font:400 10.5px/1.4 var(--display);letter-spacing:.32em;color:var(--muted);flex-wrap:wrap;justify-content:center}
+.portal2 .apx-scr17__inner h2{font-weight:400;font-size:var(--t-h2);letter-spacing:.03em;margin-top:18px}
+.choose6{position:relative;z-index:2;padding-top:0}
+.cz-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+.cz-card{--c:22px;display:grid;align-content:start;gap:10px;padding:clamp(20px,2.4vw,30px);min-height:230px}
+.cz-num{font:400 11px var(--display);letter-spacing:.3em;color:var(--e1)}
+.cz-dot{position:absolute;right:28px;top:28px;width:8px;height:8px;transform:rotate(45deg);background:var(--v-t);box-shadow:0 0 10px var(--v-t)}
+.cz-h{margin:6px 0 0;font:400 clamp(17px,1.5vw,22px)/1.15 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.cz-card p{margin:0;font-size:15px;color:var(--ink-2)}
+.cz-card .pc-btn{margin-top:8px;justify-self:start}
+.cz-card{transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.cz-card:hover,.cz-card:focus-within{transform:translateY(-4px)}
+@media (max-width:980px){.cz-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.cz-grid{grid-template-columns:1fr}.cz-card{min-height:0}}
+html.rm .cz-card{transition:none}
+
+/* ---------- FRM-102 · the four questions: progress line + picked answers in the accent ---------- */
+[data-version="black"] .tour-form .apx-f102__fill{background:linear-gradient(90deg,var(--v),var(--v-t));box-shadow:0 0 10px rgba(var(--v-rgb),.6)}
+.tour-form .apx-f102__opt input:checked+span{box-shadow:inset 0 0 0 1px var(--v-t),0 0 22px rgba(var(--v-rgb),.4)}
+.tour-form .apx-f102__opt input:focus-visible+span{outline-color:var(--v-t)}
+
+/* ---------- HOV-103 Edge Light: the light that runs along the edges is the accent ---------- */
+.apx-h103__ring,.apx-h103__wash{--apx-accent:var(--v-t)}
+.apx-h103__card.is-lit .apx-h103__ring{background:var(--v-t)}
+
+/* WHITE look: the prism keeps its colour on a light ground (no white band) */
+html[data-version="white"]{--prism:linear-gradient(100deg,var(--v) 0%,color-mix(in oklab,var(--v),#1f6fff 60%) 30%,color-mix(in oklab,var(--v),#ffffff 35%) 50%,var(--v) 72%,color-mix(in oklab,var(--v),#1f6fff 50%) 100%);--prism-b:color-mix(in oklab,var(--v),#1f6fff 60%)}
+[data-version="white"] .say .apx-txt04__w.is-hl{filter:drop-shadow(0 0 10px rgba(var(--v-rgb),.25))}

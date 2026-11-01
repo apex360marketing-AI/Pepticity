@@ -421,7 +421,7 @@
   }
   function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-101 stub) */
     if (!btn) { cb && cb(); return; }
-    var lab = $('.pc-btn__label', btn) || $('.apx-b101__l', btn) || btn, w = btn.offsetWidth;
+    var lab = $('.pc-btn__label', btn) || $('.apx-b125__l', btn) || btn, w = btn.offsetWidth;
     btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; lab.textContent = 'SENDING';
     setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); lab.textContent = label || 'DONE ✓'; cb && cb(); }, RM ? 10 : 650);
   }
@@ -864,22 +864,13 @@
   $('#modal').addEventListener('keydown', function (e) { trap($('.modal'), e); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   /* the NAV-102 menu handles its own Esc and hands focus back */
+    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   
   });
 
-  /* ================= THE TOUR menu (NAV-102 Split Preview) ================= */
-  var tm = $('#tourMenu'), tmToggle = $('.apx-n102__toggle', tm), menuOpen = false;
-  if (window.APX && APX.NAV102) APX.NAV102.mount(tm, { lockScroll: true });
-  function syncMenu() {
-    var o = tm.classList.contains('is-open'); if (o === menuOpen) return; menuOpen = o;
-    $('#menuBtn').setAttribute('aria-expanded', String(o));
-    if (o) { stopScroll(); track('menu_open'); } else startScroll();
-  }
-  new MutationObserver(syncMenu).observe(tm, { attributes: true, attributeFilter: ['class'] });
-  function openMenu() { if (!tm.classList.contains('is-open')) tmToggle.click(); }
-  function closeMenu(returnFocus) { if (!tm.classList.contains('is-open')) return; tmToggle.click(); if (returnFocus === false) $('#menuBtn').blur(); else $('#menuBtn').focus({ preventScroll: true }); }
+  /* ================= THE TOUR menu (NAV-17 Timeline Scrubber along the bottom, mounted by vfx.js): THE TOUR button hands focus to the playhead ================= */
+  function openMenu() { var t = $('#tourMenu .apx-nav17__track'); if (t) t.focus({ preventScroll: true }); track('menu_open'); }
+  function closeMenu() {}
   $('#menuBtn').addEventListener('click', openMenu);
-  tm.addEventListener('keydown', function (e) { if (e.key === 'Escape') setTimeout(function () { $('#menuBtn').focus({ preventScroll: true }); }, 0); });
 
   /* ================= 02 · WHAT BRINGS YOU HERE (LAY-102) -> into the four questions ================= */
   function startTour(k) {
@@ -1026,7 +1017,7 @@
     var footR = $('#foot').getBoundingClientRect(), tr = $('#tour').getBoundingClientRect();
     var formOnScreen = (tr.top < vh * 0.7 && tr.bottom > vh * 0.3) || (agr.top < vh * 0.6 && agr.bottom > vh * 0.4);
     var showMain = !joined(), showSms = !LS.get('pc-sms');
-    sticky.classList.toggle('show', y > vh * 0.9 && (showMain || showSms) && !formFocus && !formOnScreen && !(!ag && jr.top < 0 && jr.bottom > vh && J.p > 0.85) && (ag || footR.top > vh) && $('#modal').hidden && !menuOpen);
+    sticky.classList.toggle('show', y > vh * 0.9 && (showMain || showSms) && !formFocus && !formOnScreen && !(!ag && jr.top < 0 && jr.bottom > vh && J.p > 0.85) && (ag || footR.top > vh) && $('#modal').hidden);
     sticky.classList.toggle('no-main', !showMain); sticky.classList.toggle('no-sms', !showSms);
     /* rail: real position */
     var cur = 'hero';
@@ -1160,8 +1151,8 @@
   if (OFFER) { renderOfferEnd(); setInterval(renderOfferEnd, 60000); }
 
   /* ================= the 10 effect picks: mount each module once its section is on the page (some sit past the gates) ================= */
-  var FX = [['NAV102', null], ['LAY102', '#mkPanels'], ['BGD102', '.tour-plex'], ['TXT04', '.apx-txt04'], ['BTN101', '[data-apx="BTN-101"]'],
-    ['SCR102', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD118', '.apx-c118']];
+  var FX = [['LAY102', '#mkPanels'], ['TXT103', '.apx-txt103'], ['BTN125', '[data-apx="BTN-125"]'],
+    ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD130', '.apx-c130'], ['OBJ101', '#relic']];   /* SCR-101 and NAV-17 are mounted by vfx.js */
   function mountFx() {
     if (!window.APX) return;
     FX.forEach(function (f) {

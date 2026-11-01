@@ -1,0 +1,137 @@
+/* PEPTICITY · VERSION 02 · CHARTREUSE "CHROME"
+   The seven slot effects of this version, made native to the PEPTICITY shape (same fonts, gunmetal glass, cut corners, one ground).
+   MENU NAV-101 · BUTTON BTN-109 · CARD CRD-108 · SCROLL SCR-16 · READING TXT-104 · HOVER HOV-102 · EXTRA GLS-103.
+   The colour is the accent only (--v / --v-t from ../_kit/accent.css): glows, edges, hover, focus, key phrases. Never big fills. */
+
+/* ================= MENU · NAV-101 Curtain Letters (THE TOUR) ================= */
+.tourmenu{--apx-accent:var(--v);--apx-accent-ink:#0b0b0c;--apx-radius:0px;--apx-line:var(--line);z-index:80;pointer-events:none}
+.tourmenu.is-open{pointer-events:auto}
+.tourmenu .apx-n101__bar{justify-content:flex-end;padding:14px var(--gut);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.tourmenu.is-open .apx-n101__bar{opacity:1;visibility:visible;transition-delay:0s}
+.tourmenu .apx-n101__brand{display:none}
+.tourmenu .apx-n101__toggle{border-radius:0;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  font:400 11px/1 var(--display);letter-spacing:.24em;color:var(--ink);background:linear-gradient(160deg,var(--g-a),var(--g-b)),var(--bg);border-color:var(--rim-s)}
+.tourmenu .apx-n101__toggle:hover{border-color:var(--v-t);box-shadow:inset 0 0 14px -6px var(--v)}
+.tourmenu .apx-n101__toggle:focus-visible{outline:2px solid var(--v-t);outline-offset:-5px}
+/* the curtain is led by a THIN line of colour, never a slab of it */
+.tourmenu .apx-n101__veil{background:var(--v);transition-delay:calc(var(--_m) * .02s)}
+.tourmenu.is-open .apx-n101__panel{transition-delay:calc(var(--_m) * .028s),0s}
+.tourmenu .apx-n101__panel{background:var(--bg)}
+.tourmenu .apx-n101__list li{border-color:var(--line)}
+.tourmenu .apx-n101__word{font:400 clamp(24px,min(4.3cqi,5.2vh),56px)/1.05 var(--display);letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tourmenu .apx-n101__num{font:400 10px/1 var(--display);letter-spacing:.3em;color:var(--muted)}
+.tourmenu .apx-n101__ch>i{-webkit-text-fill-color:currentColor}
+.tourmenu .apx-n101__list a:hover .apx-n101__ch>i,.tourmenu .apx-n101__list a:focus-visible .apx-n101__ch>i{color:var(--v-t)}
+.tourmenu .apx-n101__list a:hover .apx-n101__num,.tourmenu .apx-n101__list a:focus-visible .apx-n101__num{color:var(--v-t)}
+.tourmenu .apx-n101__arrow{color:var(--v-t);filter:drop-shadow(0 0 6px rgba(var(--v-rgb),.6))}
+.tourmenu .apx-n101__ghost{font-family:var(--display);text-transform:uppercase;-webkit-text-stroke:1px rgba(236,238,242,.16);--_go:1}
+.tourmenu .apx-n101__aside .tm-k{margin:0}
+.tourmenu .apx-n101__aside .linkish{color:var(--ink);padding:8px 0}
+html.age-gated .tourmenu .apx-n101__list li:nth-child(n+5) a{opacity:.55}
+html.apx-n101-lock #gl-front{opacity:0}
+[data-version="white"] .tourmenu .apx-n101__list a:hover .apx-n101__ch>i,[data-version="white"] .tourmenu .apx-n101__list a:focus-visible .apx-n101__ch>i{color:var(--ink)}
+[data-version="white"] .tourmenu .apx-n101__ghost{-webkit-text-stroke-color:rgba(17,18,20,.14)}
+
+/* ================= BUTTON · BTN-109 Chrome Bezel (the main sign-up buttons) ================= */
+.stub-slot{display:flex}
+.apx-b109{--apx-accent:var(--v);min-height:56px;border-radius:0;font:400 11.5px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase}
+.apx-b109__bz,.apx-b109__g{border-radius:0}
+/* cut-corner chrome ring (outer shape minus inner shape) instead of a pill */
+.apx-b109__bz{-webkit-mask:none;mask:none;
+  clip-path:polygon(evenodd,0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px),0 0,
+    5px 5px,5px calc(100% - 16px),16px calc(100% - 5px),calc(100% - 5px) calc(100% - 5px),calc(100% - 5px) 16px,calc(100% - 16px) 5px,5px 5px)}
+.apx-b109__g{clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px))}
+.apx-b109__l{padding:0 40px}
+.apx-b109.is-hot .apx-b109__l{text-shadow:0 0 14px rgba(var(--v-rgb),.6)}
+.apx-b109:focus-visible{outline:2px solid var(--v-t);outline-offset:5px}
+.apx-b109.busy{opacity:.75}
+@media (max-width:640px){
+  .stub-slot,.stub-slot .apx-b109{width:100%}
+  .apx-b109{font-size:10.5px;letter-spacing:.14em}
+  .apx-b109__l{white-space:normal;text-align:center;line-height:1.35;padding:0 26px}
+}
+
+/* ================= CARD · CRD-108 Bezel Plaque (text alerts) ================= */
+.sms-card.apx-c108{--apx-accent:var(--v);--apx-radius:0px;width:100%;max-width:560px;padding:42px 40px 38px}
+.sms-card .apx-c108__frame{border-radius:0;-webkit-mask:none;mask:none;
+  clip-path:polygon(evenodd,0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px),0 0,
+    11px 11px,11px calc(100% - 27px),27px calc(100% - 11px),calc(100% - 11px) calc(100% - 11px),calc(100% - 11px) 27px,calc(100% - 27px) 11px,11px 11px)}
+.sms-card .apx-c108__glass{border-radius:0;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));transition:box-shadow .4s var(--ease-out)}
+.sms-card .apx-c108__screw.tr{translate:-16.5px 13.3px}
+.sms-card .apx-c108__screw.bl{translate:16.5px -13.3px}
+.sms-card:hover .apx-c108__glass,.sms-card:focus-within .apx-c108__glass{box-shadow:inset 0 2px 6px rgb(0 0 0/.45),inset 0 0 0 1px rgba(var(--v-rgb),.55),inset 0 0 26px -10px rgba(var(--v-rgb),.7)}
+.sms-card .apx-c108__eyebrow{font:400 9.5px/1 var(--display);letter-spacing:.26em;color:var(--muted)}
+.sms-card .apx-c108__title{font:400 clamp(24px,2.8vw,40px)/1.08 var(--display);letter-spacing:.04em;color:var(--ink);margin:12px 0 18px}
+.sms-card .apx-c108__title strong{font-weight:400;color:var(--v-t);text-shadow:0 0 18px rgba(var(--v-rgb),.45)}
+.sms-bubble{display:flex;align-items:flex-start;gap:12px;margin:0 0 16px!important;padding:14px 16px;font-size:14.5px;line-height:1.5;color:var(--ink-2);
+  background:linear-gradient(160deg,var(--g-a),var(--g-b));box-shadow:inset 0 0 0 1px var(--rim-s);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.sms-bubble i{flex:none;width:8px;height:8px;margin-top:7px;transform:rotate(45deg);background:var(--v);box-shadow:0 0 10px var(--v)}
+.sms-text{color:var(--ink-2);font-size:15px}
+[data-version="white"] .sms-card .apx-c108__title strong{color:var(--ink);text-shadow:0 0 14px rgba(var(--v-rgb),.9)}
+@media (max-width:640px){.sms-card.apx-c108{padding:36px 28px 32px}}
+
+/* ================= SCROLL SECTION · SCR-16 Exploded Layers (HOW WE CHOOSE) ================= */
+.choose16{--apx-accent:var(--v);--apx-radius:0px;--apx-scr16-length:440vh;--apx-scr16-length-compact:340vh;background:transparent;position:relative;z-index:2}
+.choose16 .apx-scr16__veil{opacity:.4}
+.choose16 .apx-scr16__copy h2{margin-top:16px;font-size:var(--t-h2);letter-spacing:.03em}
+.choose16 .apx-scr16__copy>p:not(.apx-scr16__kicker){margin-top:14px;font-size:16px;color:var(--ink-2)}
+.choose16 .apx-scr16__copy .pc-btn{margin-top:18px}
+.choose16 .apx-scr16__kicker{font:400 10.5px/1.4 var(--display);letter-spacing:.32em;color:var(--muted)}
+.choose16 .apx-scr16__kicker::before{background:var(--v);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+.choose16 .apx-scr16__note b{font-family:var(--display);color:var(--ink)}
+.choose16 .apx-scr16__note span{color:var(--ink-2)}
+.choose16 .apx-scr16__layers>li{font:400 10.5px/1.2 var(--display);letter-spacing:.2em}
+.choose16 .apx-scr16__layers>li.is-now .apx-scr16__n{color:var(--v-t);text-shadow:0 0 10px rgba(var(--v-rgb),.7)}
+.choose16 .apx-scr16__tick::after{background:var(--v);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+.choose16 .apx-scr16__layers>li:focus-visible{box-shadow:0 1px 0 var(--v-t);outline:2px solid var(--v-t);outline-offset:3px}
+.choose16.is-static .apx-scr16__layers>li{border-radius:0;border:0;background:linear-gradient(160deg,var(--g-a),var(--g-b));box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 rgba(var(--v-rgb),.55);
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+.choose16.is-static .apx-scr16__layers>li>b{font-family:var(--display);font-size:18px}
+/* EXTRA · GLS-103 Molten Numerals: the step number melts into the next one */
+.ch-step{position:absolute;z-index:3;left:clamp(20px,4vw,56px);top:clamp(96px,15vh,150px);display:flex;align-items:flex-end;gap:14px;pointer-events:none;
+  opacity:0;transform:translate3d(0,14px,0);transition:opacity .6s var(--ease-out),transform .8s var(--ease-out)}
+.ch-step.on{opacity:1;transform:none}
+.ch-of,.lab-of{font:400 10px/1 var(--display);letter-spacing:.32em;color:var(--muted);padding-bottom:.9em}
+.apx-gls103{--apx-accent:var(--v);--apx-font-display:var(--display);--apx-gls103-weight:400;--apx-gls103-tracking:.04em}
+.ch-num{font-size:clamp(64px,8.4vw,132px)}
+.choose16.is-static .ch-step{display:none}
+@media (max-width:899px){.ch-step{top:auto;bottom:max(36px,calc(env(safe-area-inset-bottom,0px) + 28px));left:20px}.ch-num{font-size:64px}}
+/* the lab: the station number in molten chrome */
+.lab-step{position:absolute;z-index:5;right:var(--gut);top:clamp(96px,14vh,140px);display:flex;align-items:flex-end;gap:12px;pointer-events:none;
+  opacity:0;transition:opacity .6s var(--ease-out)}
+.lab-step.on{opacity:1}
+.lab-num{font-size:clamp(56px,6.4vw,104px);--apx-ink:#eef0f3;--apx-muted:#9aa0a8}
+.lab-of{color:var(--ph-muted)}
+html.rm .lab-step{display:none}
+@media (max-width:760px){.lab-step{top:76px;right:12px}.lab-num{font-size:46px}}
+
+/* ================= READING TEXT · TXT-104 Scatter Assemble (the two big statements) ================= */
+.say104{position:relative;z-index:2;padding:clamp(120px,24vh,260px) var(--gut)}
+.say104 .say-in{max-width:1120px;margin:0 auto;display:grid;gap:clamp(18px,3vh,34px);container-type:inline-size}
+.say104 .say-k{display:flex;align-items:center;gap:14px;margin:0;font:400 11px/1 var(--display);letter-spacing:.34em;color:var(--muted)}
+.say104 .say-k::before{content:"";flex:none;width:34px;height:1px;background:var(--v);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
+.say104 .say-t{--apx-ink:var(--read-lit);margin:0;font:500 clamp(25px,4cqi,52px)/1.2 var(--body);letter-spacing:-.01em;color:var(--read-lit)}
+/* key phrases: the accent, a glow and an underline that sweeps in once the letters have landed */
+.say104 .say-t em{--apx-accent:var(--read-key);font-style:normal;color:var(--read-key);text-shadow:var(--read-key-glow);
+  background:linear-gradient(90deg,var(--v),rgba(var(--v-rgb),.25)) 0 96%/0% 2px no-repeat;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:background-size 1.2s var(--ease-out) .25s}
+.say104.is-lit .say-t em{background-size:100% 2px}
+.say104 .say-notes{display:flex;flex-wrap:wrap;gap:8px 30px;color:var(--ink-2);font-size:15px}
+.say104 .say-notes p{margin:0}
+[data-version="white"] .say104 .say-t{--apx-ink:var(--ink);color:var(--ink)}
+[data-version="white"] .say104 .say-t em{--apx-accent:var(--ink);color:var(--ink);text-shadow:none;background-size:0% 5px;background-image:linear-gradient(90deg,var(--v),var(--v))}
+[data-version="white"] .say104.is-lit .say-t em{background-size:100% 5px}
+html.rm .say104 .say-t em{transition:none}
+
+/* ================= HOVER · HOV-102 Letter Roll (buttons, cards, menu toggles, choices) ================= */
+.hv-roll.apx-h102{display:inline-flex;min-height:0;padding:0;gap:0;background:none;border:0;border-radius:0;-webkit-backdrop-filter:none;backdrop-filter:none;
+  font:inherit;letter-spacing:inherit;color:inherit;cursor:inherit;transition:none;vertical-align:top;max-width:100%}
+.hv-roll.apx-h102:active{transform:none}
+/* the brand face sits low in its box: a taller letter window so the rolled twin never peeks in */
+.hv-roll .apx-h102__c{height:1.6em;line-height:1.6;margin-block:-.21em}
+.hv-roll .apx-h102__c>span{-webkit-text-fill-color:currentColor}
+/* the label's clipped-text sheen would paint through the hidden twin: the letter roll is this version's hover instead */
+.pc-btn__label:has(> .hv-roll){background:none;-webkit-text-fill-color:currentColor;color:var(--pc-ink);animation:none!important}
+.hv-roll .apx-h102__c>span+span{color:var(--v-t)}
+[data-version="white"] .hv-roll .apx-h102__c>span+span{color:var(--ink)}
+.photo .hv-roll .apx-h102__c>span+span{color:var(--v-t)}

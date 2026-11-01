@@ -14,16 +14,17 @@
 <link rel="icon" href="../_common/brand/logo/p-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../_common/brand/ui/button.css">
 <link rel="stylesheet" href="v4.css?v=43">
-<link rel="stylesheet" href="fx/NAV-102/module.css?v=43">
-<link rel="stylesheet" href="fx/BGD-102/module.css?v=43">
-<link rel="stylesheet" href="fx/SCR-102/module.css?v=43">
+<link rel="stylesheet" href="fx/NAV-105/module.css?v=43">
+<link rel="stylesheet" href="fx/SCR-17/module.css?v=43">
 <link rel="stylesheet" href="fx/TXT-04/module.css?v=43">
 <link rel="stylesheet" href="fx/LAY-101/module.css?v=43">
-<link rel="stylesheet" href="fx/BTN-101/module.css?v=43">
+<link rel="stylesheet" href="fx/BTN-111/module.css?v=43">
+<link rel="stylesheet" href="fx/BTN-106/module.css?v=43">
 <link rel="stylesheet" href="fx/FRM-102/module.css?v=43">
-<link rel="stylesheet" href="fx/CRD-118/module.css?v=43">
+<link rel="stylesheet" href="fx/CRD-110/module.css?v=43">
 <link rel="stylesheet" href="fx/CRD-124/module.css?v=43">
 <link rel="stylesheet" href="fx/LAY-102/module.css?v=43">
+<link rel="stylesheet" href="fx/HOV-103/module.css?v=43">
 <link rel="stylesheet" href="v4-tour.css?v=43">
 <script>
 /* ---- ONE place for swap points and switches (v4: v2's look, a guided tour, a 19+ gate before any product) ---- */
@@ -76,7 +77,8 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 </script>
 <link rel="stylesheet" href="../_kit/accent.css">
 <link rel="stylesheet" href="../_kit/chip.css">
-<script>window.PC_VERSION={"n": "05", "slug": "violet", "name": "PRISM", "hex": "#6F00FF", "colour": "violet", "note": "BTN-106 Hex Bloom on the main CTA; TXT-04 with a prism gradient", "effects": [{"slot": "MENU", "code": "NAV-105", "name": "Chapter Roll", "where": "[set by builder]"}, {"slot": "BUTTON", "code": "BTN-111", "name": "Prism Edge", "where": "[set by builder]"}, {"slot": "CARD", "code": "CRD-110", "name": "Prism Facets", "where": "[set by builder]"}, {"slot": "SCROLL SECTION", "code": "SCR-17", "name": "Word Portal", "where": "[set by builder]"}, {"slot": "READING TEXT", "code": "TXT-04", "name": "Scroll Highlight", "where": "[set by builder]"}, {"slot": "HOVER", "code": "HOV-103", "name": "Edge Light", "where": "[set by builder]"}, {"slot": "EXTRA", "code": "BTN-106", "name": "Hex Bloom", "where": "[set by builder]"}]};</script>
+<link rel="stylesheet" href="version.css?v=1">
+<script>window.PC_VERSION={"n": "05", "slug": "violet", "name": "PRISM", "hex": "#6F00FF", "colour": "violet", "note": "BTN-106 Hex Bloom on the main CTA; TXT-04 with a prism gradient", "effects": [{"slot": "MENU", "code": "NAV-105", "name": "Chapter Roll", "where": "THE TOUR menu (top right): names the stop you are at and rolls to the next; tap for the 8 stops"}, {"slot": "BUTTON", "code": "BTN-111", "name": "Prism Edge", "where": "Sign-up buttons: SEND MY SHORTLIST and GET GRACE'S LETTER"}, {"slot": "CARD", "code": "CRD-110", "name": "Prism Facets", "where": "Text alerts card (FIRST WORD, BY TEXT)"}, {"slot": "SCROLL SECTION", "code": "SCR-17", "name": "Word Portal", "where": "The scroll section HOW WE CHOOSE: fly through the word CHOOSE, then the six steps"}, {"slot": "READING TEXT", "code": "TXT-04", "name": "Scroll Highlight", "where": "Both big reading statements, key phrases in a prism gradient"}, {"slot": "HOVER", "code": "HOV-103", "name": "Edge Light", "where": "Hover on the top menu buttons and every card group (markets, six steps, bento, tiers, collection, sign-up cards)"}, {"slot": "EXTRA", "code": "BTN-106", "name": "Hex Bloom", "where": "Main CTA: CLAIM YOUR FOUNDING TICKET (hero)"}]};</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -116,7 +118,23 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
     <!-- COLLECTION and CART exist only past the 19+ gate -->
     <button class="pc-btn pc-btn--sm hide-s sales-only" id="toStore" type="button"><span class="pc-btn__face"><span class="pc-btn__label">COLLECTION</span></span></button>
     <button class="pc-btn pc-btn--sm sales-only" id="cartBtn" type="button" aria-haspopup="dialog" aria-controls="cart"><span class="pc-btn__face"><span class="pc-btn__label">CART <b class="cart-n" id="cartN">0</b></span></span></button>
-    <button class="pc-btn pc-btn--sm" id="menuBtn" type="button" aria-haspopup="dialog" aria-controls="tourMenuPanel" aria-expanded="false"><span class="pc-btn__face"><span class="pc-btn__label">THE TOUR</span></span></button>
+    <!-- NAV-105 Chapter Roll: THE TOUR menu. The button names the stop you are at and rolls to the next one; the fine line fills through the stop; tap for the 8 stops. -->
+    <div class="apx-n105 chroll" id="tourMenu" data-effect="NAV-105">
+      <div class="apx-n105__bar">
+        <button class="apx-n105__now" id="menuBtn" type="button" data-kicker="THE TOUR">THE TOUR</button>
+      </div>
+      <ol class="apx-n105__list" id="tourMenuPanel" aria-label="The tour">
+        <li><a href="#top" data-href="#top" data-go="hero">WELCOME</a></li>
+        <li><a href="#markets" data-href="#markets" data-go="markets">WHAT BRINGS YOU</a></li>
+        <li><a href="#tour" data-href="#tour" data-go="tour">FOUR QUESTIONS</a></li>
+        <li><a href="#age" data-href="#age" data-go="age">THE THRESHOLD</a></li>
+        <li><a href="#journey" data-href="#journey" data-go="city">THE CITY</a></li>
+        <li><a href="#doorsAt" data-href="#doorsAt" data-go="doors">THE DOORS</a></li>
+        <li><a href="#lab" data-href="#lab" data-go="lab">THE LAB</a></li>
+        <li><a href="#store" data-href="#store" data-go="store">THE COLLECTION</a></li>
+        <li class="chroll-meta"><button class="linkish" id="replay" type="button">REPLAY INTRO</button><span class="tm-note">Stops 05 to 08 open after the 19+ check.</span></li>
+      </ol>
+    </div>
   </nav>
 </header>
 
@@ -129,7 +147,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 
 <main id="main" tabindex="-1">
 
-  <!-- STOP 01 · WELCOME: the founding ticket, one field (BTN-101 Torn Stub is the main button) -->
+  <!-- STOP 01 · WELCOME: the founding ticket, one field (BTN-106 Hex Bloom is the main button) -->
   <section class="hero" id="top" data-stop-id="hero" aria-labelledby="heroTitle" data-no-cover>
     <!-- OBJ-08 BLACK-CHROME MONOGRAM: the approved P in real 3D, rising out of the dark after the chest film (hero-p.js) -->
     <div class="hero-card glass" data-hook="H01">
@@ -144,10 +162,10 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
         <li><b>MONTHLY</b><span>LETTER FROM GRACE</span></li>
         <li><b>FIRST</b><span>WORD WHEN NEW LOTS LAND</span></li>
       </ul>
-      <form class="cap-form hero-form" data-hook="H01" data-effect="BTN-101" data-offer novalidate>
+      <form class="cap-form hero-form" data-hook="H01" data-effect="BTN-106" data-offer novalidate>
         <div class="row">
           <label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com"></label>
-          <div class="stub-slot" data-apx="BTN-101"><button class="apx-b101 morph" type="submit">CLAIM YOUR FOUNDING TICKET</button></div>
+          <div class="stub-slot hex-slot" data-apx="BTN-106"><button class="apx-b106 morph" type="submit">CLAIM YOUR FOUNDING TICKET</button></div>
         </div>
         <label class="consent"><input type="checkbox" name="consent_email"><span>Optional: yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
         <p class="err" role="alert"></p>
@@ -218,11 +236,10 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
     </div>
   </section>
 
-  <!-- STOP 03 · FOUR QUESTIONS: FRM-102 Quote Stepper on a BGD-102 plexus (peptide bonds). Preferences only, never health. -->
+  <!-- STOP 03 · FOUR QUESTIONS: FRM-102 Quote Stepper. Preferences only, never health. -->
   <section class="sect tour" id="tour" data-stop-id="tour" aria-labelledby="tourT">
     <div class="wrap">
       <div class="tour-card glass" data-hook="H60">
-        <div class="apx-bgd102 tour-plex" data-apx="BGD-102" data-effect="BGD-102" aria-hidden="true"></div>
         <div class="tour-in">
           <header class="tour-head">
             <p class="eyebrow"><span>STOP 03 OF 08 · YOUR GUIDE</span><i></i><span class="tour-auto">AUTOMATED, NOT A PERSON</span></p>
@@ -308,7 +325,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
               <label class="consent to-sms"><input type="checkbox" name="consent_sms"><span>Optional: yes, PEPTICITY may text me news and new arrivals at this number. Up to [2] texts a month. Message and data rates may apply. Reply STOP to stop, HELP for help. Consent is not a condition of any purchase. <a href="#privacy" class="ph-link">[Privacy promise]</a></span></label>
               <label class="consent"><input type="checkbox" name="consent_tags"><span>Optional: PEPTICITY may remember my answers, including what brings me here, to choose what Grace writes to me about.</span></label>
               <p class="err" role="alert"></p>
-              <div class="stub-slot" data-apx="BTN-101"><button class="apx-b101 morph" type="submit">SEND MY SHORTLIST</button></div>
+              <div class="stub-slot prism-slot" data-apx="BTN-111"><button class="apx-b111 morph" type="submit">SEND MY SHORTLIST</button></div>
               <p class="ok" role="status" aria-live="polite"></p>
               <p class="fine">Your answers stay with PEPTICITY to choose what we send you. They never go to ad platforms.</p>
             </form>
@@ -366,6 +383,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
   <div class="past-age" id="pastAge">
   <!-- 2 · PORTAL (SCR-17) + CITY WEAVE (SCR-07) + CARD AND DOORS: one pinned stage -->
   <section class="journey photo" id="journey" data-stop-id="city" aria-label="The city">
+    <span class="ch-mark" id="doorsAt" aria-hidden="true"></span>
     <div class="stage" id="jStage">
       <div class="cam" id="cam">
         <canvas id="cvWeave" class="frames tone"></canvas>
@@ -515,18 +533,27 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       </div>
     </section>
 
-    <!-- SCR-102 Fan Deck · HOW WE CHOOSE WHAT GOES ON THE SHELF (education + trust) -->
-    <section class="apx-scr102 deck" id="choose" data-apx="SCR-102" data-effect="SCR-102" aria-labelledby="deckT">
-      <div class="apx-scr102__stage">
-        <header class="apx-scr102__head"><div><span class="apx-scr102__eyebrow">BEFORE ANYTHING GOES ON THE SHELF</span><h2 id="deckT" class="h2 x3d">HOW WE CHOOSE</h2></div>
-          <div class="apx-scr102__meta" aria-hidden="true"><span class="apx-scr102__count"></span><svg class="apx-scr102__ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" pathLength="100"/><circle cx="18" cy="18" r="15.9" pathLength="100"/></svg></div></header>
-        <ol class="apx-scr102__deck">
-          <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">01</span><i class="apx-scr102__dot"></i><h3>THE SOURCE</h3><p>Every listing starts with who makes it and how. <span class="ph">[Supplier standards: Grace to confirm before launch.]</span></p></div></li>
-          <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">02</span><i class="apx-scr102__dot"></i><h3>THE PAPERWORK</h3><p>A record for every lot, so you know which batch is in your hands. <span class="ph">[Lot records and testing: shown only once they are real.]</span></p></div></li>
-          <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">03</span><i class="apx-scr102__dot"></i><h3>THE LABEL</h3><p>PEPTICITY, the name and the strength on the front; the full details on the back. <span class="ph">[Final label copy to be approved by counsel.]</span></p></div></li>
-          <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">04</span><i class="apx-scr102__dot"></i><h3>THE STORAGE</h3><p>Freeze-dried peptides are generally kept sealed, cool and away from light. <span class="ph">[Storage and shipping details: Grace to confirm.]</span></p></div></li>
-          <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">05</span><i class="apx-scr102__dot"></i><h3>THE PRICE</h3><p>One plain price in Canadian dollars. Shipping is shown in your cart before you pay. No surprise fees.</p></div></li>
-          <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">06</span><i class="apx-scr102__dot"></i><h3>YOUR QUESTIONS</h3><p>Ask about PEPTICITY, an order or a label. A real person reads every message.</p><button class="pc-btn pc-btn--sm" type="button" data-open="ask" data-hook="H61"><span class="pc-btn__face"><span class="pc-btn__label">ASK GRACE</span></span></button></div></li>
+    <!-- SCR-17 Word Portal · HOW WE CHOOSE: fly through the word CHOOSE into the heading, then the six steps (education + trust) -->
+    <section class="apx-scr17 portal2" id="choose" data-apx="SCR-17" data-effect="SCR-17" data-word="CHOOSE" data-weight="400" aria-labelledby="deckT">
+      <div class="apx-scr17__stage">
+        <div class="apx-scr17__scene">
+          <div class="apx-scr17__ring" aria-hidden="true"></div>
+          <div class="apx-scr17__inner">
+            <span class="apx-scr17__kicker">BEFORE ANYTHING GOES ON THE SHELF</span>
+            <h2 id="deckT" class="h2 x3d">HOW WE CHOOSE</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sect choose6" aria-labelledby="deckT">
+      <div class="wrap">
+        <ol class="cz-grid">
+          <li class="cz-card glass"><span class="cz-num">01</span><i class="cz-dot" aria-hidden="true"></i><h3 class="cz-h">THE SOURCE</h3><p>Every listing starts with who makes it and how. <span class="ph">[Supplier standards: Grace to confirm before launch.]</span></p></li>
+          <li class="cz-card glass"><span class="cz-num">02</span><i class="cz-dot" aria-hidden="true"></i><h3 class="cz-h">THE PAPERWORK</h3><p>A record for every lot, so you know which batch is in your hands. <span class="ph">[Lot records and testing: shown only once they are real.]</span></p></li>
+          <li class="cz-card glass"><span class="cz-num">03</span><i class="cz-dot" aria-hidden="true"></i><h3 class="cz-h">THE LABEL</h3><p>PEPTICITY, the name and the strength on the front; the full details on the back. <span class="ph">[Final label copy to be approved by counsel.]</span></p></li>
+          <li class="cz-card glass"><span class="cz-num">04</span><i class="cz-dot" aria-hidden="true"></i><h3 class="cz-h">THE STORAGE</h3><p>Freeze-dried peptides are generally kept sealed, cool and away from light. <span class="ph">[Storage and shipping details: Grace to confirm.]</span></p></li>
+          <li class="cz-card glass"><span class="cz-num">05</span><i class="cz-dot" aria-hidden="true"></i><h3 class="cz-h">THE PRICE</h3><p>One plain price in Canadian dollars. Shipping is shown in your cart before you pay. No surprise fees.</p></li>
+          <li class="cz-card glass"><span class="cz-num">06</span><i class="cz-dot" aria-hidden="true"></i><h3 class="cz-h">YOUR QUESTIONS</h3><p>Ask about PEPTICITY, an order or a label. A real person reads every message.</p><button class="pc-btn pc-btn--sm" type="button" data-open="ask" data-hook="H61"><span class="pc-btn__face"><span class="pc-btn__label">ASK GRACE</span></span></button></li>
         </ol>
       </div>
     </section>
@@ -679,14 +706,14 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
       </div>
     </section>
 
-    <!-- CRD-118 Squircle Stack · text alerts with a sample text -->
+    <!-- CRD-110 Prism Facets · text alerts with a sample text -->
     <section class="sect texts" id="texts" aria-labelledby="txT">
       <div class="wrap texts-wrap">
-        <article class="apx-c118 sms-card" data-apx="CRD-118" data-effect="CRD-118" aria-label="Text alerts">
-          <div class="apx-c118__alert" aria-hidden="true"><i></i><span><b>SAMPLE · PEPTICITY</b>A new lot just landed. See it before the shelf goes public: [link]. Reply STOP to stop.</span></div>
-          <div>
-            <h2 class="apx-c118__title" id="txT">FIRST WORD, <strong>BY TEXT</strong></h2>
-            <p class="apx-c118__text">One short text when a new lot lands, up to [2] a month. No app to install. (Sample text shown above.)</p>
+        <article class="apx-c110 sms-card" data-apx="CRD-110" data-effect="CRD-110" aria-label="Text alerts">
+          <div class="apx-c110__in">
+            <div class="c110-alert" aria-hidden="true"><i></i><span><b>SAMPLE · PEPTICITY</b>A new lot just landed. See it before the shelf goes public: [link]. Reply STOP to stop.</span></div>
+            <h2 class="apx-c110__title" id="txT">FIRST WORD, <strong>BY TEXT</strong></h2>
+            <p class="apx-c110__text">One short text when a new lot lands, up to [2] a month. No app to install. (Sample text shown above.)</p>
           </div>
         </article>
         <form class="cap-form sms-form glass" data-hook="H43" data-effect="FRM-103" data-consent="sms" novalidate>
@@ -747,7 +774,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
           <div><p class="eyebrow"><span>GRACE'S LETTER</span></p><h2 class="h2s x3d">ONE LETTER A MONTH</h2><p>What's new on the shelf, what's back, and a note from Grace. [Grace photo and signature: placeholder]</p></div>
           <form class="cap-form" data-hook="H18" data-effect="FRM-103" data-consent="required" novalidate>
             <div class="row"><label class="field"><span class="lbl">EMAIL</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
-            <button class="pc-btn morph" type="submit"><span class="pc-btn__face"><span class="pc-btn__label">GET GRACE'S LETTER</span></span></button></div>
+            <div class="stub-slot prism-slot" data-apx="BTN-111"><button class="apx-b111 morph" type="submit">GET GRACE'S LETTER</button></div></div>
             <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me its monthly letter from Grace, including founding-list news. I can unsubscribe at any time. PEPTICITY · [legal name] · [mailing address] · [contact email] · Read our <a href="#privacy" class="ph-link">[privacy promise]</a>.</span></label>
             <p class="err" role="alert"></p><p class="ok" role="status" aria-live="polite"></p>
           </form>
@@ -800,26 +827,6 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
   </div>
 </div>
 
-<!-- NAV-102 Split Preview: THE TOUR menu. Left: the 8 stops. Right: a live miniature of the stop you point at. -->
-<header class="apx-n102 tourmenu" id="tourMenu" data-effect="NAV-102">
-  <div class="apx-n102__bar"><span class="apx-n102__brand"><span class="apx-logo"><svg class="brand-p" viewBox="-0.708 -0.58 1.416 1.16"><use href="#pmark"/></svg></span></span><button class="apx-n102__toggle" type="button" data-close-label="Close the tour menu">Open the tour menu</button></div>
-  <nav class="apx-n102__panel" id="tourMenuPanel" aria-label="The tour">
-    <div class="apx-n102__left">
-      <p class="tm-k">THE PEPTICITY TOUR · 8 STOPS</p>
-      <ul class="apx-n102__list">
-        <li><a href="#top" data-go="hero"><i>01</i>WELCOME</a><div class="apx-n102__pv"><div class="apx-n102__card tm-pv"><span class="apx-n102__tag">STOP 01</span><p class="apx-n102__h">JOIN THE PEPTICITY TEAM</p><p class="apx-n102__t">Your founding ticket, one field.</p><span class="tm-stub"><b>CLAIM YOUR FOUNDING TICKET</b><i></i></span></div></div></li>
-        <li><a href="#markets" data-go="markets"><i>02</i>WHAT BRINGS YOU</a><div class="apx-n102__pv"><div class="apx-n102__card tm-pv"><span class="apx-n102__tag">STOP 02</span><p class="apx-n102__h">WHAT BRINGS YOU HERE?</p><div class="tm-spines"><i></i><i></i><b>GYM</b><i></i><i></i><i></i><i></i><i></i><i></i></div><p class="apx-n102__t">Nine starting points, in your own words.</p></div></div></li>
-        <li><a href="#tour" data-go="tour"><i>03</i>FOUR QUESTIONS</a><div class="apx-n102__pv"><div class="apx-n102__card tm-pv"><span class="apx-n102__tag">STOP 03</span><p class="apx-n102__h">FOUR QUICK QUESTIONS</p><div class="tm-dots"><i class="on"></i><i class="on"></i><i></i><i></i></div><div class="apx-n102__rows"><span>WHAT BRINGS YOU<b>✓</b></span><span>EXPERIENCE<b>✓</b></span><span>WHAT MATTERS MOST<b>…</b></span></div></div></div></li>
-        <li><a href="#age" data-go="age"><i>04</i>THE THRESHOLD</a><div class="apx-n102__pv"><div class="apx-n102__card tm-pv"><span class="apx-n102__tag">STOP 04</span><p class="apx-n102__h">19+ · CANADA</p><p class="apx-n102__t">Names and prices open past this point.</p></div></div></li>
-        <li><a href="#journey" data-go="city"><i>05</i>THE CITY</a><div class="apx-n102__pv"><div class="tm-shot"><img class="pv-img pv-w" src="../_common/media/white-city.jpg" alt="" loading="lazy" decoding="async"><img class="pv-img pv-b" src="../_common/media/black-city.jpg" alt="" loading="lazy" decoding="async"><span>THE CITY OF PEPTICITY</span></div></div></li>
-        <li><a href="#journey" data-go="doors"><i>06</i>THE DOORS</a><div class="apx-n102__pv"><div class="tm-shot"><img class="pv-img pv-w" src="../_common/media/white-doors.jpg" alt="" loading="lazy" decoding="async"><img class="pv-img pv-b" src="../_common/media/black-doors.jpg" alt="" loading="lazy" decoding="async"><span>YOUR MEMBER CARD OPENS THE DOORS</span></div></div></li>
-        <li><a href="#lab" data-go="lab"><i>07</i>THE LAB</a><div class="apx-n102__pv"><div class="tm-shot"><img class="pv-img pv-w" src="../_common/media/white-lab.jpg" alt="" loading="lazy" decoding="async"><img class="pv-img pv-b" src="../_common/media/black-lab.jpg" alt="" loading="lazy" decoding="async"><span>HOW PEPTIDES ARE GENERALLY MADE</span></div></div></li>
-        <li><a href="#store" data-go="store"><i>08</i>THE COLLECTION</a><div class="apx-n102__pv"><div class="apx-n102__card tm-pv tm-col"><img src="../_common/assets/vial-pepticity.webp" alt="" width="305" height="760" loading="lazy"><div><span class="apx-n102__tag">STOP 08</span><p class="apx-n102__h">THE COLLECTION</p><p class="apx-n102__t">Name, strength, one plain price. Your shortlist first.</p></div></div></div></li>
-      </ul>
-      <p class="apx-n102__meta"><button class="linkish" id="replay" type="button">REPLAY INTRO</button><span class="tm-note">Stops 05 to 08 open after the 19+ check.</span></p>
-    </div>
-  </nav>
-</header>
 
 <!-- SAVE MY CART: the only exit hook, only when the cart has items (exit-and-return-hooks) -->
 <aside class="exit glass" id="exit" data-hook="H48b" hidden aria-labelledby="exitT">
@@ -841,17 +848,18 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
 <script src="../_common/vendor/lenis.min.js"></script>
 <script src="../_common/brand/ui/smoke-bg.js"></script>
 <script src="../_common/brand/ui/button.js"></script>
-<script src="fx/NAV-102/module.js?v=43"></script>
 <script>window.APX_NO_AUTOMOUNT=true;</script>
-<script src="fx/BGD-102/module.js?v=43"></script>
-<script src="fx/SCR-102/module.js?v=43"></script>
+<script src="fx/NAV-105/module.js?v=43"></script>
+<script src="fx/SCR-17/module.js?v=43"></script>
 <script src="fx/TXT-04/module.js?v=43"></script>
 <script src="fx/LAY-101/module.js?v=43"></script>
-<script src="fx/BTN-101/module.js?v=43"></script>
+<script src="fx/BTN-111/module.js?v=43"></script>
+<script src="fx/BTN-106/module.js?v=43"></script>
 <script src="fx/FRM-102/module.js?v=43"></script>
-<script src="fx/CRD-118/module.js?v=43"></script>
+<script src="fx/CRD-110/module.js?v=43"></script>
 <script src="fx/CRD-124/module.js?v=43"></script>
 <script src="fx/LAY-102/module.js?v=43"></script>
+<script src="fx/HOV-103/module.js?v=43"></script>
 <script src="v4.js?v=43"></script>
 <script type="module" src="gl3d.js?v=43"></script>
 <script type="module" src="hero-p.js?v=43"></script>
