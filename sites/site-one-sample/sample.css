@@ -1,34 +1,14 @@
 /* SITE-ONE SAMPLE (owner pick 2A, 1 Nov): stronger colour + brighter page, HERO and the first reading statement ONLY.
    Nothing moves, resizes or is reworded: light, colour and glow only. Works in all 8 colours (tokens from colour.css). */
 
-/* ---- 1 · brighter ground: deep graphite lift + soft accent light pools (these two sections only) ---- */
+/* ---- 1 · ground (owner, 1 Nov: NO colour fill anywhere): a neutral graphite lift only, no colour pools ---- */
 .hero,#say1{isolation:isolate}
 .hero::before,#say1::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
-[data-version="black"] .hero::before{
-  background:
-    radial-gradient(48% 55% at 30% 46%,rgba(var(--v-rgb),.20),transparent 70%),
-    radial-gradient(34% 42% at 78% 62%,rgba(var(--v-rgb),.16),transparent 72%),
-    radial-gradient(90% 70% at 50% 40%,rgba(120,124,134,.22),transparent 75%)}
-[data-version="black"] #say1::before{
-  background:
-    radial-gradient(42% 50% at 24% 50%,rgba(var(--v-rgb),.15),transparent 72%),
-    radial-gradient(36% 46% at 82% 40%,rgba(var(--v-rgb),.10),transparent 72%),
-    radial-gradient(90% 70% at 50% 50%,rgba(120,124,134,.18),transparent 75%)}
-[data-version="white"] .hero::before,[data-version="white"] #say1::before{
-  background:radial-gradient(45% 55% at 30% 46%,rgba(var(--v-rgb),.10),transparent 70%),radial-gradient(34% 42% at 78% 62%,rgba(var(--v-rgb),.08),transparent 72%)}
+[data-version="black"] .hero::before,[data-version="black"] #say1::before{background:radial-gradient(90% 70% at 50% 45%,rgba(120,124,134,.16),transparent 75%)}
 
-/* ---- 2 · the glass card: glowing accent edges + accent light inside the smoked glass ---- */
-.hero .hero-card{--rim-hot:var(--v-t);--rim-t:rgba(var(--v-rgb),.85);--rim-s:rgba(var(--v-rgb),.45);--rim-b:rgba(var(--v-rgb),.6);
-  box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.55),inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 30px rgba(var(--v-rgb),.16),inset 0 -30px 60px -30px rgba(var(--v-rgb),.28)}
-[data-version="black"] .hero .hc-light{background:
-  radial-gradient(30% 30% at 30% 30%,rgba(var(--v-rgb),.17),transparent 70%),
-  radial-gradient(26% 26% at 72% 64%,rgba(var(--v-rgb),.13),transparent 70%),
-  radial-gradient(40% 30% at 50% 0%,rgba(255,255,255,.10),transparent 70%)}
-[data-version="white"] .hero .hc-light{background:radial-gradient(30% 30% at 30% 30%,rgba(var(--v-rgb),.14),transparent 70%),radial-gradient(26% 26% at 72% 64%,rgba(var(--v-rgb),.10),transparent 70%)}
-.hero .hero-card .eyebrow i{background:linear-gradient(90deg,transparent,var(--v-t),transparent);box-shadow:0 0 10px rgba(var(--v-rgb),.8)}
-.hero .perks li b{text-shadow:0 0 18px rgba(var(--v-rgb),.45)}
-.hero .perks li{box-shadow:inset 0 -2px 0 rgba(var(--v-rgb),.55)}
-.hero .field input:focus{box-shadow:0 0 0 1px var(--v-t),0 0 18px rgba(var(--v-rgb),.45)}
+/* ---- 2 · the glass card: COMPLETELY see-through, no fill. The colour shows only as a thin lit edge (accent). ---- */
+.hero .hero-card{--rim-hot:var(--v-t);--rim-t:rgba(var(--v-rgb),.8);--rim-s:rgba(255,255,255,.18);--rim-b:rgba(var(--v-rgb),.45)}
+.hero .hero-card .eyebrow i{background:linear-gradient(90deg,transparent,var(--v-t),transparent);box-shadow:0 0 8px rgba(var(--v-rgb),.7)}
 
 /* ---- 3 · the CTA: accent glow at rest, stronger on hover / focus ---- */
 .hero .stub-slot{--apx-accent:var(--v-t);filter:drop-shadow(0 0 10px rgba(var(--v-rgb),.45));transition:filter .35s cubic-bezier(.16,1,.3,1)}
