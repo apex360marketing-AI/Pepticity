@@ -15,7 +15,7 @@ require('fs').mkdirSync(out,{recursive:true});
     p.on('console',m=>{if(m.type()==='error')errs.push(`[${tag}] console ${m.text()}`)});
     p.on('requestfailed',r=>errs.push(`[${tag}] reqfail ${r.url()}`));
     p.on('response',r=>{if(r.status()>=400)errs.push(`[${tag}] ${r.status()} ${r.url()}`)});
-    await p.goto(`http://127.0.0.1:8765/sites/versions/${slug}/?nointro`,{waitUntil:'load'});
+    await p.goto(`http://127.0.0.1:8765/sites/versions/${slug}/?nointro`,{waitUntil:'load',timeout:90000});
     await p.waitForTimeout(3500);
     await p.screenshot({path:`${out}/${slug}-${tag}-hero.png`});
     const H=await p.evaluate(()=>document.documentElement.scrollHeight);

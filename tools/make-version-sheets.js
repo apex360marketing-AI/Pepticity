@@ -13,7 +13,7 @@ const URL=s=>`http://127.0.0.1:8765/sites/versions/${s}/?nointro`;
   const meta=JSON.parse(fs.readFileSync(`${R}/sites/versions/${s}/version.json`));
   const shot=async(w,h,name,fn)=>{const ctx=await b.newContext({viewport:{width:w,height:h},deviceScaleFactor:1});
     await ctx.addInitScript(()=>{try{localStorage.setItem('pc-age-pass',JSON.stringify({ok:true,prov:'ON',exp:Date.now()+864e5}));localStorage.removeItem('pc-version')}catch(e){}});
-    const p=await ctx.newPage(); await p.goto(URL(s),{waitUntil:'load'}); await p.waitForTimeout(3500);
+    const p=await ctx.newPage(); await p.goto(URL(s),{waitUntil:'load',timeout:90000}); await p.waitForTimeout(3500);
     if(fn) await fn(p); await p.screenshot({path:`${RAW}/${s}-${name}.png`}); await ctx.close();};
   const scrollTo=async(p,sel,frac)=>{await p.evaluate(([sel,frac])=>{const el=document.querySelector(sel);if(!el)return;
       const r=el.getBoundingClientRect();const top=r.top+scrollY;const span=Math.max(el.offsetHeight-innerHeight,0);
@@ -42,7 +42,7 @@ const URL=s=>`http://127.0.0.1:8765/sites/versions/${s}/?nointro`;
    <figure style="grid-column:span 2"><img src="${img('cards')}" style="max-height:620px;object-fit:cover;object-position:top"><figcaption>CARDS + HOVER</figcaption></figure></div>
    <ul>${fx}</ul></body></html>`;
   const ctx=await b.newContext({viewport:{width:2000,height:1200}}); const p=await ctx.newPage();
-  await p.setContent(html,{waitUntil:'load'}); await p.waitForTimeout(400);
+  await p.setContent(html,{waitUntil:'load',timeout:90000}); await p.waitForTimeout(400);
   await p.screenshot({path:`${OUT}/${s}.png`,fullPage:true}); await ctx.close(); console.log('sheet',s);
  }
  await b.close();
