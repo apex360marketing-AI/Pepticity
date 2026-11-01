@@ -43,7 +43,7 @@ window.PC_CONFIG = {
   agePassDays: 30,
   /* SWAP POINT: chest film. A new film drops in as media/chest-<white|black>.mp4/.webm (+ -poster.jpg) */
   intro: 'chest',
-  chest: { base: 'media/chest-', diveAt: 9.1, focus: [49, 46] },
+  chest: { base: 'media-intro/chest-', diveAt: 6.6, focus: [49, 46] },   /* SAMPLE: film trimmed 2.5 s at the start (10.04 s -> 7.54 s); dive moves 9.1 -> 6.6 */
   /* SWAP POINT: city + lab frame atlases (HD). man = a copy of media/frames-hd/manifest.json */
   frames: { dir: 'media/frames-hd3/', man: {"white-weave":{"d":{"n":195,"tw":1920,"th":1080,"cols":2,"rows":2,"files":49},"m":{"n":195,"tw":608,"th":1080,"cols":4,"rows":2,"files":25}},"black-weave":{"d":{"n":226,"tw":1920,"th":1080,"cols":2,"rows":2,"files":57},"m":{"n":226,"tw":608,"th":1080,"cols":4,"rows":2,"files":29}},"white-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}},"black-lab":{"d":{"n":151,"tw":1920,"th":1080,"cols":2,"rows":2,"files":38},"m":{"n":151,"tw":608,"th":1080,"cols":4,"rows":2,"files":19}}} },
   /* SWAP POINT: the vial art used for every product */
@@ -101,6 +101,7 @@ d.classList.add('gated');d.classList.remove('js-pending');})();
   <div class="film" id="film" aria-hidden="true">
     <video id="chest" muted playsinline preload="auto"></video>
   </div>
+  <div class="intro-lux" id="introLux" aria-hidden="true"><i class="lux-sweep"></i><i class="lux-bloom"></i><i class="lux-glint"></i></div>
   <div class="intro-bloom" id="introBloom" aria-hidden="true"></div>
   <button class="pc-btn intro-tap" id="introTap" type="button" hidden><span class="pc-btn__face"><span class="pc-btn__label">TAP TO OPEN</span></span></button>
   <div class="intro-skip"><button class="pc-btn pc-btn--sm" id="skipIntro" type="button"><span class="pc-btn__face"><span class="pc-btn__label">SKIP INTRO</span></span></button></div>

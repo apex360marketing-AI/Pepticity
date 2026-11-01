@@ -308,44 +308,55 @@
   }
   /* R-ENTRANCE: the WHITE or BLACK chest film exactly as it is (the chest opens, the bottle rises with its peptide swirl),
      then the camera pushes into the bottle's light and through it into the HERO CARD. */
-  function dive() {
+  /* SAMPLE (owner, 1 Nov): luster on the last moment, then ONE smooth hand-off into the hero (no hard cut, matched brightness).
+     The film's last frame dissolves into the hero with a gentle depth push while the 3D P rises, as one shot. */
+  var luxDone = false;
+  function luster() {
+    if (luxDone || RM) return; luxDone = true;
+    mountFx(); jump(0);                                   /* heavy page work happens now, hidden under the film, not during the dissolve */
+    var lx = $('#introLux'); if (!lx) return;
+    lx.classList.add('on'); gsap.set(lx, { opacity: 1 });
+    gsap.fromTo('#introLux .lux-sweep', { xPercent: -70 }, { xPercent: 70, duration: 1.7, ease: 'sine.inOut' });
+    gsap.fromTo('#introLux .lux-bloom', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1.05, duration: 1.5, ease: 'sine.out' });
+    gsap.fromTo('#introLux .lux-glint', { opacity: 0, scale: 0.3, rotate: -8 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.55, delay: 0.75, ease: 'power2.out', yoyo: true, repeat: 1, repeatDelay: 0.15 });
+  }
+  function releaseFilm() { try { vid.pause(); vid.removeAttribute('poster'); vid.innerHTML = ''; vid.removeAttribute('src'); vid.load(); } catch (e) {} }
+  function handoff(quick) {
     if (introDone) return; introDone = true;
     introTimers.forEach(clearTimeout); introTimers = [];
     SS.set('pc-intro', '1');
+    if (!luxDone) { luxDone = true; mountFx(); jump(0); }
     var org = (CFG.chest && CFG.chest.focus) || [50, 57];
     gsap.set(film, { transformOrigin: org[0] + '% ' + org[1] + '%' });
+    var T = quick ? 0.55 : 1;                              /* SKIP INTRO uses the same path, just faster */
     var tl = introTl = gsap.timeline();
-    tl.to(film, { scale: 2.6, duration: 2.1, ease: 'power3.in' }, 0)
-      .to('#introBloom', { opacity: 1, scale: 1.35, duration: 1.0, ease: 'power2.in' }, 1.0)
-      .add(function () {                                   /* we pass through the light: the hero is already there behind it */
-        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false; mountFx(); document.dispatchEvent(new Event('pc-hero-in'));
-        startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
-        if (!RM) gsap.fromTo('.hero-card', { opacity: 0, scale: 0.92, y: 28 },
-          { opacity: 1, scale: 1, y: 0, duration: 1.9, delay: 1.1, ease: 'expo.out', clearProps: 'transform' });
-      }, 1.85)
-      .to(intro, { opacity: 0, duration: 1.1, ease: 'power2.out' }, 1.95)
-      .add(function () { intro.classList.remove('dive'); gsap.set(intro, { clearProps: 'opacity' }); gsap.set(film, { clearProps: 'transform' }); gsap.set('#introBloom', { opacity: 0, scale: 1 }); vid.pause(); }, 3.15);
+    tl.to(film, { scale: quick ? 1.12 : 1.55, duration: 1.5 * T, ease: 'power2.inOut' }, 0)
+      .to('#introBloom', { opacity: quick ? 0.25 : 0.45, scale: 1.2, duration: 0.9 * T, ease: 'sine.inOut' }, 0.35 * T)
+      .add(function () {                                   /* the hero is revealed underneath while the film is still dissolving */
+        intro.classList.add('dive'); D.classList.remove('intro-on'); introLive = false;
+        document.dispatchEvent(new Event('pc-hero-in')); startScroll(); jump(0); dirty = true;
+        gsap.fromTo('.hero-card', { opacity: 0, scale: 0.965, y: 16 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.5 * T + 0.3, ease: 'expo.out', clearProps: 'transform' });
+      }, 0.75 * T)
+      .to(intro, { opacity: 0, scale: 1.035, duration: 1.1 * T, ease: 'sine.inOut' }, 0.8 * T)
+      .add(function () {
+        intro.classList.remove('dive'); gsap.set(intro, { clearProps: 'opacity,transform' }); gsap.set(film, { clearProps: 'transform' });
+        gsap.set(['#introBloom', '#introLux'], { clearProps: 'all' }); var lx2 = $('#introLux'); if (lx2) lx2.classList.remove('on'); gsap.set('#introLux i', { clearProps: 'all' });
+        releaseFilm();                                     /* free the decoder and video memory once the intro is gone */
+        requestAnimationFrame(function () { ScrollTrigger.refresh(); });
+      }, 0.8 * T + 1.1 * T + 0.05);
     loadAll();
   }
-  function liftIntro() {
-    if (introDone) return; introDone = true;
-    introTimers.forEach(clearTimeout); introTimers = [];
-    SS.set('pc-intro', '1'); intro.classList.add('lift');
-    setTimeout(function () {
-      D.classList.remove('intro-on'); introLive = false; intro.classList.remove('lift'); vid.pause(); mountFx(); document.dispatchEvent(new Event('pc-hero-in'));
-      startScroll(); jump(0); ScrollTrigger.refresh(); dirty = true;
-      heroIn();
-    }, 1050);
-    loadAll();
-  }
+  function dive() { handoff(false); }
+  function liftIntro() { handoff(true); }
   function runIntro() {
-    introDone = false; introLive = true;
+    introDone = false; luxDone = false; introLive = true;
     D.classList.add('intro-on'); intro.classList.remove('lift', 'dive');
     gsap.set(film, { scale: 1 }); gsap.set('#introBloom', { opacity: 0, scale: 1 });
     stopScroll(); jump(0); setFilm();
     var started = false, at = (CFG.chest && CFG.chest.diveAt) || 9.1;
     vid.onplaying = function () { started = true; };
-    vid.ontimeupdate = function () { if (vid.currentTime >= at) dive(); };
+    vid.ontimeupdate = function () { if (vid.currentTime >= at - 1.6) luster(); if (vid.currentTime >= at) dive(); };
     vid.onended = function () { dive(); };
     if (/[?&]holdintro/.test(location.search)) { vid.ontimeupdate = vid.onended = null; }   /* review aid: keep the film on screen */
     /* never skip the film because it loads slowly: the closed-chest poster holds until it can play.

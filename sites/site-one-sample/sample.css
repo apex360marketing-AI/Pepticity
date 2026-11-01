@@ -25,3 +25,19 @@
 #say1 .apx-txt04__kicker{color:var(--v-t);text-shadow:0 0 14px rgba(var(--v-rgb),.5)}
 #say1 .apx-txt04__kicker::before{background:var(--v-t);box-shadow:0 0 12px rgba(var(--v-rgb),.9)}
 #say1 .apx-txt04__notes>*{border-left:2px solid rgba(var(--v-rgb),.7)}
+
+/* ---- 5 · ENTRANCE luster (last moment of the chest film): light sweep, soft accent bloom, hairline glint. Code only, over the film. ---- */
+.intro-lux{position:absolute;inset:0;pointer-events:none;opacity:0;overflow:hidden;z-index:1;display:none}
+.intro-lux.on{display:block}
+.intro-lux i{position:absolute;display:block;pointer-events:none}
+.lux-sweep{inset:-20% -40%;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.05) 46%,rgba(255,255,255,.26) 50%,rgba(255,255,255,.05) 54%,transparent 58%);will-change:transform}
+.lux-bloom{left:49%;top:46%;width:70vmin;height:70vmin;margin:-35vmin 0 0 -35vmin;opacity:0;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(var(--v-rgb),.32),rgba(var(--v-rgb),.12) 45%,transparent 72%);will-change:opacity,transform}
+.lux-glint{left:49%;top:46%;width:44vmin;height:44vmin;margin:-22vmin 0 0 -22vmin;opacity:0;
+  background:linear-gradient(90deg,transparent 0,rgba(255,255,255,.0) 30%,rgba(255,255,255,.9) 50%,rgba(255,255,255,0) 70%,transparent 100%) center/100% 1px no-repeat,
+             linear-gradient(0deg,transparent 0,rgba(255,255,255,0) 38%,rgba(255,255,255,.7) 50%,rgba(255,255,255,0) 62%,transparent 100%) center/1px 60% no-repeat,
+             radial-gradient(closest-side,rgba(255,255,255,.55),transparent 18%)}
+/* the bloom that carries the hand-off: soft and tinted, never a white flash (matched brightness into the graphite hero) */
+[data-version="black"] .intro-bloom{background:radial-gradient(closest-side,rgba(var(--v-rgb),.35) 0%,rgba(150,156,168,.28) 40%,transparent 76%)}
+@media (prefers-reduced-motion:reduce){.intro-lux{display:none}}
+#intro.dive{transition:none}
