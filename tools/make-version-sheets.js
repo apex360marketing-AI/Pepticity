@@ -20,8 +20,9 @@ const URL=s=>`http://127.0.0.1:8765/sites/versions/${s}/?nointro`;
       window.scrollTo(0,top+span*frac-(span?0:innerHeight*.15));},[sel,frac]);await p.waitForTimeout(2200);};
   await shot(1440,900,'hero');
   await shot(1440,900,'read',async p=>{await scrollTo(p,'#say1',.55);});
-  await shot(1440,900,'cards',async p=>{await scrollTo(p,'#markets',0);
-     const c=await p.$('#markets a, #markets button, #markets article, #markets [class*=card]'); if(c){await c.hover().catch(()=>{});await p.waitForTimeout(900);} });
+  await shot(1440,900,'choose',async p=>{await scrollTo(p,'#choose',.5);});
+  await shot(1440,900,'cards',async p=>{await scrollTo(p,'#texts',0);await p.evaluate(()=>{const el=document.querySelector('#texts');if(el)window.scrollBy(0,el.getBoundingClientRect().top-90)});await p.waitForTimeout(1500);
+     const c=await p.$('#texts [class*=card], #texts article, #texts button'); if(c){await c.hover().catch(()=>{});await p.waitForTimeout(900);} });
   await shot(390,844,'phone');
   const img=n=>'data:image/png;base64,'+fs.readFileSync(`${RAW}/${s}-${n}.png`).toString('base64');
   const fx=meta.effects.map(e=>`<li><b>${e.code}</b> ${e.name} <i>· ${e.where}</i></li>`).join('');
@@ -39,7 +40,8 @@ const URL=s=>`http://127.0.0.1:8765/sites/versions/${s}/?nointro`;
    <div class="g"><figure><img src="${img('hero')}"><figcaption>DESKTOP HERO</figcaption></figure>
    <figure><img src="${img('read')}"><figcaption>MID-SCROLL · READING STATEMENT</figcaption></figure>
    <figure class="ph"><img src="${img('phone')}"><figcaption>PHONE HERO</figcaption></figure>
-   <figure style="grid-column:span 2"><img src="${img('cards')}" style="max-height:620px;object-fit:cover;object-position:top"><figcaption>CARDS + HOVER</figcaption></figure></div>
+   <figure><img src="${img('choose')}"><figcaption>SCROLL SECTION · HOW WE CHOOSE</figcaption></figure>
+   <figure><img src="${img('cards')}"><figcaption>CARD + HOVER · TEXT ALERTS</figcaption></figure></div>
    <ul>${fx}</ul></body></html>`;
   const ctx=await b.newContext({viewport:{width:2000,height:1200}}); const p=await ctx.newPage();
   await p.setContent(html,{waitUntil:'load',timeout:90000}); await p.waitForTimeout(400);
