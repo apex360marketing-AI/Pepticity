@@ -1,0 +1,96 @@
+/* TXT-04 · Scroll Highlight */
+.apx-txt04 {
+  --_len: var(--apx-txt04-length, 240vh);
+  --_acc: var(--apx-accent, #cfd3da);
+  --_glow: color-mix(in srgb, var(--_acc) 40%, transparent);
+  --_mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  position: relative; color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-text, system-ui, sans-serif);
+  container-type: inline-size;
+}
+.apx-txt04.is-pin { height: var(--_len); }
+.apx-txt04__stage {
+  position: relative; min-height: 100vh; min-height: 100svh; display: grid; align-content: center;
+  padding: clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px); overflow: clip; isolation: isolate;
+}
+.apx-txt04.is-pin .apx-txt04__stage { position: sticky; top: 0; height: 100vh; height: 100svh; }
+/* slow ambient light behind the words */
+.apx-txt04__stage::before {
+  content: ""; position: absolute; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(38% 34% at 24% 36%, color-mix(in srgb, var(--apx-ink, #ecebe8) 6%, transparent), transparent 70%),
+    radial-gradient(28% 30% at 78% 72%, color-mix(in srgb, var(--_acc) 7%, transparent), transparent 70%);
+  animation: apx-txt04-drift 26s ease-in-out infinite alternate;
+}
+@keyframes apx-txt04-drift { to { transform: translate3d(6%, -4%, 0) rotate(6deg); } }
+.apx-txt04__inner { position: relative; width: 100%; max-width: 1080px; }
+
+.apx-txt04__kicker {
+  display: flex; align-items: center; gap: 14px; margin: 0;
+  font: 500 11px/1 var(--_mono); letter-spacing: .28em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3);
+}
+.apx-txt04__kicker::before { content: ""; width: 30px; height: 1px; background: var(--_acc); box-shadow: 0 0 10px var(--_glow); transform-origin: left; animation: apx-txt04-tick 3.6s ease-in-out infinite; }
+@keyframes apx-txt04-tick { 50% { transform: scaleX(.45); opacity: .6; } }
+
+.apx-txt04__text {
+  position: relative; z-index: 1; margin: 30px 0 0;
+  font-family: var(--apx-txt04-font, var(--apx-font-display, Georgia, serif)); font-weight: var(--apx-txt04-weight, 400);
+  font-size: clamp(30px, 4.6cqi, 66px); line-height: 1.1; letter-spacing: -.005em; text-wrap: pretty;
+}
+.apx-txt04__text + .apx-txt04__text { margin-top: .6em; }
+.apx-txt04__w { display: inline-block; opacity: var(--apx-txt04-dim, .16); will-change: opacity, transform; }
+.apx-txt04__w.is-lit { opacity: 1; }
+.apx-txt04__mark { background: none; color: inherit; }
+.apx-txt04__w.is-hl { position: relative; color: var(--_acc); }
+/* highlight underline draws once the phrase is fully lit (closes the gap to the next word) */
+.apx-txt04__w.is-hl::after {
+  content: ""; position: absolute; left: 0; right: -.3em; bottom: .02em; height: 2px; border-radius: 2px;
+  background: var(--_acc); box-shadow: 0 0 12px var(--_glow); transform: scaleX(0); transform-origin: left;
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+.apx-txt04__w.is-hl.is-end::after, .apx-txt04__w.is-hl.is-eol::after { right: 0; }
+.apx-txt04__mark.is-on .apx-txt04__w.is-hl::after { transform: scaleX(1); }
+.apx-txt04__mark.is-on .apx-txt04__w.is-hl:nth-child(2)::after { transition-delay: .08s; }
+.apx-txt04__mark.is-on .apx-txt04__w.is-hl:nth-child(3)::after { transition-delay: .16s; }
+.apx-txt04__mark.is-on .apx-txt04__w.is-hl:nth-child(4)::after { transition-delay: .24s; }
+/* hover: a lit phrase glows a little brighter */
+.apx-txt04__mark { cursor: default; }
+.apx-txt04__mark.is-on .apx-txt04__w.is-hl { transition: filter .4s ease; }
+@media (hover: hover) { .apx-txt04__mark.is-on:hover .apx-txt04__w.is-hl { filter: drop-shadow(0 0 10px var(--_glow)); } }
+
+/* the reading light that travels with the lit edge */
+.apx-txt04__lamp {
+  position: absolute; left: 0; top: 0; z-index: 0; width: 7em; height: 7em; border-radius: 50%; pointer-events: none;
+  font-size: clamp(30px, 4.6cqi, 66px);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--_acc) 16%, transparent), color-mix(in srgb, var(--apx-ink, #ecebe8) 4%, transparent) 55%, transparent);
+  transition: opacity .6s ease; will-change: transform, opacity; mix-blend-mode: screen;
+}
+
+/* progress hairline + notes */
+.apx-txt04__meter { position: relative; display: block; width: min(240px, 50%); height: 1px; margin-top: 44px; background: var(--apx-line, rgba(255, 255, 255, .13)); overflow: hidden; }
+.apx-txt04__fill { position: absolute; inset: 0; background: var(--_acc); box-shadow: 0 0 10px var(--_glow); transform: scaleX(0); transform-origin: left; }
+.apx-txt04__notes { display: flex; flex-wrap: wrap; gap: 18px 44px; margin-top: 34px; color: var(--apx-muted, #9d9ca3); font-size: 15px; line-height: 1.6; }
+.apx-txt04__notes > * {
+  max-width: 360px; margin: 0; padding-left: 18px; border-left: 1px solid color-mix(in srgb, var(--_acc) 45%, transparent);
+  opacity: 0; transform: translate3d(-18px, 0, 0); transition: opacity .7s ease, transform .9s cubic-bezier(.16, 1, .3, 1);
+}
+.apx-txt04__notes > *:nth-child(2) { transition-delay: .14s; }
+.apx-txt04__notes > *:nth-child(3) { transition-delay: .28s; }
+.apx-txt04__notes > .is-in { opacity: 1; transform: none; }
+
+/* light grounds: screen-blend glow would vanish, use a soft multiply tint instead */
+.apx-txt04.is-light .apx-txt04__lamp { mix-blend-mode: multiply; background: radial-gradient(closest-side, color-mix(in srgb, var(--_acc) 12%, transparent), transparent); }
+
+/* phones: a shorter hold (native sticky, opacity-only work); data-pin="false" lights words as the text passes instead */
+.apx-txt04.is-compact.is-pin { height: var(--apx-txt04-length-compact, 210vh); }
+.apx-txt04.is-compact .apx-txt04__stage { padding: clamp(64px, 10vh, 110px) 20px; }
+.apx-txt04.is-compact:not(.is-pin) .apx-txt04__stage { min-height: 0; }
+.apx-txt04.is-compact .apx-txt04__text { font-size: clamp(28px, 8.4cqi, 40px); line-height: 1.12; }
+.apx-txt04.is-compact .apx-txt04__lamp { font-size: clamp(28px, 8.4cqi, 40px); }
+
+/* motion off: everything lit, notes shown */
+.apx-txt04.is-static .apx-txt04__w { opacity: 1; transform: none; }
+.apx-txt04.is-static .apx-txt04__lamp { display: none; }
+.apx-txt04.is-static .apx-txt04__notes > * { opacity: 1; transform: none; transition: none; }
+.apx-txt04.is-static .apx-txt04__w.is-hl::after { transition: none; }
+.apx-txt04.is-static .apx-txt04__stage::before, .apx-txt04.is-static .apx-txt04__kicker::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .apx-txt04__stage::before, .apx-txt04__kicker::before { animation: none; } }

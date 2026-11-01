@@ -1,0 +1,46 @@
+/* PEPTICITY · VERSIONS accent layer (copied from sites/main/v5/colour.css). Owner, 1 Nov: the whole site in the bright blue #0066FF until Grace picks her colour;
+   one button (COLOUR, in the top bar) cycles all 8 of her colours through the whole site. Accent layer only (skill accent-colorways):
+   glows, edges, hover, focus and scroll-lit details take the colour; grounds, type, glass and copy stay as they are.
+   Tokens: --v (the hex), --v-rgb, --v-t (text tint: 35% white mixed in for dark accents). colour.js sets data-colour on <html>. */
+html,html[data-colour="blue"]{--v:#0066FF;--v-rgb:0,102,255;--v-t:#59A0FF}
+html[data-colour="chartreuse"]{--v:#D4FF3A;--v-rgb:212,255,58;--v-t:#D4FF3A}
+html[data-colour="cyan"]{--v:#0FFFFF;--v-rgb:15,255,255;--v-t:#0FFFFF}
+html[data-colour="red"]{--v:#FF004F;--v-rgb:255,0,79;--v-t:#FF598C}
+html[data-colour="violet"]{--v:#6F00FF;--v-rgb:111,0,255;--v-t:#A659FF}
+html[data-colour="orchid"]{--v:#8D029B;--v-rgb:141,2,155;--v-t:#BA5BC3}
+html[data-colour="copper"]{--v:#C46210;--v-rgb:196,98,16;--v-t:#D99560}
+html[data-colour="salmon"]{--v:#FA8072;--v-rgb:250,128,114;--v-t:#FA8072}
+html{--v-glow:0 0 28px rgba(var(--v-rgb),.45)}
+
+/* the effect modules (10 picks) read --apx-glint for their tiny glints */
+html{--apx-glint:var(--v-t)}
+
+/* 1 · buttons and switches: hover/focus rim + label glow, lower rim at rest, selected thumb edge */
+.pc-btn,.pc-seg{--pc-rim-hot:var(--v-t);--pc-label-glow:rgba(var(--v-rgb),.6);--pc-ring:var(--v-t);--pc-rim-b:rgba(var(--v-rgb),.55)}
+.pc-seg__thumb{box-shadow:inset 0 -1px 0 var(--v-t),0 0 14px rgba(var(--v-rgb),.28)}
+
+/* 2 · section-label dashes and the right-hand rail */
+.eyebrow i{background:linear-gradient(90deg,transparent,var(--v),transparent)}
+.rail li.seen::before{border-color:rgba(var(--v-rgb),.55)}
+.rail li.now::before{border-color:var(--v-t);box-shadow:0 0 12px rgba(var(--v-rgb),.7)}
+
+/* 3 · scroll-lit details */
+.hl-prog i b{background:var(--v-t);box-shadow:0 0 8px rgba(var(--v-rgb),.6)}
+
+/* 4 · cards and chips: hairline at rest, glow on hover */
+.sr,.prod,.int-card{box-shadow:inset 0 1px 0 rgba(var(--v-rgb),.55)}
+.int-card:hover,.prod:hover,.sr:hover{box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.5),var(--v-glow)}
+.chip:hover{box-shadow:inset 0 0 0 1px var(--v-t),0 0 14px rgba(var(--v-rgb),.3)}
+.chip[aria-pressed="true"]{box-shadow:0 0 14px rgba(var(--v-rgb),.35)}
+.st{box-shadow:inset 2px 0 0 rgba(var(--v-rgb),.85),-6px 0 18px -10px rgba(var(--v-rgb),.7)}
+
+/* 5 · keyboard focus */
+:focus-visible{outline-color:var(--v-t)!important}
+
+
+/* ---- VERSIONS (owner, 1 Nov): grounds a little lighter than today: deep graphite, not near-black ---- */
+[data-version="black"]{--bg:#1b1c1f;--bg-2:#25262a;--g-a:rgba(255,255,255,.075);--g-b:rgba(255,255,255,.02)}
+[data-version="white"]{--bg:#f3f4f6;--bg-2:#e7e9ed}
+
+/* reading text (TXT slot): lit words in white, key phrases in the accent */
+html{--read-lit:#ffffff;--read-key:var(--v-t);--read-key-glow:0 0 22px rgba(var(--v-rgb),.55)}

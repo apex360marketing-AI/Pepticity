@@ -1,0 +1,84 @@
+/* ILL-102 · Caustic Glass */
+.apx-ill102 {
+  --_acc: var(--apx-accent, #d4ff3a);
+  --_mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --_cut: 26px;
+  position: relative; isolation: isolate; overflow: hidden; min-height: var(--apx-ill102-height, 100vh); min-height: var(--apx-ill102-height, 100svh);
+  background:
+    radial-gradient(60% 50% at 66% 40%, color-mix(in srgb, var(--apx-ink, #e9edf2) 7%, transparent), transparent 70%),
+    var(--apx-bg, #08090b);
+  color: var(--apx-ink, #e9edf2); font-family: var(--apx-font-text, system-ui, sans-serif);
+  touch-action: pan-y; -webkit-tap-highlight-color: transparent;
+}
+.apx-ill102__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
+.apx-ill102 > :not(.apx-ill102__gl) { position: relative; z-index: 1; }
+
+/* optional content slot: smoked cut-corner glass over the light */
+.apx-ill102__content { min-height: inherit; display: grid; align-content: center; padding: clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px); pointer-events: none; }
+.apx-ill102__card {
+  position: relative; width: min(500px, 100%); padding: clamp(28px, 2.8vw, 42px) clamp(26px, 2.8vw, 40px) clamp(26px, 2.6vw, 36px); pointer-events: auto;
+  clip-path: polygon(0 0, calc(100% - var(--_cut)) 0, 100% var(--_cut), 100% 100%, var(--_cut) 100%, 0 calc(100% - var(--_cut)));
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--apx-ink, #e9edf2) 8%, transparent), color-mix(in srgb, var(--apx-ink, #e9edf2) 1.5%, transparent)),
+    color-mix(in srgb, var(--apx-bg, #08090b) 34%, transparent);
+  backdrop-filter: blur(12px) saturate(1.6); -webkit-backdrop-filter: blur(12px) saturate(1.6);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--apx-ink, #e9edf2) 14%, transparent);
+}
+.apx-ill102__card::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) top left / calc(100% - var(--_cut)) 1px no-repeat,
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) bottom right / calc(100% - var(--_cut)) 1px no-repeat,
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) top left / 1px calc(100% - var(--_cut)) no-repeat,
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) bottom right / 1px calc(100% - var(--_cut)) no-repeat,
+    linear-gradient(45deg, transparent calc(50% - .5px), var(--apx-line, rgba(255, 255, 255, .16)) 50%, transparent calc(50% + .5px)) top right / var(--_cut) var(--_cut) no-repeat,
+    linear-gradient(45deg, transparent calc(50% - .5px), var(--apx-line, rgba(255, 255, 255, .16)) 50%, transparent calc(50% + .5px)) bottom left / var(--_cut) var(--_cut) no-repeat;
+}
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .apx-ill102__card { background: color-mix(in srgb, var(--apx-bg, #08090b) 90%, var(--apx-ink, #e9edf2)); }
+}
+.apx-ill102.is-light .apx-ill102__card { background: linear-gradient(145deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .18)), color-mix(in srgb, var(--apx-bg, #ece9e3) 30%, transparent); }
+.apx-ill102__kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; font: 500 11px/1 var(--_mono); letter-spacing: .26em; text-transform: uppercase; color: var(--apx-muted, #9ea7b1); }
+.apx-ill102__kicker::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--_acc); box-shadow: 0 0 10px color-mix(in srgb, var(--_acc) 60%, transparent); }
+.apx-ill102__card h2 {
+  margin: 0; font-family: var(--apx-font-display, system-ui, sans-serif); font-weight: 700; font-size: clamp(24px, 2.5vw, 38px); line-height: 1.12;
+  letter-spacing: .06em; text-transform: uppercase; text-wrap: balance;
+}
+.apx-ill102__card p { margin: 16px 0 0; max-width: 42ch; font-size: 16px; line-height: 1.66; color: color-mix(in srgb, var(--apx-ink, #e9edf2) 76%, var(--apx-muted, #9ea7b1)); }
+
+/* the CTA: a slab of the same glass; light runs along its rim on hover */
+.apx-ill102__cta {
+  --_c: 12px; position: relative; display: inline-flex; align-items: center; gap: 14px; margin-top: 26px; padding: 15px 22px 15px 20px;
+  font: 600 12px/1 var(--apx-font-text, system-ui, sans-serif); letter-spacing: .2em; text-transform: uppercase; text-decoration: none; color: var(--apx-ink, #e9edf2);
+  clip-path: polygon(0 0, calc(100% - var(--_c)) 0, 100% var(--_c), 100% 100%, var(--_c) 100%, 0 calc(100% - var(--_c)));
+  background: linear-gradient(120deg, color-mix(in srgb, var(--apx-ink, #e9edf2) 12%, transparent), color-mix(in srgb, var(--apx-ink, #e9edf2) 3%, transparent));
+  box-shadow: inset 0 0 0 1px var(--apx-line, rgba(255, 255, 255, .16));
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1), background-color .4s ease;
+  overflow: hidden;
+}
+.apx-ill102__cta::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, var(--apx-ink, #e9edf2) 30%, transparent) 48%, transparent 62%);
+  transform: translateX(-120%); transition: transform .9s cubic-bezier(.2, .8, .2, 1);
+}
+.apx-ill102__cta i { width: 5px; height: 5px; border-radius: 50%; background: var(--_acc); box-shadow: 0 0 10px color-mix(in srgb, var(--_acc) 70%, transparent); transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+.apx-ill102__cta:hover, .apx-ill102__cta:focus-visible { transform: translateY(-2px); outline: none; }
+.apx-ill102__cta:hover::before, .apx-ill102__cta:focus-visible::before { transform: translateX(120%); }
+.apx-ill102__cta:hover i, .apx-ill102__cta:focus-visible i { transform: scale(1.6); }
+.apx-ill102__cta:focus-visible { box-shadow: inset 0 0 0 1px var(--_acc); }
+.apx-ill102__cta:active { transform: translateY(0) scale(.98); }
+
+.apx-ill102.is-compact .apx-ill102__content { align-content: end; padding: 40vh 12px max(14px, env(safe-area-inset-bottom, 0px)); }
+.apx-ill102.is-compact .apx-ill102__card { --_cut: 20px; padding: 24px 22px 22px; }
+.apx-ill102.is-compact .apx-ill102__card h2 { font-size: clamp(21px, 6vw, 27px); }
+.apx-ill102.is-compact .apx-ill102__card p { font-size: 15px; line-height: 1.6; margin-top: 12px; }
+
+/* no 3D available: a still, drawn caustic net */
+.apx-ill102.is-fallback::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .5;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='c' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='4'/><feComponentTransfer><feFuncR type='table' tableValues='0 0 1 0 0 1 0 0'/><feFuncG type='table' tableValues='0 0 1 0 0 1 0 0'/><feFuncB type='table' tableValues='0 0 1 0 0 1 0 0'/><feFuncA type='table' tableValues='1 1'/></feComponentTransfer><feColorMatrix type='saturate' values='0'/></filter><rect width='420' height='420' filter='url(%23c)'/></svg>");
+  mix-blend-mode: screen;
+  -webkit-mask: radial-gradient(60% 55% at 66% 42%, #000, transparent 75%); mask: radial-gradient(60% 55% at 66% 42%, #000, transparent 75%);
+}
+.apx-ill102.is-fallback.is-light::before { mix-blend-mode: multiply; filter: invert(1); opacity: .25; }
+@media (prefers-reduced-motion: reduce) { .apx-ill102__cta, .apx-ill102__cta::before, .apx-ill102__cta i { transition: none; } }
