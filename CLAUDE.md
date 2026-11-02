@@ -11,7 +11,7 @@
    - Before asking anything new, scan the whole thread for open items and add them as steps. Never send a link that has not been checked in a browser first.
 
 4. **CLICK-TO-APPROVE ON EVERY PICTURE (owner, 2 Nov 2026, LOCKED, applies to EVERY agent and thread).**
-Every time you show the owner ANYTHING (pictures, samples, versions, logos, pages, options), give him ONE review page he can open with one click, where he clicks a picture to APPROVE / CHANGE / REJECT it, pins the exact spot, and comments by typing or talking.** His answers save by themselves.
+Every time you show the owner ANYTHING (pictures, samples, versions, logos, pages, options), give him ONE review page he can open with one click, where he clicks a picture to APPROVE / CHANGE / REJECT it, pins the exact spot, and comments by typing or talking. His answers save by themselves.
    - Build it with `tools/review_lib.py` (see `tools/build-confirm-page.py`), publish it as an Artifact with `capabilities: {"db": {}}`, then OPEN it for him. Full steps: skill `owner-review-page`.
    - Read his answers with `ArtifactData` (`answers` collection). NEVER make him repeat himself, find a file, or open a path.
    - His words: "I hate repeating myself... every single time you show me anything."
