@@ -1,0 +1,15 @@
+.ol{display:grid;gap:24px}
+.ol-strip{padding:clamp(20px,3vw,36px);display:grid;gap:20px;position:relative;overflow:hidden}
+.ol-prog{position:absolute;left:0;right:0;top:0;height:2px;background:rgba(255,255,255,.12)}
+.ol-prog i{display:block;height:100%;width:0;background:var(--v-t);box-shadow:0 0 12px rgba(var(--v-rgb),.8);transition:width .8s var(--ease)}
+.ol-step{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3)}
+.ol-q{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.03em;line-height:.95;font-size:clamp(32px,6vw,76px);margin:0}
+.ol-opts{display:flex;flex-wrap:wrap;gap:10px}
+.ol-opts .chip{font-size:16px;padding:14px 20px;animation:slidein .6s var(--ease) both}
+.ol-q.in,.ol-step.in{animation:slidein .6s var(--ease) both}
+@keyframes slidein{from{opacity:0;transform:translateX(34px)}}
+.ol-back{background:none;border:0;color:var(--ink3);font:500 13px var(--body);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;justify-self:start;padding:6px 0}
+.ol-back:hover{color:var(--ink)}
+.ol-build{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.ol-build>*{animation:msgin .7s var(--ease) both}
+.ol-ph{padding:16px 18px;color:var(--ink3);font-size:13px;letter-spacing:.12em;text-transform:uppercase;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);clip-path:var(--cut)}

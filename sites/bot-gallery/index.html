@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEPTICITY · Bot gallery · 15 guides to pick from</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="15 different PEPTICITY guide bots, one brand. Each card is live; open one to try the full bot.">
+<link rel="stylesheet" href="shared/gallery.css">
+<style>
+.hero{padding:clamp(24px,5vw,64px) 0 clamp(18px,3vw,36px);display:grid;gap:18px}
+.hero h1{margin:0;font-size:clamp(48px,9vw,128px)}
+.hero p{margin:0;max-width:720px;font-size:clamp(16px,1.6vw,19px);color:var(--ink2)}
+.rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:8px 0 34px}
+.rules div{padding:14px 16px;font-size:13px;color:var(--ink2);line-height:1.45}
+.rules b{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--v-t);margin-bottom:6px;font-weight:600}
+.fam{margin:40px 0 14px;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.fam h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(24px,3vw,36px);letter-spacing:.05em;text-transform:uppercase}
+.fam span{font-size:13px;color:var(--ink3);max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{display:grid;grid-template-rows:170px auto;text-decoration:none;color:inherit;transition:transform .5s var(--ease)}
+.card:hover,.card:focus-visible{transform:translateY(-4px)}
+.card .th{position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.08)}
+.card .th canvas{position:absolute;inset:0;width:100%;height:100%}
+.card .tx{padding:16px 18px 20px;display:grid;gap:8px}
+.card .no{font-size:11px;letter-spacing:.22em;color:var(--ink3);display:flex;justify-content:space-between}
+.card .no b{color:var(--v-t);font-weight:600}
+.card h3{margin:0;font-family:var(--display);font-weight:400;font-size:34px;letter-spacing:.04em;text-transform:uppercase;line-height:1}
+.card p{margin:0;font-size:14px;color:var(--ink2)}
+.card .go{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.card:hover .go{color:var(--v-t)}
+/* thumbs that are CSS */
+.th .tilt{position:absolute;inset:0;display:grid;place-items:center;perspective:600px}
+.th .tilt i{position:absolute;width:46%;height:56%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);clip-path:var(--cut);background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:transform .2s linear}
+.th .strip{position:absolute;left:8%;right:8%;top:50%;height:44px;transform:translateY(-50%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);clip-path:var(--cut);display:flex;align-items:center;padding:0 14px;font-size:13px;color:var(--ink2);overflow:hidden;white-space:nowrap}
+.th .strip u{display:inline-block;width:1px;height:18px;background:var(--v-t);margin-left:2px;animation:blink 1.1s steps(2) infinite;box-shadow:0 0 6px var(--v)}
+@keyframes blink{50%{opacity:0}}
+.th .tick{position:absolute;left:0;top:44%;display:flex;gap:26px;white-space:nowrap;font-size:13px;color:var(--ink2);animation:tk 22s linear infinite}
+@keyframes tk{to{transform:translateX(-50%)}}
+.th .tick span::before{content:"";display:inline-block;width:5px;height:5px;background:var(--v-t);margin-right:10px;vertical-align:middle;box-shadow:0 0 8px var(--v)}
+.th .big{position:absolute;left:10%;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:34px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+.th .big em{font-style:normal;color:var(--v-t)}
+.th .hair{position:absolute;left:10%;right:10%;bottom:26px;height:2px;background:rgba(255,255,255,.14)}
+.th .hair b{display:block;height:100%;width:30%;background:var(--v-t);box-shadow:0 0 8px var(--v);animation:hp 5s var(--ease) infinite alternate}
+@keyframes hp{to{width:90%}}
+.th .p3d{position:absolute;inset:0;display:grid;place-items:center;perspective:700px}
+.th .p3d div{position:relative;width:84px;height:68px;transform-style:preserve-3d;animation:spin 7s linear infinite}
+.th .p3d div i{position:absolute;inset:0;background:var(--logo-p) center/contain no-repeat;filter:brightness(.95)}
+@keyframes spin{to{transform:rotateY(360deg)}}
+.th .dial{position:absolute;inset:0;display:grid;place-items:center}
+.th .dial div{width:112px;height:112px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4),inset 0 0 0 10px rgba(255,255,255,.02),inset 0 0 0 11px rgba(255,255,255,.18);position:relative;animation:dl 12s linear infinite}
+.th .dial div::before{content:"";position:absolute;left:50%;top:2px;width:2px;height:12px;background:var(--v-t);transform:translateX(-50%);box-shadow:0 0 8px var(--v)}
+.th .dial div::after{content:"";position:absolute;inset:34px;background:var(--logo-p) center/contain no-repeat}
+@keyframes dl{to{transform:rotate(360deg)}}
+.th .tube{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:34px}
+.th .tube s{display:block;width:30px;height:112px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);position:relative;border-radius:0 0 15px 15px;overflow:hidden;text-decoration:none}
+.th .tube s::after{content:"";position:absolute;left:3px;right:3px;bottom:3px;height:60%;background:linear-gradient(90deg,#6d6d68,#d6d5ce,#6d6d68);animation:fl 5s ease-in-out infinite alternate;border-radius:0 0 12px 12px}
+@keyframes fl{from{height:15%}to{height:80%}}
+.th .tube em{display:block;width:12px;height:70px;background:linear-gradient(90deg,#55544f,#cfcec7,#55544f);clip-path:polygon(30% 0,70% 0,100% 80%,50% 100%,0 80%);animation:pp 5s ease-in-out infinite alternate}
+@keyframes pp{to{transform:translateY(14px)}}
+.notes{margin:48px 0 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.notes section{padding:22px}
+.notes h2{margin:0 0 10px;font-family:var(--display);font-weight:400;letter-spacing:.05em;text-transform:uppercase;font-size:26px}
+.notes ul{margin:0;padding-left:18px;color:var(--ink2);font-size:14px;display:grid;gap:8px}
+.notes li b{color:var(--ink)}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rules{grid-template-columns:repeat(2,minmax(0,1fr))}.notes{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="ground" aria-hidden="true"><i></i><i></i></div>
+<header class="top"><span class="pmark" role="img" aria-label="PEPTICITY P"></span><span class="word">PEPTICITY</span><nav aria-label="Gallery"><a href="#top">15 bots</a><a href="#notes">Notes</a></nav></header>
+<main class="wrap" id="top">
+  <section class="hero">
+    <div class="live-label" style="margin:0"><span>BOT GALLERY · PREVIEW · NOT PUBLISHED</span></div>
+    <h1 class="display">15 guides.<br><span class="kw">One brand.</span></h1>
+    <p>Pick the one you want on the site. Every card below is live. Open one to use the full bot: it asks four plain questions, builds a reading list, and ends with an email or text step.</p>
+  </section>
+  <section class="rules" aria-label="What every bot does">
+    <div class="glass"><b>Asks</b>Four plain questions: goal, age range, what you want more of, where you are starting from.</div>
+    <div class="glass"><b>Recommends</b>Class level only: peptide families to read about, vitamins and minerals, foods. No doses, no claims.</div>
+    <div class="glass"><b>Captures</b>Email, plus an optional text. Boxes start unticked, one purpose each (CASL).</div>
+    <div class="glass"><b>Hands off</b>Always "a licensed clinician decides", then a next step: the free assessment.</div>
+  </section>
+  <div id="cards"></div>
+  <div class="notes" id="notes">
+    <section class="glass"><h2>How these were built</h2><ul>
+      <li><b>One brain.</b> All 15 use the trained PEPTICITY guard and Q&amp;A (emergency, under-18, medical and outcome questions go to a clinician or a person) plus a class-level knowledge layer.</li>
+      <li><b>One logo slot.</b> The P comes from a single swap point (<code>--logo-p</code> in <code>shared/gallery.css</code>, file <code>assets/p-mark.svg</code>). The new P drops in there and every bot, 3D ones included, picks it up.</li>
+      <li><b>Real 3D.</b> Bots 01 to 05, 09 and 13 to 15 are three.js lit objects with reflections. Nothing is hand-drawn.</li>
+      <li><b>Accessible.</b> Every bot works with a keyboard, shows focus, and has a reduced-motion version.</li>
+      <li><b>Compliance switch.</b> Add <code>?safe=1</code> to any bot address to see the version with no peptide families, no pairings and no clinician or assessment wording. Needs the owner's pick before publishing (see the report).</li></ul></section>
+    <section class="glass"><h2>Mascot art: listed only</h2><ul>
+      <li><b>Not generated. No Higgsfield credits spent.</b> The agents use glass and chrome shapes, so they need no character art.</li>
+      <li>If you ever want a character, this is the shot to approve first: <i>"A small glass-and-chrome drone mascot, one round lens for an eye, no face, graphite studio background, soft white key light, one thin blue rim light, three-quarter view, clean negative space."</i></li>
+      <li>Second shot: the same drone in a three-view turnaround, so it can be placed in the bots as a real asset.</li></ul></section>
+  </div>
+  <p class="disc">PEPTICITY GUIDE is an automated guide, not a clinician, and this is not medical advice. In an emergency call 911. Preview build: entries stay in this browser only. [Final legal copy to be approved by counsel.]</p>
+</main>
+<script src="shared/registry.js"></script>
+<script src="shared/inventory.js"></script>
+<script src="shared/pep-brain.js"></script>
+<script src="shared/gallery-brain.js"></script>
+<script src="shared/common.js"></script>
+<script src="shared/card-live.js"></script>
+</body>
+</html>

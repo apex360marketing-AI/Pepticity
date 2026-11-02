@@ -1,0 +1,15 @@
+.dp{perspective:1500px;padding:10px 0 20px}
+.dp-prog{display:flex;gap:8px;max-width:760px;margin:0 auto 18px}
+.dp-prog i{flex:1;height:2px;background:rgba(255,255,255,.16);transition:background .5s,box-shadow .5s}
+.dp-prog i.on{background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.7)}
+.dp-stack{position:relative;max-width:760px;margin:0 auto;height:470px;transform-style:preserve-3d;transition:transform .3s linear}
+.dp-card{position:absolute;inset:0;padding:clamp(20px,3vw,34px);display:grid;align-content:start;gap:14px;transition:transform .9s var(--ease),opacity .7s var(--ease);will-change:transform}
+.dp-card .n{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
+.dp-card .n b{color:var(--v-t);font-weight:600}
+.dp-card h2{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(28px,4.4vw,52px);line-height:.98}
+.dp-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.dp-card.back{pointer-events:none}
+.dp-fan{display:none;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;max-width:1100px;margin:0 auto;align-items:start}
+.dp.done .dp-stack,.dp.done .dp-prog{display:none}
+.dp.done .dp-fan{display:grid;animation:msgin .9s var(--ease) both}
+@media(max-width:900px){.dp-stack{height:520px}.dp-fan{grid-template-columns:minmax(0,1fr)}.dp{perspective:none}}

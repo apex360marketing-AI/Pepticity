@@ -1,0 +1,18 @@
+.cmd-stage{display:grid;gap:18px;max-width:880px;margin:0 auto;padding:clamp(8px,3vw,40px) 0}
+.cmd-q{margin:0;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.cmd-q b{color:var(--v-t);font-weight:600}
+.cmd{display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap;min-height:68px}
+.cmd .gl{font-family:var(--display);color:var(--v-t);font-size:22px;letter-spacing:.05em;flex:none}
+.cmd .toks{display:flex;gap:6px;flex-wrap:wrap}
+.cmd .tok{font-size:13px;padding:6px 10px;border:0;color:var(--ink);background:rgba(255,255,255,.012);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);clip-path:var(--cut);cursor:pointer}
+.cmd .tok:hover{box-shadow:inset 0 0 0 1px var(--v-t)}
+.cmd input{flex:1;min-width:160px;background:transparent;border:0;color:var(--ink);font:400 18px/1.2 var(--body);padding:12px 4px;outline:none}
+.cmd input::placeholder{color:var(--ink3)}
+.cmd kbd{font:500 11px var(--body);color:var(--ink3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);padding:4px 7px}
+.cmd-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.cmd-list .chip{animation:msgin .45s var(--ease) both}
+.cmd-list .chip mark{background:none;color:var(--v-t)}
+.cmd-out{display:grid;gap:14px}
+.cmd-out .res{grid-template-columns:repeat(2,1fr)}
+.cmd-out .res>h3,.cmd-out .res>ul,.cmd-out .res>.clin,.cmd-out .res>.pair{grid-column:1/-1}
+@media(max-width:700px){.cmd-out .res{grid-template-columns:1fr}}
