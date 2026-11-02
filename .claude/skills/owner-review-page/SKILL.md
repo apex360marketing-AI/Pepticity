@@ -11,7 +11,7 @@ Owner: "I want to be able to click on the image and tell you if I approve it or 
 3. Publish `artifact.html` with the Artifact tool, `capabilities: {"db": {}}`, then `action: "open"` so it opens for him. Reply with the link in the first line.
 4. His answers save into the artifact's database (`answers` collection, one document per card, with verdicts, pins and comments). Read them with `ArtifactData` (`action: "list"`, `collection: "answers"`) when he says he answered. NEVER ask him to repeat anything that is already there.
 5. If the Artifact tool is not available in your session: build the same page, send it with SendUserFile (display render), and say plainly that his answers need COPY MY ANSWERS.
-6. Pictures first, point form, short. Questions as numbered options with letters, recommended first. Never decide for him.
+6. Pictures first, point form, short. QUESTIONS NEVER GO IN CHAT: every question is a step on the owner's board (CLAUDE.md rule 5, https://claude.ai/artifact/QJABMKttNFPFsRMcRkdJw5), with a last option "Fuck off, drop it". Never decide for him.
 7. Re-publish the SAME file path to keep the same link when he asks for changes.
 
 ## Checks before you send

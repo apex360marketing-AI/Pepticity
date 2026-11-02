@@ -989,6 +989,7 @@
   }
   function showOut(focus) {
     renderOut(); tourForm.hidden = true; tourOut.hidden = false;
+    mountFx();   /* the shortlist button (BTN-173) sits inside the result panel: mount it now that it is on the page */
     if (focus) setTimeout(function () { var h = $('.to-play .eyebrow', tourOut); h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); glide(absTop($('.tour-card')) - 60, 1.2); }, 60);
     ScrollTrigger.refresh();
   }
