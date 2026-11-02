@@ -51,3 +51,6 @@ Rule: one stage at a time; each stage ends with proof (screenshots, a test run, 
 | D9 | Counsel: CASL for saved-cart and restock alerts | Book counsel | Same session as D8 |
 | D10 | Create an `incident-thinker` skill with skill-creator | Yes / No | **Yes** |
 | D11 | Grace's quiet hours | 22:00-07:00 Pacific / other | 22:00-07:00 |
+| D12 | Start week 1 now | Yes / change the spec first | **Yes** |
+
+Review page: https://claude.ai/artifact/RVs6CFZnAnhKwpgdDZ16QZ · Panel preview: https://claude.ai/artifact/MwZfrWKNXkBWozzuqwdmsk
