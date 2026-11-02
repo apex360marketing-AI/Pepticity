@@ -49,3 +49,5 @@ The owner approves every line. Change it only when he says so (review page: docs
 
 ## S11 · QUESTIONS (locked 2 Nov, CLAUDE.md rule 5)
 - NEVER ask the owner anything in chat (no typed options, no dialog). Every question is a STEP on his board: https://claude.ai/artifact/QJABMKttNFPFsRMcRkdJw5 (ArtifactData, collection steps; answers in collection answers). Every question gets a last option "Fuck off, drop it". Then OPEN the page for him and stop.
+- OPEN THE BOARD YOURSELF after ANY change, build, publish or new step (Artifact tool, action open). Never just say "it's on the board". If you changed a page, open that page too.
+- Mark changed text bright purple (#B000FF) on pages the owner reviews. Keep working on anything that needs no answer; never idle. (Owner order relayed 2 Nov.)
