@@ -17,6 +17,12 @@ Every time you show the owner ANYTHING (pictures, samples, versions, logos, page
    - His words: "I hate repeating myself... every single time you show me anything."
    - HOW THE TWO RULES FIT (rules 3 and 4): the review-queue page in rule 3 is the master page for step-by-step decisions. Rule 4 is how EVERY picture behaves, on any page you show him: tap it, APPROVE / CHANGE / REJECT, pin the exact spot, comment by typing or talking, answers saved for you. A batch of pictures can use `tools/review_lib.py` (ready now); the owner has been asked whether to merge both into the one review-queue page.
 
+5. **ALL QUESTIONS GO IN THE INTERACTIVE QUESTION BOARD (owner, 2 Nov 2026, for every session of every project).** Never ask the owner anything in chat, never as typed options (1A / 2B), never in a dialog (AskUserQuestion). EVERY question, approval, choice and recommendation is a STEP on the review page (rule 3), so he only clicks.
+   - Each step: one question, big bright tap choices, a red "Fuck off, drop it" choice on EVERY question (his word for skip / drop it), an optional comment, no typing, no walls of text.
+   - After adding steps, OPEN the page for him (Artifact action `open`), then stop. Read `answers` before acting. Never send him a link instead of opening the page.
+   - Easy for him, never lower quality.
+   - His words: "I want all questions you're going to ask me built into an interactive questionnaire. I just click and answer. I don't ever want to see these questions like this ever again."
+
 # PEPTICITY: LOCKED DECISIONS (read first, every session)
 
 These are final. Do not change any of them unless the owner asks in so many words.
