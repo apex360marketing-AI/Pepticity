@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Owner Hub</title>
+<style>
+:root{--bg:#0b0b10;--card:#16161f;--line:#2a2a38;--txt:#f4f4f8;--mut:#9a9ab0;--acc:#B000FF;--ok:#27E39B;--drop:#FF3B5C}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:17px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.top{position:sticky;top:0;z-index:5;display:flex;gap:8px;align-items:center;padding:12px 16px;background:rgba(11,11,16,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;letter-spacing:.08em;font-size:15px;margin-right:auto}
+.tab{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 16px;font-weight:600}
+.tab.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.stat{font-size:13px;color:var(--mut);padding:6px 16px}
+.stat b{color:var(--ok)}.stat.bad b{color:var(--drop)}
+main{max-width:760px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--mut);margin-bottom:10px}
+.chip{background:#23233a;border-radius:999px;padding:3px 10px;color:#d8d8ee}
+.new{color:var(--acc);font-weight:800}
+h2{margin:0 0 10px;font-size:26px;line-height:1.2}
+.body{white-space:pre-wrap;color:#e6e6f2;margin-bottom:14px;max-height:46vh;overflow:auto}
+.imgs img{max-width:100%;border-radius:12px;margin:6px 0;display:block}
+.links a{color:var(--acc);display:block;margin:4px 0;word-break:break-all}
+.opts{display:grid;gap:10px;margin:16px 0}
+.opt{text-align:left;padding:16px 18px;border-radius:14px;border:2px solid var(--line);background:#1d1d2b;font-weight:600;font-size:18px;min-height:56px}
+.opt.sel{border-color:var(--ok);background:#0f2a22}
+.opt.drop{border-color:var(--drop);color:var(--drop)}
+.opt.drop.sel{background:#2a0f17}
+textarea{width:100%;min-height:76px;border-radius:12px;border:1px solid var(--line);background:#101018;color:var(--txt);padding:12px;font:inherit}
+.next{width:100%;margin-top:12px;padding:18px;border:0;border-radius:14px;background:var(--acc);color:#fff;font-weight:800;font-size:19px}
+.next:disabled{opacity:.4}
+.ghost{background:transparent;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:10px}
+.empty{text-align:center;color:var(--mut);padding:60px 10px}
+.thread{display:flex;justify-content:space-between;gap:10px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;margin-bottom:8px;background:var(--card);width:100%;text-align:left}
+.thread small{color:var(--mut);display:block}
+.badge{background:var(--acc);border-radius:999px;padding:2px 10px;font-weight:700;font-size:14px;align-self:center}
+.done{color:var(--ok);font-size:14px}
+.login{max-width:380px;margin:12vh auto;padding:16px}
+.login input{width:100%;margin:8px 0;padding:14px;border-radius:12px;border:1px solid var(--line);background:#101018;color:var(--txt);font:inherit}
+.err{color:var(--drop);margin-top:8px;min-height:1.4em}
+.row{display:flex;gap:8px}.row>*{flex:1}
+@media(max-width:480px){h2{font-size:22px}.card{padding:16px;border-radius:16px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const LS={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let sb=null,msgs=LS.get('hub_msgs',[]),ans=LS.get('hub_ans',{}),view='inbox',proj=null,idx=0,sel=[],comment='',online=null,loggedIn=LS.get('hub_in',false),seen=LS.get('hub_seen',{}),pending=LS.get('hub_pending',[]);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const order=(a,b)=>(a.sort_order!=null&&b.sort_order!=null)?(a.sort_order-b.sort_order):(new Date(a.created_at)-new Date(b.created_at));
+const unanswered=()=>msgs.filter(m=>!ans[m.id]&&(!proj||m.project===proj)).sort(order);
+
+function status(){const s=$('#stat');if(!s)return;
+ if(online===null){s.className='stat';s.innerHTML='Showing saved data…'}
+ else if(online){s.className='stat';s.innerHTML='<b>● Live</b> · '+unanswered().length+' waiting'+(pending.length?' · '+pending.length+' to sync':'')}
+ else{s.className='stat bad';s.innerHTML='<b>● Can\'t reach the server.</b> Showing saved data; your answers are kept and will sync.'}}
+
+function shell(inner){app.innerHTML='<div class="top"><span class="brand">OWNER HUB</span><button class="tab '+(view==='inbox'?'on':'')+'" data-v="inbox">Inbox</button><button class="tab '+(view==='threads'?'on':'')+'" data-v="threads">All threads</button></div><div class="stat" id="stat"></div><main>'+inner+'</main>';
+ app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;if(view==='inbox'){idx=0;}render()});status()}
+
+function render(){ if(!loggedIn)return loginView(); if(view==='threads')return threadsView(); inboxView()}
+
+function loginView(){app.innerHTML='<div class="login"><h2>Owner Hub</h2><p style="color:var(--mut)">Private. Sign in.</p><input id="em" type="email" autocomplete="username" placeholder="Email"><input id="pw" type="password" autocomplete="current-password" placeholder="Password"><button class="next" id="go">Sign in</button><div class="err" id="err"></div></div>';
+ $('#em').value=LS.get('hub_email','');
+ const go=async()=>{const e=$('#em').value.trim(),p=$('#pw').value;$('#err').textContent='Signing in…';
+  const t=setTimeout(()=>{$('#err').textContent='The server is not answering. Check your connection and tap Sign in again.'},5000);
+  try{const r=await sb.auth.signInWithPassword({email:e,password:p});clearTimeout(t);if(r.error){$('#err').textContent=r.error.message;return}
+   LS.set('hub_email',e);loggedIn=true;LS.set('hub_in',true);start()}catch(x){clearTimeout(t);$('#err').textContent='Could not reach the server.'}};
+ $('#go').onclick=go;$('#pw').onkeydown=e=>{if(e.key==='Enter')go()}}
+
+function inboxView(){const list=unanswered();
+ if(!list.length){shell('<div class="empty"><div style="font-size:56px">✓</div><h2>All caught up</h2><p>New questions from your sessions will appear here by themselves.</p></div>');return}
+ if(idx>=list.length)idx=0;const m=list[idx];
+ const isNew=!seen[m.id];
+ const opts=(m.options||[]);
+ const imgs=(m.images||[]).map(u=>'<img loading="lazy" src="'+esc(typeof u==='string'?u:u.url)+'" alt="">').join('');
+ const links=(m.links||[]).map(l=>{const u=typeof l==='string'?l:l.url;const t=typeof l==='string'?l:(l.label||l.url);return '<a target="_blank" rel="noopener" href="'+esc(u)+'">'+esc(t)+' ↗</a>'}).join('');
+ shell('<div class="card"><div class="meta"><span class="chip">'+esc(m.project)+'</span><span class="chip">'+esc(String(m.session_id).slice(0,18))+'</span><span>'+new Date(m.created_at).toLocaleString()+'</span>'+(isNew?'<span class="new">NEW</span>':'')+'<span style="margin-left:auto">'+(idx+1)+' / '+list.length+'</span></div><h2>'+esc(m.title)+'</h2><div class="body">'+esc(m.body)+'</div><div class="imgs">'+imgs+'</div><div class="links">'+links+'</div><div class="opts">'+opts.map(o=>'<button class="opt'+(o.id==='drop'?' drop':'')+(sel.includes(o.id)?' sel':'')+'" data-o="'+esc(o.id)+'"'+(o.color&&o.id==='drop'?' style="border-color:'+esc(o.color)+';color:'+esc(o.color)+'"':'')+'>'+(sel.includes(o.id)?'✓ ':'')+esc(o.label)+'</button>').join('')+'</div><textarea id="cm" placeholder="Comment (optional)">'+esc(comment)+'</textarea><button class="next" id="nx" '+(sel.length||comment.trim()?'':'disabled')+'>NEXT →</button>'+(list.length>1?'<button class="ghost" id="skip">Skip for now</button>':'')+'</div>');
+ seen[m.id]=1;LS.set('hub_seen',seen);
+ app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const id=b.dataset.o;
+  if(id==='drop'){sel=sel.includes('drop')?[]:['drop']}
+  else{sel=sel.filter(x=>x!=='drop');if(m.multi||opts.filter(o=>o.id!=='drop').length>3){sel=sel.includes(id)?sel.filter(x=>x!==id):[...sel,id]}else{sel=sel.includes(id)?[]:[id]}}
+  comment=$('#cm').value;inboxView()});
+ $('#cm').oninput=e=>{comment=e.target.value;$('#nx').disabled=!(sel.length||comment.trim())};
+ $('#nx').onclick=()=>submit(m);
+ const sk=$('#skip');if(sk)sk.onclick=()=>{idx=(idx+1)%list.length;sel=[];comment='';inboxView()}}
+
+async function submit(m){const row={message_id:m.id,picks:sel,comment:comment.trim(),answered_at:new Date().toISOString()};
+ ans[m.id]=row;LS.set('hub_ans',ans);sel=[];comment='';
+ pending.push(row);LS.set('hub_pending',pending);inboxView();flush()}
+
+async function flush(){if(!sb||!pending.length)return;
+ try{const rows=pending.slice();const r=await sb.from('answers').upsert(rows,{onConflict:'message_id'});
+  if(r.error)throw r.error;pending=pending.filter(p=>!rows.includes(p));LS.set('hub_pending',pending);online=true}catch(e){online=false}status()}
+
+function threadsView(){const by={};msgs.forEach(m=>{(by[m.project]=by[m.project]||[]).push(m)});
+ const names=Object.keys(by).sort((a,b)=>by[b].filter(m=>!ans[m.id]).length-by[a].filter(m=>!ans[m.id]).length);
+ shell('<h2>All threads</h2>'+(proj?'<button class="ghost" id="clr">Showing only “'+esc(proj)+'” — show all</button>':'')+(names.length?names.map(n=>{const w=by[n].filter(m=>!ans[m.id]).length;return '<button class="thread" data-p="'+esc(n)+'"><span><b>'+esc(n)+'</b><small>'+by[n].length+' cards · '+(by[n].length-w)+' answered</small></span>'+(w?'<span class="badge">'+w+'</span>':'<span class="done">✓ done</span>')+'</button>'}).join(''):'<div class="empty">Nothing yet.</div>'));
+ app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{proj=b.dataset.p;view='inbox';idx=0;render()});
+ const c=$('#clr');if(c)c.onclick=()=>{proj=null;render()}}
+
+async function load(){if(!sb)return;
+ const t=setTimeout(()=>{if(online===null){online=false;status()}},5000);
+ try{const [a,b]=await Promise.all([sb.from('messages').select('*').order('created_at',{ascending:true}).limit(1000),sb.from('answers').select('*').limit(2000)]);
+  clearTimeout(t);if(a.error||b.error)throw (a.error||b.error);
+  msgs=a.data;LS.set('hub_msgs',msgs);const o={};b.data.forEach(r=>o[r.message_id]=r);pending.forEach(p=>o[p.message_id]=p);ans=o;LS.set('hub_ans',ans);online=true;
+  if(view==='inbox'&&!document.activeElement?.matches?.('textarea'))render();else status()}
+ catch(e){clearTimeout(t);online=false;status()}}
+
+function start(){render();load().then(flush);
+ try{sb.channel('hub').on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>load()).on('postgres_changes',{event:'*',schema:'public',table:'answers'},()=>load()).subscribe()}catch(e){}
+ setInterval(()=>{load();flush()},30000)}
+
+(async function boot(){
+ if(!window.supabase||!window.HUB_CONFIG){render_err();return}
+ sb=supabase.createClient(HUB_CONFIG.url,HUB_CONFIG.key,{auth:{persistSession:true,autoRefreshToken:true}});
+ if(loggedIn){render()}else render();
+ try{const s=await Promise.race([sb.auth.getSession(),new Promise((_,r)=>setTimeout(()=>r('t'),5000))]);
+  if(s&&s.data&&s.data.session){loggedIn=true;LS.set('hub_in',true);start()}else{loggedIn=false;LS.set('hub_in',false);render()}}
+ catch(e){ if(loggedIn){online=false;render()} else render()}
+ function render_err(){app.innerHTML='<div class="login"><h2>Owner Hub</h2><p class="err">Could not load the app libraries. Check your connection and reload.</p></div>'}
+})();
+})();
+</script>
+</body>
+</html>
