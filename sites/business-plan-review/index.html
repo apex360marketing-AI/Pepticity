@@ -1,0 +1,175 @@
+<title>PEPTICITY Review Queue</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one review step per screen, big tap targets, progress on top, summary at the end. */
+:root{
+  --bg:#1b1b1a; --panel:#242422; --line:#3a3a37; --fg:#f1f1ec; --mute:#a9a8a0;
+  --accent:#d4ff3a; --accent-ink:#1b1b1a; --drop:#ff3b5c; --ok:#d4ff3a;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f3f3ee; --panel:#ffffff; --line:#d3d3cb; --fg:#1d1d1b; --mute:#5c5c56;
+  --accent:#4f6600; --accent-ink:#ffffff; --drop:#c4153a; --ok:#4f6600; color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f3f3ee; --panel:#ffffff; --line:#d3d3cb; --fg:#1d1d1b; --mute:#5c5c56;
+  --accent:#4f6600; --accent-ink:#ffffff; --drop:#c4153a; --ok:#4f6600; color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Helvetica Neue",Arial,sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+.wrap{max-width:720px;margin:0 auto}
+h1,h2,.cap{text-transform:uppercase;letter-spacing:.14em;font-weight:800}
+h1{font-size:14px;margin:0 0 12px;color:var(--mute)}
+.bar{height:4px;background:var(--line);margin-bottom:6px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.count{font-size:12px;color:var(--mute);letter-spacing:.12em;text-transform:uppercase;margin-bottom:22px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.kind{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:3px 8px;margin-bottom:12px}
+h2{font-size:clamp(20px,5vw,28px);line-height:1.2;margin:0 0 10px;text-wrap:balance}
+.note{color:var(--mute);margin:0 0 14px;max-width:62ch}
+a{color:var(--fg)} a:hover{color:var(--accent)}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.links a{border:1px solid var(--line);padding:8px 12px;font-size:14px;text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
+.q{font-weight:700;margin:18px 0 10px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;width:100%;min-height:56px;padding:12px 16px;background:var(--panel);color:var(--fg);
+  border:1px solid var(--line);font:inherit;font-weight:700;cursor:pointer}
+.opt:hover{border-color:var(--fg)}
+.opt:focus-visible,.nav button:focus-visible,.sum button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt .dot{width:14px;height:14px;border:2px solid var(--mute);flex:none}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
+.opt[aria-pressed="true"] .dot{background:var(--accent);border-color:var(--accent)}
+.opt.drop[aria-pressed="true"]{border-color:var(--drop);box-shadow:inset 4px 0 0 var(--drop)}
+.opt.drop[aria-pressed="true"] .dot{background:var(--drop);border-color:var(--drop)}
+.opt.drop .dot{border-color:var(--drop)}
+.nav{display:flex;gap:10px;margin-top:22px;position:sticky;bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 30%)}
+.nav button,.sum button{font:inherit;font-weight:800;letter-spacing:.1em;text-transform:uppercase;min-height:52px;padding:0 20px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--fg)}
+.nav .next{flex:1;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.nav .next:disabled{opacity:.35;cursor:not-allowed}
+.nav .back:disabled{opacity:.35;cursor:not-allowed}
+.dots{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:22px}
+.dots button{width:26px;height:26px;border:1px solid var(--line);background:none;color:var(--mute);font:600 11px/1 inherit;cursor:pointer;padding:0}
+.dots button.done{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.dots button.dropped{background:var(--drop);color:#fff;border-color:var(--drop)}
+.dots button.cur{outline:2px solid var(--fg)}
+.sum{background:var(--panel);border:1px solid var(--line);padding:18px}
+.sum table{width:100%;border-collapse:collapse;font-size:14px}
+.sum td{padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+.sum td:first-child{color:var(--mute);width:48%}
+.sum .pick{font-weight:700}
+.sum .pick.drop{color:var(--drop)}
+.sum .pick.none{color:var(--mute);font-weight:400}
+.sum .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.toast{font-size:13px;color:var(--ok);min-height:20px;margin-top:8px}
+textarea{width:100%;min-height:110px;margin-top:12px;background:var(--bg);color:var(--fg);border:1px solid var(--line);font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <h1>PEPTICITY · REVIEW QUEUE · BUSINESS PLAN SESSION</h1>
+  <div class="bar"><i id="fill"></i></div>
+  <div class="count"><span id="pos"></span><span id="state"></span></div>
+  <div class="dots" id="dots" role="navigation" aria-label="Jump to step"></div>
+  <div id="stage"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var DROP={id:'drop',label:'Fuck off, drop it'};
+// Every open decision from this session, in the order they matter. Recommended is always first.
+var STEPS=[
+ {id:'plan-look',kind:'REVIEW',title:'The business plan page: look and layout',
+  note:'Interactive page with 3 stages, 3/6/12 month views, sliders, risk toggle, timeline, links. Built and pushed, not published.',
+  links:[['Open the page file','https://github.com/apex360marketing-ai/pepticity/blob/claude/pepticity-business-plan/sites/business-plan/index.html']],
+  q:'Is the look and layout right?',
+  opts:[['approve','Approved as it is (Recommended)'],['tweak','Needs changes: I will say what'],['redo','Start the design again']]},
+ {id:'honest-finding',kind:'REVIEW',title:'The honest finding: B and C do not beat A in BASE',
+  note:'BASE, 12 months, net: A $24K, B $18K, C $13K. They only pull ahead in HIGH. Their value is extra revenue and revenue that survives if peptides stop.',
+  q:'How do we treat this?',
+  opts:[['keep','Keep the numbers as modelled (Recommended)'],['rework','Rework the assumptions so B and C look better'],['ask','Show me which sliders drive it first']]},
+ {id:'pep-numbers',kind:'DECISION',title:'Peptide margin and average order value',
+  note:'Placeholders: 60% margin, $140 order. No public benchmark. Grace knows the real ones.',
+  q:'What does the plan use until real numbers exist?',
+  opts:[['placeholder','Keep my labelled placeholders (Recommended)'],['grace','Grace supplies the numbers first']]},
+ {id:'paid-share',kind:'DECISION',title:'Paid ads on vitamins, protein, creatine',
+  note:'Assumed 5% of leads. At the cited cost per lead, low-ticket products lose money on paid leads.',
+  q:'Keep that assumption?',
+  opts:[['keep5','Keep 5% (Recommended)'],['zero','Organic only, 0%'],['higher','Raise it so I can see the cost']]},
+ {id:'font',kind:'DECISION',title:'Headings use a plain bold font',
+  note:'The approved PEPTICITY STUDIO 3D font is an image-style asset. Rebuilding it in this page needs your OK per the brand rules.',
+  q:'What should the headings use?',
+  opts:[['plain','Keep plain bold for this working page (Recommended)'],['brand','Use the approved PEPTICITY font before Grace sees it']]},
+ {id:'compliance',kind:'DECISION',title:'Compliance read before Grace sees it',
+  note:'The page names no peptides and makes no health claims, but links Health Canada advisories. The compliance reviewer has not read it yet.',
+  q:'Run the compliance review?',
+  opts:[['run','Yes, run it now (Recommended)'],['later','After I have reviewed it']]},
+ {id:'next-step',kind:'DECISION',title:'What happens next in the business',
+  note:'Counsel answers move the plan the most. Maker quotes replace my margin guesses. Real traffic data replaces my visitor guesses.',
+  q:'Which comes first?',
+  opts:[['counsel','Counsel on the peptide and vitamins position (Recommended)'],['quotes','Draft the maker quote emails for me to approve'],['traffic','Pull real traffic and sales from Grace\'s store']]},
+ {id:'publish',kind:'APPROVAL',title:'Publishing the plan',
+  note:'Nothing is published. Publishing puts it at a public no-login link for Grace.',
+  q:'When does it go to Grace?',
+  opts:[['after','Publish after I have reviewed everything (Recommended)'],['private','Keep it private for now']]},
+ {id:'ledger',kind:'REVIEW',title:'I added entry R192 to the request ledger',
+  note:'One line in docs/owner/REQUEST-LEDGER.md describing this build. You did not ask for it.',
+  q:'Keep that line?',
+  opts:[['keep','Keep it (Recommended)'],['remove','Remove it']]},
+ {id:'board',kind:'APPROVAL',title:'Move all questions to your review board',
+  note:'A scheduled task told this session to write its questions to your main review page. I did not do it without your word. This queue is the stand-in.',
+  q:'Should I also copy these steps to the main board?',
+  opts:[['yes','Yes, use the main board (Recommended)'],['here','No, this page is enough']]},
+ {id:'arsenal',kind:'HEADS UP',title:'The effects library is missing from this session',
+  note:'apex_agents_bots is not attached. The plan page did not need it. Anything visual later will.',
+  q:'Attach it for the next build?',
+  opts:[['attach','Attach it when a visual build starts (Recommended)'],['skip','Not needed']]}
+];
+STEPS.forEach(function(s){s.opts.push([DROP.id,DROP.label])});
+var KEY='pepticity-review-bp-v1',ans={},i=0;
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);ans=o.ans||{};i=Math.min(o.i||0,STEPS.length)}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({ans:ans,i:i}))}catch(e){}}
+var $=function(s){return document.querySelector(s)};
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function label(s,id){var r=s.opts.filter(function(o){return o[0]===id})[0];return r?r[1].replace(' (Recommended)',''):null}
+function paint(){
+  var n=STEPS.length,done=STEPS.filter(function(s){return ans[s.id]}).length;
+  $('#fill').style.width=(done/n*100)+'%';
+  $('#state').textContent=done+' of '+n+' answered';
+  $('#dots').innerHTML=STEPS.map(function(s,k){var c=(ans[s.id]==='drop'?'dropped':ans[s.id]?'done':'')+(k===i?' cur':'');
+    return '<button class="'+c+'" data-k="'+k+'" aria-label="Step '+(k+1)+'">'+(k+1)+'</button>'}).join('')+
+    '<button data-k="'+n+'" class="'+(i===n?'cur':'')+'" aria-label="Summary" style="width:auto;padding:0 8px">END</button>';
+  document.querySelectorAll('#dots button').forEach(function(b){b.onclick=function(){i=+b.dataset.k;save();render()}});
+}
+function render(){
+  paint();var n=STEPS.length,st=$('#stage');
+  if(i>=n){$('#pos').textContent='All steps';summary(st);return}
+  var s=STEPS[i];$('#pos').textContent='Step '+(i+1)+' of '+n;
+  var links=(s.links||[]).map(function(l){return '<a href="'+l[1]+'" target="_blank" rel="noopener">'+esc(l[0])+'</a>'}).join('');
+  st.innerHTML='<span class="kind">'+esc(s.kind)+'</span><h2>'+esc(s.title)+'</h2><p class="note">'+esc(s.note)+'</p>'+
+   (links?'<div class="links">'+links+'</div>':'')+'<div class="q">'+esc(s.q)+'</div><div class="opts" role="group" aria-label="'+esc(s.q)+'">'+
+   s.opts.map(function(o){return '<button class="opt'+(o[0]==='drop'?' drop':'')+'" data-id="'+o[0]+'" aria-pressed="'+(ans[s.id]===o[0])+'"><span class="dot"></span>'+esc(o[1])+'</button>'}).join('')+
+   '</div><div class="nav"><button class="back" id="back"'+(i===0?' disabled':'')+'>Back</button><button class="next" id="next"'+(ans[s.id]?'':' disabled')+'>'+(i===n-1?'Finish':'Done, next')+'</button></div>';
+  st.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){ans[s.id]=b.dataset.id;save();render();var nx=$('#next');if(nx)nx.focus()}});
+  $('#back').onclick=function(){i=Math.max(0,i-1);save();render();window.scrollTo(0,0)};
+  $('#next').onclick=function(){i++;save();render();window.scrollTo(0,0)};
+}
+function mdOut(){
+  var l=['# PEPTICITY business plan review answers',''];
+  STEPS.forEach(function(s,k){l.push((k+1)+'. '+s.title+': '+(ans[s.id]?label(s,ans[s.id]):'NOT ANSWERED'))});
+  return l.join('\n');
+}
+function summary(st){
+  var rows=STEPS.map(function(s,k){var a=ans[s.id];
+    return '<tr><td>'+(k+1)+'. '+esc(s.title)+'</td><td class="pick '+(a==='drop'?'drop':a?'':'none')+'">'+(a?esc(label(s,a)):'Not answered')+'</td></tr>'}).join('');
+  var left=STEPS.filter(function(s){return !ans[s.id]}).length;
+  st.innerHTML='<span class="kind">SUMMARY</span><h2>'+(left?left+' still to answer':'All answered')+'</h2><div class="sum"><table>'+rows+'</table>'+
+   '<div class="actions"><button id="copy">Copy my answers</button>'+(left?'<button id="first">Go to first unanswered</button>':'')+'<button id="reset">Start over</button></div>'+
+   '<div class="toast" id="toast" role="status"></div><textarea id="ta" readonly aria-label="Answers as text" hidden></textarea></div>';
+  $('#copy').onclick=function(){var t=mdOut(),ta=$('#ta');
+    function fallback(){ta.hidden=false;ta.value=t;ta.focus();ta.select();$('#toast').textContent='Select and copy the text below.'}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){$('#toast').textContent='Copied. Paste it into the chat.'},fallback)}else fallback()};
+  var f=$('#first');if(f)f.onclick=function(){for(var k=0;k<STEPS.length;k++){if(!ans[STEPS[k].id]){i=k;break}}save();render()};
+  $('#reset').onclick=function(){ans={};i=0;save();render()};
+}
+render();
+})();
+</script>
