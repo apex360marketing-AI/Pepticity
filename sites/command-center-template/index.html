@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Command Center Template</title>
+<meta name="description" content="Blank, client-agnostic Command Center and one-click Setup Kit template for resale (placeholders, sample data).">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+/* template: add the client's display font here */
+:root{
+  --matte:#0b0b0c; --uv:#0d0b13; --ink:#ecedf1; --ink2:#c3c7cf; --mute:#9ba1aa; --dim:#7d828c;
+  --chrome:#e6e8ec; --hair:rgba(222,226,234,.14); --hair2:rgba(222,226,234,.26);
+  --ok:#8fe3b4; --warn:#f0c987; --bad:#ff9b9b; --uvs:rgba(160,140,255,.55);
+  --glass:linear-gradient(165deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 42%,rgba(255,255,255,.035) 100%);
+  --tone:linear-gradient(118deg,rgba(9,9,10,.42) 0%,rgba(9,9,10,.42) 47%,rgba(17,12,30,.46) 53%,rgba(17,12,30,.46) 100%);
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .56  0 0 0 0 .75  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --spec:inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(0,0,0,.55);
+  --neu:0 24px 48px -26px rgba(0,0,0,.9), 0 2px 0 rgba(0,0,0,.35), -1px -1px 0 rgba(255,255,255,.025);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --fh:'Instrument Sans',ui-sans-serif,system-ui,sans-serif;
+  --fmetal:var(--fh); --fb:'Instrument Sans',ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark}}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden}
+body{background:var(--matte);color:var(--ink);font:400 15px/1.5 var(--fb);-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--chrome);outline-offset:3px;border-radius:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* background: matte + UV black, same ground as the approved dashboard */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:radial-gradient(1200px 700px at 105% -10%,rgba(146,118,255,.10),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(146,118,255,.06),transparent 60%),
+  linear-gradient(118deg,var(--matte) 0%,var(--matte) 46%,var(--uv) 54%,var(--uv) 100%)}
+.bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.55) 100%)}
+.bg .wmk{position:absolute;right:-8vmin;bottom:-10vmin;width:62vmin;opacity:.05}
+
+.app{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 28px 80px}
+@media (max-width:600px){.app{padding:0 16px 64px}}
+
+.glass{position:relative;background:var(--grain),var(--glass),var(--tone);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);
+  border:1px solid var(--hair);box-shadow:var(--spec),var(--neu);isolation:isolate;border-radius:3px}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:radial-gradient(120% 60% at 12% -8%,rgba(255,255,255,.14),transparent 46%),radial-gradient(60% 40% at 100% 100%,rgba(146,118,255,.07),transparent 70%)}
+.glass::after{content:"";position:absolute;left:14%;right:14%;top:-1px;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);opacity:.55}
+
+/* headings: CSS gunmetal fallback; the three.js layer draws over [data-type3d] when available */
+.h3d{position:relative;margin:0;font-family:var(--fmetal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;line-height:1.02;z-index:0;
+  color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:.008em .014em 0 #55585e,.016em .028em 0 #47494f,.024em .042em 0 #3b3d42,.032em .056em 0 #313337,.04em .07em 0 #28292d,.048em .084em 0 #212225,.056em .098em 0 #1a1b1e,
+   .1em .17em .12em rgba(0,0,0,.62),.18em .3em .34em rgba(0,0,0,.5),0 0 .6em rgba(146,118,255,.10)}
+.h3d::after{content:attr(data-t);position:absolute;inset:0;pointer-events:none;text-shadow:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 3px,rgba(0,0,0,.08) 3px 4px,transparent 4px 6px),
+   linear-gradient(180deg,#8e8d85 0%,#6f6e68 30%,#3a3935 52%,#24231f 60%,#5a5953 80%,#8e8d85 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 -.5px 0 rgba(255,255,255,.35))}
+#type3d,#type3dTop{position:fixed;inset:0;width:100%;height:100%;z-index:15;pointer-events:none;display:block}
+#type3dTop{z-index:25}
+html:not(.t3d) #type3d,html:not(.t3d) #type3dTop{display:none}
+.t3slot{position:absolute;inset:-.45em;pointer-events:none}
+html.t3d [data-type3d]{color:transparent!important;-webkit-text-fill-color:transparent!important;text-shadow:.06em .16em .28em rgba(0,0,0,.55)!important}
+html.t3d .h3d[data-type3d]::after{display:none}
+html.t3d .lg .pfb{visibility:hidden}
+
+.eyebrow{font:600 11px/1 var(--fb);letter-spacing:.38em;text-transform:uppercase;color:var(--mute);margin:0 0 14px;display:flex;gap:10px;align-items:center}
+.eyebrow::before{content:"";width:26px;height:1px;background:linear-gradient(90deg,var(--chrome),transparent)}
+.h2{font-size:clamp(15px,1.5vw,19px);letter-spacing:.12em;line-height:1.15}
+.ctitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
+.ctitle small{font:600 10px/1 var(--fb);letter-spacing:.26em;color:var(--mute);text-transform:uppercase}
+
+/* top bar */
+.top{position:sticky;top:12px;z-index:20;margin:12px 0 26px;padding:10px 12px 10px 16px;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.lg{position:relative;width:44px;height:44px;flex:none}
+.lg .pfb{position:absolute;inset:6px 3px;width:auto;height:auto}
+.mono{width:44px;height:44px;display:grid;place-items:center;border:1px dashed var(--hair2);font:700 18px/1 var(--fb);color:var(--ink2)}
+.wm{display:flex;flex-direction:column;line-height:1;min-width:0}
+.wm .h3d{font-size:18px;letter-spacing:.2em}
+.wm small{display:block;font:600 9.5px/1 var(--fb);letter-spacing:.42em;color:var(--mute);margin-top:7px;white-space:nowrap}
+.sample{justify-self:start;font:700 9.5px/1 var(--fb);letter-spacing:.28em;text-transform:uppercase;color:var(--warn);border:1px dashed rgba(240,201,135,.45);padding:7px 9px;border-radius:2px}
+.seg{display:inline-grid;grid-auto-flow:column;border:1px solid var(--hair2);border-radius:3px;background:rgba(0,0,0,.3);padding:3px;gap:3px}
+.seg button{border:0;background:none;cursor:pointer;min-height:40px;padding:0 14px;border-radius:2px;font:700 10.5px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.seg button[aria-selected="true"]{color:#0b0b0c;background:linear-gradient(180deg,#d9d9d4,#8e8d85);box-shadow:inset 0 1px 0 #fff}
+.seg button:hover{color:var(--ink)} .seg button[aria-selected="true"]:hover{color:#0b0b0c}
+@media (max-width:900px){.top{grid-template-columns:auto 1fr auto}.top .seg{grid-column:1/-1;order:3;width:100%;grid-auto-columns:1fr}.sample{display:none}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 18px;border:1px solid var(--hair2);border-radius:3px;cursor:pointer;text-decoration:none;
+  font:700 10.5px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02) 55%,rgba(0,0,0,.2));box-shadow:var(--spec);transition:filter .25s}
+.btn:hover{filter:brightness(1.25)}
+.btn.metal{color:#0b0b0c;background:linear-gradient(180deg,#e4e4df 0%,#b3b2ab 45%,#8e8d85 55%,#c9c8c2 100%);border-color:rgba(255,255,255,.4);box-shadow:inset 0 1px 0 #fff,0 0 22px -8px var(--uvs)}
+.btn.sm{min-height:36px;padding:0 12px;font-size:9.5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+
+.hero{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;margin:6px 4px 22px}
+.hero h1{font-size:clamp(28px,5vw,64px)}
+.hero .meta{text-align:right;color:var(--mute);font-size:13px;line-height:1.6}
+.hero .meta b{color:var(--ink2);font-weight:600}
+@media (max-width:700px){.hero{grid-template-columns:1fr}.hero .meta{text-align:left}}
+
+.view[hidden]{display:none}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.span2{grid-column:span 2}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.g4,.g3,.g2{grid-template-columns:minmax(0,1fr)}.span2{grid-column:auto}}
+.card{padding:20px 20px 18px;min-width:0}
+.mt{margin-top:16px}
+
+/* status rail */
+.stat{padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;grid-row:span 2}
+.dot.ok{background:var(--ok);box-shadow:0 0 12px var(--ok)}
+.dot.off{background:#55544f;box-shadow:inset 0 0 0 1px var(--hair2)}
+.dot.warn{background:var(--warn);box-shadow:0 0 12px var(--warn)}
+.stat b{font:700 10.5px/1.2 var(--fb);letter-spacing:.24em;text-transform:uppercase}
+.stat span{font-size:12.5px;color:var(--mute)}
+.stat .btn{grid-column:1/-1;margin-top:8px}
+
+/* lists */
+.list{list-style:none;margin:0;padding:0}
+.list li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-top:1px solid rgba(255,255,255,.07)}
+.list li:first-child{border-top:0}
+.list .t{font-weight:600;font-size:14px}
+.list .s{grid-column:1;font-size:12.5px;color:var(--mute)}
+.list .a{grid-row:span 2;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.tag{font:700 9px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;padding:5px 7px;border-radius:2px;border:1px solid var(--hair2);color:var(--ink2);white-space:nowrap}
+.tag.ok{color:var(--ok);border-color:rgba(143,227,180,.4)} .tag.warn{color:var(--warn);border-color:rgba(240,201,135,.4)} .tag.bad{color:var(--bad);border-color:rgba(255,155,155,.4)}
+
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.kpi small{display:block;font:600 10px/1.3 var(--fb);letter-spacing:.22em;color:var(--mute);text-transform:uppercase}
+.kpi b{display:block;font:700 26px/1.1 var(--fb);margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi i{font-style:normal;font-size:12px;color:var(--ok)}
+
+.log{list-style:none;margin:0;padding:0;position:relative}
+.log li{position:relative;padding:0 0 14px 22px;font-size:13.5px;color:var(--ink2)}
+.log li::before{content:"";position:absolute;left:4px;top:7px;width:7px;height:7px;border-radius:50%;background:#8e8d85;box-shadow:0 0 0 3px rgba(142,141,133,.15)}
+.log li::after{content:"";position:absolute;left:7px;top:16px;bottom:0;width:1px;background:rgba(255,255,255,.1)}
+.log li:last-child::after{display:none}
+.log time{display:block;font:600 10px/1.4 var(--fb);letter-spacing:.2em;color:var(--dim)}
+
+.bar{height:6px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#55544f,#8e8d85);border-radius:2px}
+.bar i.low{background:linear-gradient(90deg,#8a6a3a,var(--warn))}
+
+.pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:480px){.pad{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{display:grid;gap:6px;align-content:start;padding:14px 12px;min-height:88px;border:1px solid var(--hair);border-radius:3px;background:rgba(0,0,0,.25);text-decoration:none;cursor:pointer;text-align:left;transition:border-color .25s,transform .25s var(--ease)}
+.tile:hover{border-color:var(--hair2);transform:translateY(-2px)}
+.tile b{font:700 10.5px/1.2 var(--fb);letter-spacing:.18em;text-transform:uppercase}
+.tile span{font-size:12px;color:var(--mute);line-height:1.35}
+
+.check{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.check li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:13.5px;color:var(--ink2)}
+.check li::before{content:"";width:18px;height:18px;border-radius:2px;border:1px solid var(--hair2);margin-top:1px;background:center/12px no-repeat}
+.check li.y::before{border-color:rgba(143,227,180,.6);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.5 2.5L10 3' fill='none' stroke='%238fe3b4' stroke-width='1.8'/%3E%3C/svg%3E")}
+.check li.n::before{border-color:rgba(240,201,135,.6)}
+.check small{display:block;color:var(--mute);font-size:12px}
+
+/* setup kit */
+.steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:0 0 16px;padding:6px;list-style:none}
+.steps button{width:100%;min-height:56px;border:1px solid transparent;border-radius:3px;background:none;cursor:pointer;color:var(--mute);text-align:left;padding:8px 10px;display:grid;gap:4px}
+.steps button i{font:700 10px/1 var(--fb);font-style:normal;letter-spacing:.2em;color:var(--dim)}
+.steps button b{font:700 10.5px/1.2 var(--fb);letter-spacing:.16em;text-transform:uppercase}
+.steps button[aria-current="step"]{color:var(--ink);border-color:var(--hair2);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02));box-shadow:var(--spec)}
+.steps button.done i{color:var(--ok)}
+@media (max-width:900px){.steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:480px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.panel{padding:24px}
+.panel[hidden]{display:none}
+.panel h2,dialog h2{width:fit-content;max-width:100%}
+.panel h2{margin-bottom:10px}
+.panel p{color:var(--ink2);max-width:72ch}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:22px;flex-wrap:wrap}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font:700 9.5px/1.3 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--mute);padding:10px 8px;border-bottom:1px solid var(--hair2)}
+.tbl td{padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top;color:var(--ink2)}
+.tbl td b{color:var(--ink)}
+.tblwrap{overflow-x:auto}
+@media (max-width:700px){.tbl thead{display:none}.tbl tr{display:grid;grid-template-columns:1fr auto;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07)}.tbl td{border:0;padding:3px 0}.tbl td:nth-child(2){grid-column:1/-1;order:3}}
+.prog li{grid-template-columns:1fr 110px}
+.prog .bar{width:110px;margin:0}
+.consent{border:1px solid var(--hair2);border-radius:3px;padding:16px;background:rgba(0,0,0,.25);margin:14px 0}
+.consent label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:14px}
+.consent input{width:20px;height:20px;margin:1px 0 0;accent-color:#8e8d85;flex:none}
+.mock{border:1px solid var(--hair2);border-radius:3px;background:#f3f3f1;color:#1d1d1f;padding:14px 16px;font:13px/1.45 system-ui,sans-serif;max-width:440px}
+.mock b{display:block;font-size:14px;margin-bottom:4px}
+.mock .mb{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.mock .mb span{padding:6px 12px;border-radius:3px;background:#e2e2e0;font-size:12px}
+.mock .mb span.p{background:#1d1d1f;color:#fff}
+#signins li{grid-template-columns:1fr}#signins li::before{display:none}
+.mocks .mock{max-width:none}
+.mocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+@media (max-width:800px){.mocks{grid-template-columns:1fr}}
+code,.code{font:500 12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--ink2)}
+pre.code{white-space:pre-wrap;background:rgba(0,0,0,.35);border:1px solid var(--hair);border-radius:3px;padding:12px;overflow-x:auto;margin:10px 0 0}
+
+dialog{max-width:min(560px,calc(100vw - 32px));border:1px solid var(--hair2);border-radius:3px;padding:0;color:var(--ink);background:#121214;box-shadow:0 40px 80px rgba(0,0,0,.8)}
+dialog::backdrop{background:rgba(4,4,7,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+dialog .in{padding:24px}
+dialog h2{margin-bottom:12px}
+dialog p,dialog li{color:var(--ink2);font-size:14px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);opacity:0;z-index:70;padding:12px 18px;font:700 10.5px/1.3 var(--fb);letter-spacing:.2em;text-transform:uppercase;transition:all .4s var(--ease);pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{transform:translate(-50%,0);opacity:1}
+footer{position:relative;z-index:1;text-align:center;color:var(--dim);font-size:12px;padding:10px 16px 40px}
+.ph{border-bottom:1px dashed var(--warn);color:var(--warn)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="gGun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8e8d85"/><stop offset=".46" stop-color="#55544f"/><stop offset=".54" stop-color="#24231f"/><stop offset="1" stop-color="#6f6e68"/></linearGradient>
+  
+</defs></svg>
+<div class="bg" aria-hidden="true"></div>
+<canvas id="type3d" aria-hidden="true"></canvas>
+<canvas id="type3dTop" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="top glass">
+    <div class="brand">
+      <div class="mono" role="img" aria-label="Client logo goes here">B</div>
+      <div class="wm"><span class="h3d" data-t="[BUSINESS]" >[BUSINESS]</span><small>COMMAND CENTER</small></div>
+    </div>
+    <span class="sample" title="Every name, number and order on this page is sample data">SAMPLE DATA</span>
+    <div class="seg" role="tablist" aria-label="Switch view">
+      <button type="button" role="tab" id="tab-cc" aria-controls="view-cc" aria-selected="true">Command Center</button>
+      <button type="button" role="tab" id="tab-kit" aria-controls="view-kit" aria-selected="false">Setup Kit</button>
+    </div>
+    <button type="button" class="btn sm" id="helpTop" aria-haspopup="dialog">Get help</button>
+  </header>
+
+  <!-- ================= COMMAND CENTER ================= -->
+  <main class="view" id="view-cc" role="tabpanel" aria-labelledby="tab-cc">
+    <div class="hero">
+      <div>
+        <p class="eyebrow" id="greet">GOOD MORNING</p>
+        <h1 class="h3d" data-t="YOUR COMMAND CENTER" >YOUR COMMAND CENTER</h1>
+      </div>
+      <div class="meta"><b id="todayStr"></b><br><span id="bizLine"></span></div>
+    </div>
+
+    <section class="grid g4" aria-label="Status">
+      <div class="glass stat"><i class="dot ok"></i><b>Concierge on</b><span id="stConcierge"></span></div>
+      <div class="glass stat"><i class="dot ok"></i><b>Store up</b><span id="stStore"></span></div>
+      <div class="glass stat"><i class="dot off" id="remoteDot"></i><b id="remoteTitle">Remote help off</b><span id="remoteSub">Nobody can connect to this computer.</span>
+        <button type="button" class="btn sm" id="remoteBtn" aria-haspopup="dialog">Let us help for 1 hour</button></div>
+      <div class="glass stat"><i class="dot ok"></i><b>Backed up</b><span id="stBackup"></span></div>
+    </section>
+
+    <section class="grid g3 mt">
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="NEEDS YOU" >NEEDS YOU</h2><small id="needsCount"></small></div>
+        <ul class="list" id="needs"></ul>
+      </div>
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="TODAY" >TODAY</h2><small>so far</small></div>
+        <div class="kpis" id="kpis"></div>
+      </div>
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="CONCIERGE" >CONCIERGE</h2><small>what it did</small></div>
+        <ul class="log" id="log"></ul>
+      </div>
+    </section>
+
+    <section class="grid g3 mt">
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="LOW STOCK" >LOW STOCK</h2><small>reorder soon</small></div>
+        <ul class="list" id="stock"></ul>
+      </div>
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="LAUNCHPAD" >LAUNCHPAD</h2><small>your apps</small></div>
+        <div class="pad" id="pad"></div>
+      </div>
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="SAFETY" >SAFETY</h2><small>checked nightly</small></div>
+        <ul class="check" id="safety"></ul>
+      </div>
+    </section>
+
+    <section class="grid g2 mt">
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="SCHEDULE" >SCHEDULE</h2><small>the concierge's routine</small></div>
+        <ul class="list" id="sched"></ul>
+      </div>
+      <div class="glass card">
+        <div class="ctitle"><h2 class="h2 h3d" data-t="SITE HEALTH" >SITE HEALTH</h2><small>last 30 days</small></div>
+        <ul class="list" id="health"></ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= SETUP KIT ================= -->
+  <main class="view" id="view-kit" role="tabpanel" aria-labelledby="tab-kit" hidden>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">ONE DOUBLE-CLICK · ABOUT 25 MINUTES</p>
+        <h1 class="h3d" data-t="SETUP KIT" >SETUP KIT</h1>
+      </div>
+      <div class="meta"><b>Preview only</b><br>Nothing installs from this page</div>
+    </div>
+    <ol class="steps glass" id="steps" aria-label="Setup steps"></ol>
+
+    <section class="glass panel" data-step="1">
+      <h2 class="h2 h3d" data-t="01 WELCOME" >01 WELCOME</h2>
+      <p id="welcomeP"></p>
+      <ul class="check" id="welcomeList"></ul>
+      <div class="consent"><label><input type="checkbox" id="agree"> <span>I understand what this kit installs, that it asks before every change, and that remote help stays <b>off</b> until I switch it on.</span></label></div>
+      <div class="navrow"><span></span><button type="button" class="btn metal" data-go="2" id="go2" disabled>Next: what gets installed</button></div>
+    </section>
+
+    <section class="glass panel" data-step="2" hidden>
+      <h2 class="h2 h3d" data-t="02 WHAT GETS INSTALLED" >02 WHAT GETS INSTALLED</h2>
+      <p>The kit installs the apps for you. Anything that needs your password, you do yourself in step 4: the kit never sees or stores a password.</p>
+      <div class="tblwrap"><table class="tbl"><thead><tr><th>App</th><th>What it is for</th><th>Cost</th><th>Who does it</th></tr></thead><tbody id="appRows"></tbody></table></div>
+      <div class="navrow"><button type="button" class="btn" data-go="1">Back</button><button type="button" class="btn metal" data-go="3">Next: install</button></div>
+    </section>
+
+    <section class="glass panel" data-step="3" hidden>
+      <h2 class="h2 h3d" data-t="03 INSTALL" >03 INSTALL</h2>
+      <p>On the real computer this is one double-click on <code>[BUSINESS]-Setup.cmd</code>. Windows shows its "Do you want to allow this app to make changes" box: press Yes each time it appears (some apps ask once each). Each app installs from its maker. Press the button to watch a preview.</p>
+      <div class="mocks"><div class="mock"><b>User Account Control</b>Do you want to allow this app to make changes to your device?<br><small>Verified publisher: Microsoft Windows · PowerShell</small><div class="mb"><span class="p">Yes</span><span>No</span></div></div></div>
+      <ul class="list prog mt" id="prog"></ul>
+      <div class="navrow"><button type="button" class="btn" data-go="2">Back</button><span style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn" id="runBtn">Run preview</button><button type="button" class="btn metal" data-go="4">Next: sign in</button></span></div>
+    </section>
+
+    <section class="glass panel" data-step="4" hidden>
+      <h2 class="h2 h3d" data-t="04 SIGN IN" >04 SIGN IN</h2>
+      <p>These need you, because they are your accounts. Each one opens in your browser. Tick them off as you go. These are the screens you will see:</p>
+      <ul class="check" id="signins"></ul>
+      <div class="mocks" id="mocks"></div>
+      <div class="navrow"><button type="button" class="btn" data-go="3">Back</button><button type="button" class="btn metal" data-go="5">Next: connect the concierge</button></div>
+    </section>
+
+    <section class="glass panel" data-step="5" hidden>
+      <h2 class="h2 h3d" data-t="05 CONNECT THE CONCIERGE" >05 CONNECT THE CONCIERGE</h2>
+      <p id="concP"></p>
+      <ul class="check" id="concRules"></ul>
+      <div class="navrow"><button type="button" class="btn" data-go="4">Back</button><button type="button" class="btn metal" data-go="6">Next: finish</button></div>
+    </section>
+
+    <section class="glass panel" data-step="6" hidden>
+      <h2 class="h2 h3d" data-t="06 DONE" >06 DONE</h2>
+      <p>Your Command Center now opens when the computer starts. Remote help is <b>off</b>. To get help, double-click <b>Remote help ON (1 hour)</b> on your desktop: it switches itself off when the hour ends. (On this page the same button is shown as <b>Let us help for 1 hour</b>.)</p>
+      <ul class="check" id="doneList"></ul>
+      <div class="navrow"><button type="button" class="btn" data-go="5">Back</button><button type="button" class="btn metal" id="openCC">Open my Command Center</button></div>
+    </section>
+  </main>
+</div>
+<footer id="foot"></footer>
+
+<dialog id="dlgRemote" aria-labelledby="dlgRemoteT"><div class="in">
+  <h2 class="h2 h3d" id="dlgRemoteT" data-t="LET US HELP?">LET US HELP?</h2>
+  <p>Switching this on lets <b id="agencyName"></b> connect to this computer through Tailscale, a private encrypted link. Nobody else can.</p>
+  <ul class="check">
+    <li class="y"><span>Turns itself off after <b>1 hour</b>.<small>You can switch it off sooner, any time.</small></span></li>
+    <li class="y"><span>The Tailscale icon by your clock shows "Connected" the whole time.</span></li>
+    <li class="y"><span>We never see your passwords: they stay in your password manager.</span></li>
+    <li class="y"><span>Every switch on and off is written to your Remote Help Log (in Documents).</span></li>
+  </ul>
+  <div class="navrow"><button type="button" class="btn" value="cancel" id="dlgNo">Not now</button><button type="button" class="btn metal" id="dlgYes">Switch on for 1 hour</button></div>
+</div></dialog>
+<dialog id="dlgNeed" aria-labelledby="dlgNeedT"><div class="in">
+  <h2 class="h2 h3d" id="dlgNeedT" data-t="REVIEW">REVIEW</h2>
+  <div id="dlgNeedBody"></div>
+  <div class="navrow"><button type="button" class="btn" id="dlgNeedNo">Close</button><button type="button" class="btn metal" id="dlgNeedYes">Approve</button></div>
+</div></dialog>
+<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============ CONFIG: the only part that changes per client ============ */
+window.CC = {
+ "client": "[Client]",
+ "business": "[Business name]",
+ "agency": "[Agency name]",
+ "currency": "[Currency]",
+ "status": {
+  "concierge": "[Agent name] · last action 2 min ago",
+  "store": "Checked every 5 min · 99.9% this month",
+  "backup": "Nightly 2:10 AM · orders, stock and settings to Drive"
+ },
+ "needs": [
+  {
+   "t": "Reply to a customer about a late order",
+   "s": "Concierge drafted it · waiting for your OK",
+   "detail": "[Draft reply appears here]. The Concierge only sends after you approve.",
+   "cta": "Approve and send"
+  },
+  {
+   "t": "Refund request over [limit]",
+   "s": "Order #[0000] · sample",
+   "detail": "Refunds over [limit] always come to you. Approving opens the refund screen in your store admin; nothing is refunded automatically.",
+   "cta": "Open in store admin"
+  },
+  {
+   "t": "Reorder [Product A]",
+   "s": "4 left · usually sells 6 a week",
+   "detail": "Approving adds it to your reorder list; you still place the order yourself.",
+   "cta": "Add to reorder list"
+  }
+ ],
+ "kpis": [
+  {
+   "l": "Orders",
+   "v": "7",
+   "d": "+2 vs last Mon"
+  },
+  {
+   "l": "Sales",
+   "v": "[$0,000]",
+   "d": "sample"
+  },
+  {
+   "l": "Emails handled",
+   "v": "23",
+   "d": "3 sent to you"
+  },
+  {
+   "l": "Avg reply",
+   "v": "4 min",
+   "d": "was 6 h"
+  }
+ ],
+ "log": [
+  {
+   "time": "9:42 AM",
+   "t": "Answered a shipping-time question and attached the tracking link."
+  },
+  {
+   "time": "9:15 AM",
+   "t": "Sorted 31 new emails: 23 answered from your approved replies, 5 filed, 3 for you."
+  },
+  {
+   "time": "8:00 AM",
+   "t": "Morning check: store up, payments working, 3 products under reorder level."
+  },
+  {
+   "time": "2:10 AM",
+   "t": "Backed up the store and your files. All good."
+  },
+  {
+   "time": "Yesterday",
+   "t": "Flagged a message outside the approved replies and sent it to you."
+  }
+ ],
+ "stock": [
+  {
+   "name": "[Product A]",
+   "size": "[size]",
+   "left": 4,
+   "par": 24
+  },
+  {
+   "name": "[Product B]",
+   "size": "[size]",
+   "left": 9,
+   "par": 40
+  },
+  {
+   "name": "[Product C]",
+   "size": "[size]",
+   "left": 7,
+   "par": 20
+  },
+  {
+   "name": "[Product D]",
+   "size": "[size]",
+   "left": 11,
+   "par": 20
+  }
+ ],
+ "launchpad": [
+  {
+   "n": "Store admin",
+   "d": "Orders, products, refunds",
+   "url": "https://example.com/"
+  },
+  {
+   "n": "Email",
+   "d": "Your business inbox",
+   "url": "https://mail.google.com/"
+  },
+  {
+   "n": "Claude",
+   "d": "Ask anything, draft anything",
+   "url": "https://claude.ai/"
+  },
+  {
+   "n": "Concierge",
+   "d": "Hermes: rules and history",
+   "url": "https://portal.nousresearch.com/"
+  },
+  {
+   "n": "Passwords",
+   "d": "Your password vault",
+   "url": "https://vault.bitwarden.com/"
+  },
+  {
+   "n": "Uptime",
+   "d": "Is the store up?",
+   "url": "https://dashboard.uptimerobot.com/"
+  }
+ ],
+ "safety": [
+  {
+   "ok": true,
+   "t": "Two-step sign-in on email, store and payments",
+   "s": "Codes come from your phone app"
+  },
+  {
+   "ok": true,
+   "t": "Every password lives in the vault",
+   "s": "None saved in the browser"
+  },
+  {
+   "ok": true,
+   "t": "Windows and apps up to date",
+   "s": "Checked 2:00 AM"
+  },
+  {
+   "ok": true,
+   "t": "Remote help is off",
+   "s": "Only on when you switch it on, for 1 hour"
+  },
+  {
+   "ok": false,
+   "t": "Recovery codes printed and stored",
+   "s": "To do: print them once and keep them safe"
+  }
+ ],
+ "schedule": [
+  {
+   "t": "Inbox sweep",
+   "when": "Every 15 min",
+   "s": "Answers routine questions with your approved replies, sends the rest to you"
+  },
+  {
+   "t": "Morning brief",
+   "when": "8:00 AM",
+   "s": "Orders, money in, low stock and anything that needs you"
+  },
+  {
+   "t": "Stock check",
+   "when": "6:00 PM",
+   "s": "Flags anything under its reorder level"
+  },
+  {
+   "t": "Backup",
+   "when": "2:10 AM",
+   "s": "Orders, stock sheet and Concierge settings exported to Google Drive, 30 days kept"
+  }
+ ],
+ "health": [
+  {
+   "t": "Store",
+   "v": "99.98%",
+   "s": "One 9-minute blip on Oct 21, back on its own"
+  },
+  {
+   "t": "Checkout",
+   "v": "Working",
+   "s": "Test purchase every morning"
+  },
+  {
+   "t": "Security certificate",
+   "v": "Renews in 61 days",
+   "s": "Automatic"
+  },
+  {
+   "t": "Page speed",
+   "v": "1.9 s",
+   "cls": "",
+   "s": "Home page, phone"
+  }
+ ],
+ "kit": {
+  "welcome": "This kit sets up your computer so [Business name] runs on autopilot: your Concierge answers routine emails, watches the store and stock, and brings you only what needs you. It installs trusted apps straight from their makers and asks before every change.",
+  "promises": [
+   "Installs apps only from their official makers: Windows' own app installer (winget), or the maker's signed installer where there is no winget package (Hermes).",
+   "Never asks for, sees or stores your passwords. You sign in to each account yourself.",
+   "Remote help stays off. It only turns on when you press the button, for 1 hour.",
+   "Writes a plain-English log of everything it did, in your Documents folder.",
+   "You can uninstall any app later from Windows Settings, like any other app."
+  ],
+  "apps": [
+   {
+    "n": "Tailscale",
+    "why": "Private, encrypted link so [Agency name] can help, only when you allow it",
+    "cost": "US$8/user/mo (Standard, business use)",
+    "who": "both",
+    "after": "sign in later"
+   },
+   {
+    "n": "Claude",
+    "why": "Your AI assistant for writing and questions",
+    "cost": "Pro US$20/mo",
+    "who": "both",
+    "after": "sign in later"
+   },
+   {
+    "n": "Hermes Agent",
+    "why": "The Concierge: answers routine email, watches store, stock and uptime",
+    "cost": "Free app + Nous Portal Plus US$20/mo",
+    "who": "both",
+    "after": "official installer, sign in later"
+   },
+   {
+    "n": "Google Chrome",
+    "why": "One browser for everything, works with Claude in Chrome",
+    "cost": "Free",
+    "who": "kit",
+    "after": "installed"
+   },
+   {
+    "n": "Bitwarden",
+    "why": "Password vault, shared safely with [Agency name] in a 2-person group",
+    "cost": "Free",
+    "who": "both",
+    "after": "sign in later"
+   },
+   {
+    "n": "Ente Auth",
+    "why": "Two-step sign-in codes, backed up so a lost phone is not a lockout",
+    "cost": "Free",
+    "who": "both",
+    "after": "installed"
+   },
+   {
+    "n": "Telegram",
+    "why": "Where the Concierge sends alerts and the morning brief",
+    "cost": "Free",
+    "who": "both",
+    "after": "sign in later"
+   },
+   {
+    "n": "Business email",
+    "why": "Google Workspace on your own domain; the Concierge gets its own mailbox",
+    "cost": "About US$7–8/user/mo",
+    "who": "you"
+   },
+   {
+    "n": "Store and payments admin",
+    "why": "Orders, products, refunds and payouts ([platform])",
+    "cost": "[existing]",
+    "who": "you"
+   },
+   {
+    "n": "UptimeRobot",
+    "why": "Checks the store every 5 minutes and alerts if it goes down",
+    "cost": "Free (business use allowed)",
+    "who": "you"
+   }
+  ],
+  "signins": [
+   {
+    "t": "Bitwarden: create your vault",
+    "s": "One strong master password. Write it on paper and keep it at home. Then accept [Agency name]'s sharing invite."
+   },
+   {
+    "t": "Ente Auth: set up on your phone",
+    "s": "Then turn on two-step sign-in for email, Bitwarden, Tailscale, Claude, store and payments."
+   },
+   {
+    "t": "Tailscale: sign in with your business email",
+    "s": "You own the account. Invite [Agency name] as admin. Remote help still stays off."
+   },
+   {
+    "t": "Claude: sign in",
+    "s": "Pro plan, billed to your card."
+   },
+   {
+    "t": "Hermes: sign in to Nous Portal",
+    "s": "One browser sign-in. Then give the Concierge its own mailbox's app password, typed by you."
+   },
+   {
+    "t": "Telegram: start the Concierge's bot",
+    "s": "Only your account is allowed to talk to it."
+   },
+   {
+    "t": "UptimeRobot: add your store address",
+    "s": "Alerts go to Telegram and email."
+   }
+  ],
+  "mocks": [
+   {
+    "t": "Tailscale",
+    "body": "Sign in to connect \"[CLIENT-PC]\" to your tailnet.",
+    "btns": [
+     "Connect",
+     "Cancel"
+    ]
+   },
+   {
+    "t": "Google Account · App passwords",
+    "body": "Create an app password for \"[Agent name]\". It can only be used for this one mailbox and you can delete it any time.",
+    "btns": [
+     "Create",
+     "Cancel"
+    ]
+   },
+   {
+    "t": "Nous Portal",
+    "body": "Hermes Agent wants to sign in with your Nous account.",
+    "btns": [
+     "Authorize",
+     "Cancel"
+    ]
+   },
+   {
+    "t": "Bitwarden",
+    "body": "Set your master password. It cannot be recovered if you forget it.",
+    "btns": [
+     "Create account",
+     "Cancel"
+    ]
+   }
+  ],
+  "concierge": "The Concierge (Hermes Agent) now connects to your email, store and uptime monitor. It follows the rules below, and you can change them on your Command Center.",
+  "rules": [
+   {
+    "t": "Answers only from your approved replies",
+    "s": "[List the topics the client approves: shipping, order status, hours…]"
+   },
+   {
+    "t": "Never answers outside its approved topics",
+    "s": "[Industry-specific red lines go here]. Those messages come to you."
+   },
+   {
+    "t": "Refunds, complaints and anything over [limit] come to you",
+    "s": "It drafts, you decide."
+   },
+   {
+    "t": "Can read the store, cannot change prices or products",
+    "s": "Read-only store key."
+   },
+   {
+    "t": "Every action is logged",
+    "s": "You see it under CONCIERGE on your Command Center."
+   }
+  ],
+  "finish": [
+   "Command Center opens when the computer starts",
+   "Concierge running, inbox sweep every 15 minutes",
+   "Backups nightly at 2:10 AM",
+   "Remote help off until you switch it on",
+   "Setup log saved to Documents\\[Business] Setup Log.txt"
+  ]
+ }
+};
+</script>
+<script>
+(function(){
+'use strict';
+var C=window.CC, $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove('on')},2600)}
+var now=new Date(),h=now.getHours();
+$('#greet').textContent=(h<12?'GOOD MORNING':h<17?'GOOD AFTERNOON':'GOOD EVENING')+', '+C.client.toUpperCase();
+$('#todayStr').textContent=now.toLocaleDateString('en-CA',{weekday:'long',month:'long',day:'numeric'});
+$('#bizLine').textContent=C.business+' · '+C.currency;
+$('#stConcierge').textContent=C.status.concierge; $('#stStore').textContent=C.status.store; $('#stBackup').textContent=C.status.backup;
+$('#agencyName').textContent=C.agency;
+$('#foot').innerHTML=esc(C.business)+' Command Center · built by '+esc(C.agency)+' · sample data preview';
+
+/* needs you */
+function renderNeeds(){
+  $('#needs').innerHTML=C.needs.map(function(n,i){return '<li><span class="t">'+esc(n.t)+'</span><span class="a"><button type="button" class="btn sm" data-need="'+i+'">Review</button></span><span class="s">'+esc(n.s)+'</span></li>'}).join('')||'<li><span class="s">All clear. Nothing needs you.</span></li>';
+  $('#needsCount').textContent=C.needs.length+' waiting';
+}
+renderNeeds();
+var openNeed=-1;
+$('#needs').addEventListener('click',function(e){var b=e.target.closest('[data-need]');if(!b)return;openNeed=+b.dataset.need;var n=C.needs[openNeed];
+  $('#dlgNeedBody').innerHTML='<p><b>'+esc(n.t)+'</b></p><p>'+esc(n.detail)+'</p>';$('#dlgNeedYes').textContent=n.cta||'Approve';$('#dlgNeed').showModal()});
+$('#dlgNeedNo').onclick=function(){$('#dlgNeed').close()};
+$('#dlgNeedYes').onclick=function(){var n=C.needs.splice(openNeed,1)[0];$('#dlgNeed').close();renderNeeds();
+  C.log.unshift({time:'just now',t:'You approved: '+n.t+' (preview: nothing was sent)'});renderLog();toast('Approved · preview only')};
+
+$('#kpis').innerHTML=C.kpis.map(function(k){return '<div class="kpi"><small>'+esc(k.l)+'</small><b>'+esc(k.v)+'</b>'+(k.d?'<i>'+esc(k.d)+'</i>':'')+'</div>'}).join('');
+function renderLog(){$('#log').innerHTML=C.log.slice(0,6).map(function(l){return '<li><time>'+esc(l.time)+'</time>'+esc(l.t)+'</li>'}).join('')}
+renderLog();
+$('#stock').innerHTML=C.stock.map(function(s){var pct=Math.max(4,Math.round(s.left/s.par*100));return '<li><span class="t">'+esc(s.name)+'</span><span class="a"><span class="tag '+(s.left<=s.par*0.25?'warn':'')+'">'+s.left+' left</span></span><span class="s">'+esc(s.size)+'<span class="bar"><i class="'+(pct<=25?'low':'')+'" style="width:'+pct+'%"></i></span></span></li>'}).join('');
+$('#pad').innerHTML=C.launchpad.map(function(a){return '<a class="tile" href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer"><b>'+esc(a.n)+'</b><span>'+esc(a.d)+'</span></a>'}).join('');
+$('#safety').innerHTML=C.safety.map(function(s){return '<li class="'+(s.ok?'y':'n')+'"><span>'+esc(s.t)+'<small>'+esc(s.s)+'</small></span></li>'}).join('');
+$('#sched').innerHTML=C.schedule.map(function(s){return '<li><span class="t">'+esc(s.t)+'</span><span class="a"><span class="tag">'+esc(s.when)+'</span></span><span class="s">'+esc(s.s)+'</span></li>'}).join('');
+$('#health').innerHTML=C.health.map(function(s){return '<li><span class="t">'+esc(s.t)+'</span><span class="a"><span class="tag '+(s.cls||'ok')+'">'+esc(s.v)+'</span></span><span class="s">'+esc(s.s)+'</span></li>'}).join('');
+
+/* remote help: off by default, 1-hour window, consent dialog */
+var remoteUntil=0,timer=0;
+function paintRemote(){var on=remoteUntil>Date.now();$('#remoteDot').className='dot '+(on?'warn':'off');
+  $('#remoteTitle').textContent=on?'Remote help on':'Remote help off';
+  $('#remoteSub').textContent=on?(C.agency+' can connect · ends in '+Math.ceil((remoteUntil-Date.now())/60000)+' min'):'Nobody can connect to this computer.';
+  $('#remoteBtn').textContent=on?'Switch off now':'Let us help for 1 hour';
+  if(!on&&timer){clearInterval(timer);timer=0}}
+function askHelp(){if(remoteUntil>Date.now()){remoteUntil=0;paintRemote();C.log.unshift({time:'just now',t:'You switched remote help off.'});renderLog();toast('Remote help is off');return}$('#dlgRemote').showModal()}
+$('#remoteBtn').onclick=askHelp;$('#helpTop').onclick=askHelp;
+$('#dlgNo').onclick=function(){$('#dlgRemote').close()};
+$('#dlgYes').onclick=function(){$('#dlgRemote').close();remoteUntil=Date.now()+3600000;paintRemote();timer=setInterval(paintRemote,30000);
+  C.log.unshift({time:'just now',t:'You switched remote help on for 1 hour.'});renderLog();toast('Remote help on for 1 hour · preview')};
+
+/* view switch */
+function show(v){['cc','kit'].forEach(function(k){var on=k===v;$('#tab-'+k).setAttribute('aria-selected',on);$('#view-'+k).hidden=!on});
+  try{localStorage.setItem('cc-view',v)}catch(e){} window.dispatchEvent(new Event('resize'));scrollTo(0,0)}
+$('#tab-cc').onclick=function(){show('cc')};$('#tab-kit').onclick=function(){show('kit')};
+$$('.seg [role=tab]').forEach(function(t,i,all){t.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowLeft'){var n=all[(i+(e.key==='ArrowRight'?1:all.length-1))%all.length];n.focus();n.click()}})});
+if(/[?&]view=kit/.test(location.search))show('kit');
+
+/* setup kit */
+var K=C.kit, cur=1, done={};
+$('#steps').innerHTML=['Welcome','What gets installed','Install','Sign in','Connect the concierge','Done'].map(function(n,i){return '<li><button type="button" data-step-btn="'+(i+1)+'"><i>STEP '+(i+1)+'</i><b>'+n+'</b></button></li>'}).join('');
+function go(n){if(n>1&&!$('#agree').checked){toast('Tick the box in step 1 first');n=1}
+  done[cur]=true;cur=n;$$('.panel').forEach(function(p){p.hidden=+p.dataset.step!==n});
+  $$('[data-step-btn]').forEach(function(b){var s=+b.dataset.stepBtn;if(s===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');b.classList.toggle('done',!!done[s]&&s!==n)});
+  window.dispatchEvent(new Event('resize'));}
+document.addEventListener('click',function(e){var g=e.target.closest('[data-go]');if(g&&!g.disabled)go(+g.dataset.go);var s=e.target.closest('[data-step-btn]');if(s)go(+s.dataset.stepBtn)});
+$('#agree').onchange=function(){$('#go2').disabled=!this.checked};
+$('#welcomeP').textContent=K.welcome;
+$('#welcomeList').innerHTML=K.promises.map(function(p){return '<li class="y"><span>'+esc(p)+'</span></li>'}).join('');
+$('#appRows').innerHTML=K.apps.map(function(a){return '<tr><td><b>'+esc(a.n)+'</b></td><td>'+esc(a.why)+'</td><td>'+esc(a.cost)+'</td><td><span class="tag '+(a.who==='kit'?'ok':a.who==='you'?'warn':'')+'">'+(a.who==='kit'?'Kit installs':a.who==='you'?'You sign up':'Kit installs · you sign in')+'</span></td></tr>'}).join('');
+var inst=K.apps.filter(function(a){return a.who!=='you'});
+$('#prog').innerHTML=inst.map(function(a,i){return '<li><span class="t">'+esc(a.n)+'</span><span class="a"><span class="bar"><i id="pb'+i+'" style="width:0"></i></span></span><span class="s" id="ps'+i+'">Waiting</span></li>'}).join('');
+$('#runBtn').onclick=function(){var b=this;b.disabled=true;var i=0;
+  (function next(){if(i>=inst.length){b.disabled=false;b.textContent='Run again';toast('Preview finished · nothing was installed');return}
+    var bar=$('#pb'+i),st=$('#ps'+i),w=0;st.textContent='Installing from the maker…';
+    var t=setInterval(function(){w+=matchMedia('(prefers-reduced-motion: reduce)').matches?100:12+Math.random()*16;bar.style.width=Math.min(w,100)+'%';
+      if(w>=100){clearInterval(t);st.textContent='Done · '+(inst[i].after||'installed');i++;next()}},120)})()};
+$('#signins').innerHTML=K.signins.map(function(s){return '<li class="n"><label style="display:flex;gap:8px;cursor:pointer"><input type="checkbox" style="accent-color:#8e8d85;width:18px;height:18px;margin:0"> <span>'+esc(s.t)+'<small>'+esc(s.s)+'</small></span></label></li>'}).join('');
+$('#signins').addEventListener('change',function(e){var li=e.target.closest('li');li.className=e.target.checked?'y':'n'});
+$('#mocks').innerHTML=K.mocks.map(function(m){return '<div class="mock"><b>'+esc(m.t)+'</b>'+esc(m.body)+'<div class="mb">'+m.btns.map(function(x,i){return '<span class="'+(i===0?'p':'')+'">'+esc(x)+'</span>'}).join('')+'</div></div>'}).join('');
+$('#concP').textContent=K.concierge;
+$('#concRules').innerHTML=K.rules.map(function(r){return '<li class="y"><span>'+esc(r.t)+'<small>'+esc(r.s)+'</small></span></li>'}).join('');
+$('#doneList').innerHTML=K.finish.map(function(r){return '<li class="y"><span>'+esc(r)+'</span></li>'}).join('');
+$('#openCC').onclick=function(){show('cc')};
+go(1);
+try{if(localStorage.getItem('cc-view')==='kit'&&!/[?&]view=/.test(location.search))show('kit')}catch(e){}
+})();
+</script>
+
+</body>
+</html>
