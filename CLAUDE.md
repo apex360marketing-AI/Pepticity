@@ -10,6 +10,13 @@
    - Seed list and examples: sites/review-queue/steps.seed.json.
    - Before asking anything new, scan the whole thread for open items and add them as steps. Never send a link that has not been checked in a browser first.
 
+4. **CLICK-TO-APPROVE ON EVERY PICTURE (owner, 2 Nov 2026, LOCKED, applies to EVERY agent and thread).**
+Every time you show the owner ANYTHING (pictures, samples, versions, logos, pages, options), give him ONE review page he can open with one click, where he clicks a picture to APPROVE / CHANGE / REJECT it, pins the exact spot, and comments by typing or talking.** His answers save by themselves.
+   - Build it with `tools/review_lib.py` (see `tools/build-confirm-page.py`), publish it as an Artifact with `capabilities: {"db": {}}`, then OPEN it for him. Full steps: skill `owner-review-page`.
+   - Read his answers with `ArtifactData` (`answers` collection). NEVER make him repeat himself, find a file, or open a path.
+   - His words: "I hate repeating myself... every single time you show me anything."
+   - HOW THE TWO RULES FIT (rules 3 and 4): the review-queue page in rule 3 is the master page for step-by-step decisions. Rule 4 is how EVERY picture behaves, on any page you show him: tap it, APPROVE / CHANGE / REJECT, pin the exact spot, comment by typing or talking, answers saved for you. A batch of pictures can use `tools/review_lib.py` (ready now); the owner has been asked whether to merge both into the one review-queue page.
+
 # PEPTICITY: LOCKED DECISIONS (read first, every session)
 
 These are final. Do not change any of them unless the owner asks in so many words.

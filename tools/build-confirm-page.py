@@ -1,23 +1,18 @@
 #!/usr/bin/env python3
 """Builds docs/owner/confirm/index.html: ONE visual page of everything waiting on the owner (pictures, one-tap choices, talk/type notes).
 Needs the shot files from the scratchpad (stage1 screenshots). Usage: python3 tools/build-confirm-page.py <stage1-shots-dir>"""
-import sys, io, json, base64, pathlib
-from PIL import Image
+import sys, json, pathlib
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from review_lib import uri, render
 R = pathlib.Path(__file__).resolve().parent.parent; SH = pathlib.Path(sys.argv[1])
-def uri(path, w, box=None, q=78):
-    im = Image.open(path).convert('RGB')
-    if box: im = im.crop(box)
-    im = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
-    b = io.BytesIO(); im.save(b, 'JPEG', quality=q, optimize=True)
-    return 'data:image/jpeg;base64,' + base64.b64encode(b.getvalue()).decode()
 BASE = 'https://apex360marketing-ai.github.io/Pepticity/stage1/'
 pcards = [('A','A: as it is','Width 0.91 x height',100,338),('A1','A1: a bit longer','1.05',350,588),('A2','A2: longer','1.12',601,838),('A3','A3: almost D','1.18',851,1089),('D','D: for comparison','1.26',1102,1340)]
-logo = [dict(key=k, label=l, sub='width '+s if not s.startswith('Width') else s, img=uri(SH/'stage1/p.png', 300, (x0, 180, x1, 512))) for k, l, s, x0, x1 in pcards]
-logo.append(dict(key='NONE', label='None of these', sub='say what you want', img=uri(SH/'stage1/p.png', 300, (100, 560, 1340, 900))))
+logo = [dict(key=k, label=l, sub='width '+s if not s.startswith('Width') else s, img=uri(SH/'stage1/p.png', 640, (x0, 180, x1, 512))) for k, l, s, x0, x1 in pcards]
+logo.append(dict(key='NONE', label='None of these', sub='say what you want', img=uri(SH/'stage1/p.png', 640, (100, 560, 1340, 900))))
 fam = [('classic','CLASSIC, five ways','5 versions','classic.html'),('glass','GLASS MEDALLION','3 versions','glass.html'),('boss','THE BOSS','8 peptide marks','boss.html'),
        ('honeycomb','HONEYCOMB MEDALLION','8 colours','honeycomb.html'),('hive','EIGHT HONEYCOMBS','8 designs','hive.html'),('medallions','HEX MEDALLIONS','8 looks','medallions.html')]
-coin = [dict(key=k, label=l, sub=s, img=uri(SH/f'stage1/{k}.png', 320, (0, 0, 1440, 900))) for k, l, s, _ in fam]
-coin.append(dict(key='KEEP', label='Keep the current coin', sub='for now', img=uri(SH/'stage1/glass.png', 320, (0, 0, 1440, 900), 30)))
+coin = [dict(key=k, label=l, sub=s, img=uri(SH/f'stage1/{k}.png', 900, (0, 0, 1440, 900))) for k, l, s, _ in fam]
+coin.append(dict(key='KEEP', label='Keep the current coin', sub='for now', img=uri(SH/'stage1/glass.png', 400, (0, 0, 1440, 900), 30)))
 O = R / 'docs/owner'
 items = [
  dict(id='logo', title='YOUR NEW P', ask='Which P is yours? (Live: ' + BASE + 'p.html)', thumbs=logo, link=BASE + 'p.html'),
@@ -37,7 +32,8 @@ items = [
       lines=['premium-restraint: accent only on edges, with a colour-coverage checker','clear-glass-spec: completely see-through glass, with a pixel test','4d-direction: 3D that reacts to pointer, scroll and time','lead-hook-proof: every form and hook tested end to end','luxury-benchmark: compare against top award sites before you see it','smooth-scroll-audit: measured scroll speed and soft stops'],
       options=[dict(key='APPROVE', label='KEEP ALL 6'), dict(key='CHANGE', label='CHANGE (say what)')]),
 ]
-tpl = (R / 'tools/confirm.template.html').read_text()
-out = R / 'docs/owner/confirm/index.html'
-out.write_text(tpl.replace('/*ITEMS*/[]', json.dumps(items, ensure_ascii=True)))
-print(len(items), 'cards,', round(out.stat().st_size / 1e6, 2), 'MB ->', out)
+spec = dict(id='confirm-1', title='PEPTICITY Review',
+  intro='Everything waiting on you, in pictures. <b>Tap any picture</b> to approve it, change it, reject it, drop a pin on the exact spot and comment (type or TALK). Your answers save for Claude by themselves.',
+  running='<b>Running now, nothing to confirm:</b> bot gallery (15 designs), business plan (3 stages, 3/6/12 months), vitamins and protein/creatine research (done).', items=items)
+a, b = render(spec, R / 'docs/owner/confirm')
+print(len(items), 'cards,', round(a.stat().st_size / 1e6, 2), 'MB ->', a)

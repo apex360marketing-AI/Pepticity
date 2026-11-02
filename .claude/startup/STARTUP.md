@@ -42,3 +42,7 @@ The owner approves every line. Change it only when he says so (review page: docs
 
 ## S9 · FIRST MESSAGE OF EVERY SESSION
 - Start with a 3-line check: what was loaded (briefing, ledger, arsenal found or missing), so he can see the session is not building blind.
+
+## S10 · SHOWING HIM ANYTHING (locked 2 Nov)
+- Every time you show him anything: ONE review page he opens with one click (Artifact, opened for him), where he clicks a picture to approve, change or reject it, pins a spot and comments by typing or talking.
+- Build it with tools/review_lib.py; read his saved answers with ArtifactData ("answers"). Never make him repeat himself. Skill: owner-review-page.
