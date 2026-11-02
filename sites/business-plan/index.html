@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEPTICITY BUSINESS PLAN</title>
+<meta name="robots" content="noindex">
+<style>
+:root{
+  --bg:#1b1b1a; --bg2:#232321; --ink:#f1f1ec; --mute:#a9a8a0; --dim:#7d7c75;
+  --edge:rgba(241,241,236,.16); --edge-hi:rgba(241,241,236,.42);
+  --accent:#D4FF3A; --pep:#8b8a83; --vit:#a18bf0; --perf:#e7e7e0; --bad:#ff6a6a;
+  --cut:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "Helvetica Neue",Arial,sans-serif;min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(1200px 700px at 12% -10%,#2c2c2a 0,transparent 60%),radial-gradient(900px 600px at 100% 30%,#262527 0,transparent 60%);background-attachment:fixed}
+h1,h2,h3,.cap{font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--edge-hi)}
+a:hover{border-color:var(--accent);color:var(--accent)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+/* clear glass: transparent, blur, hairline, sheen */
+.glass{position:relative;background:rgba(255,255,255,.015);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.glass::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg,var(--edge-hi),var(--edge) 35%,rgba(241,241,236,.06) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);padding:1px}
+.glass::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(420px 220px at var(--mx,20%) var(--my,0%),rgba(255,255,255,.07),transparent 70%)}
+.card{padding:22px}
+header.top{padding:34px 0 18px}
+.brand{font-size:13px;color:var(--mute)}
+h1{font-size:clamp(28px,5vw,54px);line-height:1.05;margin:10px 0 12px}
+h1 b{color:var(--accent);font-weight:800}
+.sub{color:var(--mute);max-width:760px}
+.disc{margin-top:14px;font-size:12px;color:var(--dim);border-left:2px solid var(--edge-hi);padding-left:10px;max-width:820px}
+/* control bar */
+.bar{position:sticky;top:0;z-index:20;padding:10px 0;background:linear-gradient(var(--bg) 70%,transparent)}
+.bar .glass{padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.grp{display:flex;flex-direction:column;gap:4px}
+.grp>span{font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.seg{display:flex;border:1px solid var(--edge)}
+.seg button{background:none;border:0;color:var(--mute);font-family:inherit;font-weight:700;font-size:12px;line-height:1;letter-spacing:.06em;padding:10px 10px;cursor:pointer;min-height:40px;text-transform:uppercase}
+.seg button+button{border-left:1px solid var(--edge)}
+.seg button[aria-pressed=true]{color:var(--bg);background:var(--ink)}
+.seg button:focus-visible,.tog:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tog{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--edge);color:var(--mute);padding:9px 14px;min-height:40px;cursor:pointer;font-family:inherit;font-weight:700;font-size:12px;line-height:1;letter-spacing:.1em;text-transform:uppercase}
+.tog i{width:30px;height:16px;border:1px solid var(--edge-hi);position:relative;display:block}
+.tog i::after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;background:var(--mute);transition:.2s}
+.tog[aria-pressed=true]{border-color:var(--bad);color:var(--ink)}
+.tog[aria-pressed=true] i::after{left:16px;background:var(--bad)}
+section{padding:34px 0}
+h2{font-size:clamp(18px,2.4vw,26px);margin-bottom:6px}
+h2 small{color:var(--accent);font-size:.55em;letter-spacing:.2em;margin-right:10px}
+.lead{color:var(--mute);margin-bottom:18px}
+.grid{display:grid;gap:16px}
+.g6{grid-template-columns:repeat(6,1fr)}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.kpi{padding:16px}
+.kpi .l{font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.kpi .v{font-size:clamp(20px,2vw,28px);font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .v.k{color:var(--accent)}
+.kpi .n{font-size:11px;color:var(--dim);margin-top:2px}
+.neg{color:var(--bad)!important}
+svg{display:block;width:100%;height:auto}
+svg text{fill:var(--mute);font:11px "Helvetica Neue",Arial,sans-serif}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px}
+.ch h3{font-size:12px;margin-bottom:10px;color:var(--mute)}
+ul.pts{list-style:none}
+ul.pts li{padding:7px 0;border-top:1px solid var(--edge);display:flex;gap:10px;font-size:14px}
+ul.pts li:first-child{border-top:0}
+ul.pts b{min-width:132px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.tag{font-size:10px;letter-spacing:.12em;padding:2px 6px;border:1px solid var(--edge-hi);color:var(--mute);white-space:nowrap;align-self:flex-start;text-transform:uppercase}
+.tag.in{border-color:var(--accent);color:var(--accent)}
+/* sliders */
+.pre{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.sl{padding:10px 0;border-top:1px solid var(--edge)}
+.sl:first-child{border-top:0}
+.sl .row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.sl label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.sl output{font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+.sl .src{font-size:11px;color:var(--dim);margin-top:2px}
+.sl .src a{color:var(--mute)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--edge-hi)}
+input[type=range]::-moz-range-track{height:2px;background:var(--edge-hi)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--ink);margin-top:-7px;border:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ink);border:0;border-radius:0}
+details summary{cursor:pointer;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);padding:10px 0;min-height:40px}
+/* risks */
+.risk{padding:16px;border-top:2px solid var(--bad)}
+.risk h3{font-size:12px;margin-bottom:6px}
+.risk p{font-size:13px;color:var(--mute)}
+.alert{padding:14px 18px;border-left:3px solid var(--bad);font-size:14px;margin-bottom:16px;display:none}
+.alert.on{display:block}
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tl h3{font-size:12px;color:var(--accent);margin-bottom:8px}
+.tl li{font-size:13px;color:var(--mute);padding:5px 0;list-style:none;border-top:1px solid var(--edge)}
+.tl li b{color:var(--ink);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-right:6px}
+.links{display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:14px}
+.links a{border:1px solid var(--edge);padding:7px 10px;font-size:12px}
+.why h3{font-size:13px;margin-bottom:10px}
+.why li{list-style:none;padding:9px 0;border-top:1px solid var(--edge);font-size:14px}
+.why li em{font-style:normal;color:var(--accent);font-weight:800}
+.src-list{font-size:12px;color:var(--dim);columns:2;column-gap:30px}
+.src-list li{margin-bottom:6px;break-inside:avoid;list-style:none}
+footer{padding:30px 0 60px;color:var(--dim);font-size:12px;border-top:1px solid var(--edge)}
+@media(max-width:980px){.g6{grid-template-columns:repeat(2,1fr)}.g2,.g3,.tl{grid-template-columns:1fr}.src-list{columns:1}}
+@media(max-width:700px){.bar{position:static;background:none}}
+@media(max-width:520px){.wrap{padding:0 16px}.card{padding:16px}ul.pts li{flex-direction:column;gap:2px}.seg button{padding:10px 11px}.bar .glass{gap:10px 14px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand cap">PEPTICITY · BUSINESS PLAN · DRAFT FOR OWNER</div>
+  <h1>THREE STAGES. <b>ONE BUSINESS.</b></h1>
+  <p class="sub">Peptides first. Then vitamins. Then protein and creatine. Flip the switches, move the sliders, watch the numbers.</p>
+  <p class="disc">SCENARIOS, NOT PROMISES. Not financial advice. Every number is the output of the assumptions below. Defaults are either cited from a public benchmark (vendor blogs, directional only) or marked "assumption: owner to set". No health claims. Counsel must confirm the Canadian rules before launch.</p>
+</header>
+
+<div class="bar"><div class="glass" id="bar">
+  <div class="grp"><span>STAGE</span><div class="seg" id="segStage">
+    <button data-v="A" aria-pressed="true">A · PEPTIDES</button><button data-v="B" aria-pressed="false">B · + VITAMINS</button><button data-v="C" aria-pressed="false">C · + PROTEIN + CREATINE</button></div></div>
+  <div class="grp"><span>VIEW</span><div class="seg" id="segH">
+    <button data-v="3" aria-pressed="false">3 MONTH</button><button data-v="6" aria-pressed="false">6 MONTH</button><button data-v="12" aria-pressed="true">12 MONTH</button></div></div>
+  <div class="grp"><span>SCENARIO</span><div class="seg" id="segS">
+    <button data-v="low" aria-pressed="false">LOW</button><button data-v="base" aria-pressed="true">BASE</button><button data-v="high" aria-pressed="false">HIGH</button></div></div>
+  <div class="grp"><span>DOWNSIDE TEST</span><button class="tog" id="paused" aria-pressed="false"><i></i>PEPTIDES PAUSED</button></div>
+</div></div>
+
+<section id="s1">
+  <h2><small>01</small>THE NUMBERS</h2>
+  <p class="lead" id="s1lead"></p>
+  <div class="alert" id="alert"><b class="cap">PEPTIDES PAUSED:</b> peptide sales are set to zero. Fixed costs still run. This is the downside case.</div>
+  <div class="grid g6" id="kpis"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="glass card ch"><h3>MONTHLY REVENUE BY SHELF + CUMULATIVE CASH</h3><div id="c1"></div>
+      <div class="legend"><span><i style="background:var(--pep)"></i>PEPTIDES</span><span><i style="background:var(--vit)"></i>VITAMINS</span><span><i style="background:var(--perf)"></i>PROTEIN + CREATINE</span><span><i style="background:var(--accent);height:2px;vertical-align:3px"></i>CUMULATIVE CASH</span></div></div>
+    <div class="glass card ch"><h3>CUMULATIVE CASH · ALL THREE STAGES</h3><div id="c2"></div>
+      <div class="legend"><span><i style="background:var(--pep)"></i>A</span><span><i style="background:var(--vit)"></i>B</span><span><i style="background:var(--accent)"></i>C</span><span>Selected stage is thick. Below the line = cash out.</span></div></div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2><small>02</small>THE DIFFERENCE · STAGE BY STAGE</h2>
+  <p class="lead" id="s2lead"></p>
+  <div class="glass card ch"><h3>REVENUE · GROSS PROFIT · NET AT THE SELECTED VIEW</h3><div id="c3"></div>
+    <div class="legend"><span><i style="background:var(--perf)"></i>REVENUE</span><span><i style="background:var(--pep)"></i>GROSS PROFIT</span><span><i style="background:var(--accent)"></i>NET (AFTER ALL COSTS)</span></div></div>
+</section>
+
+<section id="s3">
+  <h2><small>03</small>HOW WE MAKE MONEY</h2>
+  <p class="lead">One line each. "IN MODEL" = counted in the numbers. "UPSIDE" = real lever, not counted (kept out so the numbers stay honest).</p>
+  <div class="grid g3" id="money"></div>
+</section>
+
+<section id="s4">
+  <h2><small>04</small>ASSUMPTIONS · MOVE THEM</h2>
+  <p class="lead">Every graph above updates live. Presets set all sliders at once.</p>
+  <div class="glass card">
+    <div class="pre"><span class="cap" style="font-size:11px;color:var(--dim)">PRESET</span>
+      <div class="seg" id="segP"><button data-v="low" aria-pressed="false">LOW</button><button data-v="base" aria-pressed="true">BASE</button><button data-v="high" aria-pressed="false">HIGH</button></div></div>
+    <div class="grid g2"><div id="sl1"></div><div id="sl2"></div></div>
+    <details><summary>MORE ASSUMPTIONS (shelves, costs, ramp)</summary><div class="grid g2"><div id="sl3"></div><div id="sl4"></div></div></details>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><small>05</small>RISKS · THE HONEST ROW</h2>
+  <p class="lead">Peptides carry the most upside and the most regulatory risk. Use the PEPTIDES PAUSED switch to see the downside.</p>
+  <div class="grid g3">
+    <div class="glass risk"><h3>CANADIAN REGULATION</h3><p>Health Canada says unauthorized injectable peptides are illegal to sell and has seized product and won an injunction against a seller. Selling the clinician service, not the product, is the working approach. Counsel must confirm. <a href="https://recalls-rappels.canada.ca/en/alert-recall/think-twice-injecting-peptides-bought-online-unauthorized-products-can-seriously-harm" target="_blank" rel="noopener">HEALTH CANADA ADVISORY</a> · <a href="https://www.canada.ca/en/health-canada/news/2026/07/health-canada-obtains-permanent-injunction-preventing-canlab-researchs-illegal-sale-of-injectable-peptides-in-canada.html" target="_blank" rel="noopener">INJUNCTION</a></p></div>
+    <div class="glass risk"><h3>SUPPLIER RISK</h3><p>No maker has quoted a minimum order, price or dropship terms yet. Vitamin and protein makers hold their own Canadian site licences; peptide supply has no equivalent licensed route in this research. Use the slider "paid share" and the margin sliders to stress it.</p></div>
+    <div class="glass risk"><h3>AD-PLATFORM LIMITS</h3><p>Paid ads for peptides may be restricted, so growth leans on organic: quiz, health hub, bot, letter. Set "paid share of leads" to 0% to see an organic-only plan. Vitamins, protein and creatine are easier to advertise (copy rules still apply).</p></div>
+  </div>
+  <div class="glass card ch" style="margin-top:16px"><h3>REVENUE AT THE SELECTED VIEW · NORMAL vs PEPTIDES PAUSED</h3><div id="c4"></div>
+    <div class="legend"><span><i style="background:var(--perf)"></i>NORMAL</span><span><i style="background:var(--bad)"></i>PEPTIDES PAUSED</span></div>
+    <p class="lead" id="c4note" style="margin:12px 0 0"></p></div>
+</section>
+
+<section id="s6">
+  <h2><small>06</small>TIMELINE · WHO DOES WHAT</h2>
+  <p class="lead" id="tlLead"></p>
+  <div class="tl" id="tl"></div>
+  <div class="links" id="links"></div>
+</section>
+
+<section id="s7">
+  <h2><small>07</small>WHY STAGE B AND STAGE C</h2>
+  <p class="lead">Numbers come from the model at your current sliders and view.</p>
+  <div class="grid g2" id="why"></div>
+</section>
+
+<section id="s8">
+  <h2><small>08</small>SOURCES · BENCHMARKS</h2>
+  <p class="lead">Mostly vendor blogs and marketplace listings. Directional only. Verify before relying on them.</p>
+  <ul class="src-list glass card" id="srcs" style="padding:18px 22px"></ul>
+</section>
+
+<footer>PEPTICITY · Scenario model for owner review. Not financial, legal or medical advice. Nothing here is a promise of results. No health claims are made about any product.</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var money=function(n){var a=Math.abs(n),s=a>=1e6?(a/1e6).toFixed(2)+'M':a>=1e4?Math.round(a/1e3)+'K':a>=1e3?(a/1e3).toFixed(1)+'K':Math.round(a)+'';return (n<0?'-':'')+'$'+s};
+var money0=function(n){return (n<0?'-':'')+'$'+Math.round(Math.abs(n)).toLocaleString('en-CA')};
+
+/* ---------- SOURCES ---------- */
+var SRC={
+ conv:{t:'Health/supplement store conversion 1.8-2.8% typical, 3.5%+ top (vendor blogs)',u:'https://www.webtonic.io/blog/health-wellness-shopify-statistics'},
+ shop:{t:'Shopify-store conversion thresholds (3.2% top 20%, 4.7% top 10%)',u:'https://www.nudgify.com/shopify-conversion-rate-benchmarks/'},
+ sub:{t:'Subscriber-to-buyer 7-day: 2-4% average, 6-10% good, 10-15% excellent (e-commerce, vendor report)',u:'https://excelohunt-site.pages.dev/blog/us-ecommerce-email-benchmarks'},
+ aov:{t:'Supplement AOV about $45-75 (calculator vendor)',u:'https://ai.pushowl.com/tools/average-order-value-calculator'},
+ gm:{t:'Supplement gross margin about 60-75% (vendor blog)',u:'https://eightx.co/blog/supplement-cac-payback-benchmarks'},
+ rep:{t:'90-day repeat rate 20-30% healthy; subscription churn 5-8%/month (vendor blog)',u:'https://eightx.co/blog/supplement-subscription-churn-rate-benchmark'},
+ rep2:{t:'Supplement repurchase about 29% typical, best 50-60% (vendor blog)',u:'https://www.ringly.io/blog/supplement-brand-customer-retention'},
+ cpl:{t:'Wellness cost per lead, Meta ads: median about $38-43 (ad-tool vendor)',u:'https://www.superads.ai/facebook-ads-costs/cost-per-lead/wellness-holistic-health'},
+ cpl2:{t:'All-industry lead-gen cost per lead about $27.66 (WordStream 2025, as cited)',u:'https://admanage.ai/blog/facebook-ads-cost-per-lead-benchmarks'},
+ vit:{t:'ConsumerLab 2026: top supplements bought (vitamin D 71.7%, magnesium 64.8%, omega-3 49.7%)',u:'https://www.consumerlab.com/news/2026-supplement-popularity-press-release/02-26-2026/'},
+ hcsite:{t:'Health Canada: site licensing guidance (NHPs)',u:'https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-non-prescription/legislation-guidelines/guidance-documents/site-licensing-guidance-document.html'},
+ hcadv:{t:'Health Canada: Think twice before injecting peptides bought online',u:'https://recalls-rappels.canada.ca/en/alert-recall/think-twice-injecting-peptides-bought-online-unauthorized-products-can-seriously-harm'},
+ creat:{t:'Creatine in Canada: NHP, needs NPN; 60/90/310+ day classes (consultant)',u:'https://sourcenutra.com/2026/04/creatine-market-entry-canada/'},
+ prot:{t:'Protein powder in Canada: food or NHP depending on claims (consultant)',u:'https://sourcenutra.com/2026/09/protein-powder-regulations-canada/'}
+};
+var A='assumption: owner to set';
+
+/* ---------- PRESETS + SLIDERS ---------- */
+var DEF=[
+ // key,label,min,max,step,fmt, low,base,high, source html, group
+ ['V','Monthly visitors (at full ramp)',1000,40000,500,function(v){return v.toLocaleString('en-CA')},3000,6000,10000,A+'. Needs real traffic data.',1],
+ ['cap','Lead capture rate (visitor to lead)',2,40,1,function(v){return v+'%'},12,18,22,A+'. Quiz, hub, bot, letter. No public benchmark found.',1],
+ ['conv','Lead to first order',1,30,1,function(v){return v+'%'},6,10,13,'cited: <a href="'+SRC.sub.u+'" target="_blank" rel="noopener">2-4% avg, 6-10% good, 10-15% excellent</a> (7-day, e-commerce).',1],
+ ['aov','Average order value (peptides)',40,300,5,function(v){return '$'+v},110,140,160,A+'. Cited supplement AOV is lower: <a href="'+SRC.aov.u+'" target="_blank" rel="noopener">$45-75</a>.',1],
+ ['gm','Gross margin (peptides)',20,85,1,function(v){return v+'%'},50,60,68,'cited: <a href="'+SRC.gm.u+'" target="_blank" rel="noopener">supplements 60-75%</a>. Peptide supply cost: '+A+'.',2],
+ ['rep','Repeat rate (past customers reordering each month)',1,25,1,function(v){return v+'%'},5,8,12,'cited: <a href="'+SRC.rep.u+'" target="_blank" rel="noopener">20-30% in 90 days is healthy</a> (about 7-10%/month).',2],
+ ['cpl','Cost per paid lead',5,80,1,function(v){return '$'+v},53,38,20,'cited: <a href="'+SRC.cpl.u+'" target="_blank" rel="noopener">wellness median about $38-43</a>; <a href="'+SRC.cpl2.u+'" target="_blank" rel="noopener">all-industry about $28</a>. Low = high cost.',2],
+ ['paid','Paid share of leads (rest is organic)',0,100,5,function(v){return v+'%'},10,15,15,A+'. 0% = organic only (ad platforms may restrict peptides).',2],
+ ['paidX','Paid share of leads on added shelves (vitamins, protein, creatine)',0,100,5,function(v){return v+'%'},10,5,5,A+'. Added shelves mostly sell to the existing list and cross-shoppers. Low-ticket lines cannot afford paid leads at the cited cost per lead.',3],
+ // more
+ ['vRel','Vitamins traffic vs peptide traffic',10,150,5,function(v){return v+'%'},50,70,90,A+'. Share of peptide-level visitors the vitamins shelf attracts.',3],
+ ['vAov','Vitamins order value',20,150,5,function(v){return '$'+v},45,55,70,'cited: <a href="'+SRC.aov.u+'" target="_blank" rel="noopener">supplement AOV $45-75</a>.',3],
+ ['vGm','Vitamins margin (dropship or resale)',20,75,1,function(v){return v+'%'},35,45,55,A+'. Dropship margin is lower than owned stock (maker quotes pending).',3],
+ ['pRel','Protein + creatine traffic vs peptide traffic',10,150,5,function(v){return v+'%'},30,50,70,A+'.',3],
+ ['pAov','Protein + creatine order value',20,150,5,function(v){return '$'+v},50,60,75,A+'. Cited AOV range is a guide only.',3],
+ ['pGm','Protein + creatine margin (resale)',20,75,1,function(v){return v+'%'},30,40,50,A+'.',3],
+ ['plUp','Own-brand margin uplift (from month 10, stage C)',0,25,1,function(v){return '+'+v+' pts'},4,8,12,A+'. Needs MOQ stock and counsel.',4],
+ ['rMult','Repeat multiplier, vitamins/protein/creatine vs peptides',100,200,10,function(v){return (v/100).toFixed(1)+'x'},110,140,170,A+'. Daily-use consumables reorder more (no citation).',4],
+ ['fix','Fixed costs per month, stage A',500,8000,100,function(v){return money0(v)},1800,1800,1800,A+'. Tools, bot, email, admin. Stage B adds 35%, C adds 60% more.',4],
+ ['ship','Net shipping cost per order',0,20,1,function(v){return '$'+v},9,6,5,A+'. After what customers pay.',4],
+ ['grow','Traffic growth per month after month 6',0,12,1,function(v){return v+'%'},2,4,7,A+'.',4]
+];
+var P={},scn='base',stage='A',H=12,paused=false;
+function loadPreset(k){var i={low:6,base:7,high:8}[k];DEF.forEach(function(d){P[d[0]]=d[i]});scn=k}
+loadPreset('base');
+
+function buildSliders(){
+  var cols={1:$('#sl1'),2:$('#sl2'),3:$('#sl3'),4:$('#sl4')};
+  Object.keys(cols).forEach(function(k){cols[k].innerHTML=''});
+  DEF.forEach(function(d){
+    var el=document.createElement('div');el.className='sl';
+    el.innerHTML='<div class="row"><label for="in_'+d[0]+'">'+d[1]+'</label><output id="o_'+d[0]+'"></output></div>'+
+      '<input type="range" id="in_'+d[0]+'" min="'+d[2]+'" max="'+d[3]+'" step="'+d[4]+'" aria-label="'+d[1]+'">'+
+      '<div class="src">'+d[9]+'</div>';
+    cols[d[10]].appendChild(el);
+    var inp=el.querySelector('input');
+    inp.addEventListener('input',function(){P[d[0]]=+inp.value;syncOut();setPressed('#segP',null);setPressed('#segS',null);render()});
+  });
+  syncIn();
+}
+function syncIn(){DEF.forEach(function(d){var i=$('#in_'+d[0]);i.value=P[d[0]];});syncOut()}
+function syncOut(){DEF.forEach(function(d){$('#o_'+d[0]).textContent=d[5](P[d[0]])})}
+
+/* ---------- MODEL ---------- */
+function run(p,stg,pause){
+  var months=[],pool={pep:0,vit:0,perf:0},cum=0,minCum=0,leadsTot=0,adTot=0;
+  var lines=[
+    {k:'pep',start:1,on:!pause,rel:1,aov:p.aov,gm:p.gm/100,rm:1},
+    {k:'vit',start:4,on:stg!=='A',rel:p.vRel/100,aov:p.vAov,gm:p.vGm/100,rm:p.rMult/100},
+    {k:'perf',start:7,on:stg==='C',rel:p.pRel/100,aov:p.pAov,gm:p.pGm/100,rm:p.rMult/100}
+  ];
+  var cumRev=0;
+  for(var m=1;m<=12;m++){
+    var growth=m>6?Math.pow(1+p.grow/100,m-6):1;
+    var row={m:m,rev:{pep:0,vit:0,perf:0},gp:0,rev_t:0,ad:0,fees:0,ship:0,fixed:0,once:0,orders:0,leads:0};
+    lines.forEach(function(L){
+      var k=m-L.start; if(k<0) return;
+      var ramp=L.k==='pep'?Math.min(1,0.3+0.7*k/5):Math.min(1,0.4+0.6*k/3);
+      // peptide traffic is still tracked for pooling when paused? no: paused = zero
+      if(!L.on) return;
+      var traffic=p.V*L.rel*ramp*growth;
+      var leads=traffic*p.cap/100, nc=leads*p.conv/100;
+      var rep=pool[L.k]*Math.min(.6,p.rep/100*L.rm);
+      var orders=nc+rep; pool[L.k]+=nc;
+      var gm=L.gm; if(L.k!=='pep'&&stg==='C'&&m>=10) gm+=p.plUp/100;
+      var rev=orders*L.aov;
+      row.rev[L.k]=rev; row.rev_t+=rev; row.gp+=rev*gm;
+      row.ad+=leads*(L.k==='pep'?p.paid:p.paidX)/100*p.cpl; row.orders+=orders; row.leads+=leads;
+      row.fees+=rev*0.029+orders*0.30; row.ship+=orders*p.ship;
+    });
+    row.fixed=p.fix*(1+(stg!=='A'&&m>=4?0.35:0)+(stg==='C'&&m>=7?0.60:0));
+    row.once=(m===1?4000:0)+(stg!=='A'&&m===3?2500:0)+(stg==='C'&&m===6?2500:0);
+    row.cost=row.ad+row.fees+row.ship+row.fixed+row.once;
+    row.net=row.gp-row.cost;
+    cum+=row.net; row.cum=cum; if(cum<minCum)minCum=cum;
+    months.push(row);
+  }
+  return months;
+}
+// stats for view h
+function stats(months,h,stg){
+  var s={rev:0,gp:0,cost:0,net:0,orders:0,leads:0,ad:0};
+  for(var i=0;i<h;i++){var r=months[i];s.rev+=r.rev_t;s.gp+=r.gp;s.cost+=r.cost;s.net+=r.net;s.orders+=r.orders;s.leads+=r.leads;s.ad+=r.ad}
+  var peak=0;for(i=0;i<h;i++){if(months[i].cum<peak)peak=months[i].cum}
+  var float_=(stg==='C'&&h>=8)?10000:0; // stock deposit, owner assumption
+  s.cash=-peak+float_; s.float=float_;
+  s.be=null;for(i=0;i<h;i++){var ok=true;for(var j=i;j<12;j++){if(months[j].net<=0){ok=false;break}}if(ok){s.be=i+1;break}}
+  s.pay=null;for(i=0;i<h;i++){if(months[i].cum>=0&&i>0&&months[i-1].cum<0){s.pay=i+1;}}
+  s.end=months[h-1].cum;
+  return s;
+}
+window.PLAN={run:run,stats:stats,P:P};
+
+/* ---------- RENDER ---------- */
+var COL={pep:'#8b8a83',vit:'#a18bf0',perf:'#e7e7e0',acc:'#D4FF3A',bad:'#ff6a6a'};
+function svgOpen(w,h){return '<svg viewBox="0 0 '+w+' '+h+'" role="img" xmlns="http://www.w3.org/2000/svg">'}
+function niceMax(v){if(v<=0)return 1;var e=Math.pow(10,Math.floor(Math.log10(v))),f=v/e;return (f<=1?1:f<=2?2:f<=5?5:10)*e}
+function axis(w,h,pl,pb,pt,min,max,ticks){
+  var s='',iw=h-pb-pt;
+  for(var i=0;i<=ticks;i++){var v=min+(max-min)*i/ticks,y=pt+iw-(v-min)/(max-min)*iw;
+    s+='<line x1="'+pl+'" x2="'+(w-8)+'" y1="'+y+'" y2="'+y+'" stroke="rgba(241,241,236,.10)"/><text x="'+(pl-6)+'" y="'+(y+4)+'" text-anchor="end">'+money(v)+'</text>';}
+  return s;
+}
+function chart1(months){
+  var w=600,h=300,pl=52,pb=26,pt=14,iw=h-pb-pt,bw=(w-pl-8)/12;
+  var maxR=0,minC=0,maxC=0;months.forEach(function(r){maxR=Math.max(maxR,r.rev_t);minC=Math.min(minC,r.cum);maxC=Math.max(maxC,r.cum)});
+  var max=niceMax(Math.max(maxR,maxC)*1.05), min=minC<0?-niceMax(-minC*1.05):0;
+  var Y=function(v){return pt+iw-(v-min)/(max-min)*iw};
+  var s=svgOpen(w,h)+axis(w,h,pl,pb,pt,min,max,4);
+  if(min<0) s+='<line x1="'+pl+'" x2="'+(w-8)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="rgba(241,241,236,.4)"/>';
+  months.forEach(function(r,i){
+    var x=pl+i*bw+bw*.18,ww=bw*.64,acc=0,op=r.m<=H?1:.28;
+    ['pep','vit','perf'].forEach(function(k){var v=r.rev[k];if(v<=0)return;var top=Y(acc+v),hh=Y(acc)-top;acc+=v;
+      s+='<rect x="'+x+'" y="'+top+'" width="'+ww+'" height="'+Math.max(hh,0)+'" fill="'+COL[k]+'" opacity="'+op+'"><title>Month '+r.m+' '+k+': '+money0(v)+'</title></rect>'});
+    s+='<text x="'+(x+ww/2)+'" y="'+(h-8)+'" text-anchor="middle" opacity="'+(r.m<=H?1:.4)+'">'+r.m+'</text>';
+  });
+  var d='';months.forEach(function(r,i){d+=(i?'L':'M')+(pl+i*bw+bw/2)+' '+Y(r.cum)});
+  s+='<path d="'+d+'" fill="none" stroke="'+COL.acc+'" stroke-width="2.2"/>';
+  var last=months[H-1];s+='<circle cx="'+(pl+(H-1)*bw+bw/2)+'" cy="'+Y(last.cum)+'" r="4" fill="'+COL.acc+'"/>';
+  s+='<text x="'+(w-8)+'" y="'+(h-8)+'" text-anchor="end" fill="#7d7c75">MONTH</text></svg>';
+  return s;
+}
+function chart2(all){
+  var w=600,h=300,pl=52,pb=26,pt=14,iw=h-pb-pt,bw=(w-pl-8)/11;
+  var mn=0,mx=0;['A','B','C'].forEach(function(k){all[k].forEach(function(r){mn=Math.min(mn,r.cum);mx=Math.max(mx,r.cum)})});
+  var max=niceMax(mx*1.05||1),min=mn<0?-niceMax(-mn*1.05):0;
+  var Y=function(v){return pt+iw-(v-min)/(max-min)*iw},X=function(i){return pl+i*bw};
+  var s=svgOpen(w,h)+axis(w,h,pl,pb,pt,min,max,4);
+  s+='<line x1="'+pl+'" x2="'+(w-8)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="rgba(241,241,236,.4)"/>';
+  s+='<rect x="'+X(H-1)+'" y="'+pt+'" width="'+(w-8-X(H-1))+'" height="'+iw+'" fill="rgba(0,0,0,.28)"/>';
+  [['A',COL.pep],['B',COL.vit],['C',COL.acc]].forEach(function(p){
+    var d='';all[p[0]].forEach(function(r,i){d+=(i?'L':'M')+X(i)+' '+Y(r.cum)});
+    s+='<path d="'+d+'" fill="none" stroke="'+p[1]+'" stroke-width="'+(p[0]===stage?3.4:1.6)+'" opacity="'+(p[0]===stage?1:.7)+'"/>';
+    var l=all[p[0]][H-1];s+='<text x="'+(X(H-1)+5)+'" y="'+(Y(l.cum)+4)+'" fill="'+p[1]+'" style="fill:'+p[1]+'">'+p[0]+'</text>';
+  });
+  for(var m=1;m<=12;m++)s+='<text x="'+X(m-1)+'" y="'+(h-8)+'" text-anchor="middle">'+m+'</text>';
+  return s+'</svg>';
+}
+function chart3(S){
+  var w=600,h=300,pl=52,pb=30,pt=14,iw=h-pb-pt;
+  var mx=0,mn=0;['A','B','C'].forEach(function(k){mx=Math.max(mx,S[k].rev,S[k].gp);mn=Math.min(mn,S[k].net)});
+  var max=niceMax(mx*1.05||1),min=mn<0?-niceMax(-mn*1.1):0;
+  var Y=function(v){return pt+iw-(v-min)/(max-min)*iw};
+  var gw=(w-pl-8)/3,bw=gw/5,s=svgOpen(w,h)+axis(w,h,pl,pb,pt,min,max,4);
+  if(min<0)s+='<line x1="'+pl+'" x2="'+(w-8)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="rgba(241,241,236,.4)"/>';
+  ['A','B','C'].forEach(function(k,gi){
+    var x0=pl+gi*gw+bw*.5;
+    [[S[k].rev,COL.perf],[S[k].gp,COL.pep],[S[k].net,COL.acc]].forEach(function(b,bi){
+      var v=b[0],y=Y(Math.max(v,0)),hh=Math.abs(Y(v)-Y(0));
+      s+='<rect x="'+(x0+bi*bw*1.3)+'" y="'+(v>=0?Y(v):Y(0))+'" width="'+bw+'" height="'+Math.max(hh,1)+'" fill="'+b[1]+'" opacity="'+(k===stage?1:.6)+'"><title>'+k+': '+money0(v)+'</title></rect>';
+      s+='<text x="'+(x0+bi*bw*1.3+bw/2)+'" y="'+((v>=0?Y(v):Y(v))+(v>=0?-5:13))+'" text-anchor="middle" style="font-size:10px">'+money(v)+'</text>'});
+    s+='<text x="'+(x0+bw*1.9)+'" y="'+(h-8)+'" text-anchor="middle" style="fill:#f1f1ec;font-weight:700;letter-spacing:.1em">STAGE '+k+'</text>';
+  });
+  return s+'</svg>';
+}
+function chart4(N,Z){
+  var w=600,h=250,pl=52,pb=30,pt=14,iw=h-pb-pt;
+  var mx=0;['A','B','C'].forEach(function(k){mx=Math.max(mx,N[k].rev)});
+  var max=niceMax(mx*1.1||1),Y=function(v){return pt+iw-v/max*iw};
+  var gw=(w-pl-8)/3,bw=gw/4,s=svgOpen(w,h)+axis(w,h,pl,pb,pt,0,max,4);
+  ['A','B','C'].forEach(function(k,gi){
+    var x0=pl+gi*gw+bw*.7;
+    [[N[k].rev,COL.perf],[Z[k].rev,COL.bad]].forEach(function(b,bi){
+      s+='<rect x="'+(x0+bi*bw*1.25)+'" y="'+Y(b[0])+'" width="'+bw+'" height="'+Math.max(iw+pt-Y(b[0]),1)+'" fill="'+b[1]+'" opacity=".9"/><text x="'+(x0+bi*bw*1.25+bw/2)+'" y="'+(Y(b[0])-5)+'" text-anchor="middle" style="font-size:10px">'+money(b[0])+'</text>'});
+    s+='<text x="'+(x0+bw*1.1)+'" y="'+(h-8)+'" text-anchor="middle" style="fill:#f1f1ec;font-weight:700;letter-spacing:.1em">STAGE '+k+'</text>';
+  });
+  return s+'</svg>';
+}
+
+function kpiBox(l,v,n,cls){return '<div class="glass kpi"><div class="l">'+l+'</div><div class="v '+(cls||'')+'">'+v+'</div><div class="n">'+n+'</div></div>'}
+var NAMES={A:'PEPTIDES',B:'PEPTIDES + VITAMINS',C:'PEPTIDES + VITAMINS + PROTEIN + CREATINE'};
+
+var MONEY={
+ A:[['PRODUCT MARGIN','Each consult-led order earns the gross margin slider.',1],['REPEAT ORDERS','Past customers reorder at the repeat-rate slider.',1],['MEMBERSHIP','Member price card tied to the letter and hub.',0],['REFERRAL','Friend referral with counsel-cleared rewards.',0]],
+ B:[['VITAMINS SHELF','Higher-frequency, lower-ticket orders (dropship or ready-NPN).',1],['CROSS-SHOP','Peptide visitors discover the vitamins shelf. Not counted.',0],['AUTO-SHIP','Monthly vitamin refills. Not counted.',0],['AFFILIATE LINKS','Partner commission on products we do not stock.',0]],
+ C:[['PROTEIN + CREATINE','Highest reorder products in the plan (multiplier slider).',1],['PRIVATE-LABEL UPLIFT','Own-brand margin +pts from month 10 (slider).',1],['STACK DISPLAYS','Shelf-level display, never goal bundles. Not counted.',0],['AUTO-SHIP + MEMBERSHIP','Largest lever once there are 3+ reorder lines. Not counted.',0]]
+};
+var TL={
+ A:{m13:[['OWNER','Approve plan, pick supplier route, brief counsel'],['COUNSEL','Confirm Canadian peptide position + site wording'],['CLAUDE','Build site, quiz, health hub, bot, letter hooks'],['GRACE','Review and approve pages before publish']],
+    m46:[['OWNER','Soft launch to the list'],['MARKETING','Organic first: quiz + hub + letter. Paid only if counsel clears'],['CLAUDE','Fix what the lead data shows'],['OWNER','Weekly numbers vs this plan']],
+    m712:[['OWNER','Decide: keep scaling or pivot weight to stage B/C'],['MARKETING','Grow list and repeat orders'],['COUNSEL','Re-check Health Canada position quarterly']]},
+ B:{m13:[['OWNER','Choose vitamins route 1A/1B/1C (research playbook)'],['OWNER','Approve quote emails to 3 makers (nothing sent yet)'],['COUNSEL','Site-licence + claims position for a reseller'],['CLAUDE','Build vitamins shelf at its own link, verify each NPN']],
+    m46:[['MAKERS','Samples, quotes, label proof'],['OWNER','Pick 6 starter products'],['CLAUDE','Merge shelf into the store, interest cards, quiz'],['OWNER','Shelf live around month 4']],
+    m712:[['OWNER','Read sales data: which vitamins reorder'],['MAKERS','Move winners to private label (1B)'],['MARKETING','Ads allowed to run on vitamins (copy rules still apply)']]},
+ C:{m13:[['OWNER','Pick package path + concept (protein/creatine playbook)'],['COUNSEL','Food vs NHP class per product; NPN holder'],['MAKERS','Quotes: minimums, lead time, testing certificates']],
+    m46:[['MAKERS','Samples + testing certificates'],['OWNER','OK label before print'],['CLAUDE','Build protein + creatine shelf, pair view with vitamins']],
+    m712:[['MAKERS','First small own-brand run (about month 8)'],['OWNER','Launch the shelf; own brand follows the data'],['COUNSEL','Label wording, recall + complaint procedure']]}
+};
+var LINKS={
+ A:[['HEALTH CANADA ADVISORY',SRC.hcadv.u]],
+ B:[['SYNERGY PRIVATE LABEL','https://synergyprivatelabel.com/'],['PURA','https://pura.ca/'],['NUTRALAB','https://www.nutralab.ca'],['RHEMA','https://rhemamade.com'],['SITE LICENSING (HEALTH CANADA)',SRC.hcsite.u],['CONSUMERLAB 2026 TOP SUPPLEMENTS',SRC.vit.u]],
+ C:[['THRIVE PROTEIN (WHOLESALE)','https://www.thriveprotein.ca/pages/wholesale'],['NUTRANORTH','http://nutranorth.com'],['NUTRIZA (DIRECTORY)','https://pharmchoices.com/vitamins-and-supplement-manufacturers-in-canada'],['TRUE NORTH PROTEIN','https://www.newsfilecorp.com/release/258239'],['MAKERS NUTRITION (US COMPARISON)','https://www.makersnutrition.com/private-label/sports-nutrition'],['CREATINE RULES (CONSULTANT)',SRC.creat.u],['PROTEIN RULES (CONSULTANT)',SRC.prot.u]]
+};
+var HOOKS={A:'QUIZ → HEALTH HUB → BOT → GRACE\'S LETTER feed the peptide consult.',B:'QUIZ shortlist + HEALTH HUB pages route visitors to the vitamins shelf. LETTER announces the shelf.',C:'BOT + LETTER announce protein and creatine; QUIZ adds a shelf-finder step (catalogue only, no health questions).'};
+
+function render(){
+  var all={},S={},Z={},ZS={};
+  ['A','B','C'].forEach(function(k){all[k]=run(P,k,paused);S[k]=stats(all[k],H,k);var z=run(P,k,true);Z[k]=stats(z,H,k);var n=run(P,k,false);ZS[k]=stats(n,H,k);});
+  var cur=S[stage],months=all[stage];
+  $('#s1lead').innerHTML='STAGE '+stage+' · '+NAMES[stage]+' · FIRST '+H+' MONTHS · '+scn.toUpperCase()+' SCENARIO. Launch pace: peptides month 1, vitamins month 4, protein + creatine month 7.';
+  var be=cur.be?('MONTH '+cur.be):(H<12?'NOT BY MONTH '+H:'NOT IN 12 MONTHS');
+  $('#kpis').innerHTML=
+    kpiBox('REVENUE',money(cur.rev),cur.orders.toFixed(0)+' orders')+
+    kpiBox('GROSS PROFIT',money(cur.gp),(cur.rev?Math.round(cur.gp/cur.rev*100):0)+'% of revenue')+
+    kpiBox('COSTS',money(cur.cost),'ads '+money(cur.ad)+' · fixed + fees + ship')+
+    kpiBox('NET',money(cur.net),'after all costs',cur.net<0?'neg':'k')+
+    kpiBox('CASH NEEDED',money(cur.cash),'deepest dip'+(cur.float?' + $10K stock float':''),'k')+
+    kpiBox('BREAK-EVEN',be,'first month profit stays positive'+(cur.pay?' · cash payback M'+cur.pay:''),cur.be?'k':'neg');
+  $('#alert').classList.toggle('on',paused);
+  $('#c1').innerHTML=chart1(months);
+  $('#c2').innerHTML=chart2(all);
+  $('#c3').innerHTML=chart3(S);
+  var d=S.C.net-S.A.net;
+  $('#s2lead').textContent='At '+H+' months ('+scn.toUpperCase()+'): net A '+money(S.A.net)+' · B '+money(S.B.net)+' · C '+money(S.C.net)+'. Cash needed A '+money(S.A.cash)+' · B '+money(S.B.cash)+' · C '+money(S.C.cash)+'.';
+  // money
+  $('#money').innerHTML=MONEY[stage].map(function(m){return '<div class="glass card"><div class="tag '+(m[2]?'in':'')+'">'+(m[2]?'IN MODEL':'UPSIDE')+'</div><h3 style="font-size:13px;margin:10px 0 6px">'+m[0]+'</h3><p style="font-size:13px;color:var(--mute)">'+m[1]+'</p></div>'}).join('');
+  // risk chart
+  $('#c4').innerHTML=chart4(ZS,Z);
+  $('#c4note').innerHTML='With peptides at zero, stage A earns <b>'+money(Z.A.rev)+'</b> and loses <b>'+money(-Z.A.net)+'</b>. Stage B earns <b>'+money(Z.B.rev)+'</b>, stage C <b>'+money(Z.C.rev)+'</b>. Net with peptides paused: A '+money(Z.A.net)+', B '+money(Z.B.net)+', C '+money(Z.C.net)+'. '+((Z.C.net>Z.A.net)?'The added shelves reduce the loss.':'The added shelves keep revenue alive but, at these settings, do not cover their own added costs. Raise the margin, traffic or repeat sliders to test.');
+  // timeline
+  var t=TL.A,stg=['A','B','C'].slice(0,['A','B','C'].indexOf(stage)+1);
+  function col(key){return stg.map(function(k){return TL[k][key].map(function(r){return '<li><b>'+k+' · '+r[0]+'</b>'+r[1]+'</li>'}).join('')}).join('')}
+  $('#tlLead').textContent='Showing every step up to stage '+stage+'. '+stg.map(function(k){return HOOKS[k]}).join(' ');
+  $('#tl').innerHTML='<div class="glass card"><h3>MONTHS 1-3</h3><ul>'+col('m13')+'</ul></div><div class="glass card"><h3>MONTHS 4-6</h3><ul>'+col('m46')+'</ul></div><div class="glass card"><h3>MONTHS 7-12</h3><ul>'+col('m712')+'</ul></div>';
+  $('#links').innerHTML=stg.map(function(k){return LINKS[k]}).reduce(function(a,b){return a.concat(b)},[]).map(function(l){return '<a href="'+l[1]+'" target="_blank" rel="noopener">'+l[0]+'</a>'}).join('');
+  // why
+  var pa=ZS.A,pb=ZS.B,pc=ZS.C;
+  var vitPart=pb.rev-pa.rev, perfPart=pc.rev-pb.rev;
+  var shareB=pb.rev?Math.round((pb.rev-pa.rev)/pb.rev*100):0, shareC=pc.rev?Math.round((pc.rev-pa.rev)/pc.rev*100):0;
+  var run12={};['A','B','C'].forEach(function(k){run12[k]=run(P,k,false)[11].net});
+  var runP={};['A','B','C'].forEach(function(k){runP[k]=run(P,k,true)[11].net});
+  $('#why').innerHTML=
+   '<div class="glass card why"><h3>WHY STAGE B · + VITAMINS</h3><ul>'+
+    '<li>MORE REVENUE: adds <em>'+money(vitPart)+'</em> over '+H+' months ('+shareB+'% of the stage B total).</li>'+
+    '<li>IF PEPTIDES STOP: the business still sells <em>'+money(Z.B.rev)+'</em> ('+H+' months) vs <em>'+money(Z.A.rev)+'</em> for A. Net '+money(Z.B.net)+' vs '+money(Z.A.net)+'. '+(Z.B.net>=Z.A.net?'The extra shelf softens the loss.':'At these settings the added costs outweigh the extra sales.')+'</li>'+
+    '<li>THE PRICE: extra cash needed '+money(pb.cash-pa.cash)+'. Month-12 monthly net: B <em>'+money(run12.B)+'</em> vs A <em>'+money(run12.A)+'</em>. '+(run12.B>=run12.A?'B overtakes A at the exit.':'B has not overtaken A within 12 months at these settings.')+'</li></ul></div>'+
+   '<div class="glass card why"><h3>WHY STAGE C · + PROTEIN + CREATINE</h3><ul>'+
+    '<li>MORE REVENUE: adds <em>'+money(perfPart)+'</em> over stage B at '+H+' months'+(H<7?' (starts month 7, nothing yet in this view)':'')+'. Reorder multiplier '+(P.rMult/100).toFixed(1)+'x is an assumption.</li>'+
+    '<li>IF PEPTIDES STOP: month-12 monthly net is <em>'+money(runP.C)+'</em> vs <em>'+money(runP.A)+'</em> for A and <em>'+money(runP.B)+'</em> for B.</li>'+
+    '<li>THE PRICE: cash needed '+money(pc.cash)+' (incl. stock float) vs '+money(pb.cash)+' for B. Own-brand margin +'+P.plUp+' pts only starts month 10. Month-12 monthly net: C <em>'+money(run12.C)+'</em> vs A <em>'+money(run12.A)+'</em>.</li></ul></div>';
+}
+function setPressed(sel,v){document.querySelectorAll(sel+' button').forEach(function(b){b.setAttribute('aria-pressed',v!==null&&b.dataset.v===String(v)?'true':'false')})}
+function seg(sel,fn){document.querySelectorAll(sel+' button').forEach(function(b){b.addEventListener('click',function(){fn(b.dataset.v)})})}
+seg('#segStage',function(v){stage=v;setPressed('#segStage',v);render()});
+seg('#segH',function(v){H=+v;setPressed('#segH',v);render()});
+function pick(v){loadPreset(v);syncIn();setPressed('#segS',v);setPressed('#segP',v);render()}
+seg('#segS',pick);seg('#segP',pick);
+$('#paused').addEventListener('click',function(){paused=!paused;this.setAttribute('aria-pressed',paused);render()});
+// pointer sheen
+document.addEventListener('pointermove',function(e){var t=e.target.closest&&e.target.closest('.glass');if(!t)return;var r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
+// sources list
+$('#srcs').innerHTML=Object.keys(SRC).map(function(k){return '<li><a href="'+SRC[k].u+'" target="_blank" rel="noopener">'+SRC[k].t+'</a></li>'}).join('');
+buildSliders();render();
+})();
+</script>
+</body>
+</html>
