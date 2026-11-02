@@ -1,8 +1,8 @@
 /* PEPTICITY main site v4 = v2's look with a guided tour that sells (owner R173 + R174).
-   Chest film -> 01 WELCOME (founding ticket, BTN-101) -> TXT-04 -> 02 WHAT BRINGS YOU (LAY-102) -> 03 FOUR QUESTIONS (FRM-102 on BGD-102)
+   Chest film -> 01 WELCOME (founding ticket, BTN-105) -> TXT-103 -> 02 WHAT BRINGS YOU (LAY-102) -> 03 FOUR QUESTIONS (FRM-102)
    -> 04 THE THRESHOLD (19+ gate; the catalogue loads only after a pass) -> 05 CITY (SCR-17 + SCR-07, cards picked from the answers)
    -> 06 DOORS (FRM-02) -> 07 LAB -> SCR-102 HOW WE CHOOSE -> TXT-04 promise -> SCR-16 vial -> 08 COLLECTION + cart -> LAY-101 WHAT YOU GET
-   -> SCR-18 tiers -> CRD-124 perks + FRM-104 -> CRD-118 text alerts -> HOV-17 network -> refer -> letter + TXT-13. Menu = NAV-102.
+   -> SCR-18 tiers -> CRD-124 perks + FRM-104 -> CRD-119 text alerts -> HOV-17 network -> refer -> letter + TXT-13. Menu = NAV-04. Hover = HOV-104. HOW WE CHOOSE = SCR-104. Extra = CRD-129 (refer card). VERSION 10 · PLATINUM.
    GSAP ScrollTrigger + Lenis on one ticker. Every form is preview only: nothing is sent. */
 (function () {
   'use strict';
@@ -361,7 +361,7 @@
   }
   $('#skipIntro').addEventListener('click', liftIntro);
   addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.classList.contains('intro-on')) liftIntro(); });
-  $('#replay').addEventListener('click', function () { closeMenu(); runIntro(); });
+  $('#replay').addEventListener('click', function (e) { e.preventDefault(); closeMenu(false); runIntro(); });
   function heroIn() { if (RM) return; gsap.fromTo('.hero-card', { opacity: 0, y: 40, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.4, delay: 1.1, ease: 'expo.out' }); }
   if (introLive) runIntro(); else { loadAll(); heroIn(); }
 
@@ -419,9 +419,9 @@
     if (form.dataset.interest && ct && ct.checked) d.interest = form.dataset.interest;
     return d;
   }
-  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-101 stub) */
+  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-105 lens) */
     if (!btn) { cb && cb(); return; }
-    var lab = $('.pc-btn__label', btn) || $('.apx-b101__l', btn) || btn, w = btn.offsetWidth;
+    var lab = $('.pc-btn__label', btn) || $('.apx-b105__l', btn) || btn, w = btn.offsetWidth;
     btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; lab.textContent = 'SENDING';
     setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); lab.textContent = label || 'DONE ✓'; cb && cb(); }, RM ? 10 : 650);
   }
@@ -864,22 +864,33 @@
   $('#modal').addEventListener('keydown', function (e) { trap($('.modal'), e); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   /* the NAV-102 menu handles its own Esc and hands focus back */
+    if (!$('#modal').hidden) closeModal(); else if (!$('#cart').hidden) closeCart(); else if (!exitEl.hidden) closeExit();   /* the NAV-04 menu handles its own Esc and hands focus back */
   });
 
-  /* ================= THE TOUR menu (NAV-102 Split Preview) ================= */
-  var tm = $('#tourMenu'), tmToggle = $('.apx-n102__toggle', tm), menuOpen = false;
-  if (window.APX && APX.NAV102) APX.NAV102.mount(tm, { lockScroll: true });
+  /* ================= THE TOUR menu (NAV-04 Elevator Floors) ================= */
+  /* the floor readout sits in the top bar; THE TOUR opens the brushed-metal panel (the module's own FLOORS plate stays hidden) */
+  var tm = $('#tourMenu'), tmToggle = $('.apx-nav04__btn', tm), menuOpen = false;
+  if (window.APX && APX.NAV04) APX.NAV04.mount(tm);
+  /* the floor buttons go through the site's own tour logic (19+ gate, pinned city, Lenis glide) instead of the module's raw scroll */
+  $('.apx-nav04__panel', tm).addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-go]'); if (!a) return;
+    e.preventDefault(); e.stopPropagation();
+    a.classList.remove('is-pressed'); void a.offsetWidth; a.classList.add('is-pressed');
+    setTimeout(function () { a.classList.remove('is-pressed'); }, 450);
+    setTimeout(function () { closeMenu(false); goTo(a.dataset.go); }, RM ? 0 : 260);
+  }, true);
   function syncMenu() {
     var o = tm.classList.contains('is-open'); if (o === menuOpen) return; menuOpen = o;
     $('#menuBtn').setAttribute('aria-expanded', String(o));
     if (o) { stopScroll(); track('menu_open'); } else startScroll();
   }
   new MutationObserver(syncMenu).observe(tm, { attributes: true, attributeFilter: ['class'] });
-  function openMenu() { if (!tm.classList.contains('is-open')) tmToggle.click(); }
+  function openMenu() { if (!tm.classList.contains('is-open')) tmToggle.click(); else closeMenu(); }
   function closeMenu(returnFocus) { if (!tm.classList.contains('is-open')) return; tmToggle.click(); if (returnFocus === false) $('#menuBtn').blur(); else $('#menuBtn').focus({ preventScroll: true }); }
+  /* pressing THE TOUR is not an "outside" press for the panel */
+  $('#menuBtn').addEventListener('pointerdown', function (e) { e.stopPropagation(); });
   $('#menuBtn').addEventListener('click', openMenu);
-  tm.addEventListener('keydown', function (e) { if (e.key === 'Escape') setTimeout(function () { $('#menuBtn').focus({ preventScroll: true }); }, 0); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menuOpen) setTimeout(function () { $('#menuBtn').focus({ preventScroll: true }); }, 0); }, true);
 
   /* ================= 02 · WHAT BRINGS YOU HERE (LAY-102) -> into the four questions ================= */
   function startTour(k) {
@@ -1160,8 +1171,20 @@
   if (OFFER) { renderOfferEnd(); setInterval(renderOfferEnd, 60000); }
 
   /* ================= the 10 effect picks: mount each module once its section is on the page (some sit past the gates) ================= */
-  var FX = [['NAV102', null], ['LAY102', '#mkPanels'], ['BGD102', '.tour-plex'], ['TXT04', '.apx-txt04'], ['BTN101', '[data-apx="BTN-101"]'],
-    ['SCR102', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD118', '.apx-c118']];
+  /* VERSION 10 · TXT-103 Tide Fill: every word of each reading statement is its own little tide, so the lines fill top to bottom
+     in reading order as they scroll up (outline -> liquid white). Key phrases (<mark>) fill with the platinum mirror and keep a moving glint. */
+  $$('[data-tide]').forEach(function (p) {
+    var out = [];
+    [].forEach.call(p.childNodes, function (n) {
+      var key = n.nodeType === 1 && n.tagName === 'MARK', ws = (n.textContent || '').split(/(\s+)/);
+      ws.forEach(function (w) { if (!w) return; if (/^\s+$/.test(w)) { out.push(' '); return; }
+        out.push('<span class="apx-txt103 tw' + (key ? ' key' : '') + '">' + (key ? '<em>' + esc(w) + '</em>' : esc(w)) + '</span>'); });
+    });
+    p.innerHTML = out.join('').replace(/ +/g, ' ');
+    p.setAttribute('data-tide-on', '');
+  });
+  var FX = [['LAY102', '#mkPanels'], ['TXT103', '.say .tw'], ['BTN105', '[data-apx="BTN-105"]'],
+    ['SCR104', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD119', '.apx-c119'], ['CRD129', '.apx-c129']];
   function mountFx() {
     if (!window.APX) return;
     FX.forEach(function (f) {
@@ -1171,6 +1194,24 @@
     ScrollTrigger.refresh();
   }
   mountFx();
+  /* VERSION 10 · HOV-104 Lead Trail: moving the pointer over a card, the menu or a button leaves a trail of small see-through stop cards that pop up and drift away.
+     The module wants one section as its root, so a fixed see-through overlay is the root and the pointer over any glass surface is forwarded to it. Mouse only; touch and reduced motion get nothing. */
+  (function () {
+    if (!window.APX || !APX.HOV104 || RM || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    var STOPS = ['WELCOME', 'WHAT BRINGS YOU', 'FOUR QUESTIONS', 'THE THRESHOLD', 'THE CITY', 'THE DOORS', 'THE LAB', 'THE COLLECTION'];
+    var root = D.createElement('div'); root.className = 'apx-h104 hov-trail'; root.setAttribute('aria-hidden', 'true');
+    root.innerHTML = '<ul class="apx-h104__items">' + STOPS.map(function (n, k) { return '<li><span class="apx-h104__tag">STOP 0' + (k + 1) + '</span><b>' + n + '</b><span>THE PEPTICITY TOUR</span></li>'; }).join('') + '</ul>';
+    D.body.appendChild(root);
+    APX.HOV104.mount(root, { gap: 120, pool: 7, life: 1300 });
+    var SEL = '.glass, .pc-btn, .pc-seg, .tourmenu, .apx-b105, .apx-c119, .apx-c129, .apx-scr104__tile, .prod, .int-card, .nav, .tm-meta', inside = false;
+    function fwd(type, e) { root.dispatchEvent(new PointerEvent(type, { clientX: e.clientX, clientY: e.clientY, pointerType: 'mouse' })); }
+    addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      var hit = e.target.closest && e.target.closest(SEL);
+      if (hit) { if (!inside) { inside = true; fwd('pointerenter', e); } fwd('pointermove', e); }
+      else if (inside) { inside = false; fwd('pointerleave', e); }
+    }, { passive: true });
+  })();
   document.addEventListener('pc-version', function () { window.dispatchEvent(new Event('apx:tokens')); });
 
   /* TRN-01 Soft Rise: each section's content rises into place once as it scrolls into view (nothing moves position for good) */
