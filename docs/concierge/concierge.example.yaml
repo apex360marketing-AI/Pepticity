@@ -1,0 +1,35 @@
+# Concierge Grace job policy (example; no secrets here, ever). Loaded by the Hermes skill at start.
+# autonomy: L0 watch · L1 tell · L2 draft (needs tap) · L3 act-safe · L3+ auto-send locked template (opt-in)
+timezone: America/Vancouver
+quiet_hours: { start: "22:00", end: "07:00", except: [P1] }
+kill_switch: { phrase: "STOP CONCIERGE", panel_button: true, vault_revoke: true }
+secrets_from: bitwarden   # machine token only in ~/.hermes/.env (chmod 600)
+limits:
+  customer_emails: { per_hour: 20, per_day: 100, per_customer_per_category_per_day: 1 }
+  alerts_non_p1_per_hour: 6
+  owner_sms_per_day: 10
+  fix_agent: { concurrent: 1, per_day: 3, timebox_min: 30 }
+  pull_requests_per_day: 5
+  ai_spend_usd_per_day: { soft: 5, hard: 10 }
+  sent_without_approval: 0   # any → kill switch + P1
+jobs:
+  J01_inbox:      { trigger: gmail_push, fallback_poll: 5m, autonomy: L2, auto_send_categories: [] }
+  J02_inventory:  { trigger: [webhook.product.updated, webhook.order.created], sweep: 1h, autonomy: L2 }
+  J03_uptime:     { http: { tool: uptimerobot, every: 5m }, journey: { tool: checkly, every: 30m, stop_before: place_order }, autonomy: L3, script_only: true }
+  J04_incident:   { trigger: [J03.fail, J06.fail, J11.alert], fixer: claude_code_routine, branch_prefix: "fix/", merge: human, autonomy: L3 }
+  J05_payments:   { every: 15m, mark_paid: L2, refunds: L2, card_features: dormant }
+  J06_crawl:      { tool: lychee, cron: "30 2 * * *", also: after_deploy, autonomy: L3 }
+  J07_recovery:   { enabled: false, blocked_by: [counsel_D8, counsel_D9] }
+  J08_restock:    { enabled: false, cleared_items_only: true }
+  J09_brief:      { daily: "07:30", weekly: "MON 08:00", to: [grace, owner_copy] }
+  J10_compliance: { weekly: true, on_change: true, edits: never }
+  J11_security:   { daily: "06:00", install_updates: never }
+  J12_email_auth: { daily: "06:05", checks: [spf, dkim, dmarc, smtp_log] }
+  J13_orders:     { every: 1h, unshipped_business_days: 2 }
+  J14_backups:    { daily: "04:00", max_age_h: 26, restore_test: monthly }
+escalation:
+  INFO:   { to: grace, via: brief }
+  NOTICE: { to: grace, within: 15m, via: push }
+  P2:     { to: [grace, owner], within: 5m, via: [push, panel] }
+  P1:     { to: [owner, grace], within: 2m, via: [push, sms], call_if_unacked: 15m }
+log: { format: jsonl, retain_months: 13, pii: ids_and_hashes_only, offsite_copy: daily }

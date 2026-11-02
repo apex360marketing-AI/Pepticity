@@ -1,0 +1,58 @@
+    <!-- CONCIERGE (preview, sample data) -->
+    <section class="panel" id="p-concierge" role="tabpanel" aria-label="Concierge">
+      <div class="grid g-kpi">
+        <div class="glass card r-a kpi big tilt"><div class="lab">CONCIERGE · STATUS</div><div class="val" id="cgState">RUNNING</div><div class="foot"><span class="delta" id="cgJobsOn">14 of 14 jobs on</span>&nbsp;sample data</div></div>
+        <div class="glass card r-d kpi tilt"><div class="lab">WAITING FOR YOU</div><div class="val" id="cgWaiting">0</div><div class="foot">approvals and drafts</div></div>
+        <div class="glass card r-b kpi tilt"><div class="lab">SITE UPTIME · 30 DAYS</div><div class="val">99.96%</div><div class="foot">1 incident · 17 min</div></div>
+        <div class="glass card r-c kpi tilt"><div class="lab">HANDLED ALONE · TODAY</div><div class="val" id="cgAlone">37</div><div class="foot">sorted, labelled, checked</div></div>
+      </div>
+
+      <div class="grid g-2 mt">
+        <div class="glass card r-e">
+          <div class="card-h"><h2 class="h3d h2">WAITING FOR YOU</h2><span class="sub">nothing is sent or paid until you tap</span></div>
+          <div class="tbl cg-q" id="cgQueue"></div>
+          <p class="note">Every customer reply starts as a draft in Gmail. Money and customer messages always wait for your tap.</p>
+        </div>
+        <div class="stack">
+          <div class="glass card r-f">
+            <div class="card-h"><h2 class="h3d h2">LIVE CHECKOUT CHECK</h2><span class="sub" id="cgNext">next run in 30:00</span></div>
+            <div id="cgJourney"></div>
+            <p class="note">Every 30 minutes a robot shopper walks the store to the checkout page and stops. It never places a real order.</p>
+          </div>
+          <div class="glass card r-c">
+            <div class="card-h"><h2 class="h3 ">KILL SWITCH</h2></div>
+            <p class="muted" style="margin:0 0 12px">Stops every job and cancels anything queued to send. Also works by texting <b>STOP CONCIERGE</b>.</p>
+            <button class="btn chrome cut morph" style="width:100%" id="cgPause" type="button"><span class="lbl">PAUSE ALL</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid g-2b mt">
+        <div class="glass card r-b">
+          <div class="card-h"><h2 class="h3d h2">THE JOBS</h2><span class="sub">turn any job off on its own</span></div>
+          <div class="tbl cg-jobs" id="cgJobs"></div>
+        </div>
+        <div class="glass card r-a">
+          <div class="card-h"><h2 class="h3d h2">WHAT IT DID</h2><span class="sub">today · newest first</span></div>
+          <div id="cgLog"></div>
+        </div>
+      </div>
+
+      <div class="grid g-3 mt">
+        <div class="glass card r-d">
+          <div class="card-h"><h2 class="h3 ">SEND WITHOUT ASKING</h2></div>
+          <p class="muted" style="margin:0 0 6px">Off until you turn it on. Only fixed wording, never free-written replies, never money.</p>
+          <div id="cgAuto"></div>
+        </div>
+        <div class="glass card r-f">
+          <div class="card-h"><h2 class="h3 ">TOMORROW'S 7:30 BRIEF</h2></div>
+          <div id="cgBrief"></div>
+        </div>
+        <div class="glass card r-e">
+          <div class="card-h"><h2 class="h3 ">WORDING CHECK</h2></div>
+          <div id="cgComp"></div>
+          <p class="note">Every draft is checked for health, dosing and outcome words before you see it.</p>
+        </div>
+      </div>
+      <p class="note">Preview only, sample data. In the live build these numbers come from the store and the concierge's audit log.</p>
+    </section>

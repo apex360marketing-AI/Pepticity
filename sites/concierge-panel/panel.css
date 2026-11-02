@@ -1,0 +1,13 @@
+/* CONCIERGE tab: grid columns only, in the dashboard's own table pattern. No new colours, fonts or cards. */
+.cg-q .tr-row{grid-template-columns:1.7fr .8fr auto}
+.cg-jobs .tr-row{grid-template-columns:1.6fr 1fr .9fr auto}
+.cg-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.cg-step{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(222,226,234,.07);font-size:13.5px}
+.cg-step span:last-child{color:var(--mute);font-size:12px;white-space:nowrap}
+.cg-step .ok::before{content:"✓ ";color:var(--chrome)}
+.cg-done{opacity:.45}
+#p-concierge.cg-paused .card:not(:has(#cgPause)){opacity:.5}
+@media (max-width:860px){
+  .cg-q .tr-row,.cg-jobs .tr-row{grid-template-columns:1fr 1fr;row-gap:6px}
+  .cg-acts{justify-content:flex-start;grid-column:1/-1}
+}
