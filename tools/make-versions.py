@@ -17,6 +17,8 @@ VERS = [
  (6,"orchid","GLASS","#8D029B",["NAV-04","BTN-118","CRD-107","SCR-18","TXT-101","HOV-101","GLS-101"],"GLS-101 Two-Piece Glass offer card"),
  (7,"copper","CRAFTED","#C46210",["NAV-17","BTN-125","CRD-130","SCR-101","TXT-103","HOV-102","OBJ-101"],"OBJ-101 Blacklight Relic medallion moment"),
  (8,"salmon","SOFT","#FA8072",["NAV-101","BTN-119","CRD-111","SCR-19","TXT-104","HOV-105","GLS-105"],"GLS-105 Living Condensation wipe-to-reveal offer; NAV-101 soft variant"),
+ (9,"gold","CHROME GOLD","#A4845D",["NAV-102","BTN-174","CRD-122","SCR-16","TXT-04","HOV-103","BTN-173"],"owner 2 Nov: liquid chrome-gold (shadow #332814 mid #a4845d highlight #f0e6c7 hot #fef9e8). All 7 NAV codes are already used by the 8, so NAV-102 repeats (blue only); SCR-16 repeats (chartreuse), TXT-04 (blue, violet) with a gold sweep, HOV-103 (blue, violet)."),
+ (10,"platinum","CHROME PLATINUM","#C9CDD3",["NAV-04","BTN-105","CRD-119","SCR-104","TXT-103","HOV-104","CRD-129"],"owner 2 Nov: very shiny chrome platinum. NAV-04 repeats (orchid), TXT-103 repeats (cyan, copper); BTN-105, CRD-119, SCR-104, HOV-104, CRD-129 are new."),
 ]
 KEEP_FX = ["FRM-102", "LAY-101", "LAY-102", "CRD-124"]  # shape pieces kept in all 8 (tour + layout)
 PAT = re.compile(r"""(['"(`])(?:\./)?(brand|media|vendor|shared|assets|data)/""")
@@ -24,6 +26,7 @@ def rw(s): return PAT.sub(r"\1../_common/\2/", s)
 force = "--force" in sys.argv
 for n, slug, name, hexv, codes, note in VERS:
     d = OUT / f"{n}-{slug}"
+    NEWKIT = n >= 9
     if d.exists():
         if not force: print("skip (exists)", d.name); continue
         shutil.rmtree(d)
@@ -43,8 +46,10 @@ for n, slug, name, hexv, codes, note in VERS:
     html = html.replace("<html ", f'<html data-colour="{slug}" ', 1)
     head = (f'<link rel="stylesheet" href="../_kit/accent.css">\n<link rel="stylesheet" href="../_kit/chip.css">\n'
             f'<script>window.PC_VERSION={json.dumps(meta)};</script>\n')
+    if NEWKIT: head = head.replace('<script>window.PC_VERSION', '<link rel="stylesheet" href="../_kit/glass-react.css">\n<script>window.PC_VERSION', 1)
     html = html.replace("</head>", head + "</head>", 1)
-    html = html.replace("</body>", '<script src="../_kit/chip.js"></script>\n</body>', 1)
+    tail = '<script src="../_kit/chip.js"></script>\n' + ('<script src="../_kit/glass-react.js"></script>\n' if NEWKIT else '')
+    html = html.replace("</body>", tail + "</body>", 1)
     html = re.sub(r"<title>.*?</title>", f"<title>PEPTICITY · VERSION {n:02d} · {name}</title>", html, count=1, flags=re.S)
     (d / "index.html").write_text(html)
     print("made", d.name, codes)

@@ -1,0 +1,7 @@
+/* APEX DESK style pointer-reactive glass (owner 2 Nov: "when you scroll over it, it moves"). Glass stays 100% see-through:
+   the only things that move are a faint white sheen and the hairline edge light. Used by 9-gold and 10-platinum. Skill clear-glass-spec. */
+.glass,.hero-card{--mx:50%;--my:30%;--rg:0}
+.glass::after,.hero-card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:var(--rg);transition:opacity .35s ease;
+  background:radial-gradient(220px 220px at var(--mx) var(--my),rgba(255,255,255,.11),rgba(255,255,255,.035) 45%,transparent 70%)}
+.glass[data-rg="1"],.hero-card[data-rg="1"]{--rg:1}
+@media (hover:none),(prefers-reduced-motion:reduce){.glass::after,.hero-card::after{display:none}}
