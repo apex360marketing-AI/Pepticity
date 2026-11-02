@@ -1,3 +1,14 @@
+## OWNER RULES: HIGHEST PRIORITY, EVERY SESSION, EVERY PROJECT (2 Nov 2026)
+Review board: https://claude.ai/artifact/QJABMKttNFPFsRMcRkdJw5
+1. OPEN THE BOARD EVERY TIME. After ANY change, build, publish or new step, open the review board yourself (Artifact tool, action open). Never say "it's on the board" without opening it. If you changed a page, open that page too.
+2. NEVER ASK IN CHAT. No 1A/2B, no AskUserQuestion, no "reply with...". Every question, approval, choice and recommendation becomes a STEP on the board.
+3. ADD A STEP: ArtifactData set on the board URL, collection steps, doc_id <project>-<short-id>, data {id, order (100+ unless urgent), kind, title, note, link, images, question, options [{id,label,swatch}]}.
+4. OPTIONS: few, short, recommended first "(Recommended)". LAST option always {id:"drop", label:"Fuck off, drop it", swatch:"#FF3B5C"}.
+5. READ ANSWERS from collection answers (doc id = step id). Never act on an unanswered step. Never edit/delete other sessions' steps.
+6. Re-ask anything you were waiting on as a board step, then open the board.
+7. Keep working on anything that needs no answer. Don't idle.
+Also: mark changed text bright purple (#B000FF) on pages the owner reviews.
+
 # THE OWNER'S TWO TOP RULES (31 Oct 2026, read before anything else)
 
 1. **LOCKED MEANS LOCKED.** When the owner says something is "done and locked" (or "lock that in"), it never changes again, not by one pixel, word or timing, unless the owner himself says to change it. Every locked item is listed in docs/owner/LOCKED.md with the date and his words.
