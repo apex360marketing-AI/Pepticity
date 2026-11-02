@@ -1,5 +1,7 @@
 /*! APEX library SCR-16 · Exploded Layers — self-contained, token-driven. window.APX['SCR-16'].mount(root) -> destroy() */
 (function () {
+  /* CLEAR GLASS (9-gold): on data-colour="gold" every slab is see-through glass (no fill, edge light only) and the caption plates carry no fill */
+  var GOLD = document.documentElement.getAttribute('data-colour') === 'gold';
   'use strict';
   /* ---- APX core (inlined per module; no globals besides window.APX) ---- */
   var W = window, D = document;
@@ -247,8 +249,8 @@
       /* drawn in a 1024x640 design space, stored as a power-of-two 1024x1024 texture (WebGL 1 mipmaps) */
       var c = D.createElement('canvas'); c.width = 1024; c.height = 1024; var g = c.getContext('2d'), L = C.light, ink = C.ink, acc = C.acc;
       g.clearRect(0, 0, 1024, 1024); g.scale(1, 1024 / 640);
-      g.fillStyle = L ? css(mix3(C.bg, [1, 1, 1], .4), .8) : css(mix3(C.bg, [0, 0, 0], .3), .66); g.fillRect(46, 46, 932, 548);
-      g.strokeStyle = css(ink, L ? .2 : .22); g.lineWidth = 2; g.strokeRect(46, 46, 932, 548);
+      if (GOLD) { g.shadowColor = 'rgba(0,0,0,.75)'; g.shadowBlur = 16; } else { g.fillStyle = L ? css(mix3(C.bg, [1, 1, 1], .4), .8) : css(mix3(C.bg, [0, 0, 0], .3), .66); g.fillRect(46, 46, 932, 548); }
+      g.strokeStyle = GOLD ? 'rgba(222,205,165,.8)' : css(ink, L ? .2 : .22); g.lineWidth = 2; g.strokeRect(46, 46, 932, 548);
       var title = LAYERS[i].label.toUpperCase(), sz = 74;
       g.font = '600 ' + sz + 'px ' + C.font; while (g.measureText(title).width > 760 && sz > 40) { sz -= 2; g.font = '600 ' + sz + 'px ' + C.font; }
       var last = i === N - 1, bright = lum(acc) > .45;
@@ -355,12 +357,12 @@
         return i % 2 ? { alb: lite, met: .95, ro: .36 } : { alb: dark, met: .95, ro: .5 };
       }
       function drawSlab(i) {
-        var m = mat(i);
+        var m = GOLD ? { alb: mix3(ink, bg, .1), met: .1, ro: .08, glass: 1 } : mat(i);
         gl.uniformMatrix4fv(s.u('uM'), false, Ms[i]); gl.uniform3fv(s.u('uAlb'), m.alb); gl.uniform1f(s.u('uMet'), m.met); gl.uniform1f(s.u('uRough'), m.ro);
-        gl.uniform1f(s.u('uGlass'), m.glass ? 1 : 0); gl.uniform1f(s.u('uAlpha'), L ? .26 : .2);
+        gl.uniform1f(s.u('uGlass'), m.glass ? 1 : 0); gl.uniform1f(s.u('uAlpha'), GOLD ? .02 : L ? .26 : .2);
         attribs(s, B.slab.vb, [['aP', 3], ['aN', 3]], 6); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, B.slab.ib); gl.drawElements(gl.TRIANGLES, B.slab.n, gl.UNSIGNED_SHORT, 0);
       }
-      for (var i2 = 0; i2 < N - 1; i2++) drawSlab(i2);
+      if (!GOLD) for (var i2 = 0; i2 < N - 1; i2++) drawSlab(i2);
       /* floor pool: accent glow at night, soft shadow by day */
       gl.disable(gl.CULL_FACE); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
       var f = P.flat; gl.useProgram(f.p); gl.uniformMatrix4fv(f.u('uVP'), false, VP); gl.uniform1f(f.u('uPs'), 1);
@@ -375,7 +377,7 @@
       var t = P.tex;
       order.forEach(function (o) {
         var i = o.i;
-        if (i === N - 1) {
+        if (i === N - 1 || GOLD) {
           gl.useProgram(s.p); gl.enable(gl.CULL_FACE);
           gl.cullFace(gl.FRONT); drawSlab(i); gl.cullFace(gl.BACK); drawSlab(i);
           gl.disable(gl.CULL_FACE);
