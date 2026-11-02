@@ -23,6 +23,9 @@ Every time you show the owner ANYTHING (pictures, samples, versions, logos, page
    - Easy for him, never lower quality.
    - His words: "I want all questions you're going to ask me built into an interactive questionnaire. I just click and answer. I don't ever want to see these questions like this ever again."
 
+6. **OPEN THE BOARD EVERY TIME (owner, 2 Nov 2026, relayed to every thread).** After ANY change, build, publish or new step, open the review board yourself (Artifact tool, action open): https://claude.ai/artifact/QJABMKttNFPFsRMcRkdJw5. Never say "it's on the board" without opening it. If you changed a page, open that page too. Keep working on anything that needs no answer; don't idle. Step ids are `<project>-<short-id>`, order 100+ unless urgent, and the LAST option is always {id:"drop", label:"Fuck off, drop it", swatch:"#FF3B5C"}.
+7. **MARK CHANGED TEXT BRIGHT PURPLE (#B000FF)** on pages the owner reviews.
+
 # PEPTICITY: LOCKED DECISIONS (read first, every session)
 
 These are final. Do not change any of them unless the owner asks in so many words.
