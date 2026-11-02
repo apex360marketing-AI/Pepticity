@@ -1,0 +1,3 @@
+-- Applied to Supabase project vrasgzbkvtefcmtmsmjw (agent-hq) as migration "owner_hub_schema".
+-- Tables: hub_owner (allowed login emails), hub_token (sha256 of ingest token), messages, answers. RLS: owner only.
+-- See OWNER-HUB.md. The token itself and the login password are NOT stored in this repo.
