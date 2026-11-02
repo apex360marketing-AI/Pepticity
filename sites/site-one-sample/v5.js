@@ -138,14 +138,45 @@
   /* ================= smooth scroll ================= */
   var lenis = null;
   if (!RM && typeof Lenis !== 'undefined' && matchMedia('(pointer: fine)').matches) {
-    lenis = new Lenis({ lerp: 0.075, smoothWheel: true, wheelMultiplier: 0.9 });
+    /* SCROLL-SMOOTH (owner 2 Nov): heavier glide, capped flicks, soft stops at the hook cards. Notes: SCROLL-NOTES.md */
+    var SC_MULT = 0.65, SC_LEAD = 1.15, SC_SLOW = 0.42, SC_EVT = 0.8;   /* wheel multiplier; max pending travel (screens); slow-zone speed; max single wheel event (screens) */
+    var SC_ZONES = ['.hero-card', '#markets .apx-lay102', '#markets', '.tour-card', '#gift .perks-card, .perks-card', '.sms-card', '#tiers .tiers-grid, #tiers', '.refer-card', '.letter'];
+    var scEls = [], scT = 0;
+    function scSlowAt() {   /* true while a hook card is mostly in view; cached 120 ms so the wheel path never forces layout every event */
+      var n = performance.now(); if (n - scT < 120) return scSlowAt.v; scT = n; var vh = innerHeight, hit = false;
+      if (!scEls.length) SC_ZONES.forEach(function (q) { var e = document.querySelector(q); if (e && scEls.indexOf(e) < 0) scEls.push(e); });
+      for (var i = 0; i < scEls.length && !hit; i++) {
+        var r = scEls[i].getBoundingClientRect(), h = r.height; if (!h || r.bottom < 0 || r.top > vh) continue;
+        if (h <= vh * 1.05) { var vis = Math.min(r.bottom, vh) - Math.max(r.top, 0); hit = vis >= h * 0.78; }   /* card fits: slow while 78%+ of it is on screen */
+        else hit = r.top <= vh * 0.1 && r.bottom >= vh * 0.9 && (r.top > -vh * 0.15);                              /* tall block: only the first beat, never the whole length */
+      }
+      return (scSlowAt.v = hit);
+    }
+    lenis = new Lenis({ lerp: 0.05, smoothWheel: true, wheelMultiplier: SC_MULT, touchMultiplier: 1,
+      virtualScroll: function (e) {
+        if (!e.event || e.event.type.indexOf('wheel') < 0 || e.event.ctrlKey) return;
+        var vh = innerHeight, d = e.deltaY, evCap = vh * SC_EVT / SC_MULT;
+        d = Math.max(-evCap, Math.min(evCap, d));                                  /* one wheel event can never add more than ~half a screen */
+        if (scSlowAt()) d *= SC_SLOW / 1;                                           /* soft stop: heavier, never locked */
+        var pend = lenis.targetScroll - lenis.animatedScroll, room = vh * SC_LEAD - Math.abs(pend);   /* cap how far ahead a flick can queue */
+        if (pend * d > 0) { var mx = Math.max(0, room) / SC_MULT; d = Math.sign(d) * Math.min(Math.abs(d), mx); }
+        e.deltaY = d;
+      } });
+    var scKeys = { PageDown: 0.85, ' ': 0.85, PageUp: -0.85, ArrowDown: 0.12, ArrowUp: -0.12, End: 0, Home: 0 };
+    document.addEventListener('keydown', function (e) {   /* keyboard: eased glides instead of native instant jumps; never trapped */
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || !(e.key in scKeys) || lenis.isStopped) return;
+      var t = e.target, tag = t && t.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable) || (e.key === ' ' && (tag === 'BUTTON' || tag === 'A'))) return;
+      var cur = lenis.targetScroll, vh = innerHeight, y;
+      if (e.key === 'Home') y = 0; else if (e.key === 'End') y = lenis.limit; else y = cur + scKeys[e.key] * vh * (e.key === ' ' && e.shiftKey ? -1 : 1);
+      e.preventDefault(); lenis.scrollTo(Math.max(0, Math.min(lenis.limit, y)), { duration: e.key === 'Home' || e.key === 'End' ? 3 : (Math.abs(scKeys[e.key]) > 0.5 ? 1.5 : 0.6), easing: function (x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; } });
+    });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0);
   }
   function stopScroll() { if (lenis) lenis.stop(); D.classList.add('lock'); }
   function startScroll() { if (lenis) lenis.start(); D.classList.remove('lock'); }
   function jump(y) { if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); window.scrollTo(0, y); }
-  function glide(y, dur) { if (lenis) lenis.scrollTo(y, { duration: dur || 1.6 }); else window.scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' }); }
+  function glide(y, dur) { if (lenis) { var sc = Math.abs(y - lenis.animatedScroll) / innerHeight; lenis.scrollTo(y, { duration: Math.max(dur || 1.6, Math.min(1.6 * sc, 6)), easing: function (x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; } }); }   /* never faster than ~1.6 s per screen (cap 6 s), always eased */ else window.scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' }); }
   function absTop(el) { return el.getBoundingClientRect().top + (window.scrollY || 0); }
 
   var J = { p: 0 }, L = { p: 0 }, X = { p: 0 };
