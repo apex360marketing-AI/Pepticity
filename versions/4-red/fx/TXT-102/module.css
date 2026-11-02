@@ -1,0 +1,23 @@
+/* TXT-102 · Throttle Marquee */
+.apx-txt102 {
+  position: relative; overflow: hidden; padding-block: clamp(24px, 6vh, 64px);
+  color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-display, Georgia, serif);
+  border-block: 1px solid var(--apx-line, rgba(255, 255, 255, .13));
+}
+.apx-txt102__row {
+  position: relative; margin: 0; white-space: nowrap; overflow: hidden;
+  font-size: var(--apx-txt102-size, clamp(52px, 9.5vw, 160px)); line-height: 1.08; letter-spacing: -.02em; font-weight: 400;
+}
+.apx-txt102__row + .apx-txt102__row { margin-top: clamp(2px, 1vh, 12px); }
+.apx-txt102__track { display: inline-flex; will-change: transform; }
+.apx-txt102__track.is-fill { position: absolute; left: 0; top: 0; opacity: 0; }
+.apx-txt102__seq { display: inline-flex; align-items: center; flex: none; }
+.apx-txt102__item { padding-inline: .28em; }
+.apx-txt102__track.is-outline .apx-txt102__item { color: transparent; -webkit-text-stroke: max(1px, .012em) color-mix(in srgb, var(--apx-ink, #ecebe8) 70%, transparent); }
+.apx-txt102__track.is-fill .apx-txt102__item { color: var(--apx-ink, #ecebe8); }
+.apx-txt102__row[data-tone="muted"] .apx-txt102__item { color: var(--apx-muted, #9b9ba1); }
+.apx-txt102__sep { flex: none; width: .14em; height: .14em; border-radius: 50%; background: var(--apx-accent, #cfd3da); box-shadow: 0 0 .35em color-mix(in srgb, var(--apx-accent, #cfd3da) 70%, transparent); }
+.apx-txt102__row:hover .apx-txt102__item { transition: color .3s ease; }
+.apx-txt102__track:not(.is-outline) .apx-txt102__item:hover { color: var(--apx-accent, #cfd3da); }
+.apx-txt102.is-static .apx-txt102__track.is-fill { opacity: 1; }
+.apx-txt102.is-static .apx-txt102__track.is-outline { visibility: hidden; }

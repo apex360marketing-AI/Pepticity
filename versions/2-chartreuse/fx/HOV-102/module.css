@@ -1,0 +1,30 @@
+/* HOV-102 · Letter Roll — each letter rolls over to an italic twin in a wave that starts from the side the pointer came in */
+.apx-h102{--_m:var(--apx-motion,1);--_st:28ms;position:relative;display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:0 24px;cursor:pointer;
+  font:500 16px/1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.01em;color:var(--apx-ink,#efe9e6);text-decoration:none;
+  background:var(--apx-surface,rgba(255,255,255,.06));border:1px solid var(--apx-line,rgba(255,255,255,.15));border-radius:var(--apx-radius,14px);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);-webkit-tap-highlight-color:transparent;
+  transition:border-color .3s,transform calc(var(--_m)*.5s) cubic-bezier(.34,1.56,.64,1)}
+button.apx-h102{appearance:none;font:500 16px/1 var(--apx-font-text,system-ui,sans-serif)}
+.apx-h102--solid{color:var(--apx-accent-ink,#1a0c0f);background:var(--apx-accent,#cf7f88);border-color:transparent}
+.apx-h102--link{min-height:0;padding:6px 0;background:none;border:0;border-radius:4px;-webkit-backdrop-filter:none;backdrop-filter:none;
+  font:500 clamp(1.4rem,3vw,2rem)/1 var(--apx-font-display,Georgia,serif)}
+@media (prefers-reduced-motion:reduce){.apx-h102{--_m:0}}
+.apx-h102:hover,.apx-h102.is-roll{border-color:var(--apx-accent,#cf7f88)}
+.apx-h102--solid:hover{border-color:transparent}
+.apx-h102:active{transform:scale(.97)}
+.apx-h102:focus-visible{outline:2px solid var(--apx-accent,#cf7f88);outline-offset:3px}
+
+.apx-h102__w{display:inline-flex;white-space:pre}
+.apx-h102__c{position:relative;display:inline-block;overflow:hidden;height:1.18em;line-height:1.18;vertical-align:top}
+.apx-h102__c>span{display:block;transition:transform calc(var(--_m)*.55s) cubic-bezier(.7,0,.2,1);
+  transition-delay:calc(var(--_m)*var(--_st)*((1 - var(--dir,0))*var(--i) + var(--dir,0)*var(--j)))}
+.apx-h102__c>span+span{position:absolute;left:0;top:100%;font-style:italic;color:var(--apx-accent,#cf7f88)}
+.apx-h102--solid .apx-h102__c>span+span{color:var(--apx-accent-ink,#1a0c0f)}
+.apx-h102__c.is-sp>span+span{display:none}
+.apx-h102.is-roll .apx-h102__c>span{transform:translateY(-100%)}
+.apx-h102__ico{width:18px;height:18px;flex:none;overflow:hidden;position:relative}
+.apx-h102__ico svg{position:absolute;inset:0;width:18px;height:18px;transition:transform calc(var(--_m)*.5s) cubic-bezier(.7,0,.2,1) calc(var(--_m)*.12s)}
+.apx-h102__ico svg+svg{transform:translateX(-120%);color:var(--apx-accent,#cf7f88)}
+.apx-h102--solid .apx-h102__ico svg+svg{color:inherit}
+.apx-h102.is-roll .apx-h102__ico svg:first-child{transform:translateX(120%)}
+.apx-h102.is-roll .apx-h102__ico svg+svg{transform:none}

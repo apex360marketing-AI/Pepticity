@@ -1,0 +1,149 @@
+/* PEPTICITY · VERSION 07 · COPPER "CRAFTED" — wiring for this version's 7 effect slots (loads after _kit/accent.css).
+   NAV-17 Timeline Scrubber · BTN-125 Leaf Turn · CRD-130 Hinged Doors · SCR-101 Flipbook Scrub · TXT-103 Tide Fill · HOV-102 Letter Roll · OBJ-101 Blacklight Relic.
+   Every module reads the version accent through var(--v) / var(--v-t); grounds, type and glass stay the site's own. */
+
+/* ---------- MENU · NAV-17 Timeline Scrubber (THE TOUR along the bottom) ---------- */
+.tl{--apx-accent:var(--v);--apx-ink:var(--ink);--apx-muted:var(--muted);--apx-bg:var(--bg);--apx-line:var(--rim-s);--apx-font-text:var(--body);
+  z-index:46;background:none;transition:opacity .45s ease,transform .55s cubic-bezier(.2,.9,.25,1)}
+.tl .apx-nav17__in{--c:16px;position:relative;isolation:isolate;margin:0 auto 12px;padding:12px 18px}
+/* the smoked cut-corner glass sits on its own layer, so the preview frame above the track is never clipped */
+.tl .apx-nav17__in::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),color-mix(in srgb,var(--bg) 72%,transparent);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)));
+  box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 rgba(var(--v-rgb),.55)}
+.tl .apx-nav17__tc{font:400 9.5px/1 var(--display);letter-spacing:.2em;min-width:104px}
+.tl .apx-nav17__tc b{color:var(--v-t)}
+.tl .apx-nav17__tc i{border-radius:0;transform:rotate(45deg);background:var(--v);box-shadow:0 0 8px var(--v)}
+.tl .apx-nav17__ch{font:400 9.5px/1.2 var(--display);letter-spacing:.2em;min-width:170px}
+.tl .apx-nav17__mark span{font:400 8.5px/1 var(--display);letter-spacing:.18em;opacity:0;transition:opacity .3s}
+.tl .apx-nav17__mark.is-on span,.tl .apx-nav17__mark.is-near span{opacity:1}   /* close-set stops: only the current and pointed-at numbers show */
+.tl .apx-nav17__btn{clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.tl .apx-nav17__btn:hover,.tl .apx-nav17__btn:focus-visible{color:var(--v-t);border-color:rgba(var(--v-rgb),.7);box-shadow:0 0 14px -4px rgba(var(--v-rgb),.7)}
+.tl .apx-nav17__btn:focus-visible,.tl .apx-nav17__track:focus-visible{outline:2px solid var(--v-t);outline-offset:3px}
+.tl .apx-nav17__frame{clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+.tl .apx-nav17__frame b{font:400 26px/1 var(--display);color:var(--v-t)}
+.tl .apx-nav17__frame em{font:400 10.5px/1.25 var(--display);letter-spacing:.14em}
+.tl .apx-nav17__cap{font:400 9px/1 var(--display);letter-spacing:.2em}
+html.intro-on .tl,.tl.tl-away{opacity:0;pointer-events:none;transform:translate3d(0,24px,0)}
+.tl.tl-away .apx-nav17__in{visibility:hidden;transition:visibility 0s .45s}
+@media (min-width:900px){.tl{left:184px;right:470px}}
+@media (max-width:899px){.tl{left:8px;right:8px;bottom:84px}.tl .apx-nav17__in{margin-bottom:0;padding:26px 10px 10px}}
+
+/* ---------- BUTTON · BTN-125 Leaf Turn (the main conversion buttons) ---------- */
+.stub-slot{display:flex}
+.stub-slot .apx-b125{--apx-accent:var(--v);--apx-ink:var(--ink);--apx-line:rgba(var(--v-rgb),.55);--apx-bg:var(--bg);
+  font:400 11.5px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase;min-height:56px}
+.stub-slot .apx-b125__l{padding:0 38px}
+.stub-slot .apx-b125__g{background:linear-gradient(155deg,rgba(255,255,255,.16),rgba(255,255,255,.03) 48%,rgba(var(--v-rgb),.10)),color-mix(in srgb,var(--bg) 45%,transparent)}
+.stub-slot .apx-b125.is-hot .apx-b125__g{background:radial-gradient(80% 120% at 50% 120%,rgba(var(--v-rgb),.38),transparent 70%),linear-gradient(155deg,rgba(255,255,255,.2),rgba(255,255,255,.04) 48%,rgba(var(--v-rgb),.14)),color-mix(in srgb,var(--bg) 45%,transparent)}
+.stub-slot .apx-b125__vein{background:linear-gradient(90deg,transparent,rgba(var(--v-rgb),.9),transparent)}
+.stub-slot .apx-b125.is-hot .apx-b125__l{text-shadow:0 0 14px rgba(var(--v-rgb),.7)}
+.stub-slot .apx-b125.busy{opacity:.75}
+.hero-form .row{grid-template-columns:minmax(0,1fr) auto}
+@media (max-width:640px){
+  .hero-form .row{grid-template-columns:1fr}
+  .stub-slot,.stub-slot .apx-b125{width:100%}
+  .stub-slot .apx-b125{font-size:10.5px;letter-spacing:.16em}
+  .stub-slot .apx-b125__l{padding:0 20px}
+}
+.to-cap .stub-slot{justify-content:flex-start}
+
+/* ---------- READING TEXT · TXT-103 Tide Fill: outlined statement, filled white as it rises; key phrases in copper ---------- */
+.say{position:relative;z-index:2;padding:clamp(90px,17vh,180px) 0}
+.say__inner{width:min(1040px,calc(100% - 2 * var(--gut)));margin:0 auto}
+.say__kicker{display:flex;align-items:center;gap:14px;margin:0 0 24px;font:400 11px/1 var(--display);letter-spacing:.34em;color:var(--muted)}
+.say__kicker::before{content:"";width:8px;height:8px;transform:rotate(45deg);background:var(--v);box-shadow:0 0 12px var(--v)}
+.say__text.apx-txt103{--apx-ink:var(--read-lit);--apx-accent:var(--read-key);margin:0;font:500 clamp(25px,3.6vw,52px)/1.2 var(--body);letter-spacing:-.01em}
+.say__text .apx-txt103__base{-webkit-text-stroke:1px color-mix(in srgb,var(--ink) 34%,transparent)}
+.say__text em{font-style:normal}
+.say__text .apx-txt103__base em{-webkit-text-stroke-color:rgba(var(--v-rgb),.6)}
+.say__text .apx-txt103__fill em{color:var(--read-key);text-shadow:var(--read-key-glow);background:linear-gradient(90deg,var(--v),var(--v-t)) 0 100%/100% 3px no-repeat;padding-bottom:.04em}
+.say__notes{display:flex;flex-wrap:wrap;gap:10px 34px;margin-top:30px}
+.say__notes p{margin:0;font-size:15px;color:var(--muted)}
+[data-version="white"] .say{--read-lit:var(--ink)}
+@media (max-width:640px){.say__text.apx-txt103{font-size:clamp(23px,6.6vw,30px)}}
+
+/* ---------- SCROLL SECTION · SCR-101 Flipbook Scrub (HOW WE CHOOSE over the lab film) ---------- */
+.flip{--apx-scr101-length:360vh;--apx-accent:var(--v);--apx-ink:var(--ink);--apx-muted:var(--ink-2);--apx-line:var(--rim-s);--apx-surface:rgba(255,255,255,.045);position:relative;z-index:2}
+.flip .apx-scr101__stage{padding-top:clamp(150px,21vh,210px);padding-bottom:clamp(70px,10vh,110px)}
+.flip-head{position:absolute;top:clamp(84px,11vh,118px);left:clamp(20px,5vw,72px);right:clamp(20px,5vw,72px);display:grid;gap:12px}
+.flip-k{font:400 10.5px/1 var(--display);letter-spacing:.32em;color:var(--muted)}
+.flip-head .h2{font-size:var(--t-h2);letter-spacing:.03em;justify-self:start}
+.flip .apx-scr101__canvas{height:auto;aspect-ratio:16/9;max-height:62vh;align-self:center;
+  clip-path:polygon(0 0,calc(100% - 26px) 0,100% 26px,100% 100%,26px 100%,0 calc(100% - 26px))}
+.flip .apx-scr101__glow{background:radial-gradient(closest-side,rgba(var(--v-rgb),.22),transparent 72%)}
+.flip .apx-scr101__beats>li{--c:20px;border:0;border-radius:0;pointer-events:none;
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)));
+  background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.015) 60%),color-mix(in srgb,var(--bg) 45%,transparent);
+  box-shadow:inset 0 0 0 1px var(--rim-s),inset 2px 0 0 rgba(var(--v-rgb),.85)}
+.flip .apx-scr101__beats>li.is-on{pointer-events:auto}
+.flip .apx-scr101__beats .apx-scr101__kicker{font:400 10.5px/1 var(--display);letter-spacing:.3em;color:var(--v-t)}
+.flip .apx-scr101__beats h3{font:400 clamp(20px,2.2vw,32px)/1.1 var(--display);letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.flip .apx-scr101__beats p{color:var(--ink-2)}
+.flip .apx-scr101__beats .pc-btn{margin-top:18px}
+.flip .apx-scr101__meter{font:400 9.5px/1 var(--display);letter-spacing:.2em}
+.flip .apx-scr101__bar{background:linear-gradient(90deg,rgba(var(--v-rgb),.3),var(--v));box-shadow:0 0 10px var(--v)}
+.flip.is-compact .flip-head,.flip.is-static .flip-head{position:static;grid-column:1;grid-row:1}
+.flip.is-compact .apx-scr101__stage,.flip.is-static .apx-scr101__stage{padding-top:48px}
+.flip.is-compact .apx-scr101__canvas,.flip.is-static .apx-scr101__canvas,.flip.is-compact .apx-scr101__glow,.flip.is-static .apx-scr101__glow{grid-row:2;height:auto}
+.flip.is-compact .apx-scr101__beats,.flip.is-static .apx-scr101__beats{grid-row:3}
+.flip.is-compact .apx-scr101__beats>li,.flip.is-static .apx-scr101__beats>li{pointer-events:auto}
+.flip.is-compact .apx-scr101__meter{grid-row:4}
+
+/* ---------- CARD · CRD-130 Hinged Doors (text alerts: the TEXT ME form waits behind the doors) ---------- */
+.sms-intro{position:relative;z-index:2;display:grid;gap:18px;align-content:center}
+.sms-alert{--c:14px;display:flex;gap:12px;align-items:flex-start;max-width:460px;padding:16px 18px;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),color-mix(in srgb,var(--bg) 40%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px var(--rim-s);
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
+.sms-alert i{flex:none;width:8px;height:8px;margin-top:4px;transform:rotate(45deg);background:var(--v);box-shadow:0 0 10px var(--v)}
+.sms-alert span{font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.sms-alert b{display:block;margin-bottom:6px;font:400 9.5px/1 var(--display);letter-spacing:.24em;color:var(--ink)}
+.sms-title{margin:0;font:400 clamp(24px,2.8vw,40px)/1.08 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.sms-title strong{font-weight:400;color:var(--v-t);text-shadow:0 0 22px rgba(var(--v-rgb),.5)}
+.sms-text{margin:0;max-width:44ch;font-size:16px;line-height:1.55;color:var(--ink-2)}
+.doors.apx-c130{--apx-accent:var(--v);--apx-ink:var(--ink);--apx-muted:var(--ink-2);--apx-bg:var(--bg);--apx-font-display:var(--display);--c:22px;
+  position:relative;z-index:2;width:min(100%,540px);justify-self:center;padding:30px 30px 26px;
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
+.doors .apx-c130__glass,.doors .apx-c130__door,.doors .apx-c130__door.l,.doors .apx-c130__door.r{border-radius:0}
+.doors .apx-c130__glass{box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 rgba(var(--v-rgb),.5)}
+.doors .apx-c130__door{background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.03) 60%),color-mix(in srgb,var(--bg) 90%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px var(--rim-s)}
+.doors .apx-c130__label{font:400 clamp(16px,1.6vw,22px)/1.2 var(--display);translate:0 -78%;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.doors .apx-c130__label small{font:400 9.5px/1 var(--display);letter-spacing:.3em;color:var(--v-t)}
+.doors .apx-c130__handle,.doors .apx-c130__hinge{border-radius:1px}
+.doors .apx-c130__open{--c2:10px;border:0;border-radius:0;min-height:46px;padding:0 34px;font:400 10.5px/1 var(--display);letter-spacing:.26em;color:var(--ink);
+  clip-path:polygon(0 0,calc(100% - var(--c2)) 0,100% var(--c2),100% 100%,var(--c2) 100%,0 calc(100% - var(--c2)));
+  box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.75),inset 0 -12px 22px -14px rgba(var(--v-rgb),.7);transition:opacity .3s,box-shadow .3s,color .3s}
+.doors .apx-c130__open:hover,.doors .apx-c130__open:focus-visible{color:#fff;box-shadow:inset 0 0 0 1px var(--v-t),inset 0 0 26px rgba(var(--v-rgb),.45)}
+.doors .apx-c130__open:focus-visible{outline:2px solid var(--v-t);outline-offset:3px}
+.doors .doors-form{position:relative;z-index:2;padding:0;background:none;box-shadow:none}
+
+/* ---------- HOVER · HOV-102 Letter Roll on every button label and text link ---------- */
+.apx-h102{--apx-accent:var(--v-t)}
+.apx-h102 .apx-h102__c>span+span{color:var(--v-t);text-shadow:0 0 12px rgba(var(--v-rgb),.55)}
+.pc-btn .pc-btn__label.apx-h102,.apx-b125__l.apx-h102{display:inline-flex;min-height:0;padding:0;gap:0;background:none;border:0;border-radius:0;
+  -webkit-backdrop-filter:none;backdrop-filter:none;font:inherit;letter-spacing:inherit;color:inherit;cursor:inherit;transition:none}
+.apx-b125__l.apx-h102{height:56px;padding:0 38px}
+.pc-btn .pc-btn__label.apx-h102::before{content:"";position:absolute;inset:-16px -20px}
+/* the brand label paints its text through a gradient clip; rolled letters carry their own solid ink instead */
+.pc-btn .pc-btn__label.apx-h102{background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:currentColor;color:var(--pc-ink)}
+.pc-btn .apx-h102 .apx-h102__c>span+span{-webkit-text-fill-color:var(--v-t)}
+.pc-btn .pc-btn__label.apx-h102:active,.apx-b125__l.apx-h102:active{transform:none}
+.linkish.apx-h102{display:inline-flex;align-items:center;min-height:44px;padding:8px 2px;gap:0;background:none;border:0;border-radius:0;-webkit-backdrop-filter:none;backdrop-filter:none;
+  font:400 var(--t-xs)/1 var(--display);letter-spacing:.24em;color:var(--muted);text-decoration:none;box-shadow:inset 0 -1px 0 var(--rim-s);transition:color .3s,box-shadow .3s}
+.linkish.apx-h102:hover,.linkish.apx-h102:focus-visible,.linkish.apx-h102.is-roll{color:var(--ink);box-shadow:inset 0 -1px 0 var(--v-t)}
+.photo .linkish.apx-h102,.st-ask .linkish.apx-h102{color:var(--ph-ink)}
+@media (max-width:640px){.apx-b125__l.apx-h102{padding:0 20px}}
+
+/* ---------- EXTRA · OBJ-101 Blacklight Relic (the founding medallion moment) ---------- */
+.relic{--apx-accent:var(--v);--apx-bg:var(--bg);--apx-ink:var(--ink);--apx-muted:var(--muted);--apx-line:var(--rim-s);--apx-font-display:var(--display);--apx-font-text:var(--body);z-index:2}
+.relic .apx-obj101__kicker{font:400 10px/1 var(--display);letter-spacing:.3em}
+.relic .apx-obj101__kicker::before{border-radius:0;transform:rotate(45deg);background:var(--v);box-shadow:0 0 10px var(--v)}
+.relic .apx-obj101__card h2{font-weight:400;letter-spacing:.04em}
+.relic .relic-cta{margin-top:22px}
+.relic .apx-obj101__hint{display:flex;font:400 9.5px/1 var(--display);letter-spacing:.24em}
+.tl-doors{position:absolute;left:0;top:calc(100% - 100vh - 4px);width:1px;height:1px;pointer-events:none}
+@media (max-width:899px){.relic.is-compact .apx-obj101__card{bottom:184px}}   /* phones: clear of the timeline and the sticky bar */
+/* small phones: the THIS VERSION chip sits above the concierge bar, so the timeline rides above the chip */
+@media (max-width:700px){.tl{bottom:146px}.relic.is-compact .apx-obj101__card{bottom:246px}}

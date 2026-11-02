@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAV-04 · Elevator Floors — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Onest:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #0b0b0d; --apx-surface: rgba(255, 255, 255, .055); --apx-ink: #ecebe8; --apx-muted: #9d9ca3;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .13); --apx-radius: 18px;
+    --apx-font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #f1efeb; --apx-surface: rgba(255, 255, 255, .6); --apx-ink: #18161a; --apx-muted: #635e66;
+    --apx-accent: #7d2235; --apx-accent-ink: #fbf6f3; --apx-line: rgba(24, 22, 26, .15); --apx-radius: 6px;
+    --apx-font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #0b0b0d; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Onest", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 78vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 56px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; text-transform: uppercase; font-family: var(--apx-font-display); font-weight: 400; font-size: clamp(40px, 7vw, 96px); line-height: .98; letter-spacing: .02em; max-width: 14ch; }
+  .demo-intro p { margin: 0; max-width: 52ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-intro .hint { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .demo-outro { min-height: 70vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 600px) { .demo-bar b { display: none; } }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+<style>
+  /* Demo-only: the floors the menu flies between */
+  .demo-bar { top: auto; bottom: 12px; }
+  .n4-floor { position: relative; min-height: 96vh; min-height: 96svh; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); align-items: end; gap: 24px;
+    padding: 140px clamp(20px, 6vw, 96px) 72px; border-top: 1px solid var(--apx-line); overflow: clip; }
+  .n4-floor::before { content: ""; position: absolute; left: clamp(20px, 6vw, 96px); top: -1px; width: 120px; height: 2px; background: var(--apx-accent); opacity: .7; }
+  .n4-floor .apx-nav04-mark { justify-self: end; align-self: center; font-size: clamp(140px, 26vw, 380px); }
+  .n4-floor small { display: block; margin-bottom: 18px; font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .26em; text-transform: uppercase; color: var(--apx-muted); }
+  .n4-floor h2 { margin: 0; max-width: 15ch; font-family: var(--apx-font-display); font-weight: 400; font-size: clamp(38px, 6vw, 88px); line-height: .98; letter-spacing: .02em; text-transform: uppercase;
+    opacity: .35; transform: translate3d(0, 24px, 0); transition: opacity 1s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1); }
+  .n4-floor p { margin: 22px 0 0; max-width: 46ch; font-size: 17px; line-height: 1.65; color: color-mix(in srgb, var(--apx-ink) 72%, var(--apx-muted)); opacity: 0; transition: opacity 1s ease .15s; }
+  .n4-floor.apx-nav04-here h2 { opacity: 1; transform: none; }
+  .n4-floor.apx-nav04-here p { opacity: 1; }
+  .n4-floor:first-of-type::before { display: none; }
+  .n4-floor:first-of-type { border-top: 0; min-height: calc(100vh - 82px); min-height: calc(100svh - 82px); padding-top: 48px; }
+  @media (max-width: 760px) { .n4-floor { grid-template-columns: minmax(0, 1fr); align-content: end; } .n4-floor .apx-nav04-mark { position: absolute; right: 12px; top: 90px; font-size: 46vw; } }
+  @media (prefers-reduced-motion: reduce) { .n4-floor h2, .n4-floor p { opacity: 1; transform: none; transition: none; } }
+</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>NAV-04 · Elevator Floors</b><a href="#dark">Dark tokens</a><a href="#light">Light tokens</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="apx-nav04" data-apx="NAV-04" data-fx="NAV-04" data-floors-from="33">
+      <div class="apx-nav04__bar">
+        <a class="apx-nav04__brand" href="#d-roof">APEX</a>
+        <div class="apx-nav04__floor" aria-hidden="true"></div>
+        <button class="apx-nav04__btn" type="button">Floors</button>
+      </div>
+      <nav class="apx-nav04__panel" aria-label="Floors">
+        <ol>
+        <li><a href="#d-roof" data-sub="Start">Rooftop</a></li>
+        <li><a href="#d-ask" data-sub="01 · Capture">They ask</a></li>
+        <li><a href="#d-real" data-sub="02 · Verify">Real people</a></li>
+        <li><a href="#d-only" data-sub="03 · Match">Only you</a></li>
+        <li><a href="#d-pocket" data-sub="04 · Deliver">Your pocket</a></li>
+        <li><a href="#d-area" data-sub="Check area">Get leads</a></li>
+        </ol>
+      </nav>
+    </header>
+    <header class="demo-intro">
+      <small>NAV-04 · Dark token set</small>
+      <h1>ELEVATOR FLOORS</h1>
+      <p>An elevator-style header: the floor readout counts down as you scroll down the page and the arrow flips when you head back up. Floors opens a brushed-metal button panel whose doors slide apart; each button flies you to its floor.</p>
+      <p class="hint">Scroll, or press Floors</p>
+    </header>
+    <section class="n4-floor" id="d-roof" aria-label="Rooftop"><div><small>Floor 33 · Rooftop</small><h2>SOMEWHERE DOWN THERE, A CUSTOMER IS ASKING FOR YOU.</h2><p>Press Floors and pick a stop. The readout counts down as you descend and the car flies you to the floor you choose.</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="d-ask" aria-label="They ask"><div><small>Capture</small><h2>THEY ASK FOR A QUOTE.</h2><p>A homeowner in [City] asks for your exact service. That request is where every lead starts.</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="d-real" aria-label="Real people"><div><small>Verify</small><h2>WE CHECK THEY'RE REAL.</h2><p>Phone and email are checked, and fakes and duplicates are thrown out. [Your verification process]</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="d-only" aria-label="Only you"><div><small>Match</small><h2>IT GOES TO YOU. ONLY YOU.</h2><p>One business per service, per area. Nobody else gets this lead. [Your exclusivity terms]</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="d-pocket" aria-label="Your pocket"><div><small>Deliver</small><h2>IT LANDS IN YOUR POCKET.</h2><p>A text alert, the full details by email and a card in your CRM.</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="d-area" aria-label="Get leads"><div><small>Ground floor</small><h2>IS YOUR AREA STILL OPEN?</h2><p>Each service goes to one business per area. Tell us yours and we will tell you if it is free. [Area check form]</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <div class="demo-outro"><p>End of the dark token set. The same module follows below with the light tokens, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="apx-nav04" data-apx="NAV-04" data-fx="NAV-04" data-floors-from="33">
+      <div class="apx-nav04__bar">
+        <a class="apx-nav04__brand" href="#l-roof">APEX</a>
+        <div class="apx-nav04__floor" aria-hidden="true"></div>
+        <button class="apx-nav04__btn" type="button">Floors</button>
+      </div>
+      <nav class="apx-nav04__panel" aria-label="Floors">
+        <ol>
+        <li><a href="#l-roof" data-sub="Start">Rooftop</a></li>
+        <li><a href="#l-ask" data-sub="01 · Capture">They ask</a></li>
+        <li><a href="#l-real" data-sub="02 · Verify">Real people</a></li>
+        <li><a href="#l-only" data-sub="03 · Match">Only you</a></li>
+        <li><a href="#l-pocket" data-sub="04 · Deliver">Your pocket</a></li>
+        <li><a href="#l-area" data-sub="Check area">Get leads</a></li>
+        </ol>
+      </nav>
+    </header>
+    <header class="demo-intro">
+      <small>NAV-04 · Light token set</small>
+      <h1>ELEVATOR FLOORS</h1>
+      <p>An elevator-style header: the floor readout counts down as you scroll down the page and the arrow flips when you head back up. Floors opens a brushed-metal button panel whose doors slide apart; each button flies you to its floor.</p>
+      <p class="hint">Scroll, or press Floors</p>
+    </header>
+    <section class="n4-floor" id="l-roof" aria-label="Rooftop"><div><small>Floor 33 · Rooftop</small><h2>SOMEWHERE DOWN THERE, A CUSTOMER IS ASKING FOR YOU.</h2><p>Press Floors and pick a stop. The readout counts down as you descend and the car flies you to the floor you choose.</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="l-ask" aria-label="They ask"><div><small>Capture</small><h2>THEY ASK FOR A QUOTE.</h2><p>A homeowner in [City] asks for your exact service. That request is where every lead starts.</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="l-real" aria-label="Real people"><div><small>Verify</small><h2>WE CHECK THEY'RE REAL.</h2><p>Phone and email are checked, and fakes and duplicates are thrown out. [Your verification process]</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="l-only" aria-label="Only you"><div><small>Match</small><h2>IT GOES TO YOU. ONLY YOU.</h2><p>One business per service, per area. Nobody else gets this lead. [Your exclusivity terms]</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="l-pocket" aria-label="Your pocket"><div><small>Deliver</small><h2>IT LANDS IN YOUR POCKET.</h2><p>A text alert, the full details by email and a card in your CRM.</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <section class="n4-floor" id="l-area" aria-label="Get leads"><div><small>Ground floor</small><h2>IS YOUR AREA STILL OPEN?</h2><p>Each service goes to one business per area. Tell us yours and we will tell you if it is free. [Area check form]</p></div><span class="apx-nav04-mark" aria-hidden="true"></span></section>
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+</body>
+</html>

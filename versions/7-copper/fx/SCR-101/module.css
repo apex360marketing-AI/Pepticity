@@ -1,0 +1,51 @@
+/* SCR-101 · Flipbook Scrub */
+.apx-scr101 {
+  --_len: var(--apx-scr101-length, 340vh);
+  position: relative; height: var(--_len);
+  color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-text, system-ui, sans-serif);
+}
+.apx-scr101__stage {
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center;
+  gap: clamp(16px, 4vw, 64px); padding: clamp(20px, 5vw, 72px);
+}
+.apx-scr101__canvas { grid-column: 2; grid-row: 1; width: 100%; height: min(78vh, 760px); display: block; }
+.apx-scr101__glow {
+  grid-column: 2; grid-row: 1; justify-self: center; width: min(60vh, 90%); aspect-ratio: 1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, color-mix(in srgb, var(--apx-accent, #cfd3da) 40%, var(--apx-ink, #ecebe8)) 14%, transparent), transparent 72%);
+  filter: blur(30px); opacity: .7; animation: apx-scr101-breathe calc(7s / max(var(--apx-motion, 1), .01)) ease-in-out infinite alternate;
+}
+@keyframes apx-scr101-breathe { from { transform: scale(.9); opacity: .45; } to { transform: scale(1.08); opacity: .8; } }
+.apx-scr101__beats { grid-column: 1; grid-row: 1; list-style: none; margin: 0; padding: 0; display: grid; }
+.apx-scr101__beats > li {
+  grid-area: 1 / 1; align-self: center;
+  padding: clamp(20px, 2.4vw, 34px); border-radius: var(--apx-radius, 18px);
+  background: var(--apx-surface, rgba(255, 255, 255, .06)); border: 1px solid var(--apx-line, rgba(255, 255, 255, .12));
+  backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  opacity: 0; transform: translate3d(0, 28px, 0); filter: blur(6px);
+  transition: opacity calc(.6s * var(--apx-motion, 1)) ease, transform calc(.8s * var(--apx-motion, 1)) cubic-bezier(.16, 1, .3, 1), filter calc(.6s * var(--apx-motion, 1)) ease;
+}
+.apx-scr101__beats > li.is-on { opacity: 1; transform: none; filter: none; }
+.apx-scr101__beats h3 { font-family: var(--apx-font-display, Georgia, serif); font-weight: 500; font-size: clamp(26px, 3vw, 44px); line-height: 1.05; margin: 0 0 .4em; letter-spacing: -.01em; }
+.apx-scr101__beats p { margin: 0; color: var(--apx-muted, #9b9ba1); font-size: clamp(15px, 1.1vw, 17px); line-height: 1.6; max-width: 40ch; }
+.apx-scr101__beats .apx-scr101__kicker { display: block; font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--apx-accent, #cfd3da); margin-bottom: 14px; }
+.apx-scr101__meter {
+  position: absolute; left: clamp(20px, 5vw, 72px); right: clamp(20px, 5vw, 72px); bottom: clamp(18px, 4vh, 40px);
+  display: flex; align-items: center; gap: 16px; font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .14em; color: var(--apx-muted, #9b9ba1);
+}
+.apx-scr101__meter i { position: relative; flex: 1; height: 1px; background: var(--apx-line, rgba(255, 255, 255, .12)); overflow: hidden; }
+.apx-scr101__bar { position: absolute; inset: 0; background: var(--apx-accent, #cfd3da); transform-origin: 0 50%; transform: scaleX(0); }
+.apx-scr101__count { min-width: 9ch; font-variant-numeric: tabular-nums; }
+
+/* phones: no pin, the sequence scrubs as it passes; steps read as a list */
+.apx-scr101.is-compact, .apx-scr101.is-static { height: auto; }
+.apx-scr101.is-compact .apx-scr101__stage, .apx-scr101.is-static .apx-scr101__stage {
+  position: relative; height: auto; grid-template-columns: 1fr; padding-block: 48px 72px;
+}
+.apx-scr101.is-compact .apx-scr101__canvas, .apx-scr101.is-static .apx-scr101__canvas { grid-column: 1; grid-row: 1; height: min(92vw, 520px); }
+.apx-scr101.is-compact .apx-scr101__glow, .apx-scr101.is-static .apx-scr101__glow { grid-column: 1; }
+.apx-scr101.is-compact .apx-scr101__beats, .apx-scr101.is-static .apx-scr101__beats { grid-column: 1; grid-row: 2; gap: 14px; }
+.apx-scr101.is-compact .apx-scr101__beats > li, .apx-scr101.is-static .apx-scr101__beats > li { grid-area: auto; opacity: 1; transform: none; filter: none; }
+.apx-scr101.is-static .apx-scr101__meter { display: none; }
+.apx-scr101.is-compact .apx-scr101__meter { position: relative; left: auto; right: auto; bottom: auto; grid-row: 3; }
+@media (prefers-reduced-motion: reduce) { .apx-scr101__glow { animation: none; } }

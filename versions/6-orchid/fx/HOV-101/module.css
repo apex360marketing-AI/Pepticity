@@ -1,0 +1,34 @@
+/* HOV-101 · Rising Tide — on hover the button fills with colour from the bottom like liquid, its wavy surface sloshing toward the pointer */
+.apx-h101{--_m:var(--apx-motion,1);--_dur:calc(var(--_m) * .75s);--_ease:cubic-bezier(.65,0,.35,1);
+  position:relative;display:inline-grid;place-items:center;isolation:isolate;min-height:54px;padding:0 28px;cursor:pointer;
+  font:600 15px/1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.01em;color:var(--apx-ink,#efe9e6);text-decoration:none;
+  background:var(--apx-surface,rgba(255,255,255,.06));border:1px solid color-mix(in srgb,var(--apx-accent,#cf7f88) 55%,var(--apx-line,rgba(255,255,255,.15)));
+  border-radius:calc(var(--apx-radius,14px) * 1.5);-webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3);
+  -webkit-tap-highlight-color:transparent;transition:transform calc(var(--_m)*.5s) cubic-bezier(.34,1.56,.64,1)}
+button.apx-h101{appearance:none;font:600 15px/1 var(--apx-font-text,system-ui,sans-serif)}
+@media (prefers-reduced-motion:reduce){.apx-h101{--_m:0}}
+.apx-h101:active{transform:scale(.97)}
+.apx-h101:focus-visible{outline:2px solid var(--apx-accent,#cf7f88);outline-offset:3px}
+.apx-h101__label{grid-area:1/1;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;position:relative;z-index:1}
+.apx-h101__label svg{width:16px;height:16px}
+
+/* glow: a soft halo that only appears while wet (opacity only) */
+.apx-h101::before{content:"";position:absolute;inset:-40% -20%;z-index:-2;pointer-events:none;opacity:0;
+  background:radial-gradient(50% 50% at 50% 60%,color-mix(in srgb,var(--apx-accent,#cf7f88) 45%,transparent),transparent 70%);transition:opacity var(--_dur)}
+
+/* the tide: rises with translateY, its inner label counter-moves so the text stays put */
+.apx-h101__clip{position:absolute;inset:-1px;z-index:2;overflow:hidden;pointer-events:none;border-radius:inherit}
+.apx-h101__tide{position:absolute;inset:0 0 -14px 0;overflow:hidden;transform:translateY(100%);transition:transform var(--_dur) var(--_ease)}
+.apx-h101__inner{position:absolute;inset:0 0 14px 0;display:grid;place-items:center;padding:0 28px;transform:translateY(calc(-100% - 14px));transition:transform var(--_dur) var(--_ease)}
+.apx-h101__inner .apx-h101__label{color:var(--apx-accent-ink,#1a0c0f)}
+.apx-h101__body{position:absolute;left:-12%;right:-12%;top:12px;bottom:-4px;background:var(--apx-accent,#cf7f88)}
+.apx-h101__surf{position:absolute;left:-12%;right:-12%;top:0;height:14px;transform-origin:50% 100%;will-change:transform}
+.apx-h101__surf svg{position:absolute;left:0;top:0;width:200%;height:14px;fill:var(--apx-accent,#cf7f88);animation:apxH101Wave calc(1.6s / max(var(--_m),.01)) linear infinite;animation-play-state:paused}
+.apx-h101__surf svg+svg{opacity:.45;animation-duration:calc(2.3s / max(var(--_m),.01));animation-direction:reverse;top:-3px}
+@keyframes apxH101Wave{to{transform:translateX(-50%)}}
+
+.apx-h101.is-wet .apx-h101__tide{transform:translateY(-14px)}
+.apx-h101.is-wet .apx-h101__inner{transform:translateY(14px)}
+.apx-h101.is-wet .apx-h101__surf svg{animation-play-state:running}
+.apx-h101.is-wet::before{opacity:1}
+@media (prefers-reduced-motion:reduce){.apx-h101__surf svg{animation:none}}

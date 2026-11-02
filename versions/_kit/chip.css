@@ -1,0 +1,31 @@
+/* THIS VERSION chip (bottom-left): opens a list of this version's 7 effects. Reads window.PC_VERSION. */
+.vchip{position:fixed;left:16px;bottom:16px;z-index:9000;font:500 13px/1.4 "Hanken Grotesk",system-ui,sans-serif;color:#eef0f3}
+.vchip__btn{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;cursor:pointer;color:inherit;font:inherit;
+  letter-spacing:.14em;text-transform:uppercase;font-size:11.5px;background:rgba(30,31,35,.55);backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);border:1px solid rgba(255,255,255,.18);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);transition:border-color .25s,box-shadow .25s,transform .2s}
+.vchip__btn:hover{border-color:var(--v-t);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 0 18px rgba(var(--v-rgb),.35);transform:translateY(-1px)}
+.vchip__btn:focus-visible{outline:2px solid var(--v-t);outline-offset:3px}
+.vchip__dot{width:9px;height:9px;transform:rotate(45deg);background:var(--v);box-shadow:0 0 10px rgba(var(--v-rgb),.9)}
+.vchip__panel{position:absolute;left:0;bottom:56px;width:min(360px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;padding:18px 18px 14px;
+  background:rgba(28,29,33,.78);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.16);clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  opacity:0;transform:translateY(10px) scale(.98);transform-origin:bottom left;pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.16,1,.3,1)}
+.vchip.open .vchip__panel{opacity:1;transform:none;pointer-events:auto}
+.vchip__t{margin:0 0 2px;font:400 15px/1.2 "PEPTICITY BLACK","Arial Black",sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.vchip__s{margin:0 0 12px;color:#aab0b8;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.vchip__s b{color:var(--v-t);font-weight:500}
+.vchip ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.vchip li{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:9px 10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);transition:border-color .2s,background .2s}
+.vchip li:hover{border-color:rgba(var(--v-rgb),.55);background:rgba(var(--v-rgb),.07)}
+.vchip li .c{grid-row:span 2;color:var(--v-t);font:500 11px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.04em}
+.vchip li .n{text-transform:uppercase;letter-spacing:.08em;font-size:12px}
+.vchip li .w{color:#9aa1aa;font-size:12px}
+.vchip__close{position:absolute;top:10px;right:10px;width:32px;height:32px;border:1px solid rgba(255,255,255,.14);background:transparent;color:inherit;cursor:pointer;transition:border-color .2s,transform .2s}
+.vchip__close:hover{border-color:var(--v-t);transform:rotate(90deg)}
+.vchip__close:focus-visible{outline:2px solid var(--v-t);outline-offset:2px}
+html.intro-on .vchip{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.vchip__panel,.vchip__btn,.vchip li,.vchip__close{transition:none}}
+/* phones: the concierge bar spans the bottom, so the chip sits just above it */
+@media (max-width:700px){.vchip{bottom:calc(24px + var(--pb-barh,64px) + 10px);left:12px}.vchip__btn{min-height:44px;width:44px;padding:0;justify-content:center;font-size:0;letter-spacing:0}.vchip__btn .vchip__dot{width:12px;height:12px}}

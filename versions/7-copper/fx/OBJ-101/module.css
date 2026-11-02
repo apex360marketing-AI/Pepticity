@@ -1,0 +1,87 @@
+/* OBJ-101 · Blacklight Relic */
+.apx-obj101 {
+  --_acc: var(--apx-accent, #d4ff3a);
+  --_mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --_cut: 26px;
+  position: relative; min-height: var(--apx-obj101-height, 100vh); min-height: var(--apx-obj101-height, 100svh);
+  background: var(--apx-bg, #0a0a0c); color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-text, system-ui, sans-serif);
+  overflow: hidden; isolation: isolate;
+}
+.apx-obj101__stage { position: absolute; inset: 0; overflow: hidden; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+.apx-obj101__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+@media (hover: hover) and (pointer: fine) { .apx-obj101__stage { cursor: none; } .apx-obj101__card a, .apx-obj101__card button { cursor: pointer; } }
+
+/* the torch reticle: a hairline ring with a tiny live core */
+.apx-obj101__reticle {
+  position: absolute; left: 0; top: 0; z-index: 3; width: 0; height: 0; pointer-events: none; opacity: 0;
+  transition: opacity .5s cubic-bezier(.2, .7, .2, 1);
+}
+.apx-obj101__reticle::before, .apx-obj101__reticle::after { content: ""; position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
+.apx-obj101__reticle::before { width: 30px; height: 30px; border: 1px solid color-mix(in srgb, var(--apx-ink, #ecebe8) 46%, transparent); transition: width .35s cubic-bezier(.3, 1.4, .5, 1), height .35s cubic-bezier(.3, 1.4, .5, 1); }
+.apx-obj101__reticle::after { width: 3px; height: 3px; background: var(--_acc); box-shadow: 0 0 8px color-mix(in srgb, var(--_acc) 70%, transparent); }
+.apx-obj101.is-aiming .apx-obj101__reticle { opacity: 1; }
+.apx-obj101.is-pressed .apx-obj101__reticle::before { width: 20px; height: 20px; }
+.apx-obj101.is-touch .apx-obj101__reticle, .apx-obj101.is-fallback .apx-obj101__reticle { display: none; }
+
+/* caption: smoked cut-corner glass */
+.apx-obj101__card {
+  position: absolute; z-index: 2; left: clamp(20px, 5.5vw, 88px); top: 50%; translate: 0 -50%; width: min(440px, 38vw);
+  padding: clamp(26px, 2.6vw, 38px) clamp(24px, 2.6vw, 36px) clamp(24px, 2.4vw, 32px);
+  clip-path: polygon(0 0, calc(100% - var(--_cut)) 0, 100% var(--_cut), 100% 100%, var(--_cut) 100%, 0 calc(100% - var(--_cut)));
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--apx-ink, #ecebe8) 7%, transparent), color-mix(in srgb, var(--apx-ink, #ecebe8) 1.2%, transparent)),
+    color-mix(in srgb, var(--apx-bg, #0a0a0c) 40%, transparent);
+  backdrop-filter: blur(12px) saturate(1.5); -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  will-change: transform, opacity, filter;
+}
+.apx-obj101__card::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) top left / calc(100% - var(--_cut)) 1px no-repeat,
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) bottom right / calc(100% - var(--_cut)) 1px no-repeat,
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) top left / 1px calc(100% - var(--_cut)) no-repeat,
+    linear-gradient(var(--apx-line, rgba(255, 255, 255, .16)), var(--apx-line, rgba(255, 255, 255, .16))) bottom right / 1px calc(100% - var(--_cut)) no-repeat,
+    linear-gradient(45deg, transparent calc(50% - .5px), var(--apx-line, rgba(255, 255, 255, .16)) 50%, transparent calc(50% + .5px)) top right / var(--_cut) var(--_cut) no-repeat,
+    linear-gradient(45deg, transparent calc(50% - .5px), var(--apx-line, rgba(255, 255, 255, .16)) 50%, transparent calc(50% + .5px)) bottom left / var(--_cut) var(--_cut) no-repeat;
+}
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .apx-obj101__card { background: color-mix(in srgb, var(--apx-bg, #0a0a0c) 92%, var(--apx-ink, #ecebe8)); }
+}
+.apx-obj101__kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; font: 500 11px/1 var(--_mono); letter-spacing: .26em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3); }
+.apx-obj101__kicker::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--_acc); box-shadow: 0 0 10px color-mix(in srgb, var(--_acc) 60%, transparent); }
+.apx-obj101__card h2 {
+  margin: 0; font-family: var(--apx-font-display, system-ui, sans-serif); font-weight: 700; font-size: clamp(24px, 2.35vw, 36px); line-height: 1.12;
+  letter-spacing: .06em; text-transform: uppercase; text-wrap: balance;
+  background: linear-gradient(100deg, var(--apx-ink, #ecebe8) 0%, color-mix(in srgb, var(--apx-ink, #ecebe8) 62%, var(--apx-bg, #0a0a0c)) 45%, var(--apx-ink, #ecebe8) 70%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.apx-obj101__card p { margin: 16px 0 0; max-width: 40ch; font-size: 16px; line-height: 1.66; color: color-mix(in srgb, var(--apx-ink, #ecebe8) 74%, var(--apx-muted, #9d9ca3)); }
+.apx-obj101__card p b { color: var(--apx-ink, #ecebe8); font-weight: 600; }
+.apx-obj101__hint {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; font: 500 10.5px/1 var(--_mono); letter-spacing: .24em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3);
+}
+.apx-obj101__hint::before { content: ""; width: 26px; height: 1px; background: currentColor; opacity: .6; transform-origin: left; animation: apx-obj101-sweep 3.2s cubic-bezier(.6, 0, .2, 1) infinite; }
+@keyframes apx-obj101-sweep { 0% { transform: scaleX(.15); } 50% { transform: scaleX(1); } 100% { transform: scaleX(.15); } }
+.apx-obj101.is-light .apx-obj101__card { background: linear-gradient(145deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .2)), color-mix(in srgb, var(--apx-bg, #f1efeb) 35%, transparent); }
+
+/* phones: the relic holds the top, the caption docks at the bottom */
+.apx-obj101.is-compact .apx-obj101__card { left: 12px; right: 12px; top: auto; bottom: max(14px, env(safe-area-inset-bottom, 0px)); translate: none; width: auto; padding: 22px 22px 20px; --_cut: 20px; }
+.apx-obj101.is-compact .apx-obj101__card h2 { font-size: clamp(20px, 5.6vw, 26px); }
+.apx-obj101.is-compact .apx-obj101__card p { margin-top: 10px; font-size: 14.5px; line-height: 1.58; }
+.apx-obj101.is-compact .apx-obj101__kicker { margin-bottom: 12px; }
+.apx-obj101.is-compact .apx-obj101__hint { margin-top: 14px; }
+
+.apx-obj101.is-static .apx-obj101__hint::before { animation: none; transform: none; }
+
+/* no 3D available: a quiet black medallion under a soft light */
+.apx-obj101.is-fallback .apx-obj101__stage {
+  background: radial-gradient(38vmin 38vmin at 66% 48%, color-mix(in srgb, var(--apx-ink, #ecebe8) 9%, transparent), transparent 70%), var(--apx-bg, #0a0a0c);
+}
+.apx-obj101.is-fallback .apx-obj101__stage::before {
+  content: ""; position: absolute; left: 66%; top: 48%; width: min(52vmin, 460px); aspect-ratio: 1; translate: -50% -50%;
+  clip-path: polygon(50% 0, 75% 6.7%, 93.3% 25%, 100% 50%, 93.3% 75%, 75% 93.3%, 50% 100%, 25% 93.3%, 6.7% 75%, 0 50%, 6.7% 25%, 25% 6.7%);
+  background: radial-gradient(circle at 34% 28%, #3a3d43, #121316 38%, #050506 70%), #070708;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .08);
+}
+.apx-obj101.is-fallback.is-compact .apx-obj101__stage::before { left: 50%; top: 32%; width: min(64vw, 320px); }
+@media (prefers-reduced-motion: reduce) { .apx-obj101__hint::before { animation: none; } .apx-obj101__reticle::before { transition: none; } }

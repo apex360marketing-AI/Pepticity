@@ -1,0 +1,79 @@
+/* LAY-102 · Panel Accordion
+   Options: --apx-lay102-h (row height, default 560px), --apx-lay102-spine (closed width, 88px), --apx-lay102-spine-v (closed height on phones, 64px) */
+.apx-lay102 {
+  --apx-lay102-gap: 10px;
+  position: relative; color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-text, system-ui, sans-serif);
+  display: grid; gap: 10px;   /* no-JS fallback: a plain stack */
+}
+.apx-lay102.is-ready { display: block; height: var(--apx-lay102-h, 560px); }
+.apx-lay102.is-ready.is-vertical { height: var(--apx-lay102-hv, 720px); }
+.apx-lay102__panel {
+  position: relative; overflow: hidden; border-radius: var(--apx-radius, 18px);
+  border: 1px solid var(--apx-line, rgba(255, 255, 255, .13)); background: var(--apx-surface, rgba(255, 255, 255, .055));
+}
+.apx-lay102.is-ready .apx-lay102__panel {
+  position: absolute; left: 0; top: 0; height: 100%; border: 0;
+  transition: transform calc(.75s * var(--apx-motion, 1)) cubic-bezier(.7, 0, .2, 1), clip-path calc(.75s * var(--apx-motion, 1)) cubic-bezier(.7, 0, .2, 1);
+}
+.apx-lay102.is-ready.is-vertical .apx-lay102__panel { width: 100%; }
+.apx-lay102__panel::before { /* frame drawn inside so clip-path keeps rounded corners crisp */
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3;
+  box-shadow: inset 0 0 0 1px var(--apx-line, rgba(255, 255, 255, .13)); transition: box-shadow .4s ease;
+}
+.apx-lay102__panel.is-open::before { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--apx-accent, #cfd3da) 45%, transparent); }
+/* closed panels: a frame the size of the visible spine, so its far edge is not clipped away */
+.apx-lay102.is-ready .apx-lay102__panel::after {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: var(--apx-lay102-spine, 88px); border-radius: inherit; pointer-events: none; z-index: 3;
+  box-shadow: inset 0 0 0 1px var(--apx-line, rgba(255, 255, 255, .13)); transition: opacity .3s ease;
+}
+.apx-lay102.is-ready.is-vertical .apx-lay102__panel::after { right: 0; bottom: auto; width: auto; height: var(--apx-lay102-spine-v, 64px); }
+.apx-lay102.is-ready .apx-lay102__panel::before { opacity: 0; transition: opacity .3s ease, box-shadow .4s ease; }
+.apx-lay102.is-ready .apx-lay102__panel.is-open::before { opacity: 1; }
+.apx-lay102.is-ready .apx-lay102__panel.is-open::after { opacity: 0; }
+.apx-lay102__art { /* slow drifting light inside each panel */
+  position: absolute; inset: -8%; pointer-events: none; z-index: 0; opacity: .9;
+  background: radial-gradient(40% 35% at 30% 30%, color-mix(in srgb, var(--apx-ink, #ecebe8) 10%, transparent), transparent 70%),
+              radial-gradient(30% 30% at 70% 70%, color-mix(in srgb, color-mix(in srgb, var(--apx-accent, #cfd3da) 40%, var(--apx-ink, #ecebe8)) 10%, transparent), transparent 70%);
+  animation: apx-lay102-drift calc(14s / max(var(--apx-motion, 1), .01)) ease-in-out infinite alternate; animation-play-state: paused;
+}
+.apx-lay102__panel.is-open .apx-lay102__art { animation-play-state: running; }
+@keyframes apx-lay102-drift { to { transform: translate3d(6%, -5%, 0); } }
+.apx-lay102__tab {
+  all: unset; box-sizing: border-box; position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: var(--apx-lay102-spine, 88px);
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 0; cursor: pointer;
+  color: var(--apx-ink, #ecebe8); font: 500 15px/1 var(--apx-font-text, system-ui, sans-serif); letter-spacing: .02em;
+}
+.apx-lay102:not(.is-ready) .apx-lay102__tab { position: relative; width: auto; flex-direction: row; padding: 18px 22px; }
+.apx-lay102__tab:focus-visible { outline: 2px solid var(--apx-accent, #cfd3da); outline-offset: -6px; border-radius: var(--apx-radius, 18px); }
+.apx-lay102__num { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; color: var(--apx-muted, #9b9ba1); }
+.apx-lay102__name { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--apx-font-display, Georgia, serif); font-size: 24px; letter-spacing: 0; transition: opacity .4s ease; }
+.apx-lay102:not(.is-ready) .apx-lay102__name { writing-mode: horizontal-tb; transform: none; }
+.apx-lay102__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--apx-line, rgba(255, 255, 255, .3)); transition: background .4s ease, box-shadow .4s ease; }
+.apx-lay102__panel.is-open .apx-lay102__dot { background: var(--apx-accent, #cfd3da); box-shadow: 0 0 12px var(--apx-accent, #cfd3da); }
+.apx-lay102__panel.is-open .apx-lay102__name { opacity: .35; }
+.apx-lay102__panel:not(.is-open) .apx-lay102__tab:hover .apx-lay102__name { opacity: .7; }
+.apx-lay102__body {
+  position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 14px;
+  padding: clamp(24px, 3vw, 44px) clamp(24px, 3vw, 44px) clamp(24px, 3vw, 44px) calc(var(--apx-lay102-spine, 88px) + 8px);
+  max-width: 760px;
+}
+.apx-lay102.is-ready .apx-lay102__body { opacity: 0; transform: translate3d(24px, 0, 0); transition: opacity .35s ease, transform .5s ease; }
+.apx-lay102.is-ready .apx-lay102__panel.is-open .apx-lay102__body { opacity: 1; transform: none; transition: opacity calc(.6s * var(--apx-motion, 1)) ease calc(.3s * var(--apx-motion, 1)), transform calc(.8s * var(--apx-motion, 1)) cubic-bezier(.16, 1, .3, 1) calc(.25s * var(--apx-motion, 1)); }
+.apx-lay102__body h3 { margin: 0; font-family: var(--apx-font-display, Georgia, serif); font-weight: 400; font-size: clamp(34px, 4vw, 64px); line-height: 1; letter-spacing: -.02em; max-width: 14ch; }
+.apx-lay102__body p { margin: 0; color: var(--apx-muted, #9b9ba1); line-height: 1.6; max-width: 46ch; }
+.apx-lay102__cta { align-self: start; margin-top: 8px; padding: 13px 22px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 15px; color: var(--apx-accent-ink, #111); background: var(--apx-accent, #cfd3da); transition: transform .35s cubic-bezier(.2, .9, .3, 1.3); }
+.apx-lay102__cta:hover, .apx-lay102__cta:focus-visible { transform: translateY(-2px) scale(1.03); }
+.apx-lay102__cta:focus-visible { outline: 2px solid var(--apx-ink, #fff); outline-offset: 3px; }
+.apx-lay102__timer { position: absolute; left: 0; right: 0; bottom: -18px; height: 1px; background: var(--apx-line, rgba(255, 255, 255, .13)); overflow: hidden; display: none; }
+.apx-lay102.is-ready .apx-lay102__timer { display: block; }
+.apx-lay102__timer::after { content: ""; position: absolute; inset: 0; background: var(--apx-accent, #cfd3da); transform-origin: 0 50%; transform: scaleX(0); }
+.apx-lay102.is-auto .apx-lay102__timer::after { animation: apx-lay102-timer var(--apx-lay102-auto, 6s) linear forwards; }
+@keyframes apx-lay102-timer { to { transform: scaleX(1); } }
+/* phones: vertical spines */
+.apx-lay102.is-vertical .apx-lay102__tab { right: 0; bottom: auto; width: auto; height: var(--apx-lay102-spine-v, 64px); flex-direction: row; padding: 0 20px; justify-content: flex-start; gap: 14px; }
+.apx-lay102.is-vertical .apx-lay102__name { writing-mode: horizontal-tb; transform: none; font-size: 20px; }
+.apx-lay102.is-vertical .apx-lay102__dot { margin-left: auto; }
+.apx-lay102.is-vertical .apx-lay102__body { padding: calc(var(--apx-lay102-spine-v, 64px) + 4px) 20px 22px; }
+.apx-lay102.is-vertical .apx-lay102__body h3 { font-size: 32px; }
+.apx-lay102.is-static .apx-lay102__panel, .apx-lay102.is-static .apx-lay102__body { transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .apx-lay102__art { animation: none; } .apx-lay102__panel, .apx-lay102__body { transition: none !important; } }

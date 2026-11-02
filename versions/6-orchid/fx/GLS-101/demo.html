@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLS-101 · Two-Piece Glass — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Hanken+Grotesk:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Onest:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #08090b; --apx-surface: rgba(255, 255, 255, .06); --apx-ink: #e9edf2; --apx-muted: #a3abb5;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .16); --apx-radius: 3px;
+    --apx-font-display: "Syncopate", "Arial Black", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #e9e7e3; --apx-surface: rgba(255, 255, 255, .5); --apx-ink: #17181b; --apx-muted: #4f5259;
+    --apx-accent: #6e2333; --apx-accent-ink: #fbf6f3; --apx-line: rgba(23, 24, 27, .16); --apx-radius: 3px;
+    --apx-font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #08090b; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Onest", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 62vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 56px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; text-transform: uppercase; font-family: var(--apx-font-display); font-weight: 700; font-size: clamp(34px, 6vw, 84px); line-height: .98; letter-spacing: .02em; max-width: 14ch; }
+  .demo-intro p { margin: 0; max-width: 52ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-intro .hint { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .demo-outro { min-height: 40vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 600px) { .demo-bar b { display: none; } }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>GLS-101 · Two-Piece Glass</b><a href="#dark">Dark tokens</a><a href="#light">Light tokens</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="demo-intro">
+      <small>GLS-101 · Dark token set</small>
+      <h1>TWO-PIECE GLASS</h1>
+      <p>A thick smoked-glass card with a button-shaped hole cut right through it. The button is its own slab of glass. Point at it and it lifts out toward you; press it and it drops back into place with a click.</p>
+      <p class="hint">Hover, tab or tap the button</p>
+    </header>
+    <section class="apx-g101" data-apx="GLS-101" data-shape="cut" data-word="APEX" aria-label="Get leads">
+      <div class="apx-g101__card">
+        <span class="apx-g101__kicker"><i aria-hidden="true"></i>Roofing · [City]</span>
+        <h2 class="apx-g101__title">YOUR NEXT JOB IS ONE PRESS AWAY</h2>
+        <p class="apx-g101__text">Verified, exclusive leads for your trade, sent straight to your phone and your CRM. [Your verification process]</p>
+        <div class="apx-g101__row">
+          <button class="apx-g101__key" type="button">Get my leads</button>
+          <span class="apx-g101__note" aria-live="polite">Nobody else gets them</span>
+        </div>
+      </div>
+    </section>
+    <section class="apx-g101" data-apx="GLS-101" data-shape="round" data-word="[CITY]" aria-label="Check your area">
+      <div class="apx-g101__card">
+        <span class="apx-g101__kicker"><i aria-hidden="true"></i>One business per area</span>
+        <h2 class="apx-g101__title">IS YOUR AREA STILL OPEN?</h2>
+        <p class="apx-g101__text">One business per service, per area. Check yours before someone else takes it. [Your exclusivity terms]</p>
+        <div class="apx-g101__row">
+          <button class="apx-g101__key" type="button" aria-label="Check my area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <span class="apx-g101__note" aria-live="polite">Check my area</span>
+        </div>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of the dark token set. The same module follows below with the light tokens, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="demo-intro">
+      <small>GLS-101 · Light token set</small>
+      <h1>TWO-PIECE GLASS</h1>
+      <p>The same two pieces of glass on a pale ground: the hole, the separate slab, the lift and the click.</p>
+      <p class="hint">Hover, tab or tap the button</p>
+    </header>
+    <section class="apx-g101" data-apx="GLS-101" data-shape="cut" data-word="APEX" aria-label="Get leads">
+      <div class="apx-g101__card">
+        <span class="apx-g101__kicker"><i aria-hidden="true"></i>Roofing · [City]</span>
+        <h2 class="apx-g101__title">YOUR NEXT JOB IS ONE PRESS AWAY</h2>
+        <p class="apx-g101__text">Verified, exclusive leads for your trade, sent straight to your phone and your CRM. [Your verification process]</p>
+        <div class="apx-g101__row">
+          <button class="apx-g101__key" type="button">Get my leads</button>
+          <span class="apx-g101__note" aria-live="polite">Nobody else gets them</span>
+        </div>
+      </div>
+    </section>
+    <section class="apx-g101" data-apx="GLS-101" data-shape="round" data-word="[CITY]" aria-label="Check your area">
+      <div class="apx-g101__card">
+        <span class="apx-g101__kicker"><i aria-hidden="true"></i>One business per area</span>
+        <h2 class="apx-g101__title">IS YOUR AREA STILL OPEN?</h2>
+        <p class="apx-g101__text">One business per service, per area. Check yours before someone else takes it. [Your exclusivity terms]</p>
+        <div class="apx-g101__row">
+          <button class="apx-g101__key" type="button" aria-label="Check my area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <span class="apx-g101__note" aria-live="polite">Check my area</span>
+        </div>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+<script>
+/* demo only: a pressed slab confirms in the note beside it */
+document.querySelectorAll('.apx-g101__key').forEach(function (b) {
+  var note = b.closest('.apx-g101__row').querySelector('.apx-g101__note'), base = note.textContent, t = 0;
+  b.addEventListener('click', function () { note.textContent = 'Request started · [Your next step]'; clearTimeout(t); t = setTimeout(function () { note.textContent = base; }, 2600); });
+});
+</script>
+</body>
+</html>

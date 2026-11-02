@@ -1,0 +1,52 @@
+/* NAV-103 · Ticker Nav — the section links run past in a slow ticker; it eases to a stop under the pointer, can be dragged, and glides to whatever you tab to */
+.apx-n103{--_m:var(--apx-motion,1);position:sticky;top:0;z-index:40;container:apxn103/inline-size;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:clamp(10px,2cqi,24px);
+  padding:10px clamp(12px,3cqi,32px);font-family:var(--apx-font-text,system-ui,sans-serif);color:var(--apx-ink,#efe9e6);
+  background:color-mix(in srgb,var(--apx-bg,#0e0d0f) 86%,transparent);border-bottom:1px solid var(--apx-line,rgba(255,255,255,.14));
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2)}
+@media (prefers-reduced-motion:reduce){.apx-n103{--_m:0}}
+.apx-n103__brand{display:inline-flex;color:inherit;border-radius:8px;padding:4px}
+.apx-n103 .apx-logo{display:inline-flex;line-height:0}
+.apx-n103 .apx-logo svg,.apx-n103 .apx-logo img{height:26px;width:auto}
+
+.apx-n103__track{position:relative;overflow:hidden;min-width:0;height:44px;touch-action:pan-y;cursor:grab;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.apx-n103__track.is-drag{cursor:grabbing}
+.apx-n103__belt{display:flex;width:max-content;height:100%;will-change:transform}
+.apx-n103__list{display:flex;align-items:center;list-style:none;margin:0;padding:0;flex:none}
+.apx-n103__list li{display:flex;align-items:center}
+.apx-n103__list li::after{content:"";width:5px;height:5px;margin:0 clamp(14px,2.4cqi,26px);transform:rotate(45deg);
+  background:color-mix(in srgb,var(--apx-accent,#cf7f88) 70%,transparent);border-radius:1px}
+.apx-n103__list a{position:relative;display:inline-flex;align-items:center;height:36px;padding:0 4px;white-space:nowrap;color:var(--apx-muted,#a8a09e);
+  text-decoration:none;font:500 15px/1 var(--apx-font-display,Georgia,serif);letter-spacing:.01em;border-radius:6px;transition:color .25s;-webkit-user-drag:none;user-select:none}
+.apx-n103__list a::after{content:"";position:absolute;left:4px;right:4px;bottom:4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;
+  transition:transform calc(var(--_m)*.45s) cubic-bezier(.2,.8,.2,1)}
+.apx-n103__list a:hover,.apx-n103__list a:focus-visible,.apx-n103__list a.is-current{color:var(--apx-ink,#efe9e6)}
+.apx-n103__list a:hover::after,.apx-n103__list a:focus-visible::after{transform:scaleX(1);transform-origin:left}
+.apx-n103__list a.is-current::before{content:"";position:absolute;left:50%;top:1px;width:4px;height:4px;margin-left:-2px;border-radius:50%;
+  background:var(--apx-accent,#cf7f88);box-shadow:0 0 10px var(--apx-accent,#cf7f88)}
+.apx-n103__list a:focus-visible,.apx-n103__brand:focus-visible,.apx-n103__cta:focus-visible{outline:2px solid var(--apx-accent,#cf7f88);outline-offset:2px}
+
+.apx-n103__cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;white-space:nowrap;text-decoration:none;
+  font-weight:600;font-size:14px;color:var(--apx-accent-ink,#1a0c0f);background:var(--apx-accent,#cf7f88);
+  transition:transform calc(var(--_m)*.5s) cubic-bezier(.34,1.56,.64,1)}
+.apx-n103__cta:hover{transform:translateY(-1px)}
+.apx-n103__cta:active{transform:scale(.96)}
+.apx-n103__cta svg{width:16px;height:16px}
+
+/* pause pill: shows the ticker is paused under the pointer */
+.apx-n103__state{position:absolute;right:10%;top:50%;margin-top:-9px;height:18px;padding:0 7px;display:flex;align-items:center;gap:3px;border-radius:999px;
+  background:var(--apx-surface,rgba(255,255,255,.06));border:1px solid var(--apx-line,rgba(255,255,255,.14));opacity:0;transform:translateY(4px);
+  transition:opacity .25s,transform calc(var(--_m)*.35s);pointer-events:none}
+.apx-n103__state i{width:2px;height:7px;background:var(--apx-muted,#a8a09e);border-radius:1px}
+.apx-n103.is-paused .apx-n103__state{opacity:1;transform:none}
+
+/* no motion: a plain swipeable row */
+.apx-n103.is-static .apx-n103__track{overflow-x:auto;scrollbar-width:none;cursor:auto;-webkit-mask-image:none;mask-image:none}
+.apx-n103.is-static .apx-n103__track::-webkit-scrollbar{display:none}
+.apx-n103.is-static .apx-n103__state{display:none}
+
+@container apxn103 (max-width:560px){
+  .apx-n103__cta{width:40px;padding:0;justify-content:center}
+  .apx-n103__cta span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+}

@@ -1,0 +1,172 @@
+/* PEPTICITY · VERSION 06 · ORCHID "GLASS" (#8D029B)
+   Slot effects: NAV-04 Elevator Floors (THE TOUR menu + floor readout) · BTN-118 Thick Glass (main sign-up buttons) · CRD-107 Double Pane (text-alerts card)
+   SCR-18 Card Stack (HOW WE CHOOSE) · TXT-101 Orbit Caption (seal beside each reading statement; the statement lights word by word)
+   HOV-101 Rising Tide (buttons, cards) · GLS-101 Two-Piece Glass (the founding offer card in the city).
+   Orchid is dark: glows use the hex (--v), thin lines and text use the lighter tint (--v-t) so it stays readable and never reads as pink. */
+
+/* ---------- 0 · module tokens -> the accent ---------- */
+.apx-nav04,.apx-scr18,.apx-c107,.apx-b118,.apx-g101,.apx-txt101{--apx-accent:var(--v-t);--apx-accent-ink:#fff}
+
+/* ---------- 1 · BTN-118 Thick Glass · the two main sign-up buttons (chamfered slab) ---------- */
+.stub-slot{display:flex}
+.apx-b118{font:400 11.5px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase;min-height:60px;border-radius:0;--apx-line:rgba(var(--v-rgb),.6)}
+.apx-b118 .apx-b118__g{border-radius:0;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.75),inset 0 2px 0 rgb(255 255 255/.38),inset 0 -3px 7px rgb(0 0 0/.28),inset 4px 0 8px -4px rgb(255 255 255/.3),inset -4px 0 8px -4px rgb(255 255 255/.18),inset 0 -14px 26px -14px rgba(var(--v-rgb),.7)}
+.apx-b118 .apx-b118__l{padding:0 30px;text-shadow:0 0 14px rgba(var(--v-rgb),.6)}
+.apx-b118.is-hot .apx-b118__g{box-shadow:inset 0 0 0 1px var(--v-t),inset 0 2px 0 rgb(255 255 255/.5),inset 0 -3px 7px rgb(0 0 0/.28),inset 0 -22px 34px -14px rgba(var(--v-rgb),.95)}
+.apx-b118:focus-visible{outline:2px solid var(--v-t);outline-offset:4px}
+.apx-b118.busy{opacity:.75}
+@media (max-width:640px){
+  .stub-slot,.stub-slot .apx-b118{width:100%}
+  .apx-b118{font-size:10.5px;letter-spacing:.14em}
+  .apx-b118 .apx-b118__l{white-space:normal;text-align:center;line-height:1.35;padding:0 18px}
+}
+
+/* ---------- 2 · reading statements: TXT-101 Orbit Caption seal + word-by-word light ---------- */
+.say{position:relative;z-index:2;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:clamp(90px,14vh,160px) var(--gut)}
+.say-in{width:min(1180px,100%);display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:clamp(28px,4vw,64px);row-gap:clamp(16px,3vh,30px);align-items:center}
+.say-orbit{grid-row:1 / span 3;align-self:center}
+.say-k{margin:0;display:flex;align-items:center;gap:14px;font:400 11px/1 var(--display);letter-spacing:.34em;color:var(--muted);text-transform:uppercase}
+.say-k::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--v-t));box-shadow:0 0 8px rgba(var(--v-rgb),.9)}
+.say-t{margin:0;font:500 clamp(26px,3.5vw,54px)/1.18 var(--body);letter-spacing:-.01em;color:var(--ink)}
+.say-t mark{background:none;color:inherit}
+.say .rw{color:rgba(238,241,245,.15);transition:color .45s var(--ease-out),text-shadow .45s var(--ease-out),background-size .7s var(--ease-out)}
+.say .rw.lit{color:var(--read-lit);text-shadow:0 0 18px rgba(255,255,255,.14)}
+.say .rw.key{background:linear-gradient(90deg,var(--v-t),var(--v-t)) 0 96%/0% 2px no-repeat;padding-bottom:.04em}
+.say .rw.key.lit{color:var(--read-key);text-shadow:var(--read-key-glow),0 0 2px rgba(var(--v-rgb),.9);background-size:100% 2px}
+[data-version="white"] .say .rw{color:rgba(17,18,20,.16)}
+[data-version="white"] .say .rw.lit{color:var(--ink);text-shadow:none}
+[data-version="white"] .say .rw.key.lit{color:var(--v);text-shadow:0 0 14px rgba(var(--v-rgb),.25)}
+html.rm .say .rw{transition:none}
+.say-notes{display:flex;flex-wrap:wrap;gap:8px 34px}
+.say-notes p{margin:0;font-size:15px;color:var(--ink-2)}
+html.rm .say{min-height:0}
+/* the seal: ring of caption in the accent tint around a gunmetal glass core */
+.say-orbit{--apx-txt101-size:clamp(132px,13vw,176px);--apx-ink:var(--v-t);--apx-surface:rgba(255,255,255,.06);--apx-line:rgba(var(--v-rgb),.55);color:var(--ink)}
+.say-orbit .apx-txt101__ring text{font:400 11.5px/1 var(--display);letter-spacing:.16em;fill:var(--v-t);filter:drop-shadow(0 0 4px rgba(var(--v-rgb),.8))}
+.say-orbit .apx-txt101__core{background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.03)),color-mix(in srgb,var(--bg) 70%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 30px -8px rgba(var(--v-rgb),.9)}
+.say-orbit .apx-txt101__arrow{color:var(--v-t)}
+a.say-orbit:hover .apx-txt101__core,a.say-orbit:focus-visible .apx-txt101__core{background:rgba(var(--v-rgb),.92);color:#fff;box-shadow:0 0 44px -4px rgba(var(--v-rgb),.95),inset 0 1px 0 rgba(255,255,255,.4)}
+a.say-orbit:hover .apx-txt101__arrow,a.say-orbit:focus-visible .apx-txt101__arrow{color:#fff}
+.say-orbit:focus-visible{outline:2px solid var(--v-t);outline-offset:6px}
+[data-version="white"] .say-orbit{--apx-ink:var(--v)}
+[data-version="white"] .say-orbit .apx-txt101__ring text{fill:var(--v);filter:none}
+@media (max-width:760px){
+  .say-in{grid-template-columns:minmax(0,1fr)}
+  .say-orbit{grid-row:auto;--apx-txt101-size:120px;justify-self:start}
+}
+
+/* ---------- 3 · SCR-18 Card Stack · HOW WE CHOOSE ---------- */
+.deck.apx-scr18{position:relative;z-index:2;background:transparent;--apx-bg:var(--bg);--apx-font-display:var(--display);--apx-font-text:var(--body);
+  --apx-line:rgba(230,233,237,.16);--apx-surface:rgba(255,255,255,.05);--apx-scr18-card-height:min(62vh,480px);--apx-scr18-card-height-compact:min(66vh,520px)}
+.deck .apx-scr18__head{margin-bottom:clamp(30px,6vh,70px)}
+.deck .apx-scr18__head h2{margin:18px 0 0;font-size:var(--t-h2);font-weight:400;letter-spacing:.03em;max-width:none}
+.deck .apx-scr18__kicker{font:400 10.5px/1 var(--display);letter-spacing:.32em}
+.deck .apx-scr18__kicker::before{background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.9)}
+.deck .apx-scr18__num{font:400 10.5px/1 var(--display);letter-spacing:.3em;color:var(--v-t);text-shadow:0 0 12px rgba(var(--v-rgb),.8)}
+.deck .apx-scr18__copy h3{font:400 clamp(28px,3.4vw,52px)/1 var(--display);letter-spacing:.03em;color:var(--ink)}
+.deck .apx-scr18__copy p{color:var(--ink-2)}
+.deck .apx-scr18__copy .pc-btn{margin-top:20px}
+.deck .apx-scr18__in{background:linear-gradient(160deg,var(--g-a),var(--g-b) 62%),rgba(255,255,255,.02)}
+.deck .apx-scr18__in::before{background:
+  linear-gradient(var(--_line),var(--_line)) top left / calc(100% - var(--_cut)) 1px no-repeat,
+  linear-gradient(var(--_line),var(--_line)) bottom left / 100% 1px no-repeat,
+  linear-gradient(var(--_line),var(--_line)) top left / 1px 100% no-repeat,
+  linear-gradient(var(--_line),var(--_line)) bottom right / 1px calc(100% - var(--_cut)) no-repeat,
+  linear-gradient(45deg,transparent calc(50% - .75px),var(--v-t) 50%,transparent calc(50% + .75px)) top right / var(--_cut) var(--_cut) no-repeat}
+.deck .apx-scr18__card.is-hover .apx-scr18__in::after{background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(var(--v-rgb),.16),transparent 60%)}
+.deck .apx-scr18__vis{min-height:120px}
+.deck .apx-scr18__idx{-webkit-text-stroke:1px rgba(var(--v-rgb),.55);font-family:var(--display);font-weight:400;right:50%;bottom:50%;transform:translate(50%,50%);font-size:clamp(90px,12vw,180px)}
+.deck.is-compact .apx-scr18__idx{font-size:84px}
+.deck.is-static .apx-scr18__vis{min-height:140px}
+
+/* ---------- 4 · CRD-107 Double Pane · text alerts ---------- */
+.sms-card.apx-c107{width:min(100%,520px);margin:30px 30px 0 0;padding:40px 36px 36px;--apx-font-display:var(--display);--apx-font-text:var(--body);--apx-muted:var(--ink-2);--apx-ink:var(--ink);--apx-accent:var(--v)}
+.sms-card .apx-c107__pane{border:0;border-radius:0;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));
+  box-shadow:inset 0 0 0 1px rgba(230,233,237,.22),inset 1px 1px 0 rgb(255 255 255/.35),inset -1px -1px 0 rgb(0 0 0/.25)}
+.sms-card .apx-c107__pane.b{box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.65),inset 1px 1px 0 rgb(255 255 255/.25)}
+.sms-card .apx-c107__num{font:400 112px/1 var(--display);letter-spacing:.02em;-webkit-text-stroke:1px rgba(var(--v-rgb),.7);top:10px}
+.sms-card .apx-c107__gap{background:radial-gradient(closest-side,rgba(var(--v-rgb),.95),transparent)}
+.sms-card .apx-c107__title{font:400 clamp(24px,2.8vw,38px)/1.08 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink);margin:18px 0 12px}
+.sms-card .apx-c107__title em{font-style:normal;color:var(--v-t);text-shadow:0 0 18px rgba(var(--v-rgb),.9)}
+.sms-card .apx-c107__text{max-width:36ch;font-size:15px;color:var(--ink-2)}
+.sms-alert{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;font-size:13.5px;line-height:1.45;color:var(--ink);
+  background:color-mix(in srgb,var(--bg) 55%,transparent);box-shadow:inset 0 0 0 1px rgba(230,233,237,.16);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.sms-alert i{flex:none;width:8px;height:8px;margin-top:5px;transform:rotate(45deg);background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.9)}
+.sms-alert b{display:block;margin-bottom:3px;font:400 9.5px var(--display);letter-spacing:.24em;color:var(--muted)}
+@media (max-width:640px){.sms-card.apx-c107{margin:24px 22px 0 0;padding:32px 22px 26px}.sms-card .apx-c107__num{font-size:80px}}
+
+/* ---------- 5 · GLS-101 Two-Piece Glass · the founding offer card (in the city) ---------- */
+.sr.apx-g101{position:absolute;display:block;min-height:0;padding:0;width:min(400px,calc(100% - 32px));overflow:hidden;
+  --apx-bg:#121316;--apx-ink:#eef1f5;--apx-muted:#b9bec6;--apx-line:rgba(230,233,237,.2);--apx-font-display:var(--display);--apx-font-text:var(--body);
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));color:#eef1f5}
+.found-g101 .apx-g101__card{width:100%;padding:26px 26px 24px;gap:10px}
+.found-g101 .apx-g101__kicker{white-space:nowrap;display:flex;align-items:center;gap:0;margin:0;font:400 10px/1 var(--display);letter-spacing:.3em;color:#b9bec6}
+.found-g101 .apx-g101__kicker i{background:var(--v-t);box-shadow:0 0 10px rgba(var(--v-rgb),.9)}
+.found-g101 .h3{font-size:clamp(17px,1.5vw,21px)}
+.found-g101 .apx-g101__text{font-size:14.5px;color:#c9ced5}
+.found-g101 .apx-g101__row{margin-top:8px}
+.found-g101 .apx-g101__key{min-height:56px;padding:0 26px;font:400 11px/1 var(--display);letter-spacing:.22em;color:#fff;text-shadow:0 0 14px rgba(var(--v-rgb),.9)}
+.found-g101 .apx-g101__key:focus-visible{outline:2px solid var(--v-t);outline-offset:6px}
+
+/* ---------- 6 · NAV-04 Elevator Floors · THE TOUR menu ---------- */
+.tourmenu.apx-nav04{z-index:85;pointer-events:none;--apx-bg:#17181b;--apx-ink:#e6e9ed;--apx-muted:#9aa1aa;--apx-line:rgba(230,233,237,.14);--apx-radius:0px;--apx-font-display:var(--display);--apx-font-text:var(--display)}
+.tourmenu.apx-nav04::before{display:none}
+.tourmenu .apx-nav04__bar{justify-content:center;padding:14px var(--gut);max-width:none}
+.tourmenu .apx-nav04__btn{display:none}
+.tourmenu .apx-nav04__floor{pointer-events:auto;height:38px;border:0;border-radius:0;font:400 9.5px/1 var(--display);letter-spacing:.26em;color:var(--muted);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.015)),color-mix(in srgb,var(--bg) 60%,transparent);box-shadow:inset 0 0 0 1px rgba(230,233,237,.18),inset 0 1px 0 rgba(255,255,255,.3)}
+.tourmenu .apx-nav04__floor .apx-nav04__num{font:400 15px/1 var(--display);letter-spacing:.06em;color:var(--v-t);text-shadow:0 0 12px rgba(var(--v-rgb),.95)}
+.tourmenu .apx-nav04__shaft i{background:var(--v-t);box-shadow:0 0 8px rgba(var(--v-rgb),.95)}
+@media (max-width:1180px){.tourmenu .apx-nav04__bar{display:none}}
+.tourmenu .apx-nav04__panel{pointer-events:auto;top:66px;right:var(--gut);width:min(440px,calc(100vw - 32px));
+  clip-path:inset(0 50% 0 50%)}
+.tourmenu.is-open .apx-nav04__panel{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+.tourmenu.is-static .apx-nav04__panel,.tourmenu.is-static.is-open .apx-nav04__panel{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+.tourmenu .apx-nav04__doors i:last-child::before{background:var(--v-t);box-shadow:0 0 14px rgba(var(--v-rgb),1),0 0 30px rgba(var(--v-rgb),.7);opacity:1}
+.tourmenu .apx-nav04__head p{font:400 9.5px/1.5 var(--display);letter-spacing:.26em}
+.tourmenu .apx-nav04__disp .apx-nav04__num{font:400 22px/1 var(--display);color:var(--v-t);text-shadow:0 0 14px rgba(var(--v-rgb),.95)}
+.tourmenu .apx-nav04__disp .apx-nav04__dir{color:var(--v-t)}
+.tourmenu .apx-nav04__fbtn{font-family:var(--display);border-radius:0;color:var(--ink-2)}
+.tourmenu .apx-nav04__name{font:400 11.5px/1.25 var(--display);letter-spacing:.12em}
+.tourmenu .apx-nav04__name small{font:400 8.5px/1.3 var(--display);letter-spacing:.24em;margin-top:5px}
+.tourmenu .apx-nav04__key{font:400 12px/1 var(--display);letter-spacing:.04em}
+.tourmenu .apx-nav04__key::after{border-color:var(--v-t);box-shadow:0 0 14px rgba(var(--v-rgb),.95),inset 0 0 8px rgba(var(--v-rgb),.8)}
+.tourmenu .apx-nav04__fbtn:hover .apx-nav04__key,.tourmenu .apx-nav04__fbtn:focus-visible .apx-nav04__key{transform:translateY(-2px);transition:transform .35s var(--ease-out)}
+.tourmenu .apx-nav04__fbtn:hover .apx-nav04__key::after{opacity:.9}
+.tourmenu .apx-nav04__fbtn:hover,.tourmenu .apx-nav04__fbtn:focus-visible,.tourmenu .apx-nav04__fbtn.is-here{color:#fff}
+.tourmenu .apx-nav04__fbtn:focus-visible{outline:2px solid var(--v-t);outline-offset:2px}
+.tourmenu .apx-nav04__foot{font:400 9px/1 var(--display);letter-spacing:.24em}
+.tourmenu .apx-nav04__close{font:400 9.5px/1 var(--display);letter-spacing:.24em}
+.tourmenu .apx-nav04__close::after{background:var(--v-t)}
+.tourmenu .apx-nav04__close:focus-visible{outline:2px solid var(--v-t);outline-offset:2px}
+.tourmenu .tm-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px;margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(230,233,237,.1)}
+.tourmenu .tm-meta .linkish{font-size:10px;letter-spacing:.22em}
+.tourmenu .tm-note{font-size:12.5px;color:var(--muted);font-family:var(--body)}
+html:not(.age-gated) .tourmenu .tm-note{display:none}
+html.age-gated .tourmenu .apx-nav04__panel li:nth-child(n+5) .apx-nav04__fbtn{opacity:.55}
+html.intro-on .tourmenu{opacity:0;pointer-events:none}
+@media (max-width:640px){.tourmenu .apx-nav04__panel{top:auto;right:0;width:auto;bottom:calc(64px + env(safe-area-inset-bottom));max-height:calc(100svh - 140px);clip-path:inset(100% 0 0 0)}.tourmenu.is-open .apx-nav04__panel{clip-path:inset(0 0 0 0)}}
+
+/* ---------- 7 · HOV-101 Rising Tide · on every glass button (THE ONE BUTTON keeps its face, the tide rises inside it) ---------- */
+.pc-btn .pc-btn__face.apx-h101{border:0;border-radius:0;min-height:0;font:inherit;letter-spacing:inherit;color:inherit;isolation:auto;
+  --apx-accent:rgba(var(--v-rgb),.94);--apx-accent-ink:#fff}
+.pc-btn__face>.apx-h101__label{gap:.9em;grid-area:auto}
+.pc-btn__face .apx-h101__inner{padding:0 var(--px);display:flex;align-items:center;justify-content:center}
+.pc-btn__face .apx-h101__inner .apx-h101__label{gap:.9em;text-shadow:0 0 10px rgba(255,255,255,.35)}
+.pc-btn:focus-visible .apx-h101__tide{transform:translateY(-14px)}
+.pc-btn:focus-visible .apx-h101__inner{transform:translateY(14px)}
+.pc-btn:focus-visible .apx-h101__surf svg{animation-play-state:running}
+.pc-btn:disabled .apx-h101__clip{display:none}
+/* cards: the same tide of light rises from the bottom edge on hover (no colour floods the copy) */
+.prod{transition:opacity .7s var(--ease-out),transform .7s var(--ease-out),box-shadow .75s cubic-bezier(.65,0,.35,1)}
+.int-card{transition:transform .5s var(--ease-out),box-shadow .75s cubic-bezier(.65,0,.35,1)}
+.sr,.tier{transition:box-shadow .75s cubic-bezier(.65,0,.35,1)}
+.bento .apx-lay101__tile{transition:border-color .35s ease,translate .5s cubic-bezier(.2,.9,.3,1.25),box-shadow .75s cubic-bezier(.65,0,.35,1)}
+.prod:hover,.int-card:hover,.sr:not(.apx-g101):hover{box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.65),inset 0 -160px 90px -90px rgba(var(--v-rgb),.32),var(--v-glow)}
+.tier:hover{box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.6),inset 0 -200px 110px -110px rgba(var(--v-rgb),.28)}
+.bento .apx-lay101__tile:hover{box-shadow:inset 0 0 0 1px rgba(var(--v-rgb),.65),inset 0 1px 0 var(--rim-hot),inset 0 -150px 90px -90px rgba(var(--v-rgb),.32)}
+@media (prefers-reduced-motion:reduce){.sr,.tier{transition:none}}

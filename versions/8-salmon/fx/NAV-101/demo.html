@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NAV-101 · Curtain Letters — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&family=Syne:wght@500;600;700&family=Onest:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* ---- token sets (the only thing that differs between the two frames) ---- */
+  .tk-dark{--apx-bg:#0e0d0f;--apx-surface:rgba(255,255,255,.065);--apx-ink:#efe9e6;--apx-muted:#a8a09e;--apx-accent:#cf7f88;
+    --apx-accent-ink:#1a0c0f;--apx-line:rgba(239,233,230,.15);--apx-radius:18px;
+    --apx-font-display:"Fraunces",Georgia,serif;--apx-font-text:"Instrument Sans",system-ui,sans-serif;--apx-motion:1}
+  .tk-light{--apx-bg:#f1ede6;--apx-surface:rgba(255,255,255,.58);--apx-ink:#17181b;--apx-muted:#55575e;--apx-accent:#6d1f2b;
+    --apx-accent-ink:#f8f1eb;--apx-line:rgba(23,24,27,.16);--apx-radius:6px;
+    --apx-font-display:"Syne",system-ui,sans-serif;--apx-font-text:"Onest",system-ui,sans-serif;--apx-motion:1}
+  body.motion-off .tk-dark,body.motion-off .tk-light{--apx-motion:0}
+
+  /* ---- demo chrome (not part of the module) ---- */
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;background:#0a0a0b;color:#e9e7e4;font:15px/1.5 "Instrument Sans",system-ui,sans-serif}
+  .demo-head{max-width:1320px;margin:0 auto;padding:28px clamp(16px,3vw,32px) 18px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:end;justify-content:space-between}
+  .demo-head h1{margin:0;font:500 clamp(1.5rem,3vw,2.2rem)/1.1 "Fraunces",Georgia,serif;letter-spacing:-.01em}
+  .demo-head h1 b{font:600 .55em/1 ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#b9b6b2;vertical-align:middle;margin-right:.7em;padding:.35em .6em;border:1px solid #2c2b2d;border-radius:6px}
+  .demo-head p{margin:6px 0 0;color:#a9a6a2;max-width:62ch}
+  .demo-motion{appearance:none;border:1px solid #333;background:#151516;color:#e9e7e4;border-radius:999px;padding:9px 16px;font:500 13px/1 inherit;cursor:pointer}
+  .demo-motion:focus-visible{outline:2px solid #e9e7e4;outline-offset:2px}
+  .demo-frames{max-width:1320px;margin:0 auto;padding:0 clamp(16px,3vw,32px) 48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+  .demo-col{min-width:0}
+  .demo-tag{display:flex;justify-content:space-between;gap:8px;font:500 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:#8f8c88;margin:0 0 10px}
+  .frame{position:relative;contain:layout paint;isolation:isolate;overflow:clip;min-height:720px;border-radius:14px;border:1px solid #222;
+    background:var(--apx-bg);color:var(--apx-ink);font-family:var(--apx-font-text)}
+  .frame__amb{position:absolute;inset:-20%;z-index:-1;pointer-events:none;opacity:.55;
+    background:radial-gradient(40% 35% at 30% 30%,color-mix(in srgb,var(--apx-accent) 22%,transparent),transparent 70%),
+               radial-gradient(35% 30% at 75% 70%,color-mix(in srgb,var(--apx-ink) 10%,transparent),transparent 70%);
+    animation:frameDrift calc(28s / max(var(--apx-motion),.01)) ease-in-out infinite alternate}
+  @keyframes frameDrift{to{transform:translate3d(6%,-4%,0) rotate(8deg)}}
+  @media (prefers-reduced-motion:reduce){.frame__amb{animation:none}}
+  .frame-pad{padding:clamp(20px,4vw,40px)}
+  .f-eyebrow{font:500 12px/1 var(--apx-font-text);letter-spacing:.16em;text-transform:uppercase;color:var(--apx-muted)}
+  .f-h{font:500 clamp(1.7rem,3.4vw,2.6rem)/1.08 var(--apx-font-display);letter-spacing:-.015em;margin:.35em 0 .4em;text-wrap:balance}
+  .f-p{color:var(--apx-muted);max-width:52ch;margin:0 0 1em}
+  .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (max-width:1000px){.demo-frames{grid-template-columns:1fr}}
+  .stack .demo-frames{grid-template-columns:1fr}
+  
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body class="">
+<header class="demo-head">
+  <div>
+    <h1><b>NAV-101</b>Curtain Letters</h1>
+    <p>The menu drops like a theatre curtain led by a thin line of colour, and each link rises letter by letter in a wave; pointing at a link lifts it and writes its name huge in the background.</p>
+  </div>
+  <button class="demo-motion" type="button" aria-pressed="false">Motion token: 1</button>
+</header>
+<main class="demo-frames">
+  <section class="demo-col" aria-label="Dark token set">
+    <p class="demo-tag"><span>Dark token set</span><span>Onyx &amp; rosewood</span></p>
+    <div class="frame tk-dark" data-frame="dark"><div class="frame__amb" aria-hidden="true"></div>
+      <header class="apx-n101" data-demo>
+        <div class="apx-n101__bar">
+          <a class="apx-n101__brand" href="#" aria-label="Home"><span class="apx-logo"><svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M3 27 16 4l13 23h-6.4L16 15.2 9.4 27Z" fill="currentColor"/><path d="M13.2 27 16 22l2.8 5Z" fill="currentColor" opacity=".55"/></svg></span></a>
+          <button class="apx-n101__toggle" type="button">Menu</button>
+        </div>
+        <nav class="apx-n101__panel" aria-label="Site menu">
+          <ul class="apx-n101__list">
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#industries">Industries</a></li>
+            <li><a href="#sample">Sample leads</a></li>
+            <li><a href="#area">Check your area</a></li>
+            <li><a href="#contact">Talk to us</a></li>
+          </ul>
+          <div class="apx-n101__aside">
+            <p>Leads for [your industry], checked and sent to your phone and CRM.</p>
+            <p><a href="tel:[phone]">[Your phone number]</a></p>
+            <a class="apx-n101__cta" href="#area">Check my area</a>
+          </div>
+        </nav>
+      </header>
+      <div class="frame-pad" style="padding-top:110px">
+        <p class="f-eyebrow">Verified leads · [Your industry]</p>
+        <h2 class="f-h">New customers, checked and sent straight to your phone.</h2>
+        <p class="f-p">Every lead is checked before it reaches you, and nobody else gets it. [Your verification process]</p>
+      </div>
+    </div>
+  </section>
+  <section class="demo-col" aria-label="Light token set">
+    <p class="demo-tag"><span>Light token set</span><span>Bone &amp; oxblood</span></p>
+    <div class="frame tk-light" data-frame="light"><div class="frame__amb" aria-hidden="true"></div>
+      <header class="apx-n101" data-demo>
+        <div class="apx-n101__bar">
+          <a class="apx-n101__brand" href="#" aria-label="Home"><span class="apx-logo"><svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M3 27 16 4l13 23h-6.4L16 15.2 9.4 27Z" fill="currentColor"/><path d="M13.2 27 16 22l2.8 5Z" fill="currentColor" opacity=".55"/></svg></span></a>
+          <button class="apx-n101__toggle" type="button">Menu</button>
+        </div>
+        <nav class="apx-n101__panel" aria-label="Site menu">
+          <ul class="apx-n101__list">
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#industries">Industries</a></li>
+            <li><a href="#sample">Sample leads</a></li>
+            <li><a href="#area">Check your area</a></li>
+            <li><a href="#contact">Talk to us</a></li>
+          </ul>
+          <div class="apx-n101__aside">
+            <p>Leads for [your industry], checked and sent to your phone and CRM.</p>
+            <p><a href="tel:[phone]">[Your phone number]</a></p>
+            <a class="apx-n101__cta" href="#area">Check my area</a>
+          </div>
+        </nav>
+      </header>
+      <div class="frame-pad" style="padding-top:110px">
+        <p class="f-eyebrow">Verified leads · [Your industry]</p>
+        <h2 class="f-h">New customers, checked and sent straight to your phone.</h2>
+        <p class="f-p">Every lead is checked before it reaches you, and nobody else gets it. [Your verification process]</p>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="module.js"></script>
+<script>
+  // mount every instance explicitly (mount is idempotent; calling twice returns the same destroy)
+  document.querySelectorAll('[data-demo]').forEach(function (el) { var d = APX.NAV101.mount(el); APX.NAV101.mount(el) === d || console.error('mount not idempotent'); });
+  var mb = document.querySelector('.demo-motion');
+  mb.addEventListener('click', function () { var off = document.body.classList.toggle('motion-off'); mb.setAttribute('aria-pressed', off); mb.textContent = 'Motion token: ' + (off ? '0' : '1'); });
+  
+</script>
+</body>
+</html>
