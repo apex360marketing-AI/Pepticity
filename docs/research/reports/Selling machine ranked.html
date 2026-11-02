@@ -1,0 +1,313 @@
+<title>PEPTICITY Selling Machine Ranking</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a working review document. Numbered step rail (left on desktop, top strip on phone), then seven steps in reading order; the ranking table is the tool at the centre. */
+:root{
+  --bg:#f3f3f1;--panel:#fbfbfa;--ink:#151514;--muted:#55544f;--line:rgba(21,21,20,.14);--soft:rgba(21,21,20,.045);
+  --new:#B000FF;--newsoft:rgba(176,0,255,.08);
+  --hi:#a3261f;--med:#8a5a00;--lo:#2f6b3f;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1b1a;--panel:#242423;--ink:#ecebe6;--muted:#a8a69e;--line:rgba(236,235,230,.14);--soft:rgba(236,235,230,.05);--new:#CB5CFF;--newsoft:rgba(203,92,255,.12);--hi:#ff8a80;--med:#f0c060;--lo:#8fd4a0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1b1a;--panel:#242423;--ink:#ecebe6;--muted:#a8a69e;--line:rgba(236,235,230,.14);--soft:rgba(236,235,230,.05);--new:#CB5CFF;--newsoft:rgba(203,92,255,.12);--hi:#ff8a80;--med:#f0c060;--lo:#8fd4a0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 80px}
+a{color:inherit;text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,th:focus-visible{outline:2px solid var(--new);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto}
+.new{color:var(--new)}
+header.top{padding:clamp(36px,6vw,80px) 0 28px;border-bottom:1px solid var(--line);display:grid;gap:14px}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1{font:800 clamp(34px,6vw,76px)/.95 var(--display);font-stretch:118%;text-transform:uppercase;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lead{max-width:68ch;margin:0;font-size:18px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
+.legend b{font-weight:600}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:44px;margin-top:30px}
+nav.steps{position:sticky;top:calc(env(safe-area-inset-top,0px) + 18px);align-self:start}
+nav.steps ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:s}
+nav.steps a{display:grid;grid-template-columns:28px 1fr;align-items:baseline;text-decoration:none;color:var(--muted);padding:6px 0 6px 10px;border-left:2px solid var(--line);font-size:14px}
+nav.steps a span{font:500 12px var(--mono)}
+nav.steps a:hover,nav.steps a.on{color:var(--ink);border-left-color:var(--new)}
+@media (max-width:960px){.layout{grid-template-columns:minmax(0,1fr);gap:8px}nav.steps{position:static}nav.steps ol{grid-auto-flow:column;grid-auto-columns:max-content;overflow-x:auto;padding-bottom:6px}nav.steps a{border-left:0;border-bottom:2px solid var(--line);padding:6px 10px}}
+main{min-width:0}
+section{padding:28px 0 34px;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+h2{font:750 clamp(22px,2.8vw,32px)/1.1 var(--display);font-stretch:110%;text-transform:uppercase;margin:0 0 6px;display:flex;gap:14px;align-items:baseline;text-wrap:balance}
+h2 .n{font:500 13px var(--mono);color:var(--muted);letter-spacing:.1em}
+.dek{color:var(--muted);max-width:72ch;margin:0 0 18px}
+h3{font:700 15px/1.2 var(--display);font-stretch:105%;text-transform:uppercase;letter-spacing:.04em;margin:22px 0 8px}
+ul,ol{margin:0;padding-left:20px;display:grid;gap:6px}
+li{max-width:80ch}
+.gate{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:6px}
+@media (max-width:760px){.gate{grid-template-columns:1fr}}
+.gcard{border:1px solid var(--line);border-radius:6px;padding:16px 18px;background:var(--panel);min-width:0}
+.gcard h3{margin-top:0;display:flex;gap:10px;align-items:center}
+.code{font:600 12px var(--mono);border:1px solid currentColor;border-radius:3px;padding:1px 6px}
+.alert{border:2px solid var(--new);border-radius:6px;padding:14px 18px;background:var(--newsoft);max-width:80ch;margin:0 0 16px}
+.quote{font-style:italic}
+/* table tool */
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:4px 0 12px}
+.controls label{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
+.controls input[type=search],.controls select{font:15px var(--body);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:7px 10px;min-height:38px}
+.controls input[type=search]{width:220px;max-width:100%}
+.chip{font:500 13px var(--body);background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 10px;min-height:36px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--new);color:var(--new);background:var(--newsoft)}
+.count{font:500 13px var(--mono);color:var(--muted);margin-left:auto}
+.tbox{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+table.rank{min-width:1180px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--soft);white-space:nowrap;position:sticky;top:0}
+th.sort{cursor:pointer;user-select:none}
+th.sort::after{content:" ↕";opacity:.4}
+th[aria-sort="ascending"]::after{content:" ↑";opacity:1;color:var(--new)}
+th[aria-sort="descending"]::after{content:" ↓";opacity:1;color:var(--new)}
+tr:last-child td{border-bottom:0}
+td.num,td.prio{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.feat{font-weight:600;min-width:170px}
+td.lift{min-width:260px}td.build{min-width:230px}td.tool{min-width:200px}td.risk{min-width:200px}
+tr.top10 td.feat::before{content:"TOP 10";display:block;font:500 10px var(--mono);letter-spacing:.12em;color:var(--new);margin-bottom:2px}
+.pill{display:inline-block;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:1px 6px;white-space:nowrap;margin-bottom:4px}
+.r-Low{color:var(--lo)}.r-Low-Med{color:var(--lo)}.r-Med{color:var(--med)}.r-Med-High{color:var(--hi)}.r-High{color:var(--hi)}
+.bar{display:inline-flex;gap:2px;vertical-align:middle;margin-right:6px}
+.bar i{width:6px;height:12px;border:1px solid var(--line);display:block}
+.bar i.f{background:var(--new);border-color:var(--new)}
+.dep{font:500 12px var(--mono);white-space:nowrap}
+.empty{padding:20px;color:var(--muted)}
+/* top 10 */
+.top{list-style:none;padding:0;counter-reset:t;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.top{grid-template-columns:1fr}}
+.top li{counter-increment:t;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;border-top:1px solid var(--line);padding:14px 0 4px;max-width:none}
+.top li::before{content:counter(t,decimal-leading-zero);font:800 26px/1 var(--display);font-stretch:112%;color:var(--new)}
+.top b{display:block;font-weight:600}
+.top .why{color:var(--ink)}
+.top .first{color:var(--muted);font-size:14px}
+table.claims{min-width:880px}
+td.fail{color:var(--hi)}
+td.ok{color:var(--new)}
+.decisions{list-style:none;padding:0;display:grid;gap:12px;counter-reset:d}
+.decisions li{counter-increment:d;border:1px solid var(--line);border-radius:6px;padding:14px 16px;background:var(--panel);max-width:none}
+.decisions li>b{display:block;margin-bottom:6px}
+.decisions li>b::before{content:counter(d) ". ";font-family:var(--mono);color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font-size:14px;border:1px solid var(--line);border-radius:4px;padding:5px 10px}
+.opt.rec{border-color:var(--new);color:var(--new);font-weight:600}
+.audit{display:grid;gap:10px}
+footer{margin-top:30px;font-size:13px;color:var(--muted);max-width:90ch}
+.wrap .new{color:var(--new)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">PEPTICITY · Selling machine research · 2 Nov 2026 · for the owner</div>
+  <h1 class="new">The selling machine, ranked</h1>
+  <p class="lead new">31 features that big stores use to close more sales and raise order value, ranked for Grace's store. Each one shows the proof behind it, how we'd build it, what it costs, how risky it is, and what it depends on. Read the steps in order. Step 7 holds your decisions.</p>
+  <div class="legend"><span><b class="new">Purple</b> = new in this review (all of it)</span><span><b>Independent</b> = study or research firm</span><span><b>Vendor benchmark</b> = a vendor's own data</span><span><b>Industry claim</b> = no traceable method</span><span><b>Inference</b> = our reasoning, not data</span></div>
+</header>
+<div class="layout">
+<nav class="steps" aria-label="Steps"><ol>
+ <li><a href="#gate"><span>01</span>Gate zero</a></li>
+ <li><a href="#method"><span>02</span>How we ranked</a></li>
+ <li><a href="#table"><span>03</span>All 31 features</a></li>
+ <li><a href="#top10"><span>04</span>Build first</a></li>
+ <li><a href="#copy"><span>05</span>Copy check</a></li>
+ <li><a href="#audit"><span>06</span>Sales audit</a></li>
+ <li><a href="#decide"><span>07</span>Your decisions</a></li>
+</ol></nav>
+<main>
+
+<section id="gate"><h2><span class="n">01</span><span class="new">Gate zero: who will let us sell</span></h2>
+<p class="dek new">Before any feature matters, a payment company and an email company have to agree to work with the store. On today's policy text, none of the big ones can be assumed to say yes. Every feature in step 3 names which gate it needs.</p>
+<div class="alert new"><b>Biggest finding.</b> The new site has no checkout or payment provider yet (the bot still says "[Payment methods: Grace to confirm]"). Shopify apps mostly don't apply because the site is custom-built, and Shopify Payments takes its banned list from its processor.</div>
+<div class="gate">
+ <div class="gcard"><h3><span class="code">P</span><span class="new">Payments</span></h3><ul class="new">
+  <li><b>Helcim (Canada)</b> bans <span class="quote">"Non-FDA/Health Canada approved peptides"</span>. Checked 2 Nov, policy dated 30 Sep 2026. <a href="https://legal.helcim.com/ca/acceptable-use-policy/" target="_blank" rel="noopener">Source</a></li>
+  <li><b>Stripe</b> bans <span class="quote">"Incorrectly labeled research chemicals"</span> and restricts prescription products sold online. Checked 2 Nov, list dated 22 Sep 2026. <a href="https://stripe.com/legal/restricted-businesses" target="_blank" rel="noopener">Source</a></li>
+  <li><b>Card networks</b> have processors scan the website. LegitScript's guide names BPC-157, TB-500, CJC-1295 and ipamorelin as problem peptides and flags a lab-style look. <a href="https://www.legitscript.com/wp-content/uploads/2025/10/Peptides-for-Payment-Processors-Guide.pdf" target="_blank" rel="noopener">Source</a></li>
+  <li><b>High-risk processors</b> aren't a way around it: Corepay says it does "not support research-use-only (RUO) peptide sellers".</li>
+  <li>Apple Pay, Google Pay, one-click upsells, subscriptions and gift cards all run on the processor. If the processor drops the store, they all go at once.</li>
+ </ul></div>
+ <div class="gcard"><h3><span class="code">E</span><span class="new">Email and text</span></h3><ul class="new">
+  <li><b>Brevo</b> refuses peptides for human use, <span class="quote">"including those labeled 'research use only'"</span>. Checked 2 Nov. <a href="https://www.brevo.com/legal/antispampolicy/" target="_blank" rel="noopener">Source</a></li>
+  <li><b>Omnisend</b> bans prescription drugs, "including … drugs for research purposes". <b>Klaviyo</b> and <b>Mailchimp</b> restrict pharmaceutical products.</li>
+  <li><b>US texting:</b> carriers (via Twilio) reject prescription-drug marketing for good.</li>
+  <li>Get written approval from an email platform <b>before</b> building flows. Keep the list and the flow logic on our side so a ban doesn't wipe them out.</li>
+ </ul></div>
+ <div class="gcard"><h3><span class="code">C</span><span class="new">Consent and counsel</span></h3><ul class="new">
+  <li><b>CASL:</b> order and shipping messages need no consent. Implied consent lasts 2 years after a purchase and 6 months after an inquiry.</li>
+  <li>Whether starting a checkout counts as an "inquiry" is not settled. Until counsel says yes, put an unticked consent box on every email field.</li>
+  <li>Every feature is only as legal as the product it sells. See step 5.</li>
+ </ul></div>
+ <div class="gcard"><h3><span class="code">I</span> <span class="code">K</span><span class="new">Data we must have</span></h3><ul class="new">
+  <li><b>I</b> = real stock counts and real lab certificates per lot (shared/inventory.js plus COAs).</li>
+  <li><b>K</b> = checkout events (added to cart, order placed) from whichever checkout we connect.</li>
+  <li><b>none</b> = can be built now, with no outside company.</li>
+ </ul></div>
+</div>
+</section>
+
+<section id="method"><h2><span class="n">02</span><span class="new">How we ranked</span></h2>
+<ul class="new">
+ <li><b>Score = impact × evidence × fit ÷ effort.</b> Impact 1–5 (our judgement). Evidence 3 = independent study, 2 = vendor data, 1 = claim or inference. Fit 3 = works before gate zero, 1 = blocked today. Effort S = 1, M = 2, L = 3.</li>
+ <li><b>Priority 1–5</b> comes from the score: 5 means score 15+, 1 means under 3.</li>
+ <li><b>Compliance is a gate, not a score.</b> Risk is rated for the compliant version of each feature. Anything still High is held at the bottom until counsel clears it.</li>
+ <li>Scores sort the list. They are not sales forecasts. Prices are mostly third-party trackers (Apr–Oct 2026, USD): confirm on the vendor's page before buying.</li>
+</ul>
+</section>
+
+<section id="table"><h2><span class="n">03</span><span class="new">All 31 features</span></h2>
+<p class="dek new">Click a column heading to sort. Use the filters to narrow it down. "Ships now" shows only what we can build without a payment or email company.</p>
+<div class="controls" role="group" aria-label="Filter the features">
+ <label for="q">Search <input type="search" id="q" placeholder="cart, reviews, loyalty…"></label>
+ <label for="area">Area <select id="area"><option value="">All areas</option></select></label>
+ <label for="risk">Risk <select id="risk"><option value="">Any risk</option><option>Low</option><option value="Low–Med">Low–Med</option><option>Med</option><option value="Med–High">Med–High</option><option>High</option></select></label>
+ <label for="eff">Effort <select id="eff"><option value="">Any effort</option><option value="S">S (days)</option><option value="M">M (1–3 weeks)</option><option value="L">L (a month+)</option></select></label>
+ <button class="chip" id="now" aria-pressed="false" type="button">Ships now</button>
+ <button class="chip" id="t10" aria-pressed="false" type="button">Top 10 only</button>
+ <span class="count" id="count" aria-live="polite"></span>
+</div>
+<div class="tbox"><table class="rank" id="rank">
+<thead><tr>
+ <th class="sort" data-k="rank" tabindex="0" aria-sort="ascending">Rank</th>
+ <th class="sort" data-k="name" tabindex="0">Feature</th>
+ <th class="sort" data-k="area" tabindex="0">Area</th>
+ <th>Lift and proof</th>
+ <th>How we'd build it</th>
+ <th>Tool and price</th>
+ <th class="sort" data-k="effN" tabindex="0">Effort</th>
+ <th class="sort" data-k="riskN" tabindex="0">Compliance risk</th>
+ <th class="sort" data-k="prio" tabindex="0">Priority</th>
+ <th class="sort" data-k="dep" tabindex="0">Needs</th>
+</tr></thead>
+<tbody id="rows"></tbody></table></div>
+<p class="dek new" style="margin-top:12px"><b>Texts (SMS):</b> promotional texts about the products are the riskiest channel. Plan order and shipping texts only, with consent taken at checkout.</p>
+</section>
+
+<section id="top10"><h2><span class="n">04</span><span class="new">Build first: the top 10</span></h2>
+<p class="dek new">Cheap, mostly our own code, and backed by the strongest proof. Items 1–6 and 9 need no outside company, so they can start straight away.</p>
+<ol class="top new">
+ <li><div><b>All-in price everywhere</b><span class="why">Fixes the biggest reason people leave (40% abandon over extra costs, Baymard). The law already requires it.</span><div class="first">First step: show shipping estimate and total on product cards and in the cart drawer.</div></div></li>
+ <li><div><b>Free-shipping bar</b><span class="why">Raises basket size at almost no cost. A threshold set too high can lose buyers, so test it.</span><div class="first">First step: pick two thresholds and build the bar to test both.</div></div></li>
+ <li><div><b>Verified service reviews (store-wide)</b><span class="why">Strongest proof on the list: 5 reviews make a purchase 270% more likely than none (Spiegel).</span><div class="first">First step: write the moderation rules and add "review your delivery" to the shipped email.</div></div></li>
+ <li><div><b>Lot-certificate lookup and a true trust strip</b><span class="why">Answers the 19% who don't trust a site with their card, with proof others can't fake.</span><div class="first">First step: get one real lab certificate for one lot and build the lookup on it.</div></div></li>
+ <li><div><b>Page speed on the store path</b><span class="why">0.1 s faster on phones gave +8.4% conversions (Deloitte study for Google).</span><div class="first">First step: measure store and product pages on a phone; set a load budget for the 3D.</div></div></li>
+ <li><div><b>Privacy-safe analytics</b><span class="why">We can't improve what we can't measure. Ad pixels on peptide pages repeat the GoodRx and BetterHelp fines.</span><div class="first">First step: install Plausible with goals for add-to-cart and checkout start.</div></div></li>
+ <li><div><b>Short guest checkout</b><span class="why">Forced accounts (18%) and long forms (17%) are fixable. Aim for 7–8 fields.</span><div class="first">First step: lay it out with the age and province gate, ready for whichever processor says yes.</div></div></li>
+ <li><div><b>Abandoned cart, with consent capture</b><span class="why">Highest-earning email flow in Klaviyo's data ($6.77 per email, vendor figure).</span><div class="first">First step: add the unticked consent box to every email field now; ask email platforms for written approval.</div></div></li>
+ <li><div><b>"Save my cart" exit card</b><span class="why">Catches people leaving and grows the consented list, with no outside company.</span><div class="first">First step: build it from the exit-and-return-hooks skill with the approved copy.</div></div></li>
+ <li><div><b>Quantity breaks, same item only</b><span class="why">The cleanest way to raise order value without "stacks" named for a goal.</span><div class="first">First step: build ×2/×3 pricing on one item; wait for counsel before applying it more widely.</div></div></li>
+</ol>
+</section>
+
+<section id="copy"><h2><span class="n">05</span><span class="new">Copy check: what big stores say vs what we can say</span></h2>
+<p class="dek new">Run with the regulated-claims check. Research-style hedging ("studied for…") counts as proof of intended use, so a disclaimer doesn't fix a bad sentence: delete it. Risk scan only, not legal advice.</p>
+<div class="tbox"><table class="claims"><thead><tr><th>#</th><th>Feature</th><th>Typical big-store line (fails)</th><th>Why it fails</th><th>What we say instead</th></tr></thead><tbody id="claims"></tbody></table></div>
+<h3 class="new">The ceiling</h3>
+<ul class="new">
+ <li><b>Prescription-list products</b> (e.g. tirzepatide, HGH, tesamorelin): ads to the public may show name, price and quantity only (FDR C.01.044).</li>
+ <li><b>Unauthorized products</b> (most of the catalogue, named in Health Canada's advisories): there is no lawful claim layer at all. The Canlab injunction (2026) is the precedent.</li>
+ <li><b>Safe to say:</b> name, size, price in CAD, real stock, lot and certificate (once real), shipping, returns, contact, order status, and store mechanics (cart saved, points for access, gift cards).</li>
+</ul>
+<h3 class="new">Counsel questions (these gate the work)</h3>
+<ol class="new">
+ <li>Can PEPTICITY lawfully sell and advertise each item in Canada, and ship to the US?</li>
+ <li>Are price incentives (15% code, quantity breaks, subscribe-and-save, points, referral credit) allowed on prescription or unauthorized items?</li>
+ <li>Does starting a checkout count as a CASL "inquiry", so one plain cart reminder can go out without the box ticked?</li>
+ <li>Can reviews appear on product pages, or only store-wide service reviews?</li>
+ <li>Which auto-renewal and cancellation rules apply to a BC seller shipping across Canada?</li>
+</ol>
+</section>
+
+<section id="audit"><h2><span class="n">06</span><span class="new">Sales audit: why this could still fail</span></h2>
+<p class="dek new">A separate reviewer, who hadn't seen the plan being written, tried to break it.</p>
+<div class="audit new">
+<div class="alert"><b>Verdict.</b> The top 10 makes visitors more likely to buy, but nothing in it brings visitors in or takes the money. Fix those two first.</div>
+<h3>Where the money path breaks</h3>
+<ul>
+ <li><b>No arrival.</b> No row says where visitors come from. Google and Meta ads need LegitScript certification, which only covers approved drugs sold by licensed pharmacies or clinics, so paid ads are closed.</li>
+ <li><b>No payment.</b> No processor is named, and #7 checkout is "design now, wire later".</li>
+ <li><b>No proof yet.</b> #3 reviews need delivered orders. #4 certificate lookup needs real lab certificates, and the inventory file has no lot field yet.</li>
+ <li><b>Earning vs cost.</b> Only #1 all-in price, #2 shipping bar and #5 speed earn from day one, and only once a processor exists. The rest are cost until something else exists.</li>
+</ul>
+<h3>Biggest miss: Grace's current store</h3>
+<ul>
+ <li>Grace already runs <b>northernpeptides.st</b> (WooCommerce, 36 listings, the source of our catalogue). It already takes payment and has past buyers. The plan ignored it.</li>
+ <li><b>Catch:</b> it also lists bacteriostatic water, which regulators treat as proof of intended human use. Whether that store affects PEPTICITY is a question for counsel.</li>
+</ul>
+<h3>Suggested order for revenue in 60 days (reviewer's view)</h3>
+<ol>
+ <li>Money received: a processor that approves the catalogue in writing, or Interac e-Transfer as a stopgap.</li>
+ <li>Counsel clears a short list of products.</li>
+ <li>Bring over past buyers from the current store (with consent).</li>
+ <li>All-in price and guest checkout.</li>
+ <li>One real lab certificate (get a lab quote).</li>
+ <li>Traffic: a journal that ranks on Google for safe topics, plus showing up in peptide communities.</li>
+ <li>Referrals, then reviews, then email flows, then speed and analytics polish.</li>
+</ol>
+<h3>What changes in the ranking</h3>
+<ul>
+ <li>Add <b>step zero: money received</b> above the top 10. Every row that needs a processor sits below it.</li>
+ <li>Add <b>getting traffic</b> as its own track (journal, communities, referrals, clinic or pharmacy partners), scored the same way.</li>
+ <li>Reviews and the certificate lookup only count once orders and certificates exist.</li>
+ <li>Weakest top-10 items to demote if time is short: analytics, speed, quantity breaks, exit card, shipping bar.</li>
+</ul>
+<p class="dek">Not checked by the reviewer: the current store's processor, order volume, email list or traffic.</p>
+</div>
+</section>
+
+<section id="decide"><h2><span class="n">07</span><span class="new">Your decisions</span></h2>
+<p class="dek new">The recommended option is outlined. The key decisions are also on your review board as tap-to-answer steps.</p>
+<ol class="decisions new" id="decisions"></ol>
+</section>
+
+<footer>Sources: four research tracks (recovery flows, retention and loyalty, checkout and trust, on-site merchandising), saved with the full report on branch claude/pepticity-selling-machine under docs/research/. Key policy quotes (Stripe, Helcim, Brevo) plus the Spiegel and Klaviyo figures were checked against the original pages on 2 Nov 2026. Not checked: Square, PayPal, Moneris, Apple Pay and Google Pay terms; Customer.io, Postmark and SES policies. This is research, not legal advice. [Final legal copy to be approved by counsel.]</footer>
+</main></div></div>
+
+<script>
+const DATA = {"feat": [{"n": 1, "name": "All-in price shown early (no drip fees)", "area": "Checkout", "lift": "40% abandon over extra costs; 12% couldn't see total cost up front · <a href=\"https://baymard.com/lists/cart-abandonment-rate\" target=\"_blank\" rel=\"noopener\">Baymard<\/a> · Independent", "build": "Custom: show CAD price incl. shipping estimate and fees on card, drawer and checkout", "tool": "$0 (own code)", "eff": "S", "risk": "Low", "riskTxt": "Low: also what Competition Act drip-pricing rules require", "prio": 5, "rank": 1, "score": 45.0, "dep": "none", "held": false}, {"n": 2, "name": "Free-shipping bar", "area": "Cart", "lift": "Same 40% extra-costs reason (<a href=\"https://baymard.com/lists/cart-abandonment-rate\" target=\"_blank\" rel=\"noopener\">Baymard<\/a>) · Independent. Thresholds raise basket size (<a href=\"https://hbswk.hbs.edu/item/shipping-fees-and-product-assortment-in-online-retail\" target=\"_blank\" rel=\"noopener\">HBS<\/a>) but a randomised test found they cut purchase incidence (<a href=\"https://scinapse.io/papers/2939285397\" target=\"_blank\" rel=\"noopener\">Marketing Letters 2019<\/a>) · Independent, mixed", "build": "Custom JS in cart drawer: subtotal vs threshold", "tool": "$0", "eff": "S", "risk": "Low", "riskTxt": "Low: line must be true and all-in", "prio": 5, "rank": 2, "score": 24.0, "dep": "none", "held": false}, {"n": 3, "name": "Reviews (verified, service-only, store-level)", "area": "Social proof", "lift": "5 reviews = 270% higher purchase likelihood vs none (380% higher-priced, 190% lower-priced items) · <a href=\"https://spiegel.medill.northwestern.edu/How-Online-Reviews-Influence-Sales\" target=\"_blank\" rel=\"noopener\">Spiegel<\/a> · Independent", "build": "Custom review store (serverless + DB, verified-order token after delivery) or REVIEWS.io widget/API", "tool": "In-house $0, or REVIEWS.io ~$19–29/mo (<a href=\"https://signedreviews.com/blog/trustpilot-alternatives-for-ecommerce/\" target=\"_blank\" rel=\"noopener\">Signed Reviews<\/a>, aggregator)", "eff": "M", "risk": "Med", "riskTxt": "Med: reviews are \"representations\" under the Competition Act (penalty up to $10M) (<a href=\"https://nortonrosefulbright.com/en-ca/knowledge/publications/41049288/fake-reviews-competition-bureau-warns-businesses-of-stiff-penalties-associated-with-online-reviews\" target=\"_blank\" rel=\"noopener\">NRF<\/a>). Efficacy reviews = drug claims. High if on product pages for Rx/unauthorized SKUs", "prio": 5, "rank": 3, "score": 22.5, "dep": "C, K", "held": false}, {"n": 4, "name": "Trust signals + COA lot lookup", "area": "Trust", "lift": "19% abandon from distrust with card (<a href=\"https://baymard.com/lists/cart-abandonment-rate\" target=\"_blank\" rel=\"noopener\">Baymard<\/a>) · Independent. Norton seal gave best sense of trust (<a href=\"https://baymard.com/blog/site-seal-trust\" target=\"_blank\" rel=\"noopener\">Baymard<\/a>) · Independent survey. COA lookup lift: no study · Inference", "build": "Custom: lot number → certificate PDF from a named lab; Canadian return address; named owner; contact", "tool": "$0 build; lab testing cost not researched", "eff": "M", "risk": "Med", "riskTxt": "Med: false if not real (\"Health Canada compliant\", \"99% purity\" = FAIL). Only once COAs exist", "prio": 5, "rank": 4, "score": 18.0, "dep": "I", "held": false}, {"n": 5, "name": "Page speed", "area": "Site", "lift": "0.1 s faster mobile = +8.4% retail conversions, +9.2% AOV · <a href=\"https://web.dev/case-studies/milliseconds-make-millions\" target=\"_blank\" rel=\"noopener\">Deloitte for Google<\/a> · Independent (Google-funded). 1 s page = 2.5× conversion of 5 s · <a href=\"https://www.portent.com/blog/analytics/research-site-speed-hurting-everyone.htm\" target=\"_blank\" rel=\"noopener\">Portent<\/a> · Industry study, correlational", "build": "Custom: static pages, lazy-load 3D, compress Higgsfield media, fast store path", "tool": "$0", "eff": "M", "risk": "Low", "riskTxt": "Low", "prio": 5, "rank": 5, "score": 18.0, "dep": "none", "held": false}, {"n": 6, "name": "Privacy-safe analytics / attribution", "area": "Measure", "lift": "Enabler, not a lift. Risk precedent: GoodRx ~$1.5M, BetterHelp $7.8M for sharing health data with ad platforms (<a href=\"https://www.dwt.com/blogs/privacy--security-law-blog/2023/03/ftc-pixel-tracking-health-goodrx-betterhelp\" target=\"_blank\" rel=\"noopener\">DWT<\/a>) · Independent (FTC)", "build": "Cookieless analytics; no ad pixels on product/category pages; server-side events stripped of product names", "tool": "Plausible $9–19/mo or free self-host (<a href=\"https://seline.com/blog/plausible-analytics-pricing\" target=\"_blank\" rel=\"noopener\">Seline<\/a>); PostHog free tier. Skip Northbeam (~$1,500/mo)", "eff": "S", "risk": "Low", "riskTxt": "Low cookieless; High if ad pixels see peptide views", "prio": 5, "rank": 6, "score": 18.0, "dep": "none", "held": false}, {"n": 7, "name": "Guest checkout, 7–8 fields, account after purchase", "area": "Checkout", "lift": "Forced account 18%, long checkout 17%; ideal 7–8 fields vs 14.88 US average; better checkout could lift large sites' conversion 35.26% · <a href=\"https://baymard.com/lists/cart-abandonment-rate\" target=\"_blank\" rel=\"noopener\">Baymard<\/a> · Independent", "build": "Custom checkout UI on the chosen gateway; age + province gate kept (legal, not optional)", "tool": "$0 build", "eff": "M", "risk": "Low", "riskTxt": "Low", "prio": 5, "rank": 7, "score": 15.0, "dep": "P, K", "held": false}, {"n": 8, "name": "Abandoned cart (email; SMS only if approved)", "area": "Recovery", "lift": "Email RPR $6.77 (top 10% $13.70); SMS $4.48 · <a href=\"https://www.klaviyo.com/blog/abandoned-cart-benchmarks\" target=\"_blank\" rel=\"noopener\">Klaviyo<\/a> · Vendor benchmark. Avg abandonment 70.22% · <a href=\"https://baymard.com/lists/cart-abandonment-rate\" target=\"_blank\" rel=\"noopener\">Baymard<\/a> · Independent", "build": "Site fires Added to Cart / Started Checkout; backend fires Placed Order to stop flow; ESP sends", "tool": "Klaviyo ~$100/mo at 5k profiles (<a href=\"https://www.charle.co.uk/articles/klaviyo-pricing/\" target=\"_blank\" rel=\"noopener\">Charle<\/a>, aggregator); Customer.io ~$100 at 5k (<a href=\"https://automationatlas.io/answers/customer-io-pricing-explained-2026/\" target=\"_blank\" rel=\"noopener\">Automation Atlas<\/a>); free tier 250 profiles (<a href=\"https://www.klaviyo.com/pricing\" target=\"_blank\" rel=\"noopener\">Klaviyo<\/a>)", "eff": "M", "risk": "Med", "riskTxt": "Med: express unticked consent box needed for the full cadence; without it, at most one factual reminder after counsel sign-off", "prio": 4, "rank": 8, "score": 10.0, "dep": "E, C, K", "held": false}, {"n": 9, "name": "Exit intent: \"save my cart\" card", "area": "Capture", "lift": "No independent lift found. Addresses the 40%/19% reasons · Inference", "build": "Custom JS (desktop mouse-leave, phone scroll-up heuristic), frequency cap; exit-and-return-hooks skill", "tool": "$0", "eff": "S", "risk": "Low–Med", "riskTxt": "Low–Med: CASL consent on capture; no fake countdowns", "prio": 4, "rank": 9, "score": 9.0, "dep": "C (E to send)", "held": false}, {"n": 10, "name": "Quantity breaks (same item ×2/×3/×5), no goal stacks", "area": "AOV", "lift": "No independent lift found · Inference", "build": "Custom cart logic: tiered unit price by quantity", "tool": "$0", "eff": "S", "risk": "Low", "riskTxt": "Low for neutral breaks. High for goal-named stacks. Price incentives on Rx/unauthorized SKUs = counsel Q2", "prio": 4, "rank": 10, "score": 9.0, "dep": "C", "held": false}, {"n": 11, "name": "Product finder (catalogue only; sample exists)", "area": "Discovery", "lift": "No independent lift found · Inference", "build": "Extend existing custom 3-tap finder (product-finder-quiz skill); keep answers on-site", "tool": "$0; Typeform $39–129/mo (<a href=\"https://www.jetadmin.io/blog/typeform-pricing/\" target=\"_blank\" rel=\"noopener\">Jetadmin<\/a>); Octane AI $50–200 (Shopify-first) (<a href=\"https://pricingsaas.com/companies/octaneai\" target=\"_blank\" rel=\"noopener\">PricingSaaS<\/a>)", "eff": "S", "risk": "Med", "riskTxt": "Med: browsing preferences and budget only, never goals or health", "prio": 4, "rank": 11, "score": 9.0, "dep": "none", "held": false}, {"n": 12, "name": "Welcome series (delivers 15% code)", "area": "Recovery", "lift": "Email RPR $5.75 (top 10% $13.27); click 6.5% · <a href=\"https://www.klaviyo.com/blog/abandoned-cart-benchmarks\" target=\"_blank\" rel=\"noopener\">Klaviyo<\/a> · Vendor benchmark", "build": "ESP flow triggered by sign-up with consent flag", "tool": "Same ESP as #8", "eff": "M", "risk": "Med", "riskTxt": "Med: \"longevity\", \"protocol\" = FAIL; discount on Rx SKUs = counsel Q2", "prio": 4, "rank": 12, "score": 8.0, "dep": "E, C", "held": false}, {"n": 13, "name": "Express wallets (Apple/Google Pay)", "area": "Checkout", "lift": "Shop Pay \"up to 50%\" vs guest checkout · <a href=\"https://shopify.com/solutions/shop-pay/enterprise\" target=\"_blank\" rel=\"noopener\">Shopify<\/a> · Industry claim (vendor, unnamed study). No independent wallet study found", "build": "Turn on in the chosen gateway", "tool": "Included with processor (fees not found)", "eff": "S", "risk": "Low", "riskTxt": "Low content risk; High platform risk (dies with the processor)", "prio": 4, "rank": 13, "score": 8.0, "dep": "P", "held": false}, {"n": 14, "name": "Replenishment reminders", "area": "Retention", "lift": "No benchmark. Post-purchase RPR $1.80 as a proxy · <a href=\"https://www.klaviyo.com/blog/abandoned-cart-benchmarks\" target=\"_blank\" rel=\"noopener\">Klaviyo<\/a> · Vendor benchmark", "build": "ESP flow timed from order history only (\"It's been 60 days\")", "tool": "Same ESP", "eff": "S", "risk": "Med", "riskTxt": "Med: \"cycle\", \"daily\", dose-based timing = FAIL", "prio": 3, "rank": 14, "score": 6.0, "dep": "E, K", "held": false}, {"n": 15, "name": "Back-in-stock alerts", "area": "Recovery", "lift": "No benchmark found · Inference", "build": "Custom \"notify me\" form (SKU + email + consent); inventory change triggers send", "tool": "$0 + ESP or transactional sender", "eff": "S", "risk": "Low", "riskTxt": "Low: person asked to be told; \"healing peptide\" = FAIL", "prio": 3, "rank": 15, "score": 6.0, "dep": "I, E", "held": false}, {"n": 16, "name": "Honest stock line", "area": "Urgency", "lift": "No lift study of truthful stock. Fake stock and timers are documented dark patterns (632 low-stock instances; 16 sites with fake counts) · <a href=\"https://webtransparency.cs.princeton.edu/dark-patterns\" target=\"_blank\" rel=\"noopener\">Princeton<\/a> · Independent", "build": "Render real count from shared/inventory.js; hide when unknown (honest-urgency skill)", "tool": "$0", "eff": "S", "risk": "Low", "riskTxt": "Low if real; High if not (Competition Act)", "prio": 3, "rank": 16, "score": 6.0, "dep": "I", "held": false}, {"n": 17, "name": "Product Q&amp;A", "area": "Discovery", "lift": "No data · Inference", "build": "Static JSON of moderated, vetted answers (shipping, storage of sealed product, lab docs)", "tool": "$0", "eff": "S", "risk": "Med", "riskTxt": "Med: dosing or \"will it help me\" questions routed away", "prio": 3, "rank": 17, "score": 6.0, "dep": "none", "held": false}, {"n": 18, "name": "Wishlist / save for later", "area": "Retention", "lift": "No data · Inference", "build": "localStorage + emailed \"save my list\" link (save-share-and-refer skill)", "tool": "$0", "eff": "S", "risk": "Low–Med", "riskTxt": "Low–Med: follow-up emails need consent", "prio": 3, "rank": 18, "score": 6.0, "dep": "none (E for emails)", "held": false}, {"n": 19, "name": "VIP early drops", "area": "Retention", "lift": "No data · Inference", "build": "Gated pages / member links sent N hours before public release", "tool": "$0 + ESP", "eff": "S", "risk": "Low–Med", "riskTxt": "Low–Med: access reward, not price", "prio": 3, "rank": 19, "score": 6.0, "dep": "E, I", "held": false}, {"n": 20, "name": "Loyalty / tiers (members' club + member cards exist)", "area": "Retention", "lift": "Bain: 5% less defection = 25–85% more profit · <a href=\"https://www.forrester.com/blogs/profiting-from-post-sale-marketing\" target=\"_blank\" rel=\"noopener\">HBR 1990 via Forrester<\/a> · Independent but contested (<a href=\"https://www.ipsos.com/en-us/shattering-myths-customer-loyalty\" target=\"_blank\" rel=\"noopener\">Ipsos<\/a>). No feature lift study", "build": "Extend in-house club; reward access/status, not cash", "tool": "$0 in-house; Smile.io free–$999; LoyaltyLion free–$199 or ~$400, headless API (<a href=\"https://www.dejaoffice.com/blog/2026/05/25/5-best-headless-loyalty-apis-for-custom-frontends-in-2026/\" target=\"_blank\" rel=\"noopener\">DejaOffice<\/a>); Open Loyalty quote", "eff": "M", "risk": "Med", "riskTxt": "Med: points on Rx items may be a pharmacy inducement (counsel)", "prio": 2, "rank": 20, "score": 4.5, "dep": "C (E for emails)", "held": false}, {"n": 21, "name": "Referrals", "area": "Acquisition", "lift": "No independent lift found · Inference", "build": "In-house code + server ledger; referrer shares own link", "tool": "$0; ReferralCandy $39/mo + 10.5% success fee (<a href=\"https://www.stackscored.com/pricing/referral-marketing/\" target=\"_blank\" rel=\"noopener\">StackScored<\/a>)", "eff": "M", "risk": "Med", "riskTxt": "Med: CASL referral rule = one message, name the referrer (<a href=\"https://laws-lois.justice.gc.ca/eng/regulations/SOR-2013-221/page-1.html\" target=\"_blank\" rel=\"noopener\">SOR/2013-221<\/a>); cash credit = inducement question", "prio": 2, "rank": 21, "score": 4.5, "dep": "C, K", "held": false}, {"n": 22, "name": "Live chat / concierge (bot exists)", "area": "Support", "lift": "One chat reply = ~50% more likely to convert (Intercom 2018, correlational) · <a href=\"https://www.socialintents.com/blog/wp-json/wp/v2/posts/183\" target=\"_blank\" rel=\"noopener\">Social Intents<\/a> · Industry claim", "build": "Restrict existing bot (pep-concierge.js) to orders, shipping, lot certificates; human reply promise", "tool": "$0 in-house. Intercom/Tidio/Gorgias 2026 prices not retrieved", "eff": "M", "risk": "Med", "riskTxt": "Med for service-only. High if it recommends products. Intercom AUP bars medical advice (<a href=\"https://www.intercom.com/legal/acceptable-use-policy\" target=\"_blank\" rel=\"noopener\">Intercom<\/a>)", "prio": 2, "rank": 22, "score": 4.5, "dep": "none", "held": false}, {"n": 23, "name": "Win-back", "area": "Retention", "lift": "Email RPR $0.82; click 2.8% · <a href=\"https://www.klaviyo.com/blog/abandoned-cart-benchmarks\" target=\"_blank\" rel=\"noopener\">Klaviyo<\/a> · Vendor benchmark", "build": "ESP flow on lapsed buyers (&lt;2 years = implied consent)", "tool": "Same ESP", "eff": "S", "risk": "Med", "riskTxt": "Med: \"restart your cycle\" = FAIL", "prio": 2, "rank": 23, "score": 4.0, "dep": "E, K", "held": false}, {"n": 24, "name": "Post-purchase one-click add-on", "area": "AOV", "lift": "Avg take 4.7%, top offers 28.3% · <a href=\"https://reconvert.io/blog/the-impact-of-post-purchase-upselling-2023\" target=\"_blank\" rel=\"noopener\">ReConvert<\/a> · Vendor benchmark (Shopify only). Under 2% without true one-click · <a href=\"https://www.loopwork.co/blog/cart-upsell-vs-post-purchase-upsell-one-click-upsell-shopify\" target=\"_blank\" rel=\"noopener\">Loopwork<\/a> · Industry claim", "build": "Needs a gateway that charges a saved card; thank-page offer: second vial same lot or gift card", "tool": "Custom on gateway; Woo plugins from $69–79/yr if Woo (<a href=\"https://cartmango.com/woocommerce-upsell-plugin/\" target=\"_blank\" rel=\"noopener\">CartMango<\/a>)", "eff": "M", "risk": "Med", "riskTxt": "Med: never bac water or syringes (adjacency proves human use)", "prio": 2, "rank": 24, "score": 3.0, "dep": "P, K", "held": false}, {"n": 25, "name": "A/B testing", "area": "Measure", "lift": "Enabler. Google Optimize shut 30 Sep 2023 (<a href=\"https://support.google.com/analytics/answer/12979939?hl=en\" target=\"_blank\" rel=\"noopener\">Google<\/a>)", "build": "Self-hosted flags/experiments once traffic allows", "tool": "GrowthBook free self-host; PostHog free tier; Convert $299/mo (<a href=\"https://tiergauge.pages.dev/tools/convert\" target=\"_blank\" rel=\"noopener\">TierGauge<\/a>)", "eff": "M", "risk": "Low", "riskTxt": "Low self-hosted", "prio": 2, "rank": 25, "score": 3.0, "dep": "none", "held": false}, {"n": 26, "name": "Personalization / recommendations", "area": "AOV", "lift": "10–15% revenue lift (large firms) · <a href=\"https://businesschief.com/technology-and-ai/mckinsey-prioritise-personalisation-for-10-15-revenue-lift\" target=\"_blank\" rel=\"noopener\">McKinsey 2021 via Business Chief<\/a> · Industry claim (consultancy)", "build": "Hand-curated \"often bought with\" (never goal-named) beats ML at 28 SKUs · Inference", "tool": "$0; Nosto ~$99/mo + 2.5–4% rev share (<a href=\"https://futurepicker.com/?p=2800\" target=\"_blank\" rel=\"noopener\">Futurepicker<\/a>)", "eff": "L", "risk": "Med", "riskTxt": "Med: browsing a peptide can be health-inferred data", "prio": 1, "rank": 26, "score": 2.7, "dep": "none", "held": false}, {"n": 27, "name": "On-site search", "area": "Discovery", "lift": "\"Searchers convert 2–3×\" is a misquote. Defensible: ~1.4–2.5× in vendor data, reflecting intent, not tool lift · <a href=\"https://econsultancy.com/four-reasons-why-site-search-is-vital-for-online-retailers/\" target=\"_blank\" rel=\"noopener\">Econsultancy<\/a> · Industry claim", "build": "Skip at 28 SKUs; good category nav instead", "tool": "Algolia Grow $0.50/1k searches over free tier (<a href=\"https://www.activepieces.com/blog/algolia-pricing-2026-plans-costs-and-examples\" target=\"_blank\" rel=\"noopener\">Activepieces<\/a>)", "eff": "M", "risk": "Low", "riskTxt": "Low (keep queries away from ad pixels)", "prio": 1, "rank": 27, "score": 1.5, "dep": "none", "held": false}, {"n": 28, "name": "Subscribe &amp; save / auto-ship", "area": "Retention", "lift": "No lift figure. Wellness churn ~8.8%/month; ~61% of cancels at first 2 renewals · <a href=\"https://retainup.co/recharge-subscription-trend-report-2026/\" target=\"_blank\" rel=\"noopener\">RetainUp on Recharge 2026<\/a> · Vendor benchmark (second-hand)", "build": "Processor's recurring billing + self-serve skip/cancel page + pre-renewal reminder", "tool": "Shopify apps don't apply (Recharge $99+/mo, Loop, Skio). Non-Shopify billing prices not researched", "eff": "L", "risk": "Med–High", "riskTxt": "Med–High: \"daily\" = dosing; auto-renewal rules (FTC ROSCA; Ontario 2023 Act not in force) (<a href=\"https://www.jonesday.com/en/insights/2026/05/ftc-revives-clicktocancel-rule-new-risks-for-subscription-businesses\" target=\"_blank\" rel=\"noopener\">Jones Day<\/a>); discount on Rx = counsel", "prio": 1, "rank": 28, "score": 1.3, "dep": "P, E, C", "held": false}, {"n": 29, "name": "Gift cards", "area": "AOV", "lift": "No data · Inference", "build": "Custom balance ledger; no expiry, no dormancy fees (BC law) (<a href=\"https://www.consumerprotectionbc.ca/consumer-help/consumer-information-gift-cards/\" target=\"_blank\" rel=\"noopener\">Consumer Protection BC<\/a>)", "tool": "$0 build", "eff": "M", "risk": "Low", "riskTxt": "Low if sold; Med if given free as a reward on Rx", "prio": 1, "rank": 29, "score": 1.0, "dep": "P", "held": false}, {"n": 30, "name": "Multi-currency (CAD/USD)", "area": "Checkout", "lift": "No data gathered · Inference", "build": "Display + settlement through processor", "tool": "Processor-dependent", "eff": "M", "risk": "Med", "riskTxt": "Med: US shipping raises FDA exposure (counsel Q1)", "prio": 1, "rank": 30, "score": 1.0, "dep": "P, C", "held": false}, {"n": 31, "name": "Browse abandonment", "area": "Recovery", "lift": "Email RPR $2.08; SMS $1.04 · <a href=\"https://www.klaviyo.com/blog/abandoned-cart-benchmarks\" target=\"_blank\" rel=\"noopener\">Klaviyo<\/a> · Vendor benchmark", "build": "ESP flow on Viewed Product + known email", "tool": "Same ESP", "eff": "M", "risk": "High", "riskTxt": "<b>High (held):<\/b> naming an Rx peptide goes past name/price/quantity; emailing about pages viewed is health-inferred tracking", "prio": 2, "rank": 31, "score": 6.0, "dep": "E, C, counsel", "held": true}], "claims": [["1", "Abandoned cart email", "\"Still thinking about BPC-157? Your recovery is waiting.\"", "Outcome by implication (\"recovery\")", "\"Your cart is saved: BPC-157 10 mg, $[xx]. Pick up where you left off.\""], ["2", "Bundles", "\"RECOVERY STACK: BPC-157 + TB-500, save 15%\"", "Goal-named set + \"stack\" = use instruction", "\"TB-500 10 mg × 3 · save [x]%\" (same item, quantity break)"], ["3", "Subscribe &amp; save", "\"Never run out of your daily NAD+. Subscribe and save 10%.\"", "\"daily\" = frequency of use (dosing)", "\"Auto-ship every [30/60/90] days. Skip or cancel in one click. Save [x]%.\""], ["4", "Replenishment", "\"Your 30-day cycle is almost done. Time to restock?\"", "\"cycle\" + consumption-based timing = use instruction", "\"It's been [60] days since your last order. Reorder in one tap.\" (timing from order history only)"], ["5", "Reviews", "\"'Knee pain gone in 2 weeks!' ★★★★★\"", "Efficacy testimonial; condition claim the store is liable for", "Moderate to service only: \"'Arrived in 3 days, well packed.'\""], ["6", "Back in stock", "\"BPC-157 is back: the healing peptide everyone wants.\"", "\"healing\" = drug claim", "\"BPC-157 10 mg is back in stock. Lot [L-xxxx], certificate attached.\""], ["7", "Low stock", "\"Only 3 left. Selling fast!\"", "Misleading unless real (Competition Act)", "\"[real count] in this lot.\" (hidden when no real data)"], ["8", "Post-purchase upsell", "\"Add bacteriostatic water + syringes for $9\"", "Adjacency proves intended human use with no words at all", "Remove. Offer \"Add a second vial from the same lot, [x]% off\" or a gift card."], ["9", "Quiz", "\"What's your goal? Fat loss / Muscle / Anti-aging\"", "Health/goal data + matching a product to a goal = claim", "\"What are you browsing? Single vials / Blends / New arrivals · Budget\""], ["10", "Loyalty", "\"Earn points on every order: your path to peak performance.\"", "Outcome; points on Rx items = possible inducement", "\"Earn points on every order. [500] points = early access to new lots.\""], ["11", "Welcome email", "\"Welcome to the future of longevity. 15% off your first protocol.\"", "\"longevity\" outcome; \"protocol\" = use instruction", "\"Welcome to PEPTICITY. Your 15% first-order code: [CODE].\""], ["12", "Live chat", "\"Ask our peptide experts what's right for you.\"", "Personal recommendation = advice; borrowed authority", "\"Questions about an order, shipping or a lot certificate? A person replies within [x] hours.\""], ["13", "Trust badges", "\"Health Canada compliant · 99% purity · Doctor-trusted\"", "False authority and unverified claims", "Only once real: \"Lot certificate from [named lab] for every vial. Look up yours.\""], ["14", "Referral", "\"Give $20, get $20. Share the gains.\"", "\"gains\" outcome; cash credit = inducement question", "\"Share PEPTICITY. When a friend joins, you both get early access.\""], ["15", "Win-back", "\"We miss you. Time to restart your cycle?\"", "\"cycle\" = use instruction", "\"It's been a while. Here's what's new in the store.\""], ["16", "SMS", "\"Your peptides are ready to work for you 💪\"", "Outcome", "\"PEPTICITY: your cart is saved. [link] Reply STOP to opt out.\""], ["17", "Gift card", "\"Give the gift of better health.\"", "Health outcome", "\"Give a PEPTICITY gift card. Any amount.\""]]};
+const DECISIONS = [{"q": "Step zero: how do we take money first?", "o": [{"t": "Processor that approves the catalogue in writing", "r": true}, {"t": "Interac e-Transfer as a stopgap"}, {"t": "Use the current WooCommerce store's checkout"}]}, {"q": "Counsel timing", "o": [{"t": "Book counsel now; build only vendor-free features meanwhile", "r": true}, {"t": "Build everything now, fix later"}]}, {"q": "Which products sell online?", "o": [{"t": "Only the items counsel clears", "r": true}, {"t": "Full catalogue, accept fragile payments"}, {"t": "Move prescription items to a licensed pharmacy or clinic partner"}]}, {"q": "Grace's current store (northernpeptides.st)", "o": [{"t": "Ask counsel, then invite past buyers over with consent", "r": true}, {"t": "Keep the two stores fully separate"}, {"t": "Close it"}]}, {"q": "Where traffic comes from (no paid ads possible)", "o": [{"t": "Journal for Google + peptide communities + referrals", "r": true}, {"t": "Affiliates with a no-claims brief"}, {"t": "Clinic and pharmacy partners"}]}, {"q": "Email platform", "o": [{"t": "Ask Klaviyo and Customer.io for written approval; use whoever says yes", "r": true}, {"t": "Self-built flows on a developer sender"}]}, {"q": "Text messages", "o": [{"t": "Order and shipping texts only", "r": true}, {"t": "Promotional texts too"}, {"t": "No texts"}]}, {"q": "Discounts on prescription or unauthorized items (15% code, quantity breaks)", "o": [{"t": "Hold until counsel answers", "r": true}, {"t": "Only on cleared non-prescription items"}, {"t": "All items now"}]}, {"q": "Reviews", "o": [{"t": "Store-wide service reviews only", "r": true}, {"t": "Moderated product reviews"}, {"t": "No reviews"}]}, {"q": "Loyalty rewards (members' club)", "o": [{"t": "Access and status only: early lots, member drops", "r": true}, {"t": "Points worth dollars"}, {"t": "Both"}]}, {"q": "Free-shipping threshold", "o": [{"t": "Test two thresholds", "r": true}, {"t": "One fixed threshold"}, {"t": "Always free"}]}, {"q": "Analytics", "o": [{"t": "Plausible, no cookies, no ad pixels", "r": true}, {"t": "Self-hosted PostHog"}, {"t": "GA4 + Meta pixel (not advised)"}]}, {"q": "Concierge bot", "o": [{"t": "Orders, shipping and lot certificates only, with a human reply", "r": true}, {"t": "Answers product questions"}, {"t": "Remove it"}]}, {"q": "US shipping at launch", "o": [{"t": "Canada only", "r": true}, {"t": "Ship to the US"}]}, {"q": "Subscribe & save", "o": [{"t": "Wait for a processor and counsel", "r": true}, {"t": "Build now"}]}];
+const TOP10 = new Set([1,2,3,4,5,6,7,8,9,10]);
+const RISKN = {"Low":1,"Low–Med":2,"Med":3,"Med–High":4,"High":5};
+const EFFN = {S:1,M:2,L:3};
+const rows = DATA.feat.map(f => Object.assign({}, f, {
+  plain: (f.name + " " + f.area + " " + f.lift + " " + f.build + " " + f.tool).replace(/<[^>]+>/g, "").toLowerCase(),
+  riskN: RISKN[f.risk] || 3, effN: EFFN[f.eff] || 2,
+  now: /^none/.test(f.dep)
+}));
+const $ = id => document.getElementById(id);
+const areas = [...new Set(rows.map(r => r.area))].sort();
+areas.forEach(a => { const o = document.createElement("option"); o.value = a; o.textContent = a; $("area").appendChild(o); });
+let sortK = "rank", sortDir = 1;
+function bar(n){ let s = '<span class="bar" aria-hidden="true">'; for (let i=1;i<=5;i++) s += '<i class="' + (i<=n?'f':'') + '"></i>'; return s + '</span>'; }
+function render(){
+  const q = $("q").value.trim().toLowerCase(), area = $("area").value, risk = $("risk").value, eff = $("eff").value;
+  const now = $("now").getAttribute("aria-pressed") === "true", t10 = $("t10").getAttribute("aria-pressed") === "true";
+  let list = rows.filter(r => (!q || r.plain.includes(q)) && (!area || r.area === area) && (!risk || r.risk === risk) && (!eff || r.eff === eff) && (!now || r.now) && (!t10 || TOP10.has(r.rank)));
+  list.sort((a,b) => { let x=a[sortK], y=b[sortK]; if (typeof x === "string") { x=x.replace(/<[^>]+>/g,""); y=y.replace(/<[^>]+>/g,""); return x.localeCompare(y)*sortDir; } return (x-y)*sortDir || a.rank-b.rank; });
+  $("rows").innerHTML = list.length ? list.map(r => `<tr class="${TOP10.has(r.rank)?'top10':''}">
+    <td class="num">#${r.rank}${r.held?'<br><span class="pill r-High">held</span>':''}</td>
+    <td class="feat new">${r.name}</td><td>${r.area}</td>
+    <td class="lift">${r.lift}</td><td class="build">${r.build}</td><td class="tool">${r.tool}</td>
+    <td class="num">${r.eff}</td>
+    <td class="risk"><span class="pill r-${r.risk.replace('–','-')}">${r.risk}</span><br>${r.riskTxt}</td>
+    <td class="prio">${bar(r.prio)}${r.prio}/5<br><span style="color:var(--muted)">score ${r.score}</span></td>
+    <td class="dep">${r.dep}</td></tr>`).join("") : '<tr><td colspan="10" class="empty">No features match these filters. Clear a filter to see more.</td></tr>';
+  $("count").textContent = list.length + " of " + rows.length + " shown";
+}
+document.querySelectorAll("th.sort").forEach(th => {
+  const go = () => { const k = th.dataset.k; if (sortK === k) sortDir = -sortDir; else { sortK = k; sortDir = (k === "prio") ? -1 : 1; }
+    document.querySelectorAll("th.sort").forEach(t => t.removeAttribute("aria-sort")); th.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending"); render(); };
+  th.addEventListener("click", go); th.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+});
+["q","area","risk","eff"].forEach(id => $(id).addEventListener("input", render));
+["now","t10"].forEach(id => $(id).addEventListener("click", e => { const b = e.currentTarget; b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true"); render(); }));
+render();
+$("claims").innerHTML = DATA.claims.map(c => `<tr><td class="num">${c[0]}</td><td>${c[1]}</td><td class="fail">${c[2]}</td><td>${c[3]}</td><td class="ok">${c[4]}</td></tr>`).join("");
+$("decisions").innerHTML = DECISIONS.map(d => `<li><b>${d.q}</b><div class="opts">${d.o.map(o => `<span class="opt ${o.r?'rec':''}">${o.t}${o.r?' (recommended)':''}</span>`).join("")}</div></li>`).join("");
+// step rail highlight
+const links = [...document.querySelectorAll("nav.steps a")];
+try { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), {rootMargin:"-30% 0px -60% 0px"});
+  document.querySelectorAll("main section").forEach(s => io.observe(s)); } catch(e) {}
+</script>
