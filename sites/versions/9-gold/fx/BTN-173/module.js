@@ -4,6 +4,15 @@
    Reads only --apx-* tokens (rebuilds on the 'apx:tokens' event). Reduced motion / --apx-motion:0 give a still bead.
    One small WebGL1 canvas per button for the liquid metal; without WebGL a drawn chrome bead stands in. */
 (function () {
+  /* CHROME GOLD (9-gold): the metal ramps are re-cast in the owner's liquid chrome-gold (#332814 / #68513d / #A4845D / #F0E6C7 / #FEF9E8) when the page says data-colour="gold" */
+  var GOLD = document.documentElement.getAttribute('data-colour') === 'gold';
+  function goldOf(h) {
+    var n = parseInt(h.slice(1), 16), k = ((n >> 16 & 255) * .2126 + (n >> 8 & 255) * .7152 + (n & 255) * .0722) / 255;
+    var R = [[0, 51, 40, 20], [.3, 104, 81, 61], [.55, 164, 132, 93], [.85, 240, 230, 199], [1, 254, 249, 232]], i = 1;
+    while (i < R.length - 1 && k > R[i][0]) i++;
+    var a = R[i - 1], b = R[i], t = Math.max(0, Math.min(1, (k - a[0]) / (b[0] - a[0])));
+    return '#' + [1, 2, 3].map(function (j) { return ('0' + Math.round(a[j] + (b[j] - a[j]) * t).toString(16)).slice(-2); }).join('');
+  }
   'use strict';
   var APX = (window.APX = window.APX || {});
   if (APX.BTN173 && APX.BTN173.mount) return;
@@ -131,6 +140,7 @@
     ' vec3 r=vec3(2.*n.z*n.x,2.*n.z*n.y,2.*n.z*n.z-1.);',
     ' float px=p.x/uRes.x-.5;',
     ' vec3 col=env(r,px);',
+    GOLD ? ' col*=vec3(1.,.925,.76);' : '',
     ' vec3 L=normalize(vec3(-.42-uTilt.x*.3,-.7,.58));',
     ' col+=vec3(1.)*pow(max(dot(reflect(vec3(0.,0.,-1.),n),L),0.),90.)*1.6;',
     ' float fr=pow(1.-n.z,3.);col=mix(col,col*.5,fr*.4);',
@@ -183,7 +193,7 @@
     var gid = 'apx131c' + (++UID) + Math.random().toString(36).slice(2, 6);
     var s = svg('svg', { 'class': ctx.c('rim'), 'aria-hidden': 'true', focusable: 'false' });
     var lg = svg('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse' });
-    [['0', '#5d646d'], ['.14', '#f4f7fa'], ['.26', '#8d959f'], ['.4', '#22262c'], ['.52', '#dfe4ea'], ['.63', '#ffffff'], ['.76', '#3a3f47'], ['.88', '#c9d0d8'], ['1', '#6f7781']].forEach(function (st) { lg.appendChild(svg('stop', { offset: st[0], 'stop-color': st[1] })); });
+    [['0', '#5d646d'], ['.14', '#f4f7fa'], ['.26', '#8d959f'], ['.4', '#22262c'], ['.52', '#dfe4ea'], ['.63', '#ffffff'], ['.76', '#3a3f47'], ['.88', '#c9d0d8'], ['1', '#6f7781']].forEach(function (st) { lg.appendChild(svg('stop', { offset: st[0], 'stop-color': GOLD ? goldOf(st[1]) : st[1] })); });
     var defs = svg('defs', {}); defs.appendChild(lg); s.appendChild(defs);
     var ring = svg('path', { 'class': ctx.c('ring') }), track = svg('path', { 'class': ctx.c('track') }), inner = svg('path', { 'class': ctx.c('inner') }),
       bez = svg('path', { 'class': ctx.c('bez'), stroke: 'url(#' + gid + ')' }), hi = svg('path', { 'class': ctx.c('hi') });

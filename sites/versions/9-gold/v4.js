@@ -419,9 +419,9 @@
     if (form.dataset.interest && ct && ct.checked) d.interest = form.dataset.interest;
     return d;
   }
-  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-101 stub) */
+  function morph(btn, label, cb) {   /* FRM-103 submit morph: same size, progress, then the success state (also works on the BTN-174 / BTN-173 glass) */
     if (!btn) { cb && cb(); return; }
-    var lab = $('.pc-btn__label', btn) || $('.apx-b101__l', btn) || btn, w = btn.offsetWidth;
+    var lab = $('.pc-btn__label', btn) || $('.apx-b174__l', btn) || $('.apx-b173__l', btn) || btn, w = btn.offsetWidth;
     btn.style.width = w + 'px'; btn.classList.add('busy'); btn.disabled = true; lab.textContent = 'SENDING';
     setTimeout(function () { btn.classList.remove('busy'); btn.classList.add('done'); lab.textContent = label || 'DONE ✓'; cb && cb(); }, RM ? 10 : 650);
   }
@@ -1160,8 +1160,8 @@
   if (OFFER) { renderOfferEnd(); setInterval(renderOfferEnd, 60000); }
 
   /* ================= the 10 effect picks: mount each module once its section is on the page (some sit past the gates) ================= */
-  var FX = [['NAV102', null], ['LAY102', '#mkPanels'], ['BGD102', '.tour-plex'], ['TXT04', '.apx-txt04'], ['BTN101', '[data-apx="BTN-101"]'],
-    ['SCR102', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD118', '.apx-c118']];
+  var FX = [['NAV102', null], ['LAY102', '#mkPanels'], ['TXT04', '.apx-txt04'], ['BTN174', '[data-apx="BTN-174"]'], ['BTN173', '[data-apx="BTN-173"]'],
+    ['SCR16', '#choose'], ['LAY101', '.apx-lay101'], ['CRD124', '.apx-c124'], ['CRD122', '.apx-c122']];
   function mountFx() {
     if (!window.APX) return;
     FX.forEach(function (f) {
@@ -1172,6 +1172,26 @@
   }
   mountFx();
   document.addEventListener('pc-version', function () { window.dispatchEvent(new Event('apx:tokens')); });
+
+  /* HOV-103 Edge Light: one soft light follows the pointer across each group and catches the edges of every card near it (the edge light runs in the chrome-gold).
+     Each group mounts the first time it is on screen (some sit past the gates); the shelf re-mounts when its cards are re-drawn. */
+  (function () {
+    if (!window.APX || !APX.HOV103) return;
+    var HOV = [['.nav-r', '.pc-btn__face'], ['#mkPanels', '.apx-lay102__panel'], ['.bento .apx-lay101', '.apx-lay101__tile'], ['#tiers .stack', '.tier'],
+      ['#shelf', '.prod'], ['#shelfAnc', '.prod'], ['.twoway .pair', '.fogcard, .sentence'], ['.texts-wrap', '.sms-form'], ['.refer .wrap', '.refer-card'], ['.foot .wrap', '.letter']];
+    function arm(root, sel) {
+      var off = null;
+      function go() { if (off) off(); $$(sel, root).forEach(function (c) { c.classList.add('apx-h103__card'); }); off = APX.HOV103.mount(root, { reach: 220 }); }
+      if (!('IntersectionObserver' in window)) return go();
+      var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); go(); } }, { rootMargin: '200px 0px' });
+      io.observe(root);
+      if (/shelf/i.test(root.id)) new MutationObserver(function (ms) {
+        if (!off || !ms.some(function (m) { return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && !/apx-h103/.test(n.className); }); })) return;
+        go();
+      }).observe(root, { childList: true });
+    }
+    HOV.forEach(function (h) { var r = $(h[0]); if (r) arm(r, h[1]); });
+  })();
 
   /* TRN-01 Soft Rise: each section's content rises into place once as it scrolls into view (nothing moves position for good) */
   (function () {

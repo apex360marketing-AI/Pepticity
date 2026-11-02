@@ -4,6 +4,15 @@
    Reads only --apx-* tokens (rebuilds on the 'apx:tokens' event). Reduced motion / --apx-motion:0 hold a still dial.
    Pure SVG + CSS. Press pulls the crown out one click; release snaps it home and fires the action. */
 (function () {
+  /* CHROME GOLD (9-gold): the metal ramps are re-cast in the owner's liquid chrome-gold (#332814 / #68513d / #A4845D / #F0E6C7 / #FEF9E8) when the page says data-colour="gold" */
+  var GOLD = document.documentElement.getAttribute('data-colour') === 'gold';
+  function goldOf(h) {
+    var n = parseInt(h.slice(1), 16), k = ((n >> 16 & 255) * .2126 + (n >> 8 & 255) * .7152 + (n & 255) * .0722) / 255;
+    var R = [[0, 51, 40, 20], [.3, 104, 81, 61], [.55, 164, 132, 93], [.85, 240, 230, 199], [1, 254, 249, 232]], i = 1;
+    while (i < R.length - 1 && k > R[i][0]) i++;
+    var a = R[i - 1], b = R[i], t = Math.max(0, Math.min(1, (k - a[0]) / (b[0] - a[0])));
+    return '#' + [1, 2, 3].map(function (j) { return ('0' + Math.round(a[j] + (b[j] - a[j]) * t).toString(16)).slice(-2); }).join('');
+  }
   'use strict';
   var APX = (window.APX = window.APX || {});
   if (APX.BTN174 && APX.BTN174.mount) return;
@@ -74,9 +83,9 @@
     var s = svg('svg', { 'class': ctx.c('svg'), 'aria-hidden': 'true', focusable: 'false' });
     var defs = svg('defs', {}, s);
     var chr = svg('linearGradient', { id: id + 'c', gradientUnits: 'userSpaceOnUse' }, defs);
-    [['0', '#4b525b'], ['.1', '#f6f8fa'], ['.2', '#a3abb5'], ['.33', '#262a30'], ['.46', '#e3e7ec'], ['.55', '#ffffff'], ['.66', '#5e656e'], ['.8', '#d5dae0'], ['.9', '#7e868f'], ['1', '#eef1f4']].forEach(function (a) { svg('stop', { offset: a[0], 'stop-color': a[1] }, chr); });
+    [['0', '#4b525b'], ['.1', '#f6f8fa'], ['.2', '#a3abb5'], ['.33', '#262a30'], ['.46', '#e3e7ec'], ['.55', '#ffffff'], ['.66', '#5e656e'], ['.8', '#d5dae0'], ['.9', '#7e868f'], ['1', '#eef1f4']].forEach(function (a) { svg('stop', { offset: a[0], 'stop-color': GOLD ? goldOf(a[1]) : a[1] }, chr); });
     var cyl = svg('linearGradient', { id: id + 'y', x1: '0', y1: '0', x2: '0', y2: '1' }, defs);
-    [['0', '#3a3f46'], ['.12', '#9aa2ab'], ['.28', '#ffffff'], ['.4', '#e1e5ea'], ['.62', '#6b727b'], ['.8', '#2a2e34'], ['.92', '#8a929b'], ['1', '#3a3f46']].forEach(function (a) { svg('stop', { offset: a[0], 'stop-color': a[1] }, cyl); });
+    [['0', '#3a3f46'], ['.12', '#9aa2ab'], ['.28', '#ffffff'], ['.4', '#e1e5ea'], ['.62', '#6b727b'], ['.8', '#2a2e34'], ['.92', '#8a929b'], ['1', '#3a3f46']].forEach(function (a) { svg('stop', { offset: a[0], 'stop-color': GOLD ? goldOf(a[1]) : a[1] }, cyl); });
     var flt = svg('filter', { id: id + 'b', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs); svg('feGaussianBlur', { stdDeviation: '.7' }, flt);
     var ring = svg('path', { 'class': ctx.c('ring') }, s);
     var ticksD = svg('path', { 'class': ctx.c('tk') }, s), ticksL = svg('path', { 'class': ctx.c('tkl') }, s);

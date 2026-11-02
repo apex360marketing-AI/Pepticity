@@ -1,0 +1,166 @@
+/* PEPTICITY · VERSION 09 · CHROME GOLD. Loaded after ../_kit/accent.css and ../_kit/glass-react.css.
+   Owner 2 Nov: the gold from the APEX DESK (pale, low-saturation chrome gold) over COMPLETELY see-through glass. The metal shows on thin edges, glints,
+   the main button, key words, hover and focus only. No colour fill inside any glass, no coloured light pools. Skills: premium-restraint, clear-glass-spec.
+   Ramp: shadow #332814 · low #68513d · mid #A4845D · highlight #F0E6C7 · hot #FEF9E8. Every rule below is scoped to html[data-colour="gold"]. */
+
+html[data-colour="gold"]{
+  --gold-ramp:linear-gradient(100deg,#B7A07A 0%,#F0E6C7 16%,#FEF9E8 26%,#C2AB82 40%,#A4845D 50%,#E3D4AE 62%,#FEF9E8 74%,#D3BF96 88%,#B7A07A 100%);
+  --gold-line:linear-gradient(90deg,transparent,#A4845D 14%,#F0E6C7 40%,#FEF9E8 52%,#F0E6C7 64%,#A4845D 86%,transparent);
+  /* the glass hairlines (every .glass, field, panel) run in the chrome-gold */
+  --rim-hot:#FEF9E8; --rim-t:rgba(240,230,199,.66); --rim-s:rgba(164,132,93,.55); --rim-b:rgba(164,132,93,.34);
+  /* glass is clear: a breath of white at most */
+  --g-a:rgba(255,255,255,.022); --g-b:rgba(255,255,255,.004); --g-sheen:rgba(255,255,255,.03);
+  --line:rgba(240,230,199,.14); --glow:rgba(240,230,199,.25);
+  --apx-accent:#F0E6C7; --apx-glint:#F0E6C7; --apx-line:rgba(240,230,199,.2); --apx-surface:rgba(255,255,255,.015); --apx-accent-ink:#1a1814;
+  --mx:50%; --my:30%;
+}
+/* the ground: deep graphite with real light in it (neutral only), brighter than the dark originals */
+html[data-colour="gold"][data-version="black"]{--bg:#212226;--bg-2:#2b2c31;--ink:#F3F4F6;--ink-2:#D3D6DB;--muted:#A8ADB5}
+
+html[data-colour="gold"][data-version="black"] #smoke{filter:brightness(1.4) contrast(.94)}   /* neutral smoke, lifted a little: real light in the graphite, never colour */
+
+/* ---- the one glass recipe stays; photo glass loses most of its dark scrim (the blur keeps the words readable) ---- */
+html[data-colour="gold"] .photo .glass,html[data-colour="gold"] .glass.on-photo{--g-a:rgba(14,14,17,.2);--g-b:rgba(14,14,17,.07);--g-sheen:rgba(255,255,255,.05);
+  --rim-t:rgba(240,230,199,.7);--rim-s:rgba(164,132,93,.6);--rim-b:rgba(164,132,93,.38)}
+html[data-colour="gold"] .glass,html[data-colour="gold"] .hero-card{-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+/* every glass surface gets the same pointer sheen as the desk (glass-react.js sets --mx/--my on .glass and .hero-card; the groups below get it from HOV-103) */
+html[data-colour="gold"] .glass::after,html[data-colour="gold"] .hero-card::after{background:radial-gradient(240px 240px at var(--mx) var(--my),rgba(255,255,255,.11),rgba(255,255,255,.03) 46%,transparent 70%)}
+/* text entry: clear with a gold hairline, a gold edge on focus */
+html[data-colour="gold"] .field input,html[data-colour="gold"] .field select{background:rgba(255,255,255,.025);box-shadow:inset 0 0 0 1px var(--rim-s)}
+html[data-colour="gold"] .field input:hover,html[data-colour="gold"] .field select:hover{box-shadow:inset 0 0 0 1px var(--rim-t)}
+html[data-colour="gold"] .field input:focus,html[data-colour="gold"] .field select:focus{box-shadow:inset 0 0 0 1px var(--m2),0 0 0 3px rgba(240,230,199,.2)}
+html[data-colour="gold"] .photo .field input,html[data-colour="gold"] .photo .field select{background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(240,230,199,.4)}
+html[data-colour="gold"] .consent input{border-color:var(--rim-t)}
+html[data-colour="gold"] .consent input:checked{background:var(--m2)}
+/* the four-questions output panels: no tint, only blur and a hairline */
+html[data-colour="gold"] .to-play,html[data-colour="gold"] .to-shelf,html[data-colour="gold"] .to-cap{background:transparent;
+  -webkit-backdrop-filter:blur(12px) saturate(150%);backdrop-filter:blur(12px) saturate(150%);box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 var(--rim-t)}
+html[data-colour="gold"] .fog-lock span{background:transparent;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html[data-colour="gold"] .pick-tag{background:transparent;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html[data-colour="gold"] .ph-link{text-decoration-color:var(--m3)}
+html[data-colour="gold"] .linkish{text-decoration-color:var(--m3)}
+html[data-colour="gold"] .linkish:hover{color:var(--m1)}
+/* the top bar: clear glass that fades into the page */
+html[data-colour="gold"] .nav::before{background:linear-gradient(180deg,rgba(18,19,22,.5),rgba(18,19,22,0))}
+
+/* ---- the PEPTICITY button (BTN-P01) used for small actions: gold hairline, cream label glow ---- */
+html[data-colour="gold"] .pc-btn,html[data-colour="gold"] .pc-seg{--pc-fill-a:rgba(255,255,255,.025);--pc-fill-b:rgba(255,255,255,.004);--pc-sheen:rgba(255,255,255,.06);
+  --pc-rim-hot:#FEF9E8;--pc-rim-t:rgba(240,230,199,.8);--pc-rim-s:rgba(164,132,93,.62);--pc-rim-b:rgba(164,132,93,.4);
+  --pc-sweep:rgba(254,249,232,.5);--pc-sweep-soft:rgba(240,230,199,.1);--pc-glow:rgba(240,230,199,.16);--pc-label-glow:rgba(240,230,199,.5);--pc-ring:#F0E6C7;--pc-thumb:rgba(255,255,255,.06)}
+html[data-colour="gold"] .pc-seg__thumb{box-shadow:inset 0 -1px 0 var(--m2),0 0 12px rgba(240,230,199,.18)}
+html[data-colour="gold"] :focus-visible{outline-color:#F0E6C7!important}
+
+/* ---- small metal details: dashes, rail, progress, chips, dots ---- */
+html[data-colour="gold"] .eyebrow i{background:var(--gold-line)}
+html[data-colour="gold"] .rail li.now::before{border-color:var(--m2);background:var(--m2);box-shadow:0 0 10px rgba(240,230,199,.5)}
+html[data-colour="gold"] .rail li.seen::before{background:rgba(164,132,93,.7);border-color:var(--m3)}
+html[data-colour="gold"] .hl-prog i b{background:var(--gold-ramp);box-shadow:0 0 8px rgba(240,230,199,.4)}
+html[data-colour="gold"] .sr,html[data-colour="gold"] .prod,html[data-colour="gold"] .int-card{box-shadow:inset 0 1px 0 rgba(240,230,199,.5)}
+html[data-colour="gold"] .int-card:hover,html[data-colour="gold"] .prod:hover,html[data-colour="gold"] .sr:hover{box-shadow:inset 0 0 0 1px rgba(240,230,199,.5),0 0 18px rgba(240,230,199,.12)}
+html[data-colour="gold"] .st{box-shadow:inset 2px 0 0 rgba(240,230,199,.8)}
+html[data-colour="gold"] .tour-form .apx-f102__fill{background:var(--gold-ramp);box-shadow:0 0 8px rgba(240,230,199,.4)}
+html[data-colour="gold"] .tour-form .apx-f102__opt input:checked+span{box-shadow:inset 0 0 0 1px var(--m2),0 0 16px rgba(240,230,199,.18)}
+html[data-colour="gold"] .tour-form .apx-f102__opt input:focus-visible+span{outline:2px solid var(--m2)}
+html[data-colour="gold"] .tour-form .apx-f102__next{background:var(--gold-ramp);background-size:200% 100%;color:#1a1814}
+html[data-colour="gold"] .tour-form .apx-f102__next:hover{background-position:100% 0}
+html[data-colour="gold"] .tour-form .apx-f102__back{border-color:var(--rim-s)}
+
+/* ===================== TXT-04 · reading statements: lit words go white, key phrases take the chrome-gold with a moving sheen and underline ===================== */
+@keyframes goldRun{from{background-position:0% 0}to{background-position:-440% 0}}
+html[data-colour="gold"] .say{--apx-accent:#F0E6C7}
+html[data-colour="gold"] .say .apx-txt04__w.is-lit{color:#fff;text-shadow:none}
+html[data-colour="gold"] .say .apx-txt04__w.is-hl{color:var(--m2);text-shadow:none;background:var(--gold-ramp);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.7)) drop-shadow(0 0 10px rgba(240,230,199,.22));animation:goldRun 9s linear infinite}
+html[data-colour="gold"] .say .apx-txt04__w.is-hl::after{height:2px;background:var(--gold-ramp);background-size:220% 100%;box-shadow:0 0 10px rgba(240,230,199,.5);animation:goldRun 9s linear infinite}
+html[data-colour="gold"] .say .apx-txt04__kicker::before,html[data-colour="gold"] .say .apx-txt04__fill{background:var(--gold-ramp);box-shadow:0 0 8px rgba(240,230,199,.45)}
+html[data-colour="gold"] .say .apx-txt04__notes>*{border-left-color:rgba(240,230,199,.5)}
+html.rm[data-colour="gold"] .say .apx-txt04__w.is-hl,html.rm[data-colour="gold"] .say .apx-txt04__w.is-hl::after{animation:none}
+@media (prefers-reduced-motion:reduce){html[data-colour="gold"] .say .apx-txt04__w.is-hl,html[data-colour="gold"] .say .apx-txt04__w.is-hl::after{animation:none}}
+
+/* ===================== NAV-102 · Split Preview (THE TOUR menu): the two halves are clear glass ===================== */
+html[data-colour="gold"] .tourmenu{--apx-accent:#F0E6C7}
+html[data-colour="gold"] .tourmenu .apx-n102__left,html[data-colour="gold"] .tourmenu .apx-n102__right{background:rgba(255,255,255,.012);
+  -webkit-backdrop-filter:blur(22px) saturate(140%) brightness(.72);backdrop-filter:blur(22px) saturate(140%) brightness(.72)}
+html[data-colour="gold"] .tourmenu .apx-n102__right{border-left:0;box-shadow:inset 1px 0 0 rgba(240,230,199,.38)}
+html[data-colour="gold"] .tourmenu .apx-n102__toggle{background:rgba(255,255,255,.02);border:0;box-shadow:inset 0 0 0 1px var(--rim-t);transition:box-shadow .3s,transform .45s cubic-bezier(.34,1.56,.64,1)}
+html[data-colour="gold"] .tourmenu .apx-n102__toggle:hover{box-shadow:inset 0 0 0 1px var(--m1),0 0 16px rgba(240,230,199,.25)}
+html[data-colour="gold"] .tourmenu .apx-n102__toggle:focus-visible{outline:2px solid var(--m2);outline-offset:3px}
+html[data-colour="gold"] .tourmenu .apx-n102__list a::before{background:var(--gold-ramp);height:2px}
+html[data-colour="gold"] .tourmenu .apx-n102__list a[aria-current="true"]::before{background:var(--gold-ramp);box-shadow:0 0 8px rgba(240,230,199,.5)}
+html[data-colour="gold"] .tourmenu .apx-n102__list a:hover{color:var(--m1)}
+html[data-colour="gold"] .tourmenu .apx-n102__list a:focus-visible{outline:2px solid var(--m2);outline-offset:4px}
+html[data-colour="gold"] .tourmenu .apx-n102__list a{transition:color .3s,transform .4s cubic-bezier(.16,1,.3,1)}
+html[data-colour="gold"] .tourmenu .apx-n102__list a:hover{transform:translateX(6px)}
+html[data-colour="gold"] .tourmenu .apx-n102__card{background:transparent;-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);box-shadow:inset 0 0 0 1px var(--rim-s),inset 0 1px 0 var(--rim-hot)}
+html[data-colour="gold"] .tm-stub{border-color:var(--rim-t)}
+html[data-colour="gold"] .tm-spines i{background:transparent;box-shadow:inset 0 0 0 1px var(--rim-s)}
+html[data-colour="gold"] .tm-dots i.on{background:var(--m2)}
+html[data-colour="gold"] .tm-k{color:var(--m2)}
+
+/* ===================== BTN-174 · Crown Set (hero CTA) and BTN-173 · Mercury Bead (SEND MY SHORTLIST) ===================== */
+.crown-slot,.bead-slot{display:flex}
+html[data-colour="gold"] .apx-b174,html[data-colour="gold"] .apx-b173{--apx-accent:#F0E6C7;--apx-ink:#F7F2E4;font-family:var(--display)}
+html[data-colour="gold"] .apx-b174{font:400 12px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase}
+html[data-colour="gold"] .apx-b174__l{padding:0 calc(22px + 29px) 0 70px}
+html[data-colour="gold"] .apx-b174__tip{fill:#FEF9E8;filter:drop-shadow(0 0 2px rgba(240,230,199,.9))}
+html[data-colour="gold"] .apx-b174__pin{fill:#E8DCB8;stroke:#68513d}
+html[data-colour="gold"] .apx-b174__pind{fill:#332814}
+html[data-colour="gold"] .apx-b174__nd,html[data-colour="gold"] .apx-b174__cw{stroke:#C9B48A}
+html[data-colour="gold"] .apx-b174__nd{fill:#EFE3C0}
+html[data-colour="gold"] .apx-b174__rd{stroke:#2a2012}
+html[data-colour="gold"] .apx-b174__rl{stroke:#FEF9E8}
+html[data-colour="gold"] .apx-b174.is-hot .apx-b174__case{box-shadow:0 18px 30px -18px rgb(0 0 0/.8),0 0 22px -4px rgba(240,230,199,.28)}
+html[data-colour="gold"] .apx-b174__case{transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .35s}
+html[data-colour="gold"] .apx-b173{font:400 12px/1.1 var(--display);letter-spacing:.2em;text-transform:uppercase}
+html[data-colour="gold"] .apx-b173 .apx-b173__l{font-family:var(--display)}
+@media (max-width:640px){
+  .crown-slot,.crown-slot .apx-b174,.bead-slot,.bead-slot .apx-b173{width:100%}
+  html[data-colour="gold"] .apx-b174{font-size:10.5px;letter-spacing:.13em}
+  html[data-colour="gold"] .apx-b174__l{white-space:normal;text-align:center;line-height:1.3;padding:0 calc(14px + 29px) 0 58px}
+  html[data-colour="gold"] .apx-b173{font-size:10.5px;letter-spacing:.13em}
+  html[data-colour="gold"] .apx-b173 .apx-b173__l{white-space:normal;text-align:center;line-height:1.3}
+}
+
+/* ===================== CRD-122 · Bevel Diamond (text alerts) ===================== */
+html[data-colour="gold"] .sms-card.apx-c122{--apx-accent:#F0E6C7;width:min(100%,470px);max-width:none;justify-self:center;padding:21%;--apx-ink:#F3F4F6}
+html[data-colour="gold"] .apx-c122 .apx-c122__rim .o{stroke:#F0E6C7;stroke-opacity:.9}
+html[data-colour="gold"] .apx-c122 .apx-c122__rim .i{stroke:#A4845D;stroke-opacity:.75}
+html[data-colour="gold"] .apx-c122__glass{background:transparent;-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+html[data-colour="gold"] .apx-c122__t{font:400 clamp(17px,2vw,25px)/1.1 var(--display);letter-spacing:.05em;text-transform:uppercase;margin:0 0 10px;color:var(--ink)}
+html[data-colour="gold"] .apx-c122__t strong{font-weight:400;background:var(--gold-ramp);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:goldRun 9s linear infinite}
+html[data-colour="gold"] .apx-c122__k{font:400 9.5px var(--display);letter-spacing:.24em;color:var(--m2)}
+html[data-colour="gold"] .apx-c122__d{font-size:13.5px;line-height:1.4;color:var(--ink-2)}
+html[data-colour="gold"] .apx-c122__btn{border-radius:0;font:400 10px/1 var(--display);letter-spacing:.2em;min-height:40px;padding:0 16px;background:rgba(255,255,255,.025);border:0;box-shadow:inset 0 0 0 1px var(--rim-t);
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:box-shadow .3s,background-color .3s,transform .35s cubic-bezier(.16,1,.3,1)}
+html[data-colour="gold"] .apx-c122__btn:hover{background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px var(--m1),0 0 14px rgba(240,230,199,.2);transform:translateY(-1px)}
+html[data-colour="gold"] .apx-c122__btn:focus-visible{outline:2px solid var(--m2);outline-offset:3px}
+html.rm[data-colour="gold"] .apx-c122__t strong{animation:none}
+@media (max-width:640px){html[data-colour="gold"] .sms-card.apx-c122{width:100%;padding:19%}html[data-colour="gold"] .apx-c122__d{font-size:12.5px;line-height:1.35}html[data-colour="gold"] .apx-c122__t{font-size:17px}}
+
+/* ===================== SCR-16 · Exploded Layers (HOW WE CHOOSE) ===================== */
+html[data-colour="gold"] .deck{--apx-scr16-length:420vh;--apx-scr16-length-compact:340vh;--apx-accent:#F0E6C7;--apx-ink:#E4E6EA;--apx-muted:#A8ADB5;--apx-bg:#212226;background:transparent;position:relative;z-index:2}
+html[data-colour="gold"] .deck .apx-scr16__veil{background:radial-gradient(120% 95% at 50% 45%,transparent 62%,rgba(10,10,12,.4) 100%);opacity:.6}
+html[data-colour="gold"] .deck .apx-scr16__veil::after{display:none}
+html[data-colour="gold"] .deck .apx-scr16__stage::before{background:radial-gradient(40% 35% at 30% 30%,rgba(255,255,255,.06),transparent 70%)}
+html[data-colour="gold"] .deck .apx-scr16__kicker{font:400 10.5px/1.4 var(--display);letter-spacing:.32em;color:var(--ink-2)}
+html[data-colour="gold"] .deck .apx-scr16__kicker::before{background:var(--gold-line);height:1px;box-shadow:none}
+html[data-colour="gold"] .deck .apx-scr16__copy h2.x3d{font:400 var(--t-h2)/1 var(--display);letter-spacing:.03em;margin-top:20px;display:block;width:fit-content}
+html[data-colour="gold"] .deck .deck-ask{margin-top:24px}
+html[data-colour="gold"] .deck .apx-scr16__cue{font:400 10px/1 var(--display);letter-spacing:.34em;color:var(--ink-2)}
+html[data-colour="gold"] .deck .apx-scr16__note b{font:400 clamp(22px,2.4vw,34px)/1.1 var(--display);letter-spacing:.05em;background:var(--gold-ramp);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:goldRun 12s linear infinite}
+html[data-colour="gold"] .deck .apx-scr16__note span{color:var(--ink-2)}
+html[data-colour="gold"] .deck .apx-scr16__layers>li{font:400 10.5px/1.2 var(--display);letter-spacing:.2em;color:var(--muted);transition:color .3s,transform .4s cubic-bezier(.16,1,.3,1)}
+html[data-colour="gold"] .deck .apx-scr16__layers>li:hover{transform:translateX(-4px)}
+html[data-colour="gold"] .deck .apx-scr16__tick::after{background:var(--gold-ramp)}
+html[data-colour="gold"] .deck .apx-scr16__layers>li:focus-visible{outline:2px solid var(--m2);outline-offset:3px;box-shadow:none}
+html[data-colour="gold"] .deck .apx-scr16__layers>li.is-now .apx-scr16__n{color:var(--m2)}
+html[data-colour="gold"] .deck .apx-scr16.is-static .apx-scr16__layers>li,html[data-colour="gold"] .deck.is-static .apx-scr16__layers>li{border:0;background:transparent;border-radius:0;box-shadow:inset 0 0 0 1px var(--rim-s);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+html.rm[data-colour="gold"] .deck .apx-scr16__note b{animation:none}
+@media (max-width:640px){html[data-colour="gold"] .deck .apx-scr16__copy h2.x3d{font-size:clamp(26px,8.4vw,40px)}}
+
+/* ===================== HOV-103 · Edge Light: the light that runs along the edges is the metal; the wash behind is a faint white sheen, never a colour ===================== */
+html[data-colour="gold"] .apx-h103__ring,html[data-colour="gold"] .apx-h103__wash{--apx-accent:#F0E6C7}
+html[data-colour="gold"] .apx-h103__orb{background:radial-gradient(closest-side,#FEF9E8,rgba(240,230,199,.7) 45%,transparent)}
+html[data-colour="gold"] .apx-h103__wash .apx-h103__orb{background:radial-gradient(closest-side,rgba(255,255,255,.07),transparent)}
+html[data-colour="gold"] .apx-h103__card.is-lit .apx-h103__ring{background:rgba(240,230,199,.7)}
+html[data-colour="gold"] .apx-h103__card:has(a:focus-visible),html[data-colour="gold"] .apx-h103__card:focus-visible{outline-color:#F0E6C7}

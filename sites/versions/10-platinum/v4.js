@@ -1174,11 +1174,11 @@
   /* VERSION 10 · TXT-103 Tide Fill: every word of each reading statement is its own little tide, so the lines fill top to bottom
      in reading order as they scroll up (outline -> liquid white). Key phrases (<mark>) fill with the platinum mirror and keep a moving glint. */
   $$('[data-tide]').forEach(function (p) {
-    var out = [];
+    var out = [], wi = 0;
     [].forEach.call(p.childNodes, function (n) {
       var key = n.nodeType === 1 && n.tagName === 'MARK', ws = (n.textContent || '').split(/(\s+)/);
       ws.forEach(function (w) { if (!w) return; if (/^\s+$/.test(w)) { out.push(' '); return; }
-        out.push('<span class="apx-txt103 tw' + (key ? ' key' : '') + '">' + (key ? '<em>' + esc(w) + '</em>' : esc(w)) + '</span>'); });
+        out.push('<span class="apx-txt103 tw' + (key ? ' key' : '') + '"' + (key ? ' style="--k:' + (wi++) + '"' : '') + '>' + (key ? '<em>' + esc(w) + '</em>' : esc(w)) + '</span>'); });
     });
     p.innerHTML = out.join('').replace(/ +/g, ' ');
     p.setAttribute('data-tide-on', '');
@@ -1199,9 +1199,9 @@
   (function () {
     if (!window.APX || !APX.HOV104 || RM || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
     var STOPS = ['WELCOME', 'WHAT BRINGS YOU', 'FOUR QUESTIONS', 'THE THRESHOLD', 'THE CITY', 'THE DOORS', 'THE LAB', 'THE COLLECTION'];
-    var root = D.createElement('div'); root.className = 'apx-h104 hov-trail'; root.setAttribute('aria-hidden', 'true');
+    var root = document.createElement('div'); root.className = 'apx-h104 hov-trail'; root.setAttribute('aria-hidden', 'true');
     root.innerHTML = '<ul class="apx-h104__items">' + STOPS.map(function (n, k) { return '<li><span class="apx-h104__tag">STOP 0' + (k + 1) + '</span><b>' + n + '</b><span>THE PEPTICITY TOUR</span></li>'; }).join('') + '</ul>';
-    D.body.appendChild(root);
+    document.body.appendChild(root);
     APX.HOV104.mount(root, { gap: 120, pool: 7, life: 1300 });
     var SEL = '.glass, .pc-btn, .pc-seg, .tourmenu, .apx-b105, .apx-c119, .apx-c129, .apx-scr104__tile, .prod, .int-card, .nav, .tm-meta', inside = false;
     function fwd(type, e) { root.dispatchEvent(new PointerEvent(type, { clientX: e.clientX, clientY: e.clientY, pointerType: 'mouse' })); }
