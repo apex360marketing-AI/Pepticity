@@ -23,6 +23,12 @@ h1,h2{text-transform:uppercase;letter-spacing:.08em;margin:0;text-wrap:balance}h
 .th:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.4)}.th img{width:100%;display:block;margin-bottom:6px}.th b{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.08em}.th small{color:var(--dim);font-size:12px}
 .th[data-v="a"]{border-color:var(--lime)}.th[data-v="c"]{border-color:var(--pur)}.th[data-v="r"]{border-color:var(--bad)}
 .th .mk{position:absolute;top:10px;right:10px;font-size:11px;letter-spacing:.1em;padding:2px 8px;background:rgba(20,20,22,.88);border:1px solid var(--edge)}
+.chk{display:grid;gap:6px;margin:8px 0 12px}
+.ck{display:grid;grid-template-columns:28px 1fr;gap:2px 10px;text-align:left;text-transform:none;letter-spacing:.01em;font-size:15px;min-height:46px;padding:8px 12px;width:100%}
+.ck i{grid-row:span 2;font-style:normal;align-self:center;width:22px;height:22px;border:1px solid var(--edge);display:grid;place-items:center;color:transparent}
+.ck b{font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:13px}.ck small{color:var(--dim);font-size:13px}
+.ck[aria-pressed="true"]{border-color:rgba(212,255,58,.55)}.ck[aria-pressed="true"] i{color:var(--lime);border-color:var(--lime)}
+.ck[aria-pressed="false"]{opacity:.55}.ck[aria-pressed="false"] b{text-decoration:line-through}
 .row{display:flex;flex-wrap:wrap;gap:10px}
 button{font:inherit;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);cursor:pointer;background:rgba(255,255,255,.07);border:1px solid var(--edge);min-height:46px;padding:0 16px;transition:background .2s,border-color .2s,transform .15s,color .2s;
  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
@@ -70,7 +76,8 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const VW={a:'APPROVE',c:'CHANGE',r:'REJECT'};
 $('ttl').textContent=SPEC.title;$('intro').innerHTML=SPEC.intro;if(SPEC.running){$('run').hidden=false;$('run').innerHTML=SPEC.running}
 function entries(it){const e=[];(it.thumbs||[]).forEach(t=>e.push({k:'t-'+t.key,src:t.img,label:t.label,pickKey:t.key}));(it.images||[]).forEach((s,n)=>e.push({k:'i-'+n,src:s,label:(it.images.length>1?it.title+' '+(n+1):it.title)}));return e}
-function rec(id){return S[id]=S[id]||{pick:'',note:'',imgs:{}}}
+function rec(id){const r=S[id]=S[id]||{pick:'',note:'',imgs:{}};r.checks=r.checks||{};return r}
+const isOn=(r,k)=>r.checks[k]!==false;
 function ir(id,k){const r=rec(id);return r.imgs[k]=r.imgs[k]||{v:'',c:'',pins:[]}}
 /* ---- save for Claude: db (when the page runs as an artifact) ---- */
 let db=null,q=Promise.resolve(),timers={};
@@ -78,12 +85,12 @@ let db=null,q=Promise.resolve(),timers={};
   try{const snap=await db.collection('answers').get();let ch=false;snap.docs.forEach(d=>{const x=d.data();if(x&&x.state&&!S[d.id]){S[d.id]=x.state;ch=true}});if(ch){persist();render()}}catch(e){}}}}catch(e){db=null}})();
 function setSaved(t,ok){const s=$('saved');s.textContent=t;s.className=ok?'ok':''}
 function queue(it){persist();tally();if(!db)return;clearTimeout(timers[it.id]);timers[it.id]=setTimeout(()=>{const r=rec(it.id);const flat={};entries(it).forEach(e=>{const x=r.imgs[e.k];if(x&&(x.v||x.c||(x.pins||[]).length))flat[e.label]={verdict:VW[x.v]||'',comment:x.c,pins:(x.pins||[]).map(p=>p[0]+'%,'+p[1]+'%')}});
- const body={title:it.title,pick:r.pick||'',pickLabel:r.pick?labelFor(it,r.pick):'',note:r.note||'',pictures:flat,state:r,at:new Date().toISOString()};
+ const rem=(it.checks||[]).filter(c=>!isOn(r,c.key)).map(c=>c.label);const body={title:it.title,checks:it.checks?{kept:it.checks.length-rem.length,removed:rem}:undefined,pick:r.pick||'',pickLabel:r.pick?labelFor(it,r.pick):'',note:r.note||'',pictures:flat,state:r,at:new Date().toISOString()};
  q=q.then(()=>db.collection('answers').doc(it.id).set(body)).then(()=>setSaved('saved for Claude '+new Date().toLocaleTimeString(),true)).catch(()=>setSaved('could not reach Claude: tap COPY MY ANSWERS',false))},500)}
 function labelFor(it,k){const m=[...(it.options||[]),...(it.thumbs||[])].find(x=>x.key===k);return m?m.label:k}
 /* ---- page ---- */
 const list=$('list');
-function render(){list.innerHTML='';SPEC.items.forEach((it,i)=>{const r=rec(it.id);const done=!!(r.pick||Object.values(r.imgs).some(x=>x.v));
+function render(){list.innerHTML='';SPEC.items.forEach((it,i)=>{const r=rec(it.id);const done=!!(r.pick||Object.keys(r.checks).length||Object.values(r.imgs).some(x=>x.v));
  const el=document.createElement('section');el.className='card';el.dataset.done=done?'1':'0';
  el.innerHTML=`<span class="st">${done?'ANSWERED':'WAITING'}</span><h2><span class="n">${String(i+1).padStart(2,'0')}</span>${esc(it.title)}</h2><p class="ask">${esc(it.ask||'')}</p>`;
  if((it.images||[]).length)el.insertAdjacentHTML('beforeend','<p class="hint">Tap the picture to approve it, change it or comment on a spot.</p>');
@@ -91,13 +98,14 @@ function render(){list.innerHTML='';SPEC.items.forEach((it,i)=>{const r=rec(it.i
   if(x.v){const t=document.createElement('span');t.className='tag '+x.v;t.textContent=VW[x.v];w.append(t)}el.append(w)});
  if(it.lines){const u=document.createElement('ul');u.className='l';u.innerHTML=it.lines.map(l=>`<li>${esc(l)}</li>`).join('');el.append(u)}
  if(it.link){const p=document.createElement('p');p.innerHTML=`<a href="${esc(it.link)}" target="_blank" rel="noopener">Open the live page</a>`;el.append(p)}
+ if(it.checks){el.insertAdjacentHTML('beforeend','<p class="hint">Everything starts IN. Tap one to take it OUT.</p>');const c=document.createElement('div');c.className='chk';it.checks.forEach(ch=>{const b=document.createElement('button');b.type='button';b.className='ck';b.setAttribute('aria-pressed',isOn(r,ch.key));b.innerHTML=`<i>&#10003;</i><b>${esc(ch.label)}</b><small>${esc(ch.sub||'')}</small>`;b.onclick=()=>{if(isOn(r,ch.key))r.checks[ch.key]=false;else delete r.checks[ch.key];queue(it);render()};c.append(b)});el.append(c)}
  if(it.thumbs){el.insertAdjacentHTML('beforeend','<p class="hint">Tap a picture to look closer, then APPROVE the one you pick or comment on it.</p>');const t=document.createElement('div');t.className='thumbs';
   it.thumbs.forEach(th=>{const k='t-'+th.key,x=r.imgs[k]||{};const b=document.createElement('button');b.type='button';b.className='th';if(x.v)b.dataset.v=x.v;b.innerHTML=`${x.v?`<span class="mk">${VW[x.v]}</span>`:''}<img src="${th.img}" alt=""><b>${esc(th.label)}</b>${th.sub?`<small>${esc(th.sub)}</small>`:''}`;b.onclick=()=>openM(it,{k,src:th.img,label:th.label,pickKey:th.key});t.append(b)});el.append(t)}
  if(it.options){const row=document.createElement('div');row.className='row';it.options.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='opt';b.textContent=o.label;b.setAttribute('aria-pressed',r.pick===o.key);b.onclick=()=>{r.pick=r.pick===o.key?'':o.key;queue(it);render()};row.append(b)});el.append(row)}
  const ta=document.createElement('textarea');ta.placeholder='Optional note for this whole card: type, or tap TALK';ta.value=r.note||'';ta.setAttribute('aria-label','Note for '+it.title);ta.oninput=()=>{r.note=ta.value;queue(it)};
  const mic=document.createElement('button');mic.type='button';mic.className='mic';mic.textContent='TALK';mic.style.marginTop='8px';mic.onclick=()=>talk(ta,mic);el.append(ta,mic);list.append(el)});tally()}
 function talk(ta,mic){if(!SR){ta.focus();return}const rc=new SR();rc.lang='en-CA';rc.interimResults=false;mic.classList.add('live');rc.onresult=e=>{ta.value=(ta.value?ta.value+' ':'')+e.results[0][0].transcript;ta.dispatchEvent(new Event('input'))};rc.onend=rc.onerror=()=>mic.classList.remove('live');rc.start()}
-function tally(){const d=SPEC.items.filter(it=>{const r=S[it.id];return r&&(r.pick||Object.values(r.imgs||{}).some(x=>x.v))}).length;$('count').textContent=d+' of '+SPEC.items.length+' answered'}
+function tally(){const d=SPEC.items.filter(it=>{const r=S[it.id];return r&&(r.pick||Object.keys(r.checks||{}).length||Object.values(r.imgs||{}).some(x=>x.v))}).length;$('count').textContent=d+' of '+SPEC.items.length+' answered'}
 /* ---- picture dialog: click the picture, approve / change / reject, pin a spot, comment ---- */
 let cur=null;
 function pins(){const st=$('stage');st.querySelectorAll('.pin').forEach(p=>p.remove());const x=ir(cur.it.id,cur.e.k);(x.pins||[]).forEach((p,n)=>{const d=document.createElement('span');d.className='pin';d.style.left=p[0]+'%';d.style.top=p[1]+'%';d.textContent=n+1;st.append(d)})}
@@ -112,6 +120,7 @@ $('mnote').oninput=()=>{ir(cur.it.id,cur.e.k).c=$('mnote').value;queue(cur.it)};
 $('clear').onclick=()=>{if(!window.__sure){window.__sure=1;$('clear').textContent='TAP AGAIN TO CLEAR';setTimeout(()=>{window.__sure=0;$('clear').textContent='CLEAR'},3000);return}window.__sure=0;$('clear').textContent='CLEAR';S={};persist();render();SPEC.items.forEach(queue)};
 $('copy').onclick=async()=>{const L=[SPEC.title.toUpperCase()+' ANSWERS:'];SPEC.items.forEach((it,i)=>{const r=S[it.id]||{imgs:{}};
  L.push(String(i+1).padStart(2,'0')+' '+it.title+': '+(r.pick?labelFor(it,r.pick):'(no choice, hold)')+(r.note&&r.note.trim()?' | note: '+r.note.trim():''));
+ if(it.checks){const rm=it.checks.filter(c=>(r.checks||{})[c.key]===false).map(c=>c.label);L.push('    - '+(it.checks.length-rm.length)+' kept, '+rm.length+' taken out'+(rm.length?': '+rm.join(', '):''))}
  entries(it).forEach(e=>{const x=(r.imgs||{})[e.k];if(x&&(x.v||x.c||(x.pins||[]).length))L.push('    - '+e.label+': '+(VW[x.v]||'no verdict')+((x.pins||[]).length?' | pins at '+x.pins.map((p,n)=>(n+1)+'=('+p[0]+'%,'+p[1]+'%)').join(' '):'')+(x.c&&x.c.trim()?' | '+x.c.trim():''))})});
  const t=L.join('\n');$('outText').value=t;$('out').style.display='block';try{await navigator.clipboard.writeText(t)}catch(e){$('outText').select()}$('out').scrollIntoView({behavior:'smooth',block:'center'})};
 render();
