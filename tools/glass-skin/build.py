@@ -74,4 +74,9 @@ p += '\n<style id="concierge-panel-css">\n' + (CG_PANEL / 'panel.css').read_text
 p = rep(p, "<title>GRACE'S DASHBOARD · PEPTICITY</title>", "<title>CONCIERGE PANEL · PREVIEW</title>")
 write('concierge-glass/panel/index.html', skin(p))
 
-write('command-center/index.html', skin(CC_HTML.read_text()))
+cc = CC_HTML.read_text()
+# owner: no "YOUR COMMAND CENTER" header and no "COMMAND CENTER" label under the logo; the view tab reads HOME
+cc = rep(cc, '\n        <h1 class="h3d" data-t="YOUR COMMAND CENTER" data-type3d>YOUR COMMAND CENTER</h1>', '')
+cc = rep(cc, '<span class="h3d" data-t="PEPTICITY" data-type3d>PEPTICITY</span><small>COMMAND CENTER</small>', '<span class="h3d" data-t="PEPTICITY" data-type3d>PEPTICITY</span>')
+cc = rep(cc, 'aria-selected="true">Command Center</button>', 'aria-selected="true">Home</button>')
+write('command-center/index.html', skin(cc))

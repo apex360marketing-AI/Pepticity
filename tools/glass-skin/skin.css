@@ -1,81 +1,127 @@
-/* PEPTICITY · DESK GLASS SKIN
+/* PEPTICITY · DESK GLASS SKIN v2
    One look for the dashboards, the concierge and the Command Center, taken from the PEPTICITY DESK:
    ground #0b0b0c, platinum #e6e9ed / #9aa3b0, glow #dcd6ff, liquid-glass panes (translucent gradient,
-   blur 12-14px saturate 1.3, clipped corners, thin glow line), Michroma labels + Geist body.
-   The accent (--acc*) is set by skin.js from the 10-colour switcher. Layout and content are untouched. */
+   blur 12-14px saturate 1.3, clipped corners, glow rim). v2 adds colour and light:
+   - every colour option is a PAIR (--acc + --acc2), e.g. Chrome Gold with sapphire, like the Desk globe
+   - a torch that follows the pointer behind the glass, plus a hot spot inside the card under the pointer
+   - a coloured rim that brightens where the pointer is, an inner glow and lit labels on hover
+   - one light sweep at a time across the cards (sequenced by skin.js), hover fires it at once
+   - colour on figures, eyebrows, chart lines, bars and the active tab
+   Page fonts, layout, copy and the 3D type stay as approved (CLAUDE.md). Tokens are set by skin.js. */
 :root{
   --dk-ground:#0b0b0c;--dk-plat:#e6e9ed;--dk-dim:#9aa3b0;--dk-glow:#dcd6ff;--dk-line:rgba(220,214,255,.32);
-  --dk-gold-hi:#f0e6c7;--dk-gold-mid:#a4845d;--dk-gold-wrap:#d9c39a;
-  --acc:#d9c39a;--acc-hi:#f0e6c7;--acc-glow:rgba(217,195,154,.30);--acc-soft:rgba(217,195,154,.10);--acc-line:rgba(217,195,154,.42);
+  --acc:#d9c39a;--acc-hi:#f0e6c7;--acc2:#4f7dff;--acc2-hi:#9fb6ff;
+  --acc-glow:rgba(217,195,154,.30);--acc-soft:rgba(217,195,154,.10);--acc2-glow:rgba(79,125,255,.26);--acc-line:rgba(240,230,199,.45);
+  --acc-ink:color-mix(in srgb,var(--acc-hi) 78%,#e6e9ed);
   --acc-grad:linear-gradient(135deg,#f0e6c7 0%,#d9c39a 30%,#a4845d 55%,#f0e6c7 78%,#d9c39a 100%);
-  --dk-cut:12px;
-  --dk-label:'Michroma','Geist',ui-sans-serif,system-ui,sans-serif;
+  --dk-ease:cubic-bezier(.2,.9,.2,1);
+  --dk-label:'Michroma',ui-sans-serif,system-ui,sans-serif;
 }
 
-/* ambient light in the accent, behind everything */
+/* ---------- LIGHT BEHIND THE GLASS ---------- */
 .dk-amb{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(1100px 680px at 104% -12%,var(--acc-glow),transparent 62%),radial-gradient(900px 600px at -8% 112%,var(--acc-soft),transparent 60%);
-  opacity:.55;transition:background .6s ease}
+  background:radial-gradient(1100px 680px at 104% -12%,var(--acc-glow),transparent 62%),
+             radial-gradient(1000px 640px at -10% 112%,var(--acc2-glow),transparent 60%),
+             radial-gradient(700px 420px at 50% 118%,var(--acc-soft),transparent 70%);
+  opacity:1;transition:background .6s ease}
+/* torch: follows the pointer, lights the smoke under every pane (the panes sample it through their blur) */
+.dk-torch{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;
+  background:radial-gradient(560px 360px at var(--px,50vw) var(--py,40vh),color-mix(in srgb,var(--acc) 24%,transparent) 0%,color-mix(in srgb,var(--acc2) 9%,transparent) 46%,transparent 72%)}
+.dk-torch.lit{opacity:1}
+.dk-torch.over{opacity:.6}
+@media (hover:none),(prefers-reduced-motion:reduce){.dk-torch{display:none}}
 
 /* ---------- LIQUID GLASS PANES ---------- */
-.glass,.dk-pane{
-  background:radial-gradient(280px circle at var(--mx,-600px) var(--my,-600px),var(--acc-soft),transparent 70%),
-             linear-gradient(150deg,rgba(220,214,255,.10) 0%,rgba(220,214,255,.035) 38%,rgba(8,8,12,.40) 72%)!important;
+.glass,.dk-pane,.does li,.line>div,.demo{
+  background:radial-gradient(320px circle at var(--mx,-900px) var(--my,-900px),color-mix(in srgb,var(--acc) 15%,transparent),transparent 70%),
+             radial-gradient(120% 80% at 0% 0%,color-mix(in srgb,var(--acc) 11%,transparent),transparent 55%),
+             radial-gradient(100% 70% at 100% 100%,color-mix(in srgb,var(--acc2) 10%,transparent),transparent 60%),
+             linear-gradient(150deg,rgba(220,214,255,.08) 0%,rgba(220,214,255,.025) 38%,rgba(8,8,12,.40) 72%)!important;
   background-size:auto!important;background-position:0 0!important;background-repeat:no-repeat!important;
   -webkit-backdrop-filter:blur(13px) saturate(1.3)!important;backdrop-filter:blur(13px) saturate(1.3)!important;
   border-color:transparent!important;
-  box-shadow:inset 0 1px 0 rgba(240,236,255,.16),0 30px 60px -36px rgba(0,0,0,.9)!important;
-}
+  box-shadow:inset 0 1px 0 rgba(240,236,255,.16),0 30px 60px -36px rgba(0,0,0,.9)!important}
 .glass:hover{animation:none!important}
-.glass::before{background:radial-gradient(120% 70% at 10% -10%,rgba(240,236,255,.12),transparent 50%)!important}
-/* the thin glow line, following the clipped outline (the Desk's ::after border) */
-.glass::after,.dk-pane::after{content:""!important;position:absolute!important;inset:0!important;left:0!important;right:0!important;top:0!important;width:auto!important;height:auto!important;
-  transform:none!important;background:none!important;opacity:1!important;border:1px solid var(--acc-line)!important;border-radius:inherit;clip-path:inherit;pointer-events:none;z-index:2}
-.dk-pane{position:relative;isolation:isolate}
+.dk-pane,.does li,.line>div,.demo{position:relative;isolation:isolate;border-radius:0!important}
+/* gloss in the accent; brighter on hover */
+.glass::before,.dk-pane::before,.does li::before,.line>div::before,.demo::before{content:""!important;position:absolute;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(125% 90% at 30% -20%,color-mix(in srgb,var(--acc) 20%,transparent),transparent 62%)!important;opacity:.45;transition:opacity .45s var(--dk-ease)}
+/* the rim: a 1px ring in the pair of colours, brightest where the pointer is */
+.glass::after,.dk-pane::after,.does li::after,.line>div::after,.demo::after{content:""!important;position:absolute!important;inset:0!important;left:0!important;right:0!important;top:0!important;width:auto!important;height:auto!important;
+  transform:none!important;opacity:1!important;border:0!important;padding:1px;box-sizing:border-box;border-radius:inherit;clip-path:inherit;pointer-events:none;z-index:2;
+  background:radial-gradient(260px circle at var(--mx,-900px) var(--my,-900px),var(--acc-hi),transparent 70%),
+             linear-gradient(135deg,color-mix(in srgb,var(--acc-hi) 78%,transparent) 0%,color-mix(in srgb,var(--acc) 22%,rgba(220,214,255,.12)) 28%,rgba(220,214,255,.08) 60%,color-mix(in srgb,var(--acc2) 72%,transparent) 100%)!important;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 /* clipped corners: top-left and bottom-right, like the Desk panels */
-.card,.order,.prod,.inbox,.plat,.sheet,.top.glass,.tabs.glass,.toast.glass,.panel.glass,.stat.glass,.dk-pane{
+.card,.order,.prod,.inbox,.plat,.sheet,.top.glass,.tabs.glass,.toast.glass,.panel.glass,.stat.glass,.steps.glass,.dk-pane,.does li,.line>div,.demo{
   --dk-cut:14px;border-radius:0!important;
   clip-path:polygon(var(--dk-cut) 0,100% 0,100% calc(100% - var(--dk-cut)),calc(100% - var(--dk-cut)) 100%,0 100%,0 var(--dk-cut))!important}
-.prod,.plat,.tabs.glass{--dk-cut:10px}
+.prod,.plat,.tabs.glass,.line>div{--dk-cut:10px}
 .top.glass{--dk-cut:12px}
 
-/* ---------- TYPE: page fonts stay as approved (CLAUDE.md); only the accent colour is added ---------- */
-.eyebrow::before,.eyebrow i{background:linear-gradient(90deg,var(--acc-hi),transparent)!important}
-/* figures in the metal of the chosen colour */
-.kpi .val,.stat .v,.stat b{background:var(--acc-grad);-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;
-  text-shadow:none!important;filter:drop-shadow(0 6px 14px rgba(0,0,0,.55))}
+/* ---------- HOVER: the pane lights up ---------- */
+@media (hover:hover){
+  .glass:not(.top):not(.tabs):not(.sheet):hover,.dk-pane:hover,.does li:hover,.line>div:hover,.demo:hover{
+    box-shadow:inset 0 0 34px -6px color-mix(in srgb,var(--acc) 30%,transparent),inset 0 -18px 40px -30px color-mix(in srgb,var(--acc2) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.24),0 30px 60px -36px rgba(0,0,0,.9)!important}
+  .glass:hover::before,.dk-pane:hover::before,.does li:hover::before,.line>div:hover::before,.demo:hover::before{opacity:1}
+  .glass:hover .eyebrow,.glass:hover .lab,.glass:hover .ctitle span,.glass:hover small,.does li:hover h3,.line>div:hover b{color:var(--acc-ink)!important;text-shadow:0 0 18px color-mix(in srgb,var(--acc) 55%,transparent)}
+  .glass:hover .val,.glass:hover .kpi b,.glass:hover .stat b{filter:drop-shadow(0 0 14px color-mix(in srgb,var(--acc) 45%,transparent)) drop-shadow(0 6px 14px rgba(0,0,0,.55))!important}
+}
 
-/* ---------- CONTROLS ---------- */
-.tab[aria-selected="true"]{border-color:var(--acc-line)!important;background:linear-gradient(180deg,var(--acc-soft),rgba(255,255,255,.02))!important;
-  box-shadow:inset 0 0 14px var(--acc-soft),0 0 18px -6px var(--acc-glow)!important}
+/* ---------- THE SWEEP (one pane at a time, driven by skin.js) ---------- */
+.dk-sweep{position:absolute;top:-35%;bottom:-35%;left:-60%;width:36%;z-index:-1;pointer-events:none;opacity:0;transform:skewX(-14deg);filter:blur(12px);
+  background:linear-gradient(100deg,transparent 0%,color-mix(in srgb,var(--acc) 18%,transparent) 40%,color-mix(in srgb,var(--acc-hi) 42%,transparent) 50%,color-mix(in srgb,var(--acc2) 20%,transparent) 60%,transparent 100%)}
+.dk-sweeping>.dk-sweep{animation-name:dk-sweep;animation-duration:1.9s;animation-timing-function:cubic-bezier(.4,.02,.3,1);animation-iteration-count:1;animation-fill-mode:both}
+@keyframes dk-sweep{0%{left:-60%;opacity:0}10%{opacity:.95}82%{opacity:.95}100%{left:125%;opacity:0}}
+@media (prefers-reduced-motion:reduce){.dk-sweep,.dk-sweeping>.dk-sweep{animation:none;left:30%;opacity:.35;filter:blur(18px)}}
+
+/* ---------- COLOUR IN THE CONTENT ---------- */
+.eyebrow{color:var(--acc-ink)!important}
+.eyebrow::before,.eyebrow i{background:linear-gradient(90deg,var(--acc-hi),color-mix(in srgb,var(--acc2) 60%,transparent) 60%,transparent)!important}
+/* figures in the metal of the chosen colour */
+.kpi .val,.kpi b,.stat b{background:var(--acc-grad);-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;
+  text-shadow:none!important;filter:drop-shadow(0 6px 14px rgba(0,0,0,.55))}
+/* charts: the line runs partner -> accent -> light; the area fades from the accent */
+#gLine stop:nth-child(1){stop-color:var(--acc2)!important}
+#gLine stop:nth-child(2){stop-color:var(--acc)!important}
+#gLine stop:nth-child(3){stop-color:var(--acc-hi)!important}
+#gArea stop{stop-color:var(--acc)!important}
+.bar .fl{background:linear-gradient(90deg,color-mix(in srgb,var(--acc2) 70%,#0b0b0c),var(--acc) 62%,var(--acc-hi))!important;box-shadow:0 0 14px color-mix(in srgb,var(--acc) 55%,transparent)!important}
+.bar .rk{color:var(--acc)!important}
+.bar .amt{color:var(--acc-ink)!important}
+/* chart point only; status dots (.ok/.off/.warn/.bad) keep their meaning colours */
+.dot:not(.ok):not(.off):not(.warn):not(.bad){background:var(--acc-hi)!important;box-shadow:0 0 8px var(--acc-hi),0 0 18px var(--acc2)!important}
+/* controls */
+.tab[aria-selected="true"],.seg button[aria-selected="true"]{border-color:var(--acc-line)!important;color:var(--dk-plat)!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 26%,transparent),color-mix(in srgb,var(--acc2) 10%,transparent))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 16px color-mix(in srgb,var(--acc) 22%,transparent),0 0 20px -6px var(--acc-glow)!important}
 .tab[aria-selected="true"] .n{color:var(--acc-hi)!important}
+.tab:hover,.seg button:hover{color:var(--acc-ink)!important}
 .pc-seg__thumb{box-shadow:0 0 0 1px var(--acc-line),0 0 18px -4px var(--acc-glow)!important}
-.btn:hover,.pc-btn:hover{box-shadow:0 0 22px -6px var(--acc-glow)}
+.btn:hover,.pc-btn:hover{box-shadow:inset 0 0 0 1px var(--acc-line),0 0 24px -6px var(--acc-glow)!important}
 :focus-visible{outline-color:var(--acc-hi)!important}
-.dot.ok,.unread:not(:empty){box-shadow:0 0 10px var(--acc-glow)}
+.unread:not(:empty){box-shadow:0 0 10px var(--acc-glow)}
 
 /* ---------- CONCIERGE PAGE (only matches there) ---------- */
-.does li,.line>div,.demo,.asks>*{position:relative;isolation:isolate;
-  background:linear-gradient(150deg,rgba(220,214,255,.10),rgba(220,214,255,.03) 40%,rgba(8,8,12,.42) 74%)!important;
-  -webkit-backdrop-filter:blur(13px) saturate(1.3);backdrop-filter:blur(13px) saturate(1.3);border-color:transparent!important;border-radius:0!important;
-  --dk-cut:12px;clip-path:polygon(var(--dk-cut) 0,100% 0,100% calc(100% - var(--dk-cut)),calc(100% - var(--dk-cut)) 100%,0 100%,0 var(--dk-cut))}
-.does li::after,.line>div::after,.demo::after,.asks>*::after{content:"";position:absolute;inset:0;border:1px solid var(--acc-line);clip-path:inherit;pointer-events:none}
-.does .n{color:var(--acc-hi)!important;-webkit-text-fill-color:var(--acc-hi)!important;background:none!important}
+.does .n{color:var(--acc-hi)!important;-webkit-text-fill-color:var(--acc-hi)!important;background:none!important;text-shadow:0 0 16px color-mix(in srgb,var(--acc) 50%,transparent)}
 .line b,.demo b{background:var(--acc-grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.chips span{border-color:var(--acc-line)!important}
-.pb-panel{background:linear-gradient(160deg,rgba(220,214,255,.10),rgba(8,8,12,.80) 55%)!important;border-color:var(--acc-line)!important}
+.chips span{border-color:var(--acc-line)!important;color:var(--acc-ink)!important}
+.asks>*{border-color:var(--acc-line)!important}
+.asks>*:hover{box-shadow:inset 0 0 22px -6px color-mix(in srgb,var(--acc) 40%,transparent),0 0 20px -8px var(--acc-glow)!important;color:var(--acc-ink)!important}
+.pb-panel{background:linear-gradient(160deg,color-mix(in srgb,var(--acc) 12%,transparent),rgba(8,8,12,.80) 55%)!important;border-color:var(--acc-line)!important}
 .pb-msg--bot{border-color:var(--acc-line)!important}
 
 /* ---------- COLOUR SWITCHER ---------- */
 .dk-sw{position:fixed;left:16px;bottom:16px;z-index:9000;font-family:var(--dk-label);color:var(--dk-plat)}
-.dk-sw__btn,.dk-sw__pop{background:linear-gradient(150deg,rgba(220,214,255,.14),rgba(8,8,12,.70) 60%);
+.dk-sw__btn,.dk-sw__pop{background:linear-gradient(150deg,color-mix(in srgb,var(--acc) 18%,rgba(220,214,255,.10)),rgba(8,8,12,.72) 60%);
   -webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3);position:relative;
   clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
-.dk-sw__btn::after,.dk-sw__pop::after{content:"";position:absolute;inset:0;border:1px solid var(--dk-line);clip-path:inherit;pointer-events:none}
+.dk-sw__btn::after,.dk-sw__pop::after{content:"";position:absolute;inset:0;border:1px solid var(--acc-line);clip-path:inherit;pointer-events:none}
 .dk-sw__btn{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 12px;border:0;color:inherit;cursor:pointer;font:400 9.5px/1 var(--dk-label);letter-spacing:.2em;text-transform:uppercase}
-.dk-sw__btn:hover{background:linear-gradient(150deg,rgba(220,214,255,.24),rgba(8,8,12,.70) 60%)}
-.dk-sw__cur{width:16px;height:16px;transform:rotate(45deg);background:var(--acc-grad);box-shadow:0 0 10px var(--acc-glow)}
-.dk-sw__pop{position:absolute;left:0;bottom:54px;width:max-content;padding:14px;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.2,1)}
+.dk-sw__btn:hover{box-shadow:inset 0 0 18px color-mix(in srgb,var(--acc) 30%,transparent)}
+.dk-sw__cur{width:16px;height:16px;transform:rotate(45deg);background:linear-gradient(135deg,var(--acc-hi),var(--acc) 50%,var(--acc2));box-shadow:0 0 10px var(--acc-glow)}
+.dk-sw__pop{position:absolute;left:0;bottom:54px;width:max-content;padding:14px;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .35s,transform .45s var(--dk-ease)}
 .dk-sw.on .dk-sw__pop{opacity:1;transform:none;pointer-events:auto}
 .dk-sw__h{font-size:9px;letter-spacing:.24em;color:var(--dk-dim);margin:0 0 10px}
 .dk-sw__grid{display:grid;grid-template-columns:repeat(5,44px);gap:6px}
@@ -87,9 +133,9 @@
 .dk-sw__name{margin:12px 0 0;font-size:10px;letter-spacing:.18em;color:var(--dk-plat);text-transform:uppercase}
 .dk-sw :focus-visible{outline:1px solid var(--dk-glow)!important;outline-offset:2px}
 @media (max-width:640px){.dk-sw{left:12px;bottom:12px}.dk-sw__btn span{display:none}.dk-sw__btn{padding:0 14px}}
-@media (prefers-reduced-motion:reduce){.dk-sw__pop{transition:none}}
 /* pages with the concierge chat docked at the bottom: on phones the switcher moves to the top right */
 @media (max-width:640px){
   html:has(.pb-root) .dk-sw{left:auto;right:12px;bottom:auto;top:12px}
   html:has(.pb-root) .dk-sw__pop{left:auto;right:0;bottom:auto;top:54px}
 }
+@media (prefers-reduced-motion:reduce){.dk-sw__pop{transition:none}}
