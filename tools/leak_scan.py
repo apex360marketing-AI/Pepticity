@@ -15,7 +15,8 @@ MARKERS = {
                    'RENDER.marketing', 'RENDER.delight', 'RENDER.odrops', 'RENDER.olab', 'addProductForm',
                    'receiveForm', 'function csv('],
     'owner route': ["setView('owner'", "h==='owner'", '#owner'],
-    'owner copy': ['MONEY + TAXES', 'GRACE (OWNER)', 'NET PROFIT', 'UNIT COST', 'YOUR STUDIO', 'GOOD AFTERNOON, GRACE'],
+    'owner copy': ['MONEY + TAXES', 'GRACE (OWNER)', 'NET PROFIT', 'UNIT COST', 'YOUR STUDIO', 'GOOD AFTERNOON, GRACE',
+                   'Email the waitlist on arrival', 'on the restock list', "' units'"],
     'other customers': ['Marcus T.', 'Sofia L.', 'Nadia F.', 'Aaron B.', 'Elena R.', 'Mississauga, ON'],
 }
 

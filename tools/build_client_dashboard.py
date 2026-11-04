@@ -99,6 +99,10 @@ cut('function showNew(name){', '/* ---------- COPY')                     # add p
 cut('/* ---------- OWNER: REFERRALS', '/* ---------- SHARED V3 HELPERS')   # referrals + marketing
 cut('RENDER.olab=function(){', '/* ---------- TRUST')                     # lab uploads
 cut('/* ---------- OWNER: SURPRISE', '/* ---------- SILHOUETTES')          # delight desk, drops admin
+# the bottle drawer's owner-shelf extras (stock counts, waitlist size, waitlist email) never ship
+sub("+(o.units?' · '+p.onHand+' units':'')", '')
+s, n = re.subn(r"\n  if\(o\.coming\)\{var n=esc\(p\.name\).*?\n.*?'</span>'\}", '', s, count=1, flags=re.S)
+assert n == 1, 'bottle owner extras not stripped'
 # lot list keeps lot + date only (units received is stock data)
 s, n = re.subn(r"(\['[A-Z]{2}-\d{4}-[A-Z]','[^']*'),\d+\]", r"\1]", s)
 assert n >= 6, 'lot table not stripped'
