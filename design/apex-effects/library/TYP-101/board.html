@@ -1,0 +1,246 @@
+<title>APEX Letter Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: big live letter + verdict panel on the left (sticky on desktop), the full set as a tile wall on the right. */
+  :root {
+    --void: #040507; --panel: #0a0c10; --wall: #1d1e20; --ink: #e9edf2; --ink-2: #c3cad3; --muted: #9ea7b1; --dim: #636b75;
+    --spark: #d4ff3a; --rim: rgba(255,255,255,.14); --rim-2: rgba(255,255,255,.26); --change: #e6e9ee;
+    --display: "Syncopate", "Arial Black", system-ui, sans-serif;
+    --body: "Hanken Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--void); color: var(--ink); font-family: var(--body); }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+  .wrap { max-width: 1360px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  header { display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: end; justify-content: space-between; padding-block: 36px 22px; }
+  h1 { font-family: var(--display); font-size: clamp(20px, 2.8vw, 30px); letter-spacing: .14em; text-transform: uppercase; }
+  header p { margin-top: 10px; color: var(--ink-2); max-width: 60ch; line-height: 1.55; }
+  .counts { display: flex; gap: 18px; font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .counts b { display: block; font-size: 22px; color: var(--ink); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+  .counts .ok b { color: var(--spark); }
+  .finish { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .finish button { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); background: rgba(255,255,255,.03);
+    border: 1px solid var(--rim); padding: 9px 14px; cursor: pointer; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px)); }
+  .finish button[aria-pressed="true"] { color: var(--ink); border-color: var(--rim-2); box-shadow: inset 0 -2px 0 var(--spark); }
+  .finish button:focus-visible, .tile:focus-visible, .act:focus-visible, textarea:focus-visible, .nav button:focus-visible { outline: 2px solid var(--spark); outline-offset: 2px; }
+
+  main { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 22px; padding-block: 0 64px; align-items: start; }
+  .focus { position: sticky; top: max(12px, env(safe-area-inset-top, 0px)); display: grid; gap: 14px; }
+  .stage { position: relative; aspect-ratio: 1 / .78; max-width: 100%; border: 1px solid var(--rim); background: var(--stage-bg, var(--wall));
+           clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px)); }
+  .stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(110% 90% at 50% 45%, transparent 50%, rgba(0,0,0,.5) 100%); }
+  .stage .big { position: absolute; inset: 0; }
+  .stage .fb { position: absolute; inset: 0; display: none; place-items: center; }
+  .stage .fb svg { height: 62%; }
+  .nogl .stage .fb { display: grid; }
+  .stage .tag { position: absolute; left: 18px; top: 16px; z-index: 4; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; }
+  .stage .tag b { color: var(--ink); font-size: 14px; }
+  .nav { position: absolute; right: 14px; bottom: 14px; z-index: 4; display: flex; gap: 8px; }
+  .nav button { width: 42px; height: 42px; background: rgba(6,8,12,.5); color: var(--ink); border: 1px solid var(--rim); cursor: pointer; font: 600 16px var(--body); backdrop-filter: blur(8px); }
+
+  .verdict { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--rim); background: linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.01)), var(--panel);
+             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%); }
+  .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .act { position: relative; overflow: hidden; padding: 16px 12px; font: 700 13px var(--display); letter-spacing: .16em; text-transform: uppercase; cursor: pointer;
+         color: var(--ink); background: linear-gradient(180deg, #2a2d32, #121418); border: 1px solid var(--rim-2);
+         clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+  .act::before { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%); transform: translateX(-120%); transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .act:hover::before { transform: translateX(120%); }
+  .act:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(212,255,58,.35); }
+  .act[aria-pressed="true"].ok { color: #0b0c0e; background: linear-gradient(180deg, #f2f4f6, #b9bfc7); box-shadow: 0 0 0 1px var(--spark), 0 0 24px rgba(212,255,58,.25); }
+  .act[aria-pressed="true"].chg { border-color: var(--change); box-shadow: inset 0 -3px 0 var(--spark); }
+  label { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  textarea { width: 100%; min-height: 96px; resize: vertical; padding: 12px; font: 16px/1.5 var(--body); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid var(--rim); }
+  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .saved { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--dim); text-transform: uppercase; min-height: 1.2em; }
+
+  .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+  .tile { position: relative; aspect-ratio: 1 / 1.08; border: 1px solid var(--rim); background: var(--stage-bg, var(--wall)); cursor: pointer; padding: 0; color: inherit;
+          clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); transition: border-color .2s, transform .25s; }
+  .tile:hover { border-color: var(--rim-2); transform: translateY(-2px); }
+  .tile[aria-current="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  .tile .k { position: absolute; left: 7px; bottom: 6px; z-index: 4; font: 500 10px var(--mono); letter-spacing: .1em; color: var(--muted); }
+  .tile .mark { position: absolute; right: 6px; top: 6px; z-index: 4; width: 8px; height: 8px; border-radius: 50%; }
+  .tile[data-s="accept"] .mark { background: var(--spark); box-shadow: 0 0 8px var(--spark); }
+  .tile[data-s="change"] .mark { border: 1.5px solid var(--change); }
+  .tile .fb { position: absolute; inset: 14% 18% 22%; display: none; }
+  .tile .fb svg { width: 100%; height: 100%; }
+  .nogl .tile .fb { display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+    .focus { position: static; }
+    .tiles { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  }
+  @media (max-width: 420px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+</style>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>APEX LETTER BOARD · TYP-101</h1>
+      <p>Every letter and number of the APEX 360 lettering, live in 3D. Pick one, look at it, then press ACCEPT or CHANGE IT and say what to change.</p>
+    </div>
+    <div class="counts" aria-live="polite">
+      <span class="ok"><b id="nOk">0</b>Accepted</span>
+      <span><b id="nChg">0</b>To change</span>
+      <span><b id="nLeft">0</b>Not reviewed</span>
+    </div>
+  </header>
+
+  <div class="finish" role="group" aria-label="Finish">
+    <button type="button" data-style="gunmetal" aria-pressed="true">Brushed gunmetal</button>
+    <button type="button" data-style="gunspark" aria-pressed="false">Gunmetal · chartreuse light</button>
+    <button type="button" data-style="onyx" aria-pressed="false">Onyx · chrome edge</button>
+  </div>
+
+  <main>
+    <section class="focus" aria-label="Selected letter">
+      <div class="stage">
+        <div class="tag"><b id="selName">A</b> · <span id="selNote">NEW A</span></div>
+        <div class="big" id="big"></div>
+        <div class="fb" id="bigFb"></div>
+        <div class="nav"><button type="button" id="prev" aria-label="Previous letter">‹</button><button type="button" id="next" aria-label="Next letter">›</button></div>
+      </div>
+      <div class="verdict">
+        <div class="acts">
+          <button type="button" class="act ok" id="accept" aria-pressed="false">Accept</button>
+          <button type="button" class="act chg" id="change" aria-pressed="false">Change it</button>
+        </div>
+        <label for="note">What should change on this letter?</label>
+        <textarea id="note" placeholder="Type here, or tap the microphone on your keyboard and just say it."></textarea>
+        <p class="hint">Notes save as you type. Press the arrows or the letters on the right to move on.</p>
+        <p class="saved" id="saved"></p>
+      </div>
+    </section>
+
+    <section aria-label="All letters and numbers">
+      <div class="tiles" id="tiles"></div>
+      <div class="legend"><span><i style="background:var(--spark)"></i>Accepted</span><span><i style="border:1.5px solid var(--change)"></i>To change</span><span>No dot: not reviewed yet</span></div>
+    </section>
+  </main>
+</div>
+
+<script src="glyphs.js"></script>
+<script>
+  // The full set, in order. "A-WIDE" is the first-draft A, kept so it can be compared with the new one.
+  var KEYS = 'A,A-WIDE,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9'.split(',');
+  var NOTE = { A: 'NEW A', 'A-WIDE': 'FIRST-DRAFT A' };
+  function glyphFor(k) { return TYP101.alt[k] || TYP101.glyphs[k]; }
+  function svgFor(k) {
+    var g = glyphFor(k), ring = function (p) { return 'M' + p.map(function (q) { return q[0] + ' ' + (100 - q[1]); }).join('L') + 'Z'; };
+    var d = g.outlines.map(function (ol) { return ring(ol.pts) + ol.holes.map(ring).join(''); }).join('');
+    return '<svg viewBox="-4 -4 ' + (g.w + 8) + ' 108" aria-hidden="true"><path d="' + d + '" fill="#9aa0a7" fill-rule="evenodd"/></svg>';
+  }
+  var tilesEl = document.getElementById('tiles');
+  KEYS.forEach(function (k) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'tile'; b.dataset.k = k;
+    b.setAttribute('aria-label', (NOTE[k] || k) + ', not reviewed');
+    b.innerHTML = '<span class="fb">' + svgFor(k) + '</span><span class="mark"></span><span class="k">' + (k === 'A-WIDE' ? 'A·OLD' : k) + '</span>';
+    tilesEl.appendChild(b);
+  });
+  window.apexFallback = function () {
+    if (document.body.classList.contains('nogl')) return;
+    document.body.classList.add('nogl'); document.getElementById('gl').style.display = 'none';
+    document.getElementById('bigFb').innerHTML = svgFor(window.__sel || 'A');
+  };
+  if (/[?&]nogl/.test(location.search)) apexFallback();
+  setTimeout(function () { if (!window.__apex3dReady) apexFallback(); }, 7000);
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+  import { mountBoard } from './board3d.js';
+  const KEYS = window.KEYS, $ = id => document.getElementById(id);
+  const tiles = [...document.querySelectorAll('.tile')];
+  const state = {};               // k -> { status, note }
+  let sel = 'A';
+  try { const saved = JSON.parse(localStorage.getItem('typ101-board') || '{}'); Object.assign(state, saved); } catch (e) {}
+
+  function render() {
+    let ok = 0, chg = 0;
+    tiles.forEach(t => {
+      const s = state[t.dataset.k]?.status || '';
+      t.dataset.s = s; t.setAttribute('aria-current', t.dataset.k === sel ? 'true' : 'false');
+      t.setAttribute('aria-label', (window.NOTE[t.dataset.k] || t.dataset.k) + ', ' + (s === 'accept' ? 'accepted' : s === 'change' ? 'to change' : 'not reviewed'));
+      if (s === 'accept') ok++; else if (s === 'change') chg++;
+    });
+    $('nOk').textContent = ok; $('nChg').textContent = chg; $('nLeft').textContent = KEYS.length - ok - chg;
+    const cur = state[sel] || {};
+    $('selName').textContent = sel === 'A-WIDE' ? 'A' : sel;
+    $('selNote').textContent = window.NOTE[sel] || (/[0-9]/.test(sel) ? 'NUMBER' : 'LETTER');
+    $('accept').setAttribute('aria-pressed', cur.status === 'accept' ? 'true' : 'false');
+    $('change').setAttribute('aria-pressed', cur.status === 'change' ? 'true' : 'false');
+    if (document.activeElement !== $('note')) $('note').value = cur.note || '';
+    if (document.body.classList.contains('nogl')) $('bigFb').innerHTML = window.svgFor(sel);
+    window.__sel = sel;
+  }
+
+  // Saving: shared store when the viewer allows it (Claude reads it back), otherwise this device only.
+  let db = null;
+  const local = () => { try { localStorage.setItem('typ101-board', JSON.stringify(state)); } catch (e) {} };
+  const timers = {};
+  function save(k) {
+    local();
+    if (!db) { $('saved').textContent = 'Saved on this device only'; return; }
+    clearTimeout(timers[k]);
+    timers[k] = setTimeout(() => {
+      const s = state[k] || {};
+      db.collection('letters').doc(k).set({ status: s.status || null, note: s.note || '', updatedAt: Date.now() })
+        .then(() => { $('saved').textContent = 'Saved'; })
+        .catch(() => { $('saved').textContent = 'Could not save to the shared board. Kept on this device.'; });
+    }, 500);
+  }
+  (async () => {
+    try { db = await window.claude?.use?.('db'); } catch (e) { db = null; }
+    if (!db) { $('saved').textContent = 'Saved on this device only'; return; }
+    db.collection('letters').onSnapshot(snap => {
+      snap.docs.forEach(d => { const v = d.data() || {}; state[d.id] = { status: v.status || null, note: v.note || '' }; });
+      local(); render();
+    }, () => { $('saved').textContent = 'Saved on this device only'; });
+  })();
+
+  function pick(k) { sel = k; render(); board?.kick(); }
+  function set(status) { const s = state[sel] = state[sel] || {}; s.status = s.status === status ? null : status; render(); save(sel); if (status === 'change' && s.status) $('note').focus(); }
+  $('accept').addEventListener('click', () => set('accept'));
+  $('change').addEventListener('click', () => set('change'));
+  $('note').addEventListener('input', e => {
+    const s = state[sel] = state[sel] || {}; s.note = e.target.value;
+    if (s.note && !s.status) s.status = 'change';
+    render(); $('saved').textContent = 'Saving…'; save(sel);
+  });
+  const step = d => pick(KEYS[(KEYS.indexOf(sel) + d + KEYS.length) % KEYS.length]);
+  $('prev').addEventListener('click', () => step(-1));
+  $('next').addEventListener('click', () => step(1));
+  tiles.forEach(t => t.addEventListener('click', () => { pick(t.dataset.k); if (matchMedia('(max-width: 900px)').matches) document.querySelector('.focus').scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+  addEventListener('keydown', e => { if (e.target.tagName === 'TEXTAREA') return; if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
+
+  const BG = { gunmetal: '#1d1e20', gunspark: '#1a1b1d', onyx: 'radial-gradient(90% 110% at 50% 40%, #12151a 0%, #040507 75%)' };
+  let board = null;
+  document.querySelectorAll('.finish button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.finish button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    document.documentElement.style.setProperty('--stage-bg', BG[b.dataset.style]);
+    board?.setStyle(b.dataset.style);
+  }));
+
+  render();
+  if (!document.body.classList.contains('nogl')) {
+    const probe = document.createElement('canvas');
+    if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) window.apexFallback();
+    else try {
+      board = mountBoard({ canvas: $('gl'), viewer: $('big'), tiles, glyphFor: window.glyphFor, getSelected: () => sel });
+      window.__apex3d = board; window.__apex3dReady = true;
+    } catch (e) { console.error(e); window.apexFallback(); }
+  }
+</script>

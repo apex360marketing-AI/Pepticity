@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLS-103 · Molten Numerals — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Hanken+Grotesk:wght@400;500;600&family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #08090b; --apx-surface: rgba(255, 255, 255, .05); --apx-ink: #e9edf2; --apx-muted: #9ea7b1;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .14); --apx-radius: 3px;
+    --apx-font-display: "Syncopate", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #eeece8; --apx-surface: rgba(255, 255, 255, .55); --apx-ink: #17181b; --apx-muted: #5f6066;
+    --apx-accent: #7d2235; --apx-accent-ink: #fbf6f3; --apx-line: rgba(23, 24, 27, .16); --apx-radius: 3px;
+    --apx-font-display: "Unbounded", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #08090b; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Hanken Grotesk", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 60vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 40px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; text-transform: uppercase; font-family: var(--apx-font-display); font-weight: 700; font-size: clamp(32px, 5.4vw, 72px); line-height: 1; letter-spacing: .04em; max-width: 16ch; }
+  .demo-intro p { margin: 0; max-width: 54ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-outro { min-height: 40vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+
+  /* ---- the showcase stage ---- */
+  .stage { position: relative; min-height: 100vh; min-height: 100svh; display: grid; align-content: center; padding: clamp(28px, 6vh, 72px) clamp(18px, 5vw, 80px); overflow: hidden; }
+  .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(60% 50% at 28% 46%, color-mix(in srgb, var(--apx-ink) 7%, transparent), transparent 70%), radial-gradient(40% 40% at 82% 70%, color-mix(in srgb, var(--apx-ink) 4%, transparent), transparent 70%); }
+  .theme-light .stage::before { background: radial-gradient(60% 50% at 28% 46%, #fff, transparent 70%); }
+  .grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px); align-items: end; width: 100%; max-width: 1280px; margin-inline: auto; }
+  .eyebrow { display: flex; gap: 14px; align-items: center; font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: var(--apx-muted); }
+  .chip { padding: 6px 9px 5px; border: 1px solid var(--apx-line); color: var(--apx-ink); background: color-mix(in srgb, var(--apx-ink) 6%, transparent); }
+  .chip i { display: inline-block; width: 5px; height: 5px; margin-right: 7px; vertical-align: 1px; background: var(--apx-accent); border-radius: 50%; box-shadow: 0 0 8px var(--apx-accent); }
+  .theme-light .chip i { box-shadow: none; }
+  .price { margin: clamp(26px, 5vh, 54px) 0 clamp(20px, 3vh, 34px); font-size: clamp(64px, 21vw, 112px); }
+  @media (min-width: 900px) { .price { font-size: min(13.5vw, 190px); } }
+  .price-sub { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: baseline; color: var(--apx-muted); font-size: 15px; }
+  .price-sub b { font: 700 12px/1 var(--apx-font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--apx-ink); }
+
+  /* smoked cut-corner glass (house style) */
+  .glass { position: relative; padding: 22px; color: var(--apx-ink);
+    --cut: 18px; clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+    background: linear-gradient(145deg, color-mix(in srgb, var(--apx-ink) 8%, transparent), color-mix(in srgb, var(--apx-ink) 1.5%, transparent)), color-mix(in srgb, var(--apx-bg) 40%, transparent);
+    backdrop-filter: blur(12px) saturate(1.6); -webkit-backdrop-filter: blur(12px) saturate(1.6); }
+  .glass::before { content: ""; position: absolute; inset: 0; pointer-events: none; border: 1px solid var(--apx-line);
+    clip-path: inherit; background: linear-gradient(135deg, transparent calc(var(--cut) * .7 - 1px), var(--apx-line) calc(var(--cut) * .7 - 1px), var(--apx-line) calc(var(--cut) * .7), transparent calc(var(--cut) * .7)) top left / calc(var(--cut) * 1.5) calc(var(--cut) * 1.5) no-repeat; }
+  .theme-light .glass { background: linear-gradient(145deg, rgba(255,255,255,.75), rgba(255,255,255,.35)); }
+
+  .try { margin-top: clamp(22px, 4vh, 40px); display: flex; gap: 0; align-items: stretch; max-width: 520px; padding: 6px; }
+  .try label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .try input { flex: 1; min-width: 0; height: 48px; padding: 0 14px; border: 0; background: transparent; color: var(--apx-ink); font: 500 16px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .06em; outline: none; }
+  .try input::placeholder { color: var(--apx-muted); }
+  .try:focus-within::after { content: ""; position: absolute; left: 20px; right: 20px; bottom: 6px; height: 1px; background: var(--apx-accent); }
+  .btn { position: relative; height: 48px; padding: 0 20px; border: 1px solid var(--apx-line); background: color-mix(in srgb, var(--apx-ink) 9%, transparent); color: var(--apx-ink); cursor: pointer;
+    font: 700 11px/1 var(--apx-font-display); letter-spacing: .16em; text-transform: uppercase; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: background .25s ease, transform .25s cubic-bezier(.3, .7, .2, 1); }
+  .btn::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 1px; background: var(--apx-accent); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.3, .7, .2, 1); }
+  .btn:hover, .btn:focus-visible { background: color-mix(in srgb, var(--apx-ink) 16%, transparent); outline: none; }
+  .btn:hover::after, .btn:focus-visible::after { transform: scaleX(1); }
+  .btn:active { transform: translateY(1px) scale(.98); }
+
+  .steps { padding: clamp(22px, 2.4vw, 30px); }
+  .steps h2 { margin: 0 0 6px; font: 700 12px/1.2 var(--apx-font-display); letter-spacing: .2em; color: var(--apx-muted); }
+  .counter { display: flex; align-items: flex-end; gap: 14px; margin: 18px 0 10px; }
+  .counter .apx-gls103 { font-size: clamp(64px, 8vw, 112px); }
+  .counter .of { padding-bottom: .5em; font: 600 13px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .16em; color: var(--apx-muted); }
+  .step-name { margin: 6px 0 2px; font: 700 clamp(15px, 1.4vw, 18px)/1.2 var(--apx-font-display); letter-spacing: .12em; text-transform: uppercase; min-height: 1.2em; }
+  .step-text { margin: 0; color: var(--apx-muted); font-size: 15px; line-height: 1.55; min-height: 3.1em; }
+  .rail { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; margin: 20px 0 18px; }
+  .rail span { height: 2px; background: var(--apx-line); position: relative; overflow: hidden; }
+  .rail span::after { content: ""; position: absolute; inset: 0; background: var(--apx-ink); transform: scaleX(0); transform-origin: left; transition: transform .6s cubic-bezier(.3, .7, .2, 1); }
+  .rail span.on::after { transform: scaleX(1); }
+  .rail span.now::after { background: var(--apx-accent); }
+  .nav { display: flex; gap: 10px; }
+  .nav .btn { flex: 1; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @media (max-width: 899px) {
+    .grid { grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .stage { align-content: start; padding-top: 54px; }
+    .price { margin-top: 22px; }
+  }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>GLS-103 · MOLTEN NUMERALS</b><a href="#dark">Dark set</a><a href="#light">Light set</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="demo-intro">
+      <small>GLS-103 · Dark colour set</small>
+      <h1>MOLTEN NUMERALS</h1>
+      <p>Numbers made of liquid chrome. When a value changes, the old digits melt into droplets that run along underneath and climb back up into the new number, with thin silver light arcs circling behind.</p>
+    </header>
+    <section class="stage" aria-label="Sample price and steps">
+      <div class="grid">
+        <div>
+          <div class="eyebrow"><span class="chip"><i></i>SAMPLE</span><span>PRICE SHOWN AS AN EXAMPLE</span></div>
+          <div class="apx-gls103 price" data-apx="GLS-103" data-value="$249"></div>
+          <div class="price-sub"><b>[YOUR PLAN NAME]</b><span>Per [period] · set by you</span></div>
+          <form class="glass try" data-try>
+            <label for="try-d">Type a number to see it melt in</label>
+            <input id="try-d" inputmode="decimal" autocomplete="off" maxlength="5" placeholder="TYPE A NUMBER" aria-describedby="try-d-h">
+            <button class="btn" type="submit">MELT IT IN</button>
+            <span id="try-d-h" class="sr-only">The large number above changes to what you type.</span>
+          </form>
+        </div>
+        <aside class="glass steps" data-steps aria-label="How a lead reaches you">
+          <h2>HOW A LEAD REACHES YOU</h2>
+          <div class="counter"><div class="apx-gls103" data-apx="GLS-103" data-value="01"></div><span class="of">/ 06</span></div>
+          <p class="step-name" data-name>THEY ASK FOR A QUOTE</p>
+          <p class="step-text" data-text>A homeowner in [City] asks for your exact service.</p>
+          <div class="rail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="nav"><button class="btn" type="button" data-prev>PREVIOUS</button><button class="btn" type="button" data-next>NEXT STEP</button></div>
+        </aside>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of the dark colour set. The same effect follows below with the light colours, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="demo-intro">
+      <small>GLS-103 · Light colour set</small>
+      <h1>MOLTEN NUMERALS</h1>
+      <p>The same liquid numbers on a pale ground: polished graphite chrome with a soft shadow underneath.</p>
+    </header>
+    <section class="stage" aria-label="Sample price and steps">
+      <div class="grid">
+        <div>
+          <div class="eyebrow"><span class="chip"><i></i>SAMPLE</span><span>PRICE SHOWN AS AN EXAMPLE</span></div>
+          <div class="apx-gls103 price" data-apx="GLS-103" data-value="$249"></div>
+          <div class="price-sub"><b>[YOUR PLAN NAME]</b><span>Per [period] · set by you</span></div>
+          <form class="glass try" data-try>
+            <label for="try-l">Type a number to see it melt in</label>
+            <input id="try-l" inputmode="decimal" autocomplete="off" maxlength="5" placeholder="TYPE A NUMBER" aria-describedby="try-l-h">
+            <button class="btn" type="submit">MELT IT IN</button>
+            <span id="try-l-h" class="sr-only">The large number above changes to what you type.</span>
+          </form>
+        </div>
+        <aside class="glass steps" data-steps aria-label="How a lead reaches you">
+          <h2>HOW A LEAD REACHES YOU</h2>
+          <div class="counter"><div class="apx-gls103" data-apx="GLS-103" data-value="01"></div><span class="of">/ 06</span></div>
+          <p class="step-name" data-name>THEY ASK FOR A QUOTE</p>
+          <p class="step-text" data-text>A homeowner in [City] asks for your exact service.</p>
+          <div class="rail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="nav"><button class="btn" type="button" data-prev>PREVIOUS</button><button class="btn" type="button" data-next>NEXT STEP</button></div>
+        </aside>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+<script>
+/* demo wiring only: the effect itself needs nothing beyond data-value */
+(function () {
+  var STEPS = [
+    ['THEY ASK FOR A QUOTE', 'A homeowner in [City] asks for your exact service.'],
+    ['THEY AGREE TO HEAR FROM YOU', 'Their permission to be contacted by your business is recorded.'],
+    ['WE CHECK THEY ARE REAL', 'Phone and email are checked. [Your verification process]'],
+    ['WE CHECK THEY ARE SERIOUS', 'A few questions on budget, timing and the job itself.'],
+    ['IT GOES TO YOU. ONLY YOU.', 'One business per service, per area. [Your exclusivity terms]'],
+    ['IT LANDS IN YOUR POCKET', 'A text alert, the details by email and a card in your CRM.']
+  ];
+  document.querySelectorAll('[data-steps]').forEach(function (box) {
+    var num = box.querySelector('[data-apx="GLS-103"]'), name = box.querySelector('[data-name]'), text = box.querySelector('[data-text]');
+    var rail = box.querySelectorAll('.rail span'), i = 0, timer = 0, touched = false;
+    function show(n) {
+      i = (n + STEPS.length) % STEPS.length;
+      num.setAttribute('data-value', ('0' + (i + 1)).slice(-2));
+      name.textContent = STEPS[i][0]; text.textContent = STEPS[i][1];
+      rail.forEach(function (r, k) { r.classList.toggle('on', k <= i); r.classList.toggle('now', k === i); });
+    }
+    box.querySelector('[data-next]').addEventListener('click', function () { touched = true; show(i + 1); });
+    box.querySelector('[data-prev]').addEventListener('click', function () { touched = true; show(i - 1); });
+    /* gentle auto-advance while on screen until someone presses a button */
+    var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var io = new IntersectionObserver(function (es) {
+      clearInterval(timer);
+      if (es[0].isIntersecting && !touched && !still) timer = setInterval(function () { if (!touched && !document.hidden) show(i + 1); }, 3600);
+    }, { threshold: .4 });
+    io.observe(box); show(0);
+  });
+  document.querySelectorAll('[data-try]').forEach(function (form) {
+    var input = form.querySelector('input'), num = form.parentNode.querySelector('.price');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = input.value.replace(/[^0-9.,$]/g, '').slice(0, 5);
+      if (!v) { input.focus(); return; }
+      num.dispatchEvent(new CustomEvent('apx:value', { detail: { value: v } }));
+    });
+  });
+})();
+</script>
+</body>
+</html>

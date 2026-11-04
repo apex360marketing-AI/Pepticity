@@ -1,0 +1,52 @@
+<title>APEX 360 Chevron Steel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #232426; --wall: #1d1e20; --ink: #e7e8ea; --dim: #8c9096; --line: rgba(255,255,255,.08); color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: "Chakra Petch", system-ui, sans-serif; }
+  .stage { position: relative; height: 100svh; min-height: 420px; overflow: hidden; background: var(--wall); }
+  .stage .gl { position: absolute; inset: 0; }
+  .stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 45%, rgba(0,0,0,.55) 100%); }
+  .stage .fallback { position: absolute; inset: 0; display: none; place-items: center; padding: 0 8vw; }
+  .stage.nogl .fallback { display: grid; }
+  .stage.nogl .gl { display: none; }
+  .fallback svg { width: min(900px, 100%); filter: drop-shadow(-6px 14px 14px rgba(0,0,0,.55)); }
+  h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .tag { position: absolute; left: 16px; right: 16px; bottom: 28px; display: flex; justify-content: space-between; gap: 12px;
+         font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: var(--dim); z-index: 1; flex-wrap: wrap; }
+  .tag b { color: var(--ink); font-weight: 600; }
+  @media (min-width: 700px) { .tag { left: 40px; right: 40px; } }
+</style>
+<main class="stage" id="stage">
+  <h1>APEX 360</h1>
+  <div class="gl" id="gl"></div>
+  <div class="fallback" id="fallback"></div>
+  <div class="tag"><span><b>TYP-101</b> · CHEVRON STEEL</span><span>BRUSHED GUNMETAL · REAL 3D</span></div>
+</main>
+<script src="glyphs.js"></script>
+<script>
+  window.apexFallback = function () {
+    var s = document.getElementById('stage'); if (s.classList.contains('nogl')) return;
+    document.getElementById('fallback').innerHTML = TYP101.toSVG('APEX 360'); s.classList.add('nogl');
+  };
+  if (/[?&]nogl/.test(location.search)) apexFallback();
+  setTimeout(function () { if (!window.__apex3dReady) apexFallback(); }, 6000);
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+  import { mountWordmark } from './wordmark3d.js';
+  if (!document.getElementById('stage').classList.contains('nogl')) {
+    const probe = document.createElement('canvas');
+    if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) apexFallback();
+    else {
+      try { window.__apex3d = mountWordmark(document.getElementById('gl'), { text: 'APEX 360', onLost: apexFallback }); window.__apex3dReady = true; }
+      catch (e) { console.error(e); apexFallback(); }
+    }
+  }
+</script>

@@ -28,3 +28,9 @@ These are final. Do not change any of them unless the owner asks in so many word
 - ALL imagery and video (photos, product shots, bottles, films, backgrounds, textures, illustrations) is made with Higgsfield, never drawn or composited by hand in code (PIL/three.js drawings) (owner, 30 Oct). Code only animates or places Higgsfield assets; the owner's font/logo files may be layered on exactly.
 - Before a Higgsfield spend, state the cost in the message; films and batches need the owner's OK.
 - Owner preferences: point form, recommendations, multiple-choice questions, pictures plus links, verify in a browser before showing.
+
+## Design skills (owner, 4 Nov 2026)
+- Before ANY visual PEPTICITY work load: pepticity-brand-lock, pepticity-brand-auditor, apex-house-style, apex-standard, effect-catalog, apex-glassmorphism, apex-visual-gate (all in .claude/skills).
+- Effect modules (real code for every catalogue effect) live in design/apex-effects/library/<CODE>/ with the registry design/apex-effects/effects.json. Use them; never hand-roll an effect that exists there.
+- On PEPTICITY pages the library accent (--apx-accent) is platinum, never chartreuse (brand-lock colour check).
+

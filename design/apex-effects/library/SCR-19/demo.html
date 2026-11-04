@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCR-19 · Skew Gallery — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;800&family=Onest:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #0b0b0d; --apx-surface: rgba(255, 255, 255, .055); --apx-ink: #ecebe8; --apx-muted: #9d9ca3;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .13); --apx-radius: 18px;
+    --apx-font-display: "Geist", "Helvetica Neue", system-ui, sans-serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #f1efeb; --apx-surface: rgba(255, 255, 255, .6); --apx-ink: #18161a; --apx-muted: #635e66;
+    --apx-accent: #7d2235; --apx-accent-ink: #fbf6f3; --apx-line: rgba(24, 22, 26, .15); --apx-radius: 6px;
+    --apx-font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #0b0b0d; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Onest", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 78vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 56px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; text-transform: uppercase; font-family: var(--apx-font-display); font-weight: 700; font-size: clamp(40px, 7vw, 96px); line-height: .98; letter-spacing: .02em; max-width: 14ch; }
+  .demo-intro p { margin: 0; max-width: 52ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-intro .hint { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .demo-outro { min-height: 70vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+  @media (max-width: 600px) { .demo-bar b { display: none; } }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>SCR-19 · Skew Gallery</b><a href="#dark">Dark tokens</a><a href="#light">Light tokens</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="demo-intro">
+      <small>SCR-19 · Dark token set</small>
+      <h1>SKEW GALLERY</h1>
+      <p>Scrolling down drives a row of 33 polished 3D industry icons sideways. The faster you scroll, the more the row leans and the icons twist; they spring back to face you when you stop. Hover an icon to lift it.</p>
+      <p class="hint">Scroll</p>
+    </header>
+    <section class="apx-scr19" data-apx="SCR-19" data-fx="SCR-19" id="gal-d" aria-label="Industries">
+      <div class="apx-scr19__stage">
+        <header class="apx-scr19__head">
+          <div><span class="apx-scr19__kicker">Industries</span><h2>33 INDUSTRIES. FIND YOURS.</h2></div>
+          <span class="apx-scr19__count" aria-hidden="true"><b>01</b> / 33</span>
+        </header>
+        <ul class="apx-scr19__track" aria-label="Industries we serve, with typical lead value">
+          <li><button class="apx-scr19__tile" type="button" data-icon="executive-recruitment" data-tag="High-ticket" data-hi><b>Executive Recruitment</b><small>$125k – $175k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="industrial-water-treatment" data-tag="High-ticket" data-hi><b>Industrial Water Treatment</b><small>$1M – $14M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-security" data-tag="High-ticket" data-hi><b>Commercial Security Systems</b><small>$500k – $15M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="industrial-automation" data-tag="High-ticket" data-hi><b>Industrial Automation &amp; Manufacturing</b><small>$5.3M – $53M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-kitchen" data-tag="High-ticket" data-hi><b>Commercial Kitchen Equipment</b><small>$50k – $355k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="medical-staffing" data-tag="High-ticket" data-hi><b>Specialized Medical Staffing</b><small>$25k – $100k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-hvac" data-tag="High-ticket" data-hi><b>Commercial HVAC &amp; Refrigeration</b><small>$65k – $3M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="contract-manufacturing" data-tag="High-ticket" data-hi><b>Custom Contract Manufacturing</b><small>$100k – $5M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-real-estate" data-tag="High-ticket" data-hi><b>Commercial Real Estate</b><small>$25k – $100k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="specialty-medical" data-tag="High-ticket" data-hi><b>Specialty Medical (Cosmetic/Dental)</b><small>$3k – $43k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-printing" data-tag="High-ticket" data-hi><b>Commercial Printing &amp; Fulfillment</b><small>$50k – $500k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="cyber-insurance" data-tag="High-ticket" data-hi><b>Niche Insurance — Cyber Liability</b><small>$30k – $100k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="roofing" data-tag="Trade"><b>Roofing</b><small>$500 – $5k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="landscaping" data-tag="Trade"><b>Landscaping</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="cleaning-interior" data-tag="Trade"><b>Home Cleaning (Interior)</b><small>$100 – $1k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="cleaning-exterior" data-tag="Trade"><b>Home Cleaning (Exterior)</b><small>$150 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="plumbing" data-tag="Trade"><b>Plumbers</b><small>$200 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="electrical" data-tag="Trade"><b>Electricians</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="hvac" data-tag="Trade"><b>HVAC</b><small>$250 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="dental" data-tag="Trade"><b>Dentists</b><small>$150 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="legal" data-tag="Trade"><b>Lawyers</b><small>$500 – $5k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="real-estate" data-tag="Trade"><b>Real Estate Agents</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="fitness" data-tag="Trade"><b>Gyms &amp; Fitness</b><small>$50 – $500</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="auto-repair" data-tag="Trade"><b>Auto Repair</b><small>$200 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="pest-control" data-tag="Trade"><b>Pest Control</b><small>$300 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="salon" data-tag="Trade"><b>Hair Salons &amp; Barbershops</b><small>$50 – $500</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="insurance" data-tag="Trade"><b>Insurance Agents</b><small>$400 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="healthcare" data-tag="Trade"><b>Healthcare Clinics</b><small>$200 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="moving" data-tag="Trade"><b>Moving Companies</b><small>$400 – $4k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="personal-training" data-tag="Trade"><b>Personal Trainers</b><small>$100 – $1k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="photography" data-tag="Trade"><b>Photographers</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="wedding-venues" data-tag="Trade"><b>Wedding Venues</b><small>$2k – $15k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="restaurants" data-tag="Trade"><b>Restaurants</b><small>$500 – $5k</small></button></li>
+        </ul>
+        <div class="apx-scr19__bar" aria-hidden="true"><span>12 high-ticket · 21 trades</span><i class="apx-scr19__rail"></i><span>Just scroll</span></div>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of the dark token set. The same module follows below with the light tokens, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="demo-intro">
+      <small>SCR-19 · Light token set</small>
+      <h1>SKEW GALLERY</h1>
+      <p>Scrolling down drives a row of 33 polished 3D industry icons sideways. The faster you scroll, the more the row leans and the icons twist; they spring back to face you when you stop. Hover an icon to lift it.</p>
+      <p class="hint">Scroll</p>
+    </header>
+    <section class="apx-scr19" data-apx="SCR-19" data-fx="SCR-19" id="gal-l" aria-label="Industries">
+      <div class="apx-scr19__stage">
+        <header class="apx-scr19__head">
+          <div><span class="apx-scr19__kicker">Industries</span><h2>33 INDUSTRIES. FIND YOURS.</h2></div>
+          <span class="apx-scr19__count" aria-hidden="true"><b>01</b> / 33</span>
+        </header>
+        <ul class="apx-scr19__track" aria-label="Industries we serve, with typical lead value">
+          <li><button class="apx-scr19__tile" type="button" data-icon="executive-recruitment" data-tag="High-ticket" data-hi><b>Executive Recruitment</b><small>$125k – $175k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="industrial-water-treatment" data-tag="High-ticket" data-hi><b>Industrial Water Treatment</b><small>$1M – $14M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-security" data-tag="High-ticket" data-hi><b>Commercial Security Systems</b><small>$500k – $15M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="industrial-automation" data-tag="High-ticket" data-hi><b>Industrial Automation &amp; Manufacturing</b><small>$5.3M – $53M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-kitchen" data-tag="High-ticket" data-hi><b>Commercial Kitchen Equipment</b><small>$50k – $355k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="medical-staffing" data-tag="High-ticket" data-hi><b>Specialized Medical Staffing</b><small>$25k – $100k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-hvac" data-tag="High-ticket" data-hi><b>Commercial HVAC &amp; Refrigeration</b><small>$65k – $3M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="contract-manufacturing" data-tag="High-ticket" data-hi><b>Custom Contract Manufacturing</b><small>$100k – $5M</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-real-estate" data-tag="High-ticket" data-hi><b>Commercial Real Estate</b><small>$25k – $100k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="specialty-medical" data-tag="High-ticket" data-hi><b>Specialty Medical (Cosmetic/Dental)</b><small>$3k – $43k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="commercial-printing" data-tag="High-ticket" data-hi><b>Commercial Printing &amp; Fulfillment</b><small>$50k – $500k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="cyber-insurance" data-tag="High-ticket" data-hi><b>Niche Insurance — Cyber Liability</b><small>$30k – $100k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="roofing" data-tag="Trade"><b>Roofing</b><small>$500 – $5k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="landscaping" data-tag="Trade"><b>Landscaping</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="cleaning-interior" data-tag="Trade"><b>Home Cleaning (Interior)</b><small>$100 – $1k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="cleaning-exterior" data-tag="Trade"><b>Home Cleaning (Exterior)</b><small>$150 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="plumbing" data-tag="Trade"><b>Plumbers</b><small>$200 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="electrical" data-tag="Trade"><b>Electricians</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="hvac" data-tag="Trade"><b>HVAC</b><small>$250 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="dental" data-tag="Trade"><b>Dentists</b><small>$150 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="legal" data-tag="Trade"><b>Lawyers</b><small>$500 – $5k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="real-estate" data-tag="Trade"><b>Real Estate Agents</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="fitness" data-tag="Trade"><b>Gyms &amp; Fitness</b><small>$50 – $500</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="auto-repair" data-tag="Trade"><b>Auto Repair</b><small>$200 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="pest-control" data-tag="Trade"><b>Pest Control</b><small>$300 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="salon" data-tag="Trade"><b>Hair Salons &amp; Barbershops</b><small>$50 – $500</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="insurance" data-tag="Trade"><b>Insurance Agents</b><small>$400 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="healthcare" data-tag="Trade"><b>Healthcare Clinics</b><small>$200 – $2k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="moving" data-tag="Trade"><b>Moving Companies</b><small>$400 – $4k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="personal-training" data-tag="Trade"><b>Personal Trainers</b><small>$100 – $1k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="photography" data-tag="Trade"><b>Photographers</b><small>$300 – $3k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="wedding-venues" data-tag="Trade"><b>Wedding Venues</b><small>$2k – $15k</small></button></li>
+          <li><button class="apx-scr19__tile" type="button" data-icon="restaurants" data-tag="Trade"><b>Restaurants</b><small>$500 – $5k</small></button></li>
+        </ul>
+        <div class="apx-scr19__bar" aria-hidden="true"><span>12 high-ticket · 21 trades</span><i class="apx-scr19__rail"></i><span>Just scroll</span></div>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+</body>
+</html>

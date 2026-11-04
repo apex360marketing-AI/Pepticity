@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OBJ-103 · Link Swarm — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Hanken+Grotesk:wght@400;500;600&family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="module.css">
+
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #070809; --apx-surface: rgba(255, 255, 255, .05); --apx-ink: #e9edf2; --apx-muted: #9ea7b1;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .13); --apx-radius: 3px;
+    --apx-font-display: "Syncopate", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #eeece8; --apx-surface: rgba(255, 255, 255, .55); --apx-ink: #17181b; --apx-muted: #5f6066;
+    --apx-accent: #7d2235; --apx-accent-ink: #fbf6f3; --apx-line: rgba(23, 24, 27, .16); --apx-radius: 3px;
+    --apx-font-display: "Unbounded", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #070809; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Hanken Grotesk", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 60vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 40px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; text-transform: uppercase; font-family: var(--apx-font-display); font-weight: 700; font-size: clamp(32px, 5.4vw, 72px); line-height: 1; letter-spacing: .04em; }
+  .demo-intro p { margin: 0; max-width: 56ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-outro { min-height: 40vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+  .stage { position: relative; min-height: 100vh; min-height: 100svh; display: grid; align-content: center; padding: clamp(24px, 5vh, 64px) clamp(18px, 5vw, 80px); overflow: hidden; }
+  .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(50% 55% at 70% 50%, color-mix(in srgb, var(--apx-ink) 6%, transparent), transparent 70%); }
+  .wrap { position: relative; width: 100%; max-width: 1240px; margin-inline: auto; }
+  .head { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .22em; color: var(--apx-muted); }
+  .head span:first-child { color: var(--apx-ink); }
+  .head span:first-child::before { content: ""; display: inline-block; width: 18px; height: 1px; margin-right: 10px; vertical-align: 3px; background: var(--apx-ink); }
+  @media (hover: none) { .head .tip::after { content: " · TAP TWICE TO OPEN"; } }
+  @media (max-width: 899px) { .stage { align-content: start; padding-top: 28px; } .head { margin-bottom: 14px; } }
+  @media (max-width: 420px) { .head .tip { display: none; } }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>OBJ-103 · LINK SWARM</b><a href="#dark">Dark set</a><a href="#light">Light set</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="demo-intro">
+      <small>OBJ-103 · Dark colour set</small>
+      <h1>LINK SWARM</h1>
+      <p>A menu where thousands of fine specks of light hold a shape. Point at, focus or tap a link and the swarm streams across and rebuilds itself as that link's picture: a house, a map pin, a shield, a price tag, a phone.</p>
+    </header>
+    <section class="stage" aria-label="Menu">
+      <div class="wrap">
+        <div class="head"><span>MAIN MENU</span><span class="tip">POINT AT A LINK</span></div>
+        <nav class="apx-obj103" data-apx="OBJ-103" aria-label="Main menu" data-idle="apex" data-idle-label="APEX" data-idle-hint="Choose a page">
+          <ul>
+            <li><a href="#industries" data-shape="house" data-hint="Homes and trades">INDUSTRIES</a></li>
+            <li><a href="#areas" data-shape="pin" data-hint="Your service area">AREAS</a></li>
+            <li><a href="#how" data-shape="shield" data-hint="Checked before you get it">HOW IT WORKS</a></li>
+            <li><a href="#pricing" data-shape="tag" data-hint="[Your pricing]">PRICING</a></li>
+            <li><a href="#get-leads" data-shape="phone" data-hint="Straight to your phone">GET LEADS</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of the dark colour set. The same menu follows below with the light colours, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="demo-intro">
+      <small>OBJ-103 · Light colour set</small>
+      <h1>LINK SWARM</h1>
+      <p>A menu where thousands of fine specks of light hold a shape. Point at, focus or tap a link and the swarm streams across and rebuilds itself as that link's picture: a house, a map pin, a shield, a price tag, a phone.</p>
+    </header>
+    <section class="stage" aria-label="Menu">
+      <div class="wrap">
+        <div class="head"><span>MAIN MENU</span><span class="tip">POINT AT A LINK</span></div>
+        <nav class="apx-obj103" data-apx="OBJ-103" aria-label="Main menu" data-idle="apex" data-idle-label="APEX" data-idle-hint="Choose a page">
+          <ul>
+            <li><a href="#industries" data-shape="house" data-hint="Homes and trades">INDUSTRIES</a></li>
+            <li><a href="#areas" data-shape="pin" data-hint="Your service area">AREAS</a></li>
+            <li><a href="#how" data-shape="shield" data-hint="Checked before you get it">HOW IT WORKS</a></li>
+            <li><a href="#pricing" data-shape="tag" data-hint="[Your pricing]">PRICING</a></li>
+            <li><a href="#get-leads" data-shape="phone" data-hint="Straight to your phone">GET LEADS</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+</body>
+</html>

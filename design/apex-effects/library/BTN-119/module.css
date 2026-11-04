@@ -1,0 +1,48 @@
+/* BTN-119 · Jelly Press — A squircle of glass that squashes like jelly where you press it and wobbles back into shape. */
+/* ---- shared glass button base (tokens -> private vars) ---- */
+.apx-b119{
+  --_ink:var(--apx-ink,oklch(.96 .005 30));--_mut:var(--apx-muted,oklch(.78 .01 30));
+  --_acc:var(--apx-accent,oklch(.78 .07 12));
+  --_rim:var(--apx-line,rgb(255 255 255/.26));--_fill:var(--apx-surface,rgb(255 255 255/.08));
+  --_bg:var(--apx-bg,oklch(.15 .008 30));--_scrim:color-mix(in oklch,var(--_bg) 38%,transparent);
+  --_m:var(--apx-motion,1);
+  --_d1:calc(var(--apx-dur-1,120ms) * var(--_m));--_d2:calc(var(--apx-dur-2,200ms) * var(--_m));
+  --_d3:calc(var(--apx-dur-3,320ms) * var(--_m));--_d4:calc(var(--apx-dur-4,560ms) * var(--_m));
+  --_d5:calc(var(--apx-dur-5,900ms) * var(--_m));
+  --_out:var(--apx-ease-out,cubic-bezier(.16,1,.3,1));--_in:var(--apx-ease-in,cubic-bezier(.7,0,.84,0));
+  --_io:var(--apx-ease-inout,cubic-bezier(.65,0,.35,1));
+  --_spr:var(--apx-ease-spring,linear(0,.056,.174,.313,.472,.624,.759,.863,.951,1.015,1.056,1.079,1.088,1.087,1.079,1.066,1.054,1.04,1.027,1.016,1.007,1.001,.997,.994,.992,.992,.993,.994,.995,.996,.997,.998,.999,1));
+  --_glow:color-mix(in oklch,var(--_acc) 55%,transparent);
+  appearance:none;-webkit-appearance:none;margin:0;border:0;padding:0;background:none;color:var(--_ink);
+  font:600 15px/1.1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.01em;text-decoration:none;cursor:pointer;
+  position:relative;display:inline-grid;place-items:center;vertical-align:middle;min-height:48px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.apx-b119:focus{outline:none}
+.apx-b119:focus-visible{outline:none}
+@media (prefers-reduced-motion:reduce){.apx-b119{--_m:0}}
+.apx-b119__l{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;
+  text-shadow:0 1px 10px color-mix(in oklch,var(--_bg) 60%,transparent)}
+.apx-b119__l svg{width:18px;height:18px;flex:none}
+.apx-b119__rim{z-index:3}
+.apx-b119__edge{fill:none;stroke:var(--_rim);stroke-width:1}
+.apx-b119__hi{fill:none;stroke-width:1.2}
+.apx-b119__ring{fill:none;stroke:var(--_acc);stroke-width:5;opacity:0;transition:opacity var(--_d1) var(--_out)}
+.apx-b119:focus-visible .apx-b119__ring{opacity:1}
+.apx-b119__vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* ---- BTN-119 ---- */
+/* squircle of glass that squashes like jelly under your finger and wobbles back */
+.apx-b119{min-height:60px}
+.apx-b119__body{position:absolute;inset:0;will-change:transform}
+.apx-b119__g{position:absolute;inset:0;background:linear-gradient(155deg,rgb(255 255 255/.17),rgb(255 255 255/.035) 48%,rgb(255 255 255/.07)),linear-gradient(var(--_fill),var(--_fill)),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(175%);backdrop-filter:blur(12px) saturate(175%)}
+.apx-b119__shine{position:absolute;left:12%;top:8%;width:46%;height:30%;border-radius:50%;background:radial-gradient(closest-side,rgb(255 255 255/.4),transparent);
+  animation-name:apxB119breathe;animation-duration:calc(3.6s / max(var(--_m),.01));animation-iteration-count:infinite;animation-direction:alternate;animation-timing-function:var(--_io)}
+@keyframes apxB119breathe{from{transform:translate(0,0) scale(1)}to{transform:translate(6px,1px) scale(1.08,.9)}}
+.apx-b119__l{height:60px;padding:0 40px}
+.apx-b119__body .apx-b119__l{position:absolute;inset:0;display:flex;padding:0}
+.apx-b119__sz{visibility:hidden;height:60px;padding:0 40px;display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.apx-b119__sz svg{width:18px;height:18px}
+@media (prefers-reduced-motion:reduce){.apx-b119__shine{animation:none}}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.apx-b119 [class*="apx-b119__"]:not(.apx-b119__l):not(.apx-b119__rim):not(svg){background-color:color-mix(in oklch,var(--_bg) 84%,var(--_ink))}}
+@media (forced-colors:active){.apx-b119{border:1px solid ButtonText}}

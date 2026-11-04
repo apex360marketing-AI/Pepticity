@@ -1,0 +1,49 @@
+/* BTN-113 · Orbit Dot — A glass pill with one glowing dot circling its edge; pointing at it makes the dot race round with a short trail. */
+/* ---- shared glass button base (tokens -> private vars) ---- */
+.apx-b113{
+  --_ink:var(--apx-ink,oklch(.96 .005 30));--_mut:var(--apx-muted,oklch(.78 .01 30));
+  --_acc:var(--apx-accent,oklch(.78 .07 12));
+  --_rim:var(--apx-line,rgb(255 255 255/.26));--_fill:var(--apx-surface,rgb(255 255 255/.08));
+  --_bg:var(--apx-bg,oklch(.15 .008 30));--_scrim:color-mix(in oklch,var(--_bg) 38%,transparent);
+  --_m:var(--apx-motion,1);
+  --_d1:calc(var(--apx-dur-1,120ms) * var(--_m));--_d2:calc(var(--apx-dur-2,200ms) * var(--_m));
+  --_d3:calc(var(--apx-dur-3,320ms) * var(--_m));--_d4:calc(var(--apx-dur-4,560ms) * var(--_m));
+  --_d5:calc(var(--apx-dur-5,900ms) * var(--_m));
+  --_out:var(--apx-ease-out,cubic-bezier(.16,1,.3,1));--_in:var(--apx-ease-in,cubic-bezier(.7,0,.84,0));
+  --_io:var(--apx-ease-inout,cubic-bezier(.65,0,.35,1));
+  --_spr:var(--apx-ease-spring,linear(0,.056,.174,.313,.472,.624,.759,.863,.951,1.015,1.056,1.079,1.088,1.087,1.079,1.066,1.054,1.04,1.027,1.016,1.007,1.001,.997,.994,.992,.992,.993,.994,.995,.996,.997,.998,.999,1));
+  --_glow:color-mix(in oklch,var(--_acc) 55%,transparent);
+  appearance:none;-webkit-appearance:none;margin:0;border:0;padding:0;background:none;color:var(--_ink);
+  font:600 15px/1.1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.01em;text-decoration:none;cursor:pointer;
+  position:relative;display:inline-grid;place-items:center;vertical-align:middle;min-height:48px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.apx-b113:focus{outline:none}
+.apx-b113:focus-visible{outline:none}
+@media (prefers-reduced-motion:reduce){.apx-b113{--_m:0}}
+.apx-b113__l{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;
+  text-shadow:0 1px 10px color-mix(in oklch,var(--_bg) 60%,transparent)}
+.apx-b113__l svg{width:18px;height:18px;flex:none}
+.apx-b113__rim{z-index:3}
+.apx-b113__edge{fill:none;stroke:var(--_rim);stroke-width:1}
+.apx-b113__hi{fill:none;stroke-width:1.2}
+.apx-b113__ring{fill:none;stroke:var(--_acc);stroke-width:5;opacity:0;transition:opacity var(--_d1) var(--_out)}
+.apx-b113:focus-visible .apx-b113__ring{opacity:1}
+.apx-b113__vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* ---- BTN-113 ---- */
+/* glass pill with a glowing dot that orbits its edge and speeds up on hover */
+.apx-b113{min-height:52px;border-radius:999px}
+.apx-b113__g{position:absolute;inset:0;border-radius:999px;background:linear-gradient(155deg,rgb(255 255 255/.17),rgb(255 255 255/.035) 48%,rgb(255 255 255/.07)),linear-gradient(var(--_fill),var(--_fill)),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(175%);backdrop-filter:blur(12px) saturate(175%)}
+.apx-b113__dot{position:absolute;left:0;top:0;z-index:5;width:7px;height:7px;border-radius:50%;pointer-events:none;
+  background:var(--_acc);box-shadow:0 0 10px 2px var(--_glow),0 0 2px var(--_acc);transition:scale var(--_d2) var(--_out)}
+.apx-b113__dot--t1,.apx-b113__dot--t2,.apx-b113__dot--t3{opacity:0;transition:opacity var(--_d3) var(--_out),scale var(--_d2) var(--_out)}
+.apx-b113__dot--t1{width:5px;height:5px}.apx-b113__dot--t2{width:4px;height:4px}.apx-b113__dot--t3{width:3px;height:3px}
+.apx-b113.is-hot .apx-b113__dot--t1{opacity:.6}.apx-b113.is-hot .apx-b113__dot--t2{opacity:.36}.apx-b113.is-hot .apx-b113__dot--t3{opacity:.18}
+.apx-b113.is-press .apx-b113__dot{scale:2.2}
+.apx-b113.is-hot .apx-b113__edge{stroke:color-mix(in oklch,var(--_acc) 55%,var(--_rim))}
+.apx-b113__edge{transition:stroke var(--_d2) var(--_out)}
+.apx-b113__l{height:52px;padding:0 32px;transition:transform var(--_d2) var(--_out)}
+.apx-b113.is-press .apx-b113__l{transform:scale(.97)}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.apx-b113 [class*="apx-b113__"]:not(.apx-b113__l):not(.apx-b113__rim):not(svg){background-color:color-mix(in oklch,var(--_bg) 84%,var(--_ink))}}
+@media (forced-colors:active){.apx-b113{border:1px solid ButtonText}}

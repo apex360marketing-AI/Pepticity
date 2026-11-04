@@ -1,0 +1,9 @@
+/* BGD-103 · Halftone Light — place inside a position:relative section; content above needs position:relative; z-index:1
+   Optional: --apx-bgd103-cell (dot spacing in px, default 12 / 9 on phones) */
+.apx-bgd103 {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background:
+    radial-gradient(circle at center, color-mix(in srgb, var(--apx-ink, #ecebe8) 16%, transparent) 1.4px, transparent 1.8px) 0 0 / 12px 12px,
+    var(--apx-bg, #0b0b0d);
+}
+.apx-bgd103 > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }

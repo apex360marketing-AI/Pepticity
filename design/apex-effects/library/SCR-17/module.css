@@ -1,0 +1,66 @@
+/* SCR-17 · Word Portal */
+.apx-scr17 {
+  --_len: var(--apx-scr17-length, 280vh);
+  --_acc: var(--apx-accent, #cfd3da);
+  --_glow: color-mix(in srgb, var(--_acc) 45%, transparent);
+  --_mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  position: relative; height: var(--_len);
+  background: var(--apx-bg, #0b0b0d); color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-text, system-ui, sans-serif);
+}
+.apx-scr17.is-compact { --_len: var(--apx-scr17-length-compact, 240vh); }
+.apx-scr17__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; isolation: isolate; }
+
+/* the scene behind the word (what you fly into) */
+.apx-scr17__scene {
+  position: absolute; inset: 0; z-index: 0; display: grid; place-items: center;
+  background:
+    radial-gradient(60% 60% at 50% 50%, color-mix(in srgb, var(--apx-bg, #0b0b0d) 78%, var(--apx-ink, #ecebe8)) 0%, color-mix(in srgb, var(--apx-bg, #0b0b0d) 93%, var(--apx-ink, #ecebe8)) 52%, var(--apx-bg, #0b0b0d) 100%);
+}
+.apx-scr17.is-light .apx-scr17__scene {
+  background: radial-gradient(60% 60% at 50% 50%, color-mix(in srgb, var(--apx-bg, #f1efeb) 55%, #fff) 0%, color-mix(in srgb, var(--apx-bg, #f1efeb) 90%, var(--apx-ink, #18161a)) 70%, color-mix(in srgb, var(--apx-bg, #f1efeb) 84%, var(--apx-ink, #18161a)) 100%);
+}
+.apx-scr17__ring {
+  position: absolute; width: min(70vmin, 620px); aspect-ratio: 1; border-radius: 50%; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--_acc) 30%, transparent);
+  box-shadow: 0 0 80px -20px var(--_glow), inset 0 0 60px -30px var(--_glow);
+  animation: apx-scr17-spin 40s linear infinite; animation-play-state: paused;
+}
+.apx-scr17__ring::after { content: ""; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--_acc); box-shadow: 0 0 18px var(--_acc); }
+.apx-scr17__ring::before { content: ""; position: absolute; inset: 9%; border-radius: 50%; border: 1px dashed color-mix(in srgb, var(--apx-ink, #ecebe8) 10%, transparent); animation: apx-scr17-spin 70s linear infinite reverse; animation-play-state: inherit; }
+.apx-scr17.is-live .apx-scr17__ring { animation-play-state: running; }
+@keyframes apx-scr17-spin { to { transform: rotate(360deg); } }
+
+.apx-scr17__inner { position: relative; z-index: 1; max-width: 720px; padding: 0 22px; text-align: center; will-change: transform, opacity; }
+.apx-scr17__kicker { display: inline-flex; align-items: center; gap: 12px; font: 500 11px/1 var(--_mono); letter-spacing: .28em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3); }
+.apx-scr17__kicker::before { content: ""; width: 28px; height: 1px; background: var(--_acc); box-shadow: 0 0 8px var(--_glow); }
+.apx-scr17__inner h2 {
+  margin: 22px 0 0; font-family: var(--apx-font-display, system-ui, sans-serif); font-weight: 700; font-size: clamp(38px, 6vw, 92px);
+  line-height: .98; letter-spacing: .01em; text-transform: uppercase; text-wrap: balance;
+}
+.apx-scr17__inner h2 span { color: color-mix(in srgb, var(--apx-ink, #ecebe8) 62%, var(--apx-muted, #9d9ca3)); }
+.apx-scr17__inner p { margin: 22px auto 0; max-width: 46ch; font-size: 17px; line-height: 1.6; color: color-mix(in srgb, var(--apx-ink, #ecebe8) 66%, var(--apx-muted, #9d9ca3)); }
+
+/* the word mask (canvas drawn by the module) */
+.apx-scr17__mask { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; display: block; pointer-events: none; will-change: opacity; }
+.apx-scr17__cue {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: 12vh; margin: 0; text-align: center; pointer-events: none;
+  font: 500 11px/1 var(--_mono); letter-spacing: .3em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3);
+}
+.apx-scr17__cue::after { content: ""; display: block; width: 1px; height: 34px; margin: 14px auto 0; background: linear-gradient(var(--_acc), transparent); transform-origin: top; animation: apx-scr17-cue 2.2s ease-in-out infinite; }
+@keyframes apx-scr17-cue { 0% { transform: scaleY(0); opacity: 1; } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* the word as real text for screen readers (canvas is aria-hidden) */
+.apx-scr17__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* phones */
+.apx-scr17.is-compact .apx-scr17__inner p { font-size: 15px; }
+.apx-scr17.is-compact .apx-scr17__cue { bottom: 9vh; }
+
+/* motion off: the finished scene, no pin */
+.apx-scr17.is-static { height: auto; }
+.apx-scr17.is-static .apx-scr17__stage { position: relative; height: auto; min-height: 100vh; min-height: 100svh; display: grid; }
+.apx-scr17.is-static .apx-scr17__scene { position: relative; inset: auto; min-height: inherit; padding: 14vh 0; }
+.apx-scr17.is-static .apx-scr17__mask, .apx-scr17.is-static .apx-scr17__cue { display: none; }
+.apx-scr17.is-static .apx-scr17__inner { opacity: 1 !important; transform: none !important; }
+.apx-scr17.is-static .apx-scr17__ring { animation: none; }
+@media (prefers-reduced-motion: reduce) { .apx-scr17__ring, .apx-scr17__ring::before, .apx-scr17__cue::after { animation: none; } }

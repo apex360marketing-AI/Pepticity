@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCR-102 · Fan Deck — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Onest:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #0b0b0d; --apx-surface: rgba(255, 255, 255, .055); --apx-ink: #ecebe8; --apx-muted: #9d9ca3;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .13); --apx-radius: 18px;
+    --apx-font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #f1efeb; --apx-surface: rgba(255, 255, 255, .6); --apx-ink: #18161a; --apx-muted: #635e66;
+    --apx-accent: #7d2235; --apx-accent-ink: #fbf6f3; --apx-line: rgba(24, 22, 26, .15); --apx-radius: 6px;
+    --apx-font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #0b0b0d; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Onest", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 78vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 56px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; font-family: var(--apx-font-display); font-weight: 400; font-size: clamp(40px, 7vw, 96px); line-height: .98; letter-spacing: -.02em; max-width: 14ch; }
+  .demo-intro p { margin: 0; max-width: 52ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-intro .hint { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .demo-outro { min-height: 70vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 600px) { .demo-bar b { display: none; } }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>SCR-102 · Fan Deck</b><a href="#dark">Dark tokens</a><a href="#light">Light tokens</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="demo-intro">
+      <small>SCR-102 · Dark token set</small>
+      <h1>Fan Deck</h1>
+      <p>A neat stack of cards fans out into a hand as you scroll, then each card in turn rises out of the fan to be read.</p>
+      <p class="hint">Scroll</p>
+    </header>
+    <section class="apx-scr102" data-apx="SCR-102" data-fx="SCR-102" aria-labelledby="fan-h-d">
+  <div class="apx-scr102__stage">
+    <header class="apx-scr102__head">
+      <div><span class="apx-scr102__eyebrow">How it works</span><h2 id="fan-h-d">Six steps between a request and your phone</h2></div>
+      <div class="apx-scr102__meta" aria-hidden="true"><span class="apx-scr102__count">01 / 06</span><svg class="apx-scr102__ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" pathLength="100"/><circle cx="18" cy="18" r="15.9" pathLength="100"/></svg></div>
+    </header>
+    <ol class="apx-scr102__deck">
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">01</span><i class="apx-scr102__dot"></i><h3>A request comes in</h3><p>Someone near you asks for the job you do.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">02</span><i class="apx-scr102__dot"></i><h3>They agree to be contacted</h3><p>Clear consent is recorded with the request.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">03</span><i class="apx-scr102__dot"></i><h3>We check it is real</h3><p>[Your verification process] runs before anything is sent.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">04</span><i class="apx-scr102__dot"></i><h3>Matched to your area</h3><p>Only jobs in the places you serve.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">05</span><i class="apx-scr102__dot"></i><h3>Sent only to you</h3><p>Exclusive: no other business gets this lead.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">06</span><i class="apx-scr102__dot"></i><h3>On your phone and CRM</h3><p>You call back while they are still waiting.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+    <div class="demo-outro"><p>End of the dark token set. The same module follows below with the light tokens, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="demo-intro">
+      <small>SCR-102 · Light token set</small>
+      <h1>Fan Deck</h1>
+      <p>A neat stack of cards fans out into a hand as you scroll, then each card in turn rises out of the fan to be read.</p>
+      <p class="hint">Scroll</p>
+    </header>
+    <section class="apx-scr102" data-apx="SCR-102" data-fx="SCR-102" aria-labelledby="fan-h-l">
+  <div class="apx-scr102__stage">
+    <header class="apx-scr102__head">
+      <div><span class="apx-scr102__eyebrow">How it works</span><h2 id="fan-h-l">Six steps between a request and your phone</h2></div>
+      <div class="apx-scr102__meta" aria-hidden="true"><span class="apx-scr102__count">01 / 06</span><svg class="apx-scr102__ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" pathLength="100"/><circle cx="18" cy="18" r="15.9" pathLength="100"/></svg></div>
+    </header>
+    <ol class="apx-scr102__deck">
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">01</span><i class="apx-scr102__dot"></i><h3>A request comes in</h3><p>Someone near you asks for the job you do.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">02</span><i class="apx-scr102__dot"></i><h3>They agree to be contacted</h3><p>Clear consent is recorded with the request.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">03</span><i class="apx-scr102__dot"></i><h3>We check it is real</h3><p>[Your verification process] runs before anything is sent.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">04</span><i class="apx-scr102__dot"></i><h3>Matched to your area</h3><p>Only jobs in the places you serve.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">05</span><i class="apx-scr102__dot"></i><h3>Sent only to you</h3><p>Exclusive: no other business gets this lead.</p></div></li>
+      <li class="apx-scr102__card"><div class="apx-scr102__face" tabindex="0"><span class="apx-scr102__num">06</span><i class="apx-scr102__dot"></i><h3>On your phone and CRM</h3><p>You call back while they are still waiting.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+
+</body>
+</html>

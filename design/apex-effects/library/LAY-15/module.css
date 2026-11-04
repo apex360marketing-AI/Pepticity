@@ -1,0 +1,189 @@
+/* LAY-15 · Lit Window Facade */
+.apx-lay15 {
+  --_acc: var(--apx-accent, #cfd3da);
+  --_glow: color-mix(in srgb, var(--_acc) 42%, transparent);
+  --_mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* facade palette, derived from the tokens (night building) */
+  --_fac: color-mix(in srgb, var(--apx-bg, #0b0b0d) 93%, var(--apx-ink, #ecebe8));
+  --_fac2: color-mix(in srgb, var(--apx-bg, #0b0b0d) 97%, var(--apx-ink, #ecebe8));
+  --_frame: color-mix(in srgb, var(--apx-bg, #0b0b0d) 86%, var(--apx-ink, #ecebe8));
+  --_glass: color-mix(in srgb, var(--apx-bg, #0b0b0d) 70%, #000);
+  --_lit: var(--apx-ink, #ecebe8);
+  --_flab: var(--apx-muted, #9d9ca3);
+  --_fline: var(--apx-line, rgba(255, 255, 255, .13));
+  position: relative; color: var(--apx-ink, #ecebe8); font-family: var(--apx-font-text, system-ui, sans-serif);
+  padding: clamp(72px, 12vh, 140px) clamp(16px, 4vw, 56px); container-type: inline-size;
+}
+/* day ground: the building turns graphite with pale glass */
+.apx-lay15.is-light {
+  --_fac: color-mix(in srgb, var(--apx-ink, #18161a) 88%, var(--apx-bg, #f1efeb));
+  --_fac2: color-mix(in srgb, var(--apx-ink, #18161a) 95%, var(--apx-bg, #f1efeb));
+  --_frame: color-mix(in srgb, var(--apx-ink, #18161a) 74%, var(--apx-bg, #f1efeb));
+  --_glass: color-mix(in srgb, var(--apx-ink, #18161a) 92%, #000);
+  --_lit: var(--apx-bg, #f1efeb);
+  --_flab: color-mix(in srgb, var(--apx-bg, #f1efeb) 68%, var(--apx-ink, #18161a));
+  --_fline: color-mix(in srgb, var(--apx-bg, #f1efeb) 16%, transparent);
+}
+.apx-lay15__inner { max-width: 1320px; margin: 0 auto; }
+
+/* heading row (optional) */
+.apx-lay15__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px; margin-bottom: clamp(40px, 6vh, 64px); }
+.apx-lay15__kicker { margin: 0 0 18px; font: 500 11px/1.4 var(--_mono); letter-spacing: .28em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3); }
+.apx-lay15__head h2 {
+  margin: 0; max-width: 16ch; font-family: var(--apx-font-display, Georgia, serif); font-weight: 400;
+  font-size: clamp(36px, 5.4cqi, 80px); line-height: 1; letter-spacing: .02em; text-transform: uppercase; text-wrap: balance;
+}
+.apx-lay15__lede { margin: 22px 0 0; max-width: 54ch; font-size: 16px; line-height: 1.7; color: color-mix(in srgb, var(--apx-ink, #ecebe8) 70%, var(--apx-muted, #9d9ca3)); }
+
+/* filter switch: glass segmented control */
+.apx-lay15__filters {
+  display: flex; gap: 2px; padding: 3px; border: 1px solid var(--apx-line, rgba(255, 255, 255, .13)); border-radius: calc(var(--apx-radius, 18px) * .5);
+  background: color-mix(in srgb, var(--apx-surface, rgba(255, 255, 255, .055)) 100%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2); -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+.apx-lay15__filters button {
+  position: relative; min-height: 44px; padding: 0 16px; border: 0; border-radius: calc(var(--apx-radius, 18px) * .5 - 3px); background: transparent; cursor: pointer;
+  color: var(--apx-muted, #9d9ca3); font: 500 11px/1 var(--_mono); letter-spacing: .18em; text-transform: uppercase; isolation: isolate;
+  transition: color .3s ease;
+}
+.apx-lay15__filters button::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; opacity: 0; transform: scale(.92);
+  background: color-mix(in srgb, var(--apx-bg, #0b0b0d) 70%, var(--apx-ink, #ecebe8) 8%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--_acc) 40%, transparent), 0 0 18px -8px var(--_glow);
+  transition: opacity .35s ease, transform .45s cubic-bezier(.16, 1, .3, 1);
+}
+.apx-lay15__filters button:hover { color: var(--apx-ink, #ecebe8); }
+.apx-lay15__filters button[aria-pressed="true"] { color: var(--apx-ink, #ecebe8); }
+.apx-lay15__filters button[aria-pressed="true"]::before { opacity: 1; transform: none; }
+.apx-lay15__filters button:focus-visible { outline: 1px solid var(--_acc); outline-offset: 2px; }
+
+/* the building */
+.apx-lay15__building {
+  --_cols: 3;
+  position: relative; margin-top: 52px; padding: 30px clamp(14px, 2.2cqi, 30px) 30px; isolation: isolate;
+  background:
+    linear-gradient(90deg, var(--_fline) 0 1px, transparent 1px calc(100% - 1px), var(--_fline) calc(100% - 1px)),
+    linear-gradient(180deg, var(--_fac), var(--_fac2));
+  border: 1px solid var(--_fline); overflow: visible;
+  box-shadow: 0 50px 90px -60px rgba(0, 0, 0, .9);
+}
+/* glass reflection that slides across the facade (transform only) */
+.apx-lay15__sheen { position: absolute; inset: 0; z-index: 3; overflow: hidden; pointer-events: none; }
+.apx-lay15__sheen i {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 34%;
+  background: linear-gradient(105deg, transparent 20%, color-mix(in srgb, var(--apx-ink, #ecebe8) 5%, transparent) 50%, transparent 80%);
+  transform: translate3d(-110%, 0, 0); animation: apx-lay15-sheen 11s linear infinite; animation-play-state: paused; will-change: transform;
+}
+.apx-lay15.is-light .apx-lay15__sheen i { background: linear-gradient(105deg, transparent 20%, color-mix(in srgb, var(--apx-bg, #f1efeb) 9%, transparent) 50%, transparent 80%); }
+.apx-lay15.is-vis .apx-lay15__sheen i { animation-play-state: running; }
+@keyframes apx-lay15-sheen { from { transform: translate3d(-110%, 0, 0); } to { transform: translate3d(310%, 0, 0); } }
+@container (min-width: 560px) { .apx-lay15__building { --_cols: 6; } }
+@container (min-width: 960px) { .apx-lay15__building { --_cols: 11; } }
+
+/* cornice + mast with a slow beacon */
+.apx-lay15__roof {
+  position: absolute; left: -1px; right: -1px; top: -14px; height: 14px; z-index: 2;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--_frame) 80%, var(--apx-ink, #ecebe8) 6%), var(--_fac));
+  border: 1px solid var(--_fline); border-bottom: 0;
+}
+.apx-lay15__count {
+  position: absolute; left: 14px; bottom: calc(100% + 10px); font: 500 10px/1 var(--_mono); letter-spacing: .22em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3);
+  font-variant-numeric: tabular-nums;
+}
+.apx-lay15__count b { font-weight: 500; color: var(--apx-ink, #ecebe8); }
+.apx-lay15__mast { position: absolute; right: 12%; bottom: 100%; width: 1px; height: 30px; background: linear-gradient(180deg, var(--apx-muted, #9d9ca3), var(--_fline)); }
+.apx-lay15__mast::after {
+  content: ""; position: absolute; left: -2px; top: -3px; width: 5px; height: 5px; border-radius: 50%; background: var(--_acc);
+  box-shadow: 0 0 10px var(--_glow); animation: apx-lay15-beacon 2.8s ease-in-out infinite;
+}
+@keyframes apx-lay15-beacon { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
+
+.apx-lay15__windows { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--_cols), minmax(0, 1fr)); gap: 14px 12px; }
+.apx-lay15__cell { min-width: 0; transition: opacity .5s ease; }
+.apx-lay15__cell.is-dim { opacity: .18; }
+.apx-lay15__win {
+  position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; min-width: 0; margin: 0; padding: 0; border: 0; cursor: pointer;
+  background: color-mix(in srgb, var(--_glass) 80%, var(--_frame)); outline-offset: 3px; border-radius: 1px;
+  box-shadow: inset 0 0 0 2px var(--_frame), inset 0 0 0 3px var(--_glass);
+  transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+}
+.apx-lay15__win.is-dim { pointer-events: none; }
+.apx-lay15__pane { position: absolute; inset: 6px; overflow: hidden; background: linear-gradient(180deg, color-mix(in srgb, var(--_glass) 86%, var(--_lit) 6%), var(--_glass)); }
+.apx-lay15__lit, .apx-lay15__sel, .apx-lay15__mull { position: absolute; inset: 0; pointer-events: none; }
+.apx-lay15__lit {
+  opacity: 0; transition: opacity .7s ease;
+  background: radial-gradient(120% 90% at 50% 72%, color-mix(in srgb, var(--_lit) 97%, transparent), color-mix(in srgb, var(--_lit) 64%, transparent) 55%, color-mix(in srgb, var(--_lit) 26%, transparent) 100%);
+}
+.apx-lay15__win.is-hi .apx-lay15__lit { background: linear-gradient(180deg, color-mix(in srgb, var(--_lit) 34%, transparent) 0 14%, transparent 14% 16%, color-mix(in srgb, var(--_lit) 34%, transparent) 16% 26%, transparent 26%), radial-gradient(130% 100% at 50% 78%, var(--_lit), color-mix(in srgb, var(--_lit) 60%, transparent) 55%, color-mix(in srgb, var(--_lit) 22%, transparent)); }
+.apx-lay15__sel {
+  opacity: 0; transition: opacity .35s ease;
+  background: radial-gradient(110% 85% at 50% 72%, color-mix(in srgb, var(--_acc) 80%, #fff), color-mix(in srgb, var(--_acc) 40%, transparent) 50%, color-mix(in srgb, var(--_acc) 10%, var(--_glass)) 100%);
+}
+/* glow spill on the frame (opacity only) */
+.apx-lay15__win::before, .apx-lay15__win::after { content: ""; position: absolute; inset: -2px; pointer-events: none; opacity: 0; transition: opacity .7s ease; }
+.apx-lay15__win::before { box-shadow: 0 0 22px -2px color-mix(in srgb, var(--_lit) 42%, transparent); }
+.apx-lay15__win::after { box-shadow: 0 0 28px 0 var(--_glow); transition-duration: .35s; }
+.apx-lay15__win.is-on::before { opacity: 1; }
+.apx-lay15__win.is-on .apx-lay15__lit { opacity: 1; }
+/* mullions: four-lite for local trades, tall two-lite for high-ticket */
+.apx-lay15__mull {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), var(--_frame) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(180deg, transparent calc(42% - 1px), var(--_frame) calc(42% - 1px) calc(42% + 1px), transparent calc(42% + 1px));
+}
+.apx-lay15__win.is-hi .apx-lay15__mull { background: linear-gradient(90deg, transparent calc(50% - 1px), var(--_frame) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)); }
+/* the room behind the glass: a silhouette of the trade, seen only when lit */
+.apx-lay15__icon {
+  position: absolute; left: 50%; bottom: 10%; width: 46%; height: auto; transform: translate(-50%, 6%); opacity: 0;
+  fill: none; stroke: var(--_glass); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+  transition: opacity .9s ease, transform .6s cubic-bezier(.16, 1, .3, 1);
+}
+.apx-lay15__win.is-on .apx-lay15__icon { opacity: .42; transform: translate(-50%, 0); }
+/* hover / focus / tap: the window answers in the accent */
+.apx-lay15__win.is-sel { transform: translateY(-3px); }
+.apx-lay15__win.is-sel .apx-lay15__sel, .apx-lay15__win.is-sel::after { opacity: 1; }
+.apx-lay15__win.is-sel .apx-lay15__icon { opacity: .78; stroke: #1f2124; }
+.apx-lay15.has-sel .apx-lay15__win:not(.is-sel) .apx-lay15__pane { filter: brightness(.72); }
+.apx-lay15__pane { transition: filter .4s ease; }
+.apx-lay15__win:focus-visible { outline: 1px solid var(--_acc); }
+/* the odd flicker */
+.apx-lay15__win.is-flick .apx-lay15__lit { animation: apx-lay15-flick .9s steps(2) 1; }
+@keyframes apx-lay15-flick { 0%, 100% { opacity: 1; } 30% { opacity: .3; } 60% { opacity: .85; } }
+.apx-lay15__label {
+  display: block; margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;
+  font: 500 9px/1.3 var(--_mono); letter-spacing: .08em; text-transform: uppercase; color: var(--_flab);
+}
+
+/* details card */
+.apx-lay15__tip {
+  position: absolute; left: 0; top: 0; z-index: 5; width: min(272px, calc(100% - 16px)); padding: 18px 18px 16px; pointer-events: none;
+  border: 1px solid var(--apx-line, rgba(255, 255, 255, .13)); border-radius: calc(var(--apx-radius, 18px) * .6);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--apx-bg, #0b0b0d) 84%, transparent), color-mix(in srgb, var(--apx-bg, #0b0b0d) 70%, transparent)), var(--apx-surface, rgba(255, 255, 255, .055));
+  backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .8), inset 0 1px 0 color-mix(in srgb, var(--apx-ink, #ecebe8) 8%, transparent);
+  color: var(--apx-ink, #ecebe8); opacity: 0; visibility: hidden;
+  transition: opacity .25s ease, visibility 0s linear .25s, transform .4s cubic-bezier(.16, 1, .3, 1);
+}
+.apx-lay15__tip.is-on { opacity: 1; visibility: visible; transition: opacity .25s ease, visibility 0s, transform .4s cubic-bezier(.16, 1, .3, 1); }
+.apx-lay15__tt { margin: 0 0 6px; font-family: var(--apx-font-display, Georgia, serif); font-size: 22px; line-height: 1.1; letter-spacing: .02em; text-transform: uppercase; }
+.apx-lay15__tc { margin: 0 0 12px; font: 500 10px/1 var(--_mono); letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted, #9d9ca3); }
+.apx-lay15__tv { margin: 0 0 12px; font: 500 15px/1.2 var(--_mono); color: var(--_acc); }
+.apx-lay15__tv span { color: var(--apx-muted, #9d9ca3); font-size: 11px; letter-spacing: .1em; }
+.apx-lay15__tm { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; }
+.apx-lay15__tm span { height: 18px; display: grid; place-items: center; font: 500 8px/1 var(--_mono); color: var(--apx-muted, #9d9ca3); background: color-mix(in srgb, var(--apx-ink, #ecebe8) 6%, transparent); }
+.apx-lay15__tm span.is-pk { color: var(--apx-ink, #ecebe8); background: color-mix(in srgb, var(--apx-ink, #ecebe8) 16%, transparent); box-shadow: inset 0 -2px 0 var(--_acc); }
+/* light ground: a deep accent reads better as text than as a glow */
+.apx-lay15.is-light .apx-lay15__tv { color: var(--_acc); }
+.apx-lay15.is-light .apx-lay15__win.is-sel .apx-lay15__icon { stroke: var(--apx-accent-ink, #fbf6f3); }
+
+/* phones */
+.apx-lay15.is-compact .apx-lay15__head { margin-bottom: 40px; }
+.apx-lay15.is-compact .apx-lay15__filters { width: 100%; }
+.apx-lay15.is-compact .apx-lay15__filters button { flex: 1; padding: 0 8px; letter-spacing: .12em; }
+@container (max-width: 559px) { .apx-lay15__label { font-size: 8.5px; letter-spacing: .05em; } }
+
+/* motion off: lights on, no flicker or sheen */
+.apx-lay15.is-static .apx-lay15__sheen i, .apx-lay15.is-static .apx-lay15__mast::after { animation: none; }
+.apx-lay15.is-static .apx-lay15__lit, .apx-lay15.is-static .apx-lay15__icon, .apx-lay15.is-static .apx-lay15__win, .apx-lay15.is-static .apx-lay15__win::before, .apx-lay15.is-static .apx-lay15__tip { transition: none; }
+.apx-lay15.is-static .apx-lay15__win.is-sel { transform: none; }
+@media (prefers-reduced-motion: reduce) { .apx-lay15__sheen i, .apx-lay15__mast::after, .apx-lay15__win.is-flick .apx-lay15__lit { animation: none; } }

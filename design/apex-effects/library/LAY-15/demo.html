@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAY-15 · Lit Window Facade — APEX effect library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Onest:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="module.css">
+<style>
+  /* Demo-only token sets. Modules read nothing else. */
+  .theme-dark {
+    --apx-bg: #0b0b0d; --apx-surface: rgba(255, 255, 255, .055); --apx-ink: #ecebe8; --apx-muted: #9d9ca3;
+    --apx-accent: #d4ff3a; --apx-accent-ink: #1f2124; --apx-line: rgba(255, 255, 255, .13); --apx-radius: 18px;
+    --apx-font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif; --apx-font-text: "Onest", system-ui, sans-serif; --apx-motion: 1;
+  }
+  .theme-light {
+    --apx-bg: #f1efeb; --apx-surface: rgba(255, 255, 255, .6); --apx-ink: #18161a; --apx-muted: #635e66;
+    --apx-accent: #7d2235; --apx-accent-ink: #fbf6f3; --apx-line: rgba(24, 22, 26, .15); --apx-radius: 6px;
+    --apx-font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --apx-font-text: "Hanken Grotesk", system-ui, sans-serif; --apx-motion: 1;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #0b0b0d; }
+  .theme { position: relative; background: var(--apx-bg); color: var(--apx-ink); font-family: var(--apx-font-text); overflow-x: clip; }
+  .demo-bar { position: fixed; z-index: 50; top: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 999px;
+    background: rgba(20, 20, 24, .55); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font: 500 12px/1 "Onest", system-ui, sans-serif; color: #ecebe8; white-space: nowrap; }
+  .demo-bar b { padding: 8px 12px; font-weight: 600; letter-spacing: .04em; }
+  .demo-bar a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .07); }
+  .demo-bar a:hover, .demo-bar a:focus-visible { background: rgba(255, 255, 255, .16); outline: none; }
+  .demo-intro { min-height: 78vh; display: grid; align-content: end; padding: 120px clamp(20px, 6vw, 96px) 56px; gap: 18px; }
+  .demo-intro small { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--apx-muted); }
+  .demo-intro h1 { margin: 0; text-transform: uppercase; font-family: var(--apx-font-display); font-weight: 400; font-size: clamp(40px, 7vw, 96px); line-height: .98; letter-spacing: .02em; max-width: 14ch; }
+  .demo-intro p { margin: 0; max-width: 52ch; color: var(--apx-muted); font-size: 17px; line-height: 1.6; }
+  .demo-intro .hint { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .demo-outro { min-height: 70vh; display: grid; place-items: center; padding: 80px 24px; color: var(--apx-muted); text-align: center; }
+  .demo-outro p { max-width: 46ch; line-height: 1.6; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 600px) { .demo-bar b { display: none; } }
+</style>
+<!-- apx-solo: one colour set, full screen (used by the Effects Library) -->
+<style id="apx-solo">
+html.solo,html.solo body{background:#0a0a0b}
+html.solo-light,html.solo-light body{background:#f1efeb}
+html.solo .demo-head,html.solo .demo-bar,html.solo .demo-tag,html.solo .demo-outro{display:none!important}
+html.solo .demo-frames{display:block!important;max-width:none!important;padding:0!important;margin:0!important}
+html.solo.solo-dark .demo-col:has([data-frame="light"]),html.solo.solo-light .demo-col:has([data-frame="dark"]){display:none!important}
+html.solo .frame{min-height:100vh!important;min-height:100svh!important;border-radius:0!important;border:0!important;margin:0!important}
+html.solo.solo-dark #light,html.solo.solo-light #dark{display:none!important}
+html.solo .frame:not(:has(header)){display:grid!important;align-content:center}
+html.solo .frame-pad{width:100%;max-width:1180px;margin-inline:auto}
+html.solo .demo-intro{display:none!important}
+</style>
+<script>(function(){var h=location.hash;if(h.indexOf('#solo')===0){document.documentElement.classList.add('solo',h==='#solo-light'?'solo-light':'solo-dark')}})();</script>
+<style id="apx-caps">/* APEX house rule: every heading and menu item in CAPITALS */h1,h2,h3,h4,h5,h6,nav a,[role="menuitem"],legend,span.word,.apx-c130__label,.apx-lay102__name,.apx-scr104 b,.apx-scr105 b{text-transform:uppercase;letter-spacing:.02em}</style>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Demo"><b>LAY-15 · Lit Window Facade</b><a href="#dark">Dark tokens</a><a href="#light">Light tokens</a></nav>
+<main>
+  <div class="theme theme-dark" id="dark">
+    <header class="demo-intro">
+      <small>LAY-15 · Dark token set</small>
+      <h1>LIT WINDOW FACADE</h1>
+      <p>Every industry is one window in a single building. The windows light up one by one as the facade comes into view, flicker now and then, and open their details on hover, focus or tap. A switch dims the windows that are not in the chosen group.</p>
+      <p class="hint">Scroll</p>
+    </header>
+    <section class="apx-lay15" data-apx="LAY-15" data-fx="LAY-15" aria-label="Industries">
+      <div class="apx-lay15__inner">
+        <div class="apx-lay15__head">
+          <div><p class="apx-lay15__kicker">Every window is a market</p><h2>33 INDUSTRIES. ONE LIT WINDOW EACH.</h2><p class="apx-lay15__lede">Hover or tap a window to see that industry's typical lead value and its busiest months.</p></div>
+          <div class="apx-lay15__filters" role="group" aria-label="Filter industries"><button type="button" data-f="all" aria-pressed="true">All 33</button><button type="button" data-f="high" aria-pressed="false">High-ticket</button><button type="button" data-f="std" aria-pressed="false">Trades</button></div>
+        </div>
+        <div class="apx-lay15__building">
+          <ol class="apx-lay15__windows">
+          <li data-cat="high" data-value="$125k – $175k" data-peak="1,4,10,12" data-icon="M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2">Executive Recruitment</li>
+          <li data-cat="high" data-value="$1M – $14M" data-peak="4,5,6,7,10,11,12" data-icon="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0">Industrial Water Treatment</li>
+          <li data-cat="high" data-value="$500k – $15M" data-peak="10,11,12,1,2,3" data-icon="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4">Commercial Security Systems</li>
+          <li data-cat="high" data-value="$5.3M – $53M" data-peak="4,5,6,7,8,9,10,11,12" data-icon="M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1">Industrial Automation &amp; Manufacturing</li>
+          <li data-cat="high" data-value="$50k – $355k" data-peak="1,2,7,8,9,10" data-icon="M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12">Commercial Kitchen Equipment</li>
+          <li data-cat="high" data-value="$25k – $100k" data-peak="1,2,3,7,8,9,10,11,12" data-icon="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8">Specialized Medical Staffing</li>
+          <li data-cat="high" data-value="$65k – $3M" data-peak="1,2,10,11,12" data-icon="M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2">Commercial HVAC &amp; Refrigeration</li>
+          <li data-cat="high" data-value="$100k – $5M" data-peak="4,5,6,7,8,9,10,11,12" data-icon="M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2">Custom Contract Manufacturing</li>
+          <li data-cat="high" data-value="$25k – $100k" data-peak="1,3,4,5,9,10,11,12" data-icon="M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1">Commercial Real Estate</li>
+          <li data-cat="high" data-value="$3k – $43k" data-peak="10,11,12,1" data-icon="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z">Specialty Medical (Cosmetic/Dental)</li>
+          <li data-cat="high" data-value="$50k – $500k" data-peak="7,8,9,10,11,12,1,2" data-icon="M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z">Commercial Printing &amp; Fulfillment</li>
+          <li data-cat="high" data-value="$30k – $100k" data-peak="4,5,10,11,12" data-icon="M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2">Niche Insurance — Cyber Liability</li>
+          <li data-cat="std" data-value="$500 – $5k" data-peak="3,4,5,9,10,11" data-icon="M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6">Roofing</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="3,4,5,6,7,8,9" data-icon="M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8">Landscaping</li>
+          <li data-cat="std" data-value="$100 – $1k" data-peak="1,2,3,12" data-icon="M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6">Home Cleaning (Interior)</li>
+          <li data-cat="std" data-value="$150 – $2k" data-peak="3,4,5,9,10" data-icon="M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2">Home Cleaning (Exterior)</li>
+          <li data-cat="std" data-value="$200 – $2k" data-peak="1,2,11,12" data-icon="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z">Plumbers</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="3,4,5,9,10,11" data-icon="M13 2L4 14h7l-1 8 9-12h-7z">Electricians</li>
+          <li data-cat="std" data-value="$250 – $2k" data-peak="1,2,7,8,11,12" data-icon="M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0">HVAC</li>
+          <li data-cat="std" data-value="$150 – $2k" data-peak="1,2,3,9" data-icon="M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z">Dentists</li>
+          <li data-cat="std" data-value="$500 – $5k" data-peak="1,4,7,10" data-icon="M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z">Lawyers</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="3,4,5,9,10,11" data-icon="M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01">Real Estate Agents</li>
+          <li data-cat="std" data-value="$50 – $500" data-peak="1,2,8,9" data-icon="M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12">Gyms &amp; Fitness</li>
+          <li data-cat="std" data-value="$200 – $2k" data-peak="3,4,9,10,11" data-icon="M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0">Auto Repair</li>
+          <li data-cat="std" data-value="$300 – $2k" data-peak="3,4,5,9,10" data-icon="M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2">Pest Control</li>
+          <li data-cat="std" data-value="$50 – $500" data-peak="12,1,5,6" data-icon="M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4">Hair Salons &amp; Barbershops</li>
+          <li data-cat="std" data-value="$400 – $3k" data-peak="10,11,12,1" data-icon="M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1">Insurance Agents</li>
+          <li data-cat="std" data-value="$200 – $2k" data-peak="1,2,9" data-icon="M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2">Healthcare Clinics</li>
+          <li data-cat="std" data-value="$400 – $4k" data-peak="5,6,7,8,9" data-icon="M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0">Moving Companies</li>
+          <li data-cat="std" data-value="$100 – $1k" data-peak="1,2,6,7" data-icon="M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5">Personal Trainers</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="5,6,7,8,9,10,11" data-icon="M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z">Photographers</li>
+          <li data-cat="std" data-value="$2k – $15k" data-peak="4,5,6,9,10" data-icon="M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z">Wedding Venues</li>
+          <li data-cat="std" data-value="$500 – $5k" data-peak="5,6,7,8,12" data-icon="M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12">Restaurants</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of the dark token set. The same module follows below with the light tokens, no code changes.</p></div>
+  </div>
+  <div class="theme theme-light" id="light">
+    <header class="demo-intro">
+      <small>LAY-15 · Light token set</small>
+      <h1>LIT WINDOW FACADE</h1>
+      <p>Every industry is one window in a single building. The windows light up one by one as the facade comes into view, flicker now and then, and open their details on hover, focus or tap. A switch dims the windows that are not in the chosen group.</p>
+      <p class="hint">Scroll</p>
+    </header>
+    <section class="apx-lay15" data-apx="LAY-15" data-fx="LAY-15" aria-label="Industries">
+      <div class="apx-lay15__inner">
+        <div class="apx-lay15__head">
+          <div><p class="apx-lay15__kicker">Every window is a market</p><h2>33 INDUSTRIES. ONE LIT WINDOW EACH.</h2><p class="apx-lay15__lede">Hover or tap a window to see that industry's typical lead value and its busiest months.</p></div>
+          <div class="apx-lay15__filters" role="group" aria-label="Filter industries"><button type="button" data-f="all" aria-pressed="true">All 33</button><button type="button" data-f="high" aria-pressed="false">High-ticket</button><button type="button" data-f="std" aria-pressed="false">Trades</button></div>
+        </div>
+        <div class="apx-lay15__building">
+          <ol class="apx-lay15__windows">
+          <li data-cat="high" data-value="$125k – $175k" data-peak="1,4,10,12" data-icon="M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2">Executive Recruitment</li>
+          <li data-cat="high" data-value="$1M – $14M" data-peak="4,5,6,7,10,11,12" data-icon="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z M9 15c1 1 2 1 3 0s2-1 3 0">Industrial Water Treatment</li>
+          <li data-cat="high" data-value="$500k – $15M" data-peak="10,11,12,1,2,3" data-icon="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4">Commercial Security Systems</li>
+          <li data-cat="high" data-value="$5.3M – $53M" data-peak="4,5,6,7,8,9,10,11,12" data-icon="M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1">Industrial Automation &amp; Manufacturing</li>
+          <li data-cat="high" data-value="$50k – $355k" data-peak="1,2,7,8,9,10" data-icon="M6 14a4 4 0 0 1 1-7.9A5 5 0 0 1 17 6.1 4 4 0 0 1 18 14v6H6z M6 17h12">Commercial Kitchen Equipment</li>
+          <li data-cat="high" data-value="$25k – $100k" data-peak="1,2,3,7,8,9,10,11,12" data-icon="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 8v8 M8 12h8">Specialized Medical Staffing</li>
+          <li data-cat="high" data-value="$65k – $3M" data-peak="1,2,10,11,12" data-icon="M12 2v20 M3.3 7l17.4 10 M3.3 17L20.7 7 M9 3.5l3 2 3-2 M9 20.5l3-2 3 2">Commercial HVAC &amp; Refrigeration</li>
+          <li data-cat="high" data-value="$100k – $5M" data-peak="4,5,6,7,8,9,10,11,12" data-icon="M3 21V10l6 4V10l6 4V6h6v15z M7 18h2 M12 18h2 M17 18h2">Custom Contract Manufacturing</li>
+          <li data-cat="high" data-value="$25k – $100k" data-peak="1,3,4,5,9,10,11,12" data-icon="M3 21h18 M5 21V7l7-4v18 M12 21V9l7 3v9 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 18h1">Commercial Real Estate</li>
+          <li data-cat="high" data-value="$3k – $43k" data-peak="10,11,12,1" data-icon="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z">Specialty Medical (Cosmetic/Dental)</li>
+          <li data-cat="high" data-value="$50k – $500k" data-peak="7,8,9,10,11,12,1,2" data-icon="M7 9V3h10v6 M5 17H3v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6h-2 M7 14h10v7H7z">Commercial Printing &amp; Fulfillment</li>
+          <li data-cat="high" data-value="$30k – $100k" data-peak="4,5,10,11,12" data-icon="M6 11h12v10H6z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2">Niche Insurance — Cyber Liability</li>
+          <li data-cat="std" data-value="$500 – $5k" data-peak="3,4,5,9,10,11" data-icon="M2 12L12 3l10 9 M5 10v11h14V10 M10 21v-6h4v6">Roofing</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="3,4,5,6,7,8,9" data-icon="M5 21c0-9 5-15 15-16-1 10-7 15-15 16z M5 21l8-8">Landscaping</li>
+          <li data-cat="std" data-value="$100 – $1k" data-peak="1,2,3,12" data-icon="M9 9h6v12H9z M10 9V6h4v3 M14 6h3l2 2 M7 3h6">Home Cleaning (Interior)</li>
+          <li data-cat="std" data-value="$150 – $2k" data-peak="3,4,5,9,10" data-icon="M4 4h16v16H4z M12 4v16 M4 12h16 M15 7l2 2">Home Cleaning (Exterior)</li>
+          <li data-cat="std" data-value="$200 – $2k" data-peak="1,2,11,12" data-icon="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z">Plumbers</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="3,4,5,9,10,11" data-icon="M13 2L4 14h7l-1 8 9-12h-7z">Electricians</li>
+          <li data-cat="std" data-value="$250 – $2k" data-peak="1,2,7,8,11,12" data-icon="M12 12c-3-4-1-9 2-9 2 0 3 3 0 6 M12 12c4-3 9-1 9 2 0 2-3 3-6 0 M12 12c3 4 1 9-2 9-2 0-3-3 0-6 M12 12c-4 3-9 1-9-2 0-2 3-3 6 0">HVAC</li>
+          <li data-cat="std" data-value="$150 – $2k" data-peak="1,2,3,9" data-icon="M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4.5 2 7.5.5 3 1 6 2.5 6s1.5-3 2.5-5c.5-1 1.5-1 2 0 1 2 1 5 2.5 5s2-3 2.5-6c.5-3 2-4.5 2-7.5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z">Dentists</li>
+          <li data-cat="std" data-value="$500 – $5k" data-peak="1,4,7,10" data-icon="M12 3v18 M7 21h10 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0z M19 7l-3 7a3 3 0 0 0 6 0z">Lawyers</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="3,4,5,9,10,11" data-icon="M15 3a6 6 0 1 1-5.2 9L3 18.8V21h3v-2h2v-2h2l1.2-1.2 M16 7.5h.01">Real Estate Agents</li>
+          <li data-cat="std" data-value="$50 – $500" data-peak="1,2,8,9" data-icon="M6 6v12 M18 6v12 M3 9v6 M21 9v6 M6 12h12">Gyms &amp; Fitness</li>
+          <li data-cat="std" data-value="$200 – $2k" data-peak="3,4,9,10,11" data-icon="M5 17H3v-5l2-5h14l2 5v5h-2 M3 12h18 M7 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M13 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0">Auto Repair</li>
+          <li data-cat="std" data-value="$300 – $2k" data-peak="3,4,5,9,10" data-icon="M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z M12 9v10 M8 12H4 M20 12h-4 M8 16l-3 2 M16 16l3 2 M8 8L5 6 M16 8l3-2">Pest Control</li>
+          <li data-cat="std" data-value="$50 – $500" data-peak="12,1,5,6" data-icon="M3 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M8.1 8.1L20 20 M8.1 15.9L20 4">Hair Salons &amp; Barbershops</li>
+          <li data-cat="std" data-value="$400 – $3k" data-peak="10,11,12,1" data-icon="M3 12a9 9 0 0 1 18 0z M12 12v7a2 2 0 0 1-4 0 M12 3v-1">Insurance Agents</li>
+          <li data-cat="std" data-value="$200 – $2k" data-peak="1,2,9" data-icon="M20.8 5.6a5 5 0 0 0-7.8-.6L12 6l-1-1a5 5 0 0 0-7.8 6.4L12 21l8.8-9.6a5 5 0 0 0 0-5.8z M8 12h2l1.5-2 2 4 1.5-2h2">Healthcare Clinics</li>
+          <li data-cat="std" data-value="$400 – $4k" data-peak="5,6,7,8,9" data-icon="M2 6h12v10H2z M14 9h4l4 4v3h-8 M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M16 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0">Moving Companies</li>
+          <li data-cat="std" data-value="$100 – $1k" data-peak="1,2,6,7" data-icon="M12 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M12 12v3 M10 2h4 M12 2v3 M19 6l-1.5 1.5">Personal Trainers</li>
+          <li data-cat="std" data-value="$300 – $3k" data-peak="5,6,7,8,9,10,11" data-icon="M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8z">Photographers</li>
+          <li data-cat="std" data-value="$2k – $15k" data-peak="4,5,6,9,10" data-icon="M3 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 15a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M12 3l2 2-2 2-2-2z">Wedding Venues</li>
+          <li data-cat="std" data-value="$500 – $5k" data-peak="5,6,7,8,12" data-icon="M7 2v20 M4 2v5a3 3 0 0 0 6 0V2 M17 2c-2 2-3 5-3 8h3v12">Restaurants</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+    <div class="demo-outro"><p>End of demo.</p></div>
+  </div>
+</main>
+<script src="module.js"></script>
+</body>
+</html>

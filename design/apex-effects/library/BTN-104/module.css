@@ -1,0 +1,52 @@
+/* BTN-104 · Riding Tab — A glass capsule with a small phone tab on top that slides along the edge to follow your pointer. */
+/* ---- shared glass button base (tokens -> private vars) ---- */
+.apx-b104{
+  --_ink:var(--apx-ink,oklch(.96 .005 30));--_mut:var(--apx-muted,oklch(.78 .01 30));
+  --_acc:var(--apx-accent,oklch(.78 .07 12));
+  --_rim:var(--apx-line,rgb(255 255 255/.26));--_fill:var(--apx-surface,rgb(255 255 255/.08));
+  --_bg:var(--apx-bg,oklch(.15 .008 30));--_scrim:color-mix(in oklch,var(--_bg) 38%,transparent);
+  --_m:var(--apx-motion,1);
+  --_d1:calc(var(--apx-dur-1,120ms) * var(--_m));--_d2:calc(var(--apx-dur-2,200ms) * var(--_m));
+  --_d3:calc(var(--apx-dur-3,320ms) * var(--_m));--_d4:calc(var(--apx-dur-4,560ms) * var(--_m));
+  --_d5:calc(var(--apx-dur-5,900ms) * var(--_m));
+  --_out:var(--apx-ease-out,cubic-bezier(.16,1,.3,1));--_in:var(--apx-ease-in,cubic-bezier(.7,0,.84,0));
+  --_io:var(--apx-ease-inout,cubic-bezier(.65,0,.35,1));
+  --_spr:var(--apx-ease-spring,linear(0,.056,.174,.313,.472,.624,.759,.863,.951,1.015,1.056,1.079,1.088,1.087,1.079,1.066,1.054,1.04,1.027,1.016,1.007,1.001,.997,.994,.992,.992,.993,.994,.995,.996,.997,.998,.999,1));
+  --_glow:color-mix(in oklch,var(--_acc) 55%,transparent);
+  appearance:none;-webkit-appearance:none;margin:0;border:0;padding:0;background:none;color:var(--_ink);
+  font:600 15px/1.1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.01em;text-decoration:none;cursor:pointer;
+  position:relative;display:inline-grid;place-items:center;vertical-align:middle;min-height:48px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.apx-b104:focus{outline:none}
+.apx-b104:focus-visible{outline:none}
+@media (prefers-reduced-motion:reduce){.apx-b104{--_m:0}}
+.apx-b104__l{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;
+  text-shadow:0 1px 10px color-mix(in oklch,var(--_bg) 60%,transparent)}
+.apx-b104__l svg{width:18px;height:18px;flex:none}
+.apx-b104__rim{z-index:3}
+.apx-b104__edge{fill:none;stroke:var(--_rim);stroke-width:1}
+.apx-b104__hi{fill:none;stroke-width:1.2}
+.apx-b104__ring{fill:none;stroke:var(--_acc);stroke-width:5;opacity:0;transition:opacity var(--_d1) var(--_out)}
+.apx-b104:focus-visible .apx-b104__ring{opacity:1}
+.apx-b104__vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* ---- BTN-104 ---- */
+/* capsule with a glass tab that rides along its top edge toward the pointer */
+.apx-b104{min-height:66px;padding-top:16px;align-items:end}
+.apx-b104__cap{position:absolute;left:0;right:0;bottom:0;top:16px}
+.apx-b104__g{position:absolute;inset:0;border-radius:999px;background:linear-gradient(155deg,rgb(255 255 255/.17),rgb(255 255 255/.035) 48%,rgb(255 255 255/.07)),linear-gradient(var(--_fill),var(--_fill)),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(175%);backdrop-filter:blur(12px) saturate(175%)}
+.apx-b104__tab{position:absolute;left:0;top:1px;width:46px;height:16px;z-index:2;will-change:transform}
+.apx-b104__tab .apx-b104__g{border-radius:9px 9px 0 0}
+.apx-b104__tabin{position:absolute;inset:0;transition:transform var(--_d3) var(--_spr)}
+.apx-b104__ti{position:absolute;inset:0;z-index:4;display:grid;place-items:center;color:var(--_ink)}
+.apx-b104__ti svg{width:11px;height:11px;transform-origin:50% 60%;animation-name:apxB104ring;animation-duration:calc(4.2s / max(var(--_m),.01));animation-iteration-count:infinite;animation-timing-function:var(--_io)}
+@keyframes apxB104ring{0%,82%,100%{transform:rotate(0)}86%{transform:rotate(-16deg)}90%{transform:rotate(14deg)}94%{transform:rotate(-8deg)}}
+.apx-b104__l{height:50px;padding:0 30px;transition:transform var(--_d2) var(--_out)}
+.apx-b104__tab .apx-b104__edge{stroke:var(--_acc);stroke-opacity:.7}
+.apx-b104.is-hot .apx-b104__ti svg{animation-duration:calc(1.1s / max(var(--_m),.01))}
+.apx-b104.is-press .apx-b104__tabin{transform:translateY(9px) scaleY(.6);transition:transform var(--_d1) var(--_in)}
+.apx-b104.is-press .apx-b104__l{transform:translateY(1px) scale(.98)}
+@media (prefers-reduced-motion:reduce){.apx-b104__ti svg{animation:none}}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.apx-b104 [class*="apx-b104__"]:not(.apx-b104__l):not(.apx-b104__rim):not(svg){background-color:color-mix(in oklch,var(--_bg) 84%,var(--_ink))}}
+@media (forced-colors:active){.apx-b104{border:1px solid ButtonText}}

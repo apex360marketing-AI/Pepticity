@@ -1,0 +1,101 @@
+<title>APEX 360 Colour Styles</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Hanken+Grotesk:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: a two-column wall of live stages (one column on phones); each stage carries its number and name. */
+  :root {
+    --void: #040507; --ink: #e9edf2; --ink-2: #c3cad3; --muted: #9ea7b1; --spark: #d4ff3a; --rim: rgba(255,255,255,.14);
+    --display: "Syncopate", "Arial Black", system-ui, sans-serif;
+    --body: "Hanken Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--void); color: var(--ink); font-family: var(--body); }
+  .wrap { max-width: 1320px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  header { padding-block: 44px 26px; }
+  h1 { font-family: var(--display); font-size: clamp(20px, 3vw, 32px); letter-spacing: .14em; text-transform: uppercase; text-wrap: balance; }
+  header p { margin-top: 12px; max-width: 64ch; color: var(--ink-2); line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-block: 0 64px; }
+  .st { position: relative; aspect-ratio: 16 / 8.2; max-width: 100%; overflow: hidden; border: 1px solid var(--rim);
+        clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px)); }
+  .st .gl { position: absolute; inset: 0; }
+  .st .fb { position: absolute; inset: 0; display: none; place-items: center; padding: 0 10%; }
+  .st .fb svg { width: 100%; filter: drop-shadow(-4px 10px 12px rgba(0,0,0,.6)); }
+  .st.nogl .fb { display: grid; }
+  .st::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 95% at 50% 45%, transparent 50%, rgba(0,0,0,.5) 100%); }
+  .lab { position: absolute; left: 16px; bottom: 14px; right: 16px; z-index: 2; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+         font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .lab b { color: var(--spark); font-weight: 500; font-size: 13px; }
+  .lab span { color: var(--ink); }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .st { aspect-ratio: 16 / 10; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>APEX 360 · TEN COLOUR STYLES</h1>
+    <p>The same live 3D logo in ten metal and colour mixes. Every one has the light that climbs the A and crosses the word, the side-to-side sway, and the new corner flex. Move your mouse over any of them.</p>
+  </header>
+  <main class="grid" id="grid"></main>
+</div>
+
+<script src="glyphs.js"></script>
+<script>
+  var LIST = [
+    ['gunmetal', 'The original you liked: brushed gunmetal, white light, charcoal wall.', '#1d1e20'],
+    ['gunspark', 'Same brushed gunmetal, with the light crossing it in chartreuse.', '#1a1b1d'],
+    ['onyx', 'Matte black letters, polished chrome edges, chartreuse light.', null],
+    ['obsidian', 'Glossy black glass faces with brushed steel edges, chartreuse light.', null],
+    ['smoke', 'See-through smoked glass with chrome edges; the light glows through.', null],
+    ['blackened', 'Darker blackened steel on a lighter concrete-grey wall, white light.', '#3a3b3e'],
+    ['titanium', 'Pale brushed titanium on a near-black wall, chartreuse light.', '#0e0f11'],
+    ['oxblood', 'Brushed steel on a deep oxblood wall, white light.', '#2a1416'],
+    ['bone', 'Bone-white ceramic on an espresso wall, soft warm light.', '#1e1714'],
+    ['inkbone', 'Bone faces with black chrome edges on an ink wall, chartreuse light.', '#0c0e13'],
+  ];
+  var NAMES = { gunmetal: 'BRUSHED GUNMETAL', gunspark: 'GUNMETAL · CHARTREUSE LIGHT', onyx: 'ONYX · CHROME EDGE', obsidian: 'OBSIDIAN GLASS · STEEL EDGE', smoke: 'SMOKED GLASS · CHROME EDGE',
+    blackened: 'BLACKENED STEEL · CONCRETE', titanium: 'BRUSHED TITANIUM · ONYX WALL', oxblood: 'STEEL · OXBLOOD WALL', bone: 'BONE CERAMIC · ESPRESSO', inkbone: 'BONE · BLACK CHROME · INK' };
+  var grid = document.getElementById('grid');
+  LIST.forEach(function (s, i) {
+    var el = document.createElement('section');
+    el.className = 'st'; el.id = 's' + (i + 1); el.dataset.style = s[0];
+    el.style.background = s[2] || 'radial-gradient(90% 120% at 50% 40%, #12151a 0%, #040507 70%)';
+    el.setAttribute('aria-label', 'Style ' + (i + 1) + ': ' + NAMES[s[0]] + '. ' + s[1]);
+    el.innerHTML = '<div class="gl"></div><div class="fb"></div><div class="lab"><b>' + (i + 1) + '</b><span>' + NAMES[s[0]] + '</span></div>';
+    el.title = s[1];
+    grid.appendChild(el);
+  });
+  window.apexFallback = function () {
+    document.querySelectorAll('.st').forEach(function (s) { if (!s.classList.contains('nogl')) { s.querySelector('.fb').innerHTML = TYP101.toSVG('APEX 360'); s.classList.add('nogl'); } });
+  };
+  if (/[?&]nogl/.test(location.search)) apexFallback();
+  setTimeout(function () { if (!window.__apex3dReady) apexFallback(); }, 6000);
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+  import { mountWordmark } from './wordmark3d.js';
+  const probe = document.createElement('canvas');
+  if (!document.querySelector('.nogl')) {
+    if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) apexFallback();
+    else {
+      // Only stages near the screen hold a live 3D view, so ten styles never exceed the browser's WebGL limit.
+      const live = new Map();
+      const near = new IntersectionObserver(es => es.forEach(e => {
+        const el = e.target, gl = el.querySelector('.gl');
+        if (e.isIntersecting && !live.has(el)) {
+          try { live.set(el, mountWordmark(gl, { text: 'APEX 360', style: el.dataset.style, stackBelow: 1.2, onLost: () => live.delete(el) })); }
+          catch (err) { console.error(err); }
+        } else if (!e.isIntersecting && live.has(el)) { live.get(el).destroy(); live.delete(el); }
+      }), { rootMargin: '400px 0px' });
+      document.querySelectorAll('.st').forEach(el => near.observe(el));
+      window.__apex3d = { live, get frames() { const v = [...live.values()]; return v.length ? Math.min(...v.map(i => i.frames)) : 0; } };
+      window.__apex3dReady = true;
+    }
+  }
+</script>

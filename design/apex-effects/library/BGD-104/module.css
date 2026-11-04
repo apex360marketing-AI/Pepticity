@@ -1,0 +1,10 @@
+/* BGD-104 · Fluted Glass — place inside a position:relative section; content above needs position:relative; z-index:1
+   Optional: --apx-bgd104-flute (rib width in px, default 40 / 26 on phones) */
+.apx-bgd104 {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 34px, color-mix(in srgb, var(--apx-ink, #ecebe8) 6%, transparent) 38px 40px),
+    radial-gradient(60% 50% at 70% 40%, color-mix(in srgb, var(--apx-ink, #ecebe8) 10%, transparent), transparent 70%),
+    var(--apx-bg, #0b0b0d);
+}
+.apx-bgd104 > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }

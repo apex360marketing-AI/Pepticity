@@ -1,0 +1,20 @@
+/* HOV-104 · Lead Trail — moving the pointer across a section leaves a trail of small sample-lead cards that pop up and drift away */
+.apx-h104{--_m:var(--apx-motion,1);position:relative;isolation:isolate;overflow:clip;font-family:var(--apx-font-text,system-ui,sans-serif);color:var(--apx-ink,#efe9e6)}
+@media (prefers-reduced-motion:reduce){.apx-h104{--_m:0}}
+.apx-h104__items{display:none}
+.apx-h104__pool{position:absolute;inset:0;z-index:0;pointer-events:none}
+.apx-h104>:not(.apx-h104__pool){position:relative;z-index:1}
+.apx-h104__card{position:absolute;left:0;top:0;width:188px;margin:-44px 0 0 -94px;padding:12px 14px;opacity:0;
+  border-radius:calc(var(--apx-radius,14px) * .8);background:color-mix(in srgb,var(--apx-bg,#0e0d0f) 55%,var(--apx-surface,rgba(255,255,255,.06)));
+  border:1px solid var(--apx-line,rgba(255,255,255,.15));-webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3);
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.55);will-change:transform,opacity}
+.apx-h104__card img{display:block;width:100%;height:96px;object-fit:cover;border-radius:calc(var(--apx-radius,14px) * .5);margin-bottom:8px}
+.apx-h104__tag{display:inline-block;margin-bottom:7px;padding:3px 7px;border-radius:5px;font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--apx-accent,#cf7f88);border:1px solid color-mix(in srgb,var(--apx-accent,#cf7f88) 45%,transparent)}
+.apx-h104__card b{display:block;font:500 15px/1.2 var(--apx-font-display,Georgia,serif);color:var(--apx-ink,#efe9e6)}
+.apx-h104__card span:last-child{display:block;margin-top:4px;font-size:12px;color:var(--apx-muted,#a8a09e)}
+.apx-h104__hint{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--apx-muted,#a8a09e)}
+.apx-h104__hint::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--apx-accent,#cf7f88);box-shadow:0 0 10px var(--apx-accent,#cf7f88);
+  animation:apxH104Blink calc(1.8s / max(var(--_m),.01)) ease-in-out infinite}
+@keyframes apxH104Blink{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.apx-h104__hint::before{animation:none}}

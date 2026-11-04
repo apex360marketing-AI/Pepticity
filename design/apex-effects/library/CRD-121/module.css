@@ -1,0 +1,45 @@
+/* CRD-121 · Postmark Stamp — A new-lead notice on a perforated glass postage stamp that gets postmarked when you point. */
+.apx-c121{--_m:var(--apx-motion,1);--_acc:var(--apx-accent,#c9d3de);--_ink:var(--apx-ink,#eef0f3);--_mut:var(--apx-muted,#b6bcc5);
+  --_scrim:color-mix(in srgb,var(--apx-bg,#0c0d0f) 40%,transparent);--_rim:color-mix(in srgb,var(--apx-ink,#eef0f3) 26%,transparent);
+  --_e-out:var(--apx-ease-out,cubic-bezier(.16,1,.3,1));--_e-in:var(--apx-ease-in,cubic-bezier(.7,0,.84,0));--_e-io:var(--apx-ease-inout,cubic-bezier(.65,0,.35,1));--_e-sp:var(--apx-ease-spring,linear(0,.079,.241,.435,.624,.787,.914,1.002,1.056,1.082,1.088,1.081,1.066,1.049,1.033,1.018,1.007,1,.995,.993,.992,.993,.994,.996,.997,.998,.999,1));
+  --_dsp:calc(var(--apx-dur-spring,850ms) * var(--_m));
+  --_d1:calc(var(--apx-dur-1,120ms) * var(--_m));--_d2:calc(var(--apx-dur-2,200ms) * var(--_m));--_d3:calc(var(--apx-dur-3,320ms) * var(--_m));--_d4:calc(var(--apx-dur-4,560ms) * var(--_m));--_d5:calc(var(--apx-dur-5,900ms) * var(--_m));
+  position:relative;z-index:0;box-sizing:border-box;width:min(100%,320px);margin:0;color:var(--_ink);font-family:var(--apx-font-text,system-ui,sans-serif);font-size:15px;line-height:1.45;text-align:left;-webkit-tap-highlight-color:transparent}
+.apx-c121 *,.apx-c121 *::before,.apx-c121 *::after{box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){.apx-c121{--_m:0}}
+.apx-c121 :where(h2,h3,h4,p,ul,ol,dl,dd,dt,figure,blockquote){margin:0;padding:0}
+.apx-c121 :where(ul,ol){list-style:none}
+.apx-c121 :where(a,button){font:inherit;color:inherit}
+.apx-c121 :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--_acc);outline-offset:3px}
+.apx-c121:not([data-apx-mounted]){background:linear-gradient(150deg,rgb(255 255 255/.12),rgb(255 255 255/.03)),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);border:1px solid var(--_rim);border-radius:var(--apx-radius,16px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.apx-c121:not([data-apx-mounted]),.apx-c121 [class*="__glass"],.apx-c121 [class*="__pane"]{background:color-mix(in srgb,var(--apx-bg,#0c0d0f) 90%,var(--apx-ink,#eef0f3))!important}}
+@supports (animation-timeline:view()){
+  .apx-c121{animation-name:apxC121In;animation-duration:1ms;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:view();animation-range:entry 0% cover 28%}
+  @keyframes apxC121In{from{translate:0 calc(var(--apx-dist-2,24px) * var(--_m));scale:calc(1 - .045 * var(--_m))}to{translate:0 0;scale:1}}
+}
+/* pointer sheen + ambient sweep (shared pattern) */
+.apx-c121__sheen{position:absolute;left:-50%;top:-50%;width:200%;height:200%;pointer-events:none;z-index:0;
+  background:radial-gradient(closest-side,rgb(255 255 255/.24),rgb(255 255 255/.07) 45%,transparent 75%) center/50% 50% no-repeat;
+  transform:translate(calc((var(--_u,.5) - .5) * 50%),calc((var(--_v,.5) - .5) * 50%));opacity:var(--_h,0)}
+.apx-c121__sweep{position:absolute;top:-30%;bottom:-30%;left:0;width:34%;pointer-events:none;z-index:0;
+  background:linear-gradient(100deg,transparent,rgb(255 255 255/.16) 50%,transparent);filter:blur(6px);transform:translateX(-160%) skewX(-16deg);
+  animation-name:apxC121Sweep;animation-duration:calc(8s / max(var(--_m),.001));animation-timing-function:var(--_e-io);animation-iteration-count:infinite}
+@keyframes apxC121Sweep{0%,62%{transform:translateX(-160%) skewX(-16deg)}100%{transform:translateX(420%) skewX(-16deg)}}
+.apx-c121{padding:34px 30px 30px}
+.apx-c121:not([data-apx-mounted]){border-radius:4px}
+.apx-c121__glass{position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:radial-gradient(100% 60% at 0% 0%,rgb(255 255 255/.14),transparent 60%),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%)}
+.apx-c121__lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:1;pointer-events:none;color:var(--_ink)}
+.apx-c121__mark{position:absolute;right:-14px;top:14px;width:150px;height:110px;z-index:3;pointer-events:none;color:var(--_acc);overflow:visible;
+  transform:translate(10px,-8px) rotate(-4deg) scale(1.35);opacity:.0;transition:transform var(--_dsp) var(--_e-sp),opacity var(--_d2) var(--_e-out)}
+.apx-c121.is-marked .apx-c121__mark,.apx-c121:focus-within .apx-c121__mark{transform:rotate(-12deg);opacity:.9}
+.apx-c121__ghost{transition:opacity var(--_d2) var(--_e-out)}.apx-c121.is-marked .apx-c121__ghost{opacity:0}
+.apx-c121__ghost{position:absolute;right:-14px;top:14px;width:150px;height:110px;z-index:3;pointer-events:none;color:var(--_acc);opacity:.22;transform:rotate(-12deg)}
+.apx-c121__in{position:relative;z-index:2}
+.apx-c121__k{font:500 11.5px/1.2 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.16em;text-transform:uppercase;color:var(--_mut);max-width:16ch}
+.apx-c121__chip{display:inline-block;margin-top:10px;font:600 10px/1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.2em;text-transform:uppercase;padding:5px 8px;border:1px solid color-mix(in srgb,var(--_acc) 70%,transparent);color:var(--_ink)}
+.apx-c121__title{font:400 36px/1.02 var(--apx-font-display,Georgia,serif);margin:46px 0 10px}
+.apx-c121__text{font-size:14.5px;color:var(--_mut)}
+.apx-c121__denom{display:flex;justify-content:space-between;align-items:end;margin-top:22px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--_ink) 20%,transparent)}
+.apx-c121__denom span{font-size:12px;color:var(--_mut);letter-spacing:.08em;text-transform:uppercase}
+.apx-c121__denom b{font:400 34px/1 var(--apx-font-display,Georgia,serif);color:color-mix(in srgb,var(--_acc) 75%,var(--_ink))}

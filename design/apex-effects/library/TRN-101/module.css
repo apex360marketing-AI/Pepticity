@@ -1,0 +1,42 @@
+/* TRN-101 · Venetian Wipe
+   Put on the INCOMING section. Set --apx-trn101-from to the background colour of the section above
+   (defaults to --apx-bg, which only reads when the two sections differ). */
+.apx-trn101 { position: relative; isolation: isolate; }
+.apx-trn101__slats {
+  position: absolute; left: 0; right: 0; top: 0; height: min(100%, 100vh); z-index: 5; pointer-events: none;
+  display: flex; flex-direction: column;
+}
+.apx-trn101__slat {
+  position: relative; flex: 1 1 0; margin-bottom: -1px; transform-origin: 50% 0%;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--apx-trn101-from, var(--apx-bg, #0b0b0d)) 88%, #fff) 0%,
+    var(--apx-trn101-from, var(--apx-bg, #0b0b0d)) 22%,
+    var(--apx-trn101-from, var(--apx-bg, #0b0b0d)) 78%,
+    color-mix(in srgb, var(--apx-trn101-from, var(--apx-bg, #0b0b0d)) 82%, #000) 100%);
+}
+.apx-trn101__slat:nth-child(even) { transform-origin: 50% 100%; }
+.apx-trn101__slat::after { /* fine accent edge on each slat */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--apx-accent, #cfd3da) 70%, transparent), transparent); opacity: .55;
+}
+.apx-trn101__inner { position: relative; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .apx-trn101.is-native { view-timeline-name: --apx-trn101; view-timeline-axis: block; }
+    .apx-trn101.is-native .apx-trn101__slat {
+      animation-name: apx-trn101-shut; animation-duration: 1ms; animation-timing-function: linear; animation-fill-mode: both;
+      animation-timeline: --apx-trn101;
+      animation-range: entry calc(5% + var(--i) * 4%) entry calc(45% + var(--i) * 4%);
+    }
+    .apx-trn101.is-native .apx-trn101__inner {
+      animation-name: apx-trn101-rise; animation-duration: 1ms; animation-timing-function: linear; animation-fill-mode: both;
+      animation-timeline: --apx-trn101; animation-range: entry 10% entry 70%;
+    }
+  }
+}
+@keyframes apx-trn101-shut { 0% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+@keyframes apx-trn101-rise { from { transform: translate3d(0, calc(60px * var(--apx-motion, 1)), 0); opacity: .2; } to { transform: none; opacity: 1; } }
+/* motion 0 or reduced motion: no slats at all */
+.apx-trn101.is-static .apx-trn101__slats, .apx-trn101:not([data-apx-mounted]) .apx-trn101__slats { display: none; }
+@media (prefers-reduced-motion: reduce) { .apx-trn101__slats { display: none; } }

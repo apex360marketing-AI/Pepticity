@@ -1,0 +1,50 @@
+/* CRD-107 · Double Pane — A process step on two offset sheets of glass that drift apart as you point. */
+.apx-c107{--_m:var(--apx-motion,1);--_acc:var(--apx-accent,#c9d3de);--_ink:var(--apx-ink,#eef0f3);--_mut:var(--apx-muted,#b6bcc5);
+  --_scrim:color-mix(in srgb,var(--apx-bg,#0c0d0f) 40%,transparent);--_rim:color-mix(in srgb,var(--apx-ink,#eef0f3) 26%,transparent);
+  --_e-out:var(--apx-ease-out,cubic-bezier(.16,1,.3,1));--_e-in:var(--apx-ease-in,cubic-bezier(.7,0,.84,0));--_e-io:var(--apx-ease-inout,cubic-bezier(.65,0,.35,1));--_e-sp:var(--apx-ease-spring,linear(0,.079,.241,.435,.624,.787,.914,1.002,1.056,1.082,1.088,1.081,1.066,1.049,1.033,1.018,1.007,1,.995,.993,.992,.993,.994,.996,.997,.998,.999,1));
+  --_dsp:calc(var(--apx-dur-spring,850ms) * var(--_m));
+  --_d1:calc(var(--apx-dur-1,120ms) * var(--_m));--_d2:calc(var(--apx-dur-2,200ms) * var(--_m));--_d3:calc(var(--apx-dur-3,320ms) * var(--_m));--_d4:calc(var(--apx-dur-4,560ms) * var(--_m));--_d5:calc(var(--apx-dur-5,900ms) * var(--_m));
+  position:relative;z-index:0;box-sizing:border-box;width:min(100%,330px);margin:0;color:var(--_ink);font-family:var(--apx-font-text,system-ui,sans-serif);font-size:15px;line-height:1.45;text-align:left;-webkit-tap-highlight-color:transparent}
+.apx-c107 *,.apx-c107 *::before,.apx-c107 *::after{box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){.apx-c107{--_m:0}}
+.apx-c107 :where(h2,h3,h4,p,ul,ol,dl,dd,dt,figure,blockquote){margin:0;padding:0}
+.apx-c107 :where(ul,ol){list-style:none}
+.apx-c107 :where(a,button){font:inherit;color:inherit}
+.apx-c107 :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--_acc);outline-offset:3px}
+.apx-c107:not([data-apx-mounted]){background:linear-gradient(150deg,rgb(255 255 255/.12),rgb(255 255 255/.03)),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);border:1px solid var(--_rim);border-radius:var(--apx-radius,16px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.apx-c107:not([data-apx-mounted]),.apx-c107 [class*="__glass"],.apx-c107 [class*="__pane"]{background:color-mix(in srgb,var(--apx-bg,#0c0d0f) 90%,var(--apx-ink,#eef0f3))!important}}
+@supports (animation-timeline:view()){
+  .apx-c107{animation-name:apxC107In;animation-duration:1ms;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:view();animation-range:entry 0% cover 28%}
+  @keyframes apxC107In{from{translate:0 calc(var(--apx-dist-2,24px) * var(--_m));scale:calc(1 - .045 * var(--_m))}to{translate:0 0;scale:1}}
+}
+/* pointer sheen + ambient sweep (shared pattern) */
+.apx-c107__sheen{position:absolute;left:-50%;top:-50%;width:200%;height:200%;pointer-events:none;z-index:0;
+  background:radial-gradient(closest-side,rgb(255 255 255/.24),rgb(255 255 255/.07) 45%,transparent 75%) center/50% 50% no-repeat;
+  transform:translate(calc((var(--_u,.5) - .5) * 50%),calc((var(--_v,.5) - .5) * 50%));opacity:var(--_h,0)}
+.apx-c107__sweep{position:absolute;top:-30%;bottom:-30%;left:0;width:34%;pointer-events:none;z-index:0;
+  background:linear-gradient(100deg,transparent,rgb(255 255 255/.16) 50%,transparent);filter:blur(6px);transform:translateX(-160%) skewX(-16deg);
+  animation-name:apxC107Sweep;animation-duration:calc(8s / max(var(--_m),.001));animation-timing-function:var(--_e-io);animation-iteration-count:infinite}
+@keyframes apxC107Sweep{0%,62%{transform:translateX(-160%) skewX(-16deg)}100%{transform:translateX(420%) skewX(-16deg)}}
+.apx-c107{padding:34px 30px 30px;margin:26px 26px 0 0}
+.apx-c107__pane{position:absolute;inset:0;border-radius:4px;overflow:hidden;
+  background:linear-gradient(155deg,rgb(255 255 255/.14),rgb(255 255 255/.03) 50%,rgb(255 255 255/.07)),var(--_scrim);
+  -webkit-backdrop-filter:blur(12px) saturate(170%);backdrop-filter:blur(12px) saturate(170%);
+  border:1px solid var(--_rim);box-shadow:inset 1px 1px 0 rgb(255 255 255/.35),inset -1px -1px 0 rgb(0 0 0/.25),0 24px 40px -26px rgb(0 0 0/.7);
+  transition:translate var(--_d4) var(--_e-out)}
+.apx-c107__pane.b{z-index:0;transform:translate(calc(var(--_x,0) * -9px),calc(var(--_y,0) * -9px));translate:24px -24px}
+.apx-c107__pane.f{z-index:2;transform:translate(calc(var(--_x,0) * 6px),calc(var(--_y,0) * 6px))}
+.apx-c107:hover .apx-c107__pane.b,.apx-c107:focus-within .apx-c107__pane.b{translate:36px -34px}
+.apx-c107__num{position:absolute;right:14px;top:4px;font:300 128px/1 var(--apx-font-display,Georgia,serif);letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--_ink) 55%,transparent);font-variation-settings:"opsz" 144}
+.apx-c107__gap{position:absolute;inset:8% 4% 8% 14%;z-index:1;pointer-events:none;border-radius:50%;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--_acc) 85%,transparent),transparent);filter:blur(24px);opacity:calc(.38 + var(--_h,0) * .55);
+  animation-name:apxC107Drift;animation-duration:calc(7s / max(var(--_m),.001));animation-iteration-count:infinite;animation-direction:alternate;animation-timing-function:var(--_e-io)}
+@keyframes apxC107Drift{from{transform:translate(18%,-10%) scale(.8)}to{transform:translate(-12%,12%) scale(1.05)}}
+.apx-c107__in{position:relative;z-index:3;transform:translate(calc(var(--_x,0) * 6px),calc(var(--_y,0) * 6px))}
+.apx-c107__step{font:500 12px/1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.2em;text-transform:uppercase;color:var(--_mut)}
+.apx-c107__title{font:400 38px/1 var(--apx-font-display,Georgia,serif);letter-spacing:-.025em;margin:12px 0 14px;font-variation-settings:"opsz" 144}
+.apx-c107__title em{font-style:italic;color:color-mix(in srgb,var(--_acc) 70%,var(--_ink))}
+.apx-c107__text{color:var(--_mut);font-size:15px}
+.apx-c107__dots{display:flex;gap:6px;margin-top:24px;counter-reset:s}
+.apx-c107__dots li{flex:1;font-size:12px;color:var(--_mut);padding-top:10px;border-top:2px solid color-mix(in srgb,var(--_ink) 22%,transparent);counter-increment:s}
+.apx-c107__dots li::before{content:"0" counter(s) " ";font-variant-numeric:tabular-nums}
+.apx-c107__dots li[aria-current]{color:var(--_ink);border-top-color:var(--_acc);box-shadow:0 -8px 14px -10px var(--_acc)}

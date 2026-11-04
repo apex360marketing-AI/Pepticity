@@ -1,0 +1,50 @@
+/* GLS-103 · Molten Numerals */
+.apx-gls103 {
+  --_ink: var(--apx-ink, #ecebe8);
+  --_acc: var(--apx-accent, #d4ff3a);
+  position: relative; display: block; isolation: isolate;
+  font-family: var(--apx-font-display, system-ui, sans-serif);
+  font-weight: var(--apx-gls103-weight, 700);
+  line-height: 1; letter-spacing: var(--apx-gls103-tracking, .01em);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--_ink);
+}
+.apx-gls103__num {
+  position: relative; z-index: 2; display: inline-block; white-space: nowrap;
+  padding-block: .04em;
+  /* fallback / no-canvas look: brushed chrome type */
+  background: linear-gradient(176deg, color-mix(in srgb, var(--_ink) 96%, #fff) 0%, color-mix(in srgb, var(--_ink) 70%, transparent) 46%, color-mix(in srgb, var(--_ink) 40%, var(--apx-bg, #0b0b0d)) 52%, color-mix(in srgb, var(--_ink) 88%, #fff) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  transition: filter .42s cubic-bezier(.3, .7, .2, 1), opacity .42s cubic-bezier(.3, .7, .2, 1), transform .42s cubic-bezier(.3, .7, .2, 1);
+}
+.apx-gls103.is-light .apx-gls103__num {
+  background-image: linear-gradient(176deg, color-mix(in srgb, var(--_ink) 55%, #fff) 0%, var(--_ink) 48%, color-mix(in srgb, var(--_ink) 30%, #fff) 54%, color-mix(in srgb, var(--_ink) 85%, #000) 100%);
+}
+.apx-gls103.is-swap .apx-gls103__num { filter: blur(6px); opacity: .25; transform: translateY(.06em) scaleY(.92); transition-duration: 0s; }
+.apx-gls103.is-static.is-swap .apx-gls103__num { filter: none; opacity: 1; transform: none; }
+/* live: the real text stays in place for layout, selection and screen readers; the liquid draws it */
+.apx-gls103.is-live .apx-gls103__num { background: none; -webkit-text-fill-color: transparent; color: transparent; }
+.apx-gls103.is-live .apx-gls103__num::selection { color: var(--_ink); -webkit-text-fill-color: var(--_ink); background: color-mix(in srgb, var(--_ink) 18%, transparent); }
+
+.apx-gls103__gl {
+  position: absolute; z-index: 1; pointer-events: none; display: block;
+  left: -.3em; top: -.3em; width: calc(100% + .6em); height: calc(100% + .85em);
+}
+.apx-gls103.is-fallback .apx-gls103__gl { display: none; }
+
+/* thin silver light arcs behind the number; one tiny accent spark */
+.apx-gls103__arcs {
+  position: absolute; z-index: 0; pointer-events: none; overflow: visible;
+  left: -6%; top: -18%; width: 112%; height: 136%;
+  color: color-mix(in srgb, var(--_ink) 62%, transparent);
+  opacity: .55; transition: opacity .6s ease;
+}
+.apx-gls103.is-morph .apx-gls103__arcs { opacity: 1; }
+.apx-gls103.is-light .apx-gls103__arcs { color: color-mix(in srgb, var(--_ink) 40%, transparent); opacity: .6; }
+.apx-gls103__arc--spark { color: var(--_acc); filter: drop-shadow(0 0 3px color-mix(in srgb, var(--_acc) 70%, transparent)); }
+.apx-gls103.is-light .apx-gls103__arc--spark { filter: none; }
+.apx-gls103__arcs .apx-gls103__arc--spark ellipse { stroke: var(--_acc); }
+
+@media (prefers-reduced-motion: reduce) {
+  .apx-gls103__num { transition: none; }
+}

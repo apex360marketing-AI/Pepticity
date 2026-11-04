@@ -1,0 +1,56 @@
+/* BTN-103 · Dog-Ear — A glass card with a folded-down corner that peels back further when you point at it and flattens when pressed. */
+/* ---- shared glass button base (tokens -> private vars) ---- */
+.apx-b103{
+  --_ink:var(--apx-ink,oklch(.96 .005 30));--_mut:var(--apx-muted,oklch(.78 .01 30));
+  --_acc:var(--apx-accent,oklch(.78 .07 12));
+  --_rim:var(--apx-line,rgb(255 255 255/.26));--_fill:var(--apx-surface,rgb(255 255 255/.08));
+  --_bg:var(--apx-bg,oklch(.15 .008 30));--_scrim:color-mix(in oklch,var(--_bg) 38%,transparent);
+  --_m:var(--apx-motion,1);
+  --_d1:calc(var(--apx-dur-1,120ms) * var(--_m));--_d2:calc(var(--apx-dur-2,200ms) * var(--_m));
+  --_d3:calc(var(--apx-dur-3,320ms) * var(--_m));--_d4:calc(var(--apx-dur-4,560ms) * var(--_m));
+  --_d5:calc(var(--apx-dur-5,900ms) * var(--_m));
+  --_out:var(--apx-ease-out,cubic-bezier(.16,1,.3,1));--_in:var(--apx-ease-in,cubic-bezier(.7,0,.84,0));
+  --_io:var(--apx-ease-inout,cubic-bezier(.65,0,.35,1));
+  --_spr:var(--apx-ease-spring,linear(0,.056,.174,.313,.472,.624,.759,.863,.951,1.015,1.056,1.079,1.088,1.087,1.079,1.066,1.054,1.04,1.027,1.016,1.007,1.001,.997,.994,.992,.992,.993,.994,.995,.996,.997,.998,.999,1));
+  --_glow:color-mix(in oklch,var(--_acc) 55%,transparent);
+  appearance:none;-webkit-appearance:none;margin:0;border:0;padding:0;background:none;color:var(--_ink);
+  font:600 15px/1.1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.01em;text-decoration:none;cursor:pointer;
+  position:relative;display:inline-grid;place-items:center;vertical-align:middle;min-height:48px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.apx-b103:focus{outline:none}
+.apx-b103:focus-visible{outline:none}
+@media (prefers-reduced-motion:reduce){.apx-b103{--_m:0}}
+.apx-b103__l{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;
+  text-shadow:0 1px 10px color-mix(in oklch,var(--_bg) 60%,transparent)}
+.apx-b103__l svg{width:18px;height:18px;flex:none}
+.apx-b103__rim{z-index:3}
+.apx-b103__edge{fill:none;stroke:var(--_rim);stroke-width:1}
+.apx-b103__hi{fill:none;stroke-width:1.2}
+.apx-b103__ring{fill:none;stroke:var(--_acc);stroke-width:5;opacity:0;transition:opacity var(--_d1) var(--_out)}
+.apx-b103:focus-visible .apx-b103__ring{opacity:1}
+.apx-b103__vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* ---- BTN-103 ---- */
+/* folded dog-ear corner that peels further on hover and flattens on press */
+.apx-b103{min-height:54px}
+.apx-b103__g{position:absolute;inset:0;background:linear-gradient(155deg,rgb(255 255 255/.17),rgb(255 255 255/.035) 48%,rgb(255 255 255/.07)),linear-gradient(var(--_fill),var(--_fill)),var(--_scrim);-webkit-backdrop-filter:blur(12px) saturate(175%);backdrop-filter:blur(12px) saturate(175%);transition:clip-path var(--_d3) var(--_spr)}
+.apx-b103__rim path{transition:d var(--_d3) var(--_spr)}
+.apx-b103__fw{position:absolute;top:0;right:0;width:30px;height:30px;z-index:3;transform-origin:100% 0;transform:scale(.5333);transition:transform var(--_d3) var(--_spr)}
+.apx-b103__fsw{position:absolute;inset:0;filter:blur(3px);transform:translate(-3px,3px)}
+.apx-b103__fsh{position:absolute;inset:0;clip-path:polygon(0 0,0 100%,100% 100%);background:color-mix(in oklch,var(--_bg) 70%,transparent)}
+.apx-b103__flap{position:absolute;inset:0;clip-path:polygon(0 0,0 100%,100% 100%);overflow:hidden;
+  background:linear-gradient(225deg,rgb(255 255 255/.62),rgb(255 255 255/.26) 55%,rgb(255 255 255/.12)),color-mix(in oklch,var(--_acc) 22%,transparent);
+  -webkit-backdrop-filter:blur(6px) saturate(160%);backdrop-filter:blur(6px) saturate(160%)}
+.apx-b103__flap::after{content:"";position:absolute;inset:-40%;background:linear-gradient(135deg,transparent 40%,rgb(255 255 255/.55) 50%,transparent 60%);
+  animation-name:apxB103glint;animation-duration:calc(4.8s / max(var(--_m),.01));animation-iteration-count:infinite;animation-timing-function:var(--_io)}
+@keyframes apxB103glint{0%,60%{transform:translate(-40%,-40%)}100%{transform:translate(40%,40%)}}
+.apx-b103__l{height:54px;padding:0 34px 0 26px;transition:transform var(--_d2) var(--_out)}
+.apx-b103.is-hot .apx-b103__fw{transform:scale(1)}
+.apx-b103.is-press .apx-b103__fw{transform:scale(.18);transition:transform var(--_d1) var(--_in)}
+.apx-b103.is-press .apx-b103__g{transition:clip-path var(--_d1) var(--_in)}
+.apx-b103.is-press .apx-b103__rim path{transition:d var(--_d1) var(--_in)}
+.apx-b103.is-hot .apx-b103__l{transform:translateX(-3px)}
+@media (prefers-reduced-motion:reduce){.apx-b103__flap::after{animation:none;opacity:0}}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.apx-b103 [class*="apx-b103__"]:not(.apx-b103__l):not(.apx-b103__rim):not(svg){background-color:color-mix(in oklch,var(--_bg) 84%,var(--_ink))}}
+@media (forced-colors:active){.apx-b103{border:1px solid ButtonText}}
