@@ -96,8 +96,16 @@ Prepared 1 Nov 2026 for the owner. Point form. Not legal advice.
   - Route: Class I licence is the fastest when the product matches the monograph. Class II when mixed with other ingredients. Class III when outside the monograph.
   - Timelines on that page: 60 / 90 / 310+ days for Class I / II / III. Their estimate, not a promise.
   - Daily dose range on that page: 3 g to 20 g by directions. Confirm against the real monograph.
+  - Official database check: licensed creatine NHPs exist, for example a 5.0 g creatine monohydrate powder with an active licence: [Natural Factors licence](https://health-products.canada.ca/lnhpd-bdpsnh/info?licence=80125910); and a creatine plus glutamine workout powder: [licence](https://health-products.canada.ca/lnhpd-bdpsnh/info?licence=80128227). Licence wording on those pages is theirs, never to be copied as PEPTICITY copy.
+  - Workout supplements are an official NHP monograph (Natural and Non-prescription Health Products Directorate). The monograph page itself was not read: confirm dose and risk statements there.
+  - Whether creatine is on Health Canada's List of Permitted Supplemental Ingredients (food route): the official guidance excerpt read did not mention it, and a consultancy says it is not permitted. Treat as NOT food until confirmed with the Food Directorate (smiu-ugdi@hc-sc.gc.ca is the contact on their page).
   - Confirm with counsel: which monograph applies, and exact wording allowed.
-- PROTEIN POWDER
+- PROTEIN POWDER (OFFICIAL HEALTH CANADA TEXT, ADDED IN THE AUDIT)
+  - Health Canada's own guidance says representation is the main factor; format and ingredients alone do not decide it. Words or pictures such as "muscle gains", "muscle building", "increased protein synthesis" point to NHP. A shake, drink or meal-replacement presentation, sold among ordinary foods, points to food: [Classification at the food / NHP interface](https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-non-prescription/legislation-guidelines/guidance-documents/classification-products-at-food-natural-health-product-interface.html).
+  - The Supplemented Foods guidance lists protein dry mixes to be reconstituted as a food category but excludes "protein dry mixes marketed as workout supplements with recommended directions of use", which it says are NHPs under the Workout Supplements monograph: [Supplemented Foods Regulations guidance](https://www.canada.ca/en/health-canada/services/food-nutrition/legislation-guidelines/guidance-documents/supplemented-foods-regulations.html).
+  - Site rule that follows: on the PEPTICITY pages, no muscle-building words or pictures, no scoop-and-dose directions in copy, until counsel decides the route. Classification is case by case and changes if labels or claims change.
+  - Secondary sources (consultancies) below agree with this; kept for context.
+- PROTEIN POWDER (SECONDARY SOURCES)
   - It depends on the full product profile: composition, format, how it is represented, claims. "A scoop, serving size, or added vitamin does not independently determine the pathway": [Sourcenutra](https://sourcenutra.com/2026/09/protein-powder-regulations-canada/).
   - If it carries health claims such as muscle building, it is classed as an NHP and needs an NPN: [Quality Smart Solutions](https://qualitysmartsolutions.com/blog/food-nhp-compliance/protein-supplements-vs-protein-food-in-canada-understanding-health-canadas-classification-rules/).
   - A plain protein powder with no therapeutic claims may be a food.
@@ -303,36 +311,32 @@ All three follow the locked brand (CLAUDE.md): gunmetal, UV-black, violet sheen,
 ---
 
 ## 9. DECISIONS FOR THE OWNER
-
-**1. Package path**
-- 1A (Recommended) Private label with a Canadian maker (Option 2), contact makers now
-- 1B Resell a Canadian brand first (Option 1), private label later
-- 1C Full own brand later (Option 3), start with research only
-
-**2. Who do we contact first**
-- 2A (Recommended) NutraNorth, NutraLab, Nutriza, plus Thrive for resale prices
-- 2B Canadian makers only, skip resale
-- 2C Add Makers Nutrition (US) as a price comparison
-
-**3. Brand concept to sample first**
-- 3A (Recommended) PEPTICITY ESSENTIALS
-- 3B LAB SERIES
-- 3C DAILY
-
-**4. Counsel**
-- 4A (Recommended) Book a Canadian health-product lawyer or regulatory consultant now with the checklist in section 3
-- 4B Wait until quotes arrive
-- 4C Ask the chosen maker to supply the classification advice first
-
-**5. Phase 2 build**
-- 5A (Recommended) Hold until quotes and counsel answers are in
-- 5B Start the section now with placeholder products
-- 5C Never mind the section for now
+- All questions live on the owner's review board, not in this file (owner rule, 2 Nov 2026).
+- Board steps: `protcre-q1` to `protcre-q5` (path, suppliers, brand concept, counsel timing, Phase 2 timing) plus the audit steps added 4 Nov.
+- Nothing here is acted on until a board answer exists.
 
 ---
 
-## 10. SOURCES NOT VERIFIED
-- All Canadian maker minimums, lead times and testing: UNKNOWN.
-- Health Canada's own creatine monograph and workout-supplement pages were not readable in this session (one URL returned 404). Dose and risk wording above comes from a consultancy and must be checked on the official pages.
+## 10. SOURCES NOT VERIFIED (UPDATED IN THE 4 NOV AUDIT)
+- Fixed in the audit: protein classification and the workout-supplement exclusion are now backed by official Health Canada pages (section 3).
+- Still not verified: the Health Canada creatine / Workout Supplements monograph text (dose, risk statements, age limits), and whether creatine is on the supplemental-ingredients list.
+- All Canadian maker minimums, lead times, testing, licence numbers and expiry dates: UNKNOWN until quotes arrive. Licences must be checked in Health Canada's Licensed Natural Health Products / site licence database.
 - Directory listings (PharmChoices, comanufacturers.com) can be out of date.
-- No competitor price bands, buyer-share figures or market-size figures were verified, so none are shown.
+- Makers Nutrition minimum quoted three ways (500, 1,000, 1,500): confirm in writing.
+- No competitor price bands, buyer-share or market-size figures were verified, so none are shown.
+
+---
+
+## 11. WHAT IS MISSING OR NOT DONE (4 NOV AUDIT)
+- NOT DONE: no maker has been contacted. No quotes, samples, minimums or lead times exist.
+- NOT DONE: no counsel advice yet; every item in the section 3 checklist is open.
+- NOT DONE: no owner answers yet on the five board steps.
+- NOT DONE: no Higgsfield imagery (none generated, no spend). Product shots, pair shot and film are all still to make.
+- NOT DONE: no real product data (names, sizes, prices, flavours, certificates). Phase 2 uses placeholders only.
+- NOT DONE: no trademark search on the concept names.
+- NOT DONE: no CASL-compliant capture wired (Phase 2 form is a preview only, nothing is sent).
+- NOT DONE: no pricing model or margin sheet (needs wholesale quotes).
+- NOT DONE: not added to the request ledger (docs/owner/REQUEST-LEDGER.md) because that file lives on another branch and the owner wants this kept separate from the site.
+- GAP: US option research is thin (only Makers, Supliful, Productifi, F.A.M.E.). Other US co-packers not researched.
+- GAP: no research on shipping and 3PL for Canada (cold chain not needed, but duties and carrier costs unknown).
+- GAP: no review of competitor Canadian protein and creatine stores (teardown skill not run).
