@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en" data-version="black">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEPTICITY PROTEIN + CREATINE</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Standalone concept preview of a PEPTICITY protein and creatine range. Not for sale.">
+<style>
+@font-face{font-family:"Pepticity Black";src:url(brand/font/PepticityBlack.woff2) format("woff2");font-display:swap}
+:root{
+  --wall:#323232; --ground:#1d1d1d; --ink:#ecebe6; --ink2:#b5b4ad; --ink3:#8e8d85; --metal-lo:#080807; --metal-hi:#8e8d85;
+  --edge:rgba(220,214,255,.38); --edge-hot:rgba(220,214,255,.78); --violet:rgba(123,92,255,.35);
+  --draft:#c9a8ff; /* pale violet for DRAFT labels only: no yellow, no gold, no green */
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ground);color:var(--ink);font:400 17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(120% 80% at 50% 0%,#3a3a3a 0%,var(--wall) 38%,var(--ground) 100%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(60% 40% at 80% 10%,rgba(123,92,255,.10),transparent 70%)}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#gl{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
+.brand{font-family:"Pepticity Black",system-ui;letter-spacing:.14em;font-size:15px;text-decoration:none}
+.tag{white-space:nowrap;font:600 11px/1 system-ui;letter-spacing:.16em;text-transform:uppercase;color:var(--draft);border:1px solid rgba(201,168,255,.45);border-radius:2px;padding:7px 10px}
+
+/* glass: completely see-through, hairline edge only */
+.glass{position:relative;background:transparent;border:1px solid var(--edge);border-radius:6px;backdrop-filter:blur(2px)}
+.glass::before{content:"";position:absolute;inset:-1px;border-radius:6px;pointer-events:none;background:linear-gradient(135deg,var(--edge-hot),transparent 28%,transparent 72%,var(--edge-hot));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:1px;opacity:.7}
+
+/* headings: the real 3D lettering draws over these; the text stays for readers and as a fallback */
+.x3d{font-family:"Pepticity Black",system-ui;text-transform:uppercase;line-height:1;letter-spacing:.04em;color:var(--ink)}
+.x3d.on{color:transparent}
+.h1{font-size:clamp(40px,9vw,120px)}.h1 .x3d{display:block}.h1 .l2{font-size:.56em;margin-top:.12em}
+.h2{font-size:clamp(26px,4.4vw,52px);min-height:1.1em}
+.eyebrow{font:600 12px/1 system-ui;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;display:flex;gap:12px;align-items:center}
+.eyebrow i{display:block;width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--edge-hot))}
+
+section{padding:76px 0}
+.hero{padding:46px 0 70px}
+.hero p.lead{max-width:640px;margin-top:22px;font-size:clamp(17px,2.1vw,21px);color:var(--ink2)}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.btn{font:600 13px/1 system-ui;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);text-decoration:none;border:1px solid var(--edge);border-radius:3px;padding:16px 22px;background:transparent;cursor:pointer;min-height:48px;transition:border-color .3s,box-shadow .3s,transform .3s}
+.btn:hover,.btn:focus-visible{border-color:var(--edge-hot);box-shadow:0 0 22px rgba(123,92,255,.35);outline:none}
+.btn:active{transform:translateY(1px)}
+
+/* the three views */
+.tabs{display:flex;gap:8px;margin:28px 0 26px;flex-wrap:wrap}
+.tab{font:600 12px/1 system-ui;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:var(--ink2);border:1px solid rgba(220,214,255,.2);border-radius:3px;padding:14px 18px;min-height:46px;cursor:pointer;transition:all .3s}
+.tab[aria-selected="true"]{color:var(--ink);border-color:var(--edge-hot);box-shadow:0 0 18px rgba(123,92,255,.3)}
+.tab:focus-visible{outline:2px solid var(--edge-hot);outline-offset:3px}
+.stage{display:grid;gap:22px;grid-template-columns:1fr}
+.stage.stack{grid-template-columns:1fr 1fr}
+.card{padding:22px;display:flex;flex-direction:column;gap:18px}
+.card[hidden]{display:none}
+.shot{aspect-ratio:1/1;border:1px dashed rgba(220,214,255,.28);border-radius:4px;display:grid;place-items:center;text-align:center;padding:18px;color:var(--ink3);font:600 11px/1.7 system-ui;letter-spacing:.18em;text-transform:uppercase}
+.shot b{display:block;color:var(--draft);margin-bottom:6px}
+.card h3{font-family:"Pepticity Black",system-ui;letter-spacing:.08em;font-size:clamp(20px,2.4vw,28px);font-weight:400}
+.rows{list-style:none;padding:0;display:grid;gap:0}
+.rows li{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid rgba(220,214,255,.14);font-size:15px;color:var(--ink2)}
+.rows li span:last-child{color:var(--draft);text-align:right}
+.note{font-size:14px;color:var(--ink3)}
+@media(min-width:900px){.stage:not(.stack) .card{flex-direction:row;align-items:stretch}.stage:not(.stack) .shot{flex:0 0 38%;aspect-ratio:auto;min-height:340px}.stage:not(.stack) .card .body{flex:1;display:flex;flex-direction:column;gap:18px}}
+@media(max-width:720px){.stage.stack{grid-template-columns:1fr}}
+
+/* standards */
+.grid4{display:grid;gap:16px;grid-template-columns:repeat(4,1fr);margin-top:30px}
+.grid4 .glass{padding:22px}
+.grid4 h3{font:700 13px/1.3 system-ui;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+.grid4 p{font-size:15px;color:var(--ink2)}
+@media(max-width:900px){.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid4{grid-template-columns:1fr}}
+
+/* start-here and form preview */
+.two{display:grid;gap:28px;grid-template-columns:1.1fr .9fr;align-items:start}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.steps{list-style:none;padding:0;margin-top:26px;display:grid;gap:14px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;padding-top:14px;border-top:1px solid rgba(220,214,255,.14);color:var(--ink2)}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:"Pepticity Black",system-ui;font-size:22px;color:var(--ink)}
+form.glass{padding:26px;display:grid;gap:14px}
+label{font:600 12px/1.4 system-ui;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+input[type=email],input[type=text]{width:100%;margin-top:8px;background:transparent;border:1px solid rgba(220,214,255,.3);border-radius:3px;color:var(--ink);padding:15px 14px;font:400 16px system-ui;min-height:50px}
+input:focus-visible{outline:none;border-color:var(--edge-hot);box-shadow:0 0 18px rgba(123,92,255,.3)}
+.consent{display:flex;gap:12px;align-items:flex-start;font:400 14px/1.5 system-ui;letter-spacing:0;text-transform:none;color:var(--ink2)}
+.consent input{margin-top:3px;width:20px;height:20px;accent-color:#7b5cff}
+.msg{min-height:1.4em;font-size:14px;color:var(--draft)}
+
+footer{padding:50px 0 70px;border-top:1px solid rgba(220,214,255,.14);color:var(--ink3);font-size:14px}
+footer p+p{margin-top:10px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.tab{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="#top">PEPTICITY</a>
+    <span class="tag">Preview · not for sale</span>
+  </header>
+
+  <main id="top">
+    <!-- 1 HERO -->
+    <section class="hero" aria-labelledby="h1">
+      <p class="eyebrow"><i></i>PROTEIN + CREATINE · DRAFT 1</p>
+      <h1 class="h1" id="h1"><span class="x3d l1" data-text="PEPTICITY">PEPTICITY</span><span class="x3d l2" data-text="PROTEIN AND CREATINE">PROTEIN AND CREATINE</span></h1>
+      <p class="lead">Two everyday staples, kept simple. Plain labels, independent batch testing and a certificate you can read before you buy.</p>
+      <div class="cta-row">
+        <a class="btn" href="#range">See the range</a>
+        <a class="btn" href="#start">New to this? Start here</a>
+      </div>
+    </section>
+
+    <!-- 2 THE THREE VIEWS -->
+    <section id="range" aria-labelledby="h2r">
+      <p class="eyebrow"><i></i>THE RANGE</p>
+      <h2 class="x3d h2" id="h2r" data-text="ONE AT A TIME OR TOGETHER">ONE AT A TIME OR TOGETHER</h2>
+      <div class="tabs" role="tablist" aria-label="Range view">
+        <button class="tab" role="tab" id="t-protein" aria-selected="true" aria-controls="stage" data-view="protein">PEPTICITY PROTEIN</button>
+        <button class="tab" role="tab" id="t-creatine" aria-selected="false" aria-controls="stage" data-view="creatine" tabindex="-1">PEPTICITY CREATINE</button>
+        <button class="tab" role="tab" id="t-stack" aria-selected="false" aria-controls="stage" data-view="stack" tabindex="-1">THE PAIR</button>
+      </div>
+
+      <div class="stage" id="stage" role="tabpanel" aria-labelledby="t-protein">
+        <article class="card glass" data-card="protein">
+          <div class="shot"><div><b>IMAGE PENDING</b>Hero tub, protein<br>(Higgsfield, awaiting owner OK)</div></div>
+          <div class="body">
+            <h3>PEPTICITY PROTEIN</h3>
+            <p class="note">Draft details. Every line marked in violet is a placeholder until a maker quotes.</p>
+            <ul class="rows">
+              <li><span>Type</span><span>To be chosen</span></li>
+              <li><span>Flavours</span><span>To be chosen</span></li>
+              <li><span>Size</span><span>To be quoted</span></li>
+              <li><span>Price</span><span>To be quoted</span></li>
+              <li><span>Batch certificate</span><span>Required of every maker</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="card glass" data-card="creatine" hidden>
+          <div class="shot"><div><b>IMAGE PENDING</b>Hero tub, creatine<br>(Higgsfield, awaiting owner OK)</div></div>
+          <div class="body">
+            <h3>PEPTICITY CREATINE</h3>
+            <p class="note">Draft details. Single ingredient, unflavoured, is the plan to confirm with the maker.</p>
+            <ul class="rows">
+              <li><span>Form</span><span>To be confirmed</span></li>
+              <li><span>Size</span><span>To be quoted</span></li>
+              <li><span>Price</span><span>To be quoted</span></li>
+              <li><span>Licence number</span><span>Pending Health Canada</span></li>
+              <li><span>Batch certificate</span><span>Required of every maker</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+      <p class="note" style="margin-top:18px">All details above are placeholders. No product is for sale. Nothing here describes what a product does for anyone.</p>
+    </section>
+
+    <!-- 3 STANDARDS -->
+    <section aria-labelledby="h2s">
+      <p class="eyebrow"><i></i>THE STANDARD WE ASK OF EVERY MAKER</p>
+      <h2 class="x3d h2" id="h2s" data-text="NOTHING GOES ON THE SHELF UNTIL IT PASSES">NOTHING GOES ON THE SHELF UNTIL IT PASSES</h2>
+      <div class="grid4">
+        <div class="glass"><h3>Licensed in Canada</h3><p>A Canadian site licence, checked in Health Canada's database, and any product licence the product needs.</p></div>
+        <div class="glass"><h3>Tested by a lab</h3><p>Independent testing, batch by batch, with the certificate shared with us.</p></div>
+        <div class="glass"><h3>Plain label</h3><p>Short ingredient list, bilingual, nothing hidden in a blend.</p></div>
+        <div class="glass"><h3>Traceable</h3><p>A batch number on every tub that matches a certificate you can look up.</p></div>
+      </div>
+      <p class="note" style="margin-top:18px">This is the standard we will hold makers to. Which makers meet it is not decided yet.</p>
+    </section>
+
+    <!-- 4 START HERE + PREVIEW FORM -->
+    <section id="start" aria-labelledby="h2st">
+      <div class="two">
+        <div>
+          <p class="eyebrow"><i></i>NEW TO THIS?</p>
+          <h2 class="x3d h2" id="h2st" data-text="START WITH A QUESTION NOT A PRODUCT">START WITH A QUESTION NOT A PRODUCT</h2>
+          <ol class="steps">
+            <li>Talk to your doctor or pharmacist before adding any supplement to your routine.</li>
+            <li>Read the label and the batch certificate. Ask who tested it.</li>
+            <li>Tell us what you would like to see in a range like this, and we will write back.</li>
+          </ol>
+        </div>
+        <form class="glass" id="f" novalidate aria-labelledby="fh">
+          <p class="eyebrow" id="fh" style="margin-bottom:0"><i></i>TELL US WHAT YOU WANT TO SEE</p>
+          <label>Your email<input type="email" id="em" autocomplete="email" placeholder="you@example.com" required></label>
+          <label class="consent"><input type="checkbox" id="ok"> <span>Yes, send me PEPTICITY updates about this range. I can unsubscribe at any time. (Sender: PEPTICITY, address to be added.)</span></label>
+          <button class="btn" type="submit">Keep me posted</button>
+          <p class="msg" id="msg" role="status" aria-live="polite"></p>
+          <p class="note">Preview only. Nothing is sent or stored from this page.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>PEPTICITY PROTEIN + CREATINE is a standalone concept preview for discussion. It is not part of the PEPTICITY site and nothing here is for sale.</p>
+    <p>Products shown are placeholders pending maker quotes, Health Canada classification and counsel review. Not medical advice.</p>
+  </footer>
+</div>
+
+<script id="glyph-data" type="application/json"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script>
+/* tabs + form (plain JS, works with no 3D) */
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tab')), stage=document.getElementById('stage');
+  function show(v){
+    tabs.forEach(function(t){var on=t.dataset.view===v;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1});
+    stage.classList.toggle('stack',v==='stack');
+    stage.setAttribute('aria-labelledby','t-'+v);
+    [].forEach.call(stage.querySelectorAll('.card'),function(c){c.hidden=!(v==='stack'||c.dataset.card===v)});
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){show(t.dataset.view)});
+    t.addEventListener('keydown',function(e){
+      var k=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!k)return;
+      var n=tabs[(i+k+tabs.length)%tabs.length]; n.focus(); show(n.dataset.view); e.preventDefault();
+    });
+  });
+  document.getElementById('f').addEventListener('submit',function(e){
+    e.preventDefault();
+    var em=document.getElementById('em'),ok=document.getElementById('ok'),m=document.getElementById('msg');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value)){m.textContent='Please enter a valid email.';em.focus();return}
+    if(!ok.checked){m.textContent='Please tick the box if you would like updates.';ok.focus();return}
+    m.textContent='Preview only: this page does not send or save anything. Thank you.';
+  });
+})();
+</script>
+<script type="module">
+/* the approved PEPTICITY lettering (brand/font engine). Falls back to the flat font if WebGL or the CDN is unavailable. */
+try{
+  const glyphs=await fetch('brand/font/glyphs.json').then(r=>r.json());
+  document.getElementById('glyph-data').textContent=JSON.stringify(glyphs);
+  const THREE=await import('three');
+  const E=await import('./brand/font/type3d-engine.js');
+  const stage=E.createStage(document.getElementById('gl'));
+  if(stage){
+    document.querySelectorAll('.x3d').forEach(el=>{
+      const txt=el.dataset.text, words=txt.split(' ');
+      const w=E.makeWord(stage,txt,{face:'gunmetal',depth:.1,bevel:.012,track:.02});
+      const scene=new THREE.Scene();
+      scene.add(new THREE.HemisphereLight(0xeef1f6,0x0c0a12,.55));
+      const key=new THREE.DirectionalLight(0xffffff,1.7);key.position.set(2.5,3,4);scene.add(key);
+      const rim=new THREE.PointLight(0x9a8cff,.5,9,2);rim.position.set(-2.4,-1,1.5);scene.add(rim);
+      scene.add(w.group);
+      const camera=new THREE.PerspectiveCamera(26,2,.1,80);
+      /* wrap long titles onto two lines when the slot is narrow */
+      stage.addSlot(el,{scene,camera,
+        fit(a){E.fitCamera(camera,w.width,w.height,a,.9)},
+        update(dt,t,prog,ptr){w.group.rotation.y=ptr.x*.12;w.group.rotation.x=ptr.y*.05}});
+      el.classList.add('on');
+    });
+  }
+}catch(err){console.warn('3D lettering unavailable, using flat font',err)}
+</script>
+</body>
+</html>
