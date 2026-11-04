@@ -1,5 +1,5 @@
 <html lang="en">
-<title>CLIENT · PEPTICITY Studio</title>
+<title>MY ACCOUNT · PEPTICITY</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
@@ -1450,11 +1450,7 @@ html.p3d .mark{isolation:isolate}
       <div class="wm"><span class="h3d" data-type3d>PEPTICITY</span><small data-type3d>STUDIO</small></div>
     </div>
     <span class="sample" title="All figures, names and orders on this page are sample data for the demo">SAMPLE DATA</span>
-    <div class="pc-seg vswitch" id="vswitch" data-v="owner" role="radiogroup" aria-label="Switch view">
-      <span class="pc-seg__thumb" aria-hidden="true"></span>
-      <button class="pc-seg__opt" type="button" role="radio" aria-checked="true" data-view="owner" data-value="owner">GRACE (OWNER)<span class="unread" id="ubOwner"></span></button>
-      <button class="pc-seg__opt" type="button" role="radio" aria-checked="false" data-view="client" data-value="client">CLIENT<span class="unread" id="ubClient"></span></button>
-    </div>
+    
     <button type="button" class="sndbtn" id="sndBtn" aria-pressed="false" aria-label="Sound off · interface sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 9.5l5 5m0-5l-5 5"/></svg><span class="snd-t">SOUND OFF</span></button>
   </header>
   <canvas id="gl3d" aria-hidden="true"></canvas>
@@ -1462,243 +1458,7 @@ html.p3d .mark{isolation:isolate}
   <canvas id="type3dTop" aria-hidden="true"></canvas>
   <span class="sample sample-m">SAMPLE DATA</span>
 
-  <!-- ===================== OWNER ===================== -->
-  <main class="view" id="view-owner" aria-label="Owner view">
-    <div class="hero">
-      <div>
-        <p class="eyebrow">GOOD AFTERNOON, GRACE</p>
-        <h1 class="h3d" data-type3d>YOUR STUDIO</h1>
-      </div>
-      <div class="meta"><b id="todayStr"></b><br>Fiscal year Jan – Dec · CAD</div>
-    </div>
-    <div class="qacts" role="group" aria-label="Quick actions">
-      <button class="qa" type="button" data-act="product"><span class="plus" aria-hidden="true">+</span><span>ADD PRODUCT<small>new item, straight onto the shelf</small></span></button>
-      <button class="qa" type="button" data-act="receive"><span class="plus" aria-hidden="true">+</span><span>RECEIVE STOCK<small>log a delivery and its cost</small></span></button>
-      <button class="qa" type="button" data-act="expense"><span class="plus" aria-hidden="true">+</span><span>ADD EXPENSE<small>receipt, amount and tax</small></span></button>
-    </div>
-    <div class="tabs glass" role="tablist" aria-label="Owner sections" data-group="owner">
-      <button class="tab" role="tab" data-tab="sales"><span class="n">01</span>SALES + BEST SELLERS</button>
-      <button class="tab" role="tab" data-tab="stock"><span class="n">02</span>STOCK + WHAT'S SHORT</button>
-      <button class="tab" role="tab" data-tab="customers"><span class="n">03</span>CUSTOMERS + SIGN-UPS</button>
-      <button class="tab" role="tab" data-tab="delight"><span class="n">04</span>SURPRISE DESK</button>
-      <button class="tab" role="tab" data-tab="odrops"><span class="n">05</span>DROPS + TIERS</button>
-      <button class="tab" role="tab" data-tab="olab"><span class="n">06</span>LOTS + LAB REPORTS</button>
-      <button class="tab" role="tab" data-tab="marketing"><span class="n">07</span>MARKETING</button>
-      <button class="tab" role="tab" data-tab="referrals"><span class="n">08</span>REFERRALS</button>
-      <button class="tab" role="tab" data-tab="omsg"><span class="n">09</span>MESSAGES</button>
-      <button class="tab" role="tab" data-tab="money"><span class="n">10</span>MONEY + TAXES</button>
-    </div>
-
-    <!-- SALES -->
-    <section class="panel" id="p-sales" role="tabpanel">
-      <div class="grid g-kpi">
-        <div class="glass card r-a kpi big tilt"><div class="lab">REVENUE · THIS MONTH</div><div class="val" data-count="0" id="kMonth">$0</div><div class="foot"><span class="delta" id="kMonthD"></span>vs last month</div></div>
-        <div class="glass card r-d kpi tilt"><div class="lab">REVENUE · YEAR TO DATE</div><div class="val" id="kYear">$0</div><div class="foot">Jan 1 – today</div></div>
-        <div class="glass card r-b kpi tilt"><div class="lab">ORDERS · YTD</div><div class="val" id="kOrders">0</div><div class="foot"><span id="kOrdersM"></span>&nbsp;this month</div></div>
-        <div class="glass card r-c kpi tilt"><div class="lab">AVERAGE ORDER</div><div class="val" id="kAov">$0</div><div class="foot">per order, before tax</div></div>
-      </div>
-      <div class="grid g-2 mt">
-        <div class="glass card r-e chart" style="position:relative">
-          <div class="card-h"><h2 class="h3d h2">REVENUE BY MONTH</h2><span class="sub">2026 · month to date for October</span></div>
-          <div id="revChart"></div>
-          <div class="tip glass" id="tip"></div>
-        </div>
-        <div class="glass card r-f">
-          <div class="card-h"><h2 class="h3d h2">TOP 5 PRODUCTS</h2><span class="sub">by revenue, YTD</span></div>
-          <div class="bars" id="topBars"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STOCK -->
-    <section class="panel" id="p-stock" role="tabpanel">
-      <div class="shelves" id="shelves"></div>
-      <div class="grid g-2 mt">
-        <div class="glass card r-b">
-          <div class="card-h">
-            <h2 class="h3d h2">INVENTORY</h2>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-              <div class="seg" id="stockFilter" role="group" aria-label="Filter stock"><button aria-pressed="true" data-f="all">ALL</button><button aria-pressed="false" data-f="short">SHORT</button><button aria-pressed="false" data-f="out">OUT</button></div>
-              <label class="search"><span class="sr">Search products</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="stockQ" placeholder="Search products"></label>
-            </div>
-          </div>
-          <div class="tbl stock" id="stockTbl"></div>
-        </div>
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="glass card r-a">
-            <div class="card-h"><h2 class="h3d h2">REORDER LIST</h2><span class="sub" id="reCount"></span></div>
-            <div id="reorderList"></div>
-            <button class="btn chrome cut morph mt" style="width:100%" id="reorderBtn"><span class="lbl">SEND LIST TO SUPPLIER</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <p class="note">Demo only: in the live build this drafts an email to your supplier for you to check first.</p>
-          </div>
-          <div class="glass card r-c">
-            <div class="card-h"><h2 class="h3 ">RESTOCK ALERTS WAITING</h2></div>
-            <div class="kpi"><div class="val" id="wlTotal">0</div><div class="foot">clients asked to be told when an item is back</div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CUSTOMERS -->
-    <section class="panel" id="p-customers" role="tabpanel">
-      <div class="grid g-kpi">
-        <div class="glass card r-c kpi big tilt"><div class="lab">PEPTICITY TEAM MEMBERS</div><div class="val" id="kTeam">0</div><div class="foot"><span class="delta" id="kTeamD"></span>joined this month</div></div>
-        <div class="glass card r-a kpi tilt"><div class="lab">EMAIL LIST</div><div class="val" id="kEmail">0</div><div class="foot">subscribers</div></div>
-        <div class="glass card r-d kpi tilt"><div class="lab">RESTOCK ALERTS</div><div class="val" id="kAlerts">0</div><div class="foot">active subscribers</div></div>
-        <div class="glass card r-b kpi tilt"><div class="lab">REPEAT CLIENTS</div><div class="val" id="kRepeat">0%</div><div class="foot">ordered 2+ times</div></div>
-      </div>
-      <div class="grid g-2 mt">
-        <div class="glass card r-e">
-          <div class="card-h"><h2 class="h3d h2">CLIENTS</h2><span class="sub">sample list · most recent first</span></div>
-          <div class="tbl cust" id="custTbl"></div>
-        </div>
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="glass card r-b spark">
-            <div class="card-h"><h2 class="h3d h2">EMAIL LIST GROWTH</h2><span class="sub">2026</span></div>
-            <div id="emailChart"></div>
-          </div>
-          <div class="glass card r-f">
-            <div class="card-h"><h2 class="h3">LATEST TEAM SIGN-UPS</h2></div>
-            <div id="signups" class="letter"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SURPRISE & DELIGHT DESK -->
-    <section class="panel" id="p-delight" role="tabpanel">
-      <div class="grid g-kpi">
-        <div class="glass card kpi big tilt"><div class="lab">TO SURPRISE THIS WEEK</div><div class="val" id="dkWeek">0</div><div class="foot">picked from orders, milestones and messages</div></div>
-        <div class="glass card kpi tilt"><div class="lab">NOTES SENT · OCTOBER</div><div class="val" id="dkSent">0</div><div class="foot">handwritten or digital</div></div>
-        <div class="glass card kpi tilt"><div class="lab">SHIPPING UPGRADES</div><div class="val" id="dkUp">0</div><div class="foot">given this month</div></div>
-        <div class="glass card kpi tilt"><div class="lab">NEVER PROMISED</div><div class="val" style="font-size:clamp(20px,2vw,26px)">AT RANDOM</div><div class="foot">rotate so it never feels expected</div></div>
-      </div>
-      <div class="glass card mt desk">
-        <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">SURPRISE &amp; DELIGHT</p><h2 class="h3d h2">5 CLIENTS TO SURPRISE THIS WEEK</h2></div><span class="sub">week of Oct 26 · sample list</span></div>
-        <div class="tbl" id="deskTbl"></div>
-        <p class="note">Gifts are notes, shipping upgrades, packaging and stationery. Never a product sample: that counts as advertising and supply.</p>
-      </div>
-    </section>
-
-    <!-- DROPS + TIERS -->
-    <section class="panel" id="p-odrops" role="tabpanel">
-      <div class="grid g-kpi" id="tierKpis"></div>
-      <div class="grid g-2b mt">
-        <div class="glass card">
-          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">BACK IN STOCK · MEMBERS FIRST</p><h2 class="h3d h2">PUBLISH A PRIVATE DROP</h2></div><span class="sub">members see it in their dashboard right away</span></div>
-          <form id="dropForm" class="fgrid" novalidate>
-            <div class="field w3"><label for="dpP">PRODUCT</label><select class="inp" id="dpP"></select></div>
-            <div class="field"><label for="dpQ">UNITS FOR MEMBERS</label><input class="inp" id="dpQ" inputmode="numeric" value="12" required></div>
-            <div class="field"><label for="dpH">MEMBERS-ONLY WINDOW</label><select class="inp" id="dpH"><option value="24">24 hours</option><option value="48" selected>48 hours</option><option value="72">72 hours</option></select></div>
-            <div class="field"><label for="dpOpen">OPENS</label><input class="inp" id="dpOpen" type="datetime-local" style="color-scheme:dark"></div>
-            <div class="field w3"><label>WHO GETS FIRST ACCESS</label>
-              <div style="display:flex;gap:18px;flex-wrap:wrap"><label class="sq"><input type="checkbox" id="dpRes" checked><span class="bx"></span>RESERVE members</label><label class="sq"><input type="checkbox" id="dpPriv" checked><span class="bx"></span>PRIVATE members</label></div></div>
-            <div class="w3" id="dpPrev"></div>
-            <div class="w3 rowline"><span class="muted" id="dpErr" role="alert"></span><button class="btn chrome morph" type="submit" id="dpBtn"><span class="lbl">PUBLISH DROP</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-          </form>
-          <p class="note">The countdown and the unit count must be true. Never sell a members-only item to the public later at a lower price.</p>
-          <div class="card-h mt" style="margin-top:24px"><h2 class="h3">LIVE + UPCOMING DROPS</h2><span class="sub" id="dpCount"></span></div>
-          <div class="letter" id="dpList"></div>
-        </div>
-        <div class="glass card">
-          <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">STATUS, NOT DISCOUNTS</p><h2 class="h3d h2">TIER PERKS</h2></div><span class="sub">service perks only</span></div>
-          <div class="perkcols" id="perkCols"></div>
-          <div class="rowline mt"><span class="muted">Spend to reach each tier: <b id="thrTxt" style="color:var(--ink2)"></b> <span class="tag-s">SAMPLE</span></span>
-            <button class="btn chrome morph" type="button" id="perkBtn"><span class="lbl">SAVE PERKS</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-          <p class="note">Perks are service: first access, shipping, a direct line, stationery. No points per milligram. If counsel classes a product as prescription, provincial rules may limit perks on it.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- LOTS + LAB REPORTS -->
-    <section class="panel" id="p-olab" role="tabpanel">
-      <div class="glass card">
-        <div class="card-h"><div><p class="eyebrow" style="margin-bottom:8px">YOUR BOTTLE. YOUR LOT. YOUR REPORT.</p><h2 class="h3d h2">LOTS + LAB REPORTS</h2></div><span class="sub" id="labCount"></span></div>
-        <p class="muted" style="margin:-4px 0 12px;max-width:70ch">Upload the independent lab's report for each lot. Clients see it next to the bottle they bought, in their LOT LIBRARY.</p>
-        <div class="tbl labs" id="labTbl"></div>
-        <p class="note">Only upload a report that matches the lot number exactly. Clients see the lab's own facts: identity, purity, lot, date, lab name. No "pharmaceutical grade", no "safe".</p>
-      </div>
-    </section>
-
-    <!-- MARKETING -->
-    <section class="panel" id="p-marketing" role="tabpanel">
-      <div class="glass card site-line">
-        <div class="card-h"><h2 class="h3d h2">YOUR SITE THIS MONTH</h2><span class="sub">October · month to date · sample numbers</span></div>
-        <div class="grid g-site" id="siteLine"></div>
-      </div>
-      <div class="grid g-plat mt" id="platGrid"></div>
-      <div class="glass card mt" id="platDetail" hidden></div>
-      <p class="note">Sample numbers for the demo. In the live build each card reads from that platform's own reporting once Grace connects her accounts.</p>
-    </section>
-
-    <!-- REFERRALS -->
-    <section class="panel" id="p-referrals" role="tabpanel">
-      <div class="grid g-kpi" id="refKpis"></div>
-      <div class="glass card mt">
-        <div class="card-h"><h2 class="h3d h2">WHO IS REFERRING</h2><span class="sub">give 15%, get 15% · sample list</span></div>
-        <div class="tbl refs" id="refTbl"></div>
-      </div>
-    </section>
-
-    <!-- OWNER MESSAGES -->
-    <section class="panel" id="p-omsg" role="tabpanel">
-      <div class="glass inbox">
-        <div class="threads" id="threadList" role="tablist" aria-label="Conversations"></div>
-        <div class="conv">
-          <div class="conv-h" id="convHead"></div>
-          <div class="msgs" id="ownerMsgs" aria-live="polite"></div>
-          <div class="quick" id="ownerQuick"></div>
-          <form class="compose" id="ownerForm"><label class="sr" for="ownerInput">Message</label><input class="inp" id="ownerInput" placeholder="Write a reply…" autocomplete="off"><button class="btn chrome" type="submit"><svg><use href="#i-send"/></svg>SEND</button></form>
-        </div>
-      </div>
-    </section>
-
-    <!-- MONEY -->
-    <section class="panel" id="p-money" role="tabpanel">
-      <div class="grid g-kpi">
-        <div class="glass card r-a kpi big tilt"><div class="lab">GROSS PROFIT · YTD</div><div class="val" id="mGP">$0</div><div class="foot"><span class="delta" id="mGPm"></span>average margin</div></div>
-        <div class="glass card r-d kpi tilt"><div class="lab">REVENUE · YTD</div><div class="val" id="mRev">$0</div><div class="foot">sales before tax</div></div>
-        <div class="glass card r-b kpi tilt"><div class="lab">COST OF GOODS</div><div class="val" id="mCogs">$0</div><div class="foot">what the stock cost you</div></div>
-        <div class="glass card r-c kpi tilt"><div class="lab">NET · YTD</div><div class="val" id="mNet">$0</div><div class="foot">after expenses, before income tax</div></div>
-      </div>
-
-      <div class="glass card r-e mt">
-        <div class="card-h"><h2 class="h3d h2">COST VS SALE PRICE</h2><span class="sub">per unit · sample prices</span></div>
-        <div class="tbl money" id="moneyTbl"></div>
-      </div>
-
-      <div class="grid g-2b mt">
-        <div class="glass card r-b">
-          <div class="card-h"><h2 class="h3d h2">ADD AN EXPENSE</h2><span class="sub">receipts stay on this page</span></div>
-          <form id="expForm" class="fgrid" novalidate>
-            <div class="field"><label for="eDate">DATE</label><input class="inp" type="date" id="eDate" required></div>
-            <div class="field w2"><label for="eVendor">VENDOR</label><input class="inp" id="eVendor" placeholder="e.g. Canada Post" required></div>
-            <div class="field"><label for="eCat">CATEGORY</label><select class="inp" id="eCat"><option>Shipping</option><option>Packaging</option><option>Marketing</option><option>Software</option><option>Fees</option><option>Other</option></select></div>
-            <div class="field"><label for="eAmt">AMOUNT (BEFORE TAX)</label><input class="inp" id="eAmt" inputmode="decimal" placeholder="0.00" required></div>
-            <div class="field"><label for="eTax">GST/HST PAID</label><input class="inp" id="eTax" inputmode="decimal" placeholder="0.00"></div>
-            <div class="field w3"><label for="eNote">NOTE</label><input class="inp" id="eNote" placeholder="Optional"></div>
-            <label class="drop w3" id="drop"><input type="file" id="eFile" accept="image/*,application/pdf"><span class="ic"><svg><use href="#i-up"/></svg></span><span class="t" id="dropT">Attach receipt<small>Photo or PDF · tap or drop here</small></span></label>
-            <div class="w3" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="muted" id="expErr" role="alert"></span><button class="btn chrome morph" type="submit" id="expBtn"><span class="lbl">ADD EXPENSE</span><span class="ring"></span><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-          </form>
-          <div class="card-h mt" style="margin-top:28px"><h2 class="h3">EXPENSES THIS YEAR</h2><span class="sub" id="expCount"></span></div>
-          <div class="tbl exp" id="expTbl"></div>
-        </div>
-
-        <div class="glass card r-a" id="yearEnd">
-          <div class="card-h"><h2 class="h3d h2">YEAR-END SUMMARY</h2><span class="sub">2026 · to date</span></div>
-          <p class="muted" style="margin:-6px 0 6px">Helps prepare year-end numbers for your accountant.</p>
-          <div class="sum" id="sum"></div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="btn cut" id="csvBtn" type="button">EXPORT CSV</button></div>
-          <div id="csvWrap" hidden class="mt">
-            <label class="sr" for="csvText">CSV text</label>
-            <textarea class="inp csv" id="csvText" readonly></textarea>
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap"><span class="muted">Copy, then paste into a spreadsheet or an email to your accountant.</span><button class="btn chrome sm" id="copyBtn" type="button"><svg><use href="#i-copy"/></svg>COPY</button></div>
-          </div>
-          <p class="note">HST shown at 13% (Ontario) as a sample rate. Your accountant confirms the right rates and filings.</p>
-        </div>
-      </div>
-    </section>
-  </main>
+  
 
   <!-- ===================== CLIENT ===================== -->
   <main class="view" id="view-client" aria-label="Client view">
@@ -2222,87 +1982,24 @@ new MutationObserver(function(ms){
 }).observe(document.body,{childList:true,subtree:true});
 
 /* ---------- SAMPLE DATA (names + sizes from shared/inventory.js; prices are placeholders) ---------- */
-// [name, size, sale, unitCost, unitsYTD, onHand, reorderPt, waitlist]
-var P = [
- ['Tirzepatide','15 mg',189,74,212,14,20,0],
- ['Retatrutide','10 mg',169,68,164,0,15,23],
- ['Tesamorelin','10 mg',175,71,58,9,8,0],
- ['AOD-9604','5 mg',79,28,71,22,10,0],
- ['5-Amino-1MQ','10 mg',115,42,49,17,8,0],
- ['KLOW blend','80 mg',185,79,66,6,8,4],
- ['BPC-157','10 mg',95,31,248,41,25,0],
- ['TB-500','10 mg',99,34,176,0,20,17],
- ['Wolverine blend','10 mg',139,52,121,12,12,2],
- ['GLOW blend','70 mg',179,72,88,15,10,0],
- ['KPV','10 mg',89,30,37,19,6,0],
- ['Thymosin Alpha-1','10 mg',129,51,29,11,6,0],
- ['HGH (human growth hormone)','100 iu',249,118,24,3,5,6],
- ['CJC-1295','with DAC 5 mg',105,39,61,14,10,0],
- ['Ipamorelin','10 mg',89,29,93,27,12,0],
- ['IGF-1 LR3','[size TBC]',119,47,18,0,5,5],
- ['Epitalon','10 mg',85,27,54,23,8,0],
- ['MOTS-c','10 mg',109,40,47,7,8,3],
- ['SS-31','10 mg',149,61,22,10,5,0],
- ['NAD+','1000 mg',129,46,138,26,15,0],
- ['Glutathione','1500 mg',99,33,84,4,10,8],
- ['Semax','10 mg',79,25,46,18,6,0],
- ['Selank','10 mg',79,25,41,16,6,0],
- ['Oxytocin','2 mg',65,21,19,12,4,0],
- ['GHK-Cu','50 mg',75,22,159,38,15,0],
- ['PT-141','10 mg',89,30,52,0,8,9],
- ['Melanotan II','10 mg',69,21,63,0,8,0],
- ['Bacteriostatic water (Pfizer)','30 ml',19,7,402,64,40,0]
-].map(function(a){return {name:a[0],size:a[1],price:a[2],cost:a[3],units:a[4],onHand:a[5],rop:a[6],wl:a[7]}});
-P.forEach(function(p){p.rev=p.price*p.units;p.cogs=p.cost*p.units;p.status=p.onHand===0?'out':(p.onHand<=p.rop?'low':'ok')});
-var REV = P.reduce(function(s,p){return s+p.rev},0), COGS = P.reduce(function(s,p){return s+p.cogs},0);
-var SHAPE = [0.62,0.68,0.77,0.86,0.93,1.02,1.08,1.17,1.26,1.18]; // Oct is month-to-date
-var shapeSum = SHAPE.reduce(function(a,b){return a+b},0);
-var MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT'];
-var MREV = SHAPE.map(function(v){return Math.round(REV*v/shapeSum)});
-var AOV = 214, ORDERS = Math.round(REV/AOV), ORD_M = Math.round(MREV[9]/AOV);
+/* client-safe shop list: name, size, price and in/low/out only */
+var P = [{"name": "Tirzepatide", "size": "15 mg", "price": 189, "status": "low"}, {"name": "Retatrutide", "size": "10 mg", "price": 169, "status": "out"}, {"name": "Tesamorelin", "size": "10 mg", "price": 175, "status": "ok"}, {"name": "AOD-9604", "size": "5 mg", "price": 79, "status": "ok"}, {"name": "5-Amino-1MQ", "size": "10 mg", "price": 115, "status": "ok"}, {"name": "KLOW blend", "size": "80 mg", "price": 185, "status": "low"}, {"name": "BPC-157", "size": "10 mg", "price": 95, "status": "ok"}, {"name": "TB-500", "size": "10 mg", "price": 99, "status": "out"}, {"name": "Wolverine blend", "size": "10 mg", "price": 139, "status": "low"}, {"name": "GLOW blend", "size": "70 mg", "price": 179, "status": "ok"}, {"name": "KPV", "size": "10 mg", "price": 89, "status": "ok"}, {"name": "Thymosin Alpha-1", "size": "10 mg", "price": 129, "status": "ok"}, {"name": "HGH (human growth hormone)", "size": "100 iu", "price": 249, "status": "low"}, {"name": "CJC-1295", "size": "with DAC 5 mg", "price": 105, "status": "ok"}, {"name": "Ipamorelin", "size": "10 mg", "price": 89, "status": "ok"}, {"name": "IGF-1 LR3", "size": "[size TBC]", "price": 119, "status": "out"}, {"name": "Epitalon", "size": "10 mg", "price": 85, "status": "ok"}, {"name": "MOTS-c", "size": "10 mg", "price": 109, "status": "low"}, {"name": "SS-31", "size": "10 mg", "price": 149, "status": "ok"}, {"name": "NAD+", "size": "1000 mg", "price": 129, "status": "ok"}, {"name": "Glutathione", "size": "1500 mg", "price": 99, "status": "low"}, {"name": "Semax", "size": "10 mg", "price": 79, "status": "ok"}, {"name": "Selank", "size": "10 mg", "price": 79, "status": "ok"}, {"name": "Oxytocin", "size": "2 mg", "price": 65, "status": "ok"}, {"name": "GHK-Cu", "size": "50 mg", "price": 75, "status": "ok"}, {"name": "PT-141", "size": "10 mg", "price": 89, "status": "out"}, {"name": "Melanotan II", "size": "10 mg", "price": 69, "status": "out"}, {"name": "Bacteriostatic water (Pfizer)", "size": "30 ml", "price": 19, "status": "ok"}];
 
-var CUST = [
- ['Jordan M.','Toronto, ON','Oct 24',6,1284,true],
- ['Priya S.','Mississauga, ON','Oct 22',3,612,true],
- ['Marcus T.','Ottawa, ON','Oct 19',1,189,false],
- ['Elena R.','Vancouver, BC','Oct 17',4,903,true],
- ['Devon K.','Calgary, AB','Oct 12',2,338,true],
- ['Sofia L.','Montréal, QC','Oct 08',1,95,false],
- ['Aaron B.','Hamilton, ON','Sep 30',5,1047,true],
- ['Nadia F.','Halifax, NS','Sep 26',2,274,false]
-];
-var EMAIL = [118,164,231,302,371,455,540,631,742,858];
-var SIGNUPS = [['Priya S.','Oct 22'],['Elena R.','Oct 17'],['Devon K.','Oct 12'],['Lena W.','Oct 06'],['Omar H.','Oct 02']];
-
-var CLIENTS = {
- jordan:{name:'Jordan M.',init:'JM'}, priya:{name:'Priya S.',init:'PS'}, elena:{name:'Elena R.',init:'ER'}, aaron:{name:'Aaron B.',init:'AB'}
-};
 var SEED_MSGS = {
  jordan:[
   {f:'c',t:'Hi Grace! Is TB-500 coming back soon? I saw it says out of stock.',at:'Oct 27 · 9:14 AM'},
   {f:'o',t:'Hi Jordan, yes. My next shipment lands early November. Turn on the restock alert and you will get an email the moment it is in.',at:'Oct 27 · 11:02 AM'},
   {f:'c',t:'Perfect, done. Also, can I use the 15% code on my next order?',at:'Oct 28 · 4:40 PM'}
- ],
- priya:[{f:'c',t:'Order arrived today, thank you for the quick shipping!',at:'Oct 26 · 2:10 PM'},{f:'o',t:'So glad it got there fast, Priya. Thanks for letting me know.',at:'Oct 26 · 3:01 PM'}],
- elena:[{f:'c',t:'Do you ship to the Island? Moving to Victoria next month.',at:'Oct 25 · 8:22 PM'}],
- aaron:[{f:'o',t:'Hi Aaron, your order is packed and goes out with this afternoon’s pickup.',at:'Oct 21 · 1:15 PM'},{f:'c',t:'Great, thanks Grace.',at:'Oct 21 · 1:40 PM'}]
+ ]
 };
-var SEED_EXP = [
- {id:1,date:'2026-01-15',vendor:'Canada Post',cat:'Shipping',amt:412.50,tax:53.63,note:'January labels',file:null},
- {id:2,date:'2026-03-02',vendor:'[Packaging supplier]',cat:'Packaging',amt:1180.00,tax:153.40,note:'Boxes, inserts, seals',file:null},
- {id:3,date:'2026-05-20',vendor:'Shopify',cat:'Software',amt:468.00,tax:60.84,note:'Annual plan',file:null},
- {id:4,date:'2026-07-08',vendor:'Stripe',cat:'Fees',amt:2614.37,tax:0,note:'Card processing fees YTD',file:null},
- {id:5,date:'2026-09-12',vendor:'[Print shop]',cat:'Marketing',amt:690.00,tax:89.70,note:'Grand-opening cards',file:null}
-];
 
 /* ---------- STATE (in memory, mirrored to localStorage when allowed) ---------- */
-var KEY='pepticity-studio-demo-v1';
-var S = {eta:{'Retatrutide':'2026-11-06','TB-500':'2026-11-04','PT-141':'2026-11-12'},mail:{'Retatrutide':true},msgs:JSON.parse(JSON.stringify(SEED_MSGS)), exp:SEED_EXP.slice(), alerts:{}, letter:true, unread:{owner:{jordan:1,elena:1},client:0}, view:'owner', tab:{owner:'sales',client:'orders'},
+var KEY='pepticity-client-demo-v1';
+var S = {eta:{'Retatrutide':'2026-11-06','TB-500':'2026-11-04','PT-141':'2026-11-12'},mail:{'Retatrutide':true},msgs:JSON.parse(JSON.stringify(SEED_MSGS)), alerts:{}, letter:true, unread:{client:0}, view:'client', tab:{client:'orders'},
   auto:{every:6,next:'2026-11-12',on:true,basket:['BPC-157','GHK-Cu','NAD+'],skips:[]}, remind:null, perks:null, drops:[], labs:{}, sent:{}, reserved:{}, snd:false};
-var SKEYS=['msgs','exp','alerts','letter','unread','tab','eta','mail','auto','remind','perks','drops','labs','sent','reserved','snd'];
+var SKEYS=['msgs','alerts','letter','unread','tab','eta','mail','auto','remind','perks','drops','labs','sent','reserved','snd'];
 try{var raw=localStorage.getItem(KEY); if(raw){var L=JSON.parse(raw); SKEYS.forEach(function(k){var v=L[k],d=S[k];if(v!==undefined&&v!==null&&typeof v===(d===null?'object':typeof d)&&Array.isArray(v)===Array.isArray(d)&&(k!=='auto'||Array.isArray(v.basket)&&Array.isArray(v.skips)))S[k]=v});}}catch(e){}
 function save(){try{var o={};SKEYS.forEach(function(k){o[k]=S[k]});
-  o.exp=S.exp.map(function(x){var y=Object.assign({},x);if(y.file)y.file={name:y.file.name,type:y.file.type};return y});
   o.labs={};Object.keys(S.labs).forEach(function(k){var f=S.labs[k];o.labs[k]={name:f.name,type:f.type,size:f.size,at:f.at}});
   localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
 
@@ -2329,20 +2026,12 @@ function now(){var d=new Date();return d.toLocaleString('en-CA',{month:'short',d
 function h3dSync(){$$('.h3d').forEach(function(h){if(!h.hasAttribute('data-t'))h.setAttribute('data-t',h.textContent)})}
 
 /* ---------- ROUTER / VIEW SWITCH ---------- */
-function setView(v,fromHash){
-  S.view=v;
-  $('#vswitch').dataset.v=v;
-  $$('#vswitch .pc-seg__opt').forEach(function(b,i){var on=b.dataset.view===v;b.setAttribute('aria-checked',String(on));b.tabIndex=on?0:-1;if(on)$('#vswitch').style.setProperty('--i',i)});
-  $('#view-owner').classList.toggle('on',v==='owner');
-  $('#view-client').classList.toggle('on',v==='client');
-  if(!fromHash && location.hash!=='#'+v){try{history.replaceState(null,'','#'+v)}catch(e){location.hash=v}}
-  setTab(v,S.tab[v]);
-  updateBadges();
+function setView(){
+  S.view='client';
+  $('#view-client').classList.add('on');
+  if(location.hash){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+  setTab('client',S.tab.client||'orders');
 }
-/* brand/ui/button.js drives the toggle (click + arrow keys) and reports the choice */
-$('#vswitch').addEventListener('pc-change',function(e){if(e.detail.value!==S.view)setView(e.detail.value)});
-window.PCButtons&&window.PCButtons.init();
-window.addEventListener('hashchange',function(){var h=location.hash.slice(1);if(h==='owner'||h==='client')setView(h,true)});
 
 function setTab(group,id){
   S.tab[group]=id;save();
@@ -2351,8 +2040,7 @@ function setTab(group,id){
   var view=$('#view-'+group);
   $$('.panel',view).forEach(function(p){p.classList.toggle('on',p.id==='p-'+id)});
   RENDER[id]&&RENDER[id]();
-  if(id==='omsg'){S.unread.owner[activeThread]=0;save();updateBadges();renderThreads()}
-  if(id==='cmsg'){S.unread.client=0;save();updateBadges()}
+  if(id==='cmsg'){S.unread.client=0;save()}
 }
 $$('.tabs').forEach(function(bar){
   var g=bar.dataset.group;
@@ -2363,106 +2051,15 @@ $$('.tabs').forEach(function(bar){
     i=(i+(e.key==='ArrowRight'?1:-1)+ts.length)%ts.length;setTab(g,ts[i].dataset.tab);ts[i].focus();e.preventDefault();
   });
 });
-function updateBadges(){
-  var o=Object.keys(S.unread.owner).reduce(function(s,k){return s+(S.unread.owner[k]||0)},0), c=S.unread.client||0;
-  var bo=$('#ubOwner'),bc=$('#ubClient');
-  bo.textContent=o;bo.classList.toggle('on',o>0);bc.textContent=c;bc.classList.toggle('on',c>0);
-}
+function updateBadges(){}
 
 /* ---------- RENDERERS ---------- */
 var RENDER={};
-RENDER.sales=function(){
-  countUp($('#kMonth'),MREV[9],cad.format);
-  var d=(MREV[9]-MREV[8])/MREV[8]*100; $('#kMonthD').textContent=(d>=0?'+':'')+d.toFixed(1)+'% MTD';
-  countUp($('#kYear'),REV,cad.format); countUp($('#kOrders'),ORDERS); $('#kOrdersM').textContent=nf.format(ORD_M);
-  countUp($('#kAov'),AOV,cad.format);
-  drawRev();
-  var top=P.slice().sort(function(a,b){return b.rev-a.rev}).slice(0,5),max=top[0].rev;
-  $('#topBars').innerHTML=top.map(function(p,i){return '<div class="bar"><span class="rk">0'+(i+1)+'</span><div class="nm">'+esc(p.name)+' <span>'+nf.format(p.units)+' sold · '+esc(p.size)+'</span></div><span class="amt">'+cad.format(p.rev)+'</span><div class="tr"><div class="fl" data-w="'+(p.rev/max*100).toFixed(1)+'"></div></div></div>'}).join('');
-  requestAnimationFrame(function(){requestAnimationFrame(function(){$$('#topBars .fl').forEach(function(f){f.style.width=f.dataset.w+'%'})})});
-};
-function niceMax(v){var e=Math.pow(10,Math.floor(Math.log10(v))),n=v/e;return (n<=1.5?1.5:n<=2?2:n<=2.5?2.5:n<=3?3:n<=4?4:n<=5?5:n<=6?6:n<=8?8:10)*e}
-function drawRev(){
-  var W=720,H=280,pl=54,pr=14,pt=14,pb=34,ymax=niceMax(Math.max.apply(null,MREV)*1.08),n=MREV.length;
-  var x=function(i){return pl+i*(W-pl-pr)/(n-1)}, y=function(v){return pt+(H-pt-pb)*(1-v/ymax)};
-  var g='',ticks=4;
-  for(var k=0;k<=ticks;k++){var v=ymax*k/ticks,yy=y(v);g+='<line class="gl" x1="'+pl+'" x2="'+(W-pr)+'" y1="'+yy+'" y2="'+yy+'"/><text class="ax" x="'+(pl-10)+'" y="'+(yy+4)+'" text-anchor="end">$'+(v/1000).toFixed(v%1000?1:0)+'k</text>'}
-  MONTHS.forEach(function(m,i){g+='<text class="ax" x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle">'+m+'</text>'});
-  var pts=MREV.map(function(v,i){return [x(i),y(v)]});
-  // smooth path (monotone-ish cardinal)
-  var d='M'+pts[0][0]+','+pts[0][1];
-  for(var i=0;i<pts.length-1;i++){var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;var t=.18;
-    d+=' C'+(p1[0]+(p2[0]-p0[0])*t)+','+(p1[1]+(p2[1]-p0[1])*t)+' '+(p2[0]-(p3[0]-p1[0])*t)+','+(p2[1]-(p3[1]-p1[1])*t)+' '+p2[0]+','+p2[1]}
-  var area=d+' L'+pts[n-1][0]+','+y(0)+' L'+pts[0][0]+','+y(0)+' Z';
-  var dots=pts.map(function(p,i){return '<circle class="pt" tabindex="0" r="'+(i===n-1?5:3.6)+'" cx="'+p[0]+'" cy="'+p[1]+'" data-i="'+i+'" role="img" aria-label="'+MONTHS[i]+' '+cad.format(MREV[i])+'"/>'}).join('');
-  $('#revChart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Revenue by month, January to October 2026">'+g+'<path d="'+area+'" fill="url(#gArea)"/><path class="ln" d="'+d+'" style="--len:2000"/>'+dots+'</svg>';
-  var tip=$('#tip'),box=$('#revChart').parentNode;
-  $$('#revChart .pt').forEach(function(c){
-    var show=function(){var i=+c.dataset.i,r=c.getBoundingClientRect(),b=box.getBoundingClientRect();
-      tip.innerHTML='<span class="muted">'+MONTHS[i]+' 2026'+(i===9?' · to date':'')+'</span><b>'+cad.format(MREV[i])+'</b>';
-      var lx=r.left-b.left+r.width/2; lx=Math.max(70,Math.min(b.width-70,lx));
-      tip.style.left=(lx-60)+'px';tip.style.top=(r.top-b.top-62)+'px';tip.style.opacity=1};
-    c.addEventListener('mouseenter',show);c.addEventListener('focus',show);
-    c.addEventListener('mouseleave',function(){tip.style.opacity=0});c.addEventListener('blur',function(){tip.style.opacity=0});
-  });
-}
 var stockF='all';
 var bellSvg='<svg viewBox="0 0 24 24"><use href="#i-bell"/></svg>';
 function chip(s){return s==='out'?'<span class="chip out">OUT</span>':s==='low'?'<span class="chip low">LOW</span>':'<span class="chip ok">IN STOCK</span>'}
-RENDER.stock=function(){
-  var q=($('#stockQ').value||'').toLowerCase();
-  renderShelves(q);
-  var rows=P.filter(function(p){return (stockF==='all'||(stockF==='short'&&p.status!=='ok')||(stockF==='out'&&p.status==='out'))&&p.name.toLowerCase().indexOf(q)>-1});
-  $('#stockTbl').innerHTML='<div class="tr-row hd"><span>PRODUCT</span><span>STATUS</span><span class="num">ON HAND</span><span class="num">REORDER AT</span><span class="num">WAITLIST</span><span class="num">SOLD YTD</span></div>'+
-   (rows.length?rows.map(function(p){return '<div class="tr-row"><span class="pn">'+esc(p.name)+'<small>'+esc(p.size)+'</small></span><span data-l="Status">'+chip(p.status)+'</span><span class="num" data-l="On hand">'+p.onHand+'</span><span class="num" data-l="Reorder at">'+p.rop+'</span><span class="num" data-l="Waitlist">'+(p.wl?'<span class="wl">'+bellSvg+p.wl+'</span>':'<span style="color:var(--dim)">—</span>')+'</span><span class="num" data-l="Sold YTD">'+p.units+'</span></div>'}).join(''):'<p class="muted" style="padding:16px 12px">No products match.</p>');
-  var short=P.filter(function(p){return p.status!=='ok'}).sort(function(a,b){return (a.status==='out'?0:1)-(b.status==='out'?0:1)||b.wl-a.wl});
-  $('#reCount').textContent=short.length+' items';
-  $('#reorderList').innerHTML=short.map(function(p){var sug=Math.max(p.rop*2-p.onHand,p.rop);return '<div class="reorder-item"><div><b>'+esc(p.name)+'</b> <span class="muted" style="font-size:12px">'+esc(p.size)+'</span><div class="why">'+(p.status==='out'?'Out of stock':'Only '+p.onHand+' left')+(p.wl?' · '+p.wl+' waiting':'')+'</div></div><div class="q">'+sug+'<small>ORDER</small></div></div>'}).join('')||'<p class="muted empty">Nothing is short right now. Items appear here when they reach their reorder point.</p>';
-  var wl=P.reduce(function(s,p){return s+p.wl},0)+Object.keys(S.alerts).filter(function(k){return S.alerts[k]}).length;
-  countUp($('#wlTotal'),wl);
-};
-$('#stockQ').addEventListener('input',function(){RENDER.stock()});
-$('#stockFilter').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;stockF=b.dataset.f;$$('#stockFilter button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});RENDER.stock()});
-$('#reorderBtn').addEventListener('click',function(){morph(this,'LIST SENT',function(){toast('Reorder list drafted (demo)')})});
-
-RENDER.customers=function(){
-  countUp($('#kTeam'),143); $('#kTeamD').textContent='+21';
-  countUp($('#kEmail'),EMAIL[9]);
-  var alerts=P.reduce(function(s,p){return s+p.wl},0)+Object.keys(S.alerts).filter(function(k){return S.alerts[k]}).length;
-  countUp($('#kAlerts'),alerts);
-  countUp($('#kRepeat'),Math.round(CUST.filter(function(c){return c[3]>1}).length/CUST.length*100),function(v){return Math.round(v)+'%'});
-  $('#custTbl').innerHTML='<div class="tr-row hd"><span>CLIENT</span><span>LAST ORDER</span><span class="num">ORDERS</span><span class="num">SPENT</span><span>TEAM</span></div>'+
-   CUST.map(function(c){return '<div class="tr-row"><span class="pn">'+esc(c[0])+'<small>'+esc(c[1])+'</small></span><span data-l="Last order">'+c[2]+'</span><span class="num" data-l="Orders">'+c[3]+'</span><span class="num" data-l="Spent">'+cad.format(c[4])+'</span><span data-l="Team">'+(c[5]?'<span class="chip team">MEMBER</span>':'<span class="chip ok">—</span>')+'</span></div>'}).join('');
-  var W=420,H=170,pl=8,pb=24,mx=niceMax(EMAIL[9]),bw=(W-pl*2)/EMAIL.length;
-  var s='';EMAIL.forEach(function(v,i){var h=(H-pb-14)*v/mx,x=pl+i*bw+bw*.2,w=bw*.6;
-    s+='<rect x="'+x+'" y="'+(H-pb)+'" width="'+w+'" height="0" rx="3" fill="url(#gBar)"><animate attributeName="height" to="'+h+'" dur="'+(RM?'0.01':'1')+'s" begin="'+(i*0.05)+'s" fill="freeze" calcMode="spline" keySplines=".2 .8 .2 1"/><animate attributeName="y" to="'+(H-pb-h)+'" dur="'+(RM?'0.01':'1')+'s" begin="'+(i*0.05)+'s" fill="freeze" calcMode="spline" keySplines=".2 .8 .2 1"/></rect><text class="ax" x="'+(x+w/2)+'" y="'+(H-6)+'" text-anchor="middle" style="font:500 9px var(--fb);fill:var(--mute)">'+MONTHS[i].slice(0,1)+'</text>'+(i===EMAIL.length-1?'<text x="'+(x+w/2)+'" y="'+(H-pb-h-8)+'" text-anchor="middle" style="font:700 12px var(--fh);fill:#eceef2">'+v+'</text>':'')});
-  $('#emailChart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Email list grew from 118 in January to 858 in October"><defs><linearGradient id="gBar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#5d616a" stop-opacity=".5"/></linearGradient></defs>'+s+'</svg>';
-  $('#signups').innerHTML=SIGNUPS.map(function(x){return '<div class="iss"><b>'+x[0]+'</b><span>joined '+x[1]+'</span></div>'}).join('');
-};
-
 /* ---------- MESSAGES ---------- */
-var activeThread='jordan';
 function bubble(m,side,isNew){return '<div class="m '+side+(isNew?' new':'')+'">'+esc(m.t)+'<span class="w">'+esc(m.at)+'</span></div>'}
-function renderThreads(){
-  $('#threadList').innerHTML=Object.keys(CLIENTS).map(function(k){var c=CLIENTS[k],ms=S.msgs[k]||[],last=ms[ms.length-1]||{t:'',at:''},u=S.unread.owner[k];
-    return '<button class="th" role="tab" aria-selected="'+(k===activeThread)+'" data-k="'+k+'"><span class="av">'+c.init+'</span><span style="min-width:0"><span class="nm">'+esc(c.name)+(k==='jordan'?' <span class="chip team" style="padding:3px 5px;font-size:8px;margin-left:4px">SAMPLE CLIENT</span>':'')+'</span><span class="pv" style="display:block">'+(last.f==='o'?'You: ':'')+esc(last.t)+'</span></span><span class="tm">'+esc((last.at||'').split(' · ')[0])+(u?'<span class="ub"></span>':'')+'</span></button>'}).join('');
-}
-RENDER.omsg=function(lastNew){
-  renderThreads();
-  var c=CLIENTS[activeThread],ms=S.msgs[activeThread]||[];
-  $('#convHead').innerHTML='<span class="av">'+c.init+'</span><div><b>'+esc(c.name.toUpperCase())+'</b><div class="s">'+(activeThread==='jordan'?'Also open the CLIENT view to see this thread from Jordan’s side':'Client')+'</div></div>';
-  $('#ownerMsgs').innerHTML='<span class="day">CONVERSATION</span>'+ms.map(function(m,i){return bubble(m,m.f==='o'?'me':'them',lastNew&&i===ms.length-1)}).join('');
-  var box=$('#ownerMsgs');box.scrollTop=box.scrollHeight;
-  $('#ownerQuick').innerHTML=['Yes, the code works on your next order.','Your order ships today.','Back in stock early November.'].map(function(q){return '<button type="button">'+q+'</button>'}).join('');
-};
-$('#threadList').addEventListener('click',function(e){var b=e.target.closest('.th');if(!b)return;activeThread=b.dataset.k;S.unread.owner[activeThread]=0;save();updateBadges();RENDER.omsg()});
-$('#ownerQuick').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('#ownerInput').value=b.textContent;$('#ownerInput').focus()}});
-$('#ownerForm').addEventListener('submit',function(e){e.preventDefault();var v=$('#ownerInput').value.trim();if(!v)return;
-  (S.msgs[activeThread]=S.msgs[activeThread]||[]).push({f:'o',t:v,at:now()});
-  if(activeThread==='jordan')S.unread.client=(S.unread.client||0)+1;
-  $('#ownerInput').value='';save();RENDER.omsg(true);RENDER.cmsg();updateBadges();
-  toast(activeThread==='jordan'?'Sent · now in Jordan’s CLIENT view':'Sent to '+CLIENTS[activeThread].name);
-});
 RENDER.cmsg=function(lastNew){
   var ms=S.msgs.jordan||[];
   $('#clientMsgs').innerHTML='<span class="day">CONVERSATION</span>'+ms.map(function(m,i){return bubble(m,m.f==='c'?'me':'them',lastNew&&i===ms.length-1)}).join('');
@@ -2471,88 +2068,8 @@ RENDER.cmsg=function(lastNew){
 };
 $('#clientQuick').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('#clientInput').value=b.textContent;$('#clientInput').focus()}});
 $('#clientForm').addEventListener('submit',function(e){e.preventDefault();var v=$('#clientInput').value.trim();if(!v)return;
-  S.msgs.jordan.push({f:'c',t:v,at:now()});S.unread.owner.jordan=(S.unread.owner.jordan||0)+1;
-  $('#clientInput').value='';save();RENDER.cmsg(true);RENDER.omsg();updateBadges();toast('Sent · Grace sees it in her inbox');
-});
-
-/* ---------- MONEY + TAXES ---------- */
-RENDER.money=function(){
-  var gp=REV-COGS;
-  countUp($('#mRev'),REV,cad.format);countUp($('#mCogs'),COGS,cad.format);countUp($('#mGP'),gp,cad.format);
-  $('#mGPm').textContent=(gp/REV*100).toFixed(1)+'%';
-  $('#moneyTbl').innerHTML='<div class="tr-row hd"><span>PRODUCT</span><span class="num">UNIT COST</span><span class="num">SALE PRICE</span><span class="num">MARGIN $</span><span class="num">MARGIN %</span><span class="num">PROFIT YTD</span></div>'+
-   P.slice().sort(function(a,b){return (b.rev-b.cogs)-(a.rev-a.cogs)}).map(function(p){var m=p.price-p.cost;return '<div class="tr-row"><span class="pn">'+esc(p.name)+'<small>'+esc(p.size)+' · '+p.units+' sold</small></span><span class="num" data-l="Unit cost">'+cad2.format(p.cost)+'</span><span class="num" data-l="Sale price">'+cad2.format(p.price)+'</span><span class="num" data-l="Margin $">'+cad2.format(m)+'</span><span class="num" data-l="Margin %">'+(m/p.price*100).toFixed(0)+'%</span><span class="num" data-l="Profit YTD" style="color:var(--chrome);font-weight:600">'+cad.format(m*p.units)+'</span></div>'}).join('')+
-   '<div class="tr-row" style="border-top:1px solid var(--hair2);font-weight:700"><span class="pn">TOTALS · YTD</span><span class="num" data-l="Cost of goods">'+cad.format(COGS)+'</span><span class="num" data-l="Revenue">'+cad.format(REV)+'</span><span class="num" data-l="Gross profit">'+cad.format(gp)+'</span><span class="num" data-l="Margin %">'+(gp/REV*100).toFixed(0)+'%</span><span class="num" data-l="Profit YTD" style="color:var(--chrome)">'+cad.format(gp)+'</span></div>';
-  renderExp();renderSum();
-};
-function totals(){
-  var cats={Shipping:0,Packaging:0,Marketing:0,Software:0,Fees:0,Other:0},taxPaid=0,exp=0;
-  S.exp.forEach(function(x){cats[x.cat]=(cats[x.cat]||0)+x.amt;taxPaid+=x.tax;exp+=x.amt});
-  var gp=REV-COGS;return {cats:cats,taxPaid:taxPaid,exp:exp,gp:gp,net:gp-exp,hstColl:REV*HST};
-}
-function renderExp(flashId){
-  var list=S.exp.slice().sort(function(a,b){return b.date<a.date?-1:1});
-  $('#expCount').textContent=list.length+(list.length===1?' entry':' entries');
-  $('#expTbl').innerHTML='<div class="tr-row hd"><span>VENDOR · DATE</span><span>CATEGORY</span><span class="num">AMOUNT</span><span class="num">GST/HST</span><span>RECEIPT</span><span></span></div>'+
-   list.map(function(x){var r=x.file?(safeImg(x.file.url)&&/^image\//.test(x.file.type)?'<span class="rcpt"><img class="thumb" src="'+safeImg(x.file.url)+'" alt="Receipt for '+esc(x.vendor)+'"><span>'+esc(x.file.name)+'</span></span>':'<span class="rcpt"><span class="fi">'+(/pdf/.test(x.file.type)?'PDF':'FILE')+'</span><span>'+esc(x.file.name)+'</span></span>'):'<span style="color:var(--dim);font-size:12px">none</span>';
-    return '<div class="tr-row'+(x.id===flashId?' flash':'')+'"><span class="pn">'+esc(x.vendor)+'<small>'+esc(x.date)+(x.note?' · '+esc(x.note):'')+'</small></span><span data-l="Category">'+esc(x.cat)+'</span><span class="num" data-l="Amount">'+cad2.format(x.amt)+'</span><span class="num" data-l="GST/HST">'+cad2.format(x.tax)+'</span><span data-l="Receipt">'+r+'</span><button class="x" type="button" data-del="'+esc(x.id)+'" aria-label="Remove expense from '+esc(x.vendor)+'">×</button></div>'}).join('')+(list.length?'':'<p class="muted empty" style="padding:14px 12px">No expenses yet. Add the first receipt with the form above.</p>');
-}
-$('#expTbl').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(!b)return;var id=+b.dataset.del;S.exp=S.exp.filter(function(x){return x.id!==id});save();renderExp();renderSum(true);toast('Expense removed')});
-function renderSum(flash){
-  var t=totals(),L=function(a,b,c){return '<div class="ln2 '+(c||'')+'"><span>'+a+'</span><span>'+b+'</span></div>'};
-  var h='<div class="grp">INCOME</div>'+L('Sales (before tax)',cad2.format(REV))+L('Cost of goods sold','− '+cad2.format(COGS))+L('Gross profit',cad2.format(t.gp))+
-   '<div class="grp">EXPENSES BY CATEGORY</div>'+Object.keys(t.cats).map(function(k){return L(k,cad2.format(t.cats[k]),'sub')}).join('')+L('Total expenses','− '+cad2.format(t.exp))+
-   '<div class="grp">GST / HST</div>'+L('Collected on sales (13%)',cad2.format(t.hstColl))+L('Paid on expenses',cad2.format(t.taxPaid))+L('Estimated owing',cad2.format(t.hstColl-t.taxPaid))+
-   L('NET PROFIT',cad2.format(t.net),'tot');
-  var el=$('#sum');el.innerHTML=h;if(flash){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
-  $('#mNet').textContent=cad.format(t.net);
-  if(!$('#csvWrap').hidden)$('#csvText').value=csv();
-}
-function csv(){
-  var t=totals(),q=function(s){s=String(s);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s},r=[];
-  r.push(['PEPTICITY year-end summary 2026 (to date) - SAMPLE DATA']);r.push([]);
-  r.push(['Section','Item','Amount (CAD)']);
-  r.push(['Income','Sales before tax',REV.toFixed(2)]);r.push(['Income','Cost of goods sold',COGS.toFixed(2)]);r.push(['Income','Gross profit',t.gp.toFixed(2)]);
-  Object.keys(t.cats).forEach(function(k){r.push(['Expenses',k,t.cats[k].toFixed(2)])});
-  r.push(['Expenses','Total expenses',t.exp.toFixed(2)]);
-  r.push(['GST/HST','Collected on sales (13% sample rate)',t.hstColl.toFixed(2)]);r.push(['GST/HST','Paid on expenses',t.taxPaid.toFixed(2)]);r.push(['GST/HST','Estimated owing',(t.hstColl-t.taxPaid).toFixed(2)]);
-  r.push(['Result','Net profit before income tax',t.net.toFixed(2)]);r.push([]);
-  r.push(['Expense detail']);r.push(['Date','Vendor','Category','Amount','GST/HST paid','Note','Receipt file']);
-  S.exp.slice().sort(function(a,b){return a.date<b.date?-1:1}).forEach(function(x){r.push([x.date,x.vendor,x.cat,x.amt.toFixed(2),x.tax.toFixed(2),x.note||'',x.file?x.file.name:''])});
-  return r.map(function(row){return row.map(q).join(',')}).join('\n');
-}
-$('#csvBtn').addEventListener('click',function(){var w=$('#csvWrap');w.hidden=false;$('#csvText').value=csv();$('#csvText').focus();$('#csvText').select()});
-$('#copyBtn').addEventListener('click',function(){var ta=$('#csvText'),v=ta.value,done=function(){toast('CSV copied to clipboard')};
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(done,function(){ta.select();try{document.execCommand('copy');done()}catch(e){toast('Select the text and copy it')}})}
-  else{ta.select();try{document.execCommand('copy');done()}catch(e){toast('Select the text and copy it')}}});
-
-var pendingFile=null;
-function takeFile(f){if(!f)return;pendingFile={name:f.name,type:f.type||'',url:null};
-  var t=$('#dropT');t.innerHTML=esc(f.name)+'<small>'+(Math.max(1,Math.round(f.size/1024)))+' KB · attached</small>';
-  if(/^image\//.test(f.type)){var rd=new FileReader();rd.onload=function(){var u=safeImg(rd.result);if(!u)return;pendingFile.url=u;var im=new Image();im.className='thumb';im.alt='';im.src=u;$('#drop .ic').replaceChildren(im)};rd.readAsDataURL(f)}
-  else $('#drop .ic').innerHTML='<span class="fi" style="font:700 9px var(--fb);letter-spacing:.1em;color:var(--mute)">PDF</span>';}
-$('#eFile').addEventListener('change',function(){takeFile(this.files[0])});
-['dragenter','dragover'].forEach(function(ev){$('#drop').addEventListener(ev,function(e){e.preventDefault();this.classList.add('over')})});
-['dragleave','drop'].forEach(function(ev){$('#drop').addEventListener(ev,function(e){e.preventDefault();this.classList.remove('over');if(ev==='drop'&&e.dataTransfer.files[0])takeFile(e.dataTransfer.files[0])})});
-$('#eDate').value=new Date().toISOString().slice(0,10);
-$('#expForm').addEventListener('submit',function(e){e.preventDefault();
-  var amt=money($('#eAmt').value),taxRaw=$('#eTax').value.trim(),tax=taxRaw?money(taxRaw):0,vendor=$('#eVendor').value.trim(),dt=$('#eDate').value,err=$('#expErr');
-  if(!isoDay(dt)){badField($('#eDate'),'Add the date on the receipt.',err);return}
-  if(dt>todayIso()){badField($('#eDate'),'That date is in the future. Use the date on the receipt.',err);return}
-  if(dt<'2020-01-01'){badField($('#eDate'),'Check the year on that date.',err);return}
-  if(!vendor){badField($('#eVendor'),'Add who you paid.',err);return}
-  if(vendor.length>80){badField($('#eVendor'),'Keep the name under 80 characters.',err);return}
-  if(!(amt>0)){badField($('#eAmt'),'Add the amount in dollars, e.g. 42.50',err);return}
-  if(isNaN(tax)){badField($('#eTax'),'GST/HST in dollars, e.g. 5.53, or leave it empty.',err);return}
-  if(tax>amt){badField($('#eTax'),'The tax can’t be more than the amount.',err);return}
-  if($('#eNote').value.length>140){badField($('#eNote'),'Keep the note under 140 characters.',err);return}
-  err.textContent='';
-  var x={id:Date.now(),date:$('#eDate').value,vendor:vendor,cat:$('#eCat').value,amt:Math.round(amt*100)/100,tax:Math.round(tax*100)/100,note:$('#eNote').value.trim(),file:pendingFile&&pendingFile.url&&!safeImg(pendingFile.url)?{name:pendingFile.name,type:pendingFile.type,size:pendingFile.size}:pendingFile};
-  morph($('#expBtn'),'ADDED',function(){
-    S.exp.push(x);save();renderExp(x.id);renderSum(true);toast('Expense added · year-end summary updated');
-    ['eVendor','eAmt','eTax','eNote'].forEach(function(id){$('#'+id).value=''});$('#eFile').value='';pendingFile=null;
-    $('#dropT').innerHTML='Attach receipt<small>Photo or PDF · tap or drop here</small>';$('#drop .ic').innerHTML='<svg><use href="#i-up"/></svg>';
-  });
+  S.msgs.jordan.push({f:'c',t:v,at:now()});
+  $('#clientInput').value='';save();RENDER.cmsg(true);toast('Sent · Grace sees it in her inbox');
 });
 
 /* ---------- CLIENT VIEW ---------- */
@@ -2611,26 +2128,6 @@ function bottle(p,o){o=o||{};
       '<span class="mailnote" data-note="'+n+'">'+(on?mailNote(p):'')+'</span>'}
   return '<figure class="'+cls+'" style="--i:'+(o.i||0)+'" title="'+esc(p.name)+'" data-p="'+esc(p.name)+'"><div class="stage"><span class="pool"></span><div class="tiltb"><img src="'+src+'" alt="PEPTICITY '+esc(shortName(p.name))+' vial, '+esc(p.size)+'" decoding="async" draggable="false">'+ov+'</div></div>'+(o.nocap?'':'<figcaption><span class="nm">'+esc(shortName(p.name))+'</span><small>'+sub+'</small>'+chipH+extra+'</figcaption>')+'</figure>';
 }
-function mailNote(p){return p.wl+' '+(p.wl===1?'person':'people')+' will get an email on '+(fmtDay(S.eta[p.name])||'the arrival date')+' (demo)'}
-function stat(p){p.status=p.onHand<=0?'out':(p.onHand<=p.rop?'low':'ok')}
-function recalc(){REV=P.reduce(function(s,p){return s+p.rev},0);COGS=P.reduce(function(s,p){return s+p.cogs},0)}
-function renderShelves(q){
-  var rows=[
-    {k:'in',t:'IN STOCK',s:'ready to ship',list:P.filter(function(p){return p.status!=='out'})},
-    {k:'sold',t:'SOLD OUT',s:'no delivery booked yet',list:P.filter(function(p){return p.status==='out'&&!S.eta[p.name]})},
-    {k:'back',t:'COMING BACK',s:'delivery booked · restock list waiting',list:P.filter(function(p){return p.status==='out'&&S.eta[p.name]})}
-  ].map(function(r){r.list=r.list.filter(function(p){return p.name.toLowerCase().indexOf(q)>-1});return r})
-   .sort(function(a,b){return b.list.length-a.list.length});
-  $('#shelves').innerHTML=rows.map(function(r,ri){
-    return '<div class="glass card shelf-card" data-row="'+r.k+'"><div class="card-h"><h2 class="h3d h2" data-t="'+r.t+'">'+r.t+'</h2><span style="display:flex;gap:10px;align-items:center"><span class="sub">'+r.s+'</span><span class="count">'+r.list.length+'</span></span></div>'+
-     (r.list.length?'<div class="shelf" role="group" aria-label="'+r.t+'">'+r.list.map(function(p,i){return bottle(p,{units:r.k==='in',i:i,coming:r.k==='back'})}).join('')+'</div>':'<p class="muted" style="padding:6px 0 16px">Nothing here'+(q?' for that search':'')+'.</p>')+'</div>'}).join('');
-}
-$('#shelves').addEventListener('change',function(e){
-  var t=e.target,n;
-  if((n=t.dataset.eta)!==undefined){S.eta[n]=t.value;save();var p=P.find(function(x){return x.name===n});var nt=$('[data-note="'+CSS.escape(n)+'"]');if(nt&&S.mail[n])nt.textContent=mailNote(p);toast('Expected date saved · '+shortName(n)+' · '+fmtDay(t.value));}
-  if((n=t.dataset.mail)!==undefined){S.mail[n]=t.checked;save();var p2=P.find(function(x){return x.name===n});var nt2=$('[data-note="'+CSS.escape(n)+'"]');if(nt2)nt2.textContent=t.checked?mailNote(p2):'';toast(t.checked?mailNote(p2):'Waitlist email off · '+shortName(n))}
-});
-
 /* ---------- QUICK ACTIONS: ADD PRODUCT · RECEIVE STOCK · ADD EXPENSE ---------- */
 var sheetRet=null;
 function openSheet(title,html,onOpen){sheetRet=document.activeElement;$('#sheetT').textContent=title;$('#sheetT').setAttribute('data-t',title);$('#sheetBody').innerHTML=html;$('#sheet').hidden=false;
@@ -2651,59 +2148,6 @@ function pad0(n){return (n<10?'0':'')+n}
 function safeImg(u){return typeof u==='string'&&/^data:image\/(png|jpe?g|webp|gif|avif);base64,[A-Za-z0-9+\/=]+$/.test(u)?u:''}
 function badField(el,msg,errEl){errEl.textContent=msg;el.setAttribute('aria-invalid','true');el.focus();el.addEventListener('input',function f(){el.removeAttribute('aria-invalid');errEl.textContent='';el.removeEventListener('input',f)})}
 function fld(id,label,attrs,w){return '<div class="field'+(w?' w3':'')+'"><label for="'+id+'">'+label+'</label><input class="inp" id="'+id+'" '+(attrs||'')+'></div>'}
-function showNew(name){
-  setTab('owner','stock');
-  requestAnimationFrame(function(){var f=$('#shelves [data-p="'+CSS.escape(name)+'"]');if(!f)return;var sh=f.closest('.shelf');
-    f.closest('.shelf-card').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});if(sh)sh.scrollTo({left:f.offsetLeft-40,behavior:RM?'auto':'smooth'});f.classList.add('flashb')});
-}
-function addProductForm(){
-  var newImg=null;
-  openSheet('ADD PRODUCT','<form id="apForm" class="fgrid" novalidate>'+
-    fld('apName','PRODUCT NAME','required placeholder="e.g. BPC-157" autocomplete="off"')+fld('apSize','STRENGTH','placeholder="e.g. 10 mg"')+
-    '<div class="prev"><div id="apPrev"></div><label class="drop" style="flex:1"><input type="file" id="apImg" accept="image/*"><span class="ic"><svg><use href="#i-up"/></svg></span><span class="t" id="apImgT">Vial picture<small>Optional · uses the matching PEPTICITY bottle if you skip it</small></span></label></div>'+
-    fld('apCost','UNIT COST','inputmode="decimal" placeholder="0.00"')+fld('apPrice','SALE PRICE','inputmode="decimal" placeholder="0.00"')+
-    fld('apOn','UNITS ON HAND','inputmode="numeric" placeholder="0"')+fld('apRop','REORDER POINT','inputmode="numeric" placeholder="e.g. 8"')+
-    '<div class="acts"><span class="muted" id="apErr" role="alert"></span><button class="btn chrome cut" type="submit">ADD TO SHELF</button></div></form>',function(){
-    var prev=function(){var n=$('#apName').value.trim()||'New product',sz=$('#apSize').value.trim();$('#apPrev').innerHTML=bottle({name:n,size:sz,onHand:0,rop:0,status:'ok',img:newImg},{owned:1,nocap:1})};
-    prev();$('#apName').addEventListener('input',prev);$('#apSize').addEventListener('input',prev);
-    $('#apImg').addEventListener('change',function(){var f=this.files[0];if(!f||!/^image\//.test(f.type))return;var rd=new FileReader();rd.onload=function(){newImg=safeImg(rd.result)||null;$('#apImgT').innerHTML=esc(f.name)+'<small>attached</small>';prev()};rd.readAsDataURL(f)});
-    $('#apForm').addEventListener('submit',function(e){e.preventDefault();
-      var n=$('#apName').value.trim(),sz=$('#apSize').value.trim(),cRaw=$('#apCost').value.trim(),c=cRaw?money(cRaw):0,pr=money($('#apPrice').value),
-        onRaw=$('#apOn').value.trim(),rpRaw=$('#apRop').value.trim(),on=onRaw?wholeIn(onRaw,0,100000):0,rp=rpRaw?wholeIn(rpRaw,0,100000):0,err=$('#apErr');
-      if(!n){badField($('#apName'),'Add the product name.',err);return}
-      if(n.length>60){badField($('#apName'),'Keep the name under 60 characters.',err);return}
-      if(sz.length>24){badField($('#apSize'),'Keep the strength short, e.g. 10 mg',err);return}
-      if(P.some(function(x){return x.name.toLowerCase()===n.toLowerCase()})){badField($('#apName'),'That product is already on the shelf. Use RECEIVE STOCK.',err);return}
-      if(isNaN(c)){badField($('#apCost'),'Unit cost in dollars, e.g. 31.00, or leave it empty.',err);return}
-      if(!(pr>0)){badField($('#apPrice'),'Add the sale price in dollars, e.g. 95',err);return}
-      if(isNaN(on)){badField($('#apOn'),'Units on hand as a whole number, e.g. 24',err);return}
-      if(isNaN(rp)){badField($('#apRop'),'Reorder point as a whole number, e.g. 8',err);return}
-      var np={name:n,size:sz||'—',price:pr,cost:c||0,units:0,onHand:on,rop:rp,wl:0,rev:0,cogs:0,img:newImg};stat(np);P.push(np);
-      closeSheet();showNew(n);toast(shortName(n)+' added · on the '+(np.status==='out'?'SOLD OUT':'IN STOCK')+' shelf');
-    });
-  });
-}
-function receiveForm(pre){
-  var opts=P.map(function(p,i){return '<option value="'+i+'"'+(p.name===pre?' selected':'')+'>'+esc(p.name)+' · '+esc(p.size)+' ('+p.onHand+' on hand)</option>'}).join('');
-  openSheet('RECEIVE STOCK','<form id="rsForm" class="fgrid" novalidate><div class="field w3"><label for="rsP">PRODUCT</label><select class="inp" id="rsP">'+opts+'</select></div>'+
-    '<div class="prev" id="rsPrev"></div>'+fld('rsU','UNITS RECEIVED','inputmode="numeric" placeholder="e.g. 24" required')+fld('rsC','COST PER UNIT','inputmode="decimal"')+
-    '<div class="acts"><span class="muted" id="rsErr" role="alert"></span><button class="btn chrome cut" type="submit">RECEIVE</button></div></form>',function(){
-    var sync=function(){var p=P[+$('#rsP').value];$('#rsC').value=p.cost.toFixed(2);$('#rsPrev').innerHTML=bottle(p,{owned:1})+'<p class="muted" style="margin:0 0 20px">Sells for '+cad2.format(p.price)+' · cost now '+cad2.format(p.cost)+(S.eta[p.name]?'<br>Expected '+fmtDay(S.eta[p.name])+' · '+p.wl+' on the restock list':'')+'</p>'};
-    sync();$('#rsP').addEventListener('change',sync);
-    $('#rsForm').addEventListener('submit',function(e){e.preventDefault();
-      var p=P[+$('#rsP').value],u=wholeIn($('#rsU').value,1,100000),cRaw=$('#rsC').value.trim(),c=cRaw?money(cRaw):p.cost,err=$('#rsErr');
-      if(!(u>0)){badField($('#rsU'),'Add how many units arrived, as a whole number.',err);return}
-      if(isNaN(c)){badField($('#rsC'),'Cost per unit in dollars, e.g. 31.00',err);return}
-      var base=Math.max(p.onHand,0);p.cost=Math.round(((base*p.cost)+(u*c))/(base+u)*100)/100;p.onHand=base+u;p.cogs=p.cost*p.units;stat(p);
-      var waited=S.eta[p.name]?p.wl:0;delete S.eta[p.name];save();recalc();
-      closeSheet();showNew(p.name);toast('Received '+u+' × '+shortName(p.name)+' · cost now '+cad2.format(p.cost)+(waited&&S.mail[p.name]?' · '+waited+' restock emails ready (demo)':''));
-    });
-  });
-}
-$('.qacts').addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;var a=b.dataset.act;
-  if(a==='product')addProductForm();else if(a==='receive')receiveForm();
-  else{setTab('owner','money');requestAnimationFrame(function(){$('#expForm').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});setTimeout(function(){$('#eVendor').focus({preventScroll:true})},RM?0:450)})}});
-
 /* ---------- COPY (clipboard with fallback) ---------- */
 function copyText(v,msg){var done=function(){toast(msg||'Copied')},fb=function(){var t=document.createElement('textarea');t.value=v;t.setAttribute('readonly','');t.style.cssText='position:fixed;opacity:0;left:-9999px';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){toast('Select the text and copy it')}t.remove()};
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(done,fb)}else fb()}
@@ -2720,100 +2164,6 @@ RENDER.refer=function(){
 };
 $('#copyLink').addEventListener('click',function(){copyText($('#refLink').value,'Link copied · share PEPTICITY')});
 $('#copyCode').addEventListener('click',function(){copyText('JORDAN15','Code copied')});
-
-/* ---------- OWNER: REFERRALS ---------- */
-var REFS=[['Jordan M.','Toronto, ON',3,2,2,412],['Aaron B.','Hamilton, ON',5,4,4,1046],['Elena R.','Vancouver, BC',4,3,3,688],['Priya S.','Mississauga, ON',2,2,2,371],['Devon K.','Calgary, AB',2,1,1,189],['Nadia F.','Halifax, NS',1,1,1,226]];
-RENDER.referrals=function(){
-  var fr=REFS.reduce(function(s,r){return s+r[2]},0),od=REFS.reduce(function(s,r){return s+r[3]},0),cr=REFS.reduce(function(s,r){return s+r[4]},0),rv=REFS.reduce(function(s,r){return s+r[5]},0);
-  $('#refKpis').innerHTML='<div class="glass card kpi big tilt"><div class="lab">REVENUE FROM REFERRALS</div><div class="val" id="rkRev">$0</div><div class="foot">first orders from referred friends</div></div>'+
-   '<div class="glass card kpi tilt"><div class="lab">FRIENDS BROUGHT IN</div><div class="val" id="rkFr">0</div><div class="foot">'+od+' have ordered</div></div>'+
-   '<div class="glass card kpi tilt"><div class="lab">CREDITS ISSUED</div><div class="val" id="rkCr">0</div><div class="foot">15% each, to the referrer</div></div>'+
-   '<div class="glass card kpi tilt"><div class="lab">CLIENTS REFERRING</div><div class="val" id="rkWho">0</div><div class="foot">shared their link</div></div>';
-  countUp($('#rkRev'),rv,cad.format);countUp($('#rkFr'),fr);countUp($('#rkCr'),cr);countUp($('#rkWho'),REFS.length);
-  $('#refTbl').innerHTML='<div class="tr-row hd"><span>CLIENT</span><span class="num">FRIENDS IN</span><span class="num">ORDERED</span><span class="num">CREDITS</span><span class="num">REVENUE</span></div>'+
-   REFS.slice().sort(function(a,b){return b[5]-a[5]}).map(function(r){return '<div class="tr-row"><span class="pn">'+esc(r[0])+'<small>'+esc(r[1])+'</small></span><span class="num" data-l="Friends in">'+r[2]+'</span><span class="num" data-l="Ordered">'+r[3]+'</span><span class="num" data-l="Credits">'+r[4]+'</span><span class="num" data-l="Revenue" style="color:var(--chrome);font-weight:600">'+cad.format(r[5])+'</span></div>'}).join('');
-  bindTilt();
-};
-
-/* ---------- OWNER: MARKETING (real brand marks in 3D chrome, CSS layers as fallback) ---------- */
-var MARKS=window.PEP_MARKS;
-function markSvg(k,fill){var m=MARKS[k];
-  if(m.svg)return m.svg(fill);
-  return '<path d="'+m.d+'" fill="'+fill+'" fill-rule="'+(m.rule||'nonzero')+'"/>'}
-function fb3(k){return '<span class="fb3" aria-hidden="true"><svg viewBox="0 0 24 24">'+markSvg(k,'#141417')+'</svg><svg viewBox="0 0 24 24">'+markSvg(k,'#3a3c42')+'</svg><svg viewBox="0 0 24 24">'+markSvg(k,'url(#gChrome)')+'</svg></span>'}
-var PLAT=[
-  {k:'ig',t:'INSTAGRAM',reach:48200,clicks:1960,signups:142,sales:6840,spend:420,w:[22,25,24,29,31,30,36,41]},
-  {k:'fb',t:'FACEBOOK',reach:31500,clicks:1180,signups:77,sales:4120,spend:360,w:[30,28,31,29,33,32,34,35]},
-  {k:'tt',t:'TIKTOK',reach:66900,clicks:2410,signups:118,sales:3310,spend:0,w:[10,14,19,17,26,33,38,47]},
-  {k:'ga',t:'GOOGLE ADS',reach:22800,clicks:1540,signups:96,sales:7980,spend:910,w:[26,29,28,32,30,35,37,38]}
-];
-/* 90 days of sample daily numbers per platform (seeded, so the demo is stable) */
-(function(){var END=new Date(2026,9,29);
-  PLAT.forEach(function(p,pi){var seed=97+pi*131,rnd=function(){seed=(seed*16807)%2147483647;return seed/2147483647};
-    var g=p.w[7]/p.w[0],days=[];
-    for(var d=0;d<90;d++){var trend=Math.pow(g,(d-60)/56),wk=1+.16*Math.sin((d+pi*2)*2*Math.PI/7),nz=.82+.36*rnd(),c=p.clicks/30*trend*wk*nz;
-      var dt=new Date(END);dt.setDate(END.getDate()-89+d);
-      days.push({d:dt,clicks:Math.max(1,Math.round(c)),reach:Math.round(c*p.reach/p.clicks*(.9+.2*rnd())),signups:Math.round(c*p.signups/p.clicks*(.7+.6*rnd())),sales:Math.round(c*p.sales/p.clicks*(.6+.8*rnd()))})}
-    p.days=days})})();
-function spark(w,W,H,area){var mx=Math.max.apply(null,w)*1.08,mn=Math.min.apply(null,w)*.8,x=function(i){return i*(W/(w.length-1))},y=function(v){return H-(v-mn)/(mx-mn)*H};
-  var d=w.map(function(v,i){return (i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)}).join('');
-  return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true">'+(area?'<path d="'+d+'L'+W+','+H+'L0,'+H+'Z" fill="url(#gArea)"/>':'')+'<path d="'+d+'" fill="none" stroke="url(#gLine)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><circle cx="'+x(w.length-1)+'" cy="'+y(w[w.length-1])+'" r="3" fill="#fff"/></svg>'}
-var openPlat=null,platPeriod=30;
-RENDER.marketing=function(){
-  var vis=12840,clk=PLAT.reduce(function(s,p){return s+p.clicks},0),sig=PLAT.reduce(function(s,p){return s+p.signups},0);
-  $('#siteLine').innerHTML='<div class="s"><span>SITE CLICKS</span><b id="mkC">0</b><em>from all four platforms</em></div><div class="s"><span>VISITS</span><b id="mkV">0</b><em>people on the site</em></div><div class="s"><span>SIGN-UPS</span><b id="mkS">0</b><em>email list + team</em></div>';
-  countUp($('#mkC'),clk);countUp($('#mkV'),vis);countUp($('#mkS'),sig);
-  $('#platGrid').innerHTML=PLAT.map(function(p,i){
-    return '<button type="button" class="glass plat tilt" data-plat="'+i+'" aria-expanded="'+(openPlat===i)+'" aria-controls="platDetail" aria-label="'+p.t+': open the 7, 30 and 90-day detail">'+
-     '<div class="emb" aria-hidden="true"><span class="gap"></span><span class="well"></span><span class="cshadow"></span>'+fb3(p.k)+'<span class="sweep"></span><div class="slot" data-icon3d="'+p.k+'"></div></div>'+
-     '<span class="pn3">'+p.t+'<small>October · month to date</small></span><dl><dt>Reach</dt><dd>'+nf.format(p.reach)+'</dd><dt>Clicks</dt><dd>'+nf.format(p.clicks)+'</dd><dt>Click-through</dt><dd>'+(p.clicks/p.reach*100).toFixed(1)+'%</dd><dt>Sign-ups</dt><dd>'+p.signups+'</dd><dt>Sales attributed</dt><dd>'+cad.format(p.sales)+'</dd><dt>Spend</dt><dd>'+(p.spend?cad.format(p.spend):'organic')+'</dd></dl>'+
-     '<div class="spk">'+spark(p.w,200,38)+'</div><span class="more">'+(openPlat===i?'CLOSE DETAIL':'OPEN DETAIL')+' ›</span></button>'}).join('');
-  bindTilt();if(openPlat!==null)platDetail(openPlat);
-  window.__pep3d&&window.__pep3d.refresh();
-};
-function platDetail(i){var el=$('#platDetail');if(i===null){el.hidden=true;el.innerHTML='';window.__pep3d&&window.__pep3d.refresh();return}
-  var p=PLAT[i],N=platPeriod,cur=p.days.slice(-N),prev=p.days.slice(-2*N,-N);
-  var sum=function(a,k){return a.reduce(function(s,x){return s+x[k]},0)};
-  var tot={reach:sum(cur,'reach'),clicks:sum(cur,'clicks'),signups:sum(cur,'signups'),sales:sum(cur,'sales')},pv={clicks:sum(prev,'clicks')};
-  var ch=pv.clicks?((tot.clicks-pv.clicks)/pv.clicks*100):0,spend=p.spend/30*N;
-  el.innerHTML='<div class="card-h"><div class="pd-head"><div class="slot" data-icon3d="'+p.k+'" aria-hidden="true">'+fb3(p.k)+'</div><div><p class="eyebrow" style="margin-bottom:8px">PLATFORM DETAIL · SAMPLE NUMBERS</p><h2 class="h3d h2" data-t="'+p.t+'">'+p.t+'</h2></div></div>'+
-   '<div class="pd-tools"><div class="pick" id="pdPer" role="group" aria-label="Period">'+[7,30,90].map(function(n){return '<button type="button" data-n="'+n+'" aria-pressed="'+(n===N)+'">'+n+' DAYS</button>'}).join('')+'</div><button class="x" type="button" id="pdClose" aria-label="Close detail">×</button></div></div>'+
-   '<div class="pd-kpis"><div class="s"><span>REACH</span><b id="pdR">0</b></div><div class="s"><span>CLICKS</span><b id="pdC">0</b></div><div class="s"><span>CLICK-THROUGH</span><b>'+(tot.clicks/tot.reach*100).toFixed(1)+'%</b></div><div class="s"><span>SIGN-UPS</span><b id="pdS">0</b></div><div class="s"><span>SALES ATTRIBUTED</span><b id="pdV">$0</b></div></div>'+
-   '<div class="pd-grid"><div><p class="h3" style="margin-bottom:10px">CLICKS TO THE SITE · LAST '+N+' DAYS '+(prev.length===N?'<span style="color:var(--mute);letter-spacing:.1em">('+(ch>=0?'+':'')+ch.toFixed(0)+'% vs the '+N+' days before)</span>':'')+'</p><div class="pd-chart" id="pdChart"></div></div>'+
-   '<div><p class="h3" style="margin-bottom:10px">TOP POSTS + ADS</p><div class="posts" style="grid-template-columns:1fr;margin-top:0">'+[1,2,3].map(function(n){return '<div class="post" style="grid-template-columns:96px 1fr;align-items:center"><div class="ph" style="aspect-ratio:1">[POST '+n+']</div><dl><dt>Caption</dt><dd>[Caption]</dd><dt>Clicks</dt><dd>[—]</dd><dt>Sign-ups</dt><dd>[—]</dd></dl></div>'}).join('')+'</div></div></div>'+
-   '<p class="note">'+(p.spend?'Spend over '+N+' days about '+cad.format(spend)+' · cost per sign-up about '+cad2.format(spend/Math.max(1,tot.signups))+'. ':'Organic posts, no ad spend. ')+'[Top posts and ads fill in from the platform once Grace connects the account]</p>';
-  el.hidden=false;
-  countUp($('#pdR'),tot.reach);countUp($('#pdC'),tot.clicks);countUp($('#pdS'),tot.signups);countUp($('#pdV'),tot.sales,cad.format);
-  drawPd(cur);window.__pep3d&&window.__pep3d.refresh();
-}
-function drawPd(days){
-  var W=640,H=210,pl=40,pr=10,pt=12,pb=26,n=days.length,mx=niceMax(Math.max.apply(null,days.map(function(d){return d.clicks}))*1.1);
-  var x=function(i){return pl+(n===1?0:i*(W-pl-pr)/(n-1))},y=function(v){return pt+(H-pt-pb)*(1-v/mx)};
-  var g='';for(var k=0;k<=3;k++){var v=mx*k/3,yy=y(v);g+='<line class="gl" x1="'+pl+'" x2="'+(W-pr)+'" y1="'+yy+'" y2="'+yy+'" stroke="rgba(222,226,234,.08)"/><text class="ax" x="'+(pl-8)+'" y="'+(yy+4)+'" text-anchor="end" style="font:500 10px var(--fb);fill:var(--mute)">'+Math.round(v)+'</text>'}
-  var step=Math.ceil(n/6);days.forEach(function(d,i){if(i%step===0||i===n-1)g+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" style="font:500 10px var(--fb);fill:var(--mute)">'+d.d.toLocaleDateString('en-CA',{month:'short',day:'numeric'})+'</text>'});
-  var line=days.map(function(d,i){return (i?'L':'M')+x(i).toFixed(1)+','+y(d.clicks).toFixed(1)}).join('');
-  var area=line+'L'+x(n-1)+','+y(0)+'L'+x(0)+','+y(0)+'Z';
-  var box=$('#pdChart');
-  box.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" tabindex="0" aria-label="Daily clicks, use the arrow keys to read each day">'+g+'<path d="'+area+'" fill="url(#gArea)"/><path class="ln" d="'+line+'" style="--len:3000;fill:none;stroke:url(#gLine);stroke-width:2.2"/><line class="xh" id="pdX" x1="0" x2="0" y1="'+pt+'" y2="'+(H-pb)+'" opacity="0"/><circle id="pdDot" r="4.5" fill="#0b0b0d" stroke="#fff" stroke-width="1.8" opacity="0"/><rect class="hit" x="'+pl+'" y="0" width="'+(W-pl-pr)+'" height="'+H+'"/></svg><div class="pd-tip" id="pdTip"></div>';
-  var svg=$('svg',box),tip=$('#pdTip'),X=$('#pdX'),D=$('#pdDot'),cur=-1;
-  function show(i){i=Math.max(0,Math.min(n-1,i));cur=i;var d=days[i],cx=x(i),cy=y(d.clicks);
-    X.setAttribute('x1',cx);X.setAttribute('x2',cx);X.setAttribute('opacity',1);D.setAttribute('cx',cx);D.setAttribute('cy',cy);D.setAttribute('opacity',1);
-    tip.innerHTML='<span class="muted">'+d.d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})+'</span><b>'+nf.format(d.clicks)+' clicks</b><span class="muted">'+d.signups+' sign-ups · '+cad.format(d.sales)+'</span>';
-    var r=svg.getBoundingClientRect(),sc=r.width/W,lx=cx*sc,ty=cy*sc;tip.style.opacity=1;
-    var tw=tip.offsetWidth;tip.style.transform='translate('+Math.max(0,Math.min(r.width-tw,lx-tw/2)).toFixed(0)+'px,'+Math.max(0,ty-74).toFixed(0)+'px)'}
-  function hide(){tip.style.opacity=0;X.setAttribute('opacity',0);D.setAttribute('opacity',0)}
-  svg.addEventListener('pointermove',function(e){var r=svg.getBoundingClientRect(),vx=(e.clientX-r.left)/r.width*W;show(Math.round((vx-pl)/((W-pl-pr)/Math.max(1,n-1))))});
-  svg.addEventListener('pointerleave',hide);svg.addEventListener('blur',hide);
-  svg.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowLeft'){show((cur<0?n-1:cur)+(e.key==='ArrowRight'?1:-1));e.preventDefault()}});
-  svg.addEventListener('focus',function(){show(n-1)});
-}
-$('#platGrid').addEventListener('click',function(e){var b=e.target.closest('[data-plat]');if(!b)return;var i=+b.dataset.plat;openPlat=openPlat===i?null:i;
-  $$('#platGrid .plat').forEach(function(x){var on=+x.dataset.plat===openPlat;x.setAttribute('aria-expanded',String(on));$('.more',x).textContent=(on?'CLOSE DETAIL':'OPEN DETAIL')+' ›'});
-  window.__pep3d&&window.__pep3d.press(b);sfx(520);
-  platDetail(openPlat);if(openPlat!==null)$('#platDetail').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})});
-$('#platDetail').addEventListener('click',function(e){
-  var pb=e.target.closest('#pdPer button');if(pb){platPeriod=+pb.dataset.n;platDetail(openPlat);return}
-  if(e.target.closest('#pdClose')){openPlat=null;platDetail(null);$$('#platGrid .plat').forEach(function(x){x.setAttribute('aria-expanded','false');$('.more',x).textContent='OPEN DETAIL ›'})}});
 
 /* ---------- SHARED V3 HELPERS ---------- */
 function addDays(iso,n){var d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
@@ -2954,7 +2304,7 @@ var _refer=RENDER.refer;RENDER.refer=function(){_refer();
 };
 
 /* ---------- LOTS + LAB REPORTS ---------- */
-var LOTS={'BPC-157':['BP-2610-A','Oct 02, 2026',60],'GHK-Cu':['GH-2609-C','Sep 18, 2026',48],'NAD+':['NA-2609-B','Sep 11, 2026',40],'Ipamorelin':['IP-2608-A','Aug 21, 2026',36],'TB-500':['TB-2607-B','Jul 30, 2026',40],'Epitalon':['EP-2609-A','Sep 04, 2026',30],'Tirzepatide':['TZ-2610-B','Oct 09, 2026',36],'Retatrutide':['RT-2611-A','Nov 06, 2026 (due)',30]};
+var LOTS={'BPC-157':['BP-2610-A','Oct 02, 2026'],'GHK-Cu':['GH-2609-C','Sep 18, 2026'],'NAD+':['NA-2609-B','Sep 11, 2026'],'Ipamorelin':['IP-2608-A','Aug 21, 2026'],'TB-500':['TB-2607-B','Jul 30, 2026'],'Epitalon':['EP-2609-A','Sep 04, 2026'],'Tirzepatide':['TZ-2610-B','Oct 09, 2026'],'Retatrutide':['RT-2611-A','Nov 06, 2026 (due)']};
 function labFor(lot){return S.labs[lot]}
 function labBox(lot){var f=labFor(lot);
   if(f)return '<div class="labbox on"><div class="lh"><span>LAB REPORT · ON FILE</span><span class="tag-s">SAMPLE</span></div><div class="filecell">'+(safeImg(f.url)&&/^image\//.test(f.type)?'<img class="thumb" src="'+safeImg(f.url)+'" alt="Lab report for lot '+esc(lot)+'">':'<span class="fi">'+(/pdf/.test(f.type)?'PDF':'FILE')+'</span>')+'<span>'+esc(f.name)+'</span></div><p>Uploaded by PEPTICITY · Lab: [lab name] · Test date: [date] · Identity and purity: [as printed on the report]</p><button class="btn sm" type="button" data-view-lab="'+esc(lot)+'">VIEW REPORT</button></div>';
@@ -2967,75 +2317,12 @@ RENDER.lots=function(){
 function viewLab(lot){var f=labFor(lot);if(!f)return;
   openSheet('LOT '+lot+' · LAB REPORT','<div class="fgrid"><div class="w3">'+(safeImg(f.url)&&/^image\//.test(f.type)?'<img src="'+safeImg(f.url)+'" alt="Lab report for lot '+esc(lot)+'" style="width:100%;max-height:60vh;object-fit:contain;border:1px solid var(--hair2);background:#000">':'<div class="labbox on"><div class="filecell"><span class="fi">PDF</span><span>'+esc(f.name)+'</span></div><p>The PDF opens here in the live build.</p></div>')+'</div><p class="w3 muted" style="margin:0">Shown exactly as the lab issued it. Lot '+esc(lot)+' only.</p><div class="acts"><span></span><button class="btn" type="button" data-close>CLOSE</button></div></div>')}
 document.addEventListener('click',function(e){var b=e.target.closest('[data-view-lab]');if(b)viewLab(b.dataset.viewLab)});
-RENDER.olab=function(){
-  var keys=Object.keys(LOTS),on=keys.filter(function(k){return labFor(LOTS[k][0])}).length;
-  $('#labCount').textContent=on+' of '+keys.length+' lots have a report';
-  $('#labTbl').innerHTML='<div class="tr-row hd"><span>PRODUCT</span><span>LOT</span><span class="num">UNITS</span><span>RECEIVED</span><span>REPORT</span><span></span></div>'+
-   keys.map(function(k){var L=LOTS[k],f=labFor(L[0]),p=findP(k);return '<div class="tr-row"><span class="pn">'+esc(k)+'<small>'+esc(p?p.size:'')+'</small></span><span data-l="Lot" style="font:700 12px var(--fmetal);letter-spacing:.1em">'+L[0]+'</span><span class="num" data-l="Units">'+L[2]+'</span><span data-l="Received">'+L[1]+'</span>'+
-    '<span data-l="Report">'+(f?'<span class="filecell">'+(safeImg(f.url)&&/^image\//.test(f.type)?'<img class="thumb" src="'+safeImg(f.url)+'" alt="">':'<span class="fi">'+(/pdf/.test(f.type)?'PDF':'FILE')+'</span>')+'<span>'+esc(f.name)+'</span></span>':'<span class="chip low">NEEDED</span>')+'</span>'+
-    '<span data-l="Upload"><label class="btn sm upl'+(f?'':' chrome')+'">'+(f?'REPLACE':'UPLOAD REPORT')+'<input type="file" accept="application/pdf,image/*" data-lot="'+L[0]+'" aria-label="Upload lab report for lot '+L[0]+'"></label></span></div>'}).join('');
-};
-$('#labTbl').addEventListener('change',function(e){var inp=e.target.closest('[data-lot]');if(!inp||!inp.files[0])return;var f=inp.files[0],lot=inp.dataset.lot;
-  var rec={name:f.name,type:f.type||'',size:f.size,at:Date.now(),url:null};
-  var done=function(){S.labs[lot]=rec;save();RENDER.olab();var row=$('[data-lot="'+lot+'"]');if(row)row.closest('.tr-row').classList.add('flash');toast('Report attached to lot '+lot+' · clients see it in their LOT LIBRARY')};
-  if(/^image\//.test(rec.type)){var rd=new FileReader();rd.onload=function(){rec.url=rd.result;done()};rd.readAsDataURL(f)}else done()});
-
 /* ---------- TRUST + PRIVACY ---------- */
 RENDER.trust=function(){bindTilt()};
 $('#toGrace').addEventListener('click',function(){setTab('client','cmsg')});
 $('#dlData').addEventListener('click',function(){morph(this,'READY',function(){toast('Demo: in the live build your data downloads as a file')})});
 $('#delData').addEventListener('click',function(){openSheet('DELETE MY DATA','<div class="fgrid"><p class="w3" style="margin:0;color:var(--ink2)">We delete your account, messages and saved details. Order records we must keep for tax are kept for [the legal period] and then deleted.</p><p class="w3 muted" style="margin:0">[Privacy officer] confirms by email within [X] days.</p><div class="acts"><button class="btn" type="button" data-close>KEEP MY DATA</button><button class="btn chrome cut" type="button" id="delGo">REQUEST DELETION</button></div></div>',function(){
   $('#delGo').addEventListener('click',function(){closeSheet();toast('Deletion request logged (demo) · nothing was deleted')})})});
-
-/* ---------- OWNER: SURPRISE & DELIGHT DESK ---------- */
-var DESK=[['jordan','Jordan M.','6th order since March','Reorders every few weeks'],['priya','Priya S.','Brought 2 friends who ordered','Top referrer this month'],['elena','Elena R.','Moving to Victoria next month','Said so in messages, Oct 25'],['aaron','Aaron B.','One year since the first order','Anniversary: Nov 2'],['devon','Devon K.','Reached RESERVE this month','First month in the tier']];
-var GIFTS=['Handwritten note','Free express upgrade','Anniversary card','Upgraded gift packaging'];
-RENDER.delight=function(){
-  var sent=Object.keys(S.sent).length;
-  countUp($('#dkWeek'),DESK.length);countUp($('#dkSent'),7+sent);countUp($('#dkUp'),3+Object.keys(S.sent).filter(function(k){return /express/i.test(S.sent[k].g)}).length);
-  $('#deskTbl').innerHTML='<div class="tr-row hd"><span>CLIENT</span><span>WHY THIS WEEK</span><span>GESTURE</span><span></span></div>'+DESK.map(function(d,i){var s=S.sent[d[0]];
-    return '<div class="tr-row"><span class="pn">'+esc(d[1])+'<small>'+(CUST.find(function(c){return c[0]===d[1]})||['','—'])[1]+'</small></span><span class="why" data-l="Why">'+esc(d[2])+'<small>'+esc(d[3])+'</small></span>'+
-     '<span data-l="Gesture"><label class="sr" for="g'+i+'">Gesture for '+esc(d[1])+'</label><select class="inp" id="g'+i+'" '+(s?'disabled':'')+'>'+GIFTS.map(function(g,j){return '<option'+((s?s.g===g:j===(i%2?1:0))?' selected':'')+'>'+g+'</option>'}).join('')+'</select></span>'+
-     '<span>'+(s?'<span class="sentc">SENT · '+esc(s.at)+'</span>':'<button class="btn chrome sm" type="button" data-note="'+i+'">SEND NOTE</button>')+'</span></div>'}).join('');
-};
-$('#deskTbl').addEventListener('click',function(e){var b=e.target.closest('[data-note]');if(!b)return;var i=+b.dataset.note,d=DESK[i],g=$('#g'+i).value,first=d[1].split(' ')[0];
-  var draft={'Handwritten note':'Hi '+first+', a quick note to say thank you for being part of PEPTICITY. It means a lot. Grace','Free express upgrade':'Hi '+first+', your next order ships express, on me. Thank you. Grace','Anniversary card':'Hi '+first+', one year since your first order. Thank you for sticking with us. Grace','Upgraded gift packaging':'Hi '+first+', your next parcel comes in our gift box. Thank you. Grace'}[g];
-  openSheet('NOTE TO '+d[1].toUpperCase(),'<form id="ntForm" class="fgrid" novalidate><div class="field w3"><label for="ntTxt">'+esc(g.toUpperCase())+'</label><textarea class="inp" id="ntTxt" rows="4" style="resize:vertical">'+esc(draft)+'</textarea></div><p class="w3 muted" style="margin:0">Goes out with the next parcel, or by email if nothing is shipping this week.</p><div class="acts"><span class="muted" id="ntErr" role="alert"></span>'+morphBtn('SEND NOTE','ntBtn','cut').replace('type="button"','type="submit"')+'</div></form>',function(){
-    $('#ntForm').addEventListener('submit',function(ev){ev.preventDefault();if(!$('#ntTxt').value.trim()){$('#ntErr').textContent='Write a line or two first.';return}
-      morph($('#ntBtn'),'SENT',function(){S.sent[d[0]]={g:g,at:'Oct 29'};save();setTimeout(function(){closeSheet();RENDER.delight()},600);toast('Note queued for '+d[1]+' (demo)')})})});
-});
-
-/* ---------- OWNER: DROPS + TIER PERKS ---------- */
-RENDER.odrops=function(){
-  $('#tierKpis').innerHTML='<div class="glass card kpi big tilt"><div class="lab">MEMBERS · ALL TIERS</div><div class="val" id="tk0">0</div><div class="foot">sample counts</div></div>'+
-   '<div class="glass card kpi tilt"><div class="lab">MEMBER</div><div class="val" id="tk1">0</div><div class="foot">from first order</div></div>'+
-   '<div class="glass card kpi tilt"><div class="lab">RESERVE</div><div class="val" id="tk2">0</div><div class="foot">from '+cad.format(TIERS[1].min)+' spent</div></div>'+
-   '<div class="glass card kpi tilt"><div class="lab">PRIVATE</div><div class="val" id="tk3">0</div><div class="foot">from '+cad.format(TIERS[2].min)+' spent</div></div>';
-  countUp($('#tk0'),143);countUp($('#tk1'),96);countUp($('#tk2'),38);countUp($('#tk3'),9);
-  var sel=$('#dpP');if(!sel.options.length){sel.innerHTML=P.filter(function(p){return !/Bacteriostatic/.test(p.name)}).map(function(p){return '<option'+(p.name==='TB-500'?' selected':'')+'>'+esc(p.name)+'</option>'}).join('');
-    var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset()+60);$('#dpOpen').value=d.toISOString().slice(0,16)}
-  dpPreview();
-  var now=Date.now(),all=allDrops();$('#dpCount').textContent=all.length+' drops';
-  $('#dpList').innerHTML=all.map(function(d){var st=dropState(d,now);return '<div class="iss"><b>'+esc(d.p)+' · '+d.q+' units</b><span>'+(st.k==='live'?'live · members-only':st.k==='soon'?'opens '+new Date(d.open).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'now public')+' · '+esc(d.tiers.join(' + '))+'</span></div>'}).join('');
-  var pk=perks();
-  $('#perkCols').innerHTML=TIERS.map(function(t){return '<div class="perkcol"><h3 class="h3">'+t.k+'</h3><div class="cnt">'+(t.min?'from '+cad.format(t.min):'on joining')+'</div>'+PERK_CAT.map(function(n,i){return '<label class="sq"><input type="checkbox" data-pk="'+t.k+'" value="'+i+'"'+(pk[t.k].indexOf(i)>-1?' checked':'')+'><span class="bx"></span>'+esc(n)+'</label>'}).join('')+'</div>'}).join('');
-  $('#thrTxt').textContent='MEMBER on joining · RESERVE '+cad.format(TIERS[1].min)+' · PRIVATE '+cad.format(TIERS[2].min);
-  bindTilt();
-};
-function dpPreview(){var p=findP($('#dpP').value);if(!p)return;var q=parseInt($('#dpQ').value,10)||0,h=+$('#dpH').value;
-  $('#dpPrev').innerHTML='<p class="h3" style="margin:4px 0 10px">WHAT MEMBERS WILL SEE</p><div class="drop-card" style="padding:14px;border:1px dashed var(--hair2);background:rgba(0,0,0,.2)">'+bottle(p,{sm:1,owned:1,nocap:1})+'<div><span class="tag-s">MEMBERS-ONLY · PREVIEW</span><div class="pn2" style="margin-top:8px">'+esc(p.name)+'<small>'+esc(p.size)+' · '+q+' units held for members</small></div><div class="when" style="margin-top:10px">WINDOW LENGTH</div><div class="cd">'+cdHtml(h*3600e3)+'</div></div></div>'}
-['change','input'].forEach(function(ev){$('#dropForm').addEventListener(ev,function(e){if(e.target.id==='dpP'||e.target.id==='dpQ'||e.target.id==='dpH')dpPreview()})});
-$('#dropForm').addEventListener('submit',function(e){e.preventDefault();var q=wholeIn($('#dpQ').value,1,10000),err=$('#dpErr'),tiers=[];
-  if($('#dpRes').checked)tiers.push('RESERVE');if($('#dpPriv').checked)tiers.push('PRIVATE');
-  if(!(q>0)){badField($('#dpQ'),'Add how many units are held for members (1 to 10,000).',err);return}
-  if($('#dpOpen').value&&new Date($('#dpOpen').value).getTime()<Date.now()-6e4){badField($('#dpOpen'),'Pick an opening time from now on.',err);return}
-  if(!tiers.length){err.textContent='Pick at least one tier for first access.';return}
-  var op=$('#dpOpen').value?new Date($('#dpOpen').value).getTime():Date.now();if(isNaN(op))op=Date.now();
-  err.textContent='';
-  morph($('#dpBtn'),'PUBLISHED',function(){S.drops.unshift({id:'u'+Date.now(),p:$('#dpP').value,q:q,h:+$('#dpH').value,open:op,tiers:tiers});save();RENDER.odrops();toast('Drop published · members see it in PRIVATE DROPS')});
-});
-$('#perkBtn').addEventListener('click',function(){var o={MEMBER:[],RESERVE:[],PRIVATE:[]};$$('#perkCols [data-pk]').forEach(function(c){if(c.checked)o[c.dataset.pk].push(+c.value)});
-  morph(this,'SAVED',function(){S.perks=o;save();toast('Tier perks saved · clients see them in MEMBERSHIP')})});
 
 /* ---------- SILHOUETTES: give every glass pane its own cut, never two alike ---------- */
 var shapeN=0;
@@ -3174,14 +2461,11 @@ if(!RM)addEventListener('scroll',function(){target=scrollY*.12+nudge;kickSpin()}
 var _sv=setView;setView=function(v,h){_sv(v,h);if(!RM){nudge+=v==='client'?45:-45;target=scrollY*.12+nudge;kickSpin()}window.__pepView=v};
 
 /* ---------- INIT ---------- */
-$('#todayStr').textContent=new Date().toLocaleDateString('en-CA',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 h3dSync();bindTilt();sndUI();shapeAll();
 RENDER.cmsg();
 var h=location.hash.slice(1);
-setView(h==='client'?'client':'owner',true);
-if(!location.hash){try{history.replaceState(null,'','#owner')}catch(e){}}
-if(h!=='owner'){addEventListener('load',function(){setTimeout(function(){setView('client')},400)})}
-window.__pep={S:S,P:P,setView:setView,setTab:setTab};
+setView();
+window.__pep={setTab:setTab};
 })();
 </script>
 <script type="application/json" id="glyph-data">{"kern":{"LA":-150,"AC":-90,"CK":-60,"BL":-20,"TA":-110,"AT":-110,"LT":-90,"TY":-40,"AV":-120,"VA":-120,"PA":-80},"regular":{"A":{"adv":874,"p":[{"o":[[421.8,400.0],[393.3,365.3],[437.0,445.7],[679.0,0.0],[829.0,0.0],[437.0,722.0],[45.0,0.0],[195.0,0.0],[342.0,270.8],[489.0,0.0],[639.0,0.0]],"h":[]}]},"B":{"adv":778,"p":[{"o":[[523.0,420.0],[310.1,420.0],[181.0,280.0],[523.0,280.0],[533.0,279.3],[542.7,277.2],[552.1,273.7],[560.8,268.9],[568.8,262.9],[575.9,255.8],[584.4,243.5],[588.6,234.5],[591.4,224.9],[592.8,215.0],[592.8,205.0],[591.4,195.1],[588.6,185.5],[581.9,172.2],[575.9,164.2],[568.8,157.1],[560.8,151.1],[547.5,144.4],[537.9,141.6],[528.0,140.2],[175.0,140.0],[45.0,0.0],[538.0,0.5],[567.6,4.8],[596.4,13.2],[623.6,25.7],[648.8,41.9],[660.5,51.3],[681.7,72.5],[699.7,96.5],[714.0,122.8],[724.5,150.8],[728.2,165.4],[732.5,195.0],[732.5,225.0],[728.2,254.6],[724.5,269.2],[714.0,297.2],[707.3,310.6],[691.1,335.8],[679.4,350.0],[691.1,364.2],[699.7,376.5],[714.0,402.8],[719.8,416.6],[728.2,445.4],[732.5,475.0],[733.0,490.0],[730.9,519.9],[724.5,549.2],[714.0,577.2],[707.3,590.6],[691.1,615.8],[671.5,638.5],[648.8,658.1],[623.6,674.3],[610.2,681.0],[582.2,691.5],[552.9,697.9],[523.0,700.0],[45.0,700.0],[175.0,560.0],[523.0,560.0],[533.0,559.3],[542.7,557.2],[556.5,551.4],[564.9,546.0],[575.9,535.8],[581.9,527.8],[588.6,514.5],[591.4,504.9],[593.0,490.0],[592.3,480.0],[590.2,470.3],[586.7,460.9],[581.9,452.2],[575.9,444.2],[564.9,434.0],[552.1,426.3],[542.7,422.8],[533.0,420.7]],"h":[]}]},"C":{"adv":730,"p":[{"o":[[685.0,700.0],[295.0,700.0],[277.2,699.4],[259.4,697.5],[241.9,694.3],[224.6,689.9],[207.6,684.2],[191.1,677.4],[175.2,669.4],[159.8,660.3],[145.2,650.1],[131.3,638.9],[118.2,626.8],[106.1,613.7],[94.9,599.8],[84.7,585.2],[75.6,569.8],[67.6,553.9],[60.8,537.4],[55.1,520.4],[50.7,503.1],[47.5,485.6],[45.6,467.8],[45.0,450.0],[45.6,232.2],[47.5,214.4],[50.7,196.9],[55.1,179.6],[60.8,162.6],[67.6,146.1],[75.6,130.2],[84.7,114.8],[94.9,100.2],[106.1,86.3],[118.2,73.2],[131.3,61.1],[145.2,49.9],[159.8,39.7],[175.2,30.6],[191.1,22.6],[207.6,15.8],[224.6,10.1],[241.9,5.7],[259.4,2.5],[277.2,0.6],[295.0,0.0],[685.0,0.0],[555.0,140.0],[259.3,140.2],[242.5,143.2],[231.8,147.2],[221.7,152.7],[208.4,163.4],[197.7,176.7],[192.2,186.8],[186.8,203.0],[185.2,214.3],[185.0,480.0],[186.8,497.0],[190.0,508.0],[194.8,518.3],[204.5,532.4],[212.6,540.5],[226.7,550.2],[237.0,555.0],[248.0,558.2],[265.0,560.0],[555.0,560.0]],"h":[]}]},"D":{"adv":834,"p":[{"o":[[45.0,700.0],[45.0,0.0],[549.0,0.0],[566.1,0.6],[583.2,2.4],[600.0,5.5],[616.6,9.7],[632.9,15.1],[648.7,21.7],[664.0,29.4],[678.8,38.1],[692.8,47.9],[706.2,58.6],[718.7,70.3],[730.4,82.8],[741.1,96.2],[750.9,110.2],[759.6,125.0],[767.3,140.3],[773.9,156.1],[779.3,172.4],[783.5,189.0],[786.6,205.8],[788.4,222.9],[789.0,240.0],[788.4,477.1],[786.6,494.2],[783.5,511.0],[779.3,527.6],[773.9,543.9],[767.3,559.7],[759.6,575.0],[750.9,589.8],[741.1,603.8],[730.4,617.2],[718.7,629.7],[706.2,641.4],[692.8,652.1],[678.8,661.9],[664.0,670.6],[648.7,678.3],[632.9,684.9],[616.6,690.3],[600.0,694.5],[583.2,697.6],[566.1,699.4]],"h":[[[549.0,140.0],[185.0,140.0],[185.0,560.0],[556.1,559.7],[570.3,557.7],[590.5,551.0],[608.9,540.1],[624.6,525.5],[633.1,514.1],[640.0,501.5],[646.7,481.3],[648.7,467.1],[649.0,240.0],[646.7,218.7],[642.7,205.1],[633.1,185.9],[624.6,174.5],[614.5,164.4],[596.9,152.2],[583.9,146.3],[563.2,141.0]]]}]},"E":{"adv":650,"p":[{"o":[[475.0,140.0],[175.0,140.0],[45.0,0.0],[605.0,0.0]],"h":[]},{"o":[[475.0,560.0],[605.0,700.0],[45.0,700.0],[175.0,560.0]],"h":[]},{"o":[[479.0,420.0],[171.0,420.0],[101.0,350.0],[171.0,280.0],[479.0,280.0],[549.0,350.0]],"h":[]}]},"F":{"adv":730,"p":[{"o":[[685.0,700.0],[235.0,700.0],[208.0,698.1],[181.5,692.3],[156.1,682.8],[143.9,676.8],[121.1,662.1],[110.6,653.6],[91.4,634.4],[75.2,612.7],[62.2,588.9],[57.0,576.4],[49.3,550.4],[45.5,523.6],[45.0,0.0],[185.0,0.0],[185.1,233.6],[187.0,244.1],[191.1,254.0],[197.2,262.7],[205.0,270.0],[217.5,276.8],[227.9,279.5],[235.0,280.0],[499.0,280.0],[629.0,420.0],[235.0,420.0],[220.9,422.0],[208.0,427.9],[199.6,434.6],[191.1,446.0],[186.1,459.4],[185.0,470.0],[185.5,517.1],[189.5,530.8],[197.2,542.7],[205.0,550.0],[214.2,555.5],[224.4,558.9],[231.4,559.9],[555.0,560.0]],"h":[]}]},"G":{"adv":834,"p":[{"o":[[789.0,700.0],[221.4,699.5],[194.6,695.7],[181.5,692.3],[156.1,682.8],[132.3,669.8],[110.6,653.6],[91.4,634.4],[82.9,623.9],[68.2,601.1],[62.2,588.9],[57.0,576.4],[49.3,550.4],[45.5,523.6],[45.0,510.0],[45.5,176.4],[49.3,149.6],[52.7,136.5],[62.2,111.1],[75.2,87.3],[91.4,65.6],[100.6,55.6],[121.1,37.9],[143.9,23.2],[156.1,17.2],[168.6,12.0],[194.6,4.3],[221.4,0.5],[235.0,0.0],[612.6,0.5],[639.4,4.3],[652.5,7.7],[677.9,17.2],[701.7,30.2],[723.4,46.4],[742.6,65.6],[758.8,87.3],[771.8,111.1],[777.0,123.6],[784.7,149.6],[787.1,163.0],[789.0,190.0],[789.0,400.0],[421.0,400.0],[551.0,260.0],[599.0,260.0],[609.6,258.9],[616.5,256.8],[626.0,252.1],[631.7,247.8],[639.0,240.0],[644.5,230.8],[648.5,217.1],[649.0,190.0],[647.9,179.4],[644.5,169.2],[636.8,157.3],[629.0,150.0],[619.8,144.5],[609.6,141.1],[599.0,140.0],[235.0,140.0],[224.4,141.1],[211.0,146.1],[202.3,152.2],[197.2,157.3],[191.1,166.0],[188.2,172.5],[185.1,186.4],[185.1,513.6],[187.0,524.1],[189.5,530.8],[192.9,537.0],[199.6,545.4],[208.0,552.1],[214.2,555.5],[224.4,558.9],[231.4,559.9],[659.0,560.0]],"h":[]}]},"H":{"adv":786,"p":[{"o":[[45.0,0.0],[185.0,0.0],[185.0,280.0],[601.0,280.0],[601.0,0.0],[741.0,0.0],[741.0,700.0],[601.0,700.0],[601.0,420.0],[185.0,420.0],[185.0,700.0],[45.0,700.0]],"h":[]}]},"I":{"adv":230,"p":[{"o":[[45.0,0.0],[185.0,0.0],[185.0,700.0],[45.0,700.0]],"h":[]}]},"J":{"adv":714,"p":[{"o":[[529.0,700.0],[529.0,190.0],[527.0,175.9],[521.1,163.0],[511.7,152.2],[503.0,146.1],[493.1,142.0],[482.6,140.1],[175.0,140.0],[45.0,0.0],[479.0,0.0],[506.0,1.9],[532.5,7.7],[545.4,12.0],[570.1,23.2],[581.7,30.2],[603.4,46.4],[613.4,55.6],[622.6,65.6],[638.8,87.3],[651.8,111.1],[657.0,123.6],[664.7,149.6],[668.5,176.4],[669.0,700.0]],"h":[]}]},"K":{"adv":730,"p":[{"o":[[252.6,436.2],[233.0,456.0],[185.0,456.0],[185.0,700.0],[45.0,700.0],[45.0,0.0],[185.0,0.0],[185.0,330.0],[203.0,330.0],[512.5,0.0],[685.0,0.0],[288.5,400.0],[389.5,400.0],[685.0,700.0],[512.5,700.0]],"h":[]}]},"L":{"adv":666,"p":[{"o":[[45.0,700.0],[45.0,250.0],[45.6,232.2],[47.5,214.4],[50.7,196.9],[55.1,179.6],[60.8,162.6],[67.6,146.1],[75.6,130.2],[84.7,114.8],[94.9,100.2],[106.1,86.3],[118.2,73.2],[131.3,61.1],[145.2,49.9],[159.8,39.7],[175.2,30.6],[191.1,22.6],[207.6,15.8],[224.6,10.1],[241.9,5.7],[259.4,2.5],[277.2,0.6],[295.0,0.0],[523.0,0.0],[621.0,140.0],[259.3,140.2],[242.5,143.2],[226.7,149.8],[217.1,156.0],[208.4,163.4],[197.7,176.7],[192.2,186.8],[188.2,197.5],[185.8,208.6],[185.0,220.0],[185.0,700.0]],"h":[]}]},"M":{"adv":986,"p":[{"o":[[45.0,700.0],[45.0,0.0],[185.0,0.0],[185.0,494.2],[405.5,170.0],[580.5,170.0],[801.0,494.2],[801.0,0.0],[941.0,0.0],[941.0,700.0],[766.0,700.0],[493.0,298.6],[220.0,700.0]],"h":[]}]},"N":{"adv":802,"p":[{"o":[[45.0,700.0],[45.0,0.0],[185.0,0.0],[185.0,517.5],[582.0,0.0],[757.0,0.0],[757.0,700.0],[617.0,700.0],[617.0,182.5],[220.0,700.0]],"h":[]}]},"O":{"adv":866,"p":[{"o":[[45.0,190.0],[45.5,176.4],[49.3,149.6],[52.7,136.5],[62.2,111.1],[75.2,87.3],[82.9,76.1],[100.6,55.6],[110.6,46.4],[121.1,37.9],[143.9,23.2],[156.1,17.2],[181.5,7.7],[194.6,4.3],[221.4,0.5],[631.0,0.0],[658.0,1.9],[684.5,7.7],[697.4,12.0],[722.1,23.2],[744.9,37.9],[755.4,46.4],[774.6,65.6],[790.8,87.3],[797.8,98.9],[809.0,123.6],[813.3,136.5],[819.1,163.0],[820.5,176.4],[821.0,510.0],[819.1,537.0],[813.3,563.5],[803.8,588.9],[797.8,601.1],[783.1,623.9],[774.6,634.4],[755.4,653.6],[744.9,662.1],[722.1,676.8],[709.9,682.8],[684.5,692.3],[671.4,695.7],[644.6,699.5],[235.0,700.0],[208.0,698.1],[194.6,695.7],[181.5,692.3],[156.1,682.8],[132.3,669.8],[110.6,653.6],[91.4,634.4],[82.9,623.9],[68.2,601.1],[57.0,576.4],[49.3,550.4],[45.5,523.6]],"h":[[[185.1,186.4],[185.1,513.6],[187.0,524.1],[191.1,534.0],[197.2,542.7],[205.0,550.0],[214.2,555.5],[220.9,558.0],[235.0,560.0],[631.0,560.0],[641.6,558.9],[651.8,555.5],[663.7,547.8],[671.0,540.0],[676.5,530.8],[679.0,524.1],[681.0,510.0],[681.0,190.0],[679.9,179.4],[676.5,169.2],[668.8,157.3],[661.0,150.0],[648.5,143.2],[638.1,140.5],[631.0,140.0],[231.4,140.1],[220.9,142.0],[214.2,144.5],[205.0,150.0],[199.6,154.6],[195.0,160.0],[189.5,169.2],[187.0,175.9]]]}]},"P":{"adv":730,"p":[{"o":[[45.0,420.0],[45.0,0.0],[185.0,0.0],[185.0,280.0],[490.0,280.5],[519.6,284.8],[534.2,288.5],[562.2,299.0],[588.5,313.3],[612.5,331.3],[633.7,352.5],[643.1,364.2],[659.3,389.4],[671.8,416.6],[680.2,445.4],[684.5,475.0],[684.5,505.0],[682.9,519.9],[676.5,549.2],[666.0,577.2],[651.7,603.5],[633.7,627.5],[612.5,648.7],[588.5,666.7],[562.2,681.0],[534.2,691.5],[504.9,697.9],[475.0,700.0],[45.0,700.0],[175.0,560.0],[475.0,560.0],[489.9,558.4],[499.5,555.6],[512.8,548.9],[520.8,542.9],[527.9,535.8],[533.9,527.8],[540.6,514.5],[543.4,504.9],[545.0,490.0],[543.4,475.1],[540.6,465.5],[533.9,452.2],[527.9,444.2],[516.9,434.0],[508.5,428.6],[494.7,422.8],[485.0,420.7],[475.0,420.0],[196.0,420.0],[185.0,419.0],[185.0,420.0]],"h":[]}]},"Q":{"adv":866,"p":[{"o":[[658.0,1.9],[666.8,3.5],[669.0,0.0],[821.0,0.0],[821.0,44.4],[790.5,86.8],[797.8,98.9],[809.0,123.6],[816.7,149.6],[820.5,176.4],[820.5,523.6],[816.7,550.4],[813.3,563.5],[803.8,588.9],[790.8,612.7],[774.6,634.4],[755.4,653.6],[744.9,662.1],[722.1,676.8],[709.9,682.8],[684.5,692.3],[671.4,695.7],[658.0,698.1],[631.0,700.0],[221.4,699.5],[194.6,695.7],[181.5,692.3],[156.1,682.8],[132.3,669.8],[110.6,653.6],[91.4,634.4],[82.9,623.9],[68.2,601.1],[62.2,588.9],[57.0,576.4],[49.3,550.4],[45.5,523.6],[45.0,510.0],[45.5,176.4],[49.3,149.6],[52.7,136.5],[62.2,111.1],[75.2,87.3],[91.4,65.6],[100.6,55.6],[121.1,37.9],[143.9,23.2],[156.1,17.2],[181.5,7.7],[208.0,1.9],[235.0,0.0],[631.0,0.0]],"h":[[[637.0,300.0],[485.0,300.0],[583.1,140.0],[235.0,140.0],[220.9,142.0],[211.0,146.1],[199.6,154.6],[192.9,163.0],[188.2,172.5],[185.1,186.4],[185.0,510.0],[187.0,524.1],[191.1,534.0],[199.6,545.4],[208.0,552.1],[220.9,558.0],[231.4,559.9],[631.0,560.0],[641.6,558.9],[655.0,553.9],[663.7,547.8],[673.1,537.0],[679.0,524.1],[680.9,513.6],[681.0,238.9]]]}]},"R":{"adv":802,"p":[{"o":[[349.9,280.0],[607.0,0.0],[757.0,0.0],[499.9,280.0],[547.0,280.0],[576.9,282.1],[606.2,288.5],[634.2,299.0],[660.5,313.3],[684.5,331.3],[705.7,352.5],[715.1,364.2],[731.3,389.4],[743.8,416.6],[752.2,445.4],[756.5,475.0],[756.5,505.0],[754.9,519.9],[748.5,549.2],[738.0,577.2],[731.3,590.6],[715.1,615.8],[695.5,638.5],[672.8,658.1],[647.6,674.3],[634.2,681.0],[606.2,691.5],[591.6,695.2],[562.0,699.5],[547.0,700.0],[235.0,700.0],[208.0,698.1],[181.5,692.3],[156.1,682.8],[143.9,676.8],[121.1,662.1],[100.6,644.4],[82.9,623.9],[68.2,601.1],[62.2,588.9],[57.0,576.4],[49.3,550.4],[45.5,523.6],[45.0,0.0],[185.0,0.0],[185.0,230.0],[187.0,244.1],[191.1,254.0],[197.2,262.7],[205.0,270.0],[214.2,275.5],[227.9,279.5]],"h":[[[552.0,420.2],[185.0,420.0],[185.0,560.0],[547.0,560.0],[561.9,558.4],[571.5,555.6],[580.5,551.4],[588.9,546.0],[599.9,535.8],[605.9,527.8],[612.6,514.5],[615.4,504.9],[617.0,490.0],[616.3,480.0],[612.6,465.5],[608.4,456.5],[603.0,448.1],[592.8,437.1],[584.8,431.1],[571.5,424.4],[561.9,421.6]]]}]},"S":{"adv":810,"p":[{"o":[[765.0,700.0],[221.4,699.5],[194.6,695.7],[181.5,692.3],[156.1,682.8],[143.9,676.8],[121.1,662.1],[100.6,644.4],[82.9,623.9],[68.2,601.1],[62.2,588.9],[52.7,563.5],[49.3,550.4],[45.5,523.6],[45.0,470.0],[45.5,456.4],[49.3,429.6],[52.7,416.5],[62.2,391.1],[68.2,378.9],[82.9,356.1],[91.4,345.6],[110.6,326.4],[132.3,310.2],[156.1,297.2],[168.6,292.0],[194.6,284.3],[221.4,280.5],[575.0,280.0],[589.1,278.0],[599.0,273.9],[607.7,267.8],[617.1,257.0],[621.8,247.5],[624.9,233.6],[624.9,186.4],[623.9,179.4],[620.5,169.2],[617.1,163.0],[610.4,154.6],[602.0,147.9],[595.8,144.5],[589.1,142.0],[578.6,140.1],[175.0,140.0],[45.0,0.0],[588.6,0.5],[615.4,4.3],[628.5,7.7],[653.9,17.2],[666.1,23.2],[688.9,37.9],[709.4,55.6],[718.6,65.6],[734.8,87.3],[747.8,111.1],[757.3,136.5],[763.1,163.0],[764.5,176.4],[765.0,230.0],[763.1,257.0],[760.7,270.4],[753.0,296.4],[747.8,308.9],[741.8,321.1],[727.1,343.9],[718.6,354.4],[699.4,373.6],[688.9,382.1],[666.1,396.8],[641.4,408.0],[615.4,415.7],[588.6,419.5],[235.0,420.0],[220.9,422.0],[211.0,426.1],[202.3,432.2],[195.0,440.0],[188.2,452.5],[185.1,466.4],[185.1,513.6],[187.0,524.1],[189.5,530.8],[192.9,537.0],[199.6,545.4],[208.0,552.1],[214.2,555.5],[224.4,558.9],[231.4,559.9],[635.0,560.0]],"h":[]}]},"T":{"adv":746,"p":[{"o":[[701.0,700.0],[45.0,700.0],[175.0,560.0],[571.0,560.0]],"h":[]},{"o":[[303.0,538.0],[303.0,0.0],[443.0,0.0],[443.0,538.0]],"h":[]}]},"U":{"adv":802,"p":[{"o":[[45.0,700.0],[45.5,176.4],[49.3,149.6],[52.7,136.5],[62.2,111.1],[75.2,87.3],[91.4,65.6],[100.6,55.6],[121.1,37.9],[132.3,30.2],[156.1,17.2],[181.5,7.7],[208.0,1.9],[235.0,0.0],[567.0,0.0],[594.0,1.9],[620.5,7.7],[633.4,12.0],[658.1,23.2],[669.7,30.2],[691.4,46.4],[701.4,55.6],[719.1,76.1],[733.8,98.9],[739.8,111.1],[745.0,123.6],[752.7,149.6],[756.5,176.4],[757.0,700.0],[617.0,700.0],[617.0,190.0],[615.9,179.4],[612.5,169.2],[607.0,160.0],[602.4,154.6],[597.0,150.0],[587.8,144.5],[581.1,142.0],[570.6,140.1],[235.0,140.0],[227.9,140.5],[217.5,143.2],[208.0,147.9],[199.6,154.6],[195.0,160.0],[189.5,169.2],[187.0,175.9],[185.1,186.4],[185.0,700.0]],"h":[]}]},"V":{"adv":874,"p":[{"o":[[45.0,700.0],[437.0,-22.0],[829.0,700.0],[679.0,700.0],[437.0,254.3],[195.0,700.0]],"h":[]}]},"W":{"adv":1194,"p":[{"o":[[195.0,700.0],[45.0,700.0],[354.1,-22.0],[597.0,545.3],[839.9,-22.0],[1149.0,700.0],[999.0,700.0],[839.9,328.3],[680.8,700.0],[513.2,700.0],[354.1,328.3]],"h":[]}]},"X":{"adv":826,"p":[{"o":[[325.5,350.0],[45.0,0.0],[220.0,0.0],[413.0,240.8],[606.0,0.0],[781.0,0.0],[500.5,350.0],[781.0,700.0],[606.0,700.0],[413.0,459.2],[220.0,700.0],[45.0,700.0]],"h":[]}]},"Y":{"adv":778,"p":[{"o":[[319.0,330.0],[319.0,0.0],[459.0,0.0],[459.0,330.0],[471.5,330.0],[733.0,700.0],[568.0,700.0],[306.5,330.0]],"h":[]},{"o":[[375.5,465.8],[210.0,700.0],[45.0,700.0],[293.0,349.1]],"h":[]}]},"Z":{"adv":794,"p":[{"o":[[46.2,140.0],[45.0,140.0],[45.0,0.0],[749.0,0.0],[619.0,140.0],[231.2,140.0],[747.8,560.0],[749.0,560.0],[749.0,700.0],[45.0,700.0],[175.0,560.0],[562.8,560.0]],"h":[]}]},"0":{"adv":722,"p":[{"o":[[45.0,190.0],[46.9,163.0],[52.7,136.5],[62.2,111.1],[68.2,98.9],[75.2,87.3],[91.4,65.6],[100.6,55.6],[121.1,37.9],[143.9,23.2],[168.6,12.0],[194.6,4.3],[221.4,0.5],[500.6,0.5],[527.4,4.3],[540.5,7.7],[565.9,17.2],[578.1,23.2],[600.9,37.9],[611.4,46.4],[630.6,65.6],[639.1,76.1],[653.8,98.9],[665.0,123.6],[672.7,149.6],[676.5,176.4],[676.5,523.6],[672.7,550.4],[669.3,563.5],[659.8,588.9],[653.8,601.1],[639.1,623.9],[630.6,634.4],[611.4,653.6],[600.9,662.1],[578.1,676.8],[553.4,688.0],[527.4,695.7],[500.6,699.5],[235.0,700.0],[208.0,698.1],[181.5,692.3],[156.1,682.8],[143.9,676.8],[121.1,662.1],[100.6,644.4],[82.9,623.9],[68.2,601.1],[57.0,576.4],[49.3,550.4],[45.5,523.6]],"h":[[[185.1,186.4],[185.1,513.6],[187.0,524.1],[189.5,530.8],[192.9,537.0],[199.6,545.4],[208.0,552.1],[214.2,555.5],[224.4,558.9],[231.4,559.9],[487.0,560.0],[497.6,558.9],[507.8,555.5],[517.0,550.0],[522.4,545.4],[527.0,540.0],[532.5,530.8],[535.9,520.6],[536.9,513.6],[537.0,190.0],[535.9,179.4],[532.5,169.2],[527.0,160.0],[522.4,154.6],[517.0,150.0],[507.8,144.5],[501.1,142.0],[490.6,140.1],[231.4,140.1],[220.9,142.0],[214.2,144.5],[205.0,150.0],[199.6,154.6],[195.0,160.0],[189.5,169.2],[187.0,175.9]]]}]},"1":{"adv":466,"p":[{"o":[[281.0,548.8],[281.0,0.0],[421.0,0.0],[421.0,700.0],[281.0,700.0],[281.0,698.8],[45.0,560.0],[45.0,410.0]],"h":[]}]},"2":{"adv":738,"p":[{"o":[[45.0,700.0],[175.0,560.0],[510.1,559.5],[517.1,558.0],[527.0,553.9],[535.7,547.8],[540.8,542.7],[545.1,537.0],[549.8,527.5],[552.9,513.6],[552.9,466.4],[549.8,452.5],[543.0,440.0],[535.7,432.2],[527.0,426.1],[517.1,422.0],[503.0,420.0],[235.0,420.0],[208.0,418.1],[181.5,412.3],[156.1,402.8],[143.9,396.8],[121.1,382.1],[100.6,364.4],[91.4,354.4],[75.2,332.7],[62.2,308.9],[52.7,283.5],[49.3,270.4],[45.5,243.6],[45.0,230.0],[45.5,176.4],[49.3,149.6],[52.7,136.5],[62.2,111.1],[68.2,98.9],[75.2,87.3],[91.4,65.6],[100.6,55.6],[121.1,37.9],[143.9,23.2],[156.1,17.2],[181.5,7.7],[208.0,1.9],[235.0,0.0],[693.0,0.0],[563.0,140.0],[227.9,140.5],[217.5,143.2],[211.0,146.1],[205.0,150.0],[197.2,157.3],[191.1,166.0],[188.2,172.5],[185.1,186.4],[185.1,233.6],[188.2,247.5],[195.0,260.0],[202.3,267.8],[211.0,273.9],[220.9,278.0],[235.0,280.0],[503.0,280.0],[530.0,281.9],[543.4,284.3],[569.4,292.0],[594.1,303.2],[616.9,317.9],[637.4,335.6],[655.1,356.1],[669.8,378.9],[675.8,391.1],[685.3,416.5],[688.7,429.6],[691.1,443.0],[693.0,470.0],[692.5,523.6],[691.1,537.0],[685.3,563.5],[675.8,588.9],[669.8,601.1],[655.1,623.9],[646.6,634.4],[627.4,653.6],[616.9,662.1],[594.1,676.8],[581.9,682.8],[556.5,692.3],[530.0,698.1],[503.0,700.0]],"h":[]}]},"3":{"adv":738,"p":[{"o":[[45.0,700.0],[175.0,560.0],[506.6,559.9],[513.6,558.9],[523.8,555.5],[533.0,550.0],[538.4,545.4],[546.9,534.0],[551.9,520.6],[553.0,510.0],[553.0,470.0],[551.9,459.4],[548.5,449.2],[543.0,440.0],[535.7,432.2],[523.8,424.5],[513.6,421.1],[506.6,420.1],[375.0,420.0],[245.0,280.0],[503.0,280.0],[517.1,278.0],[527.0,273.9],[535.7,267.8],[543.0,260.0],[549.8,247.5],[552.9,233.6],[553.0,190.0],[552.5,182.9],[549.8,172.5],[545.1,163.0],[540.8,157.3],[535.7,152.2],[527.0,146.1],[520.5,143.2],[510.1,140.5],[175.0,140.0],[45.0,0.0],[516.6,0.5],[543.4,4.3],[569.4,12.0],[594.1,23.2],[605.7,30.2],[627.4,46.4],[646.6,65.6],[655.1,76.1],[669.8,98.9],[675.8,111.1],[681.0,123.6],[688.7,149.6],[691.1,163.0],[693.0,190.0],[692.5,523.6],[688.7,550.4],[685.3,563.5],[675.8,588.9],[662.8,612.7],[646.6,634.4],[627.4,653.6],[616.9,662.1],[594.1,676.8],[581.9,682.8],[556.5,692.3],[530.0,698.1],[503.0,700.0]],"h":[]}]},"4":{"adv":762,"p":[{"o":[[45.0,700.0],[45.5,376.4],[49.3,349.6],[52.7,336.5],[62.2,311.1],[75.2,287.3],[91.4,265.6],[110.6,246.4],[132.3,230.2],[156.1,217.2],[181.5,207.7],[194.6,204.3],[208.0,201.9],[235.0,200.0],[434.6,199.9],[445.1,198.0],[455.0,193.9],[463.7,187.8],[471.0,180.0],[476.5,170.8],[480.5,157.1],[481.0,0.0],[621.0,0.0],[621.0,182.4],[621.7,187.3],[624.5,192.9],[628.1,196.5],[633.7,199.3],[639.0,200.0],[717.0,340.0],[667.4,340.1],[653.5,343.2],[644.0,347.9],[635.6,354.6],[627.1,366.0],[623.0,375.9],[621.0,390.0],[621.0,700.0],[481.0,700.0],[480.9,386.4],[479.9,379.4],[476.5,369.2],[471.0,360.0],[466.4,354.6],[461.0,350.0],[451.8,344.5],[441.6,341.1],[434.6,340.1],[235.0,340.0],[224.4,341.1],[217.5,343.2],[208.0,347.9],[202.3,352.2],[197.2,357.3],[191.1,366.0],[188.2,372.5],[185.5,382.9],[185.0,700.0]],"h":[]}]},"5":{"adv":738,"p":[{"o":[[45.0,700.0],[45.0,280.0],[510.1,279.5],[523.8,275.5],[533.0,270.0],[540.8,262.7],[548.5,250.8],[551.9,240.6],[552.9,233.6],[553.0,190.0],[552.5,182.9],[549.8,172.5],[545.1,163.0],[540.8,157.3],[535.7,152.2],[527.0,146.1],[520.5,143.2],[510.1,140.5],[175.0,140.0],[45.0,0.0],[516.6,0.5],[543.4,4.3],[569.4,12.0],[594.1,23.2],[605.7,30.2],[627.4,46.4],[646.6,65.6],[655.1,76.1],[669.8,98.9],[675.8,111.1],[681.0,123.6],[688.7,149.6],[691.1,163.0],[693.0,190.0],[692.5,243.6],[691.1,257.0],[685.3,283.5],[675.8,308.9],[662.8,332.7],[646.6,354.4],[637.4,364.4],[616.9,382.1],[594.1,396.8],[569.4,408.0],[543.4,415.7],[530.0,418.1],[503.0,420.0],[235.0,420.0],[220.9,422.0],[211.0,426.1],[202.3,432.2],[195.0,440.0],[188.2,452.5],[185.1,466.4],[185.1,513.6],[187.0,524.1],[189.5,530.8],[192.9,537.0],[199.6,545.4],[208.0,552.1],[214.2,555.5],[227.9,559.5],[563.0,560.0],[693.0,700.0]],"h":[]}]},"6":{"adv":738,"p":[{"o":[[563.0,560.0],[693.0,700.0],[235.0,700.0],[208.0,698.1],[181.5,692.3],[156.1,682.8],[143.9,676.8],[121.1,662.1],[110.6,653.6],[91.4,634.4],[75.2,612.7],[62.2,588.9],[57.0,576.4],[49.3,550.4],[45.5,523.6],[45.0,190.0],[45.5,176.4],[49.3,149.6],[52.7,136.5],[62.2,111.1],[75.2,87.3],[82.9,76.1],[100.6,55.6],[110.6,46.4],[132.3,30.2],[156.1,17.2],[181.5,7.7],[208.0,1.9],[235.0,0.0],[516.6,0.5],[543.4,4.3],[556.5,7.7],[581.9,17.2],[594.1,23.2],[616.9,37.9],[627.4,46.4],[646.6,65.6],[662.8,87.3],[669.8,98.9],[681.0,123.6],[685.3,136.5],[691.1,163.0],[692.5,176.4],[692.5,243.6],[688.7,270.4],[681.0,296.4],[675.8,308.9],[669.8,321.1],[655.1,343.9],[646.6,354.4],[627.4,373.6],[605.7,389.8],[581.9,402.8],[556.5,412.3],[530.0,418.1],[503.0,420.0],[235.0,420.0],[224.4,421.1],[211.0,426.1],[199.6,434.6],[195.0,440.0],[189.5,449.2],[185.5,462.9],[185.1,513.6],[188.2,527.5],[192.9,537.0],[199.6,545.4],[208.0,552.1],[220.9,558.0],[235.0,560.0]],"h":[[[185.1,186.4],[185.1,233.6],[187.0,244.1],[189.5,250.8],[195.0,260.0],[205.0,270.0],[214.2,275.5],[227.9,279.5],[510.1,279.5],[523.8,275.5],[533.0,270.0],[538.4,265.4],[543.0,260.0],[548.5,250.8],[552.5,237.1],[552.9,186.4],[551.9,179.4],[548.5,169.2],[540.8,157.3],[533.0,150.0],[523.8,144.5],[510.1,140.5],[227.9,140.5],[217.5,143.2],[211.0,146.1],[205.0,150.0],[197.2,157.3],[191.1,166.0],[188.2,172.5]]]}]},"7":{"adv":730,"p":[{"o":[[499.4,560.0],[181.0,0.0],[366.0,0.0],[685.0,560.0],[685.0,700.0],[45.0,700.0],[175.0,560.0]],"h":[]}]},"8":{"adv":754,"p":[{"o":[[45.4,262.1],[45.4,157.9],[48.9,133.9],[55.7,110.6],[65.8,88.5],[72.0,78.1],[86.5,58.7],[94.8,49.8],[113.1,33.9],[123.1,27.0],[144.4,15.4],[167.1,6.9],[190.8,1.7],[202.9,0.4],[539.0,0.0],[563.2,1.7],[575.1,3.9],[598.4,10.7],[620.5,20.8],[640.9,33.9],[659.2,49.8],[675.1,68.1],[682.0,78.1],[693.6,99.4],[702.1,122.1],[707.3,145.8],[708.6,157.9],[709.0,250.0],[707.3,274.2],[705.1,286.1],[698.3,309.4],[688.2,331.5],[675.1,351.9],[657.7,371.6],[666.3,390.6],[670.1,402.1],[675.3,425.8],[677.0,450.0],[677.0,530.0],[675.3,554.2],[670.1,577.9],[661.6,600.6],[656.2,611.5],[643.1,631.9],[627.2,650.2],[608.9,666.1],[598.9,673.0],[577.6,684.6],[566.4,689.3],[554.9,693.1],[531.2,698.3],[507.0,700.0],[234.9,699.6],[222.8,698.3],[199.1,693.1],[187.6,689.3],[165.5,679.2],[155.1,673.0],[135.7,658.5],[118.5,641.3],[104.0,621.9],[97.8,611.5],[92.4,600.6],[83.9,577.9],[78.7,554.2],[77.4,542.1],[77.4,437.9],[80.9,413.9],[83.9,402.1],[87.7,390.6],[96.3,371.6],[78.9,351.9],[72.0,341.9],[60.4,320.6],[51.9,297.9],[46.7,274.2]],"h":[[[185.5,182.9],[185.1,233.6],[187.0,244.1],[189.5,250.8],[195.0,260.0],[205.0,270.0],[214.2,275.5],[227.9,279.5],[526.1,279.5],[539.8,275.5],[549.0,270.0],[554.4,265.4],[559.0,260.0],[564.5,250.8],[568.5,237.1],[568.9,186.4],[567.9,179.4],[564.5,169.2],[556.8,157.3],[549.0,150.0],[539.8,144.5],[526.1,140.5],[227.9,140.5],[217.5,143.2],[211.0,146.1],[199.6,154.6],[195.0,160.0],[189.5,169.2]],[[487.0,420.0],[267.0,420.0],[256.4,421.1],[249.5,423.2],[237.0,430.0],[229.2,437.3],[223.1,446.0],[219.0,455.9],[217.1,466.4],[217.0,510.0],[217.5,517.1],[220.2,527.5],[227.0,540.0],[237.0,550.0],[249.5,556.8],[263.4,559.9],[487.0,560.0],[497.6,558.9],[504.5,556.8],[514.0,552.1],[522.4,545.4],[529.1,537.0],[533.8,527.5],[536.9,513.6],[536.5,462.9],[533.8,452.5],[530.9,446.0],[524.8,437.3],[519.7,432.2],[514.0,427.9],[504.5,423.2],[497.6,421.1]]]}]},"9":{"adv":738,"p":[{"o":[[175.0,140.0],[45.0,0.0],[503.0,0.0],[530.0,1.9],[556.5,7.7],[581.9,17.2],[594.1,23.2],[616.9,37.9],[627.4,46.4],[646.6,65.6],[662.8,87.3],[675.8,111.1],[685.3,136.5],[688.7,149.6],[692.5,176.4],[693.0,510.0],[691.1,537.0],[688.7,550.4],[685.3,563.5],[675.8,588.9],[669.8,601.1],[655.1,623.9],[637.4,644.4],[627.4,653.6],[605.7,669.8],[581.9,682.8],[556.5,692.3],[530.0,698.1],[503.0,700.0],[221.4,699.5],[194.6,695.7],[181.5,692.3],[156.1,682.8],[143.9,676.8],[121.1,662.1],[110.6,653.6],[91.4,634.4],[75.2,612.7],[68.2,601.1],[62.2,588.9],[52.7,563.5],[46.9,537.0],[45.5,523.6],[45.5,456.4],[49.3,429.6],[57.0,403.6],[62.2,391.1],[68.2,378.9],[82.9,356.1],[91.4,345.6],[110.6,326.4],[132.3,310.2],[156.1,297.2],[181.5,287.7],[208.0,281.9],[235.0,280.0],[503.0,280.0],[513.6,278.9],[523.8,275.5],[530.0,272.1],[540.8,262.7],[548.5,250.8],[552.5,237.1],[552.9,186.4],[549.8,172.5],[545.1,163.0],[538.4,154.6],[530.0,147.9],[517.1,142.0],[503.0,140.0]],"h":[[[552.9,513.6],[552.9,466.4],[551.9,459.4],[548.5,449.2],[540.8,437.3],[533.0,430.0],[523.8,424.5],[510.1,420.5],[227.9,420.5],[214.2,424.5],[205.0,430.0],[199.6,434.6],[195.0,440.0],[189.5,449.2],[185.5,462.9],[185.1,513.6],[186.1,520.6],[189.5,530.8],[195.0,540.0],[205.0,550.0],[217.5,556.8],[227.9,559.5],[510.1,559.5],[523.8,555.5],[533.0,550.0],[538.4,545.4],[543.0,540.0],[548.5,530.8],[551.9,520.6]]]}]},".":{"adv":230,"p":[{"o":[[45.0,0.0],[185.0,0.0],[185.0,140.0],[45.0,140.0]],"h":[]}]},"-":{"adv":394,"p":[{"o":[[45.0,280.0],[349.0,280.0],[349.0,420.0],[45.0,420.0]],"h":[]}]},"LOGO_P":{"adv":970,"p":[{"o":[[45.0,0.0],[175.0,0.0],[175.1,247.9],[176.6,256.3],[181.3,266.6],[188.8,275.2],[195.8,280.1],[203.7,283.4],[215.0,285.0],[717.5,285.0],[747.0,287.1],[776.0,293.4],[803.7,303.8],[829.7,317.9],[853.4,335.7],[874.3,356.6],[892.1,380.3],[906.2,406.3],[911.9,420.0],[920.3,448.4],[924.5,477.7],[924.5,507.3],[922.9,522.0],[916.6,551.0],[906.2,578.7],[899.6,591.9],[883.6,616.9],[874.3,628.4],[853.4,649.3],[841.9,658.6],[816.9,674.6],[803.7,681.2],[776.0,691.6],[747.0,697.9],[732.3,699.5],[185.0,700.0],[165.1,698.6],[155.2,696.8],[136.1,691.2],[117.9,682.9],[101.1,672.1],[86.0,659.0],[79.2,651.7],[67.2,635.7],[62.1,627.1],[53.8,608.9],[48.2,589.8],[45.4,570.0]],"h":[[[717.5,415.0],[175.0,415.0],[175.0,570.0],[717.5,570.0],[728.5,569.2],[739.3,566.9],[749.7,563.0],[763.9,554.5],[772.3,547.3],[782.7,534.4],[788.0,524.7],[793.2,509.0],[795.0,492.5],[794.2,481.5],[790.1,465.4],[785.5,455.4],[779.5,446.1],[768.3,433.9],[759.4,427.3],[744.6,419.9],[728.5,415.8]]]}]}}}</script>
