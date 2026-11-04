@@ -246,7 +246,7 @@ def v2_overrides(G, k, s, R, r, d, W, th):
     up = BOX(-600, M0, w, CAP, 0, Rb, Rb, 0).difference(BOX(-600, M1, w - s, T0, 0, rc, rc, 0))
     lo = BOX(-600, 0, w, M1, 0, Rb, Rb, 0).difference(BOX(-600, B1, w - s, M0, 0, rc, rc, 0))
     keepT = Polygon([(0, CAP), (5000, CAP), (5000, M1), (cut + W(60), M1 - 1), (cut + W(60), T0), (cut, T0)])
-    keepM = Polygon([(cut, M0), (5000, M0), (5000, M1 + 1), (cut, M1 + 1)])  # owner 4 Nov: middle bar ends flat, in line with the inner ends of the top and bottom bars
+    keepM = Polygon([(W(170), M0), (5000, M0), (5000, M1 + 1), (W(170) + cut, M1 + 1)])
     keepB = Polygon([(0, 0), (5000, 0), (5000, M0 + 1), (cut, M0 + 1), (cut, B1)])
     b = U(up, lo)
     G['B'] = (U(b.intersection(BOX(0, M1, 5000, CAP)).intersection(keepT),

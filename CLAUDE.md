@@ -51,9 +51,7 @@ These are final. Do not change any of them unless the owner asks in so many word
   - built from brand/font/build_font.py + type3d-engine.js as committed in 6de50ec
   - every header on every page uses it
 - A: dark matte grey chevron (0x55544f) with the light inner bar.
-- LOGO P (website, owner 4 Nov 2026, replaces the old p-mark) = the PEPTICITY font's own P with the cut-off back (#pfont in sites/site-one-sample). Matte gunmetal face, NO shadow, NO glow or hue: one tight crisp hairline of light right around the letter. Never white or platinum. (Dashboards keep their LOGO_P until the owner says otherwise.)
-- B (font, owner 4 Nov 2026): the middle bar ends FLAT (straight, not pointed), in line with the inner ends of the top and bottom bars.
-- 3D type renders at full device resolution (setPixelRatio up to 3), never capped below the screen: no upscaling blur (owner 4 Nov 2026).
+- LOGO P = the approved P mark (brand/logo/p-mark.svg from commit ca61e2b; LOGO_P glyph in the dashboard). Never the font's cut-out P. Never white or platinum: matte gunmetal.
 - The owner's BLACK image is the source of truth for colour. Wall #323232; metal runs #080807 to #8E8D85.
 - Bottle = brand/vial-hf (Higgsfield, approved 30 Oct): see-through smoked label, etched peptide swirl, PEPTICITY vertical + logo P on the front, full info on the back, lit from below. Used in the store as assets/vial-pepticity.webp with a rising shine.
 
