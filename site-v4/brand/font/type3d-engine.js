@@ -45,7 +45,7 @@ export function createStage(canvas) {
     if (!probe) throw new Error('no webgl');
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   } catch (e) { window.type3dFallback && window.type3dFallback('no-webgl'); return null; }
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 3));   /* crisp: full device resolution (phones 3x), no upscaling blur (owner, 4 Nov) */
+  renderer.setPixelRatio(Math.min(devicePixelRatio, MOBILE ? 1.5 : 2));
   renderer.setClearColor(0, 0); renderer.autoClear = false;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.92;
