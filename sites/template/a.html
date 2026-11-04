@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEPTICITY Monolith</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500&family=Instrument+Sans:wght@400;500&family=Inter+Tight:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Manrope:wght@400;500&family=Michroma&family=Syncopate:wght@400;700&family=Unbounded:wght@400&display=swap">
+<link rel="stylesheet" href="template.css">
+<style>
+/* STYLE A · MONOLITH: centred, cinematic, vertical descent */
+.hero{height:100vh;height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;padding:0}
+.hero .shot{position:absolute;inset:0;background:url(assets/chest-black-poster.jpg) center 40%/cover;opacity:.55;filter:grayscale(.35)}
+.hero .shot:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in oklab,var(--bg),transparent 40%),transparent 40%,var(--bg) 96%)}
+.hero .inner{position:relative;z-index:1;width:100%;padding:0 var(--gut)}
+.hero .h1{white-space:nowrap;letter-spacing:.02em;font-size:clamp(28px,10.6vw,200px)}
+.hero .sub{margin:26px auto 0;max-width:46ch;color:var(--muted)}
+.hero form{margin:30px auto 0;display:flex;flex-direction:column;align-items:center}
+.cue{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);font-size:10px;letter-spacing:.4em;color:var(--muted);z-index:1}
+.cue:after{content:"";display:block;width:1px;height:38px;margin:10px auto 0;background:linear-gradient(var(--ink),transparent);animation:cue 2.2s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.center{text-align:center}.center .kick{justify-content:center}
+.explain .highlight{margin:28px auto 0;text-align:center}
+.vialhead{position:absolute;top:12vh;left:0;right:0;text-align:center;z-index:2}
+.interests .head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+.interests [data-fx="track"]{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.interests .card .h3{margin:18px 0 10px}
+.city .over{place-items:end center;padding-bottom:12vh}
+.lab{min-height:120vh}
+.lab .lay.l1{background-image:url(assets/black-lab3.jpg);opacity:.75}
+.lab .lay.l2{background:radial-gradient(60% 50% at 50% 60%,transparent,var(--bg) 85%)}
+.lab .copy{position:relative;z-index:2;padding-top:30vh}
+.lab .stations{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+@media (max-width:860px){.lab .stations{grid-template-columns:1fr 1fr}}
+.lab .stations .card{min-height:150px}
+.letter{text-align:center}.letter form{display:flex;flex-direction:column;align-items:center;margin-top:28px}
+</style>
+<script>window.TEMPLATE={style:'a',defaults:{palette:'gunmetal',background:'wall',texture:'smoke',finish:'chrome',headfont:'pb',bodyfont:'hanken',menu:'bar',button:'glass',card:'glass',hover:'torch',cursor:'ring',form:'boxed',loader:'bar',footer:'rise','fx-scroll':'glide','fx-wordmark':'scatter','fx-highlight':'words','fx-vial':'explode','fx-track':'horizontal','fx-reveal':'iris','fx-parallax':'layers','fx-magnetic':'magnetic','fx-entrance':'rise','fx-marquee':'marquee',progress:'line',watermark:'seal'}};</script>
+</head>
+<body>
+<div class="ground" aria-hidden="true"><video muted loop playsinline preload="none" src="assets/chest-black.webm"></video></div>
+<div class="wm seal" aria-hidden="true"><img src="assets/emblem-gunmetal.svg" alt=""></div>
+<div class="wm pbig" aria-hidden="true"><img src="assets/p-mark-gunmetal.svg" alt=""></div>
+<div class="wm depth" aria-hidden="true"><img src="assets/p-mark-gunmetal.svg" alt="" style="--w:28vw;--x:-6vw;--y:20vh"><img src="assets/p-mark-gunmetal.svg" alt="" style="--w:14vw;--x:70vw;--y:60vh"><img src="assets/p-mark-gunmetal.svg" alt="" style="--w:8vw;--x:40vw;--y:110vh"></div>
+<div class="wm letters" aria-hidden="true"><span>P</span><span>E</span><span>P</span><span>T</span><span>I</span><span>C</span><span>I</span><span>T</span><span>Y</span></div>
+
+<div class="loader" data-slotbox="loader" aria-hidden="true"><div class="lw">PEPTICITY</div><div class="lbar"><i></i></div></div>
+
+<nav class="menu" data-slotbox="menu" data-slotname="MENU" aria-label="Main">
+  <a class="brand" href="#top"><img src="assets/p-mark-gunmetal.svg" alt=""><span>PEPTICITY</span></a>
+  <div class="links"><a href="#explain">Research</a><a href="#vial">The vial</a><a href="#interests">Shelves</a><a href="#finder">Finder</a><a href="#letter">Letter</a></div>
+  <button class="mbtn" aria-expanded="false">Menu</button>
+</nav>
+
+<main id="top">
+  <!-- 01 HERO · E2 pull-apart wordmark -->
+  <section class="hero" data-fx="wordmark" data-slotbox="fx-wordmark,finish,headfont" data-slotname="HERO">
+    <div class="shot" aria-hidden="true"></div>
+    <div class="inner">
+      <p class="kick" data-hero-sub style="justify-content:center">[Placeholder] A Canadian peptide house</p>
+      <h1 class="h h1" data-text="PEPTICITY">PEPTICITY</h1>
+      <p class="sub" data-hero-sub>Research first. See what each compound is, how it is made and what is on the label, in plain words.</p>
+      <form data-hook="hero-letter" data-hero-sub data-slotbox="form,button" data-slotname="HERO CAPTURE" novalidate>
+        <label class="sr" for="e1">Email</label>
+        <div class="field"><input id="e1" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Get Grace's letter <span class="ar">→</span></button></div>
+        <label class="consent"><input type="checkbox"> Optional: email me Grace's monthly letter. Unsubscribe any time. [legal name] [address] [privacy promise]</label>
+        <p class="sent" aria-live="polite"></p>
+      </form>
+    </div>
+    <span class="cue" aria-hidden="true">SCROLL</span>
+  </section>
+
+  <div data-fx="marquee" class="marquee" data-slotbox="fx-marquee" aria-hidden="true"><div class="row"><span>RESEARCH FIRST</span><i>◆</i><span>PLAIN-WORDS LABELS</span><i>◆</i><span>LOT RECORDS</span><i>◆</i><span>MADE IN CANADA [confirm]</span><i>◆</i><span>RESEARCH FIRST</span><i>◆</i><span>PLAIN-WORDS LABELS</span><i>◆</i><span>LOT RECORDS</span><i>◆</i><span>MADE IN CANADA [confirm]</span><i>◆</i></div></div>
+
+  <!-- 02 EXPLAIN · E3 text reveal -->
+  <section id="explain" class="explain center" data-slotbox="fx-highlight,fx-entrance" data-slotname="EXPLAINER">
+    <div class="wrap">
+      <p class="kick" data-in>Before you buy anything</p>
+      <p class="highlight" data-fx="highlight">A peptide is a short chain of amino acids, joined in an exact order. PEPTICITY shows you what each one is, how it is generally made and what is on the label, so you can decide for yourself.</p>
+      <p class="fine" style="margin-top:28px" data-in>No health claims. No dosing advice. Questions go to a real person.</p>
+    </div>
+  </section>
+
+  <!-- 03 VIAL · E4 exploded layers, hold-and-step -->
+  <section id="vial" style="padding:0" data-slotbox="fx-vial" data-slotname="EXPLODED VIAL">
+    <div class="vialstage" data-fx="vial">
+      <div class="vialhead"><p class="kick" style="justify-content:center">Inside the vial</p><h2 class="h h2" data-text="FOUR LAYERS">FOUR LAYERS</h2></div>
+      <div class="vial" aria-label="The PEPTICITY vial pulls apart into four layers, then reassembles"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="layer l4"></div><div class="glow"></div></div>
+      <div class="vsteps">
+        <p class="vstep r" style="top:30%"><b>01 · SEAL</b>[Placeholder] What the cap and crimp do, and how to read the seal.</p>
+        <p class="vstep l" style="top:42%"><b>02 · LABEL</b>[Placeholder] Name, amount, lot number. Every word explained.</p>
+        <p class="vstep r" style="top:54%"><b>03 · CONTENTS</b>[Placeholder] What the powder is and how it is generally made.</p>
+        <p class="vstep l" style="top:66%"><b>04 · GLASS</b>[Placeholder] Why the glass type matters.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 SHELVES · E5 card story + cards + hover -->
+  <section id="interests" class="interests" style="padding:0" data-slotbox="fx-track,card,hover" data-slotname="SHELVES">
+    <div data-fx="track">
+      <div class="wrap head"><div><p class="kick">What brings you here</p><h2 class="h h2" data-text="PICK A SHELF">PICK A SHELF</h2></div><p class="lede">Each shelf shows products that have been researched in the context of that interest. [Counsel to confirm wording.]</p></div>
+      <div class="track hvgroup">
+        <article class="card hv"><span class="num">01</span><div><h3 class="h h3">GYM AND PERFORMANCE</h3><p class="fine">[Placeholder] Researched in the context of training and recovery.</p></div><a class="btn" href="#finder">See the shelf <span class="ar">→</span></a></article>
+        <article class="card hv"><span class="num">02</span><div><h3 class="h h3">55+ AND LONGEVITY</h3><p class="fine">[Placeholder] Researched in the context of healthy ageing.</p></div><a class="btn" href="#finder">See the shelf <span class="ar">→</span></a></article>
+        <article class="card hv"><span class="num">03</span><div><h3 class="h h3">ENERGY</h3><p class="fine">[Placeholder] Researched in the context of energy.</p></div><a class="btn" href="#finder">See the shelf <span class="ar">→</span></a></article>
+        <article class="card hv"><span class="num">04</span><div><h3 class="h h3">RECOVERY</h3><p class="fine">[Placeholder] Researched in the context of recovery.</p></div><a class="btn" href="#finder">See the shelf <span class="ar">→</span></a></article>
+        <article class="card hv"><span class="num">05</span><div><h3 class="h h3">SKIN AND HAIR</h3><p class="fine">[Placeholder] Researched in the context of skin and hair.</p></div><a class="btn" href="#finder">See the shelf <span class="ar">→</span></a></article>
+        <article class="card hv"><span class="num">06</span><div><h3 class="h h3">SLEEP</h3><p class="fine">[Placeholder] Researched in the context of sleep.</p></div><a class="btn" href="#finder">See the shelf <span class="ar">→</span></a></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 FINDER · lead capture (3 taps, never asks about health) -->
+  <section id="finder" data-slotbox="button,form" data-slotname="FINDER">
+    <div class="wrap" style="max-width:820px">
+      <div class="finder card" data-in>
+        <p class="kick">Catalogue finder · 3 taps</p>
+        <div class="bar" style="margin-top:18px"><i></i></div>
+        <div class="fstep on"><h2 class="h h3">WHICH SHELF FIRST?</h2><div class="opts"><button class="opt">Gym</button><button class="opt">55+</button><button class="opt">Energy</button><button class="opt">Recovery</button><button class="opt">Skin + hair</button><button class="opt">Sleep</button></div></div>
+        <div class="fstep"><h2 class="h h3">HOW DO YOU LIKE TO BROWSE?</h2><div class="opts"><button class="opt">Everything</button><button class="opt">Just new arrivals</button><button class="opt">Back in stock</button></div><button class="btn" data-back type="button">← Back</button></div>
+        <div class="fstep"><h2 class="h h3">SAVE YOUR SHORTLIST</h2><p class="fine" style="margin:10px 0 18px">We'll email the shortlist so you can come back to it.</p>
+          <form data-hook="finder-shortlist" novalidate><div class="field"><label class="sr" for="e2">Email</label><input id="e2" type="email" required placeholder="you@example.com"><button class="btn" type="submit">Email my shortlist <span class="ar">→</span></button></div><label class="consent"><input type="checkbox"> Optional: also send Grace's monthly letter.</label><p class="sent" aria-live="polite"></p></form></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 CITY · E6 image reveal + hologram hook -->
+  <section class="city" style="padding:0" data-slotbox="fx-reveal" data-slotname="CITY REVEAL">
+    <div class="reveal" data-fx="reveal">
+      <div class="img" style="background-image:url(assets/black-city.jpg)"></div>
+      <div class="over"><form class="holo" data-hook="city-sms" novalidate>
+        <p class="kick">Doors open soon</p><h2 class="h h3" style="margin:12px 0">TEXT ME WHEN THE DOORS OPEN</h2>
+        <div class="field"><label class="sr" for="t1">Mobile number</label><input id="t1" type="tel" required placeholder="(___) ___-____" autocomplete="tel"><button class="btn" type="submit">Text me <span class="ar">→</span></button></div>
+        <label class="consent"><input type="checkbox"> Yes, text me about the opening. Msg and data rates may apply. Reply STOP to stop.</label><p class="sent" aria-live="polite"></p>
+      </form></div>
+    </div>
+  </section>
+
+  <!-- 07 LAB · E7 depth -->
+  <section class="lab par" data-fx="parallax" data-slotbox="fx-parallax,card" data-slotname="LAB">
+    <div class="lay l1" aria-hidden="true"></div><div class="lay l2" aria-hidden="true"></div>
+    <div class="wrap copy">
+      <p class="kick" data-in>How it is generally made</p>
+      <h2 class="h h2" data-text="THE LAB" data-in>THE LAB</h2>
+      <div class="stations hvgroup">
+        <div class="card hv" data-in><p class="num fine">STATION 01</p><h3 class="h h3">SYNTHESIS</h3><p class="fine">[Placeholder]</p></div>
+        <div class="card hv" data-in><p class="num fine">STATION 02</p><h3 class="h h3">PURIFY</h3><p class="fine">[Placeholder]</p></div>
+        <div class="card hv" data-in><p class="num fine">STATION 03</p><h3 class="h h3">TEST</h3><p class="fine">[Placeholder: real lab and lot data only]</p></div>
+        <div class="card hv" data-in><p class="num fine">STATION 04</p><h3 class="h h3">FILL + SEAL</h3><p class="fine">[Placeholder]</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 OFFER · founding ticket -->
+  <section id="offer" data-slotbox="card,button" data-slotname="OFFER">
+    <div class="wrap" style="max-width:1000px">
+      <div class="card ticket hv" data-in>
+        <div><p class="kick">Grand opening</p><h2 class="h h2" data-text="FOUNDING LIST" style="margin:14px 0">FOUNDING LIST</h2><p class="lede">Join before the doors open and get [x]% off your first order. [Offer, end date and terms: Grace and counsel to set.]</p></div>
+        <form class="stub" data-hook="founding" novalidate><label class="sr" for="e3">Email</label><input id="e3" type="email" required placeholder="you@example.com" style="min-height:48px;padding:0 14px;background:none;border:1px solid var(--line);border-radius:var(--r)"><button class="btn" type="submit">Claim my ticket <span class="ar">→</span></button><label class="consent"><input type="checkbox"> Email me the code and opening news.</label><p class="sent" aria-live="polite"></p></form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 LETTER -->
+  <section id="letter" class="letter" data-slotbox="form" data-slotname="LETTER">
+    <div class="wrap">
+      <p class="kick" style="justify-content:center" data-in>Once a month</p>
+      <h2 class="h h2" data-text="GRACE'S LETTER" data-in>GRACE'S LETTER</h2>
+      <p class="lede" style="margin:18px auto 0" data-in>What's new on the shelves, what we learned, nothing else.</p>
+      <form data-hook="letter-footer" novalidate><div class="field"><label class="sr" for="e4">Email</label><input id="e4" type="email" required placeholder="you@example.com"><button class="btn" type="submit">Subscribe <span class="ar">→</span></button></div><label class="consent"><input type="checkbox"> Yes, send me Grace's letter. Unsubscribe any time.</label><p class="sent" aria-live="polite"></p></form>
+    </div>
+  </section>
+</main>
+
+<footer data-slotbox="footer" data-slotname="FOOTER">
+  <div class="wrap">
+    <div class="fcols"><div><h4>VISIT</h4><a href="#explain">Research</a><a href="#vial">The vial</a><a href="#interests">Shelves</a></div><div><h4>HELP</h4><a href="#">Talk to a person</a><a href="#">Lot lookup [soon]</a></div><div><h4>LEGAL</h4><a href="#">[Privacy promise]</a><a href="#">[Terms]</a></div><div><h4>PEPTICITY</h4><span class="fine">[legal name] · [address] · [contact email]</span></div></div>
+    <p class="legal">Sold to adults 19+ in Canada. Nothing on this page is medical advice. [Final legal copy to be approved by counsel.] MOCK SITE: placeholder content for layout and effect picks only.</p>
+  </div>
+  <div class="rise" aria-hidden="true">PEPTICITY</div>
+  <img class="seal" src="assets/emblem-gunmetal.svg" alt="">
+</footer>
+
+<div class="prog line" aria-hidden="true"><span class="ix">01 / 09</span><span class="tr"><i></i></span><span>SCROLL</span></div>
+<div class="prog dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<svg class="prog ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20" stroke="var(--line)"/><circle class="fg" cx="22" cy="22" r="20" stroke="var(--ink)" stroke-dasharray="125.6" stroke-dashoffset="125.6" transform="rotate(-90 22 22)"/></svg>
+
+<div class="sticky" role="region" aria-label="Founding list"><span>Founding list · [x]% off</span><a class="btn" href="#offer">Join <span class="ar">→</span></a></div>
+<div class="exit" role="dialog" aria-label="Before you go"><form class="card" data-hook="exit-card" novalidate><button class="x" type="button" aria-label="Close">×</button><p class="kick">Before you go</p><h2 class="h h3" style="margin:12px 0">SAVE YOUR PLACE ON THE FOUNDING LIST</h2><div class="field"><label class="sr" for="e5">Email</label><input id="e5" type="email" required placeholder="you@example.com"><button class="btn" type="submit">Save <span class="ar">→</span></button></div><p class="sent" aria-live="polite"></p></form></div>
+
+<script src="assets/gsap.min.js"></script><script src="assets/ScrollTrigger.min.js"></script><script src="assets/lenis.min.js"></script>
+<script src="image-to-style.js"></script>
+<script src="engine.js"></script>
+</body>
+</html>

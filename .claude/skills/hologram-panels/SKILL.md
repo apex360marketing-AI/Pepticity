@@ -16,6 +16,13 @@ A hologram is a liquid-glass panel that projects up from a real object in the fi
 - **Scanlines:** a repeating-linear-gradient at 2–3px pitch, 3–5% alpha, drifting slowly upward. Never full-screen flicker or strobing (WCAG 2.3).
 - **Type:** headings in the PEPTICITY font, body in Instrument Sans, white at 92% with a 1px accent text-shadow. It must pass 4.5:1 against the footage behind: add a 40% dark scrim inside the panel if needed.
 
+## RESTRAINED MONOCHROME (owner: multicolour glows look cheap)
+- One hue family only: cool gunmetal/silver light (#8E8D85 → #D9DAD6 for the brightest edge) with, at most, a faint UV-black violet sheen at grazing angles. The `--acc` edge is this silver unless the owner picks ONE accent; then it is that accent alone, ≤5% of screen pixels (`premium-restraint`).
+- No rainbow, no prism/chromatic-aberration fringes, no iridescent gradients, no hue-cycling, no two-colour glows. Never gold/amber.
+- Brightness does the work colour would: brightest at the edge and the base (where the light comes from), almost nothing in the middle.
+- The apex `holo-glass-ui` chrome-gold palette does NOT apply to PEPTICITY; borrow its readability and fresnel rules only.
+- Check: sample 20 glow/edge pixels; chroma (LCH C) ≤ 8 for silver edges; with an accent, only that one hue appears.
+
 ## Motion (GSAP)
 - **In:**
   1. The beam grows up from the anchor (0.35s).
