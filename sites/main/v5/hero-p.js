@@ -47,7 +47,7 @@ function start() {
     if (!(canvas.getContext('webgl2') || canvas.getContext('webgl'))) throw new Error('no webgl');
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   } catch (e) { return; }
-  renderer.setPixelRatio(Math.min(devicePixelRatio, MOBILE ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 3));   /* crisp: full device resolution (phones 3x), no upscaling blur (owner, 4 Nov) */
   renderer.setClearColor(0, 0); renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0;
 
