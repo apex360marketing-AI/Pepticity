@@ -211,7 +211,7 @@ PROBE = r"""
     const c = getComputedStyle(e);
     if (!(c.position === 'fixed' || c.position === 'absolute') || !vis(e)) continue;
     const r = rect(e); if (r.width * r.height < 0.6 * va) continue;
-    if ((c.backdropFilter && c.backdropFilter !== 'none') || e.innerText.trim().length >= 20) continue;
+    if ((c.backdropFilter && c.backdropFilter !== 'none') || (e.innerText || '').trim().length >= 20) continue;
     e.setAttribute('data-gate-ground', '1');
   }
   return out;
