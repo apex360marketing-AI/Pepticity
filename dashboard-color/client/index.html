@@ -3350,15 +3350,10 @@ function fmtDay(iso){if(!iso)return '';var d=new Date(iso+'T12:00:00');return is
 function bottle(p,o){o=o||{};
   var cls='btl'+(o.sm?' sm':'')+(o.coming?' wide':'')+(p.status==='out'&&!o.owned&&!o.coming?' out':'');
   var chipH=o.owned?'':(p.status==='out'?(o.coming?'':'<span class="chip out">SOLD OUT</span>'):p.status==='low'?'<span class="chip low">LOW</span>':'');
-  var sub=esc(p.size==='[size TBC]'?'Size TBC':p.size)+(o.units?' · '+p.onHand+' units':'');
+  var sub=esc(p.size==='[size TBC]'?'Size TBC':p.size);
   var src=safeImg(p.img)||VIALS[slug(p.name)],ov='';
   if(!src){src=VIALS._blank||'';ov='<span class="ov"><b>'+esc(shortName(p.name))+'</b><i>'+esc(p.size||'')+'</i></span>'}
   var extra='';
-  if(o.coming){var n=esc(p.name),d=S.eta[p.name]||'',on=!!S.mail[p.name];
-    extra='<label class="eta">BACK ON<input class="inp" type="date" value="'+esc(d)+'" data-eta="'+n+'" aria-label="Expected date for '+n+'"></label>'+
-      '<span class="wlc">'+p.wl+' '+(p.wl===1?'person':'people')+' on the restock list</span>'+
-      '<label class="sq"><input type="checkbox" data-mail="'+n+'"'+(on?' checked':'')+'><span class="bx"></span>Email the waitlist on arrival</label>'+
-      '<span class="mailnote" data-note="'+n+'">'+(on?mailNote(p):'')+'</span>'}
   return '<figure class="'+cls+'" style="--i:'+(o.i||0)+'" title="'+esc(p.name)+'" data-p="'+esc(p.name)+'"><div class="stage"><span class="pool"></span><div class="tiltb"><img src="'+src+'" alt="PEPTICITY '+esc(shortName(p.name))+' vial, '+esc(p.size)+'" decoding="async" draggable="false">'+ov+'</div></div>'+(o.nocap?'':'<figcaption><span class="nm">'+esc(shortName(p.name))+'</span><small>'+sub+'</small>'+chipH+extra+'</figcaption>')+'</figure>';
 }
 /* ---------- QUICK ACTIONS: ADD PRODUCT · RECEIVE STOCK · ADD EXPENSE ---------- */
