@@ -26,10 +26,10 @@
   function boot(){
     var hc=document.querySelector('.hero-card'),gate=document.getElementById('gate'),mono=document.querySelector('.hero-mono');
     if(hc){mk(hc,true);['l','r'].forEach(function(c){var t=document.createElement('span');t.className='pg-tick '+c;t.innerHTML='<i></i>';hc.appendChild(t);});
-      tag(hc,'CHANGED: CORNER TICKS',{top:'4px',left:'50%',transform:'translateX(-50%)'});
-      var h1=hc.querySelector('.h1');if(h1)tag(hc,'CHANGED: PLATINUM CHROME HEADLINE, CENTRED',{top:'82px',left:'50%',transform:'translateX(-50%)'});
+      tag(hc,'CHANGED: CORNER TICKS',{top:'-16px',left:'50%',transform:'translateX(-50%)'});
+      var h1=hc.querySelector('.h1');if(h1){tag(hc,'CHANGED: PLATINUM CHROME HEADLINE, CENTRED',{});var tg=hc.lastChild;tg.classList.add('pg-flow');h1.insertAdjacentElement('afterend',tg);}
       var cs=hc.querySelector('.crown-slot');if(cs){cs.style.position='relative';tag(cs,'CHANGED: CROWN BUTTON',{bottom:'-14px',left:'4px'});}
-      tag(hc,'CHANGED: TICKET CARD, CENTRED',{bottom:'4px',left:'50%',transform:'translateX(-50%)'});}
+      tag(hc,'CHANGED: '+(V==='11'?'HEXAGON':'NOTCHED TICKET')+' CARD, CENTRED',{bottom:'-16px',left:'50%',transform:'translateX(-50%)'});}
     if(mono){mono.style.position='relative';tag(mono,'CHANGED: CHROME GOLD P',{top:'0',left:'50%',transform:'translateX(-50%)'});}
     if(gate){mk(gate,false);tag(gate,'CHANGED: MEMBERSHIP CARD, CENTRED, NEW SILHOUETTE',{top:'-14px',left:'50%',transform:'translateX(-50%)'});}
     var on=true;try{on=localStorage.getItem('pgChanges')!=='off';}catch(e){}
