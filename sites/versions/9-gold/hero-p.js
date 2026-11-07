@@ -52,17 +52,18 @@ function start() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0;
 
   const scene = new THREE.Scene(), pmrem = new THREE.PMREMGenerator(renderer), room = new RoomEnvironment(renderer);
-  const strip = new THREE.MeshBasicMaterial({ color: 0xffffff }); strip.color.setScalar(7);
+  const strip = new THREE.MeshBasicMaterial({ color: 0xffffff }); strip.color.setScalar(14);
   [[-6, 4, 0, .35, 9], [6.5, 2.5, 1, .3, 8], [0, 9.5, 3, 7, .3], [3, -2, 6, 5, .25]].forEach(([x, y, z, w, h]) => {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, w > 1 ? .3 : w), strip); m.position.set(x, y, z); room.add(m); });
   scene.environment = pmrem.fromScene(room, 0.03).texture; pmrem.dispose();
 
   const tex = brushed();
-  const gunmetal = new THREE.MeshPhysicalMaterial({ color: 0x7a7b80, metalness: 0.86, roughness: 0.5, roughnessMap: tex, map: tex,
-    clearcoat: 0.1, clearcoatRoughness: 0.55, envMapIntensity: 0.68 });
-  const uv = new THREE.MeshPhysicalMaterial({ color: 0x0e0c14, metalness: 0.55, roughness: 0.32, sheen: 1, sheenColor: new THREE.Color(0x4b3b86),
-    sheenRoughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.7 });
-  const edge = new THREE.LineBasicMaterial({ color: 0xdcd6ff, transparent: true, opacity: 0.68, blending: THREE.AdditiveBlending, depthWrite: false });
+  const V11 = D.dataset.pop === '11';   /* POP-GOLD (owner 7 Nov): the P is liquid chrome gold with real chromatic (thin-film) shine, never black */
+  const gunmetal = new THREE.MeshPhysicalMaterial({ color: 0xf0dcae, metalness: 1, roughness: 0.2, roughnessMap: tex, map: null,
+    clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 2.6, iridescence: 1, iridescenceIOR: 1.8, iridescenceThicknessRange: [180, 620] });
+  const uv = new THREE.MeshPhysicalMaterial({ color: 0xa4845d, metalness: 1, roughness: 0.3, sheen: 1, sheenColor: new THREE.Color(0xb9a6ff),
+    sheenRoughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15, envMapIntensity: 2.0, iridescence: 0.8, iridescenceIOR: 1.6, iridescenceThicknessRange: [140, 520] });
+  const edge = new THREE.LineBasicMaterial({ color: 0xfef9e8, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
   [gunmetal, uv].forEach(m => { m.polygonOffset = true; m.polygonOffsetFactor = 1; m.polygonOffsetUnits = 1; });
 
   const depth = 0.26, bevel = 0.045;
@@ -77,9 +78,10 @@ function start() {
     P.add(new THREE.LineLoop(g, edge)); }));
   scene.add(P);
 
-  const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(2.5, 3, 4); scene.add(key);
-  scene.add(new THREE.HemisphereLight(0xeef1f6, 0x0c0a12, 0.45));
-  const violet = new THREE.PointLight(0x9a8cff, 0.6, 8, 2); violet.position.set(-2.2, -1, 1.6); scene.add(violet);
+  const key = new THREE.DirectionalLight(0xfff3d6, 2.6); key.position.set(V11 ? -2.8 : 2.5, 3, 4); scene.add(key);
+  scene.add(new THREE.HemisphereLight(0xfff6e0, 0x6a5a9a, 1.1));
+  const violet = new THREE.PointLight(0x9a8cff, 3.2, 9, 2); violet.position.set(V11 ? 2.4 : -2.2, -1, 1.6); scene.add(violet);
+  const teal = new THREE.PointLight(0x7fe8ff, 2.2, 9, 2); teal.position.set(V11 ? -2.4 : 2.4, 1.6, 1.8); scene.add(teal);
   const rake = new THREE.SpotLight(0xffffff, 0, 12, 0.32, 0.6, 1.2); rake.position.set(-3.4, 1.6, 2.6); scene.add(rake); scene.add(rake.target);
 
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 50);
@@ -115,7 +117,8 @@ function start() {
     const e = !began ? 0 : (REDUCED ? 99 : clock - t0);
     /* 1 · rises out of the dark (0–1.8 s)   2 · light rakes across the bevel (0.9–2.6 s)   3 · settles behind the headline */
     const rise = ease(e / 1.8);
-    renderer.toneMappingExposure = 0.94 * ss(0, 1.4, e);
+    renderer.toneMappingExposure = 1.35 * ss(0, 1.4, e);
+    violet.intensity = 3.2 + Math.sin(clock * 0.9) * 1.2; teal.intensity = 2.2 + Math.cos(clock * 0.7) * 1.0;
     const r = hero.getBoundingClientRect(), leave = clamp(-r.top / Math.max(1, r.height), 0, 1);   /* creative scroll: it turns away and lifts as the hero leaves */
     st.ry = damp(st.ry, ptr.x * 0.28, 2.4, dt); st.rx = damp(st.rx, ptr.y * 0.16, 2.4, dt);
     const idle = REDUCED ? 0 : Math.sin(clock * 0.32) * 0.32;
@@ -124,7 +127,7 @@ function start() {
     P.scale.setScalar(0.86 + rise * 0.14);
     const rk = ss(0.9, 1.5, e) * (1 - ss(1.9, 2.7, e));
     rake.intensity = rk * 26; rake.position.x = -3.4 + ss(0.9, 2.6, e) * 6.8; rake.target.position.set(rake.position.x * 0.2, 0, 0);
-    edge.opacity = 0.68 + rk * 0.3;
+    edge.opacity = 0.85 + rk * 0.15;
     renderer.render(scene, camera);
     if (!REDUCED && visible && !document.hidden && began) raf = requestAnimationFrame(frame);
   }

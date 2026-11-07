@@ -1,0 +1,124 @@
+/* POP-GOLD kit (owner 7 Nov: TOO DARK, need LIGHT, POP and COLOUR). Chrome-metal-pop: lifted graphite ground with gold + violet light pools, chrome gold P,
+   platinum chrome headline with a shimmer of darkness, lit corner ticks, metal-hairline ticket card, hover that lights up gold on everything.
+   Used by 9-gold (html[data-pop="9"]) and 11-gold (html[data-pop="11"]). Glass stays see-through. Changed text is marked #B000FF (CHANGES toggle). */
+html[data-pop][data-colour][data-version]{
+  --pg-g1:#FEF9E8;--pg-g2:#F0E6C7;--pg-g3:#A4845D;--pg-g4:#332814;
+  --pg-p1:#FFFFFF;--pg-p2:#DDE1E7;--pg-p3:#9AA1AB;--pg-p4:#5D636B;
+  --pg-violet:#9A8CFF;--pg-teal:#7FE8FF;
+  --bg:#34353c;--bg-2:#3f4048;--ink:#F7F8FA;--ink-2:#E0E3E8;--muted:#BFC4CC;
+}
+/* ---- the ground: lifted graphite smoke + real light pools (gold, violet, teal) ---- */
+html[data-pop] body{background:var(--bg)}
+html[data-pop] #smoke{filter:brightness(2.9) contrast(.88) saturate(1.3)!important;opacity:1}
+html[data-pop]::before{content:"";position:fixed;inset:-10%;z-index:1;mix-blend-mode:screen;pointer-events:none;
+  background:radial-gradient(38% 34% at var(--pg-ax,20%) var(--pg-ay,18%),rgba(196,160,104,.62),transparent 74%),
+    radial-gradient(34% 32% at var(--pg-bx,84%) var(--pg-by,30%),rgba(124,92,255,.66),transparent 74%),
+    radial-gradient(40% 34% at var(--pg-cx,50%) var(--pg-cy,100%),rgba(50,196,232,.42),transparent 74%);
+  animation:pgPool 16s ease-in-out infinite alternate}
+html[data-pop="9"]{--pg-ax:18%;--pg-ay:16%;--pg-bx:86%;--pg-by:34%;--pg-cx:44%;--pg-cy:104%}
+html[data-pop="11"]{--pg-ax:84%;--pg-ay:82%;--pg-bx:12%;--pg-by:40%;--pg-cx:60%;--pg-cy:-6%}
+@keyframes pgPool{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(2%,2%,0) scale(1.08)}}
+html[data-pop] .hc-light{background:radial-gradient(30% 30% at 30% 30%,rgba(254,249,232,.32),transparent 70%),radial-gradient(26% 26% at 72% 64%,rgba(154,140,255,.26),transparent 70%)!important}
+html[data-pop] .nav::before{background:linear-gradient(180deg,rgba(52,53,60,.55),transparent)}
+
+/* ---- one centre axis: wordmark (logo), P, headline and card all on x = 50% ---- */
+html[data-pop] .nav{justify-content:center}
+html[data-pop] .nav .brand{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:2}
+html[data-pop] .nav .brand .brand-p{display:none}            /* ONE P on screen: the hero P */
+html[data-pop] .nav .nav-r{margin-left:auto;position:relative;z-index:3}
+@media (min-width:900px){
+  html[data-pop] .hero{grid-template-columns:minmax(0,940px)!important;justify-content:center;align-content:center;row-gap:0;padding-top:60px;padding-bottom:36px}
+  html[data-pop] .hero-mono{order:-1;width:100%;min-height:0!important;height:clamp(120px,17vh,165px);align-self:auto}
+  html[data-pop] .hero-card{width:min(940px,100%);justify-self:center}
+}
+html[data-pop] .hero-card{--c:0px;overflow:visible;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 38%),linear-gradient(145deg,rgba(255,255,255,.022),rgba(255,255,255,.004))!important}
+html[data-pop] .hero-card>*:not(.pg-tag):not(.pg-rim):not(.pg-tick){position:relative}
+html[data-pop] .hero-card{padding:clamp(16px,2vw,24px) clamp(18px,4vw,56px)!important;gap:8px!important}
+html[data-pop] .perks li{padding-block:8px}
+html[data-pop] .pg-rim{position:absolute!important;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:4}
+html[data-pop] .pg-rim path{fill:none;stroke-width:1.6;vector-effect:non-scaling-stroke;stroke:url(#pgRimG)}
+html[data-pop] .pg-rim path.pg-in{stroke-width:1;opacity:.55;stroke:rgba(240,230,199,.55)}
+@media (min-width:900px){
+  html[data-pop] .gate{left:0;right:0;margin-left:auto;margin-right:auto}
+}
+html[data-pop] .gate{--c:0px;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 38%),linear-gradient(145deg,rgba(255,255,255,.022),rgba(255,255,255,.004))!important}
+
+/* ---- the platinum chrome headline: shimmer of darkness through it, NO panel behind (the dark 3D panel is hidden) ---- */
+html[data-pop] .hero .w3d{display:none!important}
+html[data-pop] .hero .h1.x3d,html[data-pop] .hero .w3d~.h1{position:static!important;width:auto!important;height:auto!important;clip:auto!important;overflow:visible!important;white-space:normal!important;
+  margin:2px 0 4px;text-align:center;text-wrap:balance;font-size:clamp(26px,3.7vw,52px);line-height:1.04;letter-spacing:.05em;
+  background:linear-gradient(100deg,#FFFFFF 0%,#DDE1E7 12%,#7C838D 24%,#F4F6F8 36%,#B9BEC6 48%,#4E545C 58%,#E9ECEF 70%,#FFFFFF 80%,#8F96A0 92%,#F4F6F8 100%);
+  background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;
+  text-shadow:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35)) drop-shadow(0 0 18px rgba(221,225,231,.25));animation:pgPlat 9s linear infinite}
+html[data-pop="11"] .hero .h1.x3d{animation-direction:reverse}
+@keyframes pgPlat{from{background-position:0 0}to{background-position:-260% 0}}
+/* platinum on some tiles and key type, gold on others */
+html[data-pop] .perks b,html[data-pop] .h2s,html[data-pop] .tier-t h3,html[data-pop] .apx-lay101__tile h3{
+  background:linear-gradient(100deg,#fff,#DDE1E7 30%,#8F96A0 52%,#F4F6F8 72%,#fff);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:pgPlat 11s linear infinite}
+html[data-pop] .perks li:nth-child(odd) b{background-image:linear-gradient(100deg,#FEF9E8,#F0E6C7 28%,#A4845D 52%,#FEF9E8 74%,#F0E6C7)}
+html[data-pop] .eyebrow span{color:var(--pg-g2)}
+html[data-pop] .perks li{transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .35s,background-color .35s}
+html[data-pop] .perks span{color:var(--ink-2)}
+
+/* ---- lit corner ticks (top-left, top-right): metal L, glow, a coloured bead ---- */
+html[data-pop] .pg-tick{position:absolute;top:12px;width:34px;height:34px;pointer-events:none;z-index:5;
+  border:0 solid transparent;filter:drop-shadow(0 0 6px rgba(240,230,199,.9)) drop-shadow(0 0 14px rgba(154,140,255,.55));animation:pgTick 3.2s ease-in-out infinite alternate}
+html[data-pop] .pg-tick.l{left:12px}html[data-pop] .pg-tick.r{right:12px;animation-delay:-1.6s}
+html[data-pop] .pg-tick::before,html[data-pop] .pg-tick::after{content:"";position:absolute;background:linear-gradient(90deg,#FEF9E8,#F0E6C7 40%,#C9CFD8)}
+html[data-pop] .pg-tick::before{top:0;height:3px;width:100%}
+html[data-pop] .pg-tick::after{top:0;width:3px;height:100%}
+html[data-pop] .pg-tick.l::before,html[data-pop] .pg-tick.l::after{left:0}
+html[data-pop] .pg-tick.r::before{right:0;background:linear-gradient(270deg,#FEF9E8,#DDE1E7 40%,#9A8CFF)}
+html[data-pop] .pg-tick.r::after{right:0;background:linear-gradient(180deg,#FEF9E8,#9A8CFF)}
+html[data-pop] .pg-tick i{position:absolute;top:8px;width:7px;height:7px;background:conic-gradient(#fef9e8,#7FE8FF,#9A8CFF,#fef9e8);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+html[data-pop] .pg-tick.l i{left:8px}html[data-pop] .pg-tick.r i{right:8px}
+@keyframes pgTick{from{opacity:.75;transform:scale(.95)}to{opacity:1;transform:scale(1.06)}}
+html[data-pop] .pl-ticks i{border-color:var(--pg-g2)!important;filter:drop-shadow(0 0 4px rgba(240,230,199,.8))}
+
+/* ---- BTN-174 crown: no pill, lights up gold on hover, pulls in on press ---- */
+html[data-pop] .apx-b174{transition:transform .35s cubic-bezier(.16,1,.3,1),filter .35s}
+html[data-pop] .apx-b174__case{border-radius:0!important;clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px))}
+html[data-pop] .apx-b174__g{box-shadow:inset 0 0 0 1px rgba(240,230,199,.7),inset 0 3px 9px rgba(0,0,0,.35)!important;transition:background .45s}
+html[data-pop] .apx-b174:hover,html[data-pop] .apx-b174.is-hot{transform:translateY(-3px) scale(1.025);filter:drop-shadow(0 0 16px rgba(240,230,199,.65)) drop-shadow(0 8px 14px rgba(154,140,255,.35))}
+html[data-pop] .apx-b174:hover .apx-b174__g,html[data-pop] .apx-b174.is-hot .apx-b174__g{background:linear-gradient(105deg,rgba(254,249,232,.7),rgba(240,230,199,.5) 40%,rgba(164,132,93,.55) 70%,rgba(240,230,199,.6))!important}
+html[data-pop] .apx-b174:hover .apx-b174__l,html[data-pop] .apx-b174.is-hot .apx-b174__l{color:#1c1812;text-shadow:0 1px 0 rgba(254,249,232,.6)}
+html[data-pop] .apx-b174:active,html[data-pop] .apx-b174.is-press{transform:translateY(1px) scale(.965);filter:drop-shadow(0 0 8px rgba(240,230,199,.8))}
+html[data-pop] .apx-b174:active .apx-b174__case,html[data-pop] .apx-b174.is-press .apx-b174__case{transform:translateX(-5px) scale(.97)}
+html[data-pop] .apx-b174:active .apx-b174__svg,html[data-pop] .apx-b174.is-press .apx-b174__svg{transform:translateX(5px)}
+html[data-pop] .apx-b174__svg{transition:transform .25s cubic-bezier(.16,1,.3,1)}
+
+/* ---- HOVER EVERYTHING: lights up gold, moves ---- */
+html[data-pop] .pc-btn,html[data-pop] .pc-seg,html[data-pop] .glass,html[data-pop] .perks li,html[data-pop] .int-card,html[data-pop] .prod,html[data-pop] .sr,html[data-pop] .tier,
+html[data-pop] .apx-lay101__tile,html[data-pop] .mcard,html[data-pop] .field input,html[data-pop] .apx-n102__toggle,html[data-pop] .vchip__btn,html[data-pop] .rail li,html[data-pop] .linkish,html[data-pop] .st{
+  transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .35s,background-color .35s,color .3s,filter .35s}
+html[data-pop] .pc-btn:hover,html[data-pop] .pc-seg:hover,html[data-pop] .apx-n102__toggle:hover,html[data-pop] .vchip__btn:hover{
+  transform:translateY(-2px);background-color:rgba(240,230,199,.2);filter:brightness(1.25) drop-shadow(0 0 10px rgba(240,230,199,.75));--pc-rim-t:#FEF9E8;--pc-rim-s:#F0E6C7;--pc-label-glow:#FEF9E8}
+html[data-pop] .pc-btn:active{transform:translateY(1px) scale(.98)}
+html[data-pop] .perks li:hover,html[data-pop] .int-card:hover,html[data-pop] .prod:hover,html[data-pop] .sr:hover,html[data-pop] .tier:hover,html[data-pop] .apx-lay101__tile:hover,html[data-pop] .st:hover{
+  transform:translateY(-4px);background-color:rgba(240,230,199,.13);box-shadow:inset 0 0 0 1px #F0E6C7,0 0 26px rgba(240,230,199,.4),0 10px 24px -8px rgba(154,140,255,.45)}
+html[data-pop] .glass:hover{filter:brightness(1.12);box-shadow:0 0 30px rgba(240,230,199,.22)}
+html[data-pop] .mcard:hover{filter:brightness(1.2) drop-shadow(0 0 16px rgba(240,230,199,.6))}
+html[data-pop] .field input:hover,html[data-pop] .field input:focus{box-shadow:inset 0 0 0 1px #FEF9E8,0 0 18px rgba(240,230,199,.4)!important;background:rgba(240,230,199,.08)}
+html[data-pop] .linkish:hover,html[data-pop] .ph-link:hover,html[data-pop] a:hover{color:#FEF9E8;text-shadow:0 0 12px rgba(240,230,199,.85)}
+html[data-pop] .rail li:hover::before{background:#FEF9E8;box-shadow:0 0 14px #F0E6C7;transform:scale(1.5)}
+html[data-pop] .consent:hover span{color:#FEF9E8}
+html[data-pop] .brand:hover .wordmark{filter:drop-shadow(0 0 12px rgba(240,230,199,.9))}
+
+/* 9: gold glow swell from the pointer. 11: a gold light runs across the surface (sweep) */
+html[data-pop="11"] .glass:hover::after,html[data-pop="11"] .hero-card:hover::after{opacity:1!important;background:linear-gradient(105deg,transparent 30%,rgba(254,249,232,.34) 48%,rgba(154,140,255,.2) 56%,transparent 70%)!important;background-size:260% 100%;animation:pgSweep 1.1s ease-out}
+html[data-pop="11"] .perks li:hover,html[data-pop="11"] .int-card:hover,html[data-pop="11"] .prod:hover{background-image:linear-gradient(105deg,transparent 30%,rgba(254,249,232,.3) 48%,transparent 66%);background-size:260% 100%;animation:pgSweep 1s ease-out}
+@keyframes pgSweep{from{background-position:140% 0}to{background-position:-40% 0}}
+
+/* ---- CHANGES toggle (hexagon, bottom-left, ON by default) and purple change marks ---- */
+.pg-toggle{position:fixed;left:16px;bottom:78px;z-index:90;width:76px;height:66px;display:grid;place-items:center;border:0;cursor:pointer;color:#fff;font:400 9px/1.1 var(--display);letter-spacing:.12em;text-align:center;
+  background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.02));-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);transition:transform .3s,filter .3s}
+.pg-toggle::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#FEF9E8,#A4845D 45%,#DDE1E7);clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%,25% 3%,26% 5%,3% 50%,26% 95%,74% 95%,97% 50%,74% 5%,25% 5%);z-index:-1}
+.pg-toggle:hover{transform:scale(1.08);filter:drop-shadow(0 0 10px #F0E6C7)}
+.pg-toggle b{display:block;color:#fff}.pg-toggle[aria-pressed="true"] b{color:#fff}
+.pg-toggle em{font-style:normal;color:#E4B8FF}
+.pg-tag{display:none;position:absolute;z-index:60;pointer-events:none;color:#B000FF;font:400 10px/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;text-shadow:0 0 6px rgba(255,255,255,.55)}
+html.pg-show .pg-tag{display:block}
+@media (max-width:640px){.pg-toggle{bottom:76px;left:8px;width:62px;height:54px;font-size:8px}.pg-tag{font-size:8px;letter-spacing:.08em}}
+@media (prefers-reduced-motion:reduce){html[data-pop]::before,html[data-pop] .hero .h1.x3d,.pg-tick,html[data-pop] .perks b{animation:none!important}}
