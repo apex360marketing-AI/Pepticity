@@ -60,9 +60,9 @@ function start() {
 
   const tex = brushed();
   const gunmetal = new THREE.MeshPhysicalMaterial({ color: 0xf2f5fa, metalness: 0.78, roughness: 0.2,
-    clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 5, emissive: new THREE.Color(0xaab2c8), emissiveIntensity: 0.85, iridescence: 0.6, iridescenceIOR: 1.6 });
+    clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 5, emissive: new THREE.Color(0xe4e9f4), emissiveIntensity: innerWidth < 900 ? 0.45 : 1.5, iridescence: 0.6, iridescenceIOR: 1.6 });
   const uv = new THREE.MeshPhysicalMaterial({ color: 0xc8d2f0, metalness: 0.75, roughness: 0.22, sheen: 1, sheenColor: new THREE.Color(0x7fe3ff),
-    sheenRoughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15, envMapIntensity: 4, emissive: new THREE.Color(0x7a8ccc), emissiveIntensity: 0.9 });
+    sheenRoughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15, envMapIntensity: 4, emissive: new THREE.Color(0x7a8ccc), emissiveIntensity: innerWidth < 900 ? 0.4 : 1.1 });
   const edge = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false });
   [gunmetal, uv].forEach(m => { m.polygonOffset = true; m.polygonOffsetFactor = 1; m.polygonOffsetUnits = 1; });
 
@@ -118,7 +118,7 @@ function start() {
     const e = !began ? 0 : (REDUCED ? 99 : clock - t0);
     /* 1 · rises out of the dark (0–1.8 s)   2 · light rakes across the bevel (0.9–2.6 s)   3 · settles behind the headline */
     const rise = ease(e / 1.8);
-    renderer.toneMappingExposure = 1.35 * ss(0, 1.4, e);
+    renderer.toneMappingExposure = (innerWidth < 900 ? 1.2 : 1.9) * ss(0, 1.4, e);
     const r = hero.getBoundingClientRect(), leave = clamp(-r.top / Math.max(1, r.height), 0, 1);   /* creative scroll: it turns away and lifts as the hero leaves */
     st.ry = damp(st.ry, ptr.x * 0.42, 2.4, dt); st.rx = damp(st.rx, ptr.y * 0.26, 2.4, dt);
     const idle = REDUCED ? 0 : Math.sin(clock * 0.32) * 0.32;
