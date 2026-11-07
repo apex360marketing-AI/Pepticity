@@ -7,6 +7,8 @@ Review board: https://claude.ai/artifact/QJABMKttNFPFsRMcRkdJw5
 5. READ ANSWERS from collection answers (doc id = step id). Never act on an unanswered step. Never edit/delete other sessions' steps.
 6. Re-ask anything you were waiting on as a board step, then open the board.
 7. Keep working on anything that needs no answer. Don't idle.
+8. NEVER SEND ANYTHING TO ANYONE WITHOUT THE OWNER'S OK ON THAT EXACT TEXT (owner, 7 Nov 2026, LOCKED). No emails, texts, DMs or posts to Grace, Jeff, clients or anyone. "Let Grace know" or "tell her" means WRITE A DRAFT and show it; sending needs his explicit yes. Drafts only.
+9. NEVER SEND FROM, OR AS, JEFF CARROLL (owner, 7 Nov 2026, LOCKED). The connected Gmail (jeffcarroll3349@gmail.com) is Jeff's, not the owner's. Do not send, reply or draft from it. If the connected account is not the owner's own, say so and stop. Never sign a message with a name the owner has not given.
 Also: mark changed text bright purple (#B000FF) on pages the owner reviews.
 
 # THE OWNER'S TWO TOP RULES (31 Oct 2026, read before anything else)
