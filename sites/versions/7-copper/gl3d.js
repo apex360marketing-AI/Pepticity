@@ -98,7 +98,7 @@ async function main() {
     const ratio = width / H;
     const asp = el.dataset.aspect && !(phone && lines.length > 1) ? +el.dataset.aspect * (phone ? 0.62 : 1) : clampN(ratio * (lines.length > 1 ? 0.5 : 0.3), phone ? 1.6 : 2.2, 7);
     el.style.aspectRatio = String(asp);
-    const make = light => { const ws = wallScene(front, { light }); ws.key.shadow.mapSize.set(1024, 1024); ws.scene.environment = front.envRT.texture; return ws; };
+    const make = light => { const ws = wallScene(front, { light }); ws.key.shadow.mapSize.set(2048, 2048); ws.scene.environment = front.envRT.texture; return ws; };
     const dark = make(false); let light = null;
     const camera = dark.camera;
     const slot = { scene: dark.scene, camera };
