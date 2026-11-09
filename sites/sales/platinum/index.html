@@ -32,8 +32,8 @@
 
 /* BGD-18 darkroom light field */
 .ground i:nth-child(1){width:60vw;height:60vw;left:-15vw;top:10vh;background:rgba(200,205,215,.10);animation:drift1 70s ease-in-out infinite;opacity:1}
-.ground i:nth-child(2){width:50vw;height:50vw;right:-18vw;top:40vh;background:rgba(var(--uv-rgb),.14);animation:drift2 90s ease-in-out infinite;opacity:1}
-.ground i:nth-child(3){width:70vw;height:30vw;left:15vw;bottom:-18vw;background:rgba(var(--uv-rgb),.18);animation:drift3 60s ease-in-out infinite;opacity:1}
+.ground i:nth-child(2){width:50vw;height:50vw;right:-18vw;top:40vh;background:rgba(var(--uv-rgb),.26);animation:drift2 90s ease-in-out infinite;opacity:1}
+.ground i:nth-child(3){width:70vw;height:30vw;left:15vw;bottom:-18vw;background:rgba(var(--uv-rgb),.30);animation:drift3 60s ease-in-out infinite;opacity:1}
 @keyframes drift1{50%{transform:translate(18vw,8vh) scale(1.15)}}
 @keyframes drift2{50%{transform:translate(-14vw,-10vh) scale(.9)}}
 @keyframes drift3{50%{transform:translate(-8vw,-4vh) scale(1.1)}}
@@ -67,11 +67,13 @@
 .menu a:hover,.menu a:focus-visible{background:rgba(var(--uv-rgb),.16);padding-left:28px}
 
 /* hero */
-.hero{min-height:100svh;display:grid;align-content:center;justify-items:center;text-align:center;padding:120px 0 70px;overflow:hidden}
+.hero{min-height:100svh;display:grid;align-content:center;justify-items:center;text-align:center;padding:96px 0 40px;overflow:hidden}
+.hero .lede{margin-top:6px}
+.hero .ctas{margin-top:20px}.hero .trust{margin-top:18px}
 .hero .stage{position:relative;width:100%;display:grid;justify-items:center}
 .hero h1{margin-top:24px;perspective:900px}
 .hero .sub{margin-top:6px}
-.hero .vialhero{position:relative;width:min(340px,62vw);margin:-2vw auto 0;aspect-ratio:880/1168;mix-blend-mode:lighten}
+.hero .vialhero{position:relative;height:min(40vh,420px);width:auto;margin:-1vh auto 0;aspect-ratio:880/1168;mix-blend-mode:lighten}
 .hero .vialhero img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .hero .vialhero .shine{position:absolute;inset:8% 22%;mix-blend-mode:screen;background:linear-gradient(0deg,transparent 30%,rgba(255,255,255,.22) 48%,transparent 62%);background-size:100% 260%;animation:shine 7s var(--ease-io) infinite;-webkit-mask:url(core/img/vial-front.webp) center/contain no-repeat;mask:url(core/img/vial-front.webp) center/contain no-repeat;opacity:.8}
 @keyframes shine{0%{background-position:0 -160%}60%,100%{background-position:0 160%}}
@@ -149,14 +151,14 @@
 /* set builder */
 .setb .glass{max-width:980px;margin:0 auto;padding:40px clamp(18px,4vw,48px);text-align:center}
 .picks{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:22px 0 30px}
-.pick{min-height:48px;padding:0 20px;border:0;cursor:pointer;clip-path:var(--chamfer-s);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);font:400 13px var(--display);letter-spacing:.14em;transition:all .6s var(--ease)}
+.pick{min-height:50px;padding:0 24px;border:0;cursor:pointer;clip-path:var(--chamfer);--cut:13px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);font:400 13px var(--display);letter-spacing:.14em;transition:all .6s var(--ease)}
 .pick:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px rgba(var(--uv-rgb),.8)}
 .pick[aria-pressed="true"]{background:var(--metal);color:#0b0b0d;box-shadow:none}
 .slots{display:flex;justify-content:center;gap:clamp(12px,3vw,30px);margin-bottom:26px}
 .slot{width:clamp(90px,14vw,140px);aspect-ratio:1/1.15;clip-path:var(--hex);background:rgba(255,255,255,.035);display:grid;place-items:center;position:relative;transition:background .8s}
 .slot::before{content:"";position:absolute;inset:0;clip-path:var(--hex);padding:1px;background:linear-gradient(140deg,var(--m3),rgba(var(--uv-rgb),.6),var(--m1));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.slot img{height:72%;width:auto;opacity:0;transform:translateY(16px) scale(.9);transition:all 1s var(--ease)}
-.slot.full img{opacity:1;transform:none}
+.slot img{height:72%;width:auto;opacity:.13;filter:grayscale(1);transform:translateY(6px) scale(.94);transition:all 1s var(--ease)}
+.slot.full img{opacity:1;filter:none;transform:none}
 .slot span{position:absolute;bottom:12%;font:400 10px var(--display);letter-spacing:.12em}
 .slot.full{background:rgba(var(--uv-rgb),.12)}
 
@@ -165,13 +167,14 @@
 .arrive .pin{position:sticky;top:0;height:100svh;display:grid;align-content:center;justify-items:center;overflow:hidden}
 .arrive .head{margin-bottom:34px}
 .stack3{position:relative;width:min(560px,calc(100vw - 40px));height:300px}
-.scard{position:absolute;inset:0;padding:38px 34px;text-align:center;will-change:transform,opacity}
+.scard{position:absolute;inset:0;padding:38px 34px;text-align:center;will-change:transform,opacity;background:linear-gradient(160deg,rgba(30,30,36,.97),rgba(14,14,17,.98))!important}
 .scard .n{font:400 54px var(--display);line-height:1;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
 .scard h3{font-size:clamp(20px,2.4vw,28px);margin:14px 0 10px}
 .scard p{color:var(--ink-2);margin:0 auto;max-width:42ch}
 
 /* CRD-119 glass slab member card */
-.join .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,70px);align-items:center;max-width:1040px;margin:0 auto}
+.join .grid{display:grid;grid-template-columns:1fr;gap:44px;justify-items:center;max-width:560px;margin:0 auto}
+.join .grid form{width:100%}
 .slab{position:relative;aspect-ratio:1.6/1;width:100%;max-width:470px;justify-self:center;padding:28px 30px;display:grid;align-content:space-between;transform-style:preserve-3d;
   background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.02) 40%,rgba(var(--uv-rgb),.10));box-shadow:0 40px 70px -30px rgba(0,0,0,.9)}
 .slab .row{display:flex;justify-content:space-between;align-items:flex-start;transform:translateZ(30px)}
@@ -183,7 +186,7 @@
 .join form .stack{gap:14px}
 
 /* final */
-.final{text-align:center}
+.final{text-align:center;padding-top:200px}
 .final .vialhero{width:min(220px,46vw);margin:0 auto 10px;aspect-ratio:880/1168;position:relative;mix-blend-mode:lighten}
 .final .vialhero img{width:100%;height:100%;object-fit:contain}
 
@@ -257,7 +260,7 @@
 
 <!-- ============ FOUNDING BAND (capture fallback above the fold line) ============ -->
 <section class="band" style="padding-top:0">
-  <div class="wrap"><div class="glass" data-rv>
+  <div class="wrap pool"><div class="glass" data-rv>
     <span class="eyebrow">FOUNDING OFFER</span>
     <h2 class="h-m"><span class="x3d" data-t="15% OFF YOUR FIRST ORDER">15% OFF YOUR FIRST ORDER</span></h2>
     <p class="small" style="margin:0">Join the PEPTICITY team. One email with your code, then Grace's monthly letter if you tick the box. <i class="ph">[Offer: counsel and Grace to confirm]</i></p>
@@ -304,7 +307,7 @@
 </section>
 
 <section class="lot" id="lot" style="padding-top:40px">
-  <div class="wrap"><div class="glass" data-rv>
+  <div class="wrap pool"><div class="glass" data-rv>
     <span class="eyebrow">LOT LOOKUP</span>
     <h2 class="h-m" style="margin-top:14px"><span class="x3d" data-t="GET A LOT'S PAPERWORK">GET A LOT'S PAPERWORK</span></h2>
     <p class="small" style="margin:10px 0 0">Type the lot number from the back of a vial. We email that lot's paperwork to you. <i class="ph">[Paperwork process: Grace to confirm]</i></p>
@@ -323,7 +326,7 @@
   <div class="wrap">
     <div class="head"><span class="eyebrow" data-rv>FIND YOURS</span><h2 class="h-l" data-rv="2"><span class="x3d" data-t="THREE TAPS">THREE TAPS</span></h2>
       <p class="lede" data-rv="3">Three plain questions about how you shop. Nothing about your health, ever.</p></div>
-    <div class="deck" id="deck" data-rv="3">
+    <div class="deck pool" id="deck" data-rv="3">
       <div class="q glass" data-step="0"><span class="step">QUESTION 1 OF 3</span><h3>HOW DO YOU LIKE TO START?</h3>
         <div class="opts"><button class="opt" data-a="start" data-v="one">ONE VIAL</button><button class="opt" data-a="start" data-v="set">A SET OF THREE</button><button class="opt" data-a="start" data-v="restock">I AM RESTOCKING</button></div></div>
       <div class="q glass ahead" data-step="1"><span class="step">QUESTION 2 OF 3</span><h3>WHICH FORMAT?</h3>
@@ -343,7 +346,7 @@
 
 <!-- ============ SET OF THREE ============ -->
 <section class="setb" id="set" data-floor="03">
-  <div class="wrap"><div class="glass" data-rv data-tilt="2.5">
+  <div class="wrap pool"><div class="glass" data-rv data-tilt="2.5">
     <span class="eyebrow">QUANTITY BREAK</span>
     <h2 class="h-l" style="margin-top:14px"><span class="x3d" data-t="ANY THREE, LESS">ANY THREE, LESS</span></h2>
     <p class="small" style="margin:10px auto 0;max-width:56ch">Pick any three vials and the set price applies: <b style="color:var(--ink)"><span class="ph">[X]%</span> off the three</b>. <i class="ph">[Grace to confirm]</i></p>
@@ -363,7 +366,7 @@
       <div class="scard glass"><div class="n">03</div><h3>IT SHIPS</h3><p>Plain box, tracked from our door to yours. <i class="ph">[carrier and timing: Grace to confirm]</i></p></div>
       <div class="scard glass"><div class="n">04</div><h3>A PERSON ANSWERS</h3><p>Questions go to Grace, not a bot. <i class="ph">[contact email]</i></p></div>
     </div>
-    <div class="ctas"><a class="btn ghost" href="#shop" data-cta="arrive-shop">START AN ORDER</a></div>
+    <div class="ctas" style="margin-top:48px"><a class="btn ghost" href="#shop" data-cta="arrive-shop">START AN ORDER</a></div>
   </div>
 </section>
 
@@ -372,7 +375,7 @@
   <div class="wrap">
     <div class="head"><span class="eyebrow" data-rv>FOUNDING MEMBERS</span><h2 class="h-l" data-rv="2"><span class="x3d" data-t="JOIN THE PEPTICITY TEAM">JOIN THE PEPTICITY TEAM</span></h2>
       <p class="lede" data-rv="3">First word when new lots land, Grace's monthly letter, and your founding card. Not buying today? This is the one to join.</p></div>
-    <div class="grid">
+    <div class="grid pool">
       <div class="slab glass" id="slab" data-tilt="9" data-rv>
         <span class="band2" aria-hidden="true"></span>
         <div class="row"><span class="p" aria-hidden="true">P</span><span class="k">FOUNDING MEMBER</span></div>
@@ -488,7 +491,7 @@
   /* SCR-18 card stack */
   var ar=$('#arrive'),sc=$$('.scard',ar);
   P.onFrame(function(){var p=P.progress(ar)*(sc.length-1+.4);sc.forEach(function(c,i){var d=p-i;var y,s,o;
-    if(d<-1){y=110;s=1;o=0;}else if(d<0){y=(-d)*110;s=1;o=1+d*.0;o=Math.min(1,1+d+0.6);}else{y=-Math.min(d,1.5)*16;s=1-Math.min(d,1.5)*.06;o=d>1.2?Math.max(0,1-(d-1.2)*2):1;}
+    if(d<-1){y=110;s=1;o=0;}else if(d<0){y=(-d)*110;s=1;o=Math.min(1,1+d+0.6);}else{y=-Math.min(d,1)*8;s=1-Math.min(d,1)*.05;o=d>0.55?Math.max(0,1-(d-0.55)*3):1;}
     c.style.transform='translateY('+y+'%) scale('+s+')';c.style.opacity=Math.max(0,o);c.style.zIndex=10+i;});});
   /* CRD-119 live card */
   var who=$('#who');$('#fm-n').addEventListener('input',function(e){who.textContent=(e.target.value||'YOUR NAME').toUpperCase();});

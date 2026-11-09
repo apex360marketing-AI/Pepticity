@@ -32,7 +32,7 @@
   --metal:linear-gradient(100deg,var(--m2) 0%,var(--m3) 20%,var(--m4) 32%,var(--m3) 44%,var(--m1) 58%,var(--m2) 70%,var(--m4) 84%,var(--m2) 100%);
   --oct:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
   --key:polygon(12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%,0 50%)}
-.ground{background:radial-gradient(70% 55% at 50% -12%,rgba(254,249,232,.06),transparent 60%),radial-gradient(60% 50% at 50% 112%,rgba(var(--uv-rgb),.12),transparent 70%),#0b0b0c}
+.ground{background:radial-gradient(70% 55% at 50% -12%,rgba(254,249,232,.08),transparent 60%),radial-gradient(40% 45% at 8% 30%,rgba(var(--uv-rgb),.18),transparent 70%),radial-gradient(40% 45% at 92% 70%,rgba(var(--uv-rgb),.16),transparent 70%),radial-gradient(70% 50% at 50% 115%,rgba(var(--uv-rgb),.24),transparent 70%),#0e0e10}
 
 /* BGD-101 satin folds: very slow, low contrast */
 .satin{position:fixed;inset:-20%;z-index:-1;pointer-events:none;opacity:.55;
@@ -171,8 +171,11 @@
 /* SCR-111 come forward: lab still opens out of an octagon */
 .forward{height:260vh;padding:0}
 .forward .pin{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
-.forward .img{position:absolute;inset:0;background:url(core/img/lab.webp) center/cover;clip-path:polygon(var(--o1) var(--o0),var(--o2) var(--o0),var(--o3) var(--o1),var(--o3) var(--o2),var(--o2) var(--o3),var(--o1) var(--o3),var(--o0) var(--o2),var(--o0) var(--o1));filter:saturate(.6) brightness(.62)}
-.forward .img::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 50%,transparent,rgba(11,11,12,.8))}
+.forward .img{position:absolute;inset:0;background:radial-gradient(40% 55% at 50% 60%,rgba(240,230,199,.16),transparent 70%),radial-gradient(60% 60% at 50% 100%,rgba(var(--uv-rgb),.35),transparent 70%),#0d0d0f;clip-path:polygon(var(--o1) var(--o0),var(--o2) var(--o0),var(--o3) var(--o1),var(--o3) var(--o2),var(--o2) var(--o3),var(--o1) var(--o3),var(--o0) var(--o2),var(--o0) var(--o1));}
+.forward .img img{position:absolute;left:50%;top:11vh;height:40vh;width:auto;transform:translateX(-50%) scale(var(--zs,1.08));mix-blend-mode:lighten;opacity:.95}
+.forward .pin .copy{position:absolute;bottom:4vh;left:0;right:0;margin:0 auto}
+@media (max-width:560px){.forward .img img{top:12vh;height:30vh}}
+.forward .img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(13,13,15,.85) 80%)}
 .forward .copy{position:relative;z-index:2;width:min(640px,calc(100vw - 32px));padding:34px clamp(18px,3vw,40px);text-align:center;opacity:0;transform:translateY(30px);transition:all 1.4s var(--ease)}
 .forward .copy.on{opacity:1;transform:none}
 
@@ -181,7 +184,7 @@
 .letter ul{list-style:none;padding:0;margin:18px 0 22px;display:grid;gap:8px;color:var(--ink-2)}
 .letter li::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;clip-path:var(--oct);background:var(--metal)}
 
-.final{text-align:center}
+.final{text-align:center;padding-top:200px}
 .final .duo{display:flex;justify-content:center;gap:0;margin-bottom:6px;mix-blend-mode:lighten}
 .final .duo img{width:min(170px,34vw);height:auto}
 .bar .glass-in .p{font:400 22px var(--display);color:#3a3a3e;-webkit-text-stroke:.6px rgba(255,255,255,.68)}
@@ -204,6 +207,7 @@
 }
 @media (max-width:560px){
   .logo-w{display:none}
+  .keybtn{padding:0 16px;letter-spacing:.2em;font-size:11px}
   .full-list{grid-column:1/-1}
   .ticket .cols b{font-size:12px}
   .stamp{width:76px;height:76px;font-size:9px}
@@ -239,7 +243,7 @@
       <h1 style="margin-top:18px" aria-label="PEPTICITY"><span class="word" id="w1" aria-hidden="true"></span></h1>
       <p class="h-s" style="color:var(--ink-2);margin:4px 0 0" data-rv="2">PEPTIDES, LABELLED PLAINLY</p>
       <div class="hero-ctas ctas" data-rv="3"><a class="btn" href="#shop" data-cta="hero-shop">SHOP THE SHELVES <span class="arw">&#x2192;</span></a><a class="btn ghost" href="#finder" data-cta="hero-finder">FIND YOURS</a></div>
-      <div class="ticket glass" id="ticket" data-rv="3">
+      <div class="pool"><div class="ticket glass" id="ticket" data-rv="3">
         <span class="stamp" aria-hidden="true">FOUNDING<br>MEMBER<br>15% OFF</span>
         <span class="eyebrow">FOUNDING TICKET</span>
         <div class="cols"><div><b>15% OFF</b><span>first order</span></div><div><b>MONTHLY</b><span>letter from Grace</span></div><div><b>FIRST</b><span>word on new lots</span></div></div>
@@ -249,7 +253,7 @@
           <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me news, offers and Grace's monthly letter. I can unsubscribe at any time. [legal name] · [mailing address] · <a href="#privacy">privacy</a></span></label>
           <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true"></div>
           <div class="done"><h3 class="h-s">TICKET CLAIMED</h3><p class="small">15% is applied in your cart. Preview build: no email was sent. <i class="ph">[Offer: counsel and Grace to confirm]</i></p></div></form>
-      </div>
+      </div></div>
       <div class="trust" data-rv="4"><span class="chip">SHIPS FROM CANADA <i class="ph">[confirm]</i></span><span class="chip">LOT NUMBER ON EVERY VIAL</span><span class="chip">ADULTS 19+ (18+ AB · MB · QC)</span></div>
     </div>
     <div class="side r" data-rv="2" data-tilt="5"><img src="core/img/vial-back-black.webp" alt="The PEPTICITY vial, back: product name, amount, lot and storage line" width="880" height="1168"><span class="shine" aria-hidden="true"></span></div>
@@ -270,7 +274,7 @@
   <div class="wrap">
     <div class="head"><span class="eyebrow" data-rv>FIND YOURS</span><h2 class="h-l" data-rv="2"><span class="x3d tide" data-t="ONE SENTENCE">ONE SENTENCE</span></h2>
       <p class="lede" data-rv="3">Fill in the blanks about how you shop. Nothing about your health, ever.</p></div>
-    <div class="sentence glass plate" data-rv="3">
+    <div class="pool"><div class="sentence glass plate" data-rv="3">
       <p class="s">I'D LIKE <label class="sr" for="s1">How many</label><select id="s1"><option value="one">ONE VIAL</option><option value="set">A SET OF THREE</option><option value="restock">TO RESTOCK</option></select>
         FROM <label class="sr" for="s2">Which shelf</label><select id="s2"><option value="10">THE 10 MG VIALS</option><option value="two">THE TWO-SIZE SHELF</option><option value="large">THE LARGE FORMATS</option><option value="all">ANY SHELF</option></select>,
         <label class="sr" for="s3">Paperwork</label><select id="s3"><option value="yes">WITH LOT PAPERWORK</option><option value="no">NO PAPERWORK NEEDED</option></select>.</p>
@@ -279,7 +283,7 @@
         <div class="picks-out" id="sList"></div>
         <div class="ctas" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><button class="btn" id="sAdd">ADD ALL THREE</button><button class="btn ghost" id="sSave">EMAIL MY SHORTLIST</button></div>
       </div>
-    </div>
+    </div></div>
   </div>
 </section>
 
@@ -297,10 +301,10 @@
 <!-- ============ THE PAPERWORK (SCR-111 come forward) ============ -->
 <section class="forward" id="paper">
   <div class="pin">
-    <div class="img" id="fimg" aria-hidden="true"></div>
+    <div class="img" id="fimg" aria-hidden="true"><img src="core/img/vial-back-black.webp" alt="" loading="lazy"></div>
     <div class="copy glass" id="fcopy">
       <span class="eyebrow">THE PAPERWORK</span>
-      <h2 class="h-m" style="margin:14px 0 8px"><span class="x3d" data-t="EVERY LOT, ON PAPER">EVERY LOT, ON PAPER</span></h2>
+      <h2 class="h-m" style="margin:14px 0 8px;font-size:clamp(22px,2.6vw,34px)"><span class="x3d" data-t="EVERY LOT, ON PAPER">EVERY LOT, ON PAPER</span></h2>
       <p class="small" style="margin:0 0 16px">Type the lot number from the back of your vial and we email that lot's paperwork. <i class="ph">[Paperwork process: Grace to confirm]</i></p>
       <form data-capture="lot-lookup" novalidate><div class="todo" style="display:grid;gap:10px">
         <div class="form-row"><div class="field"><label for="gl-n">Lot number</label><input class="input" id="gl-n" name="lot" autocomplete="off" autocapitalize="characters" required pattern="[A-Za-z0-9-]{3,}" placeholder="e.g. P-0000" data-hint="Letters and numbers from the back label, e.g. P-0000"><span class="msg" aria-live="polite"></span></div>
@@ -315,7 +319,7 @@
 
 <!-- ============ GRACE'S LETTER ============ -->
 <section class="letter" id="letter">
-  <div class="wrap"><div class="glass plate" data-rv data-tilt="2">
+  <div class="wrap pool"><div class="glass plate" data-rv data-tilt="2">
     <span class="eyebrow">NOT BUYING TODAY?</span>
     <h2 class="h-l" style="margin-top:14px"><span class="x3d tide" data-t="GRACE'S LETTER">GRACE'S LETTER</span></h2>
     <ul><li>New lots, the day they land</li><li>Restock dates before anyone else</li><li>Your 15% founding code, kept for when you are ready</li></ul>
@@ -420,7 +424,7 @@
   P.onFrame(function(){var p=P.progress(fw);var e=Math.min(1,p/.55);e=e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2;
     var inset=(1-e)*30;var o0=inset,o3=100-inset,cut=(1-e)*12+0;
     fimg.style.setProperty('--o0',o0+'%');fimg.style.setProperty('--o3',o3+'%');fimg.style.setProperty('--o1',(o0+cut)+'%');fimg.style.setProperty('--o2',(o3-cut)+'%');
-    var on=p>.45;fcopy.classList.toggle('on',on);fcopy.inert=!on;});
+    var on=p>.45;fcopy.classList.toggle('on',on);fcopy.inert=!on;fimg.style.setProperty('--zs',(1.12-e*.12).toFixed(3));});
   /* hero ticket stamps on claim */
   document.addEventListener('pep:lead',function(e){if(e.detail.hook==='hero-ticket')$('#ticket').classList.add('stamped');});
   new IntersectionObserver(function(es){if(es[0].isIntersecting)$('#wm').classList.add('lit');},{threshold:.6}).observe($('#wm'));

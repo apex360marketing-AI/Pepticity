@@ -70,7 +70,7 @@
       : '<div class="meta">' + esc(p.sizes[0]) + ' · one vial</div>';
     var act = p.soon
       ? '<button type="button" class="btn ghost" data-notify="' + p.k + '">TELL ME WHEN IT LANDS</button>'
-      : '<button type="button" class="btn" data-add="' + p.k + '" data-cta="add-' + p.k + '"><span class="lbl">ADD TO CART</span></button>';
+      : '<button type="button" class="btn ghost" data-add="' + p.k + '" data-cta="add-' + p.k + '"><span class="lbl">ADD TO CART</span></button>';
     return '<article class="card glass ' + (opts.cls || '') + '" data-k="' + p.k + '"' + (opts.attrs || '') + '>' +
       (p.soon ? '<span class="chip">COMING SOON</span>' : '') +
       '<div class="vial"><img src="' + IMG + '" alt="PEPTICITY vial, ' + esc(p.name) + '" loading="lazy" width="525" height="876"></div>' +
@@ -327,8 +327,8 @@
   D.addEventListener('click', function (e) { var a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute('href').length < 2) return; var el = $(a.getAttribute('href')); if (!el) return; e.preventDefault(); W.PEP.scrollTo(el); });
 
   function reveals() {
-    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -12% 0px' });
-    $$('[data-rv]').forEach(function (el) { io.observe(el); });
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -6% 0px' });
+    $$('[data-rv]').forEach(function (el) { if (el.closest('[data-hero]')) { setTimeout(function () { el.classList.add('in'); }, 120); } else io.observe(el); });
   }
   function tilt() {
     if (!fine || reduce) return;
@@ -347,7 +347,10 @@
     reveals(); tilt(); bindForms(D); renderCart(); exitHooks();
     var bar = $('.bar'), hero = $('[data-hero]');
     if (bar && hero) new IntersectionObserver(function (es) { bar.classList.toggle('on', !es[0].isIntersecting); }).observe(hero);
-    if (bar) { D.addEventListener('focusin', function (e) { if (e.target.matches('input,select')) bar.classList.add('typing'); }); D.addEventListener('focusout', function () { bar.classList.remove('typing'); }); }
+    if (bar) { var tick = 0; W.PEP.onFrame(function () { if (++tick % 8) return; var bh = bar.offsetHeight, bw = bar.offsetWidth, br = { top: W.innerHeight - 14 - bh, bottom: W.innerHeight - 14, left: (W.innerWidth - bw) / 2, right: (W.innerWidth + bw) / 2 }, hit = false;
+        $$('form[data-capture] button.btn, form[data-capture] input').forEach(function (b) { if (hit || !b.offsetParent) return; var r = b.getBoundingClientRect(); if (r.bottom > br.top - 8 && r.top < br.bottom && r.right > br.left && r.left < br.right) hit = true; });
+        bar.classList.toggle('typing', hit || bar.dataset.f === '1'); });
+      D.addEventListener('focusin', function (e) { if (e.target.matches('input,select')) bar.dataset.f = '1'; }); D.addEventListener('focusout', function () { bar.dataset.f = ''; }); }
     D.dispatchEvent(new Event('pep:ready'));
   }
   if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', boot); else boot();
