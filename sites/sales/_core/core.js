@@ -15,32 +15,71 @@
 
   /* ---------------- products (names + sizes only, from shared/inventory.js) ---------------- */
   var IMG = 'core/img/vial-front.webp';
+  /* Grace's full catalogue (northernpeptides.st Store API, pulled 10 Nov 2026: 36 listings = 28 products).
+     price = her current store price in CAD per size; shown only in the owner preview until counsel clears pricing.
+     flag: 'delist' = peptide-regulatory recommends delisting; 'high' = high legal risk; shown to the owner only.
+     Bacteriostatic water is NOT on the shelf (peptide-regulatory: never sold beside peptides). */
   var P = [
-    { k: 'bpc-157', name: 'BPC-157', sizes: ['10 mg'], shelf: 1 },
-    { k: 'tb-500', name: 'TB-500', sizes: ['10 mg'], shelf: 1 },
-    { k: 'kpv', name: 'KPV', sizes: ['10 mg'], shelf: 1 },
-    { k: 'epitalon', name: 'EPITALON', sizes: ['10 mg', '50 mg'], shelf: 2 },
-    { k: 'mots-c', name: 'MOTS-C', sizes: ['10 mg', '40 mg'], shelf: 2 },
-    { k: 'ghk-cu', name: 'GHK-CU', sizes: ['50 mg', '100 mg'], shelf: 2 },
-    { k: 'nad', name: 'NAD+', sizes: ['1000 mg'], shelf: 3 },
-    { k: 'glutathione', name: 'GLUTATHIONE', sizes: ['1500 mg'], shelf: 3 },
-    { k: 'igf-1-lr3', name: 'IGF-1 LR3', sizes: ['[size: Grace to confirm]'], shelf: 3, soon: true }
+    { k: 'bpc-157', name: 'BPC-157', sizes: ['10 mg'], price: [80], shelf: 1 },
+    { k: 'tb-500', name: 'TB-500', sizes: ['10 mg'], price: [90], shelf: 1 },
+    { k: 'kpv', name: 'KPV', sizes: ['10 mg'], price: [90], shelf: 1 },
+    { k: 'thymosin-alpha-1', name: 'THYMOSIN ALPHA-1', sizes: ['10 mg'], price: [90], shelf: 1 },
+    { k: 'ss-31', name: 'SS-31', sizes: ['10 mg'], price: [75], shelf: 1 },
+    { k: 'semax', name: 'SEMAX', sizes: ['10 mg'], price: [75], shelf: 1 },
+    { k: 'selank', name: 'SELANK', sizes: ['10 mg'], price: [75], shelf: 1 },
+    { k: 'ipamorelin', name: 'IPAMORELIN', sizes: ['10 mg'], price: [110], shelf: 1 },
+    { k: 'tesamorelin', name: 'TESAMORELIN', sizes: ['10 mg'], price: [160], shelf: 1 },
+    { k: 'cjc-1295-dac', name: 'CJC-1295 WITH DAC', sizes: ['5 mg'], price: [100], shelf: 1 },
+    { k: 'cjc-1295', name: 'CJC-1295 WITHOUT DAC', sizes: ['10 mg'], price: [100], shelf: 1 },
+    { k: 'aod-9604', name: 'AOD-9604', sizes: ['5 mg'], price: [65], shelf: 1 },
+    { k: '5-amino-1mq', name: '5-AMINO-1MQ', sizes: ['10 mg'], price: [100], shelf: 1 },
+    { k: 'oxytocin', name: 'OXYTOCIN', sizes: ['2 mg'], price: [80], shelf: 1 },
+    { k: 'pt-141', name: 'PT-141', sizes: ['10 mg'], price: [50], shelf: 1 },
+    { k: 'igf-1-lr3', name: 'IGF-1 LR3', sizes: ['[size: confirm]'], price: [110], shelf: 1 },
+    { k: 'melanotan-ii', name: 'MELANOTAN II', sizes: ['10 mg'], price: [50], shelf: 1, flag: 'delist' },
+    { k: 'epitalon', name: 'EPITALON', sizes: ['10 mg', '50 mg'], price: [60, 200], shelf: 2 },
+    { k: 'mots-c', name: 'MOTS-C', sizes: ['10 mg', '40 mg'], price: [75, 125], shelf: 2 },
+    { k: 'ghk-cu', name: 'GHK-CU', sizes: ['50 mg', '100 mg'], price: [50, 100], shelf: 2 },
+    { k: 'tirzepatide', name: 'TIRZEPATIDE', sizes: ['15 mg', '30 mg'], price: [150, 275], shelf: 2 },
+    { k: 'retatrutide', name: 'RETATRUTIDE', sizes: ['10 mg', '15 mg', '20 mg'], price: [135, 165, 190], shelf: 2, flag: 'delist' },
+    { k: 'nad', name: 'NAD+', sizes: ['1000 mg'], price: [190], shelf: 3 },
+    { k: 'glutathione', name: 'GLUTATHIONE', sizes: ['1500 mg'], price: [85], shelf: 3 },
+    { k: 'klow', name: 'KLOW BLEND', sizes: ['80 mg'], price: [170], shelf: 3 },
+    { k: 'glow', name: 'GLOW BLEND', sizes: ['70 mg'], price: [150], shelf: 3 },
+    { k: 'wolverine', name: 'WOLVERINE BLEND', sizes: ['10 mg', '20 mg'], price: [100, 195], shelf: 3 },
+    { k: 'hgh', name: 'HGH', sizes: ['100 iu'], price: [200], shelf: 3, flag: 'high' }
   ];
   var SHELVES = {
-    1: { title: 'SHELF 01 · THE 10 MG VIALS', note: 'One size, one vial, one lot number.' },
-    2: { title: 'SHELF 02 · TWO SIZES', note: 'Each comes in a smaller and a larger vial.' },
-    3: { title: 'SHELF 03 · THE LARGE FORMATS', note: 'The biggest vials on the shelf.' }
+    1: { title: 'SHELF 01 · SINGLE VIALS', note: 'One size, one vial, one lot number.' },
+    2: { title: 'SHELF 02 · MORE THAN ONE SIZE', note: 'Pick the smaller or the larger vial.' },
+    3: { title: 'SHELF 03 · BLENDS AND LARGE FORMATS', note: 'Blends and the biggest vials on the shelf.' }
   };
   /* names switch: hidden by default (peptide-regulatory: unauthorized products stay unnamed until counsel clears).
      Owner preview only: the page opened with #names shows the real names and per-product label photos. */
-  try { if (W.location.hash === '#names' || sessionStorage.getItem('pep_names')) { CFG.COUNSEL.names = true; sessionStorage.setItem('pep_names', '1'); } } catch (e) {}
+  try { if (W.location.hash === '#names' || sessionStorage.getItem('pep_names')) { CFG.COUNSEL.names = true; CFG.COUNSEL.prices = true; sessionStorage.setItem('pep_names', '1'); } } catch (e) {}
+  var HAS_IMG = { 'bpc-157': 1, 'tb-500': 1, 'kpv': 1, 'epitalon': 1, 'mots-c': 1, 'ghk-cu': 1, 'nad': 1, 'glutathione': 1 };
   P.forEach(function (p, i) {
-    p.realName = p.name; p.img = p.soon ? null : 'core/img/vials/' + p.k + '.webp';
+    p.realName = p.name; p.img = (p.soon || !HAS_IMG[p.k]) ? null : 'core/img/vials/' + p.k + '.webp';
     if (!CFG.COUNSEL.names) { p.name = 'VIAL N\u00ba ' + (i < 9 ? '0' : '') + (i + 1); p.img = null; }
   });
   var byK = {}; P.forEach(function (p) { byK[p.k] = p; });
   var PRICE = '$[PRICE]';
-  W.PEP = { products: P, shelves: SHELVES, byK: byK, img: IMG };
+  function priceOf(p, size) { if (!CFG.COUNSEL.prices || !p || !p.price) return null; var i = Math.max(0, p.sizes.indexOf(size)); return p.price[i] != null ? p.price[i] : p.price[0]; }
+  function money(n) { return n == null ? null : '$' + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, ''); }
+  function priceTxt(p, size) { var n = priceOf(p, size); return n == null ? PRICE : money(n); }
+  /* totals: real numbers in the owner preview (prices on), placeholders otherwise */
+  function totals(lines) {
+    var on = !!CFG.COUNSEL.prices, sub = 0, setSub = 0, n = 0;
+    lines.forEach(function (l) { var pr = priceOf(byK[l.k], l.size) || 0; sub += pr * l.q; n += l.q; if (l.set) setSub += pr * l.q; });
+    var setPct = typeof CFG.SET_PCT === 'number' ? CFG.SET_PCT : null;
+    var setOff = setPct != null ? setSub * setPct / 100 : null;
+    var member = (CFG.COUNSEL.offer && !!store.get('joined', false)) ? (sub - (setOff || 0)) * CFG.OFFER_PCT / 100 : 0;
+    var ship = typeof CFG.FREE_SHIP === 'number' ? (sub >= CFG.FREE_SHIP ? 0 : null) : null;
+    return { on: on, n: n, sub: sub, setSub: setSub, setOff: setOff, member: member, ship: ship, total: sub - (setOff || 0) - member,
+      t: { sub: on ? money(sub) : '$[SUBTOTAL]', setOff: setOff != null && on ? '\u2212' + money(setOff) : '\u2212$[X]', member: on ? '\u2212' + money(member) : '\u2212$[X]',
+           ship: ship === 0 ? 'FREE' : '$[SHIPPING]', total: on ? money(sub - (setOff || 0) - member) + (ship == null ? ' + shipping' : '') : '$[TOTAL]' } };
+  }
+  W.PEP = { products: P, shelves: SHELVES, byK: byK, img: IMG, priceOf: priceOf, priceTxt: priceTxt, money: money, totals: totals, cfg: CFG };
 
   /* ---------------- utils ---------------- */
   var $ = function (s, r) { return (r || D).querySelector(s); };
@@ -79,10 +118,10 @@
       ? '<button type="button" class="btn ghost" data-notify="' + p.k + '">TELL ME WHEN IT LANDS</button>'
       : '<button type="button" class="btn ghost" data-add="' + p.k + '" data-cta="add-' + p.k + '"><span class="lbl">ADD TO CART</span></button>';
     return '<article class="card glass ' + (opts.cls || '') + '" data-k="' + p.k + '"' + (opts.attrs || '') + '>' +
-      (p.soon ? '<span class="chip">COMING SOON</span>' : '') +
+      (p.soon ? '<span class="chip">COMING SOON</span>' : (CFG.COUNSEL.names && p.flag ? '<span class="chip" style="background:rgba(255,80,110,.18);color:#ffb3c4">COUNSEL: ' + (p.flag === 'delist' ? 'RECOMMEND DELIST' : 'HIGH RISK') + '</span>' : '')) +
       '<div class="vial"><img src="' + (p.img || IMG) + '" alt="PEPTICITY vial, ' + esc(p.name) + '" loading="lazy" width="525" height="876"></div>' +
       '<h3>' + esc(p.name) + '</h3>' + sizes +
-      '<div class="price">' + (p.soon ? '<span class="small">Price when it lands</span>' : PRICE + ' <span class="small">CAD</span>') + '</div>' + act + '</article>';
+      '<div class="price"><span data-price>' + (p.soon ? '' : priceTxt(p, p.sizes[0])) + '</span>' + (p.soon ? '<span class="small">Price when it lands</span>' : ' <span class="small">CAD</span>') + '</div>' + act + '</article>';
   }
   W.PEP.cardHTML = cardHTML;
 
@@ -117,10 +156,10 @@
         '<input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true"></div>' +
         '<div class="done"><p class="small">You are on the team. ' + CFG.OFFER_PCT + '% is on this order.</p></div></form>' +
       '<button class="btn" id="checkout" style="margin-top:16px">CHECKOUT <span class="arw">&#x2192;</span></button>' +
-      '<button class="btn ghost" data-close style="margin-top:10px">CONTINUE SHOPPING</button></aside>';
+      (CFG.CART_URL ? '<a class="btn ghost" href="' + CFG.CART_URL + '" style="margin-top:10px">VIEW FULL CART</a>' : '<button class="btn ghost" data-close style="margin-top:10px">CONTINUE SHOPPING</button>') + '</aside>';
     D.body.appendChild(d);
     $$('[data-close]', d).forEach(function (b) { b.addEventListener('click', closeCart); });
-    $('#checkout', d).addEventListener('click', function () { if (!count()) { toast('Your cart is empty'); return; } closeCart(); openGate(); });
+    $('#checkout', d).addEventListener('click', function () { if (!count()) { toast('Your cart is empty'); return; } closeCart(); if (CFG.CHECKOUT_URL) { track('checkout_start'); W.location.href = CFG.CHECKOUT_URL; } else openGate(); });
     d.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCart(); trap(e, $('.panel', d)); });
     return d;
   }
@@ -130,7 +169,7 @@
     drawer.classList.add('open'); lock(true); setTimeout(function () { $('.x', drawer).focus(); }, 60); track('cart_open');
   }
   function closeCart() { if (!drawer) return; drawer.classList.remove('open'); lock(false); if (lastFocus) lastFocus.focus(); }
-  W.PEP.openCart = openCart;
+  W.PEP.openCart = openCart; W.PEP.cart = function () { return cart; }; W.PEP.saveCart = function (c) { cart = c; saveCart(); }; W.PEP.count = count; W.PEP.joined = joined; W.PEP.AGE = null;
   function renderCart() {
     $$('[data-count]').forEach(function (el) { el.textContent = count(); });
     $$('.bar .count').forEach(function (el) { el.textContent = count() ? count() + (count() === 1 ? ' ITEM' : ' ITEMS') + ' IN CART' : 'FIRST ORDER ' + CFG.OFFER_PCT + '% OFF'; });
@@ -143,13 +182,13 @@
       return '<div class="line"><img src="' + IMG + '" alt=""><div><b>' + esc(p.name) + '</b><span class="small">' + esc(l.size) + ' · ' + PRICE + '</span>' + (l.set ? '<span class="small" style="display:block">SET OF THREE</span>' : '') + '</div>' +
         '<div class="qty"><button type="button" aria-label="One less ' + esc(p.name) + '" data-q="' + i + '" data-d="-1">&minus;</button><span aria-live="polite">' + l.q + '</span><button type="button" aria-label="One more ' + esc(p.name) + '" data-q="' + i + '" data-d="1">+</button></div></div>';
     }).join('');
-    var sets = cart.some(function (l) { return l.set; });
-    T.innerHTML = '<div><span>Subtotal (' + count() + ')</span><span>$[SUBTOTAL]</span></div>' +
-      (sets ? '<div><span>Set of three · ' + CFG.SET_PCT + '% off</span><span>&minus;$[X]</span></div>' : '') +
-      (CFG.COUNSEL.offer && joined() ? '<div><span>PEPTICITY TEAM · ' + CFG.OFFER_PCT + '% OFF FIRST ORDER</span><span>&minus;$[X]</span></div>' : '') +
-      '<div><span>Shipping</span><span>$[SHIPPING]</span></div><div class="ship" aria-hidden="true"><i style="width:' + Math.min(100, count() * 22) + '%"></i></div>' +
+    var sets = cart.some(function (l) { return l.set; }), T0 = totals(cart);
+    T.innerHTML = '<div><span>Subtotal (' + count() + ')</span><span>' + T0.t.sub + '</span></div>' +
+      (sets ? '<div><span>Set of three · ' + CFG.SET_PCT + '% off</span><span>' + T0.t.setOff + '</span></div>' : '') +
+      (CFG.COUNSEL.offer && joined() ? '<div><span>PEPTICITY TEAM · ' + CFG.OFFER_PCT + '% OFF FIRST ORDER</span><span>' + T0.t.member + '</span></div>' : '') +
+      '<div><span>Shipping</span><span>' + T0.t.ship + '</span></div><div class="ship" aria-hidden="true"><i style="width:' + Math.min(100, count() * 22) + '%"></i></div>' +
       '<div class="small">Free shipping over $' + CFG.FREE_SHIP + ' CAD [Grace to confirm]. Taxes shown at checkout.</div>' +
-      '<div class="big"><span>Total before tax</span><span>$[TOTAL]</span></div>';
+      '<div class="big"><span>Total before tax</span><span>' + T0.t.total + '</span></div>';
     var jl = $('.join-line', drawer); if (jl) jl.style.display = (CFG.COUNSEL.offer && !joined()) ? '' : 'none';
     $$('[data-q]', L).forEach(function (b) { b.addEventListener('click', function () {
       var i = +b.dataset.q, d = b.dataset.d, l = cart[i]; l.q += +d; if (l.q < 1) cart.splice(i, 1); saveCart(); var nb = $('[data-q="' + i + '"][data-d="' + d + '"]', drawer) || $('.x', drawer); nb.focus(); }); });
@@ -181,8 +220,8 @@
   W.PEP.modal = modal;
 
   /* age + province gate (before checkout) */
-  var AGE = { AB: 18, MB: 18, QC: 18, BC: 19, NB: 19, NL: 19, NS: 19, NT: 19, NU: 19, ON: 19, PE: 19, SK: 19, YT: 19 };
-  var PROV = { AB: 'Alberta', BC: 'British Columbia', MB: 'Manitoba', NB: 'New Brunswick', NL: 'Newfoundland and Labrador', NS: 'Nova Scotia', NT: 'Northwest Territories', NU: 'Nunavut', ON: 'Ontario', PE: 'Prince Edward Island', QC: 'Quebec', SK: 'Saskatchewan', YT: 'Yukon' };
+  var AGE = W.PEP.AGE = { AB: 18, MB: 18, QC: 18, BC: 19, NB: 19, NL: 19, NS: 19, NT: 19, NU: 19, ON: 19, PE: 19, SK: 19, YT: 19 };
+  var PROV = W.PEP.PROV = { AB: 'Alberta', BC: 'British Columbia', MB: 'Manitoba', NB: 'New Brunswick', NL: 'Newfoundland and Labrador', NS: 'Nova Scotia', NT: 'Northwest Territories', NU: 'Nunavut', ON: 'Ontario', PE: 'Prince Edward Island', QC: 'Quebec', SK: 'Saskatchewan', YT: 'Yukon' };
   function openGate() {
     track('checkout_start');
     var m = modal('gate', '<span class="eyebrow">BEFORE CHECKOUT</span><h2 id="gate-h" style="margin-top:14px">ADULTS ONLY, IN CANADA</h2>' +
@@ -301,7 +340,8 @@
     var t = e.target.closest('[data-add],[data-notify],[data-open-cart],.size,[data-cta],[data-offer]');
     if (!t) return;
     if (t.matches('[data-cta]')) track('cta_click', { id: t.dataset.cta });
-    if (t.classList.contains('size')) { $$('.size', t.parentNode).forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); }); return; }
+    if (t.classList.contains('size')) { $$('.size', t.parentNode).forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+      var cd = t.closest('[data-k]'), pe = cd && $('[data-price]', cd); if (pe) pe.textContent = priceTxt(byK[cd.dataset.k], t.dataset.size); D.dispatchEvent(new CustomEvent('pep:size', { detail: { k: cd && cd.dataset.k, size: t.dataset.size } })); return; }
     if (t.dataset.add) {
       var card = t.closest('.card'), sel = card && $('.size[aria-pressed="true"]', card);
       addToCart(t.dataset.add, sel ? sel.dataset.size : null);

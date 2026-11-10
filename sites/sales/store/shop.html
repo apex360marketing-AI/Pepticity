@@ -220,11 +220,11 @@
 <div class="ground" aria-hidden="true"></div><div class="satin" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="torch" aria-hidden="true"></div>
 <div class="announce">GRAND OPENING · 15% OFF YOUR FIRST ORDER WITH A FOUNDING TICKET · <a href="index.html#ticket">CLAIM IT</a> <span class="ph" style="color:inherit;border-color:rgba(0,0,0,.4)">[offer: counsel + Grace to confirm]</span></div>
 <header class="top" id="top">
-  <nav class="l nav" aria-label="Shop"><a href="shop.html" aria-current="page">SHOP</a><a href="index.html#finder">FIND YOURS</a><a href="about.html">THE STANDARD</a></nav>
+  <nav class="l nav" aria-label="Shop"><a href="shop.html" aria-current="page">SHOP</a><a href="index.html#finder">FIND YOURS</a><a href="about.html">THE STANDARD</a><a href="journal.html">JOURNAL</a></nav>
   <a class="brand" href="index.html" aria-label="PEPTICITY home"><span class="p" aria-hidden="true">P</span><span class="w">PEPTICITY</span></a>
   <div class="r"><nav class="nav" aria-label="Help"><a href="index.html#paper">LOT LOOKUP</a><a href="contact.html">CONTACT</a></nav><button class="keybtn" data-open-cart aria-label="Open cart">CART <span class="n" data-count>0</span></button><button class="keybtn menu-btn" id="mBtn" aria-expanded="false" aria-controls="mnav">MENU</button></div>
 </header>
-<div class="mnav" id="mnav" aria-hidden="true"><div class="scrim" data-mclose3></div><nav aria-label="Site"><a href="index.html">HOME</a><a href="shop.html">SHOP ALL</a><a href="index.html#finder">FIND YOURS</a><a href="index.html#set">THE SET OF THREE</a><a href="about.html">THE STANDARD</a><a href="index.html#paper">LOT LOOKUP</a><a href="contact.html">CONTACT</a></nav></div>
+<div class="mnav" id="mnav" aria-hidden="true"><div class="scrim" data-mclose3></div><nav aria-label="Site"><a href="index.html">HOME</a><a href="shop.html">SHOP ALL</a><a href="index.html#finder">FIND YOURS</a><a href="index.html#set">THE SET OF THREE</a><a href="about.html">THE STANDARD</a><a href="journal.html">JOURNAL</a><a href="cart.html">CART</a><a href="index.html#paper">LOT LOOKUP</a><a href="contact.html">CONTACT</a></nav></div>
 <main id="main">
 <section class="phero"><div class="wrap"><div class="crumbs"><a href="index.html">HOME</a> · SHOP</div><span class="eyebrow">THE COLLECTION</span><h1 class="h-l" style="margin-top:14px"><span class="x3d gold-t" data-t="SHOP ALL">SHOP ALL</span></h1><p class="lede">Name, size and price. Pick a size, add it to your cart. Checkout asks your province first.</p></div></section>
 <section style="padding-top:10px"><div class="wrap"><div class="filters" id="filters" role="group" aria-label="Filter the shelf"><button aria-pressed="true" data-f="0">ALL</button><button aria-pressed="false" data-f="1">10 MG VIALS</button><button aria-pressed="false" data-f="2">TWO SIZES</button><button aria-pressed="false" data-f="3">LARGE FORMATS</button></div><div class="shelf p3" id="grid"></div><div class="upsell glass pool" data-rv><div><span class="eyebrow">QUANTITY BREAK</span><h2 class="h-s" style="margin-top:10px">ANY THREE VIALS, <span class="ph">[X]%</span> OFF</h2></div><a class="btn" href="index.html#set">BUILD MY SET <span class="arw">&#x2192;</span></a></div><div class="upsell glass pool" data-rv><div><span class="eyebrow">NOT SURE?</span><h2 class="h-s" style="margin-top:10px">ONE SENTENCE, THREE PICKS</h2></div><a class="btn ghost" href="index.html#finder">FIND YOURS</a></div></div></section>
@@ -232,10 +232,11 @@
 <footer id="privacy">
   <div class="rail-h" style="margin-bottom:60px"></div>
   <div class="wordmark" id="wm" aria-hidden="true">PEPTICITY</div>
-  <div class="foot-links"><a href="shop.html">Shop all</a><a href="index.html#set">Set of three</a><a href="about.html">The standard</a><a href="index.html#paper">Lot lookup</a><a href="index.html#letter">Grace's letter</a><a href="contact.html">Contact</a><a href="contact.html#faq">FAQ</a><a href="#privacy">Privacy <i class="ph">[page]</i></a><a href="#privacy">Terms <i class="ph">[page]</i></a></div>
+  <div class="foot-links"><a href="shop.html">Shop all</a><a href="index.html#set">Set of three</a><a href="about.html">The standard</a><a href="index.html#paper">Lot lookup</a><a href="journal.html">Journal</a><a href="cart.html">Cart</a><a href="index.html#letter">Grace's letter</a><a href="contact.html">Contact</a><a href="contact.html#faq">FAQ</a><a href="#privacy">Privacy <i class="ph">[page]</i></a><a href="#privacy">Terms <i class="ph">[page]</i></a></div>
   <p class="legal">PEPTICITY · [legal name] · [mailing address] · [contact email]. Adults only. Prices in CAD. PEPTICITY does not give health, dosing or use advice. [Final legal copy to be approved by counsel.] Preview build: forms and checkout send nothing.</p>
 </footer>
 <div class="bar" aria-label="Cart bar"><div class="glass glass-in"><span class="p" aria-hidden="true">P</span><span class="count">FIRST ORDER 15% OFF</span><a class="btn" href="shop.html" data-cta="bar-shop">SHOP</a><button class="btn ghost" data-open-cart>CART · <span data-count>0</span></button></div></div>
+<script>window.PEP_CFG={CHECKOUT_URL:"checkout.html",CART_URL:"cart.html"};</script>
 <script src="core/vendor/lenis.min.js"></script>
 <script src="core/core.js"></script>
 <script>
@@ -262,7 +263,7 @@
   var grid=$('#grid');
   function draw(f){grid.innerHTML=P.products.filter(function(p){return !+f||p.shelf===+f;}).map(function(p,i){return P.cardHTML(p,{cls:'plate',attrs:' data-rv="'+((i%3)+1)+'"'}).replace('<h3>'+P.esc(p.name)+'</h3>','<h3><a href="product.html#p'+(P.products.indexOf(p)+1)+'">'+P.esc(p.name)+'</a></h3>');}).join('');$$('[data-rv]',grid).forEach(function(e){e.classList.add('in');});}
   $('#filters').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;$$('#filters button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});draw(b.dataset.f);P.track('shop_filter',{f:b.dataset.f});});
-  draw(0);
+  var m0=/#s(\d)/.exec(location.hash);var f0=m0?m0[1]:'0';$$('#filters button').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.f===f0));});draw(f0);
 
 })();
 </script>

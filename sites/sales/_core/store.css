@@ -145,3 +145,47 @@
 @media (max-width:860px){.pillars,.split,.pdp{grid-template-columns:1fr}.shelf.p3{grid-template-columns:1fr 1fr}.pdp .info{text-align:center}.pdp .qty{justify-content:center}}
 @media (max-width:560px){.top{padding:10px 10px;grid-template-columns:auto 1fr}.top .l{display:none}.top .r{justify-self:end}.top .r{gap:6px}.keybtn{padding:0 12px;letter-spacing:.14em}.story h3{font-size:17px}.story,.story .glass{min-width:0}.hero2{padding-top:110px}.spinwrap{width:min(300px,72vw)}.pdp .facts{grid-template-columns:1fr}.announce{font-size:10px;letter-spacing:.14em}.brand .w{display:none}}
 main{overflow-x:clip}
+/* cart, checkout, journal */
+.cartgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:start;max-width:1180px;margin:0 auto}
+.clines{display:grid;gap:12px;margin-bottom:18px}
+.cline{display:grid;grid-template-columns:78px 1fr auto auto;gap:16px;align-items:center;padding:14px 18px}
+.cimg{height:96px;display:grid;place-items:center}
+.cimg img{height:96px;width:auto;-webkit-mask-image:radial-gradient(42% 50% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(42% 50% at 50% 50%,#000 62%,transparent 100%)}
+.cinfo b{display:block;font:400 16px var(--display);letter-spacing:.1em}
+.cinfo .cprice{display:block;font:700 15px var(--body);margin-top:4px;color:var(--g3)}
+.cline .qty{display:flex;align-items:center;gap:8px}
+.cline .qty button{width:40px;height:44px;border:0;cursor:pointer;clip-path:var(--hex);background:rgba(255,255,255,.08)}
+.cline .qty button:hover{background:rgba(var(--uv-rgb),.3)}
+.rm{min-height:44px;border:0;background:none;cursor:pointer;font:600 11px var(--body);letter-spacing:.18em;color:var(--ink-3)}
+.rm:hover{color:#ffb3c4}
+.csum{padding:28px 24px;position:sticky;top:110px}
+.csum .totals{margin-top:14px}
+.csum .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.btn.off{opacity:.5}
+.savecart{margin-top:16px}
+.savecart summary{cursor:pointer;list-style:none;text-align:center;font:400 12px var(--display);letter-spacing:.2em;color:var(--g3);min-height:44px;display:grid;place-items:center}
+.savecart summary::-webkit-details-marker{display:none}
+.steps{display:flex;justify-content:center;gap:8px;list-style:none;padding:0;margin:24px 0 0;flex-wrap:wrap}
+.steps li{min-height:38px;display:grid;place-items:center;padding:0 18px;clip-path:var(--key);background:rgba(255,255,255,.05);font:400 11px var(--display);letter-spacing:.2em;color:var(--ink-3)}
+.steps li.on{background:var(--metal);background-size:220% 100%;color:#0b0b0d}
+.cobox{padding:30px clamp(18px,3vw,36px)}
+.cobox fieldset{border:0;padding:0;margin:0;display:grid;gap:14px}
+.cobox legend{margin-bottom:12px;color:var(--g3)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.navrow{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.paybox{padding:20px;clip-path:var(--chamfer-s);background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(240,230,199,.25)}
+.paybox b{font:400 14px var(--display);letter-spacing:.16em}
+.thanks{text-align:center;display:grid;gap:16px}
+.thanks[hidden]{display:none}
+.thook{padding:22px}
+.osum{display:grid;gap:8px;margin-top:14px}
+.oline{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--ink-2)}
+.posts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1180px;margin:0 auto}
+.post{padding:28px 24px}
+.post details summary{cursor:pointer;list-style:none;margin-top:10px;font:400 12px var(--display);letter-spacing:.22em;color:var(--g3);min-height:44px;display:flex;align-items:center}
+.post details summary::-webkit-details-marker{display:none}
+.post details[open] summary{color:var(--p3)}
+.post .body p{color:var(--ink-2);font-size:15px}
+@media (max-width:980px){.cartgrid{grid-template-columns:1fr}.csum{position:relative;top:0}.posts{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.cline{grid-template-columns:60px 1fr;row-gap:8px}.cline .qty,.cline .rm{grid-column:2}.two{grid-template-columns:1fr}.posts{grid-template-columns:1fr}}
+.cobox fieldset[hidden]{display:none}
