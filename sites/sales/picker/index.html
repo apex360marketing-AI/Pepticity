@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEPTICITY · STYLE PICKER</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<!--
+ PEPTICITY STYLE PICKER (owner, 10 Nov 2026): 10 buttons, 10 cards, 20 backgrounds (10 from the APEX arsenal
+ rebuilt in PEPTICITY gold chrome + platinum chrome, 10 NEW cinematic motion-scrolling ones).
+ Picks save by themselves (artifact db, collection "picks", doc "owner"); fallback: this browser + COPY MY PICKS.
+-->
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url("font/PepticityBlack.woff2") format("woff2");font-display:block}
+:root{
+  --g0:#332814;--g1:#68513d;--g2:#a4845d;--g3:#f0e6c7;--g4:#fef9e8;
+  --p0:#2a2d31;--p1:#6b7077;--p2:#b9bec5;--p3:#e6e9ed;--p4:#ffffff;
+  --uv:#8f63ff;--uvr:143,99,255;
+  --gold:linear-gradient(100deg,var(--g2),var(--g3) 22%,var(--g4) 34%,var(--g3) 46%,var(--g1) 60%,var(--g2) 72%,var(--g4) 86%,var(--g2));
+  --plat:linear-gradient(100deg,var(--p1),var(--p3) 22%,var(--p4) 34%,var(--p2) 48%,var(--p0) 60%,var(--p2) 74%,var(--p4) 86%,var(--p1));
+  --duo:linear-gradient(100deg,var(--p1),var(--p4) 18%,var(--p2) 32%,var(--g3) 50%,var(--g4) 60%,var(--g2) 74%,var(--p3) 88%,var(--p1));
+  --ch:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 14px);
+  --chs:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px);
+  --key:polygon(14px 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,14px 100%,0 50%);
+  --hex:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);
+  --ease:cubic-bezier(.22,.61,.12,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#0b0b0d;color:#eceef1;font:400 16px/1.55 "Hanken Grotesk",system-ui,sans-serif}
+body{background:radial-gradient(60% 40% at 15% 0%,rgba(var(--uvr),.16),transparent 70%),radial-gradient(50% 40% at 90% 30%,rgba(240,230,199,.07),transparent 70%),#0b0b0d;background-attachment:fixed}
+h1,h2,h3,.k{font-family:"PEPTICITY BLACK","Arial Black",sans-serif;text-transform:uppercase;font-weight:400;letter-spacing:.08em;margin:0}
+.metal{color:transparent;background:var(--duo);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;animation:sw 8s ease-in-out infinite;filter:drop-shadow(0 6px 0 #0a0a0e) drop-shadow(0 8px 14px rgba(var(--uvr),.45))}
+@keyframes sw{0%,40%{background-position:0 0}100%{background-position:-220% 0}}
+.wrap{width:min(1240px,calc(100vw - 32px));margin:0 auto}
+header.top{text-align:center;padding:56px 0 18px}
+header.top h1{font-size:clamp(34px,6vw,76px)}
+header.top p{color:#b4b8bf;max-width:62ch;margin:12px auto 0}
+nav.tabs{position:sticky;top:0;z-index:20;display:flex;justify-content:center;gap:10px;padding:14px;background:linear-gradient(#0b0b0d,rgba(11,11,13,.86) 70%,transparent);backdrop-filter:blur(6px)}
+nav.tabs a{min-height:46px;display:inline-flex;align-items:center;padding:0 22px;text-decoration:none;color:#eceef1;font:400 12px "PEPTICITY BLACK";letter-spacing:.24em;clip-path:var(--key);background:rgba(255,255,255,.05);position:relative}
+nav.tabs a::before{content:"";position:absolute;inset:0;clip-path:var(--key);padding:1px;background:var(--duo);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+nav.tabs a span{color:#cdb2ff;margin-left:8px}
+section{padding:46px 0 30px}
+section>.wrap>h2{font-size:clamp(26px,3.6vw,44px);text-align:center}
+section>.wrap>p.sub{text-align:center;color:#9aa0a8;margin:8px auto 26px;max-width:70ch}
+.grid{display:grid;gap:16px}
+.g-btn{grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.g-card{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+.g-bg{grid-template-columns:repeat(auto-fill,minmax(360px,1fr))}
+.item{position:relative;clip-path:var(--ch);background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));padding:16px;display:grid;gap:12px}
+.item::before{content:"";position:absolute;inset:0;clip-path:var(--ch);padding:1px;pointer-events:none;background:linear-gradient(140deg,rgba(255,255,255,.35),rgba(255,255,255,.05) 40%,rgba(var(--uvr),.5) 70%,rgba(240,230,199,.35));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.item.picked::before{background:var(--gold);padding:2px}
+.stage{min-height:170px;display:grid;place-items:center;position:relative;clip-path:var(--chs);background:radial-gradient(70% 80% at 50% 110%,rgba(var(--uvr),.22),transparent 70%),#0e0e11;overflow:hidden;padding:18px}
+.g-card .stage{min-height:300px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.item{min-width:0}
+.meta b{font:400 14px "PEPTICITY BLACK";letter-spacing:.12em;display:block}
+.meta .code{font:600 11px "Hanken Grotesk";letter-spacing:.2em;color:#9aa0a8}
+.meta .new{color:#0b0b0d;background:var(--gold);padding:2px 8px;clip-path:var(--chs);margin-left:6px}
+.desc{font-size:13px;color:#9aa0a8;margin:-4px 0 0}
+.pick{min-height:44px;min-width:110px;border:0;cursor:pointer;clip-path:var(--key);background:rgba(255,255,255,.06);color:#eceef1;font:400 11px "PEPTICITY BLACK";letter-spacing:.2em;transition:all .5s var(--ease)}
+.pick:hover{background:rgba(var(--uvr),.25);transform:translateY(-2px)}
+.pick[aria-pressed="true"]{background:var(--gold);color:#1a140a}
+.full{min-height:44px;border:0;cursor:pointer;clip-path:var(--key);background:transparent;color:#e6e9ed;font:600 11px "Hanken Grotesk";letter-spacing:.2em;text-transform:uppercase;padding:0 14px;box-shadow:none;position:relative}
+.full::before{content:"";position:absolute;inset:0;clip-path:var(--key);padding:1px;background:var(--plat);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.acts{display:flex;gap:8px}
+canvas.bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.g-bg .stage{min-height:220px;padding:0}
+.g-bg .stage .lbl{position:relative;z-index:2;font:400 clamp(18px,2vw,24px) "PEPTICITY BLACK";letter-spacing:.14em}
+/* dock */
+.dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 20px;clip-path:var(--ch);background:rgba(16,16,20,.92);backdrop-filter:blur(10px);max-width:calc(100vw - 20px)}
+.dock .count{font:600 13px "Hanken Grotesk";letter-spacing:.1em;color:#b4b8bf;white-space:nowrap}
+.dock .save{font-size:12px;color:#cdb2ff;white-space:nowrap}
+.dock button{min-height:44px;border:0;cursor:pointer;padding:0 18px;clip-path:var(--key);background:var(--gold);color:#1a140a;font:400 11px "PEPTICITY BLACK";letter-spacing:.2em}
+textarea#note{width:min(760px,100%);min-height:90px;display:block;margin:10px auto 0;background:rgba(255,255,255,.04);color:#eceef1;border:0;clip-path:var(--chs);padding:14px;font:15px "Hanken Grotesk";box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+footer{text-align:center;padding:40px 0 130px;color:#80848c;font-size:13px}
+/* full-screen background preview with scroll */
+.fs{position:fixed;inset:0;z-index:50;display:none;background:#0b0b0d}
+.fs.open{display:block}
+.fs canvas{position:fixed;inset:0;width:100vw;height:100vh}
+.fs .scroller{position:absolute;inset:0;overflow-y:auto;z-index:2}
+.fs .scene{height:100vh;display:grid;place-items:center;text-align:center;padding:20px}
+.fs .scene h2{font-size:clamp(34px,6vw,84px)}
+.fs .scene p{color:#c4c8cf;max-width:46ch;margin:12px auto 0}
+.fs .close{position:fixed;top:14px;right:14px;z-index:3}
+.fs .name{position:fixed;top:18px;left:20px;z-index:3;font:400 13px "PEPTICITY BLACK";letter-spacing:.2em}
+
+/* ================= BUTTONS ================= */
+.bx{position:relative;border:0;cursor:pointer;min-height:56px;padding:0 32px;font:400 13px "PEPTICITY BLACK";letter-spacing:.24em;text-transform:uppercase;isolation:isolate;transition:transform .7s var(--ease),filter .7s var(--ease)}
+/* B1 BTN-105 Convex Lens (platinum) */
+.b1{color:#0b0b0d;background:var(--plat);background-size:220% 100%;clip-path:var(--chs);--bx:50%;--by:50%}
+.b1::after{content:"";position:absolute;inset:0;mix-blend-mode:overlay;background:radial-gradient(80px 50px at var(--bx) var(--by),#fff,transparent 70%);opacity:0;transition:opacity .5s}
+.b1:hover{transform:translateY(-4px) scale(1.05);filter:drop-shadow(0 12px 22px rgba(230,233,237,.3))}.b1:hover::after{opacity:1}
+/* B2 BTN-133 Gold Key */
+.b2{color:#1a140a;background:var(--gold);background-size:240% 100%;clip-path:var(--key);transition:transform .7s var(--ease),filter .7s,background-position 1.6s var(--ease)}
+.b2:hover{transform:translateY(-5px) scale(1.07);background-position:-70% 0;filter:drop-shadow(0 12px 24px rgba(240,230,199,.45)) drop-shadow(0 0 16px rgba(var(--uvr),.5))}
+/* B3 BTN-131 Liquid Gold Trigger: dark glass, turning gold rim */
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+.b3{color:var(--g4);background:rgba(20,18,16,.8);clip-path:var(--ch)}
+.b3::before{content:"";position:absolute;inset:0;z-index:-1;clip-path:var(--ch);padding:2px;background:conic-gradient(from var(--a),var(--g1),var(--g4),var(--g2),var(--p3),var(--g1));animation:spin 6s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.b3::after{content:"";position:absolute;inset:3px;z-index:-2;clip-path:var(--ch);background:repeating-linear-gradient(45deg,rgba(240,230,199,.06) 0 2px,transparent 2px 6px)}
+.b3:hover{transform:translateY(-4px) scale(1.05)}.b3:hover::before{animation-duration:1.6s}
+@keyframes spin{to{--a:360deg}}
+/* B4 BTN-132 Liquid Chrome Bar */
+.b4{color:#1a140a;clip-path:var(--chs);background:linear-gradient(100deg,var(--g2),var(--g4),var(--p3),var(--g3),var(--g1),var(--g4),var(--p2),var(--g2));background-size:400% 100%;animation:flow 9s linear infinite}
+@keyframes flow{to{background-position:-400% 0}}
+.b4:hover{transform:translateY(-4px) scale(1.06);animation-duration:3s;filter:drop-shadow(0 10px 24px rgba(240,230,199,.4))}
+/* B5 BTN-109 Chrome Bezel */
+.b5{color:#eceef1;clip-path:var(--hex);padding:0 48px;min-height:64px;background:radial-gradient(120% 140% at 50% -20%,rgba(255,255,255,.22),rgba(255,255,255,.03) 60%),rgba(30,30,36,.9)}
+.b5::before{content:"";position:absolute;inset:0;clip-path:var(--hex);padding:3px;background:var(--plat);background-size:200% 100%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;transition:background-position 1.4s var(--ease)}
+.b5:hover{transform:translateY(-4px) scale(1.06)}.b5:hover::before{background-position:-100% 0}
+/* B6 BTN-111 Prism Edge */
+.b6{color:#eceef1;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,18px 100%,0 50%);background:linear-gradient(120deg,rgba(255,255,255,.1),rgba(255,255,255,.02) 40%,rgba(255,255,255,.12) 41%,rgba(255,255,255,.02) 70%),rgba(25,25,30,.9)}
+.b6::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(var(--uvr),.55) 44%,rgba(240,230,199,.6) 50%,rgba(230,233,237,.6) 56%,transparent 70%);background-size:300% 100%;background-position:120% 0;mix-blend-mode:screen;transition:background-position 1.2s var(--ease)}
+.b6:hover{transform:translateY(-4px) scale(1.05)}.b6:hover::after{background-position:-20% 0}
+/* B7 BTN-126 Focus Frame */
+.b7{color:var(--g4);background:rgba(255,255,255,.03);padding:0 40px}
+.b7 i{position:absolute;width:14px;height:14px;border:solid var(--g3);transition:all .7s var(--ease);animation:hunt 3.4s ease-in-out infinite}
+.b7 i:nth-child(1){top:0;left:0;border-width:2px 0 0 2px}.b7 i:nth-child(2){top:0;right:0;border-width:2px 2px 0 0;border-color:var(--p3)}
+.b7 i:nth-child(3){bottom:0;left:0;border-width:0 0 2px 2px;border-color:var(--p3)}.b7 i:nth-child(4){bottom:0;right:0;border-width:0 2px 2px 0}
+@keyframes hunt{50%{transform:scale(1.4)}}
+.b7:hover{background:rgba(var(--uvr),.16);transform:translateY(-3px)}.b7:hover i{animation:none;width:100%;height:100%;opacity:.6}
+/* B8 BTN-101 Torn Stub */
+.b8{color:#1a140a;padding:0 74px 0 30px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% calc(50% - 8px),calc(100% - 8px) 50%,100% calc(50% + 8px),100% 100%,0 100%,0 calc(50% + 8px),8px 50%,0 calc(50% - 8px))}
+.b8 s{position:absolute;right:0;top:0;bottom:0;width:52px;display:grid;place-items:center;background:var(--plat);border-left:2px dashed rgba(0,0,0,.35);text-decoration:none;transition:transform .7s var(--ease)}
+.b8:hover{transform:translateY(-4px)}.b8:hover s{transform:translate(6px,-4px) rotate(8deg)}
+/* B9 HOV-10 Border Trace (dual metal) */
+.b9{color:#eceef1;background:rgba(255,255,255,.03);clip-path:var(--chs)}
+.b9::before{content:"";position:absolute;inset:0;clip-path:var(--chs);padding:1.5px;background:conic-gradient(from var(--a),transparent 0 62%,var(--p4) 70%,var(--g3) 78%,transparent 86%),linear-gradient(rgba(255,255,255,.18),rgba(255,255,255,.18));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.b9:hover::before{animation:spin 2.4s linear infinite}.b9:hover{transform:translateY(-3px);background:rgba(var(--uvr),.14)}
+/* B10 NEW BTN-140 Twin Metal Split */
+.b10{color:#0b0b0d;padding:0;min-height:58px;background:none;clip-path:var(--key);display:inline-grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.b10 span{display:grid;place-items:center;padding:0 22px;transition:transform .8s var(--ease)}
+.b10 span:first-child{background:var(--plat)}.b10 span:last-child{background:var(--gold)}
+.b10:hover span:first-child{transform:translateY(-4px)}.b10:hover span:last-child{transform:translateY(4px)}
+.b10:hover{filter:drop-shadow(0 10px 24px rgba(var(--uvr),.5));transform:scale(1.05)}
+
+/* ================= CARDS ================= */
+.vimg{height:150px;width:auto;-webkit-mask-image:radial-gradient(42% 50% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(42% 50% at 50% 50%,#000 62%,transparent 100%)}
+.cx{position:relative;width:220px;text-align:center;color:#eceef1;transition:transform .8s var(--ease)}
+.cx h3{font-size:15px;letter-spacing:.14em;margin:6px 0 2px}.cx .pr{font:700 14px "Hanken Grotesk";color:var(--g3)}
+/* C1 CRD-119 Glass Slab */
+.c1{padding:16px;clip-path:var(--ch);background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.02) 45%,rgba(var(--uvr),.14));box-shadow:0 30px 50px -20px #000;transform-style:preserve-3d}
+.c1::after{content:"";position:absolute;inset:0;clip-path:var(--ch);background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.2) 48%,transparent 60%);background-size:250% 100%;animation:slab 7s ease-in-out infinite}
+@keyframes slab{0%,50%{background-position:120% 0}100%{background-position:-120% 0}}
+/* C2 CRD-102 Chamfer Plate (edge lit at pointer) */
+.c2{padding:16px;clip-path:var(--ch);background:rgba(20,20,24,.9);--mx:50%;--my:0%}
+.c2::before{content:"";position:absolute;inset:0;clip-path:var(--ch);padding:2px;background:radial-gradient(160px 160px at var(--mx) var(--my),var(--g4),var(--p3) 30%,rgba(255,255,255,.08) 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+/* C3 CRD-122 Bevel Diamond */
+.c3{width:230px;height:230px;perspective:900px}
+.c3 .in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1.2s var(--ease)}
+.c3:hover .in{transform:rotateY(180deg)}
+.c3 .f{position:absolute;inset:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);backface-visibility:hidden;display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.02) 50%,rgba(240,230,199,.16))}
+.c3 .f.b{transform:rotateY(180deg);background:var(--gold);color:#1a140a}
+.c3 .f.b div{width:60%;font-size:13px;line-height:1.4}
+/* C4 CRD-101 Ticket Stub */
+.c4{padding:16px 16px 70px;background:rgba(22,22,26,.92);clip-path:polygon(0 0,100% 0,100% calc(100% - 64px),calc(100% - 10px) calc(100% - 54px),100% calc(100% - 44px),100% 100%,0 100%,0 calc(100% - 44px),10px calc(100% - 54px),0 calc(100% - 64px))}
+.c4 .stub{position:absolute;left:0;right:0;bottom:0;height:54px;display:grid;place-items:center;background:var(--gold);color:#1a140a;font:400 12px "PEPTICITY BLACK";letter-spacing:.2em;border-top:2px dashed rgba(0,0,0,.35);transition:transform .8s var(--ease)}
+.c4:hover .stub{transform:translateY(8px) rotate(-3deg)}
+/* C5 CRD-105 Honeycomb Cell */
+.c5{width:240px;height:270px;clip-path:var(--hex);background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.12),transparent 60%),repeating-radial-gradient(circle at 50% 50%,rgba(240,230,199,.06) 0 1px,transparent 1px 7px),rgba(18,18,22,.95);display:grid;place-items:center;align-content:center}
+.c5::before{content:"";position:absolute;inset:0;clip-path:var(--hex);padding:2px;background:var(--duo);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.c5 .vimg{height:120px}
+/* C6 CRD-110 Prism Facets */
+.c6{padding:16px;clip-path:polygon(20px 0,calc(100% - 20px) 0,100% 20px,100% 70%,50% 100%,0 70%,0 20px);background:linear-gradient(130deg,rgba(255,255,255,.12) 0 30%,rgba(255,255,255,.03) 30% 55%,rgba(255,255,255,.09) 55% 70%,rgba(255,255,255,.02) 70%),rgba(20,20,24,.95);padding-bottom:60px}
+.c6::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(var(--uvr),.4) 46%,rgba(240,230,199,.45) 52%,transparent 64%);background-size:300% 100%;background-position:130% 0;mix-blend-mode:screen;transition:background-position 1.4s var(--ease)}
+.c6:hover::after{background-position:-30% 0}
+/* C7 CRD-127 Fanned Deck */
+.c7{width:260px;height:250px}
+.c7 .card{position:absolute;left:50%;top:10px;width:140px;height:220px;margin-left:-70px;clip-path:var(--ch);background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.02)),#141418;display:grid;place-items:center;transition:transform 1s var(--ease)}
+.c7 .card::before{content:"";position:absolute;inset:0;clip-path:var(--ch);padding:1px;background:var(--duo);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.c7 .card .vimg{height:130px}
+.c7:hover .card:nth-child(1){transform:translateX(-80px) rotate(-14deg)}.c7:hover .card:nth-child(3){transform:translateX(80px) rotate(14deg)}
+.c7 .card:nth-child(1){transform:rotate(-4deg)}.c7 .card:nth-child(3){transform:rotate(4deg)}
+/* C8 CRD-130 Hinged Doors */
+.c8{width:240px;height:260px;perspective:900px}
+.c8 .reveal{position:absolute;inset:0;clip-path:var(--ch);background:radial-gradient(circle at 50% 60%,rgba(var(--uvr),.3),transparent 70%),#111;display:grid;place-items:center;align-content:center;gap:6px;padding:20px}
+.c8 .reveal b{font:400 22px "PEPTICITY BLACK";letter-spacing:.1em}
+.c8 .d{position:absolute;top:0;bottom:0;width:50%;background:var(--plat);transition:transform 1.3s var(--ease);display:grid;place-items:center;color:#0b0b0d;font:400 11px "PEPTICITY BLACK";letter-spacing:.2em}
+.c8 .d.l{left:0;transform-origin:left;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 calc(100% - 14px),0 14px)}
+.c8 .d.r{right:0;transform-origin:right;background:var(--gold);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.c8:hover .d.l{transform:rotateY(-105deg)}.c8:hover .d.r{transform:rotateY(105deg)}
+/* C9 HOV-38 Card Sheen + Lift */
+.c9{padding:16px;clip-path:var(--ch);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),#121216}
+.c9::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);background-size:260% 100%;background-position:150% 0;transition:background-position 1.3s var(--ease)}
+.c9:hover{transform:translateY(-10px)}.c9:hover::after{background-position:-50% 0}
+/* C10 NEW CRD-140 Vial Pedestal */
+.c10{padding:18px 18px 22px;clip-path:var(--ch);background:linear-gradient(180deg,#141418,#0d0d10)}
+.c10::before{content:"";position:absolute;inset:0;clip-path:var(--ch);padding:1px;background:linear-gradient(180deg,var(--p3),rgba(255,255,255,.05) 40%,rgba(255,255,255,.05) 60%,var(--g3));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.c10 .ped{position:relative;margin:0 auto -6px;width:120px;height:20px;border-radius:50%;background:radial-gradient(closest-side,rgba(240,230,199,.8),rgba(var(--uvr),.4) 50%,transparent);filter:blur(2px);animation:ped 4s ease-in-out infinite}
+@keyframes ped{50%{opacity:.6;transform:scaleX(.85)}}
+.c10 .vimg{transition:transform 1.2s var(--ease)}.c10:hover .vimg{transform:translateY(-10px)}
+.c10:hover{filter:drop-shadow(0 20px 30px rgba(var(--uvr),.3))}
+.cx .bx{min-height:44px;font-size:11px;padding:0 18px;margin-top:10px}
+@media (max-width:560px){.g-btn,.g-card,.g-bg{grid-template-columns:1fr}.dock .save{display:none}nav.tabs{gap:6px;padding:10px 6px}nav.tabs a{padding:0 12px;font-size:10px;letter-spacing:.14em}.cx{max-width:100%}.c7,.c8,.c3,.c5{transform:scale(.9)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top wrap">
+  <h1 class="metal">STYLE PICKER</h1>
+  <p>Tap PICK on everything you like (as many as you want). Your picks save by themselves. Point at buttons and cards to see their hover. Backgrounds: tap FULL SCREEN and scroll to see the motion.</p>
+</header>
+<nav class="tabs" aria-label="Sections"><a href="#buttons">BUTTONS<span id="nb">0</span></a><a href="#cards">CARDS<span id="nc">0</span></a><a href="#backgrounds">BACKGROUNDS<span id="ng">0</span></a></nav>
+
+<section id="buttons"><div class="wrap"><h2 class="metal">10 BUTTONS</h2><p class="sub">Gold chrome and platinum chrome. Every one comes forward and lights up on hover.</p><div class="grid g-btn" id="gBtn"></div></div></section>
+<section id="cards"><div class="wrap"><h2 class="metal">10 CARDS</h2><p class="sub">Shown with the real PEPTICITY label photos. Point at each one: most of them move.</p><div class="grid g-card" id="gCard"></div></div></section>
+<section id="backgrounds"><div class="wrap"><h2 class="metal">20 BACKGROUNDS</h2><p class="sub">01–10 come from your APEX arsenal, rebuilt in gold and platinum chrome with UV glow. 11–20 are NEW: cinematic and scroll-driven (they move as you scroll).</p><div class="grid g-bg" id="gBg"></div>
+  <h2 class="metal" style="font-size:22px;margin-top:40px;text-align:center">ANYTHING TO ADD?</h2><textarea id="note" placeholder="Optional note (saves by itself)"></textarea></div></section>
+<footer>PEPTICITY · style picker · nothing here is shown to customers</footer>
+
+<div class="dock" role="region" aria-label="Your picks"><span class="count" id="cnt">0 PICKED</span><span class="save" id="saved">saved on this device</span><button id="copy">COPY MY PICKS</button></div>
+
+<div class="fs" id="fs" role="dialog" aria-modal="true" aria-label="Background preview"><canvas id="fsc"></canvas><span class="name metal" id="fsn"></span><button class="pick close" id="fsx">CLOSE</button>
+  <div class="scroller" id="fss">
+    <div class="scene"><div><h2 class="metal">PEPTICITY</h2><p>Scroll down. The background moves with you.</p></div></div>
+    <div class="scene"><div><h2 class="metal">ONE VIAL. ONE LOT.</h2><p>Every vial carries its name, its amount and its lot number.</p></div></div>
+    <div class="scene"><div><h2 class="metal">THE SET OF THREE</h2><p>Any three vials, one set price.</p></div></div>
+    <div class="scene"><div><h2 class="metal">JOIN THE TEAM</h2><p>15% off your first order.</p></div></div>
+  </div></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
+var V='img/';
+var BTN=[
+ ['b1','BTN-105','CONVEX LENS','Platinum plate; a bright spot follows your pointer through it.','<button class="bx b1">SHOP NOW</button>'],
+ ['b2','BTN-133','GOLD KEY','Key silhouette in gold chrome; comes far forward and lights.','<button class="bx b2">ADD TO CART</button>'],
+ ['b3','BTN-131','LIQUID GOLD TRIGGER','Dark glass with a slowly turning gold-chrome rim; spins fast on hover.','<button class="bx b3">CLAIM 15% OFF</button>'],
+ ['b4','BTN-132','LIQUID CHROME BAR','Gold and platinum flowing through the bar like molten metal.','<button class="bx b4">CHECKOUT</button>'],
+ ['b5','BTN-109','CHROME BEZEL','Glass set in a platinum hexagon ring; the reflection turns on hover.','<button class="bx b5">FIND YOURS</button>'],
+ ['b6','BTN-111','PRISM EDGE','Cut-gem glass; light splits into UV and gold as you point.','<button class="bx b6">VIEW THE SET</button>'],
+ ['b7','BTN-126','FOCUS FRAME','Camera corner marks hunt at rest and lock on when you point.','<button class="bx b7"><i></i><i></i><i></i><i></i>LOT LOOKUP</button>'],
+ ['b8','BTN-101','TORN STUB','Gold ticket with a platinum stub that lifts off on hover.','<button class="bx b8">FOUNDING TICKET<s>15%</s></button>'],
+ ['b9','HOV-10','BORDER TRACE','A line of platinum then gold light races around the outline.','<button class="bx b9">JOIN THE TEAM</button>'],
+ ['b10','BTN-140','TWIN METAL SPLIT','NEW: half platinum, half gold; the halves shear apart on hover.','<button class="bx b10"><span>SHOP</span><span>NOW</span></button>',1]
+];
+function vc(k,n,inner){return '<div class="cx '+k+'">'+inner+'</div>';}
+var IMG=function(k){return '<img class="vimg" src="'+V+k+'.webp" alt="" loading="lazy">';};
+var CARD=[
+ ['c1','CRD-119','GLASS SLAB','Thick glass member card: tilts with the pointer, a light band crosses it.',vc('c1','',IMG('bpc-157')+'<h3>BPC-157</h3><div class="pr">$[PRICE] CAD</div><button class="bx b2">ADD</button>')],
+ ['c2','CRD-102','CHAMFER PLATE','Machined plate whose edge lights up in gold and platinum wherever you point.',vc('c2','',IMG('tb-500')+'<h3>TB-500</h3><div class="pr">$[PRICE] CAD</div><button class="bx b1">ADD</button>')],
+ ['c3','CRD-122','BEVEL DIAMOND','A diamond of bevelled glass that turns over to show the offer.','<div class="cx c3"><div class="in"><div class="f">'+IMG('kpv')+'</div><div class="f b"><div><b class="k" style="font-size:16px">15% OFF</b><br>your first order with a founding ticket</div></div></div></div>'],
+ ['c4','CRD-101','TICKET STUB','Product ticket; the gold stub swings when you point.',vc('c4','',IMG('epitalon')+'<h3>EPITALON</h3><div class="pr">$[PRICE] CAD</div><div class="stub">ADD TO CART</div>')],
+ ['c5','CRD-105','HONEYCOMB CELL','A hexagon of dotted glass with a gold-to-platinum rim.','<div class="cx c5">'+IMG('mots-c')+'<h3>MOTS-C</h3><div class="pr">$[PRICE] CAD</div></div>'],
+ ['c6','CRD-110','PRISM FACETS','Cut like a crystal; facets catch UV and gold light as you move.',vc('c6','',IMG('ghk-cu')+'<h3>GHK-CU</h3><div class="pr">$[PRICE] CAD</div>')],
+ ['c7','CRD-127','FANNED DECK','Three vials held like a hand of cards; they fan out when you point.','<div class="cx c7"><div class="card">'+IMG('nad')+'</div><div class="card">'+IMG('bpc-157')+'</div><div class="card">'+IMG('glutathione')+'</div></div>'],
+ ['c8','CRD-130','HINGED DOORS','Platinum and gold doors swing open to reveal the offer.','<div class="cx c8"><div class="reveal"><b class="metal">15% OFF</b><span style="font-size:13px;color:#c4c8cf">first order · join the team</span></div><div class="d l">OPEN</div><div class="d r">ME</div></div>'],
+ ['c9','HOV-38','SHEEN LIFT','The card rises and a band of light sweeps across it.',vc('c9','',IMG('nad')+'<h3>NAD+</h3><div class="pr">$[PRICE] CAD</div><button class="bx b9">ADD</button>')],
+ ['c10','CRD-140','VIAL PEDESTAL','NEW: the vial floats over a lit gold pedestal; platinum top edge, gold bottom edge.',vc('c10','','<div class="ped" style="order:2"></div>'+IMG('glutathione')+'<div class="ped"></div><h3>GLUTATHIONE</h3><div class="pr">$[PRICE] CAD</div><button class="bx b10"><span>ADD</span><span>TO CART</span></button>'),1]
+];
+/* ================= BACKGROUNDS: f(ctx,w,h,t,s) t=seconds, s=scroll 0..1 ================= */
+var G=['#a4845d','#f0e6c7','#fef9e8'],P=['#6b7077','#e6e9ed','#ffffff'],UV='143,99,255';
+function clr(c,w,h){c.fillStyle='#0b0b0d';c.fillRect(0,0,w,h);}
+function glow(c,x,y,r,col,a){var g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba('+col+','+a+')');g.addColorStop(1,'rgba('+col+',0)');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);}
+var rnd=function(n){var a=[],x=1234567;for(var i=0;i<n;i++){x=(x*16807)%2147483647;a.push(x/2147483647);}return a;}(4000);
+var BG=[
+ ['BGD-10','DRIFTING CONTOURS','Contour lines drift like a slow map of light.',function(c,w,h,t,s){clr(c,w,h);c.lineWidth=1;for(var k=0;k<18;k++){c.beginPath();for(var x=0;x<=w;x+=8){var y=h*(k/18)+Math.sin(x*.012+t*.25+k*.7+s*6)*18+Math.sin(x*.004-t*.1)*24;x?c.lineTo(x,y):c.moveTo(x,y);}c.strokeStyle=k%3?'rgba(185,190,197,.16)':'rgba(240,230,199,.28)';c.stroke();}glow(c,w*.5,h*1.05,h*.8,UV,.28);}],
+ ['BGD-11','AMBIENT DRIFT','Soft pools of gold, platinum and UV light breathe behind the page.',function(c,w,h,t,s){clr(c,w,h);glow(c,w*(.3+.15*Math.sin(t*.2)),h*(.4+.2*Math.cos(t*.17)+s*.3),h*.9,UV,.35);glow(c,w*(.7+.12*Math.cos(t*.15)),h*(.6-s*.3),h*.8,'240,230,199',.18);glow(c,w*.5,h*(.2+.1*Math.sin(t*.3)),h*.6,'230,233,237',.12);}],
+ ['BGD-12','SONAR RINGS','Rings ripple slowly outward from the centre in alternating metals.',function(c,w,h,t,s){clr(c,w,h);var cx=w/2,cy=h*(.55-s*.2);for(var i=0;i<7;i++){var r=((t*28+i*70)%490);c.beginPath();c.arc(cx,cy,r,0,7);c.strokeStyle=(i%2?'rgba(240,230,199,':'rgba(230,233,237,')+(Math.max(0,.45-r/1100))+')';c.lineWidth=1.4;c.stroke();}glow(c,cx,cy,140,UV,.35);}],
+ ['BGD-16','SPOTLIGHT POOL','A white-gold pool of light on the floor glides with the scroll.',function(c,w,h,t,s){clr(c,w,h);var x=w*(.3+.4*s+.05*Math.sin(t*.4));var g=c.createRadialGradient(x,h*.92,0,x,h*.92,h*.75);g.addColorStop(0,'rgba(254,249,232,.42)');g.addColorStop(.4,'rgba(164,132,93,.15)');g.addColorStop(1,'rgba(0,0,0,0)');c.save();c.scale(1,.42);c.translate(0,h*1.3);c.fillStyle=g;c.fillRect(0,0,w,h*1.5);c.restore();c.fillStyle='rgba(255,255,255,.04)';c.beginPath();c.moveTo(x-30,0);c.lineTo(x+30,0);c.lineTo(x+h*.35,h);c.lineTo(x-h*.35,h);c.fill();glow(c,x,h*.95,h*.3,UV,.25);}],
+ ['BGD-17','TWINKLING SKY','A fine scatter of platinum and gold stars over a soft glow.',function(c,w,h,t,s){clr(c,w,h);glow(c,w*.5,h*.4,h,UV,.18);for(var i=0;i<220;i++){var x=rnd[i]*w,y=((rnd[i+300]*h)-s*h*.6*rnd[i+600]+h)%h,a=.25+.75*Math.abs(Math.sin(t*(.5+rnd[i+900])+i));c.fillStyle=(i%4?'rgba(230,233,237,':'rgba(240,230,199,')+a*.8+')';c.fillRect(x,y,rnd[i+1200]>.85?2:1,rnd[i+1200]>.85?2:1);}}],
+ ['BGD-18','DARKROOM LIGHT FIELD','Slow silver haze with a UV lamp underneath.',function(c,w,h,t,s){clr(c,w,h);for(var i=0;i<6;i++){glow(c,w*(.2+.6*rnd[i]+.12*Math.sin(t*.1+i)),h*(.3+.5*rnd[i+10]+.1*Math.cos(t*.12+i)-s*.2),h*.55,i%2?'200,205,215':'240,230,199',.09);}glow(c,w*.5,h*1.1,h*.9,UV,.38);}],
+ ['BGD-19','STUDIO LIGHT FIELD','A slow diagonal softbox beam crosses the haze.',function(c,w,h,t,s){clr(c,w,h);glow(c,w*.5,h*.5,h,UV,.14);c.save();c.translate(w/2,h/2);c.rotate(-.5+s*.6);var x=((t*40)%(w*2))-w;var g=c.createLinearGradient(x-120,0,x+120,0);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(254,249,232,.16)');g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.fillRect(-w*1.5,-h*1.5,w*3,h*3);c.restore();}],
+ ['BGD-101','SATIN FOLDS','Dark satin folds ripple slowly and catch a gold sheen.',function(c,w,h,t,s){clr(c,w,h);for(var y=0;y<h;y+=3){var v=Math.sin(y*.02+t*.4+s*5)*.5+Math.sin(y*.007-t*.2)*.5;var a=Math.max(0,v)*.16;c.fillStyle='rgba(240,230,199,'+a+')';c.fillRect(0,y,w,3);}glow(c,w*.8,h*.2,h*.7,UV,.22);}],
+ ['BGD-102','PLEXUS FIELD','Points drift and link up with fine platinum and gold lines.',function(c,w,h,t,s){clr(c,w,h);var pts=[];for(var i=0;i<46;i++){pts.push([(rnd[i]*w+Math.sin(t*.2+i)*30)%w,((rnd[i+50]*h+Math.cos(t*.17+i)*30-s*h*.5)%h+h)%h]);}for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){var dx=pts[i][0]-pts[j][0],dy=pts[i][1]-pts[j][1],d=Math.sqrt(dx*dx+dy*dy);if(d<110){c.strokeStyle=((i+j)%3?'rgba(185,190,197,':'rgba(240,230,199,')+(.35*(1-d/110))+')';c.beginPath();c.moveTo(pts[i][0],pts[i][1]);c.lineTo(pts[j][0],pts[j][1]);c.stroke();}}pts.forEach(function(p,i){c.fillStyle=i%3?'#e6e9ed':'#f0e6c7';c.fillRect(p[0]-1,p[1]-1,2,2);});glow(c,w*.5,h,h*.7,UV,.25);}],
+ ['BGD-104','FLUTED GLASS','Lights move behind ribbed glass and bend into stripes.',function(c,w,h,t,s){clr(c,w,h);var lx=w*(.5+.35*Math.sin(t*.3+s*4)),ly=h*.5;for(var x=0;x<w;x+=14){var off=Math.sin((x-lx)*.03)*20;var d=Math.abs(x-lx);var a=Math.max(0,1-d/(w*.45));var g=c.createLinearGradient(0,ly-h*.6+off,0,ly+h*.6+off);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.5,(x/14%2?'rgba(240,230,199,':'rgba(230,233,237,')+(a*.35)+')');g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(x,0,12,h);c.fillStyle='rgba(255,255,255,.035)';c.fillRect(x,0,1,h);}glow(c,lx,h*1.05,h*.5,UV,.3);}],
+ /* ---------- 10 NEW ---------- */
+ ['BGD-140','LIQUID CHROME FLOW','NEW: molten gold and platinum chrome flowing slowly; scrolling stirs it.',null,'liquid'],
+ ['BGD-141','MOLTEN HORIZON','NEW: a horizon of gold-chrome light; the camera rises over it as you scroll.',function(c,w,h,t,s){clr(c,w,h);var hy=h*(.62-s*.35);glow(c,w/2,hy,w*.7,UV,.3);var g=c.createLinearGradient(0,hy-2,0,hy+2);c.fillStyle='rgba(254,249,232,.9)';c.fillRect(0,hy-1,w,2);glow(c,w/2,hy,w*.35,'240,230,199',.35);c.strokeStyle='rgba(185,190,197,.18)';for(var i=1;i<22;i++){var y=hy+Math.pow(i/22,2)*(h-hy+40)+((t*12)%((h-hy)/22));c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();}for(var i=-12;i<=12;i++){c.beginPath();c.moveTo(w/2+i*12,hy);c.lineTo(w/2+i*w*.2,h);c.stroke();}}],
+ ['BGD-142','PEPTIDE HELIX','NEW: a double helix of light beads in real 3D; scrolling turns it.',function(c,w,h,t,s){clr(c,w,h);glow(c,w/2,h/2,h*.8,UV,.2);var n=48,rot=t*.35+s*7;var arr=[];for(var i=0;i<n;i++){var y=(i/n)*h*1.3-h*.15;for(var k=0;k<2;k++){var a=i*.38+rot+k*Math.PI;var z=Math.cos(a);arr.push([w/2+Math.sin(a)*w*.16,y,z,k]);}}arr.sort(function(a,b){return a[2]-b[2];});for(var i=0;i<n;i+=3){var a1=i*.38+rot,y=(i/n)*h*1.3-h*.15;c.strokeStyle='rgba(185,190,197,.12)';c.beginPath();c.moveTo(w/2+Math.sin(a1)*w*.16,y);c.lineTo(w/2-Math.sin(a1)*w*.16,y);c.stroke();}arr.forEach(function(p){var sz=3+p[2]*2.5;c.fillStyle=p[3]?'rgba(240,230,199,'+(.45+p[2]*.45)+')':'rgba(230,233,237,'+(.45+p[2]*.45)+')';c.beginPath();c.arc(p[0],p[1],Math.max(1,sz),0,7);c.fill();if(p[2]>.6)glow(c,p[0],p[1],sz*5,p[3]?'240,230,199':'230,233,237',.25);});}],
+ ['BGD-143','UV AURORA CURTAIN','NEW: tall curtains of UV light with gold edges sway slowly.',function(c,w,h,t,s){clr(c,w,h);c.globalCompositeOperation='lighter';for(var k=0;k<5;k++){for(var x=0;x<w;x+=4){var y0=h*(.15+.1*Math.sin(x*.01+t*.3+k));var a=Math.max(0,Math.sin(x*.008+t*.2+k*1.3+s*3))*.09;var g=c.createLinearGradient(0,y0,0,h);g.addColorStop(0,'rgba(240,230,199,'+a*1.5+')');g.addColorStop(.25,'rgba('+UV+','+a+')');g.addColorStop(1,'rgba('+UV+',0)');c.fillStyle=g;c.fillRect(x,y0,4,h-y0);}}c.globalCompositeOperation='source-over';}],
+ ['BGD-144','METAL RAIN','NEW: fine streaks of platinum and gold fall; they speed up when you scroll.',function(c,w,h,t,s){clr(c,w,h);var sp=1+ (window.__vel||0)*.02;for(var i=0;i<140;i++){var x=rnd[i]*w,len=20+rnd[i+200]*60,y=((rnd[i+400]*h*2+t*(120+rnd[i+600]*200)*sp)%(h+len))-len;var g=c.createLinearGradient(0,y,0,y+len);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,i%3?'rgba(230,233,237,.55)':'rgba(240,230,199,.6)');c.fillStyle=g;c.fillRect(x,y,1,len);}glow(c,w/2,h*1.05,h*.6,UV,.3);}],
+ ['BGD-145','HEX LATTICE GLOW','NEW: a honeycomb lattice lit by a slow travelling light.',function(c,w,h,t,s){clr(c,w,h);var r=22,lx=w*(.5+.4*Math.sin(t*.25)),ly=h*(.5+.35*Math.cos(t*.2)+ (s-.5)*.6);for(var row=-1;row<h/(r*1.5)+1;row++)for(var col=-1;col<w/(r*1.732)+1;col++){var x=col*r*1.732+(row%2?r*.866:0),y=row*r*1.5;var d=Math.hypot(x-lx,y-ly),a=Math.max(0,1-d/(h*.55));c.beginPath();for(var k=0;k<6;k++){var an=Math.PI/3*k+Math.PI/6;c.lineTo(x+Math.cos(an)*r*.92,y+Math.sin(an)*r*.92);}c.closePath();c.strokeStyle=(d<h*.25?'rgba(240,230,199,':'rgba(185,190,197,')+(.06+a*.5)+')';c.stroke();}glow(c,lx,ly,h*.4,UV,.25);}],
+ ['BGD-146','LIGHT SCANNER','NEW: a horizontal beam scans the page in step with your scroll.',function(c,w,h,t,s){clr(c,w,h);var y=h*((s*3+t*.05)%1);glow(c,w/2,y,w*.6,UV,.18);var g=c.createLinearGradient(0,y-60,0,y+2);g.addColorStop(0,'rgba(240,230,199,0)');g.addColorStop(1,'rgba(240,230,199,.35)');c.fillStyle=g;c.fillRect(0,y-60,w,62);c.fillStyle='rgba(254,249,232,.9)';c.fillRect(0,y,w,1);c.fillStyle='rgba(230,233,237,.05)';for(var x=0;x<w;x+=40)c.fillRect(x,0,1,h);for(var yy=0;yy<h;yy+=40)c.fillRect(0,yy,w,1);}],
+ ['BGD-147','PARTICLE NEBULA','NEW: soft particles at many depths; near ones move faster as you scroll.',function(c,w,h,t,s){clr(c,w,h);glow(c,w*.4,h*.45,h*.9,UV,.25);glow(c,w*.7,h*.6,h*.6,'240,230,199',.1);for(var i=0;i<260;i++){var z=rnd[i+1500],x=(rnd[i]*w+Math.sin(t*.1+i)*10*z),y=((rnd[i+700]*h-s*h*1.5*z+t*4*z)%h+h)%h;var r=.5+z*2.2;c.fillStyle=(i%5?'rgba(230,233,237,':'rgba(240,230,199,')+(.15+z*.6)+')';c.beginPath();c.arc(x,y,r,0,7);c.fill();}}],
+ ['BGD-148','CHROME RIBBONS','NEW: slow ribbons of gold and platinum chrome weave across the dark.',function(c,w,h,t,s){clr(c,w,h);for(var k=0;k<4;k++){var ph=t*.25+k*1.6+s*3;c.beginPath();for(var x=-20;x<=w+20;x+=10){var y=h*(.25+k*.17)+Math.sin(x*.006+ph)*h*.12+Math.sin(x*.013-ph*.7)*h*.05;x>-20?c.lineTo(x,y):c.moveTo(x,y);}var g=c.createLinearGradient(0,0,w,0);var M=k%2?P:G;g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.3,M[1]);g.addColorStop(.5,M[2]);g.addColorStop(.7,M[0]);g.addColorStop(1,'rgba(0,0,0,0)');c.strokeStyle=g;c.lineWidth=14;c.globalAlpha=.22;c.stroke();c.lineWidth=1.5;c.globalAlpha=.8;c.stroke();c.globalAlpha=1;}glow(c,w/2,h*1.05,h*.6,UV,.28);}],
+ ['BGD-149','UV CAUSTICS','NEW: pool-light caustics in UV and gold ripple across the floor of the page.',null,'caustics']
+];
+/* ---------- WebGL renderers for the two shader backgrounds ---------- */
+var FRAG={liquid:'precision mediump float;uniform vec2 r;uniform float t,s;\nvoid main(){vec2 p=(gl_FragCoord.xy*2.-r)/min(r.x,r.y);float a=t*.12+s*2.;for(int i=1;i<6;i++){float f=float(i);p+=vec2(.6/f*sin(f*p.y+a+.3*f),.6/f*sin(f*p.x+a*1.3+.4*f));}float v=.5+.5*sin(p.x*1.2+p.y*1.4);float h=pow(v,6.);vec3 gold=mix(vec3(.2,.16,.08),vec3(.94,.9,.78),h);vec3 plat=mix(vec3(.16,.17,.19),vec3(.95,.96,.97),h);vec3 c=mix(plat,gold,smoothstep(-.6,.6,sin(p.x*.7-p.y*.5+a)));c*=.42+.58*v;c+=vec3(.56,.39,1.)*.12*(1.-v);gl_FragColor=vec4(c*.62,1.);}',
+ caustics:'precision mediump float;uniform vec2 r;uniform float t,s;\nfloat c(vec2 p){float v=0.;vec2 i=p;for(int n=0;n<5;n++){float tt=t*.25*(1.-3.5/float(n+1));i=p+vec2(cos(tt-i.x)+sin(tt+i.y),sin(tt-i.y)+cos(tt+i.x));v+=1./length(vec2(p.x/(sin(i.x+tt)/.005),p.y/(cos(i.y+tt)/.005)));}v/=5.;return 1.17-pow(v,1.4);}\nvoid main(){vec2 uv=gl_FragCoord.xy/r;vec2 p=mod(uv*vec2(r.x/r.y,1.)*5.+vec2(0.,s*3.),6.28)-250.;float v=pow(abs(c(p)),8.)*.55;vec3 col=vec3(.56,.39,1.)*v*.55+vec3(.94,.9,.78)*pow(v,2.)*.5;col*=smoothstep(1.2,.0,uv.y)*.9+.1;col=col/(1.+col*1.6);gl_FragColor=vec4(clamp(col,0.,1.)*.75,1.);}'};
+function glRenderer(canvas,kind){var gl=canvas.getContext('webgl',{antialias:false,preserveDrawingBuffer:false});if(!gl)return null;function sh(ty,src){var x=gl.createShader(ty);gl.shaderSource(x,src);gl.compileShader(x);return x;}var pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FRAG[kind]));gl.linkProgram(pr);gl.useProgram(pr);var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);var loc=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);var ur=gl.getUniformLocation(pr,'r'),ut=gl.getUniformLocation(pr,'t'),us=gl.getUniformLocation(pr,'s');
+  return function(w,h,t,s){gl.viewport(0,0,w,h);gl.uniform2f(ur,w,h);gl.uniform1f(ut,t);gl.uniform1f(us,s);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);};}
+function makeRenderer(canvas,bg){if(bg[3])return(function(c){return function(w,h,t,s){bg[3](c,w,h,t,s);};})(canvas.getContext('2d'));var g=glRenderer(canvas,bg[4]);return g||function(){};}
+
+/* ---------- build grids ---------- */
+function item(sec,id,code,name,desc,stage,isNew,extra){return '<article class="item" data-id="'+id+'"><div class="stage">'+stage+'</div><div class="meta"><div><b>'+name+(isNew?'<span class="new">NEW</span>':'')+'</b><span class="code">'+code+'</span></div><div class="acts">'+(extra||'')+'<button class="pick" aria-pressed="false" data-pick="'+id+'">PICK</button></div></div><p class="desc">'+desc+'</p></article>';}
+$('#gBtn').innerHTML=BTN.map(function(b,i){return item('btn','button-'+(i+1),b[1],(i+1)+' · '+b[2],b[3],b[4],b[5]);}).join('');
+$('#gCard').innerHTML=CARD.map(function(b,i){return item('card','card-'+(i+1),b[1],(i+1)+' · '+b[2],b[3],b[4],b[5]);}).join('');
+$('#gBg').innerHTML=BG.map(function(b,i){return item('bg','background-'+(i+1),b[0],(i+1<10?'0':'')+(i+1)+' · '+b[1],b[2],'<canvas class="bg" data-bg="'+i+'"></canvas><span class="lbl metal">PEPTICITY</span>',i>=10,'<button class="full" data-full="'+i+'">FULL SCREEN</button>');}).join('');
+
+/* pointer effects */
+document.addEventListener('pointermove',function(e){var t=e.target.closest&&e.target.closest('.b1,.c2');if(!t)return;var r=t.getBoundingClientRect();t.style.setProperty(t.classList.contains('b1')?'--bx':'--mx',(e.clientX-r.left)+'px');t.style.setProperty(t.classList.contains('b1')?'--by':'--my',(e.clientY-r.top)+'px');});
+$$('.c1').forEach(function(el){el.addEventListener('pointermove',function(e){var r=el.getBoundingClientRect();el.style.transform='perspective(800px) rotateX('+((e.clientY-r.top)/r.height-.5)*-14+'deg) rotateY('+((e.clientX-r.left)/r.width-.5)*16+'deg)';});el.addEventListener('pointerleave',function(){el.style.transform='';});});
+
+/* tiles animate only when visible */
+var live=new Map(),T0=performance.now(),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var io=new IntersectionObserver(function(es){es.forEach(function(en){var cv=en.target;if(en.isIntersecting){if(!cv._r){var r=cv.getBoundingClientRect();cv.width=Math.round(r.width);cv.height=Math.round(r.height);cv._r=makeRenderer(cv,BG[+cv.dataset.bg]);}live.set(cv,1);}else live.delete(cv);});},{rootMargin:'100px'});
+$$('canvas.bg').forEach(function(cv){io.observe(cv);});
+var lastY=scrollY;window.__vel=0;
+function loop(now){var t=(now-T0)/1000;var vy=Math.abs(scrollY-lastY);lastY=scrollY;window.__vel=window.__vel*.9+vy*.1;
+  live.forEach(function(_,cv){var r=cv.getBoundingClientRect();var s=1-Math.min(1,Math.max(0,(r.top+r.height)/(innerHeight+r.height)));cv._r(cv.width,cv.height,reduce?2:t,s);});
+  if(fsOn){var sc=$('#fss');var s=sc.scrollTop/Math.max(1,sc.scrollHeight-sc.clientHeight);fsR(fsc.width,fsc.height,reduce?2:t,s);}
+  requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+
+/* full-screen scroll preview */
+var fs=$('#fs'),fsc=$('#fsc'),fsOn=false,fsR=null,lastFocus;
+function openFs(i){var nc=document.createElement('canvas');nc.id='fsc';fsc.replaceWith(nc);fsc=nc;var d=Math.min(1.5,devicePixelRatio||1);fsc.width=Math.round(innerWidth*d*(BG[i][3]?.6:.75));fsc.height=Math.round(innerHeight*d*(BG[i][3]?.6:.75));fsR=makeRenderer(fsc,BG[i]);$('#fsn').textContent=BG[i][0]+' · '+BG[i][1];$('#fss').scrollTop=0;lastFocus=document.activeElement;fs.classList.add('open');fsOn=true;document.documentElement.style.overflow='hidden';$('#fsx').focus();}
+function closeFs(){fs.classList.remove('open');fsOn=false;document.documentElement.style.overflow='';if(lastFocus)lastFocus.focus();}
+document.addEventListener('click',function(e){var f=e.target.closest('[data-full]');if(f)openFs(+f.dataset.full);});
+$('#fsx').addEventListener('click',closeFs);document.addEventListener('keydown',function(e){if(e.key==='Escape'&&fsOn)closeFs();});
+$('#fss').addEventListener('scroll',function(){var sc=$('#fss');window.__vel=Math.min(60,window.__vel+4);});
+
+/* ---------- picks: save by themselves ---------- */
+var picks={},note='',db=null,saveT;
+try{var L=JSON.parse(localStorage.getItem('pep_picker')||'{}');picks=L.picks||{};note=L.note||'';}catch(e){}
+function paint(){$$('[data-pick]').forEach(function(b){var on=!!picks[b.dataset.pick];b.setAttribute('aria-pressed',on);b.textContent=on?'PICKED ✓':'PICK';b.closest('.item').classList.toggle('picked',on);});
+  var ks=Object.keys(picks).filter(function(k){return picks[k];});$('#cnt').textContent=ks.length+' PICKED';
+  $('#nb').textContent=ks.filter(function(k){return k.indexOf('button')==0;}).length;$('#nc').textContent=ks.filter(function(k){return k.indexOf('card')==0;}).length;$('#ng').textContent=ks.filter(function(k){return k.indexOf('background')==0;}).length;$('#note').value=note;}
+function summary(){var out=[];[['button',BTN,1],['card',CARD,1],['background',BG,0]].forEach(function(g){var list=g[1];list.forEach(function(x,i){if(picks[g[0]+'-'+(i+1)])out.push(g[0].toUpperCase()+' '+(i+1)+': '+(g[2]?x[1]+' '+x[2]:x[0]+' '+x[1]));});});return out;}
+function save(){try{localStorage.setItem('pep_picker',JSON.stringify({picks:picks,note:note}));}catch(e){}
+  clearTimeout(saveT);saveT=setTimeout(function(){if(!db){$('#saved').textContent='saved on this device';return;}$('#saved').textContent='saving…';
+    db.doc('picks/owner').set({picks:picks,list:summary(),note:note,at:new Date().toISOString()}).then(function(){$('#saved').textContent='saved ✓ Claude can read it';}).catch(function(){$('#saved').textContent='saved on this device';});},500);}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-pick]');if(!b)return;picks[b.dataset.pick]=!picks[b.dataset.pick];paint();save();});
+$('#note').addEventListener('input',function(e){note=e.target.value.slice(0,2000);save();});
+$('#copy').addEventListener('click',function(){var txt='PEPTICITY STYLE PICKS\n'+summary().join('\n')+(note?'\nNOTE: '+note:'');var b=$('#copy');function done(m){b.textContent=m;setTimeout(function(){b.textContent='COPY MY PICKS';},1800);}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){done('COPIED ✓');},function(){done('COPY BLOCKED');});else done('COPY BLOCKED');});
+paint();
+if(window.claude&&window.claude.use){window.claude.use('db').then(function(d){if(!d)return;db=d;db.doc('picks/owner').get().then(function(snap){var v=snap&&(snap.data?snap.data():snap);if(v&&v.picks){picks=Object.assign({},v.picks,picks);note=note||v.note||'';paint();}save();}).catch(function(){save();});}).catch(function(){});}
+})();
+</script>
+</body>
+</html>

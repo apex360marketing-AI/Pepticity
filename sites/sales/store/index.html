@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en-CA" data-way="store">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEPTICITY · PEPTIDES, LABELLED PLAINLY</title>
+<meta name="description" content="PEPTICITY: a Canadian peptide house. Every vial labelled with its name, amount and lot number. Adults 19+ (18+ in AB, MB, QC).">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="preload" href="core/font/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="core/img/vial-front-black.webp" as="image">
+<link rel="stylesheet" href="core/core.css">
+<!--
+ PEPTICITY · GOLD CHROME colourway (built from Grace's favourite: sites/versions/9-gold)
+ Gold = the owner's approved pale chrome gold only: #332814 · #68513d · #a4845d · #f0e6c7 · #fef9e8.
+ EFFECT CATALOGUE (apex_agents_bots design/effects.json), one per slot, none shared with PLATINUM:
+   Entrance ....... TXT-19  Shutter Split (each letter of the wordmark rises out of a gold hairline)
+   Menu ........... NAV-125 Gold Key (octagon key menu, centred on the axis)
+   Background ..... BGD-101 Satin Folds (slow satin sheen, gold and UV)
+   Moving type .... TXT-103 Tide Fill (headings start as outline and fill from the bottom as you scroll)
+   Signature ...... SCR-110 Season Window, redone as THE SHELF WINDOW (one shelf held, the next wipes across at a fixed slow pace)
+   Reveal ......... SCR-111 Come Forward (the lab still opens out of an octagon window to full width)
+   Finder ......... FRM-104 Sentence Check ("I'd like ___ in ___, ___")
+   Card hover ..... HOV-14  Chamfer Plate (a polished line of light runs along the cut edges) + HOV-19 Ticket Stub set cards
+   Buttons ........ BTN-133 Gold Key Button (octagon key, chrome-gold rim, comes forward and lights)
+   Cursor ......... HOV-04  Torch Glow (a soft gold light follows the pointer behind the glass)
+-->
+<style>
+:root{--oct:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.ground{background:radial-gradient(70% 55% at 50% -12%,rgba(254,249,232,.08),transparent 60%),radial-gradient(40% 45% at 8% 30%,rgba(var(--uv-rgb),.18),transparent 70%),radial-gradient(40% 45% at 92% 70%,rgba(var(--uv-rgb),.16),transparent 70%),radial-gradient(70% 50% at 50% 115%,rgba(var(--uv-rgb),.24),transparent 70%),#0e0e10}
+
+/* BGD-101 satin folds: very slow, low contrast */
+.satin{position:fixed;inset:-20%;z-index:-1;pointer-events:none;opacity:.55;
+  background:repeating-linear-gradient(115deg,transparent 0 9%,rgba(240,230,199,.035) 13%,transparent 18%,rgba(var(--uv-rgb),.03) 24%,transparent 30%);
+  background-size:200% 200%;filter:blur(18px);animation:satin 80s linear infinite}
+@keyframes satin{to{background-position:200% 100%}}
+
+/* HOV-04 torch glow */
+.torch{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(closest-side,rgba(240,230,199,.10),rgba(var(--uv-rgb),.06) 50%,transparent);transform:translate3d(-999px,-999px,0);will-change:transform}
+
+/* NAV-125 gold key header */
+.top{position:fixed;inset:0 0 auto;z-index:70;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px clamp(14px,3vw,34px);transition:background .8s}
+.top.solid{background:linear-gradient(180deg,rgba(11,11,12,.92),rgba(11,11,12,.5) 70%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.top .l{justify-self:start;display:flex;align-items:center;gap:12px;text-decoration:none}
+.top .r{justify-self:end}
+.logo-p{font:400 30px var(--display);line-height:1;color:#3a3a3e;-webkit-text-stroke:.7px rgba(255,255,255,.68)}
+.logo-w{font:400 13px var(--display);letter-spacing:.38em;color:var(--m3)}
+.keybtn{position:relative;min-height:46px;padding:0 26px;border:0;cursor:pointer;clip-path:var(--key);font:400 12px var(--display);letter-spacing:.3em;color:var(--m4);background:rgba(254,249,232,.04);transition:transform .8s var(--ease),background .8s}
+.keybtn::before{content:"";position:absolute;inset:0;clip-path:var(--key);padding:1px;background:var(--metal);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.keybtn:hover,.keybtn[aria-expanded="true"]{transform:translateY(-2px) scale(1.04);background:rgba(var(--uv-rgb),.16)}
+.keybtn .n{color:var(--uv-2);margin-left:6px}
+.keymenu{position:fixed;inset:0;z-index:80;display:grid;place-items:center;visibility:hidden}
+.keymenu.open{visibility:visible}
+.keymenu .scrim{position:absolute;inset:0;background:rgba(6,6,7,.82);opacity:0;transition:opacity .8s}
+.keymenu.open .scrim{opacity:1}
+.keymenu nav{position:relative;display:grid;gap:10px;justify-items:center;opacity:0;transform:scale(.96);transition:all 1s var(--ease)}
+.keymenu.open nav{opacity:1;transform:none}
+.keymenu a{width:min(380px,82vw);text-align:center;padding:18px 20px;text-decoration:none;clip-path:var(--key);font:400 15px var(--display);letter-spacing:.24em;background:rgba(254,249,232,.04);position:relative;transition:transform .7s var(--ease),background .7s}
+.keymenu a::before{content:"";position:absolute;inset:0;clip-path:var(--key);padding:1px;background:var(--metal);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6}
+.keymenu a:hover,.keymenu a:focus-visible{transform:scale(1.04);background:rgba(var(--uv-rgb),.18)}
+
+/* BTN-133 gold key button */
+.btn{clip-path:var(--key);padding:0 34px}
+.btn:hover{transform:translateY(-4px) scale(1.06);filter:brightness(1.1) drop-shadow(0 10px 24px rgba(240,230,199,.35)) drop-shadow(0 0 16px rgba(var(--uv-rgb),.45))}
+.btn.ghost::before{clip-path:var(--key);background:var(--metal)}
+.btn.ghost{color:var(--m4)}
+
+/* TXT-103 tide fill: outline first, fills from the bottom with scroll */
+.tide::after{-webkit-mask:linear-gradient(to top,#000 var(--fill,0%),transparent calc(var(--fill,0%) + 6%));mask:linear-gradient(to top,#000 var(--fill,0%),transparent calc(var(--fill,0%) + 6%))}
+.tide{-webkit-text-stroke:.8px rgba(240,230,199,.55)}
+
+/* hero with founding ticket */
+.hero{min-height:100svh;display:grid;align-content:center;padding:118px 0 60px;overflow:hidden}
+.hero .grid{display:grid;grid-template-columns:1fr minmax(0,560px) 1fr;align-items:center;gap:clamp(10px,3vw,40px);width:min(1300px,calc(100vw - 32px));margin:0 auto}
+.hero .side{position:relative;aspect-ratio:880/1168;width:100%;max-width:300px;justify-self:center;mix-blend-mode:lighten}
+.hero .side img{width:100%;height:100%;object-fit:contain}
+.hero .side.r{transform:scaleX(1)}
+.hero .side::after{content:"";position:absolute;left:12%;right:12%;bottom:3%;height:14%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,230,199,.5),rgba(var(--uv-rgb),.25) 55%,transparent);filter:blur(10px)}
+.hero .side .shine{position:absolute;inset:8% 22%;mix-blend-mode:screen;background:linear-gradient(0deg,transparent 30%,rgba(254,249,232,.25) 48%,transparent 62%);background-size:100% 260%;animation:shine 8s var(--ease-io) infinite}
+.hero .side.r .shine{animation-delay:-4s}
+@keyframes shine{0%{background-position:0 -160%}60%,100%{background-position:0 160%}}
+.hero .mid{text-align:center}
+.word{display:inline-flex;overflow:hidden;padding:.08em .04em .22em;position:relative}
+.word::after{content:"";position:absolute;left:0;right:0;bottom:.12em;height:1px;background:linear-gradient(90deg,transparent,var(--m3),transparent);transform:scaleX(0);transition:transform 1.4s var(--ease)}
+.word.go::after{transform:scaleX(1)}
+.word .x3d{transform:translateY(110%);transition:transform 1.3s var(--ease)}
+.word.go .x3d{transform:none}
+.hero h1{font-size:clamp(40px,6.2vw,96px);letter-spacing:.06em;line-height:1}
+.ticket{position:relative;margin:26px auto 0;padding:26px clamp(18px,3vw,34px) 24px;max-width:560px;
+  clip-path:polygon(16px 0,calc(100% - 16px) 0,100% 16px,100% calc(50% - 14px),calc(100% - 12px) 50%,100% calc(50% + 14px),100% calc(100% - 16px),calc(100% - 16px) 100%,16px 100%,0 calc(100% - 16px),0 calc(50% + 14px),12px 50%,0 calc(50% - 14px),0 16px)}
+.ticket::before{clip-path:inherit}
+.ticket .cols{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 0 16px}
+.ticket .cols div{padding:6px 4px;border-left:1px solid rgba(240,230,199,.16)}.ticket .cols div:first-child{border-left:0}
+.ticket .cols b{display:block;font:400 clamp(13px,1.4vw,17px) var(--display);letter-spacing:.14em;color:var(--m4)}
+.ticket .cols span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.ticket .perf{height:1px;margin:14px -34px;background:repeating-linear-gradient(90deg,rgba(240,230,199,.35) 0 6px,transparent 6px 12px)}
+.stamp{position:absolute;right:18px;top:14px;width:96px;height:96px;display:grid;place-items:center;clip-path:var(--oct);font:400 11px/1.25 var(--display);letter-spacing:.14em;text-align:center;color:#1a140a;background:var(--metal);
+  transform:scale(2.2) rotate(-18deg);opacity:0;transition:transform .5s cubic-bezier(.3,1.6,.5,1),opacity .3s}
+.is-done .stamp,.ticket.stamped .stamp{transform:scale(1) rotate(-12deg);opacity:1}
+.hero .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.trust{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.trust .chip{clip-path:var(--key);padding:0 18px}
+
+/* SCR-110 the shelf window */
+.window{height:360vh;padding:0}
+.window .pin{position:sticky;top:0;height:100svh;display:grid;align-content:center;justify-items:center;overflow:hidden}
+.window .head{margin-bottom:14px;margin-top:40px}
+.window .head .h-l{font-size:clamp(30px,4.4vw,60px)}
+.frame{position:relative;width:min(1100px,calc(100vw - 32px));height:min(520px,58vh)}
+.pane{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr;gap:14px;clip-path:inset(0 0 0 100%);transition:clip-path 1.8s var(--ease-io)}
+.pane.on{clip-path:inset(0 0 0 0)}
+.pane.past{clip-path:inset(0 100% 0 0)}
+.pane .ptitle{text-align:center}
+.pane .ptitle b{font:400 clamp(16px,1.8vw,22px) var(--display);letter-spacing:.18em;color:var(--m4)}
+.pane .ptitle p{margin:4px 0 0;color:var(--ink-3);font-size:14px}
+.pane .row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;min-height:0}
+.pane .card{padding:16px 16px 18px;display:grid;align-content:end}
+.pane .card .vial{--vh:min(210px,22vh)}
+.wnav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:16px;margin-bottom:70px}
+.wnav button{min-height:44px;min-width:64px;border:0;cursor:pointer;clip-path:var(--key);background:rgba(254,249,232,.05);font:400 12px var(--display);letter-spacing:.2em;color:var(--ink-2);transition:all .6s}
+.wnav button[aria-current="true"]{background:var(--metal);color:#1a140a}
+.full-list{display:grid;align-content:center;justify-items:center;text-align:center;padding:24px}
+.full-list h3{font-size:18px;letter-spacing:.14em;margin-bottom:8px}
+.full-list form{width:100%}
+
+/* HOV-14 chamfer plate: a polished line runs the cut edge on hover */
+.plate{--a:0deg}
+.plate::after{content:"";position:absolute;inset:0;clip-path:var(--chamfer);pointer-events:none;padding:1.5px;opacity:0;transition:opacity .6s;
+  background:conic-gradient(from var(--a),transparent 0 70%,var(--m4) 80%,var(--m3) 84%,transparent 92%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.plate:hover::after{opacity:1;animation:runline 3.2s linear infinite}
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes runline{to{--a:360deg}}
+.plate:hover{transform:translateY(-6px)}
+
+/* FRM-104 sentence check */
+.sentence{max-width:980px;margin:0 auto;padding:42px clamp(18px,4vw,50px);text-align:center}
+.sentence p.s{font:400 clamp(20px,2.6vw,34px)/1.9 var(--display);letter-spacing:.06em;margin:0 0 22px;text-transform:uppercase}
+.sentence select{appearance:none;border:0;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:uppercase;color:var(--m4);padding:2px 38px 2px 16px;clip-path:var(--key);
+  background:rgba(var(--uv-rgb),.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23f0e6c7' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center;
+  box-shadow:inset 0 -2px 0 var(--m2);min-height:48px}
+.sentence select option{background:#141412;color:#eee;font:16px var(--body)}
+.picks-out{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 20px}
+.picks-out .card .vial{--vh:180px}
+.picks-out .card .btn{display:none}
+
+/* HOV-19 ticket stub set */
+.stubs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:1000px;margin:0 auto 30px}
+.stub{position:relative;min-height:92px;padding:14px 16px 14px 22px;border:0;cursor:pointer;text-align:left;display:grid;align-content:center;gap:2px;transition:transform .8s var(--ease),background .6s;
+  background:rgba(254,249,232,.04);clip-path:polygon(0 0,100% 0,100% calc(50% - 9px),calc(100% - 9px) 50%,100% calc(50% + 9px),100% 100%,0 100%,0 calc(50% + 9px),9px 50%,0 calc(50% - 9px))}
+.stub::before{content:"";position:absolute;top:10px;bottom:10px;right:44px;border-left:1px dashed rgba(240,230,199,.35)}
+.stub::after{content:"+";position:absolute;right:16px;top:50%;transform:translateY(-50%);font:300 22px var(--body);color:var(--m3);transition:transform .6s}
+.stub b{font:400 15px var(--display);letter-spacing:.12em}
+.stub span{font-size:12px;color:var(--ink-3)}
+.stub:hover{transform:translateY(-4px) rotate(-.6deg);background:rgba(var(--uv-rgb),.14)}
+.stub[aria-pressed="true"]{background:linear-gradient(100deg,rgba(240,230,199,.22),rgba(164,132,93,.12))}
+.stub[aria-pressed="true"]::after{content:"\2713";color:var(--m4)}
+.tray{display:flex;justify-content:center;align-items:flex-end;gap:clamp(14px,4vw,46px);min-height:220px;margin-bottom:24px}
+.tray .slot{width:clamp(80px,12vw,130px);height:200px;position:relative;display:grid;justify-items:center;align-content:end}
+.tray .slot::after{content:"";width:100%;height:16px;border-radius:50%;background:radial-gradient(closest-side,rgba(240,230,199,.4),transparent);filter:blur(3px)}
+.tray .slot img{height:170px;width:auto;opacity:.12;filter:grayscale(1);transition:all 1.1s var(--ease)}
+.tray .slot.full img{opacity:1;filter:none;transform:translateY(-6px)}
+.tray .slot span{position:absolute;bottom:-26px;font:400 11px var(--display);letter-spacing:.12em;white-space:nowrap}
+
+/* SCR-111 come forward: lab still opens out of an octagon */
+.forward{height:260vh;padding:0}
+.forward .pin{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
+.forward .img{position:absolute;inset:0;background:radial-gradient(40% 55% at 50% 60%,rgba(240,230,199,.16),transparent 70%),radial-gradient(60% 60% at 50% 100%,rgba(var(--uv-rgb),.35),transparent 70%),#0d0d0f;clip-path:polygon(var(--o1) var(--o0),var(--o2) var(--o0),var(--o3) var(--o1),var(--o3) var(--o2),var(--o2) var(--o3),var(--o1) var(--o3),var(--o0) var(--o2),var(--o0) var(--o1));}
+.forward .img img{position:absolute;left:50%;top:11vh;height:40vh;width:auto;transform:translateX(-50%) scale(var(--zs,1.08));mix-blend-mode:lighten;opacity:.95}
+.forward .pin .copy{position:absolute;bottom:4vh;left:0;right:0;margin:0 auto}
+@media (max-width:560px){.forward .img img{top:12vh;height:30vh}}
+.forward .img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(13,13,15,.85) 80%)}
+.forward .copy{position:relative;z-index:2;width:min(640px,calc(100vw - 32px));padding:34px clamp(18px,3vw,40px);text-align:center;opacity:0;transform:translateY(30px);transition:all 1.4s var(--ease)}
+.forward .copy.on{opacity:1;transform:none}
+
+/* letter */
+.letter .glass{max-width:760px;margin:0 auto;padding:44px clamp(18px,4vw,50px);text-align:center}
+.letter ul{list-style:none;padding:0;margin:18px 0 22px;display:grid;gap:8px;color:var(--ink-2)}
+.letter li::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;clip-path:var(--oct);background:var(--metal)}
+
+.final{text-align:center;padding-top:200px}
+.final .duo{display:flex;justify-content:center;gap:0;margin-bottom:6px;mix-blend-mode:lighten}
+.final .duo img{width:min(170px,34vw);height:auto}
+.bar .glass-in .p{font:400 22px var(--display);color:#3a3a3e;-webkit-text-stroke:.6px rgba(255,255,255,.68)}
+
+@media (max-width:980px){
+  .hero .grid{grid-template-columns:1fr 1fr;grid-template-areas:"mid mid" "l r"}
+  .hero .mid{grid-area:mid}.hero .side.l{grid-area:l;max-width:200px}.hero .side.r{grid-area:r;max-width:200px}
+  .stubs{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:760px){
+  .window{height:auto;padding:84px 0}
+  .window .pin{position:relative;height:auto}
+  .frame{height:auto;display:grid;gap:40px}
+  .pane{position:relative;clip-path:none!important}
+  .pane .row{grid-template-columns:1fr 1fr}
+  .wnav{display:none}
+  .picks-out{grid-template-columns:repeat(3,1fr);gap:8px}
+  .picks-out .card .vial{--vh:110px}
+  .picks-out .card h3{font-size:12px}
+}
+@media (max-width:560px){
+  .logo-w{display:none}
+  .keybtn{padding:0 16px;letter-spacing:.2em;font-size:11px}
+  .full-list{grid-column:1/-1}
+  .ticket .cols b{font-size:12px}
+  .stamp{width:76px;height:76px;font-size:9px}
+  .tray .slot{height:150px}.tray .slot img{height:120px}
+  .pane .card .vial{--vh:150px}
+  .sentence p.s{line-height:2.2}
+  .sentence select{max-width:100%}
+}
+</style>
+<link rel="stylesheet" href="core/store.css"></head>
+<body class="has-announce">
+<a class="skip" href="#main">Skip to content</a>
+<div class="ground" aria-hidden="true"></div><div class="satin" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="torch" aria-hidden="true"></div>
+<div class="announce">GRAND OPENING · 15% OFF YOUR FIRST ORDER WITH A FOUNDING TICKET · <a href="index.html#ticket">CLAIM IT</a> <span class="ph" style="color:inherit;border-color:rgba(0,0,0,.4)">[offer: counsel + Grace to confirm]</span></div>
+<header class="top" id="top">
+  <nav class="l nav" aria-label="Shop"><a href="shop.html">SHOP</a><a href="index.html#finder">FIND YOURS</a><a href="about.html">THE STANDARD</a></nav>
+  <a class="brand" href="index.html" aria-label="PEPTICITY home"><span class="p" aria-hidden="true">P</span><span class="w">PEPTICITY</span></a>
+  <div class="r"><nav class="nav" aria-label="Help"><a href="index.html#paper">LOT LOOKUP</a><a href="contact.html">CONTACT</a></nav><button class="keybtn" data-open-cart aria-label="Open cart">CART <span class="n" data-count>0</span></button><button class="keybtn menu-btn" id="mBtn" aria-expanded="false" aria-controls="mnav">MENU</button></div>
+</header>
+<div class="mnav" id="mnav" aria-hidden="true"><div class="scrim" data-mclose3></div><nav aria-label="Site"><a href="index.html">HOME</a><a href="shop.html">SHOP ALL</a><a href="index.html#finder">FIND YOURS</a><a href="index.html#set">THE SET OF THREE</a><a href="about.html">THE STANDARD</a><a href="index.html#paper">LOT LOOKUP</a><a href="contact.html">CONTACT</a></nav></div>
+<main id="main">
+<section class="hero2" data-hero>
+  <div class="halo" aria-hidden="true"></div><div class="ring" aria-hidden="true"></div><div class="ring r2" aria-hidden="true"></div><div class="halo2" aria-hidden="true"></div><div class="motes" aria-hidden="true"><i style="left:5%;animation-delay:-0.0s;animation-duration:11s"></i><i style="left:42%;animation-delay:-1.3s;animation-duration:12s"></i><i style="left:79%;animation-delay:-2.6s;animation-duration:13s"></i><i style="left:26%;animation-delay:-3.9000000000000004s;animation-duration:14s"></i><i style="left:63%;animation-delay:-5.2s;animation-duration:15s"></i><i style="left:10%;animation-delay:-6.5s;animation-duration:16s"></i><i style="left:47%;animation-delay:-7.800000000000001s;animation-duration:17s"></i><i style="left:84%;animation-delay:-9.1s;animation-duration:11s"></i><i style="left:31%;animation-delay:-10.4s;animation-duration:12s"></i><i style="left:68%;animation-delay:-11.700000000000001s;animation-duration:13s"></i><i style="left:15%;animation-delay:-13.0s;animation-duration:14s"></i><i style="left:52%;animation-delay:-0.3000000000000007s;animation-duration:15s"></i><i style="left:89%;animation-delay:-1.6000000000000014s;animation-duration:16s"></i><i style="left:36%;animation-delay:-2.900000000000002s;animation-duration:17s"></i><i style="left:73%;animation-delay:-4.199999999999999s;animation-duration:11s"></i><i style="left:20%;animation-delay:-5.5s;animation-duration:12s"></i><i style="left:57%;animation-delay:-6.800000000000001s;animation-duration:13s"></i><i style="left:94%;animation-delay:-8.100000000000001s;animation-duration:14s"></i></div>
+  <span class="eyebrow" data-rv>GRAND OPENING · CANADA</span>
+  <h1 class="h-xl" id="heroH" aria-label="PEPTICITY" style="margin-top:16px"><span class="word" aria-hidden="true" id="w1"></span></h1>
+  <div class="spinwrap" role="img" aria-label="The PEPTICITY vial turning a full circle"><video data-spin muted playsinline autoplay preload="auto" poster="core/img/vial-spin-poster.jpg"><source src="core/img/vial-spin.webm" type="video/webm"><source src="core/img/vial-spin.mp4" type="video/mp4"></video></div>
+  <p class="h-s" style="color:var(--p3);margin:0" data-rv="2">PEPTIDES, LABELLED PLAINLY</p>
+  <div class="ctas" data-rv="3"><a class="btn" href="shop.html" data-cta="hero-shop">SHOP THE COLLECTION <span class="arw">&#x2192;</span></a><a class="btn ghost" href="#ticket" data-cta="hero-ticket">CLAIM 15% OFF</a></div>
+  <div class="trust" data-rv="4"><span class="chip">SHIPS FROM CANADA <i class="ph">[confirm]</i></span><span class="chip">LOT NUMBER ON EVERY VIAL</span><span class="chip">A REAL PERSON ANSWERS</span><span class="chip">ADULTS 19+ (18+ AB · MB · QC)</span></div>
+</section>
+<div class="strip" aria-hidden="true"><div class="run"><span>ONE VIAL · ONE LOT NUMBER</span><span>PACKED IN CANADA [confirm]</span><span>TRACKED SHIPPING [confirm]</span><span>NAME, AMOUNT AND STORAGE ON EVERY LABEL</span><span>A REAL PERSON ANSWERS</span><span>ADULTS ONLY</span><span>ONE VIAL · ONE LOT NUMBER</span><span>PACKED IN CANADA [confirm]</span><span>TRACKED SHIPPING [confirm]</span><span>NAME, AMOUNT AND STORAGE ON EVERY LABEL</span><span>A REAL PERSON ANSWERS</span><span>ADULTS ONLY</span><span>ONE VIAL · ONE LOT NUMBER</span><span>PACKED IN CANADA [confirm]</span><span>TRACKED SHIPPING [confirm]</span><span>NAME, AMOUNT AND STORAGE ON EVERY LABEL</span><span>A REAL PERSON ANSWERS</span><span>ADULTS ONLY</span><span>ONE VIAL · ONE LOT NUMBER</span><span>PACKED IN CANADA [confirm]</span><span>TRACKED SHIPPING [confirm]</span><span>NAME, AMOUNT AND STORAGE ON EVERY LABEL</span><span>A REAL PERSON ANSWERS</span><span>ADULTS ONLY</span></div></div>
+<section id="standard"><div class="wrap"><div class="head"><span class="eyebrow" data-rv>THE PEPTICITY STANDARD</span><h2 class="h-l" data-rv="2"><span class="x3d tide gold-t" data-t="THREE PROMISES ON PAPER">THREE PROMISES ON PAPER</span></h2><p class="lede" data-rv="3">No hype, no claims. Just what you can check yourself.</p></div>
+<div class="pillars"><div class="pillar glass plate" data-rv><div class="n">01</div><h3>EVERY VIAL HAS A LOT</h3><p>The lot number is printed on the back. Look it up for that lot's paperwork. <i class="ph">[Grace to confirm]</i></p></div><div class="pillar glass plate" data-rv="2"><div class="n">02</div><h3>PACKED IN CANADA</h3><p>Plain box, tracked from our door to yours. <i class="ph">[confirm]</i></p></div><div class="pillar glass plate" data-rv="3"><div class="n">03</div><h3>A PERSON ANSWERS</h3><p>Questions go to Grace, not a bot. <i class="ph">[contact email]</i></p></div></div>
+<div class="ctas" style="display:flex;justify-content:center;margin-top:34px" data-rv><a class="btn ghost" href="about.html">READ THE STANDARD</a></div></div></section>
+<section id="start" style="padding-top:20px"><div class="wrap"><div class="head"><span class="eyebrow" data-rv>THE COLLECTION</span><h2 class="h-l" data-rv="2"><span class="x3d tide plat-t" data-t="START HERE">START HERE</span></h2><p class="lede" data-rv="3">Every vial on the shelf. Swipe, pick a size, add it to your cart.</p></div><div class="rail" id="rail" data-rv="3"></div><div class="ctas" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px"><a class="btn" href="shop.html">SHOP ALL <span class="arw">&#x2192;</span></a><a class="btn ghost" href="#finder">HELP ME CHOOSE</a></div></div></section>
+<section id="ticket" style="padding-top:40px"><div class="wrap" style="max-width:640px"><div class="pool"><div class="ticket glass" id="ticket" data-rv>
+        <span class="stamp" aria-hidden="true">FOUNDING<br>MEMBER<br>15% OFF</span>
+        <span class="eyebrow">FOUNDING TICKET</span>
+        <div class="cols"><div><b>15% OFF</b><span>first order</span></div><div><b>MONTHLY</b><span>letter from Grace</span></div><div><b>FIRST</b><span>word on new lots</span></div></div>
+        <form data-capture="hero-ticket" novalidate><div class="todo" style="display:grid;gap:10px">
+          <div class="form-row"><div class="field"><label for="ht-e">Email</label><input class="input" id="ht-e" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required data-hint="Add your email, e.g. name@example.com"><span class="msg" aria-live="polite"></span></div>
+          <button class="btn">CLAIM MY TICKET</button></div>
+          <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me news, offers and Grace's monthly letter. I can unsubscribe at any time. [legal name] · [mailing address] · <a href="#privacy">privacy</a></span></label>
+          <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true"></div>
+          <div class="done"><h3 class="h-s">TICKET CLAIMED</h3><p class="small">15% is applied in your cart. Preview build: no email was sent. <i class="ph">[Offer: counsel and Grace to confirm]</i></p></div></form>
+      </div></div>
+      </div></section>
+
+
+<!-- ============ SIGNATURE: THE SHELF WINDOW (SCR-110) ============ -->
+<section class="window" id="shelves">
+  <div class="pin">
+    <div class="head"><span class="eyebrow">THE SHELVES</span><h2 class="h-l" style="margin-top:14px"><span class="x3d tide" data-t="THREE SHELVES">THREE SHELVES</span></h2></div>
+    <div class="frame" id="frame"></div>
+    <div class="wnav" id="wnav" role="group" aria-label="Choose a shelf"></div>
+  </div>
+</section>
+
+<!-- ============ FINDER (FRM-104 sentence check) ============ -->
+<section id="finder">
+  <div class="wrap">
+    <div class="head"><span class="eyebrow" data-rv>FIND YOURS</span><h2 class="h-l" data-rv="2"><span class="x3d tide" data-t="ONE SENTENCE">ONE SENTENCE</span></h2>
+      <p class="lede" data-rv="3">Fill in the blanks about how you shop. Nothing about your health, ever.</p></div>
+    <div class="pool"><div class="sentence glass plate" data-rv="3">
+      <p class="s">I'D LIKE <label class="sr" for="s1">How many</label><select id="s1"><option value="one">ONE VIAL</option><option value="set">A SET OF THREE</option><option value="restock">TO RESTOCK</option></select>
+        FROM <label class="sr" for="s2">Which shelf</label><select id="s2"><option value="10">THE 10 MG VIALS</option><option value="two">THE TWO-SIZE SHELF</option><option value="large">THE LARGE FORMATS</option><option value="all">ANY SHELF</option></select>,
+        <label class="sr" for="s3">Paperwork</label><select id="s3"><option value="yes">WITH LOT PAPERWORK</option><option value="no">NO PAPERWORK NEEDED</option></select>.</p>
+      <button class="btn" id="sGo">SHOW MY SHORTLIST <span class="arw">&#x2192;</span></button>
+      <div id="sOut" hidden>
+        <div class="picks-out" id="sList"></div>
+        <div class="ctas" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><button class="btn" id="sAdd">ADD ALL THREE</button><button class="btn ghost" id="sSave">EMAIL MY SHORTLIST</button></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============ THE SET OF THREE (HOV-19 ticket stubs) ============ -->
+<section id="set">
+  <div class="wrap">
+    <div class="head"><span class="eyebrow" data-rv>QUANTITY BREAK</span><h2 class="h-l" data-rv="2"><span class="x3d tide" data-t="THE SET OF THREE">THE SET OF THREE</span></h2>
+      <p class="lede" data-rv="3">Punch any three tickets and the set price applies: <b style="color:var(--ink)"><span class="ph">[X]%</span> off the three</b>. <i class="ph">[Grace to confirm]</i></p></div>
+    <div class="tray" id="tray" data-rv><div class="slot"><img src="core/img/vial-front.webp" alt=""><span></span></div><div class="slot"><img src="core/img/vial-front.webp" alt=""><span></span></div><div class="slot"><img src="core/img/vial-front.webp" alt=""><span></span></div></div>
+    <div class="stubs" id="stubs" data-rv="2"></div>
+    <div class="ctas" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap" data-rv="3"><button class="btn" id="setAdd" disabled>PUNCH 3 TICKETS</button><button class="btn ghost" id="setSave">EMAIL ME THIS SET</button></div>
+  </div>
+</section>
+
+<section id="more" style="padding-top:20px"><div class="wrap"><div class="split"><div class="glass plate pool" data-rv><span class="eyebrow">NEW LOT ALERTS</span><h2 class="h-m" style="margin:14px 0 8px"><span class="x3d gold-t" data-t="FIRST WORD">FIRST WORD</span></h2><p class="small" style="margin:0 0 14px">One email the day a new lot lands or a vial is back on the shelf.</p><div id="alertForm"></div></div><div class="glass plate pool" data-rv="2"><span class="eyebrow">BRING A FRIEND</span><h2 class="h-m" style="margin:14px 0 8px"><span class="x3d plat-t" data-t="SHARE THE SHELF">SHARE THE SHELF</span></h2><p class="small" style="margin:0 0 14px">Get your own link to share. <i class="ph">[Referral reward: counsel + Grace to confirm]</i> We never email your friends; you share the link yourself.</p><div id="referForm"></div></div></div></div></section>
+<!-- ============ THE PAPERWORK (SCR-111 come forward) ============ -->
+<section class="forward" id="paper">
+  <div class="pin">
+    <div class="img" id="fimg" aria-hidden="true"><img src="core/img/vial-back-black.webp" alt="" loading="lazy"></div>
+    <div class="copy glass" id="fcopy">
+      <span class="eyebrow">THE PAPERWORK</span>
+      <h2 class="h-m" style="margin:14px 0 8px;font-size:clamp(22px,2.6vw,34px)"><span class="x3d" data-t="EVERY LOT, ON PAPER">EVERY LOT, ON PAPER</span></h2>
+      <p class="small" style="margin:0 0 16px">Type the lot number from the back of your vial and we email that lot's paperwork. <i class="ph">[Paperwork process: Grace to confirm]</i></p>
+      <form data-capture="lot-lookup" novalidate><div class="todo" style="display:grid;gap:10px">
+        <div class="form-row"><div class="field"><label for="gl-n">Lot number</label><input class="input" id="gl-n" name="lot" autocomplete="off" autocapitalize="characters" required pattern="[A-Za-z0-9-]{3,}" placeholder="e.g. P-0000" data-hint="Letters and numbers from the back label, e.g. P-0000"><span class="msg" aria-live="polite"></span></div>
+        <div class="field"><label for="gl-e">Email</label><input class="input" id="gl-e" name="email" type="email" inputmode="email" autocomplete="email" required data-hint="Add your email, e.g. name@example.com"><span class="msg" aria-live="polite"></span></div></div>
+        <label class="consent"><input type="checkbox" name="consent_email"><span>Also send me PEPTICITY news and offers. I can unsubscribe at any time.</span></label>
+        <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true">
+        <button class="btn">EMAIL ME THE PAPERWORK</button></div>
+        <div class="done"><div class="tick">&#x2713;</div><h3 class="h-s">REQUEST RECEIVED</h3><p class="small">Preview build: nothing was sent.</p></div></form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GRACE'S LETTER ============ -->
+<section class="letter" id="letter">
+  <div class="wrap pool"><div class="glass plate" data-rv data-tilt="2">
+    <span class="eyebrow">NOT BUYING TODAY?</span>
+    <h2 class="h-l" style="margin-top:14px"><span class="x3d tide" data-t="GRACE'S LETTER">GRACE'S LETTER</span></h2>
+    <ul><li>New lots, the day they land</li><li>Restock dates before anyone else</li><li>Your 15% founding code, kept for when you are ready</li></ul>
+    <form data-capture="graces-letter" novalidate><div class="todo" style="display:grid;gap:12px;max-width:520px;margin:0 auto">
+      <div class="field"><label for="gr-n">First name (optional)</label><input class="input" id="gr-n" name="name" autocomplete="given-name"></div>
+      <div class="field"><label for="gr-e">Email</label><input class="input" id="gr-e" name="email" type="email" inputmode="email" autocomplete="email" required data-hint="Add your email, e.g. name@example.com"><span class="msg" aria-live="polite"></span></div>
+      <div class="field"><label for="gr-t">Mobile (optional, for texts)</label><input class="input" id="gr-t" name="tel" type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9 ()+.-]{10,}" data-hint="Add your area code, e.g. 604 555 0123"><span class="msg" aria-live="polite"></span></div>
+      <label class="consent"><input type="checkbox" name="consent_email"><span>Yes, PEPTICITY may email me Grace's monthly letter, news and offers. I can unsubscribe at any time.</span></label>
+      <label class="consent"><input type="checkbox" name="consent_sms"><span>Yes, PEPTICITY may text me when new lots land. Message rates may apply. Reply STOP to stop. [Consent wording: counsel to review]</span></label>
+      <p class="small" style="margin:0">[legal name] · [mailing address] · [contact email] · <a href="#privacy">privacy</a></p>
+      <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true">
+      <button class="btn">SEND ME THE LETTER</button></div>
+      <div class="done"><div class="tick">&#x2713;</div><h3 class="h-s">YOU ARE ON THE LIST</h3><p class="small">Preview build: nothing was sent.</p></div></form>
+  </div></div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" style="padding-top:30px">
+  <div class="wrap">
+    <div class="head"><span class="eyebrow" data-rv>STRAIGHT ANSWERS</span><h2 class="h-m" data-rv="2"><span class="x3d tide" data-t="BEFORE YOU ORDER">BEFORE YOU ORDER</span></h2></div>
+    <div class="faq" data-rv="3">
+      <details><summary>WHO CAN ORDER?</summary><p>Adults in Canada: 19 and over, or 18 and over in Alberta, Manitoba and Quebec. Checkout asks your province first.</p></details>
+      <details><summary>WHAT DOES SHIPPING COST?</summary><p>Shipping is shown in your cart before checkout, with free shipping over $[X] CAD. <i class="ph">[Grace to confirm]</i></p></details>
+      <details><summary>WHAT IS THE LOT NUMBER FOR?</summary><p>It ties your vial to its batch. Send us the number and we email that batch's paperwork. <i class="ph">[Grace to confirm]</i></p></details>
+      <details><summary>CAN I ASK HOW TO USE A PRODUCT?</summary><p>PEPTICITY does not give health, dosing or use advice. For anything about your health, speak with a licensed health professional.</p></details>
+      <details><summary>HOW DO RETURNS WORK?</summary><p><i class="ph">[Returns policy: Grace to confirm]</i></p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="duo" data-rv aria-hidden="true"><img src="core/img/vial-front-black.webp" alt="" loading="lazy"><img src="core/img/vial-back-black.webp" alt="" loading="lazy"></div>
+    <h2 class="h-l" data-rv="2"><span class="x3d sweep" data-t="YOUR FIRST VIAL">YOUR FIRST VIAL</span></h2>
+    <p class="lede" data-rv="3">15% off your first order with a founding ticket. <i class="ph">[Offer: counsel and Grace to confirm]</i></p>
+    <div class="ctas" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px" data-rv="4"><a class="btn" href="shop.html" data-cta="final-shop">SHOP THE SHELVES <span class="arw">&#x2192;</span></a><button class="btn ghost" data-offer data-cta="final-offer">SEND ME MY CODE</button></div>
+  </div>
+</section>
+</main>
+<footer id="privacy">
+  <div class="rail-h" style="margin-bottom:60px"></div>
+  <div class="wordmark" id="wm" aria-hidden="true">PEPTICITY</div>
+  <div class="foot-links"><a href="shop.html">Shop all</a><a href="index.html#set">Set of three</a><a href="about.html">The standard</a><a href="index.html#paper">Lot lookup</a><a href="index.html#letter">Grace's letter</a><a href="contact.html">Contact</a><a href="contact.html#faq">FAQ</a><a href="#privacy">Privacy <i class="ph">[page]</i></a><a href="#privacy">Terms <i class="ph">[page]</i></a></div>
+  <p class="legal">PEPTICITY · [legal name] · [mailing address] · [contact email]. Adults only. Prices in CAD. PEPTICITY does not give health, dosing or use advice. [Final legal copy to be approved by counsel.] Preview build: forms and checkout send nothing.</p>
+</footer>
+<div class="bar" aria-label="Cart bar"><div class="glass glass-in"><span class="p" aria-hidden="true">P</span><span class="count">FIRST ORDER 15% OFF</span><a class="btn" href="shop.html" data-cta="bar-shop">SHOP</a><button class="btn ghost" data-open-cart>CART · <span data-count>0</span></button></div></div>
+<script src="core/vendor/lenis.min.js"></script>
+<script src="core/core.js"></script>
+<script>
+(function(){
+  var P=window.PEP,$=P.$,$$=P.$$;
+
+  /* shared: menu, header, torch, tide fill, footer wordmark */
+  var mn=$('#mnav'),mb=$('#mBtn');
+  function setM(on){mn.classList.toggle('open',on);mn.setAttribute('aria-hidden',String(!on));mb.setAttribute('aria-expanded',String(on));mb.textContent=on?'CLOSE':'MENU';if(on)$('a',mn).focus();}
+  mb.addEventListener('click',function(){setM(!mn.classList.contains('open'));});
+  $('[data-mclose3]',mn).addEventListener('click',function(){setM(false);mb.focus();});
+  $$('a',mn).forEach(function(a){a.addEventListener('click',function(){setM(false);});});
+  mn.addEventListener('keydown',function(e){if(e.key==='Escape'){setM(false);mb.focus();}});
+  var top=$('#top');P.onFrame(function(){top.classList.toggle('solid',scrollY>30);});
+  var torch=$('.torch');if(P.fine&&!P.reduce){var tx=-999,ty=-999,cx=-999,cy=-999;addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;if(cx<-900){cx=tx;cy=ty;}});P.onFrame(function(){cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;torch.style.transform='translate3d('+cx+'px,'+cy+'px,0)';});}
+  var tides=$$('.tide');P.onFrame(function(){var H=innerHeight;for(var i=0;i<tides.length;i++){var r=tides[i].getBoundingClientRect();if(r.bottom<-50||r.top>H+50)continue;var f=Math.min(1,Math.max(0,(H*.92-r.top)/(H*.5)));tides[i].style.setProperty('--fill',(f*106-6).toFixed(1)+'%');}});
+  new IntersectionObserver(function(es){if(es[0].isIntersecting)$('#wm').classList.add('lit');},{threshold:.6}).observe($('#wm'));
+  /* 360 spin: one full turn, 2 s hold facing front, then again */
+  $$('video[data-spin]').forEach(function(v){if(P.reduce){v.removeAttribute('autoplay');v.pause();return;}
+    v.muted=true;v.playsInline=true;var go=function(){var p=v.play();if(p&&p.catch)p.catch(function(){});};
+    v.addEventListener('ended',function(){setTimeout(function(){v.currentTime=0;go();},2000);});
+    new IntersectionObserver(function(es){if(es[0].isIntersecting){if(v.paused&&!v.ended)go();}else v.pause();}).observe(v);});
+
+  /* TXT-19 shutter split: letters rise out of a gold hairline, one after another */
+  var w1=$('#w1');
+  w1.innerHTML='PEPTICITY'.split('').map(function(c,i){return '<span class="x3d" data-t="'+c+'" style="transition-delay:'+(P.reduce?0:.25+i*.11)+'s">'+c+'</span>';}).join('');
+  requestAnimationFrame(function(){setTimeout(function(){w1.classList.add('go');$('#heroH').classList.add('go');},P.reduce?0:250);});
+  var torch=$('.torch');if(P.fine&&!P.reduce){var tx=-999,ty=-999,cx=-999,cy=-999;addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;if(cx<-900){cx=tx;cy=ty;}});P.onFrame(function(){cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;torch.style.transform='translate3d('+cx+'px,'+cy+'px,0)';});}
+  /* SCR-110 shelf window: one shelf held; the next wipes across at a fixed slow pace */
+  var frame=$('#frame'),wnav=$('#wnav'),win=$('#shelves');
+  var ids=[1,2,3];
+  frame.innerHTML=ids.map(function(s){var S=P.shelves[s];var items=P.products.filter(function(p){return p.shelf===s&&!p.soon;});
+    var cards=items.map(function(p){return P.cardHTML(p,{cls:'plate'});}).join('');
+    if(items.length<3)cards+='<div class="card glass plate full-list"><span class="chip" style="position:static;transform:none;margin-bottom:12px">COMING SOON</span><h3>NEW VIALS AND THE FULL LIST</h3><p class="small" style="margin:0 0 12px">One email the day new vials land.</p>'+P.captureForm('shelf-full-list','TELL ME FIRST',{doneTitle:'YOU WILL HEAR FIRST'})+'</div>';
+    return '<div class="pane" data-s="'+s+'" aria-label="'+S.title+'"><div class="ptitle"><b>'+S.title+'</b><p>'+S.note+'</p></div><div class="row">'+cards+'</div></div>';}).join('');
+  wnav.innerHTML=ids.map(function(s,i){return '<button type="button" data-go="'+i+'" aria-label="Shelf '+(i+1)+'">0'+(i+1)+'</button>';}).join('');
+  P.bindForms(frame);
+  var panes=$$('.pane',frame),cur=-1,mobile=matchMedia('(max-width:760px)');
+  function show(n){if(n===cur)return;cur=n;panes.forEach(function(p,i){p.classList.toggle('on',i===n);p.classList.toggle('past',i<n);p.inert=(i!==n)&&!mobile.matches;});$$('button',wnav).forEach(function(b,i){b.setAttribute('aria-current',String(i===n));});}
+  show(0);
+  P.onFrame(function(){if(mobile.matches)return;var p=P.progress(win);show(p<.36?0:p<.7?1:2);});
+  wnav.addEventListener('click',function(e){var b=e.target.closest('[data-go]');if(!b)return;var i=+b.dataset.go;var top0=win.getBoundingClientRect().top+scrollY;var span=win.offsetHeight-innerHeight;var target=top0+span*[0.12,0.52,0.86][i];if(P.lenis)P.lenis.scrollTo(target,{duration:1.8});else scrollTo(0,target);});
+  /* FRM-104 sentence check */
+  var shortlist=[];
+  $('#sGo').addEventListener('click',function(){shortlist=P.shortlist({start:$('#s1').value,format:$('#s2').value,paper:$('#s3').value});
+    $('#sList').innerHTML=shortlist.map(function(p){return P.cardHTML(p);}).join('');$('#sOut').hidden=false;P.track('finder_done');});
+  $('#sAdd').addEventListener('click',function(){if($('#s1').value==='set'&&shortlist.length===3){P.addSet(shortlist.map(function(p){return p.k;}));return;}shortlist.forEach(function(p){P.add(p.k,null,1,true);});P.toast('Shortlist added to your cart');P.openCart();});
+  $('#sSave').addEventListener('click',function(){var m=P.modal('save','<span class="eyebrow">YOUR SHORTLIST</span><h2 id="save-h" style="margin-top:14px">EMAIL IT TO ME</h2><p>'+shortlist.map(function(p){return P.esc(p.name);}).join(' · ')+'</p>'+P.captureForm('finder-shortlist','EMAIL MY SHORTLIST',{doneTitle:'SHORTLIST SAVED'}));var f=m.querySelector('form');if(f)f.dataset.extra=shortlist.map(function(p){return p.k;}).join(',');});
+  /* set of three: punch tickets into the tray */
+  var stubs=$('#stubs'),slots=$$('#tray .slot'),chosen=[],setAdd=$('#setAdd');
+  stubs.innerHTML=P.products.filter(function(p){return!p.soon;}).map(function(p){return '<button class="stub" aria-pressed="false" data-k="'+p.k+'"><b>'+P.esc(p.name)+'</b><span>'+P.esc(p.sizes[0])+' · $[PRICE]</span></button>';}).join('');
+  function paint(){slots.forEach(function(s,i){var k=chosen[i];s.classList.toggle('full',!!k);s.querySelector('span').textContent=k?P.byK[k].name:'';});
+    setAdd.disabled=chosen.length<3;setAdd.innerHTML=chosen.length<3?'PUNCH '+(3-chosen.length)+' MORE':'ADD THE SET <span class="arw">&#x2192;</span>';
+    $$('.stub',stubs).forEach(function(b){b.setAttribute('aria-pressed',String(chosen.indexOf(b.dataset.k)>-1));});}
+  stubs.addEventListener('click',function(e){var b=e.target.closest('.stub');if(!b)return;var k=b.dataset.k,i=chosen.indexOf(k);if(i>-1)chosen.splice(i,1);else{if(chosen.length===3)chosen.shift();chosen.push(k);}paint();});
+  setAdd.addEventListener('click',function(){if(chosen.length===3)P.addSet(chosen.slice());});
+  $('#setSave').addEventListener('click',function(){var m=P.modal('setsave','<span class="eyebrow">YOUR SET</span><h2 id="setsave-h" style="margin-top:14px">EMAIL ME THIS SET</h2><p>'+(chosen.length?chosen.map(function(k){return P.byK[k].name;}).join(' · '):'Punch up to three, or save it now and choose later.')+'</p>'+P.captureForm('set-save','EMAIL MY SET',{doneTitle:'SET SAVED'}));var f=m.querySelector('form');if(f)f.dataset.extra=chosen.join(',');});
+  paint();
+  /* SCR-111 come forward: octagon window opens to full width */
+  var fw=$('#paper'),fimg=$('#fimg'),fcopy=$('#fcopy');
+  P.onFrame(function(){var p=P.progress(fw);var e=Math.min(1,p/.55);e=e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2;
+    var inset=(1-e)*30;var o0=inset,o3=100-inset,cut=(1-e)*12+0;
+    fimg.style.setProperty('--o0',o0+'%');fimg.style.setProperty('--o3',o3+'%');fimg.style.setProperty('--o1',(o0+cut)+'%');fimg.style.setProperty('--o2',(o3-cut)+'%');
+    var on=p>.45;fcopy.classList.toggle('on',on);fcopy.inert=!on;fimg.style.setProperty('--zs',(1.12-e*.12).toFixed(3));});
+  /* hero ticket stamps on claim */
+  document.addEventListener('pep:lead',function(e){if(e.detail.hook==='hero-ticket')$('#ticket').classList.add('stamped');});
+
+  /* hero word: duo metal, alternating gold / platinum letters */
+  $$('#w1 .x3d').forEach(function(s,i){s.classList.add(i%2?'gold-t':'plat-t');});
+  /* rail of every vial */
+  $('#rail').innerHTML=P.products.map(function(p){return P.cardHTML(p,{cls:'plate'});}).join('');
+  $('#alertForm').innerHTML=P.captureForm('new-lot-alerts','TELL ME FIRST',{sms:true,doneTitle:'YOU WILL HEAR FIRST'});
+  $('#referForm').innerHTML=P.captureForm('refer-link','GET MY LINK',{doneTitle:'YOUR LINK IS READY',done:'Preview build: on the live site your personal link appears here to copy. Nothing was sent.'});
+  P.bindForms(document);
+
+})();
+</script>
+</body>
+</html>
