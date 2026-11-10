@@ -7,7 +7,7 @@
   'use strict';
   var CFG = W.PEP_CFG = Object.assign({
     FORM_ENDPOINT: '',              // live: one endpoint (GHL / store) - empty = preview, nothing sent
-    COUNSEL: { names: true, offer: true, restock: true }, // [COUNSEL TO CLEAR] switches (peptide-regulatory)
+    COUNSEL: { names: false, offer: true, restock: true }, // [COUNSEL TO CLEAR] switches (peptide-regulatory). names stays OFF until counsel clears; owner preview: add #names to the link
     OFFER_PCT: 15,                  // grand-opening first order (owner R105) [counsel + Grace to confirm]
     SET_PCT: '[X]',                 // quantity break for any three [Grace to confirm]
     FREE_SHIP: '[X]'                // free shipping threshold CAD [Grace to confirm]
@@ -31,6 +31,13 @@
     2: { title: 'SHELF 02 · TWO SIZES', note: 'Each comes in a smaller and a larger vial.' },
     3: { title: 'SHELF 03 · THE LARGE FORMATS', note: 'The biggest vials on the shelf.' }
   };
+  /* names switch: hidden by default (peptide-regulatory: unauthorized products stay unnamed until counsel clears).
+     Owner preview only: the page opened with #names shows the real names and per-product label photos. */
+  try { if (W.location.hash === '#names' || sessionStorage.getItem('pep_names')) { CFG.COUNSEL.names = true; sessionStorage.setItem('pep_names', '1'); } } catch (e) {}
+  P.forEach(function (p, i) {
+    p.realName = p.name; p.img = p.soon ? null : 'core/img/vials/' + p.k + '.webp';
+    if (!CFG.COUNSEL.names) { p.name = 'VIAL N\u00ba ' + (i < 9 ? '0' : '') + (i + 1); p.img = null; }
+  });
   var byK = {}; P.forEach(function (p) { byK[p.k] = p; });
   var PRICE = '$[PRICE]';
   W.PEP = { products: P, shelves: SHELVES, byK: byK, img: IMG };
@@ -73,7 +80,7 @@
       : '<button type="button" class="btn ghost" data-add="' + p.k + '" data-cta="add-' + p.k + '"><span class="lbl">ADD TO CART</span></button>';
     return '<article class="card glass ' + (opts.cls || '') + '" data-k="' + p.k + '"' + (opts.attrs || '') + '>' +
       (p.soon ? '<span class="chip">COMING SOON</span>' : '') +
-      '<div class="vial"><img src="' + IMG + '" alt="PEPTICITY vial, ' + esc(p.name) + '" loading="lazy" width="525" height="876"></div>' +
+      '<div class="vial"><img src="' + (p.img || IMG) + '" alt="PEPTICITY vial, ' + esc(p.name) + '" loading="lazy" width="525" height="876"></div>' +
       '<h3>' + esc(p.name) + '</h3>' + sizes +
       '<div class="price">' + (p.soon ? '<span class="small">Price when it lands</span>' : PRICE + ' <span class="small">CAD</span>') + '</div>' + act + '</article>';
   }

@@ -394,7 +394,7 @@
   var ids=[1,2,3];
   frame.innerHTML=ids.map(function(s){var S=P.shelves[s];var items=P.products.filter(function(p){return p.shelf===s&&!p.soon;});
     var cards=items.map(function(p){return P.cardHTML(p,{cls:'plate'});}).join('');
-    if(items.length<3)cards+='<div class="card glass plate full-list"><span class="chip" style="position:static;transform:none;margin-bottom:12px">COMING SOON</span><h3>IGF-1 LR3 AND THE FULL LIST</h3><p class="small" style="margin:0 0 12px">One email the day new vials land.</p>'+P.captureForm('shelf-full-list','TELL ME FIRST',{doneTitle:'YOU WILL HEAR FIRST'})+'</div>';
+    if(items.length<3)cards+='<div class="card glass plate full-list"><span class="chip" style="position:static;transform:none;margin-bottom:12px">COMING SOON</span><h3>NEW VIALS AND THE FULL LIST</h3><p class="small" style="margin:0 0 12px">One email the day new vials land.</p>'+P.captureForm('shelf-full-list','TELL ME FIRST',{doneTitle:'YOU WILL HEAR FIRST'})+'</div>';
     return '<div class="pane" data-s="'+s+'" aria-label="'+S.title+'"><div class="ptitle"><b>'+S.title+'</b><p>'+S.note+'</p></div><div class="row">'+cards+'</div></div>';}).join('');
   wnav.innerHTML=ids.map(function(s,i){return '<button type="button" data-go="'+i+'" aria-label="Shelf '+(i+1)+'">0'+(i+1)+'</button>';}).join('');
   P.bindForms(frame);
