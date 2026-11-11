@@ -8,3 +8,4 @@
 ## Always
 
 ## Lessons
+- OWNER RULE: every change = NEW git branch + NEW separate artifact link (keep old links); change ONLY what was asked.
