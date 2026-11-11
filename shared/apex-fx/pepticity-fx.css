@@ -120,8 +120,11 @@
 .ring .face .lbl span{font:500 10px/1.4 var(--px-mono);letter-spacing:.14em;color:var(--px-muted)}
 
 /* ===== TRN-04 Liquid Reveal: sections open like an octagon iris as they scroll in ===== */
-.reveal{clip-path:polygon(50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%);opacity:0;transition:clip-path 1s var(--px-ease),opacity .5s}
-.reveal.in{clip-path:polygon(0 0,100% 0,100% 0,100% 100%,100% 100%,0 100%,0 100%,0 0);opacity:1}
+/* hidden state uses opacity only, so the scroll observer can still see it; the iris plays once it is in view */
+.reveal{opacity:0}
+.reveal.in{opacity:1;animation:px-iris 1s var(--px-ease) backwards}
+@keyframes px-iris{from{clip-path:polygon(50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%);opacity:0}
+  60%{opacity:1}to{clip-path:polygon(0 0,50% 0,100% 0,100% 50%,100% 100%,50% 100%,0 100%,0 50%);opacity:1}}
 
 /* ===== NAV-26 Mercury Gauge (scroll position) ===== */
 .gauge{position:fixed;right:12px;top:110px;bottom:40px;width:8px;z-index:20;border-radius:6px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
@@ -137,7 +140,7 @@ body.tune [data-fx]{outline:1px dashed color-mix(in oklab,var(--px-ice) 60%,tran
 .fx-toast.on{opacity:1;transform:translate(-50%,0)}
 
 @media (prefers-reduced-motion:reduce){
-  .chrome{animation:none}.reveal{clip-path:none;opacity:1;transition:none}
+  .chrome{animation:none}.reveal,.reveal.in{opacity:1;animation:none}
   .ob,.tile,.bez .frame{transition:none}
 }
 @media (max-width:720px){.ring{height:240px}.ring .ico{left:-36px;top:-36px;width:72px;height:72px}.ring .ico svg{width:30px;height:30px}.ring .face .lbl{min-width:0}}
