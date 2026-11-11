@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MERCURY BEADS · BGD-113 · APEX Backgrounds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+.apx-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate;
+  background:radial-gradient(70% 60% at 72% 18%,color-mix(in oklab,var(--apx-accent,#9fc3ff) 12%,transparent),transparent 70%),
+             radial-gradient(60% 50% at 18% 85%,color-mix(in oklab,var(--apx-accent,#9fc3ff) 7%,transparent),transparent 70%),
+             var(--apx-bg,#0b0d12)}
+.apx-bg__cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+:root{--void:#0b0d12;--ink:#eef1f5;--ink-2:#c9d0d9;--muted:#a3acb7;--dim:#6b7380;--spark:#d4ff3a;
+  --fd:"Syncopate","Hanken Grotesk",system-ui,sans-serif;--ft:"Hanken Grotesk",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --apx-font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--void);color:var(--ink);font:400 16px/1.55 var(--ft)}
+.mono{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+/* pinned stage, as in the source page (section.bgsec + sticky .stage) */
+.bgsec{position:relative;height:340vh}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#0b0d12}
+.bgx{position:absolute;inset:0}
+.hint{position:absolute;left:14px;bottom:12px;z-index:2;color:var(--ink-2);font-size:10px;text-shadow:0 1px 8px rgba(0,0,0,.8);pointer-events:none}
+.hint b{color:var(--spark);font-weight:600}
+</style></head>
+<body>
+<section class="bgsec" id="BGD-113" data-code="BGD-113" data-apx-scope style="--acc:#d7e0ea">
+ <div class="stage">
+  <div class="bgx" data-bg="BGD-113"></div>
+  <p class="mono hint"><b>BGD-113</b> · MERCURY BEADS · scroll ↓ · move the pointer</p>
+ </div>
+</section>
+<script>
+/*! APEX interactive background core (BGD-105..114) · window.APX.bg — shared, idempotent, no dependencies */
+(function () {
+  'use strict';
+  var W = window, D = document;
+  var APX = W.APX = W.APX || {};
+  if (APX.bg) return;
+
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function tok(el, n, fb) { var v = getComputedStyle(el).getPropertyValue(n).trim(); return v || fb; }
+  var _cx;
+  function rgb(str, fb) {
+    if (!_cx) { var c = D.createElement('canvas'); c.width = c.height = 1; _cx = c.getContext('2d', { willReadFrequently: true }); }
+    _cx.clearRect(0, 0, 1, 1); _cx.fillStyle = '#000'; _cx.fillStyle = fb || '#000'; _cx.fillStyle = str || fb || '#000';
+    _cx.fillRect(0, 0, 1, 1); var d = _cx.getImageData(0, 0, 1, 1).data;
+    return [d[0] / 255, d[1] / 255, d[2] / 255];
+  }
+  function css(c, a) { return 'rgba(' + Math.round(c[0] * 255) + ',' + Math.round(c[1] * 255) + ',' + Math.round(c[2] * 255) + ',' + (a == null ? 1 : a) + ')'; }
+  function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+  var RM = W.matchMedia('(prefers-reduced-motion: reduce)');
+  function compact() { return W.matchMedia('(max-width: 899px)').matches; }
+
+  /* ---------- tiny WebGL helper (full-screen quad) ---------- */
+  function shader(gl, type, src) {
+    var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { var log = gl.getShaderInfoLog(s); gl.deleteShader(s); throw new Error(log); }
+    return s;
+  }
+  function program(gl, vs, fs) {
+    var p = gl.createProgram();
+    gl.attachShader(p, shader(gl, gl.VERTEX_SHADER, vs)); gl.attachShader(p, shader(gl, gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+    return p;
+  }
+  function makeGL(cv, fs, o) {
+    o = o || {};
+    var gl = null;
+    try { gl = cv.getContext('webgl', { antialias: !!o.aa, alpha: !!o.alpha, premultipliedAlpha: true, powerPreference: 'low-power', preserveDrawingBuffer: false }); } catch (e) {}
+    if (!gl) return null;
+    cv.__gl = gl;
+    var vs = o.vs || 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    var pr;
+    try { pr = program(gl, vs, fs); } catch (e) { if (W.console) console.warn('[APX bg] shader:', e.message); return null; }
+    gl.useProgram(pr);
+    var cache = {};
+    var g = {
+      gl: gl, prog: pr,
+      U: function (n) { if (!(n in cache)) cache[n] = gl.getUniformLocation(pr, n); return cache[n]; },
+      quad: function () {
+        var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        var l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+        g.draw = function () { gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+      },
+      common: function (S) {
+        gl.viewport(0, 0, S.cw, S.ch);
+        gl.uniform2f(g.U('uR'), S.cw, S.ch);
+        gl.uniform1f(g.U('uT'), S.t);
+        gl.uniform2f(g.U('uM'), S.px * S.cw, (1 - S.py) * S.ch);
+        gl.uniform1f(g.U('uMI'), S.pin);
+        gl.uniform1f(g.U('uP'), S.sp);
+        gl.uniform1f(g.U('uV'), S.sv);
+        gl.uniform1f(g.U('uSO'), S.so);
+        gl.uniform1f(g.U('uPx'), S.res);
+        gl.uniform3fv(g.U('uBg'), S.c.bg); gl.uniform3fv(g.U('uAc'), S.c.ac);
+        gl.uniform3fv(g.U('uInk'), S.c.ink); gl.uniform3fv(g.U('uAc2'), S.c.ac2);
+      }
+    };
+    if (!o.vs) g.quad();
+    cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cv.style.display = 'none'; }, false);
+    return g;
+  }
+
+  /* ---------- define + mount ---------- */
+  var registry = {};
+  function define(code, name, defaults, factory) {
+    var key = code.replace('-', ''), cls = 'apx-' + key.toLowerCase();
+    function mount(root, opts) {
+      if (!root || root.nodeType !== 1) return function () {};
+      root.__apx = root.__apx || {};
+      if (root.__apx[key]) return root.__apx[key];
+      opts = opts || {};
+      var offs = [];
+      function on(t, ev, fn, o) { t.addEventListener(ev, fn, o); offs.push(function () { t.removeEventListener(ev, fn, o); }); }
+      root.classList.add('apx-bg', cls);
+      var cv = D.createElement('canvas'); cv.className = 'apx-bg__cv'; cv.setAttribute('aria-hidden', 'true');
+      root.appendChild(cv);
+      var S = {
+        t: 0, dt: 1 / 60, w: 1, h: 1, cw: 1, ch: 1, res: 1,
+        px: .5, py: .5, tx: .5, ty: .5, pin: 0, pinT: 0, pvx: 0, pvy: 0, lastMove: -1e9, real: false,
+        sp: 0, sv: 0, so: 0, motion: 1, compact: compact(), touch: W.matchMedia('(hover: none)').matches,
+        c: null, root: root, cv: cv
+      };
+      function readTokens() {
+        S.c = {
+          bg: rgb(tok(root, '--apx-bg', defaults.bg), defaults.bg),
+          ac: rgb(tok(root, '--apx-accent', defaults.accent), defaults.accent),
+          ac2: rgb(tok(root, '--apx-accent-2', defaults.accent2 || defaults.accent), defaults.accent2 || defaults.accent),
+          ink: rgb(tok(root, '--apx-ink', defaults.ink || '#e9edf2'), defaults.ink || '#e9edf2')
+        };
+        var m = parseFloat(tok(root, '--apx-motion', '1'));
+        S.motion = RM.matches ? 0 : (isFinite(m) ? clamp(m, 0, 2) : 1);
+      }
+      readTokens();
+      var api = { S: S, cv: cv, root: root, opts: opts, gl: makeGL, css: css, mix: mix, clamp: clamp, on: on };
+      var inst;
+      try { inst = factory(api) || {}; } catch (e) { if (W.console) console.warn('[APX bg] ' + code + ':', e.message); inst = {}; }
+      if (inst.failed) { cv.style.display = 'none'; }
+
+      function size() {
+        var r = root.getBoundingClientRect();
+        S.w = Math.max(1, r.width); S.h = Math.max(1, r.height); S.compact = compact();
+        var dpr = Math.min(W.devicePixelRatio || 1, 2);
+        var res = typeof inst.res === 'function' ? inst.res(dpr, S.compact) : (inst.res || 1) * dpr;
+        S.res = res;
+        S.cw = Math.max(1, Math.round(S.w * res)); S.ch = Math.max(1, Math.round(S.h * res));
+        if (cv.width !== S.cw || cv.height !== S.ch) { cv.width = S.cw; cv.height = S.ch; }
+        if (inst.resize) inst.resize(S);
+      }
+      var scope = opts.scope || root.closest('[data-apx-scope]') || root.parentElement || root;
+      var lastY = W.scrollY, lastT = 0;
+      function readScroll(dt) {
+        var vh = W.innerHeight || 1, r = scope.getBoundingClientRect();
+        S.sp = clamp((vh - r.top) / (r.height + vh), 0, 1);
+        var y = W.scrollY; S.so = y / vh;
+        var v = dt > 0 ? (y - lastY) / vh / dt : 0; lastY = y;
+        v = clamp(v, -4, 4);
+        S.sv += (v - S.sv) * Math.min(1, dt * 6);
+        if (Math.abs(S.sv) < 1e-4) S.sv = 0;
+      }
+      function pointer(e) {
+        var r = root.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        if (x < -0.05 || x > 1.05 || y < -0.05 || y > 1.05) return;
+        S.tx = x; S.ty = y; S.lastMove = performance.now(); S.real = true;
+      }
+      on(W, 'pointermove', pointer, { passive: true });
+      on(W, 'pointerdown', pointer, { passive: true });
+
+      var raf = 0, visible = true, running = false, prev = 0, seed = Math.random() * 100;
+      function step(now, dt) {
+        S.dt = dt;
+        S.t += dt * (S.motion || 1);
+        readScroll(dt);
+        var idle = now - S.lastMove > 3500;
+        if (idle) {
+          var k = S.t * 0.11 + seed;
+          S.tx = 0.5 + 0.34 * Math.sin(k * 1.3) * Math.cos(k * 0.37);
+          S.ty = 0.5 + 0.30 * Math.sin(k * 0.9 + 1.7);
+        }
+        S.pinT = idle ? 0.45 : 1;
+        var e = 1 - Math.exp(-dt * (idle ? 1.6 : 9));
+        var ox = S.px, oy = S.py;
+        S.px += (S.tx - S.px) * e; S.py += (S.ty - S.py) * e;
+        S.pin += (S.pinT - S.pin) * (1 - Math.exp(-dt * 3));
+        if (dt > 0) { S.pvx += ((S.px - ox) / dt - S.pvx) * 0.25; S.pvy += ((S.py - oy) / dt - S.pvy) * 0.25; }
+        if (inst.frame) inst.frame(S);
+      }
+      function loop(now) {
+        raf = 0;
+        if (!running) return;
+        var dt = prev ? Math.min(0.05, (now - prev) / 1000) : 1 / 60; prev = now;
+        step(now, dt);
+        raf = W.requestAnimationFrame(loop);
+      }
+      function still() { // reduced motion / motion 0: one composed frame
+        var n = inst.prewarm || 1, now = performance.now();
+        for (var i = 0; i < n; i++) step(now, 1 / 60);
+      }
+      function update() {
+        var should = visible && !D.hidden && S.motion > 0 && !inst.failed;
+        if (should && !running) { running = true; prev = 0; if (!raf) raf = W.requestAnimationFrame(loop); }
+        else if (!should && running) { running = false; if (raf) W.cancelAnimationFrame(raf); raf = 0; }
+      }
+      size();
+      if (inst.prewarm && S.motion > 0) { var n0 = performance.now(); for (var i = 0; i < inst.prewarm; i++) step(n0, 1 / 60); }
+      if (S.motion === 0) still();
+      var ro = W.ResizeObserver ? new ResizeObserver(function () { size(); if (S.motion === 0) still(); }) : null;
+      if (ro) ro.observe(root); else on(W, 'resize', size);
+      var io = W.IntersectionObserver ? new IntersectionObserver(function (es) { visible = es[es.length - 1].isIntersecting; update(); }, { rootMargin: '120px' }) : null;
+      if (io) io.observe(root);
+      on(D, 'visibilitychange', update);
+      function retoken() { readTokens(); if (inst.tokens) inst.tokens(S); if (S.motion === 0) still(); update(); }
+      on(root, 'apx:tokens', retoken); on(W, 'apx:tokens', retoken);
+      var mq = function () { retoken(); };
+      if (RM.addEventListener) { RM.addEventListener('change', mq); offs.push(function () { RM.removeEventListener('change', mq); }); }
+      update();
+
+      var destroy = function () {
+        running = false; if (raf) W.cancelAnimationFrame(raf);
+        if (ro) ro.disconnect(); if (io) io.disconnect();
+        offs.splice(0).forEach(function (f) { try { f(); } catch (e) {} });
+        try { if (inst.destroy) inst.destroy(); } catch (e) {}
+        var lose = cv.__gl && cv.__gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+        if (cv.parentNode) cv.parentNode.removeChild(cv);
+        root.classList.remove('apx-bg', cls);
+        delete root.__apx[key]; root.removeAttribute('data-apx-mounted');
+      };
+      root.__apx[key] = destroy;
+      root.setAttribute('data-apx-mounted', code);
+      return destroy;
+    }
+    var entry = { code: code, name: name, defaults: defaults, mount: mount };
+    APX[code] = APX[key] = registry[code] = entry;
+    if (!W.APX_NO_AUTOMOUNT) {
+      var go = function () {
+        var els = D.querySelectorAll('[data-apx="' + code + '"]:not([data-apx-manual])');
+        for (var i = 0; i < els.length; i++) mount(els[i]);
+      };
+      if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', go); else go();
+    }
+    return entry;
+  }
+  APX.bg = { program: program, define: define, registry: registry, rgb: rgb, css: css, mix: mix, clamp: clamp };
+})();
+
+window.APX_NO_AUTOMOUNT = true;
+</script>
+<script>
+/*! BGD-113 · MERCURY BEADS — polished drops of liquid metal float in the dark, reflecting a soft studio. The pointer draws them in until they touch and melt together; scrolling flicks them, so they stretch into teardrops and pull apart. */
+APX.bg.define('BGD-113', 'MERCURY BEADS', { bg: '#0a0c10', accent: '#d7e0ea', ink: '#eef2f7' }, function (A) {
+  var MAX = 12;
+  var FS = [
+    'precision highp float;',
+    'uniform vec2 uR,uM;uniform float uT,uMI,uP,uV,uSO,uPx,uSt;uniform vec3 uBg,uAc,uInk;',
+    'uniform vec3 uB[' + MAX + '];uniform float uN;',
+    'vec3 env(vec3 R){',
+    ' float y=R.y; float x=R.x;',
+    ' float s=smoothstep(.55,.62,y)*smoothstep(.95,.8,y)*.95;',
+    ' s+=smoothstep(.12,.18,y)*smoothstep(.34,.24,y)*.35;',
+    ' s+=smoothstep(.7,.95,x+sin(uT*.2)*.1)*.45*smoothstep(-.4,.3,y);',
+    ' vec3 c=mix(uBg*1.4,uInk,s);',
+    ' c+=uAc*smoothstep(-.1,-.7,y)*.35;',
+    ' c=mix(c,uBg*.6,smoothstep(-.2,-.9,y)*.6);',
+    ' return c;}',
+    'void main(){',
+    ' vec2 fc=gl_FragCoord.xy; vec2 q=fc/uR; vec2 p=fc/uR.y;',
+    ' float f=0.; vec2 gr=vec2(0.);',
+    ' for(int i=0;i<' + MAX + ';i++){ if(float(i)>=uN) break; vec3 b=uB[i]; vec2 d=p-b.xy; d.y/=uSt; float d2=dot(d,d)+1e-5; float k=b.z*b.z/d2; f+=k; gr+=-2.*k/d2*vec2(d.x,d.y/uSt); }',
+    ' vec3 col=uBg*1.08+uAc*.035*exp(-dot(q-vec2(.7,.25),q-vec2(.7,.25))*3.);',
+    ' float halo=smoothstep(.18,.95,f); col+=uAc*halo*.055+uInk*halo*.02;',
+    ' float edge=.035*uPx/uR.y*900.;',
+    ' float a=smoothstep(1.-edge,1.+edge,f);',
+    ' if(a>0.){',
+    '  float hh=sqrt(clamp(1.-1./f,0.,1.));',
+    '  vec2 gh=gr/(f*f)/(2.*max(hh,.06));',
+    '  vec3 N=normalize(vec3(-gh*.075,1.));',
+'  vec3 R=reflect(vec3(0.,0.,-1.),N);',
+    '  R.xy+=(vec2(uM.x/uR.x,uM.y/uR.y)-.5)*.25*uMI;',
+    '  vec3 m=env(R);',
+    '  float fr=pow(1.-max(N.z,0.),2.5);',
+    '  m=mix(m,uAc*.9+uInk*.1,fr*.45);',
+    '  m*=.92;',
+    '  col=mix(col,m,a);',
+    ' }',
+    ' col*=.8+.2*smoothstep(1.3,.2,length(q-.5));',
+    ' gl_FragColor=vec4(col,1.);',
+    '}'
+  ].join('\n');
+  var g = A.gl(A.cv, FS); if (!g) return { failed: true };
+  var beads = [], data = new Float32Array(MAX * 3), st = 1;
+  function seed(S) {
+    var n = S.compact ? 7 : 10; beads = [];
+    var asp = S.cw / S.ch;
+    for (var i = 0; i < n; i++) beads.push({ x: Math.random() * asp, y: Math.random(), vx: 0, vy: 0, r: (S.compact ? .05 : .042) + Math.random() * .05, ph: Math.random() * 6.3, z: .4 + Math.random() * .8 });
+  }
+  return {
+    res: function (dpr, c) { return dpr * (c ? .6 : .7); },
+    resize: function (S) { if (!beads.length || beads.compact !== S.compact) { seed(S); beads.compact = S.compact; } },
+    prewarm: 30,
+    frame: function (S) {
+      var asp = S.cw / S.ch, dt = Math.min(S.dt, 1 / 30), mx = S.px * asp, my = 1 - S.py;
+      var tgtSt = 1 + Math.min(1.1, Math.abs(S.sv) * .5); st += (tgtSt - st) * Math.min(1, dt * 6);
+      for (var i = 0; i < beads.length; i++) {
+        var b = beads[i];
+        var hx = (.12 + .76 * ((i * .618 + S.sp * .35) % 1)) * asp, hy = .5 + .32 * Math.sin(b.ph + S.t * .12 * b.z + S.sp * 3);
+        var fx = (hx - b.x) * 1.3, fy = (hy - b.y) * 1.3;
+        var dx = mx - b.x, dy = my - b.y, d = Math.sqrt(dx * dx + dy * dy) + 1e-3;
+        var pull = S.pin * 2.4 * Math.exp(-d * 2.4);
+        fx += dx / d * pull; fy += dy / d * pull;
+        fy += -S.sv * .6 * b.z;
+        b.vx = (b.vx + fx * dt) * Math.pow(.25, dt); b.vy = (b.vy + fy * dt) * Math.pow(.25, dt);
+        b.x += b.vx * dt; b.y += b.vy * dt;
+        if (b.y > 1.25) b.y -= 1.5; if (b.y < -.25) b.y += 1.5;
+        data[i * 3] = b.x; data[i * 3 + 1] = b.y; data[i * 3 + 2] = b.r * (1 + .06 * Math.sin(S.t * .9 + b.ph));
+      }
+      var gl = g.gl; g.common(S);
+      gl.uniform3fv(g.U('uB'), data); gl.uniform1f(g.U('uN'), beads.length); gl.uniform1f(g.U('uSt'), st);
+      g.draw();
+    }
+  };
+});
+</script>
+<script>
+(function(){ var sec=document.querySelector('.bgsec'); APX['BGD-113'].mount(sec.querySelector('.bgx'),{scope:sec}); })();
+</script>
+</body></html>

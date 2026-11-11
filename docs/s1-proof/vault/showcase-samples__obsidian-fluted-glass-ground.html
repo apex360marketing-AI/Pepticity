@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Obsidian Fluted-Glass Ground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Jost:wght@400;500;600&display=swap">
+<style>
+:root{--p2:#5d6670;--p3:#aeb6bf;--p4:#dfe4e9;--g4:#a4845d;--g5:#f0e6c7;--g6:#fef9e8;--ink:#edeff2;--ink2:#b9c0c8;--mut:#7c848d;--mx:60%;--my:30%;color-scheme:dark}
+html,body{margin:0;height:100%}
+*,*::before,*::after{box-sizing:border-box}
+a{color:inherit}
+body{background:#050506;color:var(--ink);font:400 16px/1.6 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.ground{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#050506}
+.ground i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.ground i:nth-child(1){width:46vw;height:46vw;left:48%;top:-10%;background:radial-gradient(circle,#c9d0d8,transparent 65%);animation:d1 26s ease-in-out infinite alternate}
+.ground i:nth-child(2){width:38vw;height:38vw;left:-8%;top:50%;background:radial-gradient(circle,#7d8792,transparent 65%);animation:d2 32s ease-in-out infinite alternate}
+.ground i:nth-child(3){width:22vw;height:22vw;left:var(--mx);top:var(--my);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(240,244,248,.8),transparent 65%);opacity:.35;transition:left 1.2s cubic-bezier(.16,1,.3,1),top 1.2s cubic-bezier(.16,1,.3,1)}
+.ground::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,rgba(0,0,0,.28) 2px 14px,rgba(255,255,255,.02) 15px 28px);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+@keyframes d1{to{transform:translate(-18vw,22vh)}}@keyframes d2{to{transform:translate(24vw,-18vh)}}
+@media (prefers-reduced-motion:reduce){.ground i{animation:none}}
+.over{position:relative;z-index:1;min-height:100%;display:grid;place-items:center;font:400 clamp(30px,8vw,80px)/1 Italiana,serif;letter-spacing:.14em;color:var(--p4);pointer-events:none}
+</style>
+</head>
+<body>
+<div class="ground" id="ground" aria-hidden="true"><i></i><i></i><i></i></div><div class="over">OBSIDIAN</div>
+<script>addEventListener('pointermove',e=>{const g=document.getElementById('ground');g.style.setProperty('--mx',(e.clientX/innerWidth*100)+'%');g.style.setProperty('--my',(e.clientY/innerHeight*100)+'%')},{passive:true});</script>
+</body>
+</html>

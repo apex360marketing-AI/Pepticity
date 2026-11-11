@@ -28,3 +28,10 @@ These are final. Do not change any of them unless the owner asks in so many word
 - ALL imagery and video (photos, product shots, bottles, films, backgrounds, textures, illustrations) is made with Higgsfield, never drawn or composited by hand in code (PIL/three.js drawings) (owner, 30 Oct). Code only animates or places Higgsfield assets; the owner's font/logo files may be layered on exactly.
 - Before a Higgsfield spend, state the cost in the message; films and batches need the owner's OK.
 - Owner preferences: point form, recommendations, multiple-choice questions, pictures plus links, verify in a browser before showing.
+
+## Colour update (owner, 11 Nov): GOLD x PLATINUM (overrides "P never white or platinum" and the old matte-only look)
+- Base stays matte gunmetal with the PEPTICITY STUDIO 3D font. Chrome gold AND platinum chrome are the pop colours, woven together so they complement each other (never a toggle). Use on the P mark, headings, trim, buttons, hovers, shelf and glints.
+- GOLD = ONLY the owner's pale chrome gold (design/references/liquid-glass/01-gold-chrome-liquid-glass-panels.png in Apex_Agents_Bots): #332814 #68513d #a4845d #f0e6c7 #fef9e8.
+- PLATINUM = #2a2d31 #6b7077 #b9bec5 #e6e9ed #ffffff.
+- Glass: buttons and cards fully see-through (fill alpha 0.04-0.10, blur 10-18px, chrome rim), chamfered corners, no pills.
+- Review pages: changed text in purple #B000FF.

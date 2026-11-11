@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SILK CURRENT · BGD-114 · APEX Backgrounds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+.apx-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate;
+  background:radial-gradient(70% 60% at 72% 18%,color-mix(in oklab,var(--apx-accent,#9fc3ff) 12%,transparent),transparent 70%),
+             radial-gradient(60% 50% at 18% 85%,color-mix(in oklab,var(--apx-accent,#9fc3ff) 7%,transparent),transparent 70%),
+             var(--apx-bg,#0b0d12)}
+.apx-bg__cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+:root{--void:#0b0d12;--ink:#eef1f5;--ink-2:#c9d0d9;--muted:#a3acb7;--dim:#6b7380;--spark:#d4ff3a;
+  --fd:"Syncopate","Hanken Grotesk",system-ui,sans-serif;--ft:"Hanken Grotesk",system-ui,sans-serif;--fm:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --apx-font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--void);color:var(--ink);font:400 16px/1.55 var(--ft)}
+.mono{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+/* pinned stage, as in the source page (section.bgsec + sticky .stage) */
+.bgsec{position:relative;height:340vh}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#0b0d12}
+.bgx{position:absolute;inset:0}
+.hint{position:absolute;left:14px;bottom:12px;z-index:2;color:var(--ink-2);font-size:10px;text-shadow:0 1px 8px rgba(0,0,0,.8);pointer-events:none}
+.hint b{color:var(--spark);font-weight:600}
+</style></head>
+<body>
+<section class="bgsec" id="BGD-114" data-code="BGD-114" data-apx-scope style="--acc:#a9b8ff">
+ <div class="stage">
+  <div class="bgx" data-bg="BGD-114"></div>
+  <p class="mono hint"><b>BGD-114</b> · SILK CURRENT · scroll ↓ · move the pointer</p>
+ </div>
+</section>
+<script>
+/*! APEX interactive background core (BGD-105..114) · window.APX.bg — shared, idempotent, no dependencies */
+(function () {
+  'use strict';
+  var W = window, D = document;
+  var APX = W.APX = W.APX || {};
+  if (APX.bg) return;
+
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function tok(el, n, fb) { var v = getComputedStyle(el).getPropertyValue(n).trim(); return v || fb; }
+  var _cx;
+  function rgb(str, fb) {
+    if (!_cx) { var c = D.createElement('canvas'); c.width = c.height = 1; _cx = c.getContext('2d', { willReadFrequently: true }); }
+    _cx.clearRect(0, 0, 1, 1); _cx.fillStyle = '#000'; _cx.fillStyle = fb || '#000'; _cx.fillStyle = str || fb || '#000';
+    _cx.fillRect(0, 0, 1, 1); var d = _cx.getImageData(0, 0, 1, 1).data;
+    return [d[0] / 255, d[1] / 255, d[2] / 255];
+  }
+  function css(c, a) { return 'rgba(' + Math.round(c[0] * 255) + ',' + Math.round(c[1] * 255) + ',' + Math.round(c[2] * 255) + ',' + (a == null ? 1 : a) + ')'; }
+  function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+  var RM = W.matchMedia('(prefers-reduced-motion: reduce)');
+  function compact() { return W.matchMedia('(max-width: 899px)').matches; }
+
+  /* ---------- tiny WebGL helper (full-screen quad) ---------- */
+  function shader(gl, type, src) {
+    var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { var log = gl.getShaderInfoLog(s); gl.deleteShader(s); throw new Error(log); }
+    return s;
+  }
+  function program(gl, vs, fs) {
+    var p = gl.createProgram();
+    gl.attachShader(p, shader(gl, gl.VERTEX_SHADER, vs)); gl.attachShader(p, shader(gl, gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+    return p;
+  }
+  function makeGL(cv, fs, o) {
+    o = o || {};
+    var gl = null;
+    try { gl = cv.getContext('webgl', { antialias: !!o.aa, alpha: !!o.alpha, premultipliedAlpha: true, powerPreference: 'low-power', preserveDrawingBuffer: false }); } catch (e) {}
+    if (!gl) return null;
+    cv.__gl = gl;
+    var vs = o.vs || 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    var pr;
+    try { pr = program(gl, vs, fs); } catch (e) { if (W.console) console.warn('[APX bg] shader:', e.message); return null; }
+    gl.useProgram(pr);
+    var cache = {};
+    var g = {
+      gl: gl, prog: pr,
+      U: function (n) { if (!(n in cache)) cache[n] = gl.getUniformLocation(pr, n); return cache[n]; },
+      quad: function () {
+        var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        var l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+        g.draw = function () { gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+      },
+      common: function (S) {
+        gl.viewport(0, 0, S.cw, S.ch);
+        gl.uniform2f(g.U('uR'), S.cw, S.ch);
+        gl.uniform1f(g.U('uT'), S.t);
+        gl.uniform2f(g.U('uM'), S.px * S.cw, (1 - S.py) * S.ch);
+        gl.uniform1f(g.U('uMI'), S.pin);
+        gl.uniform1f(g.U('uP'), S.sp);
+        gl.uniform1f(g.U('uV'), S.sv);
+        gl.uniform1f(g.U('uSO'), S.so);
+        gl.uniform1f(g.U('uPx'), S.res);
+        gl.uniform3fv(g.U('uBg'), S.c.bg); gl.uniform3fv(g.U('uAc'), S.c.ac);
+        gl.uniform3fv(g.U('uInk'), S.c.ink); gl.uniform3fv(g.U('uAc2'), S.c.ac2);
+      }
+    };
+    if (!o.vs) g.quad();
+    cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cv.style.display = 'none'; }, false);
+    return g;
+  }
+
+  /* ---------- define + mount ---------- */
+  var registry = {};
+  function define(code, name, defaults, factory) {
+    var key = code.replace('-', ''), cls = 'apx-' + key.toLowerCase();
+    function mount(root, opts) {
+      if (!root || root.nodeType !== 1) return function () {};
+      root.__apx = root.__apx || {};
+      if (root.__apx[key]) return root.__apx[key];
+      opts = opts || {};
+      var offs = [];
+      function on(t, ev, fn, o) { t.addEventListener(ev, fn, o); offs.push(function () { t.removeEventListener(ev, fn, o); }); }
+      root.classList.add('apx-bg', cls);
+      var cv = D.createElement('canvas'); cv.className = 'apx-bg__cv'; cv.setAttribute('aria-hidden', 'true');
+      root.appendChild(cv);
+      var S = {
+        t: 0, dt: 1 / 60, w: 1, h: 1, cw: 1, ch: 1, res: 1,
+        px: .5, py: .5, tx: .5, ty: .5, pin: 0, pinT: 0, pvx: 0, pvy: 0, lastMove: -1e9, real: false,
+        sp: 0, sv: 0, so: 0, motion: 1, compact: compact(), touch: W.matchMedia('(hover: none)').matches,
+        c: null, root: root, cv: cv
+      };
+      function readTokens() {
+        S.c = {
+          bg: rgb(tok(root, '--apx-bg', defaults.bg), defaults.bg),
+          ac: rgb(tok(root, '--apx-accent', defaults.accent), defaults.accent),
+          ac2: rgb(tok(root, '--apx-accent-2', defaults.accent2 || defaults.accent), defaults.accent2 || defaults.accent),
+          ink: rgb(tok(root, '--apx-ink', defaults.ink || '#e9edf2'), defaults.ink || '#e9edf2')
+        };
+        var m = parseFloat(tok(root, '--apx-motion', '1'));
+        S.motion = RM.matches ? 0 : (isFinite(m) ? clamp(m, 0, 2) : 1);
+      }
+      readTokens();
+      var api = { S: S, cv: cv, root: root, opts: opts, gl: makeGL, css: css, mix: mix, clamp: clamp, on: on };
+      var inst;
+      try { inst = factory(api) || {}; } catch (e) { if (W.console) console.warn('[APX bg] ' + code + ':', e.message); inst = {}; }
+      if (inst.failed) { cv.style.display = 'none'; }
+
+      function size() {
+        var r = root.getBoundingClientRect();
+        S.w = Math.max(1, r.width); S.h = Math.max(1, r.height); S.compact = compact();
+        var dpr = Math.min(W.devicePixelRatio || 1, 2);
+        var res = typeof inst.res === 'function' ? inst.res(dpr, S.compact) : (inst.res || 1) * dpr;
+        S.res = res;
+        S.cw = Math.max(1, Math.round(S.w * res)); S.ch = Math.max(1, Math.round(S.h * res));
+        if (cv.width !== S.cw || cv.height !== S.ch) { cv.width = S.cw; cv.height = S.ch; }
+        if (inst.resize) inst.resize(S);
+      }
+      var scope = opts.scope || root.closest('[data-apx-scope]') || root.parentElement || root;
+      var lastY = W.scrollY, lastT = 0;
+      function readScroll(dt) {
+        var vh = W.innerHeight || 1, r = scope.getBoundingClientRect();
+        S.sp = clamp((vh - r.top) / (r.height + vh), 0, 1);
+        var y = W.scrollY; S.so = y / vh;
+        var v = dt > 0 ? (y - lastY) / vh / dt : 0; lastY = y;
+        v = clamp(v, -4, 4);
+        S.sv += (v - S.sv) * Math.min(1, dt * 6);
+        if (Math.abs(S.sv) < 1e-4) S.sv = 0;
+      }
+      function pointer(e) {
+        var r = root.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        if (x < -0.05 || x > 1.05 || y < -0.05 || y > 1.05) return;
+        S.tx = x; S.ty = y; S.lastMove = performance.now(); S.real = true;
+      }
+      on(W, 'pointermove', pointer, { passive: true });
+      on(W, 'pointerdown', pointer, { passive: true });
+
+      var raf = 0, visible = true, running = false, prev = 0, seed = Math.random() * 100;
+      function step(now, dt) {
+        S.dt = dt;
+        S.t += dt * (S.motion || 1);
+        readScroll(dt);
+        var idle = now - S.lastMove > 3500;
+        if (idle) {
+          var k = S.t * 0.11 + seed;
+          S.tx = 0.5 + 0.34 * Math.sin(k * 1.3) * Math.cos(k * 0.37);
+          S.ty = 0.5 + 0.30 * Math.sin(k * 0.9 + 1.7);
+        }
+        S.pinT = idle ? 0.45 : 1;
+        var e = 1 - Math.exp(-dt * (idle ? 1.6 : 9));
+        var ox = S.px, oy = S.py;
+        S.px += (S.tx - S.px) * e; S.py += (S.ty - S.py) * e;
+        S.pin += (S.pinT - S.pin) * (1 - Math.exp(-dt * 3));
+        if (dt > 0) { S.pvx += ((S.px - ox) / dt - S.pvx) * 0.25; S.pvy += ((S.py - oy) / dt - S.pvy) * 0.25; }
+        if (inst.frame) inst.frame(S);
+      }
+      function loop(now) {
+        raf = 0;
+        if (!running) return;
+        var dt = prev ? Math.min(0.05, (now - prev) / 1000) : 1 / 60; prev = now;
+        step(now, dt);
+        raf = W.requestAnimationFrame(loop);
+      }
+      function still() { // reduced motion / motion 0: one composed frame
+        var n = inst.prewarm || 1, now = performance.now();
+        for (var i = 0; i < n; i++) step(now, 1 / 60);
+      }
+      function update() {
+        var should = visible && !D.hidden && S.motion > 0 && !inst.failed;
+        if (should && !running) { running = true; prev = 0; if (!raf) raf = W.requestAnimationFrame(loop); }
+        else if (!should && running) { running = false; if (raf) W.cancelAnimationFrame(raf); raf = 0; }
+      }
+      size();
+      if (inst.prewarm && S.motion > 0) { var n0 = performance.now(); for (var i = 0; i < inst.prewarm; i++) step(n0, 1 / 60); }
+      if (S.motion === 0) still();
+      var ro = W.ResizeObserver ? new ResizeObserver(function () { size(); if (S.motion === 0) still(); }) : null;
+      if (ro) ro.observe(root); else on(W, 'resize', size);
+      var io = W.IntersectionObserver ? new IntersectionObserver(function (es) { visible = es[es.length - 1].isIntersecting; update(); }, { rootMargin: '120px' }) : null;
+      if (io) io.observe(root);
+      on(D, 'visibilitychange', update);
+      function retoken() { readTokens(); if (inst.tokens) inst.tokens(S); if (S.motion === 0) still(); update(); }
+      on(root, 'apx:tokens', retoken); on(W, 'apx:tokens', retoken);
+      var mq = function () { retoken(); };
+      if (RM.addEventListener) { RM.addEventListener('change', mq); offs.push(function () { RM.removeEventListener('change', mq); }); }
+      update();
+
+      var destroy = function () {
+        running = false; if (raf) W.cancelAnimationFrame(raf);
+        if (ro) ro.disconnect(); if (io) io.disconnect();
+        offs.splice(0).forEach(function (f) { try { f(); } catch (e) {} });
+        try { if (inst.destroy) inst.destroy(); } catch (e) {}
+        var lose = cv.__gl && cv.__gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+        if (cv.parentNode) cv.parentNode.removeChild(cv);
+        root.classList.remove('apx-bg', cls);
+        delete root.__apx[key]; root.removeAttribute('data-apx-mounted');
+      };
+      root.__apx[key] = destroy;
+      root.setAttribute('data-apx-mounted', code);
+      return destroy;
+    }
+    var entry = { code: code, name: name, defaults: defaults, mount: mount };
+    APX[code] = APX[key] = registry[code] = entry;
+    if (!W.APX_NO_AUTOMOUNT) {
+      var go = function () {
+        var els = D.querySelectorAll('[data-apx="' + code + '"]:not([data-apx-manual])');
+        for (var i = 0; i < els.length; i++) mount(els[i]);
+      };
+      if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', go); else go();
+    }
+    return entry;
+  }
+  APX.bg = { program: program, define: define, registry: registry, rgb: rgb, css: css, mix: mix, clamp: clamp };
+})();
+
+window.APX_NO_AUTOMOUNT = true;
+</script>
+<script>
+/*! BGD-114 · SILK CURRENT — thousands of fine threads drift on an invisible current, drawing long silk trails. Scrolling changes the current's pattern and speeds it up; the pointer is a whirlpool the threads spiral around. (WebGL: trails live in a fading framebuffer.) */
+APX.bg.define('BGD-114', 'SILK CURRENT', { bg: '#0a0b0f', accent: '#a9b8ff', ink: '#f0f2f6' }, function (A) {
+  var LVS = [
+    'attribute vec2 p; attribute float c; uniform vec2 uR; varying float vC;',
+    'void main(){ vC=c; vec2 q=p/uR*2.-1.; gl_Position=vec4(q.x,-q.y,0.,1.); }'
+  ].join('\n');
+  var LFS = [
+    'precision mediump float; uniform vec3 uInk,uAc; varying float vC;',
+    'void main(){ vec3 col=mix(uInk*.20,uAc*.42,vC); gl_FragColor=vec4(col,1.); }'
+  ].join('\n');
+  var QVS = 'attribute vec2 p; varying vec2 vU; void main(){ vU=p*.5+.5; gl_Position=vec4(p,0.,1.); }';
+  var FADE = 'precision mediump float; uniform sampler2D uTex; uniform float uK; varying vec2 vU; void main(){ vec3 c=texture2D(uTex,vU).rgb; gl_FragColor=vec4(max(c*uK-vec3(1.6/255.),0.),1.); }';
+  var SHOW = 'precision mediump float; uniform sampler2D uTex; uniform vec3 uBg,uAc; uniform vec2 uR; varying vec2 vU; void main(){ vec3 c=texture2D(uTex,vU).rgb; vec2 q=vU-vec2(.7,.8); vec3 base=uBg+uAc*.035*exp(-dot(q,q)*4.); gl_FragColor=vec4(base+c*(1.-base),1.); }';
+  var gl = null;
+  try { gl = A.cv.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'low-power' }); } catch (e) {}
+  if (!gl) return { failed: true };
+  A.cv.__gl = gl;
+  var P = APX.bg.program;
+  var pl, pf, ps;
+  try { pl = P(gl, LVS, LFS); pf = P(gl, QVS, FADE); ps = P(gl, QVS, SHOW); } catch (e) { if (window.console) console.warn('[APX bg] BGD-114:', e.message); return { failed: true }; }
+  function U(pr, n) { return gl.getUniformLocation(pr, n); }
+  var quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  var lineBuf = gl.createBuffer();
+  var tex = [], fbo = [], cur = 0, TW = 0, TH = 0;
+  function target(w, h) {
+    for (var i = 0; i < 2; i++) {
+      if (tex[i]) { gl.deleteTexture(tex[i]); gl.deleteFramebuffer(fbo[i]); }
+      tex[i] = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex[i]);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      fbo[i] = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fbo[i]);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex[i], 0);
+      gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null); TW = w; TH = h;
+  }
+  var N = 0, X, Y, LF, AC, V;
+  function respawn(i, S) { X[i] = Math.random() * S.cw; Y[i] = Math.random() * S.ch; LF[i] = 2 + Math.random() * 6; }
+  function build(S) {
+    N = S.compact ? 1100 : 2600;
+    X = new Float32Array(N); Y = new Float32Array(N); LF = new Float32Array(N); AC = new Float32Array(N); V = new Float32Array(N * 6);
+    for (var i = 0; i < N; i++) { respawn(i, S); LF[i] = Math.random() * 8; AC[i] = Math.random() < .16 ? 1 : 0; }
+    target(S.cw, S.ch);
+  }
+  function quadDraw(pr) { gl.bindBuffer(gl.ARRAY_BUFFER, quad); var l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
+  var phase = 0;
+  return {
+    res: function (dpr, c) { return Math.min(dpr, c ? 1.5 : 1.5); },
+    resize: build,
+    prewarm: 140,
+    destroy: function () { for (var i = 0; i < 2; i++) { if (tex[i]) gl.deleteTexture(tex[i]); if (fbo[i]) gl.deleteFramebuffer(fbo[i]); } },
+    frame: function (S) {
+      var W = S.cw, H = S.ch, dt = Math.min(S.dt, 1 / 30);
+      if (W !== TW || H !== TH) target(W, H);
+      phase += dt * (.04 + Math.min(2, Math.abs(S.sv)) * .25);
+      var sc = 1 / (S.res * (S.compact ? 260 : 340)), mo = S.sp * 4.2;
+      var spd = 52 * S.res * (1 + Math.min(2.5, Math.abs(S.sv)) * 1.6);
+      var mx = S.px * W, my = S.py * H, R = 240 * S.res, R2 = R * R, n = 0;
+      for (var i = 0; i < N; i++) {
+        var x = X[i], y = Y[i];
+        var a = (Math.sin(x * sc * 1.7 + phase + mo) + Math.cos(y * sc * 2.1 - phase * .8) + Math.sin((x + y) * sc * .9 + mo * .6)) * 1.15 + .35;
+        var vx = Math.cos(a) * spd, vy = Math.sin(a) * spd;
+        var dx = x - mx, dy = y - my, d2 = dx * dx + dy * dy;
+        if (d2 < R2 * 4) { var f = S.pin * Math.exp(-d2 / R2) * 3.2; vx += (-dy) * f * .9 - dx * f * .12; vy += dx * f * .9 - dy * f * .12; }
+        var nx = x + vx * dt, ny = y + vy * dt; X[i] = nx; Y[i] = ny;
+        LF[i] -= dt;
+        if (LF[i] <= 0 || nx < -20 || ny < -20 || nx > W + 20 || ny > H + 20) { respawn(i, S); continue; }
+        V[n++] = x; V[n++] = y; V[n++] = AC[i]; V[n++] = nx; V[n++] = ny; V[n++] = AC[i];
+      }
+      var nxt = 1 - cur;
+      gl.viewport(0, 0, W, H);
+      // fade previous trails into the next buffer
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo[nxt]); gl.disable(gl.BLEND);
+      gl.useProgram(pf); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex[cur]);
+      gl.uniform1i(U(pf, 'uTex'), 0); gl.uniform1f(U(pf, 'uK'), Math.pow(.955, dt * 60)); quadDraw(pf);
+      // add this frame's thread segments
+      gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
+      gl.useProgram(pl); gl.uniform2f(U(pl, 'uR'), W, H); gl.uniform3fv(U(pl, 'uInk'), S.c.ink); gl.uniform3fv(U(pl, 'uAc'), S.c.ac);
+      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf); gl.bufferData(gl.ARRAY_BUFFER, V.subarray(0, n), gl.DYNAMIC_DRAW);
+      var lp = gl.getAttribLocation(pl, 'p'), lc = gl.getAttribLocation(pl, 'c');
+      gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp, 2, gl.FLOAT, false, 12, 0);
+      gl.enableVertexAttribArray(lc); gl.vertexAttribPointer(lc, 1, gl.FLOAT, false, 12, 8);
+      gl.drawArrays(gl.LINES, 0, n / 3);
+      gl.disableVertexAttribArray(lc);
+      gl.disable(gl.BLEND);
+      // show
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.useProgram(ps); gl.bindTexture(gl.TEXTURE_2D, tex[nxt]); gl.uniform1i(U(ps, 'uTex'), 0);
+      gl.uniform3fv(U(ps, 'uBg'), S.c.bg); gl.uniform3fv(U(ps, 'uAc'), S.c.ac); quadDraw(ps);
+      cur = nxt;
+    }
+  };
+});
+</script>
+<script>
+(function(){ var sec=document.querySelector('.bgsec'); APX['BGD-114'].mount(sec.querySelector('.bgx'),{scope:sec}); })();
+</script>
+</body></html>

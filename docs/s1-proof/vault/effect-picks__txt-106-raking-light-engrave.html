@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" class="solo solo-dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TXT-106 · Raking Light Engrave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Michroma&family=Hanken+Grotesk:wght@500;600&display=swap">
+<style id="apx-module-css">
+/* TXT-106 · Raking Light Engrave */
+@property --lx{syntax:"<percentage>";inherits:true;initial-value:30%}
+.apx-t106{--m1:#332814;--m2:#68513d;--m3:#a4845d;--m4:#f0e6c7;--m5:#fef9e8;--sx:0px;
+  background:radial-gradient(18% 140% at var(--lx) 40%,var(--m5) 0%,var(--m4) 22%,transparent 60%),linear-gradient(180deg,var(--m4) 0%,var(--m3) 38%,var(--m2) 62%,var(--m1) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(var(--sx) 1px 0 rgba(255,248,232,.18)) drop-shadow(calc(var(--sx) * -1) -1px 0 rgba(0,0,0,.95)) drop-shadow(0 6px 14px rgba(0,0,0,.75))}
+.apx-t106[data-tone="platinum"]{--m1:#2b2f35;--m2:#5d6670;--m3:#aeb6bf;--m4:#eef1f4;--m5:#ffffff}
+.apx-t106.is-swept{animation:apx-t106-sweep 1.8s cubic-bezier(.65,0,.35,1)}
+@keyframes apx-t106-sweep{from{--lx:-20%}to{--lx:30%}}
+@media (prefers-reduced-motion:reduce){.apx-t106.is-swept{animation:none}}
+
+</style>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#060606;color:#ece6d8;font:15px/1.6 "Hanken Grotesk",system-ui,sans-serif}
+.stage{min-height:100vh;min-height:100svh;display:grid;place-items:center;align-content:center;gap:22px;padding:24px;text-align:center;
+  background:radial-gradient(70% 55% at 50% 45%,#141210,#060606 72%)}
+.cap{font:600 11px/1 "Hanken Grotesk",sans-serif;letter-spacing:.3em;color:#a4845d;text-transform:uppercase}
+h1{margin:0;font:700 clamp(40px,10vw,120px)/.95 "Cormorant Garamond",serif;letter-spacing:.08em;text-transform:uppercase}
+h2{margin:0;font:400 clamp(16px,3.4vw,34px)/1.1 Michroma,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+</style>
+<style id="fx-extract-base">html,body{margin:0;height:100%}body{background:#04050a}</style><style id="apx-og">html.solo,html.solo body{background:#040507!important}html.solo .frame{--apx-bg:#040507;background:#040507!important}html.solo :is(.bg,.bgx){background:#040507!important}html.solo :is(.bg,.bgx)>*:not(.word){filter:grayscale(1) brightness(.62) contrast(1.05)}html.solo :is(.bg,.bgx)::before,html.solo :is(.bg,.bgx)::after,html.solo :is(.bg,.bgx) :is(.grid,.bars,.stripes,.dots,.chk,.pin,.band,.disc){display:none!important}</style>
+</head>
+<body>
+<section class="stage">
+  <span class="cap">TXT-106 · Move your pointer across the words</span>
+  <h1 data-apx="TXT-106">Built to Last</h1>
+  <h2 data-apx="TXT-106" data-tone="platinum">APEX 360 Studio</h2>
+</section>
+<script id="apx-module-js">
+/* TXT-106 · Raking Light Engrave — headline letters cut into dark stone with a chrome-gold face; a raking light follows
+   the pointer across the letters (the bevel shadows swing with it) and sweeps once when the heading scrolls into view.
+   Mount: <h2 data-apx="TXT-106">Your words</h2>. data-tone="platinum" swaps the metal. */
+(function () {
+  var CODE = 'TXT-106';
+  function mount(el) {
+    if (el.__apx106t) return el.__apx106t;
+    el.classList.add('apx-t106');
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, raf = 0, tx = .3, x = .3;
+    function set() { el.style.setProperty('--lx', (x * 100).toFixed(1) + '%'); var s = (x - .5) * 2; el.style.setProperty('--sx', (-s * 2).toFixed(2) + 'px') }
+    function loop() { raf = 0; x += (tx - x) * .12; set(); if (Math.abs(tx - x) > .002) raf = requestAnimationFrame(loop) }
+    function move(e) { var b = el.getBoundingClientRect(); tx = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)); if (!raf) raf = requestAnimationFrame(loop) }
+    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting && !reduce) { el.classList.remove('is-swept'); void el.offsetWidth; el.classList.add('is-swept') } }, { threshold: .6 });
+    io.observe(el); addEventListener('pointermove', move, { passive: true }); set();
+    return el.__apx106t = function () { io.disconnect(); removeEventListener('pointermove', move); cancelAnimationFrame(raf); el.classList.remove('apx-t106', 'is-swept'); delete el.__apx106t };
+  }
+  window.APX = window.APX || {}; window.APX.TXT106 = window.APX[CODE] = { mount: mount };
+  function auto() { if (window.APX_NO_AUTOMOUNT) return; [].forEach.call(document.querySelectorAll('[data-apx~="' + CODE + '"]:not([data-apx-manual])'), function (r) { mount(r) }) }
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', auto) : auto();
+})();
+
+</script>
+</body>
+</html>

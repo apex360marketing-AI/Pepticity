@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" class="solo solo-dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GLS-110 · Liquid Gold Pane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<style id="apx-module-css">
+/* GLS-110 · Liquid Gold Pane */
+.apx-gls110{--apx110-h:0;--apx110-x:30%;position:relative;isolation:isolate;border-radius:26px;overflow:hidden;color:#efe8d9;
+  background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.01)),rgba(14,13,12,.55);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%)}
+.apx-gls110>*:not(.apx-gls110__fx){position:relative;z-index:2}
+.apx-gls110__fx{position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit}
+.apx-gls110__fx>*{position:absolute;inset:0;width:100%;height:100%;display:block;border-radius:inherit}
+/* dimpled hex mesh, lighter in the centre */
+.apx-gls110__mesh{background:
+  radial-gradient(circle at 50% 50%,rgba(255,255,255,.10) 0 1.6px,rgba(0,0,0,.55) 2.3px 3.2px,transparent 3.6px) 0 0/9px 15.6px,
+  radial-gradient(circle at 50% 50%,rgba(255,255,255,.10) 0 1.6px,rgba(0,0,0,.55) 2.3px 3.2px,transparent 3.6px) 4.5px 7.8px/9px 15.6px,
+  radial-gradient(70% 60% at 50% 45%,#55575a,#2a2b2d 70%,#151516);opacity:.9}
+.apx-gls110__smoke{mix-blend-mode:screen}
+.apx-gls110__drops{background:radial-gradient(circle at 78% 22%,rgba(255,248,232,.35) 0 2px,transparent 7px),radial-gradient(circle at 70% 70%,rgba(255,248,232,.22) 0 3px,transparent 9px),radial-gradient(circle at 88% 58%,rgba(255,248,232,.18) 0 1.5px,transparent 6px);filter:blur(1.2px)}
+/* thick chrome-gold tube rim with a glossy top bar */
+.apx-gls110__rim{padding:7px;background:
+  linear-gradient(180deg,#fef9e8 0,#f0e6c7 3%,#68513d 9%,#1a140b 18%,#332814 50%,#a4845d 86%,#f0e6c7 94%,#423524 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.6)}
+.apx-gls110__rim::after{content:"";position:absolute;left:8%;right:8%;top:1px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#fef9e8 var(--apx110-x),transparent);opacity:calc(.35 + var(--apx110-h) * .65);filter:blur(.4px)}
+.apx-gls110--flat .apx-gls110__metal{background:radial-gradient(60% 90% at 6% 70%,rgba(164,132,93,.55),transparent 60%)}
+@media (prefers-reduced-motion:reduce){.apx-gls110__rim::after{transition:none}}
+
+</style>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#060606;color:#ece6d8;font:15px/1.6 "Hanken Grotesk",system-ui,sans-serif}
+.stage{min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:24px;background:radial-gradient(70% 60% at 50% 40%,#16130f,#060606 70%)}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;width:min(980px,100%)}
+.pane{min-height:300px;padding:34px 34px 30px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+.pane small{font:600 11px/1 "Hanken Grotesk",sans-serif;letter-spacing:.3em;color:#f0e6c7;text-transform:uppercase;opacity:.8}
+.pane h2{margin:0;font:600 clamp(24px,3.4vw,34px)/1.05 "Cormorant Garamond",serif;letter-spacing:.12em;text-transform:uppercase;color:#fbf6ea;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.pane p{margin:0;max-width:34ch;color:rgba(239,232,217,.82);text-shadow:0 1px 6px rgba(0,0,0,.9)}
+.pane a{align-self:flex-start;margin-top:8px;color:#f0e6c7;font-weight:600;letter-spacing:.14em;font-size:12px;text-transform:uppercase;text-decoration:none;border-bottom:1px solid rgba(240,230,199,.5);padding:8px 0;min-height:44px;display:inline-flex;align-items:center}
+@media (max-width:720px){.row{grid-template-columns:1fr}}
+</style>
+<style id="fx-extract-base">html,body{margin:0;height:100%}body{background:#04050a}</style><style id="apx-og">html.solo,html.solo body{background:#040507!important}html.solo .frame{--apx-bg:#040507;background:#040507!important}html.solo :is(.bg,.bgx){background:#040507!important}html.solo :is(.bg,.bgx)>*:not(.word){filter:grayscale(1) brightness(.62) contrast(1.05)}html.solo :is(.bg,.bgx)::before,html.solo :is(.bg,.bgx)::after,html.solo :is(.bg,.bgx) :is(.grid,.bars,.stripes,.dots,.chk,.pin,.band,.disc){display:none!important}</style>
+</head>
+<body>
+<section class="stage">
+  <div class="row">
+    <article class="pane" data-apx="GLS-110"><small>GLS-110 · Point at the glass</small><h2>Liquid Gold Pane</h2><p>Chrome-gold flows along the edge of real glass. Point at it and the metal swells toward you.</p><a href="#">Book a consult</a></article>
+    <article class="pane" data-apx="GLS-110"><small>Same piece, second pane</small><h2>Your Offer Here</h2><p>Use it for a pricing tier, a featured service or the final call to action.</p><a href="#">See the plan</a></article>
+  </div>
+</section>
+<script id="apx-module-js">
+/* GLS-110 · Liquid Gold Pane — APEX DESK look, matched to design/references/liquid-glass/01-gold-chrome-liquid-glass-panels.png.
+   A see-through glass pane on a dimpled hex mesh, held in a thick chrome-gold tube rim. Liquid chrome-gold flows in
+   S-curves along the left and bottom (about 30% of the pane) and a pale smoke wisp drifts centre-right.
+   Hover: the metal speeds up and swells toward the pointer, the rim's top bar lights. Mount: <div data-apx="GLS-110">content</div>. */
+(function () {
+  var CODE = 'GLS-110';
+  var FS = [
+    'precision highp float;uniform vec2 r;uniform float t;uniform vec2 m;uniform float hov;',
+    'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}',
+    'float fbm(vec2 p){float v=0.,a=.5;mat2 R=mat2(.8,.6,-.6,.8);for(int i=0;i<4;i++){v+=a*n(p);p=R*p*2.03;a*=.5;}return v;}',
+    'vec3 gold(float k){k=clamp(k,0.,1.);vec3 a=vec3(.20,.157,.078),b=vec3(.41,.32,.24),c=vec3(.643,.518,.365),d=vec3(.941,.902,.78),e=vec3(.996,.976,.91);',
+    ' return k<.25?mix(a,b,k/.25):k<.5?mix(b,c,(k-.25)/.25):k<.78?mix(c,d,(k-.5)/.28):mix(d,e,(k-.78)/.22);}',
+    'void main(){vec2 uv=gl_FragCoord.xy/r;float asp=r.x/r.y;vec2 p=vec2(uv.x*asp,uv.y);',
+    ' float sp=.18+hov*.35;',
+    ' vec2 q=vec2(fbm(p*2.+vec2(t*sp*.3,0.)),fbm(p*2.+vec2(3.1,-t*sp*.25)));',
+    /* mask: an S-curve band hugging the left edge and sweeping along the bottom */
+    ' float curve=uv.x-(.16+.10*sin(uv.y*5.5+t*sp+q.x*2.))-(1.-smoothstep(0.,.42,uv.y))*.55*smoothstep(.0,.9,1.-uv.x*.7);',
+    ' float band=smoothstep(.06,-.02,curve)*smoothstep(-.34,-.08,curve);',
+    ' band+=smoothstep(.05,0.,abs(curve+.2+.05*sin(uv.y*9.+t*sp*1.3)))*.75;',
+    ' float d=length((uv-m)*vec2(asp,1.));band+=hov*.55*exp(-d*d*28.)*smoothstep(.0,.25,band+.15);',
+    ' band=clamp(band,0.,1.);',
+    ' float w=fbm(p*3.+q*2.4+t*sp*.2);float bands=.5+.5*sin(w*7.+t*sp*1.5);',
+    ' vec3 metal=gold(.1+bands*.55)*(.45+bands*.5);',
+    ' metal+=gold(.88)*smoothstep(.84,.985,bands)*.6;',
+    ' float a=band;gl_FragColor=vec4(metal*a,a);}'
+  ].join('\n');
+  function smoke(ctx, W, H, t, hov) {
+    ctx.clearRect(0, 0, W, H); ctx.lineCap = 'round';
+    for (var s = 0; s < 3; s++) {
+      ctx.beginPath();
+      var x0 = W * (.62 + s * .03), y0 = H * .85;
+      ctx.moveTo(x0, y0);
+      for (var i = 1; i <= 26; i++) {
+        var k = i / 26, y = y0 - k * H * .62;
+        var x = x0 + Math.sin(k * 6 + t * (.5 + s * .17) + s) * W * .05 * (1 + k * 1.6) + Math.sin(k * 13 - t * .8) * W * .012;
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(206,218,226,' + (.10 + hov * .06 - s * .025) + ')'; ctx.lineWidth = (2.6 - s * .7) * (W / 600 + .6); ctx.filter = 'blur(' + (2 + s * 2) + 'px)'; ctx.stroke();
+    }
+    ctx.filter = 'none';
+  }
+  function mount(root) {
+    if (root.__apx110) return root.__apx110;
+    root.classList.add('apx-gls110');
+    var layer = document.createElement('div'); layer.className = 'apx-gls110__fx'; layer.setAttribute('aria-hidden', 'true');
+    layer.innerHTML = '<span class="apx-gls110__mesh"></span><canvas class="apx-gls110__metal"></canvas><canvas class="apx-gls110__smoke"></canvas><span class="apx-gls110__drops"></span><span class="apx-gls110__rim"></span>';
+    root.insertBefore(layer, root.firstChild);
+    var cv = layer.querySelector('.apx-gls110__metal'), sm = layer.querySelector('.apx-gls110__smoke'), sctx = sm.getContext('2d');
+    var gl = cv.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }), U, ok = false;
+    if (gl) {
+      var sh = function (ty, s) { var x = gl.createShader(ty); gl.shaderSource(x, s); gl.compileShader(x); return x };
+      var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}')); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+      if (gl.getProgramParameter(pr, gl.LINK_STATUS)) { ok = true; gl.useProgram(pr); gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        var L = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(L); gl.vertexAttribPointer(L, 2, gl.FLOAT, false, 0, 0); U = function (k) { return gl.getUniformLocation(pr, k) }; gl.clearColor(0, 0, 0, 0) }
+    }
+    if (!ok) root.classList.add('apx-gls110--flat');
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, raf = 0, vis = true, t0 = performance.now(), hov = 0, hovT = 0, mx = .3, my = .3, tmx = .3, tmy = .3, W = 0, H = 0;
+    function size() { var b = root.getBoundingClientRect(), dp = Math.min(devicePixelRatio || 1, 2); W = b.width; H = b.height;
+      cv.width = Math.max(2, b.width * dp * .7 | 0); cv.height = Math.max(2, b.height * dp * .7 | 0); sm.width = Math.max(2, b.width * dp | 0); sm.height = Math.max(2, b.height * dp | 0);
+      if (ok) { gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(U('r'), cv.width, cv.height) } }
+    function draw(now) { var t = reduce ? 6 : (now - t0) / 1000; hov += (hovT - hov) * .08; mx += (tmx - mx) * .1; my += (tmy - my) * .1;
+      root.style.setProperty('--apx110-h', hov.toFixed(3));
+      if (ok) { gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(U('t'), t); gl.uniform1f(U('hov'), hov); gl.uniform2f(U('m'), mx, my); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4) }
+      smoke(sctx, sm.width, sm.height, t, hov) }
+    function loop(now) { raf = 0; if (!vis || document.hidden) return; draw(now); if (!reduce || Math.abs(hov - hovT) > .01) raf = requestAnimationFrame(loop) }
+    function kick() { if (!raf) raf = requestAnimationFrame(loop) }
+    function move(e) { var b = root.getBoundingClientRect(); tmx = (e.clientX - b.left) / b.width; tmy = 1 - (e.clientY - b.top) / b.height; root.style.setProperty('--apx110-x', (tmx * 100).toFixed(1) + '%'); kick() }
+    var on = function () { hovT = 1; kick() }, off = function () { hovT = 0; kick() };
+    root.addEventListener('pointerenter', on); root.addEventListener('pointerleave', off); root.addEventListener('pointermove', move); root.addEventListener('focusin', on); root.addEventListener('focusout', off);
+    var ro = new ResizeObserver(function () { size(); kick() }); ro.observe(root);
+    var io = new IntersectionObserver(function (es) { vis = es[0].isIntersecting; kick() }); io.observe(root);
+    size(); kick();
+    return root.__apx110 = function () { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); root.removeEventListener('pointerenter', on); root.removeEventListener('pointerleave', off); root.removeEventListener('pointermove', move); layer.remove(); root.classList.remove('apx-gls110'); delete root.__apx110 };
+  }
+  window.APX = window.APX || {}; window.APX.GLS110 = window.APX[CODE] = { mount: mount };
+  function auto() { if (window.APX_NO_AUTOMOUNT) return; [].forEach.call(document.querySelectorAll('[data-apx~="' + CODE + '"]:not([data-apx-manual])'), function (r) { mount(r) }) }
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', auto) : auto();
+})();
+
+</script>
+</body>
+</html>
