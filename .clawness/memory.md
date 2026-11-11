@@ -9,3 +9,4 @@
 
 ## Lessons
 - Vial = std 10 mL (assumed); label trim 75x35 mm, 2 mm bleed: docs/owner/label-print/LABEL-SPEC.md
+- Palette (owner, 11 Nov): platinum chrome leads, gold only a faint accent; no gold-led designs
