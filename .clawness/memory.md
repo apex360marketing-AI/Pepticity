@@ -8,3 +8,4 @@
 ## Always
 
 ## Lessons
+- Vial = std 10 mL (assumed); label trim 75x35 mm, 2 mm bleed: docs/owner/label-print/LABEL-SPEC.md
