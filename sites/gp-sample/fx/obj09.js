@@ -101,7 +101,7 @@ export function mountObj09(el, { items, colors, onFront, tileScale } = {}) {
   const list = (items || []).slice();
   const N = Math.max(1, list.length), RR = 4.6, STEP = Math.PI * 2 / N;
   // original ring has 33 tiles; with fewer items tiles grow so the band keeps its density
-  const TK = tileScale || Math.min(2.2, Math.sqrt(33 / N));
+  const TK = tileScale || Math.min(1.8, Math.sqrt(33 / N));
   const tiles = list.map((it, i) => {
     const g = new THREE.Group();
     const ig = iconGeometry(it.d); geos.push(ig);
@@ -149,7 +149,7 @@ export function mountObj09(el, { items, colors, onFront, tileScale } = {}) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
     // original canvas is full-viewport; here the stage is shorter, so zoom (no perspective change) to fill it
-    camera.zoom = Math.min(1.7, camera.aspect * 0.7); camera.updateProjectionMatrix();
+    camera.zoom = Math.min(1.25, camera.aspect * 0.6); camera.updateProjectionMatrix();
   }
   const ro = new ResizeObserver(resize); ro.observe(el); resize();
 
