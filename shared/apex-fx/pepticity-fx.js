@@ -43,9 +43,13 @@
       if (!drag && !auto) target = Math.round(target / step) * step;
       paint(); requestAnimationFrame(loop);
     }
-    el.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, t: target, moved: false }; auto = false; });
-    W.addEventListener('pointermove', function (e) { if (!drag) return; var dx = e.clientX - drag.x; if (Math.abs(dx) > 4) drag.moved = true; target = drag.t + dx * .35; });
-    W.addEventListener('pointerup', function () { if (!drag) return; var d = drag; setTimeout(function () { if (drag === d) drag = null; }, 0); target = Math.round(target / step) * step; });
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') return; drag = { x: e.clientX, t: target, moved: false }; auto = false; });
+    W.addEventListener('pointermove', function (e) { if (!drag || drag.touch) return; var dx = e.clientX - drag.x; if (Math.abs(dx) > 4) drag.moved = true; target = drag.t + dx * .35; });
+    W.addEventListener('pointerup', function () { if (!drag || drag.touch) return; var d = drag; setTimeout(function () { if (drag === d) drag = null; }, 0); target = Math.round(target / step) * step; });
+    /* touch: drive the spin straight from touch events (pointer events can be cancelled by the browser on phones) */
+    el.addEventListener('touchstart', function (e) { var t = e.touches[0]; drag = { x: t.clientX, y: t.clientY, t: target, moved: false, touch: true }; auto = false; }, { passive: true });
+    el.addEventListener('touchmove', function (e) { if (!drag) return; var t = e.touches[0], dx = t.clientX - drag.x; if (Math.abs(dx) > Math.abs(t.clientY - drag.y) && Math.abs(dx) > 4) { drag.moved = true; target = drag.t + dx * .35; if (e.cancelable) e.preventDefault(); } }, { passive: false });
+    el.addEventListener('touchend', function () { if (!drag) return; var d = drag; setTimeout(function () { if (drag === d) drag = null; }, 0); target = Math.round(target / step) * step; });
     el.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { target += step; auto = false; } if (e.key === 'ArrowRight') { target -= step; auto = false; } });
     paint(); loop();
   }
