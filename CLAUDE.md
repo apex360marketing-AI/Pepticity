@@ -12,7 +12,9 @@ These are final. Do not change any of them unless the owner asks in so many word
   - built from brand/font/build_font.py + type3d-engine.js as committed in 6de50ec
   - every header on every page uses it
 - A: dark matte grey chevron (0x55544f) with the light inner bar.
-- LOGO P = the approved P mark (brand/logo/p-mark.svg from commit ca61e2b; LOGO_P glyph in the dashboard). Never the font's cut-out P. Never white or platinum: matte gunmetal.
+- LOGO P = the approved P mark (brand/logo/p-mark.svg from commit ca61e2b; LOGO_P glyph in the dashboard). Never the font's cut-out P.
+- COLOUR (owner, 11 Nov 2026; replaces the old "P never white or platinum" rule): keep the gunmetal base and the PEPTICITY STUDIO 3D font. Chrome gold AND platinum chrome are the pop colours, woven together so they complement each other (never a toggle), on the P mark, headings, trim, buttons, hovers, shelf and glints. Gold = ONLY the owner's pale chrome gold (design/references/liquid-glass/01-gold-chrome-liquid-glass-panels.png in Apex_Agents_Bots: #332814 #68513d #a4845d #f0e6c7 #fef9e8). Platinum = #2a2d31 #6b7077 #b9bec5 #e6e9ed #ffffff.
+- SHAPES (owner, 11 Nov 2026): no squares, rectangles or pills. Small buttons and chips are elongated octagons with colour; every card and button is see-through glass (liquid glass / glassmorphism).
 - The owner's BLACK image is the source of truth for colour. Wall #323232; metal runs #080807 to #8E8D85.
 - Bottle = brand/vial-hf (Higgsfield, approved 30 Oct): see-through smoked label, etched peptide swirl, PEPTICITY vertical + logo P on the front, full info on the back, lit from below. Used in the store as assets/vial-pepticity.webp with a rising shine.
 
