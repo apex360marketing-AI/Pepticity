@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEPTICITY · BRAND PORTFOLIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../shared/apex-fx/pepticity-fx.css">
+<link rel="stylesheet" href="../../shared/apex-fx/gls105.css">
+<style>
+/* Layout: floating glass dock · condensation hero (GLS-105) beside the revolving icon ring (OBJ-09) ·
+   then one chapter per brand asset, each a row of bezel-tilt specimen cards (CRD-132) · "where everything lives" link wall.
+   Every shape is an octagon; colour lives in light (each chapter sets --c). */
+*{box-sizing:border-box}
+html{background:var(--px-void);color:var(--px-ink);font:15px/1.6 var(--px-body);-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{margin:0;overflow-x:clip;background:
+  radial-gradient(1100px 700px at 90% -10%,color-mix(in oklab,var(--px-uvglow) 16%,transparent),transparent 60%),
+  radial-gradient(900px 600px at -10% 40%,color-mix(in oklab,var(--px-ice) 9%,transparent),transparent 65%),
+  radial-gradient(800px 600px at 60% 110%,color-mix(in oklab,var(--px-cobalt) 10%,transparent),transparent 65%),var(--px-void)}
+h1,h2,h3{font-family:var(--px-head);font-weight:400;text-transform:uppercase;letter-spacing:.08em;margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px}
+.kv{font:500 11px/1.6 var(--px-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--px-muted)}
+
+/* dock */
+header.dock{position:sticky;top:12px;z-index:40;margin:12px auto 0;width:min(1240px,calc(100% - 24px));display:flex;align-items:center;gap:14px;padding:10px 14px 10px 18px;--o:14px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand svg{width:34px;height:auto;flex:none}
+.brand b{font:400 13px/1 var(--px-display);letter-spacing:.3em;white-space:nowrap}
+.brand small{display:block;margin-top:5px}
+.dock .sp{flex:1}
+@media(max-width:760px){.dock .hide-m{display:none}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:22px;align-items:stretch;padding:28px 0 10px}
+@media(max-width:960px){.hero{grid-template-columns:minmax(0,1fr)}}
+.vitrine{--o:30px;min-height:520px}
+.vitrine.apx-g105{--apx-bg:#08080b;--apx-ink:#eef0f3;--apx-muted:#a3a9b3;--apx-accent:var(--px-ice);--apx-font-display:"PEPTICITY BLACK",Michroma,sans-serif;--apx-font-text:Geist,sans-serif;min-height:520px;padding:64px 44px 40px}
+.vitrine .apx-g105__title{font-size:clamp(34px,5vw,74px);letter-spacing:.06em}
+.ringcard{--o:26px;--c:var(--px-uvglow);display:flex;flex-direction:column;padding:18px 10px 14px}
+.ringcard h2{font-size:12px;letter-spacing:.24em;color:var(--px-muted);padding:0 12px}
+
+/* chapters */
+.ch{padding:56px 0 8px;scroll-margin-top:90px}
+.chh{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;align-items:end;margin-bottom:22px}
+.chh .n{font:400 46px/1 var(--px-display);color:transparent;-webkit-text-stroke:1px color-mix(in oklab,var(--c) 70%,#fff);text-shadow:0 0 24px color-mix(in oklab,var(--c) 40%,transparent)}
+.chh h2{font-size:clamp(20px,3vw,34px)}
+.chh p{grid-column:2;color:var(--px-ink2);max-width:68ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));gap:22px}
+.plate.light{background:#f4f6f8}
+.plate svg.mark{width:44%;height:auto}
+.plate .sw{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+.plate .sw i{display:grid;align-content:end;padding:8px;font:500 9px/1.3 var(--px-mono);letter-spacing:.08em;font-style:normal;color:#eef0f3;text-shadow:0 1px 2px #000;
+  clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%)}
+.type{font:400 clamp(22px,3vw,34px)/1 var(--px-display);letter-spacing:.14em}
+.plate .spec{padding:16px;text-align:center;display:grid;gap:10px}
+.cards{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.cards figure{margin:0;flex:0 0 min(300px,80%);scroll-snap-align:start}
+.cards img{width:100%;height:auto;display:block;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+.cards figcaption{margin-top:6px}
+.where{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:12px}
+.where a.lk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:center;padding:14px 18px;--o:14px;text-decoration:none;color:inherit;transition:transform .45s var(--px-spring),filter .4s}
+.where a.lk:hover,.where a.lk:focus-visible{transform:translateY(-3px);filter:drop-shadow(0 0 14px color-mix(in oklab,var(--c) 55%,transparent));outline:none}
+.where a.lk .gem{grid-row:span 2;width:14px;height:14px;background:var(--c);box-shadow:0 0 12px var(--c)}
+.where a.lk b{font:400 12px/1.3 var(--px-head);letter-spacing:.12em}
+.where a.lk span{font-size:13px;color:var(--px-muted)}
+.questions{padding:22px 24px;--o:20px;display:grid;gap:10px}
+.questions li{color:var(--px-ink2)}
+footer{padding:60px 0 40px;text-align:center}
+footer .word{font:400 clamp(44px,12vw,170px)/.9 var(--px-display);letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="gauge" data-fx="NAV-26"><i></i></div>
+
+<header class="dock lg oct" data-fx="GLS-LG">
+  <a class="brand" href="#top" style="text-decoration:none;color:inherit">
+    <svg viewBox="-0.708 -0.58 1.416 1.16" aria-hidden="true"><defs><linearGradient id="gm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8e8d85"/><stop offset=".5" stop-color="#55544f"/><stop offset="1" stop-color="#2a2a27"/></linearGradient></defs><path id="pm" fill="url(#gm)" stroke="#a9a8a0" stroke-width=".012" d="M-0.6282 0.5000 L-0.4425 0.5000 L-0.4424 0.1459 L-0.4402 0.1339 L-0.4335 0.1191 L-0.4228 0.1069 L-0.4128 0.0999 L-0.4015 0.0951 L-0.3854 0.0929 L0.3325 0.0929 L0.3746 0.0899 L0.4161 0.0809 L0.4556 0.0660 L0.4928 0.0459 L0.5266 0.0204 L0.5565 -0.0094 L0.5819 -0.0433 L0.6021 -0.0804 L0.6102 -0.1000 L0.6222 -0.1406 L0.6282 -0.1824 L0.6282 -0.2247 L0.6259 -0.2457 L0.6169 -0.2871 L0.6021 -0.3267 L0.5926 -0.3456 L0.5698 -0.3813 L0.5565 -0.3977 L0.5266 -0.4276 L0.5102 -0.4409 L0.4745 -0.4637 L0.4556 -0.4731 L0.4161 -0.4880 L0.3746 -0.4970 L0.3536 -0.4993 L-0.4282 -0.5000 L-0.4566 -0.4980 L-0.4708 -0.4954 L-0.4981 -0.4874 L-0.5241 -0.4756 L-0.5481 -0.4601 L-0.5696 -0.4414 L-0.5794 -0.4310 L-0.5965 -0.4081 L-0.6038 -0.3959 L-0.6156 -0.3699 L-0.6236 -0.3426 L-0.6276 -0.3143ZM0.3325 -0.0929 L-0.4425 -0.0929 L-0.4425 -0.3143 L0.3325 -0.3143 L0.3482 -0.3131 L0.3636 -0.3099 L0.3785 -0.3043 L0.3988 -0.2921 L0.4108 -0.2819 L0.4256 -0.2634 L0.4332 -0.2496 L0.4406 -0.2271 L0.4432 -0.2036 L0.4421 -0.1879 L0.4362 -0.1649 L0.4296 -0.1506 L0.4211 -0.1373 L0.4051 -0.1199 L0.3924 -0.1104 L0.3712 -0.0999 L0.3482 -0.0940Z"/></svg>
+    <div><b>PEPTICITY</b><small class="kv hide-m">BRAND PORTFOLIO · v1</small></div>
+  </a>
+  <span class="sp"></span>
+  <a class="ob sm a-ice hide-m" href="#labels" data-fx="BTN-176"><span class="led"></span>LABELS</a>
+  <a class="ob sm a-uv hide-m" href="#where" data-fx="BTN-176"><span class="led"></span>WHERE EVERYTHING IS</a>
+  <button class="ob sm a-gold" data-tune data-fx="BTN-176"><span class="led"></span>TUNE</button>
+</header>
+
+<main class="wrap" id="top">
+  <section class="hero">
+    <div class="vitrine oct" data-apx="GLS-105" data-word="GRACE" data-fx="GLS-105">
+      <div class="apx-g105__behind">
+        <span class="apx-g105__kicker">PEPTICITY · NEXT-LEVEL BRAND PORTFOLIO · NOV 2026</span>
+        <h1 class="apx-g105__title">PURE. PROVEN. PEPTICITY.</h1>
+        <p class="apx-g105__text">The complete brand for Grace's store in one place: the P mark, colour, type, the bottle, labels in every size, business cards, dashboards and the website. Wipe the glass to read it.</p>
+      </div>
+      <div class="apx-g105__front">
+        <a class="ob big a-ice" href="#mark" data-fx="BTN-176"><span class="led"></span>OPEN THE PORTFOLIO</a>
+        <span class="apx-g105__hint"><span data-mouse>MOVE ACROSS THE GLASS</span><span data-touch>DRAG ACROSS THE GLASS</span></span>
+      </div>
+    </div>
+
+    <div class="ringcard lg oct" data-fx="OBJ-09">
+      <h2>EIGHT CHAPTERS · DRAG TO SPIN</h2>
+      <div class="ring" tabindex="0" aria-label="Chapters ring. Use left and right arrows to turn, Enter to open.">
+        <div class="track">
+          <button class="ico" style="--ic:var(--px-uvglow)" data-name="01 · THE P MARK" data-sub="LOGO + EMBLEM" data-href="mark"><span><svg viewBox="0 0 24 24"><path d="M6 20V4h8a5 5 0 0 1 0 10H6"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-ice)" data-name="02 · COLOUR" data-sub="BLACK, METAL, LIGHT" data-href="colour"><span><svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 3v18M5 7l14 10M19 7L5 17"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-plat)" data-name="03 · TYPE" data-sub="PEPTICITY BLACK" data-href="type"><span><svg viewBox="0 0 24 24"><path d="M4 6h16M12 6v14M8 20h8"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-cobalt)" data-name="04 · THE BOTTLE" data-sub="05 UV BLACK CHROME" data-href="bottle"><span><svg viewBox="0 0 24 24"><path d="M9 2h6v3H9zM8 5h8v3l1 2v11H7V10l1-2z"/><path d="M7 13h10"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-ice)" data-name="05 · LABELS" data-sub="2 · 3 · 5 · 10 ML + KIT" data-href="labels"><span><svg viewBox="0 0 24 24"><path d="M3 7h18v10H3z"/><path d="M7 11h6M7 14h4"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-gold)" data-name="06 · BUSINESS CARDS" data-sub="20 DESIGNS" data-href="cards"><span><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3z"/><path d="M6 10h5M6 13h8"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-uvglow)" data-name="07 · DASHBOARDS" data-sub="GRACE + HER CLIENTS" data-href="dash"><span><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span></button>
+          <button class="ico" style="--ic:var(--px-cobalt)" data-name="08 · WEBSITE" data-sub="SITE-ONE" data-href="where"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span></button>
+        </div>
+        <div class="face"><div class="lbl lg oct"><b></b><span></span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 MARK -->
+  <section class="ch reveal" id="mark" style="--c:var(--px-uvglow)">
+    <div class="chh"><span class="n">01</span><h2>THE P MARK</h2><p>The approved P (brand/logo/p-mark.svg): matte gunmetal, never white or platinum. It sits on the vial, the cards, the dashboard coin and the site header.</p></div>
+    <div class="tiles">
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><svg class="mark" viewBox="-0.708 -0.58 1.416 1.16" aria-label="P mark on black"><use href="#pm"/></svg></div></div><div class="glare"></div></div>
+        <div class="meta"><h4>ON BLACK</h4><p>Main use. Matte gunmetal with a hairline of light on the edge.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate light"><svg class="mark" viewBox="-0.708 -0.58 1.416 1.16" aria-label="P mark on white"><use href="#pm"/></svg></div></div><div class="glare"></div></div>
+        <div class="meta"><h4>ON WHITE</h4><p>For the white version of the brand: same gunmetal, crisp white ground.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><img src="../../brand/logo/emblem.svg" alt="PEPTICITY emblem coin" style="object-fit:contain;padding:14px"></div></div><div class="glare"></div></div>
+        <div class="meta"><h4>THE EMBLEM COIN</h4><p>The spinning coin from the dashboards; it lands as the footer watermark.</p></div></article>
+    </div>
+  </section>
+
+  <!-- 02 COLOUR -->
+  <section class="ch reveal" id="colour" style="--c:var(--px-ice)">
+    <div class="chh"><span class="n">02</span><h2>COLOUR</h2><p>Black and metal carry the brand. Colour lives only in light: glows, edges and the little LEDs on every button. No green, pink, peach, orange or yellow.</p></div>
+    <div class="tiles">
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><div class="sw">
+        <i style="background:#0b0b0c">MATTE BLACK #0B0B0C</i><i style="background:#120f1a">UV BLACK #120F1A</i><i style="background:#323232">WALL #323232</i>
+        <i style="background:linear-gradient(#8e8d85,#2a2a27)">GUNMETAL #55544F</i><i style="background:linear-gradient(100deg,#c9d0d8,#fff 30%,#9aa4af 50%,#f5f8fb)">PLATINUM</i><i style="background:linear-gradient(135deg,#68513d,#f0e6c7 50%,#a4845d)">GOLD-CHROME</i>
+      </div></div></div><div class="glare"></div></div><div class="meta"><h4>GROUND AND METAL</h4><p>From the owner's BLACK image: wall #323232, metal #080807 to #8E8D85.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><div class="sw">
+        <i style="background:radial-gradient(circle,#9b7bff,#120f1a 75%)">UV GLOW #9B7BFF</i><i style="background:radial-gradient(circle,#7fe3ff,#0b0b0c 75%)">ICE #7FE3FF</i><i style="background:radial-gradient(circle,#5b8cff,#0b0b0c 75%)">COBALT #5B8CFF</i>
+        <i style="background:radial-gradient(circle,#e6e9ed,#0b0b0c 75%)">PLATINUM LIGHT</i><i style="background:radial-gradient(circle,#f0e6c7,#0b0b0c 75%)">GOLD LIGHT</i><i style="background:#0b0b0c;box-shadow:inset 0 0 0 1px #7fe3ff">EDGE ONLY</i>
+      </div></div></div><div class="glare"></div></div><div class="meta"><h4>THE LIGHT</h4><p>One glow per section, one per action. Change them in one place: the first block of shared/apex-fx/pepticity-fx.css.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><div class="spec">
+        <div class="row" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+          <span class="ob sm a-uv"><span class="led"></span>UV</span><span class="ob sm a-ice"><span class="led"></span>ICE</span><span class="ob sm a-cobalt"><span class="led"></span>COBALT</span><span class="ob sm a-gold"><span class="led"></span>GOLD</span>
+        </div></div></div></div><div class="glare"></div></div><div class="meta"><h4>BUTTONS · BTN-176</h4><p>Elongated octagons of liquid glass with a chrome rim. Point at one: it rises and a sheen crosses it.</p></div></article>
+    </div>
+  </section>
+
+  <!-- 03 TYPE -->
+  <section class="ch reveal" id="type" style="--c:var(--px-plat)">
+    <div class="chh"><span class="n">03</span><h2>TYPE</h2><p>PEPTICITY BLACK for the name and big headings (the 3D gunmetal version leads every page). Michroma for headings, Geist for reading, Geist Mono for small labels.</p></div>
+    <div class="tiles">
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><div class="spec"><span class="type chrome">PEPTICITY</span><span class="kv">PEPTICITY BLACK · WORDMARK</span></div></div></div><div class="glare"></div></div><div class="meta"><h4>WORDMARK</h4><p>Always capitals, a little letter-spacing.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><div class="spec"><span style="font:400 22px/1.2 var(--px-head);letter-spacing:.1em">LAB-TESTED PEPTIDES</span><span class="kv">MICHROMA · HEADINGS</span></div></div></div><div class="glare"></div></div><div class="meta"><h4>HEADINGS</h4><p>Wide and geometric, to match the chamfered metal letters.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate"><div class="spec"><span style="font:400 17px/1.5 var(--px-body);max-width:26ch">Clean, calm reading text for product details and emails.</span><span class="kv">GEIST · BODY</span></div></div></div><div class="glare"></div></div><div class="meta"><h4>BODY</h4><p>Geist Mono for lot numbers, prices and small labels.</p></div></article>
+    </div>
+  </section>
+
+  <!-- 04 BOTTLE -->
+  <section class="ch reveal" id="bottle" style="--c:var(--px-cobalt)">
+    <div class="chh"><span class="n">04</span><h2>THE BOTTLE</h2><p>Your pick for labels: 05 UV BLACK CHROME. The approved see-through smoked bottle stays the store hero image.</p></div>
+    <div class="tiles">
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate" style="aspect-ratio:3/4"><img src="img/vial-05.webp" alt="Vial with the 05 UV black chrome label" style="object-position:center"></div></div><div class="glare"></div></div><div class="meta"><h4>05 · UV BLACK CHROME</h4><p>Black wrap with a violet sheen and a chrome wordmark. The label family below is built on it.</p></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate" style="aspect-ratio:3/4"><img src="img/vial-approved.webp" alt="Approved smoked see-through PEPTICITY bottle" style="object-fit:contain;background:#000"></div></div><div class="glare"></div></div><div class="meta"><h4>STORE HERO BOTTLE</h4><p>Smoked see-through label, PEPTICITY vertical, the P on the front (approved 30 Oct).</p></div></article>
+    </div>
+  </section>
+
+  <!-- 05 LABELS -->
+  <section class="ch reveal" id="labels" style="--c:var(--px-ice)">
+    <div class="chh"><span class="n">05</span><h2>LABELS IN EVERY SIZE</h2><p>Sized to the Northern Peptides bottles: 2 ml (HGH kit vials), 3 ml (most peptides), 5 ml (blends and 30-100 mg), 10 ml (NAD+, glutathione) and the HGH kit box. All 37 products are mapped.</p></div>
+    <div class="tiles" id="labelTiles"></div>
+    <p style="margin-top:18px"><a class="ob a-ice" href="../labels/" data-fx="BTN-176"><span class="led"></span>OPEN THE LABEL STUDIO · DOWNLOAD + PRINT</a></p>
+  </section>
+
+  <!-- 06 CARDS -->
+  <section class="ch reveal" id="cards" style="--c:var(--px-gold)">
+    <div class="chh"><span class="n">06</span><h2>BUSINESS CARDS</h2><p>The 20 designs from Grace's picks. Swipe through; her final pick goes to print.</p></div>
+    <div class="cards lg oct" style="--o:18px;padding:16px" id="cardRow" data-fx="LAY-SNAP"></div>
+  </section>
+
+  <!-- 07 DASHBOARDS -->
+  <section class="ch reveal" id="dash" style="--c:var(--px-uvglow)">
+    <div class="chh"><span class="n">07</span><h2>DASHBOARDS</h2><p>Grace's owner dashboard and her clients' dashboard are live (sample data). Their look is final.</p></div>
+    <div class="tiles">
+      <article class="tile lg oct" data-fx="CRD-132"><div class="meta" style="padding-top:20px"><h4>GRACE'S DASHBOARD</h4><p>Sales, stock, customers, lab reports, money, taxes.</p></div><div class="acts"><a class="ob sm a-uv" href="https://apex360marketing-ai.github.io/Pepticity/graces-dashboard/" target="_blank" rel="noopener"><span class="led"></span>OPEN LIVE</a></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="meta" style="padding-top:20px"><h4>CLIENT DASHBOARD</h4><p>Orders, auto-ship, drops, membership, messages.</p></div><div class="acts"><a class="ob sm a-ice" href="https://apex360marketing-ai.github.io/Pepticity/client/" target="_blank" rel="noopener"><span class="led"></span>OPEN LIVE</a></div></article>
+      <article class="tile lg oct" data-fx="CRD-132"><div class="meta" style="padding-top:20px"><h4>COLOUR DASHBOARDS</h4><p>The same dashboards with 8 accent-light options.</p></div><div class="acts"><a class="ob sm a-cobalt" href="https://apex360marketing-ai.github.io/Pepticity/dashboard-color/" target="_blank" rel="noopener"><span class="led"></span>OPEN LIVE</a></div></article>
+    </div>
+  </section>
+
+  <!-- WHERE -->
+  <section class="ch reveal" id="where" style="--c:var(--px-cobalt)">
+    <div class="chh"><span class="n">08</span><h2>WHERE EVERYTHING LIVES</h2><p>Every PEPTICITY piece, one tap each. Public links are safe to send Grace.</p></div>
+    <div class="where">
+      <a class="lk lg oct" style="--c:var(--px-cobalt)" href="https://apex360marketing-ai.github.io/Pepticity/site-one/" target="_blank" rel="noopener"><i class="gem oct-gem"></i><b>WEBSITE · SITE-ONE</b><span>Newest full site</span></a>
+      <a class="lk lg oct" style="--c:var(--px-uvglow)" href="https://apex360marketing-ai.github.io/Pepticity/graces-dashboard/" target="_blank" rel="noopener"><i class="gem oct-gem"></i><b>GRACE'S DASHBOARD</b><span>Owner + client switch</span></a>
+      <a class="lk lg oct" style="--c:var(--px-ice)" href="https://apex360marketing-ai.github.io/Pepticity/client/" target="_blank" rel="noopener"><i class="gem oct-gem"></i><b>CLIENT DASHBOARD</b><span>What her customers see</span></a>
+      <a class="lk lg oct" style="--c:var(--px-gold)" href="https://apex360marketing-ai.github.io/Pepticity/grace/picks.html" target="_blank" rel="noopener"><i class="gem oct-gem"></i><b>GRACE'S PICKS</b><span>Cards, vial labels, shelf set, member cards</span></a>
+      <a class="lk lg oct" style="--c:var(--px-plat)" href="https://apex360marketing-ai.github.io/Pepticity/arsenal/" target="_blank" rel="noopener"><i class="gem oct-gem"></i><b>BRAND BOOK</b><span>Mark, colour, type, effects</span></a>
+      <a class="lk lg oct" style="--c:var(--px-ice)" href="../labels/"><i class="gem oct-gem"></i><b>LABEL STUDIO</b><span>All sizes, download, print</span></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="word chrome">PEPTICITY</div><p class="kv" style="margin-top:14px">PRESS T TO SEE EVERY EFFECT'S APEX ARSENAL CODE</p></footer>
+
+<script>
+/* labels chapter: live SVG previews pulled from the label studio's renderer would duplicate code; show the three main sizes as framed specimens */
+(function () {
+  const L = [['3 ML','BPC-157 · 10 MG','45 x 22 mm'],['5 ML','KLOW · 80 MG','60 x 25 mm'],['10 ML','NAD+ · 1000 MG','66 x 30 mm']];
+  document.getElementById('labelTiles').innerHTML = L.map(([s, p, d]) => `<article class="tile lg oct" data-fx="CRD-132"><div class="bez"><div class="frame"><div class="plate" style="background:radial-gradient(circle at 78% 10%,#2a2140,#120f1a 45%,#070708)"><div class="spec"><span class="type chrome" style="font-size:22px">PEPTICITY</span><span style="font:400 14px var(--px-head);letter-spacing:.12em">${p}</span></div></div></div><div class="glare"></div></div><div class="meta"><h4>${s} LABEL</h4><p>${d} + 1.5 mm bleed</p></div></article>`).join('');
+  const row = document.getElementById('cardRow');
+  row.innerHTML = Array.from({length: 20}, (_, i) => { const n = String(i + 1).padStart(2, '0'); return `<figure><img loading="lazy" src="../grace-picks/assets/cards/card-${n}.webp" alt="Business card design ${n}"><figcaption class="kv">CARD ${n}</figcaption></figure>`; }).join('');
+})();
+</script>
+<script src="../../shared/apex-fx/gls105.js"></script>
+<script src="../../shared/apex-fx/pepticity-fx.js"></script>
+</body>
+</html>

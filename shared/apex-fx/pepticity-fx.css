@@ -1,0 +1,144 @@
+/* PEPTICITY FX KIT v1 (11 Nov 2026)
+   One stylesheet for every PEPTICITY page. Built from the APEX ARSENAL house style:
+   octagons only (no squares, rectangles or pills), liquid glass, chrome, and colour carried by light.
+   Every part carries its Arsenal code (data-fx="BTN-176" etc). Press T on any page to see the codes.
+
+   EASY CHANGES: edit the tokens in the first block below. Nothing else needs touching. */
+:root{
+  /* ground (locked brand: matte black + UV black, metal #080807 to #8E8D85) */
+  --px-void:#060607; --px-ground:#0b0b0c; --px-panel:#141416; --px-uv:#120f1a; --px-wall:#323232;
+  --px-ink:#eef0f3; --px-ink2:#c9ced5; --px-muted:#9aa1ab; --px-dim:#666d76;
+  /* colour lives in light: one glow per section (--c), one per action (--a) */
+  --px-uvglow:#9b7bff;   /* UV violet: brand accent */
+  --px-ice:#7fe3ff;      /* ice cyan: info, links */
+  --px-cobalt:#5b8cff;   /* cobalt: go, buy */
+  --px-plat:#e6e9ed;     /* platinum light: neutral actions */
+  --px-gold:#f0e6c7;     /* pale gold-chrome (approved): premium */
+  /* brand-lock: no green, pink, peach, orange or yellow; colour stays in glows, edges and LEDs, never big fills */
+  --c:var(--px-uvglow);
+  /* metal */
+  --px-chrome:linear-gradient(100deg,#c9d0d8 0%,#f5f8fb 18%,#fff 30%,#9aa4af 46%,#f5f8fb 60%,#3b424b 78%,#f5f8fb 100%);
+  --px-rim:linear-gradient(120deg,#7f8892,#f6f9fb 22%,#5b636d 46%,#e9eef3 70%,#8a939d);
+  /* type */
+  --px-display:"PEPTICITY BLACK","Michroma","Arial Black",system-ui,sans-serif;
+  --px-head:"Michroma","Eurostile",system-ui,sans-serif;
+  --px-body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --px-mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  /* shape + motion */
+  --o:18px;                                   /* octagon corner cut for panes */
+  --px-ease:cubic-bezier(.2,.8,.2,1); --px-spring:cubic-bezier(.34,1.56,.64,1);
+}
+@font-face{font-family:"PEPTICITY BLACK";src:url("../../brand/font/PepticityBlack.woff2") format("woff2");font-display:swap}
+
+/* ===== the octagon family ===== */
+.oct{clip-path:polygon(var(--o) 0,calc(100% - var(--o)) 0,100% var(--o),100% calc(100% - var(--o)),calc(100% - var(--o)) 100%,var(--o) 100%,0 calc(100% - var(--o)),0 var(--o))}
+.oct-long{clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 32%,100% 68%,calc(100% - 12px) 100%,12px 100%,0 68%,0 32%)}
+.oct-gem{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+
+/* ===== GLS liquid glass pane (see-through, chrome rim, light pooled in the section colour) ===== */
+.lg{position:relative;isolation:isolate;
+  background:
+    radial-gradient(120% 70% at 50% -10%,rgba(255,255,255,.11),transparent 55%),
+    radial-gradient(90% 60% at 100% 110%,color-mix(in oklab,var(--c) 16%,transparent),transparent 60%),
+    linear-gradient(150deg,rgba(255,255,255,.08),rgba(255,255,255,.015) 45%,rgba(255,255,255,.05)),
+    rgba(10,10,14,.22);
+  -webkit-backdrop-filter:blur(16px) saturate(185%) brightness(1.05);backdrop-filter:blur(16px) saturate(185%) brightness(1.05)}
+.lg::before{content:"";position:absolute;inset:0;clip-path:inherit;padding:1.2px;z-index:-1;pointer-events:none;background:var(--px-rim);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.75}
+
+/* ===== BTN-176 Liquid Octagon + HOV-13 chrome sheen =====
+   elongated octagon, liquid-glass body, chrome rim, the action's own colour glows inside.
+   Hover: rises toward you, lights up in its colour, a chrome sheen crosses it. */
+.ob{--a:var(--c);--h:42px;position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:var(--h);padding:0 24px;
+  font:400 10.5px/1 var(--px-head);letter-spacing:.2em;text-transform:uppercase;color:#f6f9fb;text-decoration:none;text-shadow:0 1px 0 rgba(0,0,0,.7);white-space:nowrap;cursor:pointer;border:0;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 32%,100% 68%,calc(100% - 12px) 100%,12px 100%,0 68%,0 32%);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.05) 46%,rgba(255,255,255,0) 54%,rgba(255,255,255,.10)),
+    radial-gradient(110% 90% at 50% 125%,color-mix(in oklab,var(--a) 66%,transparent),transparent 64%),
+    rgba(10,12,16,.30);
+  -webkit-backdrop-filter:blur(8px) saturate(190%);backdrop-filter:blur(8px) saturate(190%);
+  transition:transform .45s var(--px-spring),filter .35s var(--px-ease)}
+.ob::before{content:"";position:absolute;inset:0;clip-path:inherit;padding:1.4px;z-index:-1;
+  background:linear-gradient(100deg,#8d959f,#fbfdff 26%,color-mix(in oklab,var(--a) 70%,#fff) 50%,#59616b 66%,#eef2f6 86%,#7a828c);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.ob::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 46%,transparent 58%);transform:translateX(-120%);transition:transform 1.3s ease-in-out}
+.ob .led{width:7px;height:7px;flex:none;background:var(--a);box-shadow:0 0 8px var(--a),0 0 2px #fff inset;opacity:.9;
+  clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.ob:hover,.ob:focus-visible{transform:translateY(-4px) scale(1.07);outline:none;
+  filter:drop-shadow(0 14px 16px rgba(0,0,0,.65)) drop-shadow(0 0 14px color-mix(in oklab,var(--a) 75%,transparent))}
+.ob:hover::after,.ob:focus-visible::after{transform:translateX(120%)}
+.ob:active{transform:translateY(-1px) scale(1.02)}
+.ob[aria-pressed="true"]{filter:drop-shadow(0 0 12px color-mix(in oklab,var(--a) 80%,transparent))}
+.ob.sm{--h:32px;padding:0 15px;font-size:9px;letter-spacing:.15em;gap:7px}
+.ob.big{--h:56px;padding:0 36px;font-size:12px}
+.a-uv{--a:var(--px-uvglow)}.a-ice{--a:var(--px-ice)}.a-cobalt{--a:var(--px-cobalt)}.a-plat{--a:var(--px-plat)}.a-gold{--a:var(--px-gold)}
+
+/* ===== chrome text ===== */
+.chrome{background:var(--px-chrome);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:px-sheen 9s linear infinite}
+@keyframes px-sheen{from{background-position:0 0}to{background-position:-220% 0}}
+
+/* ===== CRD-132 Octagon Specimen + HOV-41 chrome bezel tilt + HOV-103 edge light =====
+   liquid-glass octagon card; the chrome bezel tilts toward the pointer with a glare; an edge light
+   in the section colour follows the pointer around the rim. */
+.tile{--o:22px;--mx:50%;--my:0%;--rx:0deg;--ry:0deg;--gx:50%;--gy:20%;position:relative;min-width:0;display:flex;flex-direction:column;transition:transform .55s var(--px-spring),filter .5s var(--px-ease)}
+.tile::after{content:"";position:absolute;inset:0;clip-path:inherit;padding:1.6px;z-index:3;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:radial-gradient(260px circle at var(--mx) var(--my),var(--c),color-mix(in oklab,var(--c) 30%,transparent) 30%,transparent 62%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.tiles:hover .tile::after{opacity:.45}.tile:hover::after{opacity:1}
+.tile:hover{transform:translateY(-6px);filter:drop-shadow(0 26px 30px rgba(0,0,0,.6))}
+.bez{position:relative;margin:12px 12px 0;perspective:900px}
+.bez .frame{position:relative;padding:6px;transform:rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;transition:transform .45s var(--px-ease);
+  clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 14px);
+  background:linear-gradient(135deg,#f6f8fa,#9ea8b3 22%,#e8ecf0 40%,#5d6670 62%,#d9dee4 80%,#8a939d)}
+.plate{position:relative;aspect-ratio:16/10;overflow:hidden;background:#06080b;display:grid;place-items:center;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.bez .glare{position:absolute;inset:6px;pointer-events:none;z-index:2;mix-blend-mode:screen;opacity:0;transition:opacity .4s;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+  background:radial-gradient(circle at var(--gx) var(--gy),rgba(255,255,255,.32),transparent 46%)}
+.tile:hover .glare{opacity:1}
+.tile .meta{padding:14px 18px 6px}
+.tile h4{margin:0;font:400 12px/1.35 var(--px-head);letter-spacing:.12em;text-transform:uppercase;color:#f4f7fa}
+.tile p{margin:6px 0 0;font-size:13.5px;line-height:1.5;color:var(--px-muted)}
+.tile .acts{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 16px;margin-top:auto}
+
+/* ===== OBJ-09 Revolving Icon Ring: chrome octagon icons on a 3D ring; drag or scroll to spin, click the one facing you ===== */
+.ring{position:relative;height:300px;perspective:1100px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.ring:active{cursor:grabbing}
+.ring .track{position:absolute;left:50%;top:44%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(-14deg) rotateY(var(--spin,0deg))}
+.ring .ico{position:absolute;left:-46px;top:-46px;width:92px;height:92px;display:grid;place-items:center;border:0;padding:0;cursor:pointer;color:#fff;
+  transform:rotateY(var(--ang)) translateZ(var(--r,260px));backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+  background:linear-gradient(135deg,#f6f8fa,#9ea8b3 22%,#e8ecf0 40%,#5d6670 62%,#d9dee4 80%,#8a939d);transition:filter .4s}
+.ring .ico>span{position:absolute;inset:5px;display:grid;place-items:center;clip-path:inherit;
+  background:radial-gradient(90% 90% at 50% 110%,color-mix(in oklab,var(--ic) 55%,transparent),transparent 70%),radial-gradient(circle at 35% 25%,#2a2d33,#0a0b0e 70%)}
+.ring .ico svg{width:40px;height:40px;stroke:#eef2f6;fill:none;stroke-width:1.6;filter:drop-shadow(0 0 6px var(--ic))}
+.ring .ico.front{filter:drop-shadow(0 0 18px var(--ic)) brightness(1.12)}
+.ring .face{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;align-items:center;gap:10px}
+.ring .face .lbl{min-width:240px;text-align:center;padding:10px 18px;--o:10px}
+.ring .face .lbl b{display:block;font:400 12px/1.2 var(--px-head);letter-spacing:.16em;text-shadow:0 0 14px var(--c)}
+.ring .face .lbl span{font:500 10px/1.4 var(--px-mono);letter-spacing:.14em;color:var(--px-muted)}
+
+/* ===== TRN-04 Liquid Reveal: sections open like an octagon iris as they scroll in ===== */
+.reveal{clip-path:polygon(50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%);opacity:0;transition:clip-path 1s var(--px-ease),opacity .5s}
+.reveal.in{clip-path:polygon(0 0,100% 0,100% 0,100% 100%,100% 100%,0 100%,0 100%,0 0);opacity:1}
+
+/* ===== NAV-26 Mercury Gauge (scroll position) ===== */
+.gauge{position:fixed;right:12px;top:110px;bottom:40px;width:8px;z-index:20;border-radius:6px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.gauge i{position:absolute;left:1px;right:1px;bottom:1px;border-radius:5px;height:0;background:linear-gradient(90deg,#5c636c,#f5f8fb 45%,#8c949e)}
+.gauge i::after{content:"";position:absolute;left:-1px;right:-1px;top:-3px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--c)}
+
+/* ===== TUNE MODE: press T (or the TUNE button) and every part shows its Arsenal code; click to copy it and open the Arsenal ===== */
+.fx-tag{position:absolute;z-index:90;display:none;font:700 9px/1 var(--px-mono);letter-spacing:.12em;color:#0b0d10;background:var(--px-ice);padding:5px 9px;cursor:pointer;border:0;
+  clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 50%,calc(100% - 5px) 100%,5px 100%,0 50%);box-shadow:0 0 14px var(--px-ice)}
+body.tune .fx-tag{display:block}
+body.tune [data-fx]{outline:1px dashed color-mix(in oklab,var(--px-ice) 60%,transparent);outline-offset:3px}
+.fx-toast{position:fixed;left:50%;bottom:24px;z-index:99;transform:translate(-50%,30px);opacity:0;padding:12px 22px;--o:10px;font:500 11px/1.4 var(--px-mono);letter-spacing:.08em;color:var(--px-ink);transition:all .4s var(--px-ease);pointer-events:none}
+.fx-toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  .chrome{animation:none}.reveal{clip-path:none;opacity:1;transition:none}
+  .ob,.tile,.bez .frame{transition:none}
+}
+@media (max-width:720px){.ring{height:240px}.ring .ico{left:-36px;top:-36px;width:72px;height:72px}.ring .ico svg{width:30px;height:30px}.ring .face .lbl{min-width:0}}
+@media (max-width:520px){.ob{white-space:normal;height:auto;min-height:var(--h);padding-block:10px;line-height:1.35;text-align:center;max-width:100%}}
