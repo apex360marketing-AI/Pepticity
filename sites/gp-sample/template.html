@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PEPTICITY · GRAND OPENING (S2 HERO SAMPLE)</title>
+<meta name="theme-color" content="#050506">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap">
+<!--
+  PEPTICITY S2 HERO SAMPLE (rev 2). Built from the owner's real modules, never redrawn. Every piece reads one token set:
+  edit build.json (ARSENAL build manifest) and the whole page recolours; every effect is a catalogue code in data-fx.
+    GROUND    Obsidian Fluted-Glass Ground (Effects Vault)          DEPTH   Cinematic Scroll Glide (Effects Vault)
+    GLASS     GLS-110 Liquid Gold Pane (Effects Vault), see-through  HEADING TXT-106 Raking Light Engrave (Effects Vault)
+    3D TYPE   PEPTICITY STUDIO engine (brand/font)                   CURSOR  HOV-39 Glow Ring (design/icons/apex-chrome-icons)
+    BUTTONS   HOV-101 Rising Tide on an elongated-octagon shell      MEDIA   HOV-41 Chrome Bezel Tilt (Effects Vault)
+    RING      OBJ-09 Revolving Icon Ring (apex-bp1)                  JOIN    GLS-105 Living Condensation (library)
+  No invented stats or reviews: [placeholders] only.
+-->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+@font-face{font-family:"PEPTICITY BLACK";src:url(data:font/woff2;base64,{{FONT_B64}}) format("woff2");font-display:block}
+:root{
+  /* tokens (overwritten at load from build.json brandKit.colours) */
+  --p-ground:#050506;--p-ink:#e6e9ed;--p-muted:#9aa0a8;
+  --p-gold-1:#332814;--p-gold-2:#68513d;--p-gold-3:#a4845d;--p-gold-4:#f0e6c7;--p-gold-5:#fef9e8;
+  --p-plat-1:#2a2d31;--p-plat-2:#6b7077;--p-plat-3:#b9bec5;--p-plat-4:#e6e9ed;--p-plat-5:#ffffff;
+  --p-accent:#8b6cff;--p-accent-ink:#0b0710;
+  --display:"PEPTICITY BLACK",system-ui,sans-serif;--body:Jost,system-ui,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  /* the library modules read --apx-* */
+  --apx-bg:var(--p-ground);--apx-ink:var(--p-ink);--apx-muted:var(--p-muted);--apx-accent:var(--p-accent);--apx-accent-ink:var(--p-accent-ink);
+  --apx-line:rgba(230,233,237,.2);--apx-surface:rgba(255,255,255,.05);--apx-radius:0px;--apx-font-text:var(--body);--apx-font-display:var(--display);--apx-motion:1;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--p-ground);color:var(--p-ink);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+::selection{background:var(--p-accent);color:var(--p-accent-ink)}
+:focus-visible{outline:2px solid var(--p-gold-4);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3{margin:0;text-transform:uppercase}
+
+/* ---------- GROUND: Obsidian Fluted-Glass (ported from the vault file) + coloured light pools ---------- */
+.ground-depth{position:fixed;inset:-6% 0;z-index:0;translate:0 calc(var(--sy,0) * -.03px);pointer-events:none}
+.ground{position:absolute;inset:0;overflow:hidden;background:var(--p-ground);--mx:60%;--my:30%}
+.ground i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.6}
+.ground i:nth-child(1){width:46vw;height:46vw;left:48%;top:-10%;background:radial-gradient(circle,#c9d0d8,transparent 65%);animation:d1 26s ease-in-out infinite alternate}
+.ground i:nth-child(2){width:38vw;height:38vw;left:-8%;top:50%;background:radial-gradient(circle,#7d8792,transparent 65%);animation:d2 32s ease-in-out infinite alternate}
+.ground i:nth-child(3){width:22vw;height:22vw;left:var(--mx);top:var(--my);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(240,244,248,.8),transparent 65%);opacity:.38;transition:left 1.2s cubic-bezier(.16,1,.3,1),top 1.2s cubic-bezier(.16,1,.3,1)}
+.ground i.c1{width:42vw;height:42vw;left:-10%;top:18%;background:radial-gradient(circle,var(--p-accent),transparent 66%);opacity:.34;animation:d2 36s ease-in-out infinite alternate-reverse}
+.ground i.c2{width:34vw;height:34vw;left:58%;top:40%;background:radial-gradient(circle,var(--p-gold-3),transparent 66%);opacity:.3;animation:d1 30s ease-in-out infinite alternate-reverse}
+.ground::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,rgba(0,0,0,.26) 2px 14px,rgba(255,255,255,.02) 15px 28px);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+@keyframes d1{to{transform:translate(-18vw,22vh)}}@keyframes d2{to{transform:translate(24vw,-18vh)}}
+@media (prefers-reduced-motion:reduce){.ground i{animation:none}}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;z-index:30;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px max(20px,env(safe-area-inset-left)) 18px max(20px,env(safe-area-inset-right))}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo svg{width:42px;height:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7)) drop-shadow(0 0 12px color-mix(in srgb,var(--p-accent) 40%,transparent))}
+.logo b{font:400 22px/1 var(--display);letter-spacing:.14em;background:linear-gradient(180deg,var(--p-gold-5) 0%,var(--p-plat-4) 34%,var(--p-gold-3) 52%,var(--p-plat-3) 70%,var(--p-plat-2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 5px rgba(0,0,0,.8))}
+.nav{display:flex;align-items:center;gap:26px;font:500 12px/1 var(--body);letter-spacing:.22em;text-transform:uppercase}
+.nav a{text-decoration:none;color:var(--p-plat-3);padding:12px 2px;min-height:44px;display:inline-flex;align-items:center;transition:color .3s,text-shadow .3s}
+.nav a:hover{color:var(--p-gold-5);text-shadow:0 0 16px var(--p-accent)}
+@media (max-width:760px){.nav a:not(.keep){display:none}}
+
+/* ---------- shapes: elongated octagons for buttons, chamfered octagons for cards. No pills, no plain boxes ---------- */
+.oct{--cx:26px;--cy:14px;clip-path:polygon(var(--cx) 0,calc(100% - var(--cx)) 0,100% var(--cy),100% calc(100% - var(--cy)),calc(100% - var(--cx)) 100%,var(--cx) 100%,0 calc(100% - var(--cy)),0 var(--cy))}
+.card-oct{--cx:30px;--cy:30px;clip-path:polygon(var(--cx) 0,calc(100% - var(--cx)) 0,100% var(--cy),100% calc(100% - var(--cy)),calc(100% - var(--cx)) 100%,var(--cx) 100%,0 calc(100% - var(--cy)),0 var(--cy))}
+svg.rim{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;overflow:visible}
+
+/* ---------- hero layout ---------- */
+.hero{position:relative;z-index:3;min-height:100vh;min-height:100svh;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:auto auto 1fr;column-gap:24px;max-width:1360px;margin:0 auto;padding:104px 32px 56px}
+.word{grid-column:1/-1;position:relative;height:clamp(110px,15.5vw,222px);translate:0 calc(var(--sy,0) * .05px)}
+.tag{grid-column:1/6;height:clamp(34px,3.6vw,50px);margin:10px 0 18px;position:relative;width:min(100%,390px);translate:0 calc(var(--sy,0) * .03px)}
+.offer{grid-column:1/7;grid-row:3;align-self:start;position:relative}
+.stage{grid-column:8/12;grid-row:2/4;position:relative;min-height:400px;display:grid;place-items:center;translate:0 calc(var(--sy,0) * -.1px)}
+.vial-wrap{position:relative;width:min(100%,360px);translate:calc(var(--px,0) * 14px) calc(var(--py,0) * 8px);animation:vrise 1.5s .35s var(--ease) both}
+.vial{position:relative;display:block;width:100%;aspect-ratio:880/1168;animation:vfloat 7s 2s ease-in-out infinite alternate}
+.vial img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 34px 30px rgba(0,0,0,.6)) drop-shadow(0 0 36px color-mix(in srgb,var(--p-accent) 30%,transparent))}
+@keyframes vrise{from{opacity:0;transform:translateY(70px) scale(.94);filter:blur(6px)}}
+@keyframes vfloat{to{transform:translateY(-12px)}}
+@media (prefers-reduced-motion:reduce){.vial-wrap,.vial{animation:none}}
+
+/* HOV-41 chrome bezel host (the module adds its own bezel + glare) */
+.bez{position:relative;padding:16px}
+
+/* ---------- GLASS: GLS-110 made see-through and octagonal ---------- */
+.offer.apx-gls110{border-radius:0;background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.012)),rgba(255,255,255,.04);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%)}
+.offer .apx-gls110__fx,.offer .apx-gls110__fx>*{border-radius:0}
+.offer .apx-gls110__mesh{opacity:.08}
+.offer .apx-gls110__rim{opacity:0}
+.offer::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(320px 240px at var(--lx,28%) var(--ly,30%),color-mix(in srgb,var(--p-accent) 36%,transparent),color-mix(in srgb,var(--p-gold-4) 10%,transparent) 55%,transparent 75%);mix-blend-mode:screen;opacity:.9;transition:opacity .4s}
+.offer{padding:clamp(28px,3.2vw,48px) clamp(26px,3.4vw,52px);display:flex;flex-direction:column;gap:14px}
+.eyebrow{font:500 12px/1 var(--body);letter-spacing:.32em;text-transform:uppercase;color:var(--p-gold-4)}
+.offer h2{font:400 clamp(34px,4.6vw,66px)/1.0 var(--display);letter-spacing:.05em}
+.offer p{margin:0;max-width:38ch;color:#d3d7dd}
+.offer p small{display:block;margin-top:10px;font-size:13px;color:var(--p-muted);letter-spacing:.02em}
+.acts{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px}
+
+/* ---------- BUTTONS: HOV-101 Rising Tide inside an elongated octagon, gold + platinum rim ---------- */
+.btn.apx-h101{min-height:54px;padding:0 38px;border:0;border-radius:0;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.03)),rgba(255,255,255,.03);font:600 12px/1 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--p-plat-5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.btn.apx-h101.gold{color:var(--p-gold-5)}
+.btn.apx-h101::before{inset:-20% -10%}
+.btn.apx-h101:hover,.btn.apx-h101:focus-visible{translate:0 -4px;scale:1.05;filter:drop-shadow(0 12px 16px rgba(0,0,0,.6)) drop-shadow(0 0 16px color-mix(in srgb,var(--p-accent) 70%,transparent))}
+.btn.apx-h101{transition:translate .45s var(--spring),scale .45s var(--spring),filter .3s}
+@media (prefers-reduced-motion:reduce){.btn.apx-h101:hover{translate:none;scale:1}}
+
+/* ---------- cursor: HOV-39 Glow Ring (ported CSS): platinum ring, gold + accent glow over buttons ---------- */
+.cur{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;z-index:90;
+  border:1px solid rgba(238,241,245,.75);box-shadow:0 0 14px rgba(238,241,245,.45),inset 0 0 10px rgba(204,210,218,.3);
+  transition:width .35s var(--spring),height .35s var(--spring),margin .35s var(--spring),border-color .3s,box-shadow .3s,opacity .3s;opacity:0}
+.cur.on{opacity:1}
+.cur.big{width:64px;height:64px;margin:-32px 0 0 -32px;border-color:var(--p-gold-4);box-shadow:0 0 24px color-mix(in srgb,var(--p-accent) 70%,transparent),0 0 10px rgba(240,230,199,.6),inset 0 0 14px color-mix(in srgb,var(--p-accent) 45%,transparent)}
+@media (hover:none){.cur{display:none}}
+
+/* ---------- section 2: OBJ-09 ring ---------- */
+.line{position:relative;z-index:3;max-width:1360px;margin:0 auto;padding:110px 32px 40px;text-align:center}
+.line h2{font:400 clamp(30px,4.4vw,60px)/1.05 var(--display);letter-spacing:.06em}
+.line .sub{margin:14px auto 0;max-width:46ch;color:#c9ced5}
+.ringhost{position:relative;height:min(64vh,540px);margin-top:16px;cursor:grab}
+.ringhost::before{content:"";position:absolute;left:50%;top:52%;width:70%;aspect-ratio:2/1;translate:-50% -50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--p-accent) 38%,transparent),color-mix(in srgb,var(--p-gold-3) 14%,transparent) 55%,transparent 75%);filter:blur(24px);z-index:-1}
+.ringlabel{font:500 12px/1 var(--body);letter-spacing:.32em;text-transform:uppercase;color:var(--p-gold-4);min-height:1em;margin-top:6px}
+
+/* ---------- section 3: GLS-105 join band ---------- */
+.join{position:relative;z-index:3;max-width:1360px;margin:40px auto 0;padding:0 32px}
+.join .apx-g105{--apx-bg:rgba(5,5,6,.9);--apx-accent:var(--p-accent);min-height:min(78vh,720px);clip-path:polygon(40px 0,calc(100% - 40px) 0,100% 40px,100% calc(100% - 40px),calc(100% - 40px) 100%,40px 100%,0 calc(100% - 40px),0 40px)}
+.apx-g105__title{font-family:var(--display)!important;letter-spacing:.05em}
+.apx-g105__cta.btn{display:inline-grid}
+.foot{position:relative;z-index:3;text-align:center;padding:60px 24px 90px;font:500 12px/1.8 var(--body);letter-spacing:.3em;text-transform:uppercase;color:var(--p-muted)}
+.sprog{position:fixed;left:0;right:0;top:0;height:2px;z-index:60;pointer-events:none;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,var(--p-gold-3),var(--p-accent),var(--p-gold-5),var(--p-plat-4))}
+
+/* ---------- review caption (changed text in purple #B000FF) ---------- */
+.review{position:fixed;z-index:80;right:14px;bottom:14px;max-width:300px;padding:12px 14px;font:600 11px/1.55 var(--body);letter-spacing:.04em;color:#B000FF;background:rgba(5,5,6,.82);border:1px solid rgba(176,0,255,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.review b{display:block;letter-spacing:.2em;margin-bottom:4px}
+body.clean .review{display:none}
+
+/* ---------- no-WebGL fallback ---------- */
+.no-webgl .word,.no-webgl .tag{height:auto}
+.fallback{display:none;font:400 clamp(40px,10vw,150px)/1 var(--display);letter-spacing:.06em;background:linear-gradient(180deg,var(--p-gold-5),var(--p-plat-3) 55%,var(--p-plat-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.no-webgl .fallback{display:block}
+
+@media (max-width:900px){
+  .hero{display:flex;flex-direction:column;padding:92px 18px 40px;gap:0}
+  .word{height:clamp(70px,20vw,130px);width:100%}
+  .stage{order:3;min-height:300px;margin:6px 0 10px;translate:0 calc(var(--sy,0) * -.04px)}
+  .vial-wrap{width:min(60vw,250px)}
+  .tag{order:2;width:min(86%,300px);margin:6px 0 14px}
+  .offer{order:4}
+  .line,.join{padding-left:16px;padding-right:16px}
+  .review{left:10px;right:10px;max-width:none;bottom:10px;font-size:10px}
+}
+</style>
+<style id="lib-gls110">{{GLS110_CSS}}</style>
+<style id="lib-txt106">{{TXT106_CSS}}</style>
+<style id="lib-hov101">{{HOV101_CSS}}</style>
+<style id="lib-gls105">{{GLS105_CSS}}</style>
+<link rel="stylesheet" href="fx/hov41.css">
+</head>
+<body>
+<div class="sprog" aria-hidden="true"></div>
+<div class="ground-depth" aria-hidden="true"><div class="ground" id="ground" data-fx="OBSIDIAN-FLUTED-GROUND"><i></i><i></i><i></i><i class="c1"></i><i class="c2"></i></div></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="cur" aria-hidden="true" data-fx="HOV-39"></div>
+
+<header class="hdr">
+  <a class="logo" href="#top" aria-label="PEPTICITY home">
+    <svg viewBox="-0.708 -0.58 1.416 1.16" aria-hidden="true"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef9e8"/><stop offset=".2" stop-color="#e6e9ed"/><stop offset=".42" stop-color="#a4845d"/><stop offset=".5" stop-color="#68513d"/><stop offset=".58" stop-color="#6b7077"/><stop offset=".8" stop-color="#b9bec5"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs><path fill="url(#pg)" d="{{PMARK_D}}"/></svg>
+    <b>PEPTICITY</b>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="#shop">Shop</a><a href="#line">The line</a><a href="#team">The team</a><a class="keep" href="#menu">Menu</a>
+  </nav>
+</header>
+
+<main id="top">
+<section class="hero" aria-labelledby="h">
+  <h1 id="h" class="sr">PEPTICITY</h1>
+  <div class="word" data-slot="word" data-fx="PEPTICITY-STUDIO-3D" aria-hidden="true"><div class="fallback">PEPTICITY</div></div>
+  <div class="tag" data-slot="tag" aria-hidden="true"></div>
+
+  <div class="offer card-oct" data-apx="GLS-110" data-fx="GLS-110 TXT-106">
+    <span class="eyebrow">Grand opening offer</span>
+    <h2 data-apx="TXT-106">15% off your first order</h2>
+    <p>Join the PEPTICITY TEAM for a monthly health letter and first word on restocks.
+      <small>[Offer terms and dates to be confirmed.] Age and province checks apply at checkout.</small></p>
+    <div class="acts">
+      <a class="btn oct apx-h101 gold" data-fx="HOV-101" href="#team">Join the team</a>
+      <a class="btn oct apx-h101" data-fx="HOV-101" href="#shop">See the products</a>
+    </div>
+  </div>
+
+  <div class="stage"><div class="vial-wrap"><div class="bez" data-apx="HOV-41" data-fx="HOV-41"><div class="vial"><img src="assets/vial.webp" width="880" height="1168" alt="PEPTICITY vial, smoked label with the P mark" fetchpriority="high"></div></div></div></div>
+</section>
+
+<section class="line" id="line" aria-labelledby="lh">
+  <h2 id="lh" data-apx="TXT-106" data-tone="platinum">The PEPTICITY line</h2>
+  <p class="sub">Drag the ring to turn it. [Product groups are placeholders until the catalogue is confirmed.]</p>
+  <div class="ringhost" id="ringhost" data-fx="OBJ-09" role="group" aria-label="Revolving ring of product groups"></div>
+  <div class="ringlabel" id="ringlabel" aria-live="polite"></div>
+</section>
+
+<section class="join" id="team" aria-label="Join the PEPTICITY team">
+  <section class="apx-g105" data-apx="GLS-105" data-fx="GLS-105" data-word="PEPTICITY" aria-label="Join the PEPTICITY team">
+    <div class="apx-g105__behind">
+      <span class="apx-g105__kicker">The PEPTICITY team</span>
+      <h2 class="apx-g105__title">JOIN THE TEAM</h2>
+      <p class="apx-g105__text">15% off your first order, a monthly health letter and first word on restocks. [Offer terms to be confirmed.]</p>
+    </div>
+    <div class="apx-g105__front">
+      <a class="apx-g105__cta btn oct apx-h101 gold" data-fx="HOV-101" href="#top">Join the team</a>
+      <span class="apx-g105__hint" aria-hidden="true"><span data-mouse>Wipe the glass</span><span data-touch>Wipe with your finger</span></span>
+    </div>
+  </section>
+</section>
+
+<div class="foot" id="shop">[Next sections follow once this sample is approved]</div>
+</main>
+
+<aside class="review" aria-label="Review notes"><b>REV 2: WHAT IS NEW</b>
+  Buttons are elongated octagons with a rising colour tide.<br>
+  Glass is see-through with moving light; accent colour added.<br>
+  New: chrome bezel tilt on the vial, revolving icon ring, living condensation join band.<br>
+  Every colour is one token in build.json (ARSENAL).</aside>
+
+<script id="glyph-data" type="application/json">{{GLYPHS_JSON}}</script>
+<script>{{LENIS_JS}}</script>
+<script>{{GLS110_JS}}</script>
+<script>{{TXT106_JS}}</script>
+<script>{{HOV101_JS}}</script>
+<script>{{GLS105_JS}}</script>
+<script>
+(function(){
+  var root=document.documentElement;
+  /* ARSENAL link: apply build.json brandKit.colours to the tokens before anything paints */
+  fetch('build.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(b){
+    var c=(b.brandKit||{}).colours||{};Object.keys(c).forEach(function(k){root.style.setProperty(k,c[k])});
+    window.__BUILD=b;document.dispatchEvent(new CustomEvent('apx:build',{detail:b}));
+  }).catch(function(){});
+  /* ground pointer light, depth vars, spotlight on the offer card */
+  addEventListener('pointermove',function(e){var g=document.getElementById('ground');g.style.setProperty('--mx',(e.clientX/innerWidth*100)+'%');g.style.setProperty('--my',(e.clientY/innerHeight*100)+'%');root.style.setProperty('--px',(e.clientX/innerWidth-.5).toFixed(3));root.style.setProperty('--py',(e.clientY/innerHeight-.5).toFixed(3));
+    var o=document.querySelector('.offer');if(o){var b=o.getBoundingClientRect();o.style.setProperty('--lx',((e.clientX-b.left)/b.width*100).toFixed(1)+'%');o.style.setProperty('--ly',((e.clientY-b.top)/b.height*100).toFixed(1)+'%')}},{passive:true});
+  if(/[?&]clean/.test(location.search))document.body.classList.add('clean');
+  /* gold + platinum + accent rim that follows the cut corners (octagons) */
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rim(el,w){
+    var cs=getComputedStyle(el),cx=parseFloat(cs.getPropertyValue('--cx'))||18,cy=parseFloat(cs.getPropertyValue('--cy'))||18;
+    var id='rg'+(n++),s=document.createElementNS(NS,'svg');s.setAttribute('class','rim');s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef9e8"/><stop offset=".2" stop-color="#a4845d"/><stop offset=".42" stop-color="#e6e9ed"/><stop offset=".6" stop-color="#8b6cff"/><stop offset=".8" stop-color="#f0e6c7"/><stop offset="1" stop-color="#68513d"/></linearGradient></defs><polygon fill="none" stroke="url(#'+id+')" stroke-width="'+w+'"/>';
+    el.appendChild(s);var p=s.querySelector('polygon');
+    function draw(){var W=el.offsetWidth,H=el.offsetHeight,i=w/2;p.setAttribute('points',[[cx,i],[W-cx,i],[W-i,cy],[W-i,H-cy],[W-cx,H-i],[cx,H-i],[i,H-cy],[i,cy]].map(function(q){return q.join(',')}).join(' '))}
+    new ResizeObserver(draw).observe(el);draw();
+  }
+  addEventListener('load',function(){setTimeout(function(){
+    document.querySelectorAll('.card-oct').forEach(function(e){rim(e,2.5)});
+    document.querySelectorAll('.btn.oct').forEach(function(e){rim(e,1.6)});
+  },300)});
+  /* HOV-39 glow ring driver (fine pointers only) */
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+    var c=document.querySelector('.cur'),x=innerWidth/2,y=innerHeight/2,tx=x,ty=y;
+    addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;c.classList.add('on');c.classList.toggle('big',!!e.target.closest('a,button,[data-hot],.ringhost'))},{passive:true});
+    document.addEventListener('pointerleave',function(){c.classList.remove('on')});
+    (function loop(){x+=(tx-x)*.22;y+=(ty-y)*.22;c.style.transform='translate3d('+x+'px,'+y+'px,0)';requestAnimationFrame(loop)})();
+  }
+  /* Cinematic Scroll Glide (Lenis + --sy depth vars) */
+  var prm=matchMedia('(prefers-reduced-motion:reduce)').matches,sprog=document.querySelector('.sprog');
+  function fx(y){var max=Math.max(1,root.scrollHeight-innerHeight);sprog.style.setProperty('--p',Math.min(1,y/max).toFixed(4));if(y<1600)root.style.setProperty('--sy',y.toFixed(1))}
+  addEventListener('scroll',function(){fx(scrollY)},{passive:true});fx(scrollY);
+  if(!prm&&window.Lenis){var l=new Lenis({lerp:.085,wheelMultiplier:.95,smoothWheel:true,anchors:{offset:-70}});l.on('scroll',function(e){fx(e.scroll)});(function loop(t){l.raf(t);requestAnimationFrame(loop)})(0)}
+  window.type3dFallback=function(){root.classList.add('no-webgl')};
+})();
+</script>
+<script type="module">
+{{MODULE_JS}}
+</script>
+<script type="module">
+import { mountObj09 } from './fx/obj09.js';
+import { mountHov41 } from './fx/hov41.js';
+const colors = () => {
+  const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim();
+  return { gold: [1,2,3,4,5].map(i => g('--p-gold-' + i)), platinum: [1,2,3,4,5].map(i => g('--p-plat-' + i)), accent: g('--p-accent') };
+};
+const go = async () => {
+  try { mountHov41(document.querySelector('[data-apx="HOV-41"]'), { colors: colors() }); } catch (e) { console.warn('HOV-41', e); }
+  try {
+    const items = await (await fetch('fx/obj09.items.json')).json();
+    const lab = document.getElementById('ringlabel');
+    mountObj09(document.getElementById('ringhost'), { items, colors: colors(), onFront: i => { lab.textContent = (items[i] || {}).label || ''; } });
+  } catch (e) { console.warn('OBJ-09', e); }
+};
+document.readyState === 'complete' ? go() : addEventListener('load', go);
+</script>
+</body>
+</html>
