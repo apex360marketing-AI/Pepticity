@@ -1,0 +1,41 @@
+/* GLS-105 · Living Condensation — the section sits behind fogged, beaded glass; a finger or pointer wipes it clear and the fog breathes back. */
+.apx-g105{
+  --_bg:var(--apx-bg,#0b0b0d);--_ink:var(--apx-ink,#ecebe8);--_mut:var(--apx-muted,#9d9ca3);
+  --_acc:var(--apx-accent,#d4ff3a);--_line:var(--apx-line,rgba(255,255,255,.14));--_surf:var(--apx-surface,rgba(255,255,255,.06));
+  position:relative;isolation:isolate;overflow:hidden;display:grid;align-content:center;
+  min-height:min(100svh,980px);padding:clamp(72px,10vw,140px) clamp(20px,7vw,112px) clamp(56px,8vw,110px);
+  background:var(--_bg);color:var(--_ink);font-family:var(--apx-font-text,system-ui,sans-serif);
+  -webkit-user-select:none;user-select:none}
+.apx-g105__cv{position:absolute;inset:0;width:100%;height:100%;z-index:1;display:block;pointer-events:none}
+/* what sits behind the glass: real, readable markup (the glass paints its picture of it) */
+.apx-g105__behind{position:relative;z-index:0;display:grid;gap:clamp(16px,2vw,24px);max-width:1100px}
+.apx-g105__kicker{font:600 12px/1.2 ui-monospace,"JetBrains Mono",Menlo,monospace;letter-spacing:.24em;text-transform:uppercase;color:var(--_mut)}
+.apx-g105__title{margin:0;font-family:var(--apx-font-display,var(--apx-font-text,system-ui));font-weight:700;
+  font-size:clamp(38px,7.4vw,112px);line-height:.98;letter-spacing:.03em;text-transform:uppercase;max-width:13ch}
+.apx-g105__text{margin:0;max-width:48ch;font-size:clamp(16px,1.4vw,19px);line-height:1.6;color:var(--_mut)}
+/* what sits on the near side of the glass (stays crisp and clickable) */
+.apx-g105__front{position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;margin-top:clamp(28px,4vw,44px)}
+.apx-g105__cta{appearance:none;-webkit-appearance:none;border:0;margin:0;cursor:pointer;color:var(--_ink);text-decoration:none;
+  display:inline-flex;align-items:center;gap:12px;min-height:54px;padding:0 30px;
+  font:700 13px/1 var(--apx-font-text,system-ui,sans-serif);letter-spacing:.2em;text-transform:uppercase;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--_ink) 16%,transparent),color-mix(in srgb,var(--_ink) 3%,transparent) 55%,color-mix(in srgb,var(--_ink) 8%,transparent)),color-mix(in srgb,var(--_bg) 40%,transparent);
+  -webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--_ink) 26%,transparent),inset 0 1px 0 color-mix(in srgb,var(--_ink) 45%,transparent);
+  transition:transform calc(.35s * var(--apx-motion,1)) cubic-bezier(.16,1,.3,1),box-shadow calc(.25s * var(--apx-motion,1)) ease;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.apx-g105__cta svg{width:18px;height:18px;flex:none;transition:transform calc(.35s * var(--apx-motion,1)) cubic-bezier(.16,1,.3,1)}
+.apx-g105__cta:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--_ink) 40%,transparent),inset 0 1px 0 color-mix(in srgb,var(--_ink) 60%,transparent),inset 0 -1px 0 var(--_acc)}
+.apx-g105__cta:hover svg{transform:translateX(4px)}
+.apx-g105__cta:active{transform:translateY(1px) scale(.98)}
+.apx-g105__cta:focus{outline:none}
+.apx-g105__cta:focus-visible{outline:2px solid var(--_acc);outline-offset:5px}
+.apx-g105__hint{font:600 11px/1.3 ui-monospace,"JetBrains Mono",Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--_mut);display:inline-flex;align-items:center;gap:10px}
+.apx-g105__hint::before{content:"";width:22px;height:1px;background:currentColor;opacity:.6}
+.apx-g105__hint [data-touch]{display:none}
+@media (hover:none){.apx-g105__hint [data-touch]{display:inline}.apx-g105__hint [data-mouse]{display:none}}
+/* live glass: the markup stays for reading aloud and for layout, the glass shows its own picture of it */
+.apx-g105.is-gl .apx-g105__behind{opacity:0}
+.apx-g105.is-static .apx-g105__hint{display:none}
+@media (prefers-reduced-motion:reduce){.apx-g105__cta,.apx-g105__cta svg{transition:none}}
+@media (forced-colors:active){.apx-g105__cv{display:none}.apx-g105.is-gl .apx-g105__behind{opacity:1}}
