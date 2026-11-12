@@ -1738,7 +1738,9 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 /* THE LOGO LAYER: the word standing along the floor's centre line and the P, on ONE camera with the picture
    (perspective and its origin are written by the script from the picture's own vanishing point) */
-.pep-lineup-floor { position: absolute; inset: 0; perspective: 1300px; }
+.pep-lineup-floor { position: absolute; inset: 0; perspective: 1300px; transition: opacity .35s ease; }
+/* while a description is open, the word and the P behind the glass step back so the words on the glass read */
+[data-module="lineup"][data-reading] .pep-lineup-floor { opacity: .3; }
 .pep-lineup-letters { position: absolute; left: 0; top: 0; width: 0; height: 0; }
 .pep-lineup-letter {
   position: absolute;
@@ -1795,42 +1797,37 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 .pep-lineup-sub { margin: clamp(6px, 1vh, 12px) 0 0; font-size: clamp(18px, 1.4vw, 21px); line-height: 1.45; color: var(--pep-plat-3); }
 .pep-lineup-fail { position: relative; z-index: 3; margin: 0; padding: 0 var(--pep-lineup-pad); font-size: clamp(18px, 1.4vw, 21px); color: var(--pep-plat-4); }
+/* the way past is for keyboard and screen-reader users only: it cannot be seen until it takes keyboard focus */
 .pep-lineup-skip {
-  position: relative;
+  position: absolute;
+  left: var(--pep-lineup-pad);
+  top: 10px;
+  z-index: 8;
   display: inline-flex;
   align-items: center;
-  gap: 14px;
   min-height: 48px;
-  padding: 0 20px 0 22px;
-  overflow: hidden;
+  padding: 0 22px;
   font-family: var(--pep-font-display);
   font-size: clamp(14px, 1.05vw, 17px);
   letter-spacing: .22em;
   white-space: nowrap;
   text-decoration: none;
-  color: var(--pep-plat-4);
-  border: 1px solid var(--pep-plat-2);
+  color: var(--pep-plat-5);
+  border: 1px solid var(--pep-plat-4);
   border-radius: var(--pep-radius);
-  background: rgba(255, 255, 255, .04);
-  -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
+  background: var(--pep-black-1);
+  opacity: 0;
+  pointer-events: none;
+  clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0, 0 0);
+}
+.pep-lineup-skip:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 1px solid var(--pep-plat-5);
+  outline-offset: -5px;
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  transition: border-color .4s ease, color .4s ease;
 }
-.pep-lineup-skip-mark {
-  flex: 0 0 auto;
-  width: 9px;
-  height: 9px;
-  margin-top: -5px;
-  border-right: 2px solid var(--pep-plat-3);
-  border-bottom: 2px solid var(--pep-plat-3);
-  transform: rotate(45deg);
-}
-.pep-lineup-skip:hover,
-.pep-lineup-skip:focus-visible { border-color: var(--pep-plat-4); color: var(--pep-plat-5); }
-.pep-lineup-skip:focus-visible { outline: 1px solid var(--pep-plat-5); outline-offset: -5px; }
 /* house hover: ONE slow light sweep, left to right */
-.pep-lineup-skip::after,
 .pep-lineup-step::after {
   content: "";
   position: absolute;
@@ -1843,8 +1840,6 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   transform: translateX(0);
   transition: transform 0s;
 }
-.pep-lineup-skip:hover::after,
-.pep-lineup-skip:focus-visible::after,
 .pep-lineup-step:hover::after,
 .pep-lineup-step:focus-visible::after { transform: translateX(340%); transition: transform 1.4s ease-in-out; }
 
@@ -1986,7 +1981,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(230, 233, 237, .75) 30%, rgba(255, 255, 255, .95) 50%, rgba(230, 233, 237, .75) 70%, rgba(255, 255, 255, 0));
 }
 [data-module="lineup"] .vc-name {
-  margin: 14px 0 10px;
+  margin: 30px 0 10px;                                      /* owner, round 2: the names a little lower */
   min-height: 2.16em;
   display: flex;
   align-items: center;
@@ -2021,7 +2016,6 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 @supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
   [data-module="lineup"] .vc-pane { background: rgba(26, 26, 29, .9); }
-  .pep-lineup-skip,
   .pep-lineup-step { background: rgba(20, 20, 22, .82); }
 }
 /* the case is BIG on a laptop, so its type grows with it (same case, same proportions) */
@@ -2035,6 +2029,117 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   [data-module="lineup"] .vc-sizes span { font-size: clamp(15px, 1.12vw, 20px); }
   [data-module="lineup"] .vc-sizes b { font-size: clamp(20px, 1.5vw, 27px); }
 }
+/* ---------- ROUND 2: click the case and it turns over into its description, in place, in the same glass ---------- */
+.pep-lineup-front { position: relative; z-index: 2; display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; min-height: 0; }
+.pep-lineup-more {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.pep-lineup-more:focus-visible { outline: 2px solid var(--pep-plat-5); outline-offset: -8px; }
+.pep-lineup-more-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[data-module="lineup"] .vc[data-open] .pep-lineup-front,
+[data-module="lineup"] .vc[data-open] .pep-lineup-more { visibility: hidden; }
+.pep-lineup-detail {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 14px);
+  padding: 16px clamp(14px, 1.7vw, 30px) 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pep-plat-2) transparent;
+}
+[data-module="lineup"] .pep-lineup-detail .vc-top { margin-right: 54px; }
+.pep-lineup-x {
+  position: absolute;
+  top: calc(var(--b) * .5 + 6px);
+  right: calc(var(--b) * .5 + 6px);
+  z-index: 4;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  cursor: pointer;
+  color: var(--pep-plat-4);
+  border: 1px solid var(--pep-plat-2);
+  border-radius: var(--pep-radius);
+  background: rgba(0, 0, 0, .3);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .16), inset -3px -4px 8px rgba(0, 0, 0, .5);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+  transition: color .3s ease, border-color .3s ease;
+}
+.pep-lineup-x:hover,
+.pep-lineup-x:focus-visible { color: var(--pep-plat-5); border-color: var(--pep-plat-4); }
+.pep-lineup-x:focus-visible { outline: 1px solid var(--pep-plat-5); outline-offset: -5px; }
+.pep-lineup-x-mark { position: absolute; left: 50%; top: 50%; width: 20px; height: 2px; margin: -1px 0 0 -10px; background: currentColor; transform: rotate(45deg); }
+.pep-lineup-x-mark::after { content: ""; position: absolute; inset: 0; background: currentColor; transform: rotate(90deg); }
+.pep-lineup-d-name {
+  margin: 4px 0 2px;
+  padding-right: calc(var(--b) * .5 + 40px);
+  font: 400 clamp(21px, 3vw, 30px)/1.08 var(--pep-font-display);
+  letter-spacing: .06em;
+  color: var(--pep-plat-5);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.pep-lineup-d-line { margin: 0; font-size: clamp(18px, 1.35vw, 21px); line-height: 1.45; color: var(--pep-plat-4); }
+.pep-lineup-d-rows { display: grid; gap: 6px; margin: 0; }
+.pep-lineup-d-row { display: grid; gap: 2px; padding: 8px 12px; background: rgba(0, 0, 0, .22); box-shadow: inset 2px 2px 7px rgba(0, 0, 0, .6), inset -1px -1px 0 rgba(255, 255, 255, .08); }
+.pep-lineup-d-row dt { font: 400 14px/1.2 var(--pep-font-display); letter-spacing: .2em; color: var(--pep-plat-3); }
+.pep-lineup-d-row dd { margin: 0; font-size: clamp(18px, 1.3vw, 21px); line-height: 1.35; color: var(--pep-plat-5); overflow-wrap: anywhere; }
+/* preview only: a value still to be matched to the lot documents carries a small quiet tag on its label line */
+[data-module="lineup"] .pep-lineup-d-row[data-pv] dt { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.pep-lineup-d-tbc { flex: 0 0 auto; font-size: 12px; letter-spacing: .14em; color: var(--pep-plat-2); white-space: nowrap; }
+.pep-lineup-d-coming {
+  margin: 0;
+  padding: 16px 12px;
+  text-align: center;
+  font: 400 clamp(16px, 1.2vw, 19px)/1.2 var(--pep-font-display);
+  letter-spacing: .24em;
+  color: var(--pep-plat-4);
+  background: rgba(0, 0, 0, .22);
+  box-shadow: inset 2px 2px 7px rgba(0, 0, 0, .6), inset -1px -1px 0 rgba(255, 255, 255, .08);
+}
+[data-module="lineup"] .pep-lineup-detail .vc-sizes { margin: auto 0 0; }
+.pep-lineup-d-label { margin: 0; font-size: 15px; line-height: 1.4; color: var(--pep-plat-3); }
+.pep-lineup-d-notes { margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.4; color: var(--pep-plat-3); }
+/* the turn over: the case closes to its edge and opens again on its other side (the words change at the edge) */
+[data-module="lineup"] .vc.pep-lineup-flipping .pep-lineup-turn {
+  animation-name: pep-lineup-flip;
+  animation-duration: .44s;
+  animation-timing-function: cubic-bezier(.4, .02, .3, 1);
+  animation-iteration-count: 1;
+}
+@keyframes pep-lineup-flip {
+  0% { transform: rotateY(0deg); }
+  48% { transform: rotateY(88deg); }
+  52% { transform: rotateY(-88deg); }
+  100% { transform: rotateY(0deg); }
+}
+@media (min-width: 1100px) {
+  .pep-lineup-d-name { font-size: clamp(26px, 2.35vw, 42px); }
+}
+/* a short window: the description closes up its spacing so the fullest card still fits its glass */
+@media (max-height: 820px) {
+  .pep-lineup-detail { gap: 6px; padding-bottom: 14px; }
+  .pep-lineup-d-rows { gap: 3px; }
+  .pep-lineup-d-row { gap: 0; padding: 4px 12px; }
+  .pep-lineup-d-row dd { line-height: 1.25; }
+  .pep-lineup-d-line { line-height: 1.35; }
+}
+
 /* the shade that lies on a case while it is not the one facing you (its own layer; the glass under it stays glass) */
 .pep-lineup-shade { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: var(--pep-black-0); }
 
@@ -2092,7 +2197,6 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 .pep-lineup-hair-fill { position: absolute; inset: 0; display: block; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, var(--pep-plat-2), var(--pep-plat-4) 62%, var(--pep-plat-5)); }
 @media (max-width: 899px) {
   .pep-lineup-hint { display: none; }
-  .pep-lineup-skip { padding: 0 16px 0 18px; letter-spacing: .16em; }
 }
 
 /* =====================================================================================================================
@@ -2106,7 +2210,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   [data-module="lineup"][data-held] {
     --pep-lineup-case-h: min(calc(var(--pep-lineup-vh) * 100 - 186px), 760px);
     --pep-lineup-vial: clamp(120px, calc(var(--pep-lineup-case-h) - 288px), 470px);
-    height: calc(var(--pep-lineup-vh) * (100 + var(--pep-lineup-open) * 100 + min(650, var(--pep-lineup-steps) * 26)));
+    height: calc(var(--pep-lineup-vh) * (100 + var(--pep-lineup-open) * 100 + min(780, var(--pep-lineup-steps) * 30)));
     padding: 0;
   }
   [data-module="lineup"][data-held] .pep-lineup-stage {
@@ -2125,7 +2229,6 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
     align-items: flex-start;
     pointer-events: none;
   }
-  [data-module="lineup"][data-held] .pep-lineup-skip { pointer-events: auto; }
   [data-module="lineup"][data-held] .pep-lineup-heading { display: flex; align-items: baseline; gap: clamp(14px, 2vw, 28px); }
   [data-module="lineup"][data-held] .pep-lineup-title { font-size: clamp(40px, min(4.2vw, calc(var(--pep-lineup-vh) * 6.6)), 62px); }
   [data-module="lineup"][data-held] .pep-lineup-sub { margin: 0; font-size: 18px; white-space: nowrap; }
@@ -2153,6 +2256,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   }
   [data-module="lineup"][data-held] .vc[data-on] { visibility: visible; }
   [data-module="lineup"][data-held] .vc[data-face] { cursor: auto; }
+  /* only the case facing you opens; a case beside it is clicked to bring it up */
+  [data-module="lineup"][data-held] .vc:not([data-face]) .pep-lineup-more { pointer-events: none; }
   [data-module="lineup"][data-held] .pep-lineup-way {
     position: absolute;
     left: 0;
@@ -2174,9 +2279,9 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 
 /* ---------- less motion: nothing moves by itself ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .pep-lineup-skip::after,
   .pep-lineup-step::after { display: none; }
   [data-module="lineup"] .vc.pep-lineup-sweeping .vc-sweep { animation-name: none; }
+  [data-module="lineup"] .vc.pep-lineup-flipping .pep-lineup-turn { animation-name: none; }
   .pep-lineup-rail { scroll-behavior: auto; }
 }
 </style>
@@ -4540,6 +4645,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
      The whole section is gated on the names switch: a live build with names closed cuts it out of the page. -->
 <section data-module="lineup" id="lineup" aria-label="THE LINEUP" data-gate="names" data-plate="on" data-logo="on" hidden>
   <div class="pep-lineup-stage" data-stage data-effect="x046-lineup">
+    <!-- the way past, for keyboard and screen-reader users only: it cannot be seen until it takes keyboard focus -->
+    <a class="pep-lineup-skip" href="#shelf" data-skip>SKIP TO THE SHELF</a>
 
     <!-- behind everything: the stage picture, a soft dark veil, and the logo layer (filled by the script) -->
     <div class="pep-lineup-scene" data-scene aria-hidden="true">
@@ -4560,7 +4667,6 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
         <h2 class="pep-lineup-title">THE LINEUP</h2>
         <p class="pep-lineup-sub">Every vial in its own glass case.</p>
       </div>
-      <a class="pep-lineup-skip" href="#shelf" data-skip>SKIP TO THE SHELF<i class="pep-lineup-skip-mark" aria-hidden="true"></i></a>
     </header>
 
     <p class="pep-lineup-fail" data-fail role="status" hidden>The lineup could not load. Please refresh.</p>
@@ -4573,7 +4679,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
       <button class="pep-lineup-step" type="button" data-prev aria-label="Previous product"><i class="pep-lineup-chev" aria-hidden="true"></i></button>
       <p class="pep-lineup-count"><span class="pep-lineup-count-now" data-now>01</span><span class="pep-lineup-count-of"> / <span data-total>01</span></span></p>
       <button class="pep-lineup-step pep-lineup-step--on" type="button" data-next aria-label="Next product"><i class="pep-lineup-chev" aria-hidden="true"></i></button>
-      <p class="pep-lineup-hint" aria-hidden="true">SCROLL · ARROW KEYS</p>
+      <p class="pep-lineup-hint" aria-hidden="true">SCROLL · ARROW KEYS · CLICK THE CASE</p>
       <div class="pep-lineup-hair" aria-hidden="true"><i class="pep-lineup-hair-fill" data-hair></i></div>
     </div>
   </div>
@@ -4585,10 +4691,36 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
         <span class="vc-glow" data-under></span>
         <div class="vc-pane">
           <span class="vc-sweep" data-sweep></span>
-          <p class="vc-top"><span class="vc-no" data-no></span><span class="vc-fam" data-fam></span></p>
-          <div class="vc-stage"><img data-img alt="" data-alt="{name} vial" width="592" height="1120" decoding="async"></div><span class="vc-ledge"></span>
-          <h3 class="vc-name" data-name></h3>
-          <ul class="vc-sizes" data-sizes></ul>
+          <!-- the front of the case: the vial, the name, sizes and prices -->
+          <div class="pep-lineup-front" data-front>
+            <p class="vc-top"><span class="vc-no" data-no></span><span class="vc-fam" data-fam></span></p>
+            <div class="vc-stage"><img data-img alt="" data-alt="{name} vial" width="592" height="1120" decoding="async"></div><span class="vc-ledge"></span>
+            <h3 class="vc-name" data-name></h3>
+            <ul class="vc-sizes" data-sizes></ul>
+          </div>
+          <!-- the whole front is one real button: click, Enter or Space turns the case over into its description -->
+          <button class="pep-lineup-more" type="button" data-more aria-expanded="false"><span class="pep-lineup-more-label" data-more-label>full description</span></button>
+          <!-- the other side of the case: what the product IS (never what it is for), from assets/lineup/details.json -->
+          <div class="pep-lineup-detail" data-detail hidden>
+            <button class="pep-lineup-x" type="button" data-x aria-label="Close the description"><i class="pep-lineup-x-mark" aria-hidden="true"></i></button>
+            <p class="vc-top"><span class="vc-no" data-d-no></span><span class="vc-fam" data-d-fam></span></p>
+            <h3 class="pep-lineup-d-name" data-d-name></h3>
+            <p class="pep-lineup-d-line" data-d-line hidden></p>
+            <dl class="pep-lineup-d-rows" data-d-rows hidden>
+              <div class="pep-lineup-d-row" data-row="kind" hidden><dt>WHAT IT IS</dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-row="chain" hidden><dt>CHAIN</dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-row="formula" hidden><dt>FORMULA</dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-row="weight" hidden><dt>WEIGHT</dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-gate="preview" data-pv="chain" hidden><dt>CHAIN <span class="pep-lineup-d-tbc">TO BE CONFIRMED</span></dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-gate="preview" data-pv="formula" hidden><dt>FORMULA <span class="pep-lineup-d-tbc">TO BE CONFIRMED</span></dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-gate="preview" data-pv="weight" hidden><dt>WEIGHT <span class="pep-lineup-d-tbc">TO BE CONFIRMED</span></dt><dd></dd></div>
+              <div class="pep-lineup-d-row" data-gate="preview" data-pv="registry" hidden><dt>REGISTRY <span class="pep-lineup-d-tbc">TO BE CONFIRMED</span></dt><dd></dd></div>
+            </dl>
+            <p class="pep-lineup-d-coming" data-d-coming hidden>MORE DETAIL COMING</p>
+            <ul class="vc-sizes" data-d-sizes></ul>
+            <p class="pep-lineup-d-label" data-d-label></p>
+            <ul class="pep-lineup-d-notes" data-gate="preview" data-d-notes hidden></ul>
+          </div>
           <span class="pep-lineup-shade" data-shade aria-hidden="true"></span>
         </div>
       </div>
@@ -6730,7 +6862,7 @@ window.PEP_CONFIG = {
       if (!stage || !rail || !caseTpl || !window.fetch) { return; }
       var tpl = function (name) { var t = q('[data-tpl="' + name + '"]'); return t ? t.content.firstElementChild.cloneNode(true) : null; };
 
-      var wins = [], n = 0;
+      var wins = [], n = 0, DETAILS = {}, openW = null, flipTimer = 0;
       var raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : function (f) { return setTimeout(function () { f(Date.now()); }, 16); };
       var caf = window.cancelAnimationFrame ? window.cancelAnimationFrame.bind(window) : clearTimeout;
       var clock = function () { return window.performance && performance.now ? performance.now() : Date.now(); };
@@ -6750,6 +6882,10 @@ window.PEP_CONFIG = {
         .then(function (r) { if (!r.ok) { throw new Error('catalogue ' + r.status); } return r.json(); })
         .then(function (d) { if (!d || !Array.isArray(d.products) || !d.products.length) { throw new Error('catalogue empty'); } return d; })
         .then(null, function () { return null; })
+        .then(function (d) {
+          // what a case may say when it is turned over (made by tools/make-lineup-details.mjs). Without it the cases still stand.
+          return fetch('assets/lineup/details.json').then(function (r) { return r.ok ? r.json() : {}; }).then(null, function () { return {}; }).then(function (det) { DETAILS = det || {}; return d; });
+        })
         .then(function (d) {
           clearTimeout(giveUp);
           if (d) { try { start(d); return; } catch (e) { if (window.console && console.error) { console.error('lineup: the catalogue could not be used', e); } } }
@@ -6778,6 +6914,7 @@ window.PEP_CONFIG = {
           q('[data-fam]', li).textContent = String(p.family || '');
           var nameEl = q('[data-name]', li);
           nameEl.textContent = name;
+          nameEl.id = 'pep-lineup-name-' + i; w.nameEl = nameEl;
           if (name.length > 20) { nameEl.setAttribute('data-fit', 'long'); } else if (name.length > 11) { nameEl.setAttribute('data-fit', 'mid'); }
           // the picture: its words come from the template, the name from the data. Its file is asked for only near the centre.
           if (w.img) { w.img.alt = (w.img.getAttribute('data-alt') || '').replace('{name}', name); w.img.removeAttribute('data-alt'); }
@@ -6794,6 +6931,48 @@ window.PEP_CONFIG = {
           var flag = p.soldOut ? tpl('out') : !rows ? tpl('soon') : null;
           if (flag) { sizesEl.appendChild(flag); }
 
+          // the other side of the case: what the product IS. Only what details.json holds is ever written.
+          w.more = q('[data-more]', li); w.detail = q('[data-detail]', li); w.x = q('[data-x]', li);
+          if (w.more && w.detail) {
+            var lab = q('[data-more-label]', li), det = DETAILS[w.sku] || {}, shown = 0;
+            if (lab) { lab.id = 'pep-lineup-more-' + i; w.more.setAttribute('aria-labelledby', nameEl.id + ' ' + lab.id); }
+            w.detail.id = 'pep-lineup-detail-' + i; w.more.setAttribute('aria-controls', w.detail.id);
+            q('[data-d-no]', li).textContent = pad2(i + 1);
+            q('[data-d-fam]', li).textContent = String(p.family || '');
+            q('[data-d-name]', li).textContent = name;
+            var lineEl = q('[data-d-line]', li), rowsEl = q('[data-d-rows]', li), coming = q('[data-d-coming]', li);
+            if (det.line && lineEl) { lineEl.textContent = String(det.line); lineEl.hidden = false; shown++; }
+            (Array.isArray(det.rows) ? det.rows : []).forEach(function (r) {
+              var row = r && r.key ? q('[data-row="' + String(r.key).replace(/[^a-z]/g, '') + '"]', li) : null;
+              if (!row || !r.value) { return; }
+              row.querySelector('dd').textContent = String(r.value); row.hidden = false; rowsEl.hidden = false; shown++;
+            });
+            // PREVIEW ONLY: values still to be matched to the lot documents, each in a row tagged in the HTML.
+            // A live build has neither these rows (the build cuts them out) nor, once regenerated, this data.
+            if (flags.PREVIEW && rowsEl && det.pv && typeof det.pv === 'object') {
+              Object.keys(det.pv).forEach(function (key) {
+                var row = q('[data-pv="' + String(key).replace(/[^a-z]/g, '') + '"]', li);
+                if (!row || !det.pv[key]) { return; }
+                row.querySelector('dd').textContent = String(det.pv[key]); row.hidden = false; rowsEl.hidden = false; shown++;
+              });
+            }
+            if (coming) { coming.hidden = !!shown; }
+            var dSizes = q('[data-d-sizes]', li);
+            Array.prototype.forEach.call(sizesEl.children, function (el) { dSizes.appendChild(el.cloneNode(true)); });
+            // the one factual label line, from config. A bracketed note for counsel shows in preview only.
+            var label = (cfg.label && cfg.label.line) || '', labEl = q('[data-d-label]', li);
+            if (!flags.PREVIEW) { label = label.replace(/\s*\[[^\]]*\]/g, '').trim(); }
+            if (labEl) { labEl.textContent = label; labEl.hidden = !label; }
+            // notes still open with the client: preview only (a launch build cuts this element out, so it may not be there)
+            var notes = q('[data-d-notes]', li);
+            if (notes && flags.PREVIEW && Array.isArray(det.notes) && det.notes.length) {
+              det.notes.forEach(function (t) { var n1 = document.createElement('li'); n1.textContent = String(t); notes.appendChild(n1); });
+              notes.hidden = false;
+            }
+            w.more.addEventListener('click', function () { openDetail(w); });
+            if (w.x) { w.x.addEventListener('click', function (e) { e.stopPropagation(); closeDetail(true); }); }
+          }
+
           // the calm list: one slow light across the case the pointer comes to (a mouse only)
           li.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && !ctx.motion.reduced && !root.hasAttribute('data-held')) { li.classList.remove('pep-lineup-sweeping'); void li.offsetWidth; li.classList.add('pep-lineup-sweeping'); } });
           if (w.sweep) { w.sweep.addEventListener('animationend', function () { li.classList.remove('pep-lineup-sweeping'); }); }
@@ -6806,6 +6985,43 @@ window.PEP_CONFIG = {
         if (way) { way.hidden = false; }
         root.setAttribute('data-state', 'ready');
         wire();
+      }
+
+      /* ROUND 2: the case turns over IN PLACE into its description and back. One open at a time; X or Esc closes it and the
+         keyboard goes back to the case; travelling on closes it too. The words change while the case is edge on. */
+      function turnOver(w, change) {
+        clearTimeout(flipTimer);
+        if (ctx.motion.reduced) { change(); return; }
+        w.li.classList.remove('pep-lineup-flipping'); void w.li.offsetWidth; w.li.classList.add('pep-lineup-flipping');
+        flipTimer = setTimeout(function () { change(); setTimeout(function () { w.li.classList.remove('pep-lineup-flipping'); }, 260); }, 210);
+      }
+      function openDetail(w) {
+        if (!w || !w.detail || openW === w) { return; }
+        if (root.hasAttribute('data-held') && !w.li.hasAttribute('data-face')) { return; }       // only the case facing you opens
+        if (openW) { closeDetail(false); }
+        openW = w;
+        root.setAttribute('data-reading', '');                       // the word and the P behind the glass step back while a description is read
+        w.more.setAttribute('aria-expanded', 'true');
+        ctx.track('lineup_detail', { sku: w.sku, state: 'open' });
+        turnOver(w, function () {
+          if (openW !== w) { return; }
+          w.li.setAttribute('data-open', ''); w.detail.hidden = false;
+          // the calm list (phones): the case grows to hold a long description, so nothing has to be scrolled inside the glass
+          if (!root.hasAttribute('data-held')) { var need = w.detail.scrollHeight - w.detail.clientHeight; if (need > 1) { w.li.style.minHeight = Math.ceil(w.li.offsetHeight + need) + 'px'; } }
+          if (w.x) { try { w.x.focus({ preventScroll: true }); } catch (e) { w.x.focus(); } }
+        });
+      }
+      function closeDetail(refocus) {
+        var w = openW;
+        if (!w) { return; }
+        openW = null;
+        root.removeAttribute('data-reading');
+        w.more.setAttribute('aria-expanded', 'false');
+        var back = function () {
+          w.li.removeAttribute('data-open'); w.detail.hidden = true; w.li.style.minHeight = '';
+          if (refocus) { try { w.more.focus({ preventScroll: true }); } catch (e) { w.more.focus(); } }
+        };
+        if (refocus) { turnOver(w, back); } else { clearTimeout(flipTimer); w.li.classList.remove('pep-lineup-flipping'); back(); }
       }
 
       // the picture of a case is asked for only when the case is near the centre
@@ -6852,13 +7068,27 @@ window.PEP_CONFIG = {
         }
 
         /* ---------------- HELD: the stage ---------------- */
+        /* ROUND 2, A PAUSE ON EVERY CASE, in the scroll itself (no timer, nothing locked): of each case's stretch of scroll
+           the middle HOLD share keeps that case dead centre; the rest carries the rail on to the next one, eased at both ends. */
+        var HOLD = 0.55;
+        function holdAt(t) {
+          var k = Math.floor(t), f = t - k, h = HOLD / 2;
+          return f <= h ? k : f >= 1 - h ? k + 1 : k + ease((f - h) / (1 - HOLD));
+        }
+        // where the centred case's name sits on the stage (its middle), so the far P can stand centred behind it
+        function nameCentre() {
+          if (mode !== 'held' || !wins.length || !wins[0].nameEl) { return 0; }
+          var w = wins[0], el = w.nameEl, y = 0, guard = 0;
+          while (el && el !== w.li && guard++ < 8) { y += el.offsetTop; el = el.offsetParent; }
+          return el === w.li ? w.li.offsetTop + y + w.nameEl.offsetHeight / 2 : 0;
+        }
         function read() {                                       // the one rectangle
           var rect = root.getBoundingClientRect();
           var range = rect.height - SH, y = clamp(-rect.top, 0, Math.max(0, range));
           var openPx = Math.min(OPEN * SH, range * 0.4), travel = Math.max(1, range - openPx);
           var p = clamp((y - openPx) / travel, 0, 1);
           return { top: rect.top, range: range, openPx: openPx, travel: travel, o: openPx > 0 ? clamp(y / openPx, 0, 1) : 1,
-            share: p, t: clamp((p - LEAD) / (1 - 2 * LEAD), 0, 1) * (n - 1) };
+            share: p, t: holdAt(clamp((p - LEAD) / (1 - 2 * LEAD), 0, 1) * (n - 1)) };
         }
         function setCur(c) {
           if (c === cur) { return; }
@@ -6871,6 +7101,7 @@ window.PEP_CONFIG = {
 
         function draw(share) {
           var i, w, d, a, f, v, c, st, slide = (1 - glide) * SW * 0.95;
+          if (openW && (glide < 0.999 || Math.abs(openW.i - pos) > 0.3)) { closeDetail(false); }      // travelling on closes the description
           for (i = 0; i < n; i++) {
             w = wins[i]; d = i - pos; a = Math.abs(d);
             if (a > 2.3 || glide <= 0.001) {
@@ -6881,7 +7112,7 @@ window.PEP_CONFIG = {
             st = w.li.style;
             if (!w.on) { w.on = true; w.li.setAttribute('data-on', ''); }
             v = a < 0.5;
-            if (w.face !== v) { w.face = v; if (v) { w.li.setAttribute('data-face', ''); } else { w.li.removeAttribute('data-face'); } }
+            if (w.face !== v) { w.face = v; if (v) { w.li.setAttribute('data-face', ''); } else { w.li.removeAttribute('data-face'); } if (w.more) { w.more.tabIndex = v ? 0 : -1; } }
             /* THE TURN UP: a case stands on its foot line. Beside the centre it lies back and stands a little away; at the
                centre it has risen to face you and come forward to the glass of the screen (exactly one to one, so its words
                are sharp). The one facing you also turns a breath toward the pointer. */
@@ -6969,6 +7200,7 @@ window.PEP_CONFIG = {
           var sl = rail.scrollLeft, atEnd = railMax > 0 && sl >= railMax - 2;
           var p = stepL > 0 ? clamp(sl / stepL, 0, n - 1) : 0;
           setCur(atEnd ? n - 1 : clamp(Math.round(p), 0, n - 1));
+          if (openW && Math.abs(openW.i - (p + (per - 1) / 2)) > per / 2 + 0.35) { closeDetail(false); }      // swiped out of view: the description closes
           var v = 'scaleX(' + (railMax > 0 ? clamp(sl / railMax, 0, 1) : 0).toFixed(4) + ')';
           if (hair && hairTf !== v) { hairTf = v; hair.style.transform = v; }
         }
@@ -7006,12 +7238,14 @@ window.PEP_CONFIG = {
         rail.addEventListener('click', function (e) { var k = index(e.target); if (mode === 'held' && k > -1 && k !== cur) { go(k); } });
         // arrow keys move ONE case, while the lineup is the thing on screen and the keyboard is not inside another section or a field
         window.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && openW && !e.defaultPrevented) { e.preventDefault(); closeDetail(true); return; }
           if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) { return; }
           var t = e.target;
           if (t && t !== document.body && t !== document.documentElement && !root.contains(t)) { return; }
           if (t && t.matches && t.matches('input, textarea, select, [contenteditable]')) { return; }
           if (!live || !n || !centred()) { return; }
           e.preventDefault();
+          if (openW) { closeDetail(false); }
           go(from() + (e.key === 'ArrowRight' ? 1 : -1));
         });
         // a sideways swipe with a finger or a pen on the held stage: one case on or back
@@ -7058,16 +7292,22 @@ window.PEP_CONFIG = {
             yb -= (hb + gap / s0) * s;
           }
           // the P: its frame is sized so the P itself stands 0.4 of the stage high when it is up front
+          // round 2: its BEAM, not its box, is centred on the stage (logo.cx is the beam's place in the frame), so the line reaches as far left as right
           var fh = H * 0.28 / logo.body, fw = fh * logo.fw / logo.fh;      // owner, Nov 11: the opening P about 15 to 20 percent smaller, same place
           mark.style.width = fw.toFixed(1) + 'px'; mark.style.height = fh.toFixed(1) + 'px';
-          mark.style.left = (cx - fw / 2).toFixed(1) + 'px'; mark.style.top = (cy + E - logo.foot * fh).toFixed(1) + 'px';
-          mark.style.transformOrigin = 'center ' + (logo.foot * 100).toFixed(2) + '%';
+          mark.style.left = (cx - (logo.cx || 0.5) * fw).toFixed(1) + 'px'; mark.style.top = (cy + E - logo.foot * fh).toFixed(1) + 'px';
+          mark.style.transformOrigin = ((logo.cx || 0.5) * 100).toFixed(2) + '% ' + (logo.foot * 100).toFixed(2) + '%';
           sheets.forEach(function (im) { im.style.width = (fw * logo.cols).toFixed(1) + 'px'; im.style.height = (fh * logo.rows).toFixed(1) + 'px'; });
           var mirror = q('.pep-lineup-mark-frame--mirror'), shadow = q('.pep-lineup-mark-shadow');
           if (mirror) { mirror.style.transformOrigin = 'center ' + (logo.foot * 100).toFixed(2) + '%'; }
           if (shadow) { shadow.style.top = (logo.foot * 100 - 6).toFixed(2) + '%'; }
           logo.fwPx = fw; logo.fhPx = fh;
-          logo.far = P * (1 / 0.3 - 1) * 0.5;                    // where it stands once it has gone back. Owner, Nov 11: half as far as before, so it still reads
+          /* Once it has gone back it is the same size as before (0.46 of its opening size), but it no longer stands on the
+             floor line: round 2 puts it exactly centred behind the NAME of the case that faces you. */
+          logo.sFar = 0.4615;
+          var nameY = nameCentre();
+          logo.dyFar = (nameY || cy + H * 0.16) - (cy + E - logo.body / 2 * fh * logo.sFar);
+          logo.mirror = mirror; logo.shadow = shadow; logo.gFade = -1;
           frameNow = -1; showFrame(logo.rest || 0);
           markTf = ''; markOp = ''; glideDrawn = -1;
           if (mode !== 'held') { originTf = ''; origin(0, 0); }      // the calm version: the eye stands still, on the picture's vanishing point
@@ -7083,10 +7323,17 @@ window.PEP_CONFIG = {
           if (!logo || !mark) { return; }
           var g = mode === 'held' ? glide : 0;
           // the P glides back along the floor to the far end and dims; the pointer moves it a little while it is up front
-          var v = 'translate3d(' + (-ptr.x * 12 * (1 - g)).toFixed(1) + 'px,0,' + (-logo.far * g).toFixed(1) + 'px)';
+          var v = 'translate3d(' + (-ptr.x * 12 * (1 - g)).toFixed(1) + 'px,' + (logo.dyFar * g).toFixed(1) + 'px,0) scale(' + (1 + (logo.sFar - 1) * g).toFixed(4) + ')';
           if (v !== markTf) { markTf = v; mark.style.transform = v; }
-          v = (1 - 0.2 * g).toFixed(3);
+          // its strength behind the glass: quiet (0.3) while a case is centred so the name reads on top of it, stronger between cases
+          var off = Math.abs(pos - Math.round(pos)) * 2;
+          v = (1 + ((0.3 + 0.4 * ease(off)) - 1) * g).toFixed(3);
           if (v !== markOp) { markOp = v; mark.style.opacity = v; }
+          if (g !== logo.gFade) {                               // its floor reflection and contact shadow belong to the opening only
+            logo.gFade = g;
+            if (logo.mirror) { logo.mirror.style.opacity = (0.2 * (1 - g)).toFixed(3); }
+            if (logo.shadow) { logo.shadow.style.opacity = (1 - g).toFixed(3); }
+          }
           if (g !== glideDrawn) {
             glideDrawn = g;
             letters.forEach(function (im) { im.style.opacity = ((1 - 0.018 * (im._k || 0)) * (1 - 0.08 * g)).toFixed(3); });      // the word stays bright: every letter has to read
@@ -7137,7 +7384,7 @@ window.PEP_CONFIG = {
           if (!wantLogo || !floor || !mark || !sheets.length) { return; }
           fetch('assets/lineup/logo.json').then(function (r) { if (!r.ok) { throw new Error('logo ' + r.status); } return r.json(); }).then(function (d) {
             if (!d || !d.sheet || !d.cols || !d.rows || !d.frames || !Array.isArray(d.letters)) { return; }
-            logo = { cols: d.cols, rows: d.rows, frames: d.frames, fw: d.fw, fh: d.fh, foot: d.foot, body: d.body, rest: d.rest || 0,
+            logo = { cols: d.cols, rows: d.rows, frames: d.frames, fw: d.fw, fh: d.fh, foot: d.foot, body: d.body, rest: d.rest || 0, cx: isFinite(d.cx) ? Number(d.cx) : 0.5,
               holdMs: d.holdMs || 5200, turnMs: d.turnMs || 2800 };
             d.letters.forEach(function (L) {
               var im = document.createElement('img');
@@ -7163,6 +7410,7 @@ window.PEP_CONFIG = {
             if (w.shade) { w.shade.style.opacity = ''; }
             if (w.glow) { w.glow.style.opacity = ''; }
             if (w.sweep) { w.sweep.style.transform = ''; w.sweep.style.opacity = ''; }
+            if (w.more) { w.more.tabIndex = 0; }
             w.li.removeAttribute('data-on'); w.li.removeAttribute('data-face');
             w.on = false; w.face = null; w.z = w.tf = w.sh = w.gl = w.stf = w.sop = '';
           });
