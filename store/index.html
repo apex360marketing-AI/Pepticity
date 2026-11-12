@@ -6962,8 +6962,9 @@ window.PEP_CONFIG = {
         lines = clean(ctx.state.get(KEY, []));
         var shared = fromHash(), sharedLines = shared ? clean(shared) : [];
         if (sharedLines.length) {
-          if (lines.length) { pendingShared = sharedLines; }   /* GUARD:shared-cart-asks */
-          else { lines = sharedLines; }
+          var keepTheirs = false;
+          if (lines.length) { keepTheirs = true; }   /* GUARD:shared-cart-asks */
+          if (keepTheirs) { pendingShared = sharedLines; } else { lines = sharedLines; }
         }
         commit();                                          // saves the cleaned cart and sends the first cart:changed
         early.splice(0).forEach(function (pair) { add(pair[0], pair[1]); });
