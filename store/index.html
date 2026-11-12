@@ -2434,6 +2434,219 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-shelf-add { transition: none; }
 }
 </style>
+<style data-pep-src="modules/50-footer/footer.css">
+/* 50-footer. Every selector starts with [data-module="footer"] or .pep-footer- */
+[data-module="footer"] {
+  position: relative;
+  z-index: 2;
+  padding: clamp(40px, 8vh, 96px) clamp(10px, 1.6vw, 24px) clamp(20px, 3vh, 36px);
+}
+
+/* the glass slab. It leaves room on the right for the guide's light. */
+.pep-footer-pane {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 48px);
+  align-items: start;
+  padding: clamp(22px, 3vw, 44px) clamp(70px, 8vw, 120px) clamp(20px, 2.4vw, 34px) clamp(18px, 3vw, 48px);
+  background: linear-gradient(155deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02) 48%, rgba(255, 255, 255, .045));
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+          backdrop-filter: blur(12px) saturate(150%);
+  clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .pep-footer-pane { background: rgba(20, 20, 22, .86); }
+}
+/* the chrome hairline round the cut shape */
+.pep-footer-pane::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-5), var(--pep-plat-3) 20%, var(--pep-plat-1) 55%, var(--pep-plat-3) 86%, var(--pep-plat-5));
+  opacity: .8;
+  clip-path: polygon(evenodd, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px, 30px 0,
+    30.4px 1px, 1px 30.4px, 1px calc(100% - 1px), calc(100% - 30.4px) calc(100% - 1px), calc(100% - 1px) calc(100% - 30.4px), calc(100% - 1px) 1px, 30.4px 1px);
+}
+
+.pep-footer-name {
+  margin: 0 0 12px;
+  font-family: var(--pep-font-display);
+  font-size: clamp(30px, 4.4vw, 64px);
+  line-height: 1;
+  letter-spacing: .2em;
+  color: var(--pep-plat-4);
+  background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-2) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-footer-label {
+  margin: 0 0 18px;
+  max-width: 34em;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--pep-plat-3);
+}
+.pep-footer-join {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 22px;
+  font-family: var(--pep-font-display);
+  font-size: 17px;
+  letter-spacing: .16em;
+  color: var(--pep-black-0);
+  text-decoration: none;
+  background: linear-gradient(100deg, var(--pep-plat-3), var(--pep-plat-5) 32%, var(--pep-plat-3) 62%, var(--pep-plat-4));
+  background-size: 220% 100%;
+  background-position: 0 0;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: background-position 1.4s var(--pep-ease);
+}
+.pep-footer-join:hover,
+.pep-footer-join:focus-visible { background-position: 100% 0; }
+
+/* four doors: four across on a wide screen, two by two below that, never three and one */
+.pep-footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.pep-footer-link {
+  position: relative;
+  overflow: hidden;
+  min-height: 64px;
+  padding: 10px 16px;
+  font-family: var(--pep-font-display);
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: .14em;
+  text-align: left;
+  color: var(--pep-plat-4);
+  background: rgba(255, 255, 255, .055);
+  border: 0;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .24), inset -3px -4px 8px rgba(0, 0, 0, .5);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  cursor: pointer;
+  transition: color .4s var(--pep-ease);
+}
+/* one slow light, left to right */
+.pep-footer-link::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -60%;
+  width: 40%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .28) 50%, rgba(255, 255, 255, 0));
+  transform: skewX(-16deg);
+  transition: left 1.4s var(--pep-ease);
+}
+.pep-footer-link:hover,
+.pep-footer-link:focus-visible { color: var(--pep-plat-5); }
+.pep-footer-link:hover::after,
+.pep-footer-link:focus-visible::after { left: 125%; }
+
+.pep-footer-fine {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(185, 190, 197, .22);
+}
+.pep-footer-fine p {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: .06em;
+  color: var(--pep-plat-3);
+}
+
+/* the sheet: a native dialog, so it sits above everything, holds the keyboard and closes on Esc */
+.pep-footer-sheet {
+  width: min(780px, calc(100vw - 24px));
+  max-height: min(86vh, 900px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  color: var(--pep-plat-4);
+  background: linear-gradient(160deg, rgba(34, 34, 38, .9), rgba(16, 16, 18, .9));
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+          backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: inset 0 0 0 1px rgba(185, 190, 197, .45);
+  overflow: hidden;
+}
+.pep-footer-sheet::backdrop { background: rgba(5, 5, 6, .62); }
+.pep-footer-sheet-in {
+  max-height: min(86vh, 900px);
+  overflow: auto;
+  padding: clamp(18px, 3vw, 36px);
+}
+.pep-footer-close {
+  float: right;
+  min-height: 48px;
+  margin: 0 0 8px 16px;
+  padding: 0 18px;
+  font-family: var(--pep-font-display);
+  font-size: 15px;
+  letter-spacing: .18em;
+  color: var(--pep-plat-4);
+  background: rgba(255, 255, 255, .07);
+  border: 0;
+  box-shadow: inset 0 0 0 1px rgba(185, 190, 197, .5);
+  cursor: pointer;
+}
+.pep-footer-close:hover,
+.pep-footer-close:focus-visible { color: var(--pep-plat-5); background: rgba(255, 255, 255, .14); }
+.pep-footer-title {
+  margin: 0 0 6px;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: clamp(26px, 4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: .08em;
+  color: var(--pep-plat-5);
+}
+.pep-footer-draft {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--pep-uv-light-4);
+}
+.pep-footer-doc h3 {
+  margin: 22px 0 6px;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: .18em;
+  color: var(--pep-plat-3);
+}
+.pep-footer-doc p {
+  margin: 0 0 8px;
+  max-width: 40em;
+  font-size: 19px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 1200px) {
+  .pep-footer-pane { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
+  .pep-footer-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 899px) {
+  .pep-footer-pane { grid-template-columns: minmax(0, 1fr); padding-right: clamp(56px, 16vw, 70px); }
+}
+@media (max-width: 420px) {
+  .pep-footer-link { font-size: 15px; letter-spacing: .1em; padding: 10px 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-footer-join,
+  .pep-footer-link,
+  .pep-footer-link::after { transition: none; }
+}
+</style>
 <style data-pep-src="modules/30-cart/cart.css">
 /* 30-cart. Every selector starts with [data-module="cart"] or .pep-cart- */
 /* The root is a fixed, see-through frame over the whole window. It sits above the 3D logo canvas (z-index 5)
@@ -3896,6 +4109,95 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
     </template>
   </div>
 </section>
+<!-- module:50-footer -->
+<!-- 50-footer: the name, the one label line (from config), four doors to the plain-language sheets (privacy, terms, shipping and returns, contact) and the fine print.
+     Every fact only Grace knows is a [FROM GRACE: ...] placeholder and every legal line is marked for counsel, so a live build refuses to ship until they are settled. -->
+<footer data-module="footer">
+  <div class="pep-footer-pane">
+    <div class="pep-footer-brand">
+      <p class="pep-footer-name">PEPTICITY</p>
+      <p class="pep-footer-label" data-footer-label></p>
+      <a class="pep-footer-join" href="#join">JOIN THE TEAM</a>
+    </div>
+    <nav class="pep-footer-nav" aria-label="Store information">
+      <button class="pep-footer-link" type="button" data-sheet-open="privacy" aria-haspopup="dialog">PRIVACY</button>
+      <button class="pep-footer-link" type="button" data-sheet-open="terms" aria-haspopup="dialog">TERMS</button>
+      <button class="pep-footer-link" type="button" data-sheet-open="shipping" aria-haspopup="dialog">SHIPPING AND RETURNS</button>
+      <button class="pep-footer-link" type="button" data-sheet-open="contact" aria-haspopup="dialog">CONTACT</button>
+    </nav>
+    <div class="pep-footer-fine">
+      <p>FOR ADULTS. PRICES IN CANADIAN DOLLARS.</p>
+      <p>2026 PEPTICITY. [FROM GRACE: legal business name]</p>
+      <p>[counsel to confirm: final legal copy]</p>
+    </div>
+  </div>
+
+  <dialog class="pep-footer-sheet">
+    <div class="pep-footer-sheet-in">
+      <button class="pep-footer-close" type="button" data-sheet-close>CLOSE</button>
+
+      <section class="pep-footer-doc" data-sheet="privacy" hidden>
+        <h2 class="pep-footer-title" id="pep-footer-t-privacy">PRIVACY</h2>
+        <p class="pep-footer-draft">[counsel to confirm: privacy wording]</p>
+        <h3>WHAT WE COLLECT</h3>
+        <p>Your email address when you join the PEPTICITY TEAM. Your name and province if you choose to add them. What you order and where it ships, when you place an order.</p>
+        <h3>WHAT WE DO NOT COLLECT</h3>
+        <p>Nothing you type to the PEPTICITY GUIDE is sent or saved. This site has no advertising trackers. Your details never go to ad platforms.</p>
+        <h3>KEPT IN YOUR OWN BROWSER</h3>
+        <p>Your cart, and whether you have joined, are kept in your own browser so the site remembers them. Clearing your browser removes them.</p>
+        <h3>EMAIL</h3>
+        <p>We send PEPTICITY news only if you tick the box. Every email has an unsubscribe link.</p>
+        <h3>WHERE YOUR DETAILS ARE KEPT</h3>
+        <p>[FROM GRACE: the email tool and store system that hold customer details, and the country they are in]</p>
+        <h3>YOUR CHOICES</h3>
+        <p>Ask to see, correct or delete your details: [FROM GRACE: privacy contact email]</p>
+        <p>The person responsible for privacy: [FROM GRACE: name of the person responsible for privacy]</p>
+      </section>
+
+      <section class="pep-footer-doc" data-sheet="terms" hidden>
+        <h2 class="pep-footer-title" id="pep-footer-t-terms">TERMS</h2>
+        <p class="pep-footer-draft">[counsel to confirm: terms wording]</p>
+        <h3>WHO CAN ORDER</h3>
+        <p>Adults only: the age of majority in your province or territory.</p>
+        <p>[FROM GRACE: where orders ship]</p>
+        <h3>THE PRODUCTS</h3>
+        <p data-footer-label></p>
+        <p>PEPTICITY gives no advice on any product.</p>
+        <h3>PRICES</h3>
+        <p>Prices are in Canadian dollars. Shipping and tax are shown before you pay.</p>
+        <h3>PAYMENT</h3>
+        <p>Payment is by Interac e-transfer for now: [FROM GRACE: e-transfer email]</p>
+        <h3>ORDERS</h3>
+        <p>[FROM GRACE: when an order is confirmed and when it ships]</p>
+        <h3>THE LAW</h3>
+        <p>[counsel to confirm: governing law and limits]</p>
+      </section>
+
+      <section class="pep-footer-doc" data-sheet="shipping" hidden>
+        <h2 class="pep-footer-title" id="pep-footer-t-shipping">SHIPPING AND RETURNS</h2>
+        <p class="pep-footer-draft">[counsel to confirm: shipping and returns wording]</p>
+        <h3>WHERE WE SHIP</h3>
+        <p>[FROM GRACE: where orders ship]</p>
+        <h3>WHAT IT COSTS</h3>
+        <p>[FROM GRACE: shipping price, and any order amount where shipping is included]</p>
+        <h3>HOW LONG IT TAKES</h3>
+        <p>[FROM GRACE: how long orders take]</p>
+        <h3>RETURNS</h3>
+        <p>[FROM GRACE: returns and damaged-order policy]</p>
+      </section>
+
+      <section class="pep-footer-doc" data-sheet="contact" hidden>
+        <h2 class="pep-footer-title" id="pep-footer-t-contact">CONTACT</h2>
+        <h3>EMAIL</h3>
+        <p>[FROM GRACE: contact email]</p>
+        <h3>THE BUSINESS</h3>
+        <p>[FROM GRACE: legal business name and mailing address]</p>
+        <h3>ABOUT AN ORDER</h3>
+        <p>Include your name and the date of your e-transfer.</p>
+      </section>
+    </div>
+  </dialog>
+</footer>
 <!-- module:30-cart -->
 <!-- 30-cart: the cart drawer, its totals and the checkout step. A direct child of body, closed until someone asks.
      The cart itself is ids and quantities only (pep_cart_v1). Names, sizes and prices are re-read from assets/catalogue.json.
@@ -6132,6 +6434,48 @@ window.PEP_CONFIG = {
         if (ctx.motion.reduced) { jump(y); return; }
         try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, y); }
       }
+    }
+  });
+})();
+</script>
+<script data-pep-src="modules/50-footer/footer.js">
+(function () {
+  'use strict';
+  PEP.register('footer', {
+    init: function (root, ctx) {
+      // the one label line comes from config, the same line the product view and the cart show
+      var line = (ctx.config && ctx.config.label && ctx.config.label.line) || '';
+      [].forEach.call(root.querySelectorAll('[data-footer-label]'), function (el) { el.textContent = line; el.hidden = !line; });
+
+      var sheet = root.querySelector('.pep-footer-sheet');
+      var inner = root.querySelector('.pep-footer-sheet-in');
+      var docs = [].slice.call(root.querySelectorAll('[data-sheet]'));
+      var names = docs.map(function (d) { return d.getAttribute('data-sheet'); });
+      if (!sheet || typeof sheet.showModal !== 'function') { return; }
+
+      function open(name) {
+        if (names.indexOf(name) < 0) { return; }
+        docs.forEach(function (d) {
+          var on = d.getAttribute('data-sheet') === name;
+          d.hidden = !on;
+          if (on) { var t = d.querySelector('.pep-footer-title'); if (t && t.id) { sheet.setAttribute('aria-labelledby', t.id); } }
+        });
+        if (!sheet.open) { sheet.showModal(); }
+        if (inner) { inner.scrollTop = 0; }
+      }
+
+      [].forEach.call(root.querySelectorAll('[data-sheet-open]'), function (b) {
+        b.addEventListener('click', function () { open(b.getAttribute('data-sheet-open')); });
+      });
+      var close = root.querySelector('[data-sheet-close]');
+      if (close) { close.addEventListener('click', function () { sheet.close(); }); }
+      // a click on the dark around the sheet closes it; Esc is handled by the dialog itself
+      sheet.addEventListener('click', function (e) { if (e.target === sheet) { sheet.close(); } });
+
+      // a link straight to a sheet: the page address ending in #privacy, #terms, #shipping or #contact
+      function fromAddress() { open((window.location.hash || '').slice(1)); }
+      window.addEventListener('hashchange', fromAddress);
+      fromAddress();
     }
   });
 })();
