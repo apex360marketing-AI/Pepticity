@@ -1661,6 +1661,525 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   [data-module="story"][data-held] .pep-story-name { font-size: clamp(26px, 7.4vw, 40px); }
 }
 </style>
+<style data-pep-src="modules/16-lineup/lineup.css">
+/* 16-lineup. Every selector starts with [data-module="lineup"] or .pep-lineup-
+   THE CASE is the owner-approved glass case (the .vc styles of shots/approval/index.html), copied value for value:
+   cut-corner silhouettes that differ by nth-child, a chrome hairline round the cut shape, a wet highlight, violet light
+   from under the vial BEHIND the pane, sizes in pressed wells. Only its size and what stands around it are set here.
+   The first half is the CALM version (a plain sideways scroll-snap list): less motion asked for, or a phone under 600px.
+   THE HELD STAGE (position: sticky inside a tall section, never fixed) is the second half, inside one media query, and
+   only once the script has marked the root with data-held.
+   SEE-THROUGH RULE: nothing above a pane (rail, case, turn wrapper) ever carries clip-path, filter, mask or an opacity
+   below 1, and no will-change names them: any of those would cut the glass off from the room behind it. */
+[data-module="lineup"] {
+  --pep-lineup-vh: 1vh;
+  --pep-lineup-steps: 25;                                   /* hand-overs between cases; the script writes the real number */
+  --pep-lineup-open: 0;                                     /* screens of opening picture before the cases (logo layer) */
+  --pep-lineup-pad: clamp(16px, 4vw, 64px);
+  --pep-lineup-case: min(84vw, 380px);                      /* ONE case in view on a phone */
+  --pep-lineup-gap: clamp(12px, 2.2vw, 32px);
+  --pep-lineup-edge: calc((100% - var(--pep-lineup-case)) / 2);
+  --pep-lineup-vial: clamp(210px, 36vh, 320px);             /* the height of every vial picture */
+  position: relative;
+  z-index: 1;
+  padding: clamp(36px, 6vh, 84px) 0 clamp(28px, 5vh, 64px);
+  color-scheme: dark;
+}
+@supports (height: 1svh) {
+  [data-module="lineup"] { --pep-lineup-vh: 1svh; }
+}
+/* TWO cases in view in a narrow window, THREE on a laptop, never more; on a big screen the case grows instead */
+@media (min-width: 600px) {
+  [data-module="lineup"] { --pep-lineup-case: 46vw; }
+}
+@media (min-width: 1100px) {
+  [data-module="lineup"] { --pep-lineup-case: clamp(320px, 31vw, 640px); }
+}
+
+.pep-lineup-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vh, 20px);
+  overflow: hidden;
+  overflow: clip;
+}
+
+/* ---------- behind everything: the stage picture, the veil, the logo layer ---------- */
+.pep-lineup-scene {
+  position: relative;
+  order: 1;
+  display: none;
+  height: clamp(250px, 64vw, 440px);
+  overflow: hidden;
+  pointer-events: none;
+}
+[data-module="lineup"][data-logo-on] .pep-lineup-scene { display: block; }
+.pep-lineup-plate {
+  position: absolute;
+  left: -3%;
+  width: 106%;
+  top: -12.83%;
+  height: 113%;                                             /* so the picture's vanishing point lands on the middle of the stage */
+  transform-origin: 50% 55.6%;
+}
+[data-module="lineup"][data-plate="on"] .pep-lineup-plate {
+  background: url("assets/lineup-stage.webp") 50% 55.6% / cover no-repeat;
+}
+@media (max-width: 599px) {
+  [data-module="lineup"][data-plate="on"] .pep-lineup-plate { background-image: url("assets/lineup-stage-phone.webp"); }
+}
+/* a soft dark veil, so the cases and their type always read; it closes to the room's own black at the head and the foot */
+.pep-lineup-veil { position: absolute; inset: 0; }
+[data-module="lineup"][data-plate="on"] .pep-lineup-veil {
+  background:
+    linear-gradient(180deg, var(--pep-black-0) 0%, rgba(11, 11, 12, 0) 15%, rgba(11, 11, 12, 0) 90%, var(--pep-black-0) 100%),
+    linear-gradient(90deg, rgba(11, 11, 12, .66), rgba(11, 11, 12, .42) 26%, rgba(11, 11, 12, .3) 50%, rgba(11, 11, 12, .42) 74%, rgba(11, 11, 12, .66));
+}
+/* THE LOGO LAYER: the word standing along the floor's centre line and the P, on ONE camera with the picture
+   (perspective and its origin are written by the script from the picture's own vanishing point) */
+.pep-lineup-floor { position: absolute; inset: 0; perspective: 1300px; }
+.pep-lineup-letters { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.pep-lineup-letter {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: block;
+  max-width: none;
+  transform-origin: 50% 100%;
+}
+.pep-lineup-mark { position: absolute; left: 0; top: 0; transform-origin: 50% 100%; }
+.pep-lineup-mark-frame { position: absolute; inset: 0; display: block; overflow: hidden; }
+.pep-lineup-mark-sheet { position: absolute; left: 0; top: 0; display: block; max-width: none; }
+/* its own drawing, flipped and faded: a faint reflection in the polished floor */
+.pep-lineup-mark-frame--mirror {
+  transform: scaleY(-1);
+  opacity: .2;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, .5) 22%, rgba(0, 0, 0, 0) 52%);
+          mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, .5) 22%, rgba(0, 0, 0, 0) 52%);
+}
+/* a soft contact shadow where it stands (shadow is light, not artwork) */
+.pep-lineup-mark-shadow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 12%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .72), rgba(0, 0, 0, .3) 55%, rgba(0, 0, 0, 0) 100%);
+}
+.pep-lineup-guides { position: absolute; inset: 0; z-index: 9; pointer-events: none; }
+
+/* ---------- heading and the way past ---------- */
+.pep-lineup-head {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 0 var(--pep-lineup-pad);
+}
+.pep-lineup-heading { min-width: 0; }
+.pep-lineup-title {
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 110px);
+  line-height: 1;
+  letter-spacing: .06em;
+  color: var(--pep-plat-4);
+  background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-2) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-lineup-sub { margin: clamp(6px, 1vh, 12px) 0 0; font-size: clamp(18px, 1.4vw, 21px); line-height: 1.45; color: var(--pep-plat-3); }
+.pep-lineup-fail { position: relative; z-index: 3; margin: 0; padding: 0 var(--pep-lineup-pad); font-size: clamp(18px, 1.4vw, 21px); color: var(--pep-plat-4); }
+.pep-lineup-skip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  padding: 0 20px 0 22px;
+  overflow: hidden;
+  font-family: var(--pep-font-display);
+  font-size: clamp(14px, 1.05vw, 17px);
+  letter-spacing: .22em;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--pep-plat-4);
+  border: 1px solid var(--pep-plat-2);
+  border-radius: var(--pep-radius);
+  background: rgba(255, 255, 255, .04);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  transition: border-color .4s ease, color .4s ease;
+}
+.pep-lineup-skip-mark {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  margin-top: -5px;
+  border-right: 2px solid var(--pep-plat-3);
+  border-bottom: 2px solid var(--pep-plat-3);
+  transform: rotate(45deg);
+}
+.pep-lineup-skip:hover,
+.pep-lineup-skip:focus-visible { border-color: var(--pep-plat-4); color: var(--pep-plat-5); }
+.pep-lineup-skip:focus-visible { outline: 1px solid var(--pep-plat-5); outline-offset: -5px; }
+/* house hover: ONE slow light sweep, left to right */
+.pep-lineup-skip::after,
+.pep-lineup-step::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 55%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .22), rgba(255, 255, 255, 0));
+  transform: translateX(0);
+  transition: transform 0s;
+}
+.pep-lineup-skip:hover::after,
+.pep-lineup-skip:focus-visible::after,
+.pep-lineup-step:hover::after,
+.pep-lineup-step:focus-visible::after { transform: translateX(340%); transition: transform 1.4s ease-in-out; }
+
+/* ---------- the rail: a plain sideways list with scroll snap (the calm version) ---------- */
+.pep-lineup-rail {
+  position: relative;
+  z-index: 1;
+  order: 3;
+  display: flex;
+  align-items: stretch;
+  gap: var(--pep-lineup-gap);
+  margin: 0;
+  padding: 10px var(--pep-lineup-edge) 18px;
+  scroll-padding: 0 var(--pep-lineup-edge);
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pep-plat-2) transparent;
+}
+.pep-lineup-rail:focus-visible { outline: 1px solid var(--pep-plat-4); outline-offset: -2px; }
+.pep-lineup-turn { position: relative; height: 100%; transform-origin: 50% 100%; }
+
+/* =========================== THE APPROVED GLASS CASE (.vc), value for value =========================== */
+[data-module="lineup"] .vc { position: relative; flex: 0 0 var(--pep-lineup-case); min-width: 0; scroll-snap-align: start; }
+[data-module="lineup"] .vc:nth-child(4n+1) { --a: 34px; --b: 10px; --c: 34px; --d: 10px; }
+[data-module="lineup"] .vc:nth-child(4n+2) { --a: 10px; --b: 34px; --c: 10px; --d: 34px; }
+[data-module="lineup"] .vc:nth-child(4n+3) { --a: 22px; --b: 22px; --c: 46px; --d: 6px; }
+[data-module="lineup"] .vc:nth-child(4n+4) { --a: 6px; --b: 46px; --c: 22px; --d: 22px; }
+/* light from under the vial, BEHIND the glass, so the pane has something to bend */
+[data-module="lineup"] .vc-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .7;
+  background:
+    radial-gradient(54% 32% at 50% 62%, rgba(127, 102, 255, .26), rgba(127, 102, 255, .07) 55%, rgba(127, 102, 255, 0) 100%),
+    radial-gradient(58% 34% at 82% 6%, rgba(230, 233, 237, .16), rgba(230, 233, 237, .04) 55%, rgba(230, 233, 237, 0) 100%),
+    radial-gradient(44% 26% at 8% 96%, rgba(185, 190, 197, .16), rgba(185, 190, 197, 0) 100%);
+}
+[data-module="lineup"] .vc-pane {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px clamp(12px, 1.6vw, 20px) 18px;
+  overflow: hidden;
+  background: linear-gradient(158deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .004) 44%, rgba(255, 255, 255, .02));
+  -webkit-backdrop-filter: blur(4px) saturate(160%);
+          backdrop-filter: blur(4px) saturate(160%);
+  clip-path: polygon(var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--d) 100%, 0 calc(100% - var(--d)), 0 var(--a));
+}
+/* the chrome hairline round the cut shape */
+[data-module="lineup"] .vc-pane::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-5), var(--pep-plat-3) 20%, color-mix(in srgb, var(--pep-plat-2) 50%, var(--pep-plat-1)) 52%, var(--pep-plat-3) 84%, var(--pep-plat-5));
+  opacity: .9;
+  clip-path: polygon(evenodd, var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--d) 100%, 0 calc(100% - var(--d)), 0 var(--a), var(--a) 0,
+    calc(var(--a) + .42px) 1px, 1px calc(var(--a) + .42px), 1px calc(100% - var(--d) - .42px), calc(var(--d) + .42px) calc(100% - 1px), calc(100% - var(--c) - .42px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--c) - .42px), calc(100% - 1px) calc(var(--b) + .42px), calc(100% - var(--b) - .42px) 1px, calc(var(--a) + .42px) 1px);
+}
+/* wet light across the top corner, and the case a touch deeper at its foot */
+[data-module="lineup"] .vc-pane::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, .2) 0, rgba(255, 255, 255, .05) 13%, rgba(255, 255, 255, 0) 28%),
+    linear-gradient(302deg, rgba(255, 255, 255, .09) 0, rgba(255, 255, 255, 0) 16%),
+    radial-gradient(120% 50% at 50% 114%, rgba(0, 0, 0, .1), rgba(0, 0, 0, 0) 60%);
+}
+[data-module="lineup"] .vc-sweep {
+  position: absolute;
+  z-index: 1;
+  top: -20%;
+  bottom: -20%;
+  left: -60%;
+  width: 38%;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-16deg);
+  filter: blur(10px);
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(230, 233, 237, .2) 42%, rgba(255, 255, 255, .46) 50%, rgba(230, 233, 237, .2) 58%, rgba(255, 255, 255, 0));
+}
+/* the calm list: one slow light across the case you point at */
+[data-module="lineup"] .vc.pep-lineup-sweeping .vc-sweep {
+  animation-name: pep-lineup-sweep;
+  animation-duration: 1.5s;
+  animation-timing-function: cubic-bezier(.4, .02, .3, 1);
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+@keyframes pep-lineup-sweep {
+  0% { transform: translateX(0) skewX(-16deg); opacity: 0; }
+  10% { opacity: .9; }
+  82% { opacity: .9; }
+  100% { transform: translateX(487%) skewX(-16deg); opacity: 0; }
+}
+[data-module="lineup"] .vc-top,
+[data-module="lineup"] .vc-stage,
+[data-module="lineup"] .vc-ledge,
+[data-module="lineup"] .vc-name,
+[data-module="lineup"] .vc-sizes { position: relative; z-index: 2; }
+[data-module="lineup"] .vc-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 0 0 4px; padding: 0 4px; }
+/* the case number: the approved pale gold thread (a thin ramp, never a flat fill) */
+[data-module="lineup"] .vc-no {
+  font: 400 16px/1 var(--pep-font-display);
+  letter-spacing: .14em;
+  color: var(--pep-gold-4);
+  background: linear-gradient(100deg, var(--pep-gold-3), var(--pep-gold-4) 46%, var(--pep-gold-3));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-module="lineup"] .vc-fam { font: 400 14px/1.2 var(--pep-font-display); letter-spacing: .2em; color: var(--pep-gold-4); text-align: right;
+  background: linear-gradient(100deg, var(--pep-gold-3), var(--pep-gold-4) 46%, var(--pep-gold-3)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+[data-module="lineup"] .vc-stage { display: flex; justify-content: center; align-items: flex-end; padding-top: 4px; }
+[data-module="lineup"] .vc-stage img {
+  display: block;
+  width: auto;
+  height: var(--pep-lineup-vial);
+  aspect-ratio: 592 / 1120;
+  max-width: none;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+[data-module="lineup"] .vc-stage img[data-loaded] { opacity: 1; }
+[data-module="lineup"] .vc-ledge {
+  display: block;
+  height: 1px;
+  margin: 0 8% 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(230, 233, 237, .75) 30%, rgba(255, 255, 255, .95) 50%, rgba(230, 233, 237, .75) 70%, rgba(255, 255, 255, 0));
+}
+[data-module="lineup"] .vc-name {
+  margin: 14px 0 10px;
+  min-height: 2.16em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font: 400 clamp(21px, 3vw, 30px)/1.08 var(--pep-font-display);
+  letter-spacing: .06em;
+  color: var(--pep-plat-5);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+[data-module="lineup"] .vc-name[data-fit="mid"] { font-size: clamp(18px, 2.4vw, 25px); }
+[data-module="lineup"] .vc-name[data-fit="long"] { font-size: clamp(15px, 1.9vw, 20px); }
+[data-module="lineup"] .vc-sizes { list-style: none; margin: auto 0 0; padding: 0; display: grid; gap: 7px; }
+[data-module="lineup"] .vc-sizes li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 12px;
+  background: rgba(0, 0, 0, .22);
+  box-shadow: inset 2px 2px 7px rgba(0, 0, 0, .6), inset -1px -1px 0 rgba(255, 255, 255, .08);
+}
+[data-module="lineup"] .vc-sizes span { font: 400 15px/1.25 var(--pep-font-display); letter-spacing: .12em; color: var(--pep-plat-3); text-transform: uppercase; }
+[data-module="lineup"] .vc-sizes b { font: 600 20px/1 "Bahnschrift", "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--pep-plat-5); white-space: nowrap; }
+[data-module="lineup"] .vc-sizes .vc-soon { justify-content: center; }
+@media (max-width: 480px) {
+  [data-module="lineup"] .vc-pane { padding-left: 10px; padding-right: 10px; }
+  [data-module="lineup"] .vc-sizes li { padding: 8px 9px; }
+  [data-module="lineup"] .vc-sizes b { font-size: 18px; }
+}
+@supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  [data-module="lineup"] .vc-pane { background: rgba(26, 26, 29, .9); }
+  .pep-lineup-skip,
+  .pep-lineup-step { background: rgba(20, 20, 22, .82); }
+}
+/* the case is BIG on a laptop, so its type grows with it (same case, same proportions) */
+@media (min-width: 1100px) {
+  [data-module="lineup"] .vc-pane { padding: 18px clamp(16px, 1.7vw, 30px) 20px; }
+  [data-module="lineup"] .vc-no { font-size: clamp(16px, 1.25vw, 22px); }
+  [data-module="lineup"] .vc-fam { font-size: clamp(14px, 1.05vw, 18px); }
+  [data-module="lineup"] .vc-name { font-size: clamp(26px, 2.35vw, 42px); }
+  [data-module="lineup"] .vc-name[data-fit="mid"] { font-size: clamp(22px, 1.9vw, 34px); }
+  [data-module="lineup"] .vc-name[data-fit="long"] { font-size: clamp(17px, 1.42vw, 26px); }
+  [data-module="lineup"] .vc-sizes span { font-size: clamp(15px, 1.12vw, 20px); }
+  [data-module="lineup"] .vc-sizes b { font-size: clamp(20px, 1.5vw, 27px); }
+}
+/* the shade that lies on a case while it is not the one facing you (its own layer; the glass under it stays glass) */
+.pep-lineup-shade { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: var(--pep-black-0); }
+
+/* ---------- THE WAY THROUGH: back, the counter, on, and the hairline ---------- */
+.pep-lineup-way {
+  position: relative;
+  z-index: 3;
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px 14px;
+  padding: 0 calc(var(--pep-lineup-pad) + 62px) 0 var(--pep-lineup-pad);   /* the right end stays clear of the page's corner (a fixed launcher from another section may stand there) */
+}
+.pep-lineup-step {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--pep-plat-4);
+  border: 1px solid var(--pep-plat-2);
+  border-radius: var(--pep-radius);
+  background: rgba(255, 255, 255, .04);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: border-color .4s ease, color .4s ease;
+}
+.pep-lineup-step:hover,
+.pep-lineup-step:focus-visible { border-color: var(--pep-plat-4); color: var(--pep-plat-5); }
+.pep-lineup-step:focus-visible { outline: 1px solid var(--pep-plat-5); outline-offset: -5px; }
+.pep-lineup-step[aria-disabled="true"] { color: var(--pep-plat-2); border-color: var(--pep-plat-1); cursor: default; }
+.pep-lineup-chev { display: block; width: 11px; height: 11px; margin-left: 5px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); }
+.pep-lineup-step--on .pep-lineup-chev { margin-left: -5px; transform: rotate(-135deg); }
+.pep-lineup-count {
+  flex: 0 0 auto;
+  min-width: 5.4em;
+  margin: 0;
+  text-align: center;
+  font-family: var(--pep-font-display);
+  font-size: clamp(20px, 1.9vw, 30px);
+  line-height: 1;
+  letter-spacing: .1em;
+  white-space: nowrap;
+  color: var(--pep-plat-5);
+  font-variant-numeric: tabular-nums;
+}
+.pep-lineup-count-of { color: var(--pep-plat-3); }
+.pep-lineup-hint { flex: 0 0 auto; margin: 0; font-family: var(--pep-font-display); font-size: 14px; letter-spacing: .24em; white-space: nowrap; color: var(--pep-plat-3); }
+.pep-lineup-hair { position: relative; flex: 1 1 auto; height: 2px; min-width: 40px; overflow: hidden; background: rgba(255, 255, 255, .12); }
+.pep-lineup-hair-fill { position: absolute; inset: 0; display: block; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, var(--pep-plat-2), var(--pep-plat-4) 62%, var(--pep-plat-5)); }
+@media (max-width: 899px) {
+  .pep-lineup-hint { display: none; }
+  .pep-lineup-skip { padding: 0 16px 0 18px; letter-spacing: .16em; }
+}
+
+/* =====================================================================================================================
+   THE HELD STAGE. The scroll is always the visitor's: the stage is position: sticky inside a tall section and every
+   move on it is a function of where the page is scrolled to. Length: one screen, the opening picture when the logo
+   layer is on, and 26 percent of a screen for each hand-over (26 cases: 8.5 screens with the opening, 7.5 without).
+   The cases are direct children of ONE perspective whose origin is the stage picture's own vanishing point, and each
+   stands on its foot line: they lie back and rise about that line.
+   ===================================================================================================================== */
+@media (prefers-reduced-motion: no-preference) and (min-width: 600px) and (min-height: 600px) {
+  [data-module="lineup"][data-held] {
+    --pep-lineup-case-h: min(calc(var(--pep-lineup-vh) * 100 - 186px), 760px);
+    --pep-lineup-vial: clamp(120px, calc(var(--pep-lineup-case-h) - 288px), 470px);
+    height: calc(var(--pep-lineup-vh) * (100 + var(--pep-lineup-open) * 100 + min(650, var(--pep-lineup-steps) * 26)));
+    padding: 0;
+  }
+  [data-module="lineup"][data-held] .pep-lineup-stage {
+    position: sticky;
+    top: 0;
+    display: block;
+    height: calc(var(--pep-lineup-vh) * 100);
+    touch-action: pan-y pinch-zoom;
+  }
+  [data-module="lineup"][data-held] .pep-lineup-scene { position: absolute; inset: 0; display: block; height: auto; }
+  [data-module="lineup"][data-held] .pep-lineup-head {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: clamp(10px, calc(var(--pep-lineup-vh) * 2.2), 24px);
+    align-items: flex-start;
+    pointer-events: none;
+  }
+  [data-module="lineup"][data-held] .pep-lineup-skip { pointer-events: auto; }
+  [data-module="lineup"][data-held] .pep-lineup-heading { display: flex; align-items: baseline; gap: clamp(14px, 2vw, 28px); }
+  [data-module="lineup"][data-held] .pep-lineup-title { font-size: clamp(40px, min(4.2vw, calc(var(--pep-lineup-vh) * 6.6)), 62px); }
+  [data-module="lineup"][data-held] .pep-lineup-sub { margin: 0; font-size: 18px; white-space: nowrap; }
+  [data-module="lineup"][data-held] .pep-lineup-fail { position: absolute; left: 0; top: 40%; }
+
+  [data-module="lineup"][data-held] .pep-lineup-rail {
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+    perspective: 1300px;                                    /* its origin is written by the script: the picture's vanishing point */
+  }
+  [data-module="lineup"][data-held] .vc {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - var(--pep-lineup-case-h) / 2 + 4px);
+    width: var(--pep-lineup-case);
+    height: var(--pep-lineup-case-h);
+    margin-left: calc(var(--pep-lineup-case) / -2);
+    transform-origin: 50% 100%;
+    visibility: hidden;
+    cursor: pointer;
+  }
+  [data-module="lineup"][data-held] .vc[data-on] { visibility: visible; }
+  [data-module="lineup"][data-held] .vc[data-face] { cursor: auto; }
+  [data-module="lineup"][data-held] .pep-lineup-way {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(10px, calc(var(--pep-lineup-vh) * 2.2), 22px);
+  }
+  @media (max-width: 1099px) {
+    [data-module="lineup"][data-held] .pep-lineup-sub { display: none; }
+  }
+  /* only while the lineup is on screen (set by an IntersectionObserver). transform only on anything above a pane. */
+  [data-module="lineup"][data-held][data-live] .vc[data-on] { will-change: transform; }
+  [data-module="lineup"][data-held][data-live] .vc[data-on] .pep-lineup-shade,
+  [data-module="lineup"][data-held][data-live] .vc[data-on] .vc-glow { will-change: opacity; }
+  [data-module="lineup"][data-held][data-live] .vc[data-on] .vc-sweep { will-change: transform, opacity; }
+  [data-module="lineup"][data-held][data-live] .pep-lineup-plate,
+  [data-module="lineup"][data-held][data-live] .pep-lineup-mark,
+  [data-module="lineup"][data-held][data-live] .pep-lineup-hair-fill { will-change: transform; }
+}
+
+/* ---------- less motion: nothing moves by itself ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .pep-lineup-skip::after,
+  .pep-lineup-step::after { display: none; }
+  [data-module="lineup"] .vc.pep-lineup-sweeping .vc-sweep { animation-name: none; }
+  .pep-lineup-rail { scroll-behavior: auto; }
+}
+</style>
 <style data-pep-src="modules/20-shelf/shelf.css">
 /* 20-shelf. Every selector starts with [data-module="shelf"] or .pep-shelf-
    Platinum only: no gold here, and violet is only the light under the bottle (drawn by 06-bottle).
@@ -4008,6 +4527,78 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
     <div class="pep-story-rail" aria-hidden="true"><i class="pep-story-rail-fill" data-rail></i></div>
   </div>
 </section>
+<!-- module:16-lineup -->
+<!-- 16-lineup: THE LINEUP (SAMPLE for the owner's approval). A sideways showcase: every product in its own glass case.
+     HELD: a sticky stage inside a tall section (never position: fixed, never wheel capture). The visitor's own vertical
+     scroll moves the rail of cases sideways, both ways; stop scrolling and it stops. The case at the centre TURNS UP to
+     face the visitor (it rises from lying back, comes forward, a light crosses it once); its neighbours lie back and dim.
+     LIST: with less motion asked for, or on a phone under 600px, the same cases are a plain sideways scroll-snap list.
+     The case is the owner-approved glass case (the .vc styles of the approval sheet), unchanged.
+     Names, sizes and prices come only from assets/catalogue.json at run time: no product is named in this file.
+     data-plate="on": the stage picture assets/lineup-stage.webp stands behind the rail (off: the site's own room shows).
+     data-logo="on": the captured G5 logo layer (assets/lineup/*: the engine's own drawings, nothing redrawn) opens the stage.
+     The whole section is gated on the names switch: a live build with names closed cuts it out of the page. -->
+<section data-module="lineup" id="lineup" aria-label="THE LINEUP" data-gate="names" data-plate="on" data-logo="on" hidden>
+  <div class="pep-lineup-stage" data-stage data-effect="x046-lineup">
+
+    <!-- behind everything: the stage picture, a soft dark veil, and the logo layer (filled by the script) -->
+    <div class="pep-lineup-scene" data-scene aria-hidden="true">
+      <div class="pep-lineup-plate" data-plate-layer></div>
+      <div class="pep-lineup-veil"></div>
+      <div class="pep-lineup-floor" data-floor data-effect="obj-08" hidden>
+        <div class="pep-lineup-letters" data-letters></div>
+        <div class="pep-lineup-mark" data-mark>
+          <span class="pep-lineup-mark-shadow"></span>
+          <span class="pep-lineup-mark-frame pep-lineup-mark-frame--mirror"><img class="pep-lineup-mark-sheet" data-sheet alt="" aria-hidden="true" decoding="async"></span>
+          <span class="pep-lineup-mark-frame"><img class="pep-lineup-mark-sheet" data-sheet alt="" aria-hidden="true" decoding="async"></span>
+        </div>
+      </div>
+    </div>
+
+    <header class="pep-lineup-head">
+      <div class="pep-lineup-heading">
+        <h2 class="pep-lineup-title">THE LINEUP</h2>
+        <p class="pep-lineup-sub">Every vial in its own glass case.</p>
+      </div>
+      <a class="pep-lineup-skip" href="#shelf" data-skip>SKIP TO THE SHELF<i class="pep-lineup-skip-mark" aria-hidden="true"></i></a>
+    </header>
+
+    <p class="pep-lineup-fail" data-fail role="status" hidden>The lineup could not load. Please refresh.</p>
+
+    <!-- one glass case per product, built from the template below -->
+    <ol class="pep-lineup-rail" role="list" data-rail data-effect="x018-turn-up" aria-label="Products, one glass case each"></ol>
+
+    <!-- THE WAY THROUGH: back, the counter, on, and the hairline -->
+    <div class="pep-lineup-way" data-way hidden>
+      <button class="pep-lineup-step" type="button" data-prev aria-label="Previous product"><i class="pep-lineup-chev" aria-hidden="true"></i></button>
+      <p class="pep-lineup-count"><span class="pep-lineup-count-now" data-now>01</span><span class="pep-lineup-count-of"> / <span data-total>01</span></span></p>
+      <button class="pep-lineup-step pep-lineup-step--on" type="button" data-next aria-label="Next product"><i class="pep-lineup-chev" aria-hidden="true"></i></button>
+      <p class="pep-lineup-hint" aria-hidden="true">SCROLL · ARROW KEYS</p>
+      <div class="pep-lineup-hair" aria-hidden="true"><i class="pep-lineup-hair-fill" data-hair></i></div>
+    </div>
+  </div>
+
+  <!-- the approved glass case -->
+  <template data-tpl="case">
+    <li class="vc">
+      <div class="pep-lineup-turn" data-turn>
+        <span class="vc-glow" data-under></span>
+        <div class="vc-pane">
+          <span class="vc-sweep" data-sweep></span>
+          <p class="vc-top"><span class="vc-no" data-no></span><span class="vc-fam" data-fam></span></p>
+          <div class="vc-stage"><img data-img alt="" data-alt="{name} vial" width="592" height="1120" decoding="async"></div><span class="vc-ledge"></span>
+          <h3 class="vc-name" data-name></h3>
+          <ul class="vc-sizes" data-sizes></ul>
+          <span class="pep-lineup-shade" data-shade aria-hidden="true"></span>
+        </div>
+      </div>
+    </li>
+  </template>
+  <template data-tpl="size"><li><span data-size-label></span><b data-size-price></b></li></template>
+  <template data-tpl="size-soon"><li><span data-size-label></span><b>SOON</b></li></template>
+  <template data-tpl="soon"><li class="vc-soon"><span>COMING SOON</span></li></template>
+  <template data-tpl="out"><li class="vc-soon"><span>SOLD OUT</span></li></template>
+</section>
 <!-- module:20-shelf -->
 <!-- 20-shelf: THE SHELF, where the visitor chooses a product. A list of glass slats (CRD-115), one live preview slab (CRD-119) with
      the ONE bottle, sizes as upright glass tubes (LAY-23), a quantity stepper and ADD TO CART (emits cart:add { sizeId, qty }).
@@ -6102,6 +6693,530 @@ window.PEP_CONFIG = {
       } else { live = true; root.setAttribute('data-live', ''); }
 
       setMode();
+    }
+  });
+})();
+</script>
+<script data-pep-src="modules/16-lineup/lineup.js">
+/* 16-lineup: THE LINEUP. A sideways showcase: every product in its own (owner-approved) glass case.
+   HELD (600px and wider, motion allowed): a sticky stage inside a tall section. The page scroll is never taken from the
+   visitor: no fixed position, no wheel capture, no scroll writes except the ones they ask for (a click, an arrow key).
+   Everything on the stage is a function of where the page is scrolled to, both ways; stop scrolling and it stops.
+   LIST (phone under 600px, short window, less motion): the same cases as a plain sideways scroll-snap list.
+   ONE CAMERA: the cases, the word and the P share one CSS perspective whose origin is the stage picture's vanishing point.
+   One passive scroll listener per mode, work in requestAnimationFrame, only transform and opacity written, one rectangle
+   read per frame. Names, sizes and prices come from assets/catalogue.json, read exactly as 20-shelf reads it. Every
+   other word is in lineup.html: this file names no product and holds no wording.
+   THE LOGO LAYER (data-logo="on") is pictures only: the real engine's own drawings, captured on a clear ground
+   (tools/scratch/lineup-capture.cjs). No logo3d slot and no bottle slot is ever asked for from this section. */
+(function () {
+  'use strict';
+  PEP.register('lineup', {
+    init: function (root, ctx) {
+      var cfg = ctx.config || {}, flags = cfg.flags || {}, cleared = flags.COUNSEL_CLEARED || {};
+      var q = function (s, el) { return (el || root).querySelector(s); };
+      var qa = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
+
+      // ---- counsel switch: the whole section shows only in preview or once counsel clears product names
+      var namesOpen = !!(flags.PREVIEW || cleared.names);
+      root.hidden = !namesOpen;
+      if (!namesOpen) { return; }                                // nothing is fetched
+
+      var stage = q('[data-stage]'), rail = q('[data-rail]'), way = q('[data-way]'), failLine = q('[data-fail]');
+      var scene = q('[data-scene]'), plate = q('[data-plate-layer]'), floor = q('[data-floor]'), mark = q('[data-mark]');
+      var nowEl = q('[data-now]'), totalEl = q('[data-total]'), hair = q('[data-hair]');
+      var prevBtn = q('[data-prev]'), nextBtn = q('[data-next]'), skip = q('[data-skip]');
+      var caseTpl = q('[data-tpl="case"]');
+      if (!stage || !rail || !caseTpl || !window.fetch) { return; }
+      var tpl = function (name) { var t = q('[data-tpl="' + name + '"]'); return t ? t.content.firstElementChild.cloneNode(true) : null; };
+
+      var wins = [], n = 0;
+      var raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : function (f) { return setTimeout(function () { f(Date.now()); }, 16); };
+      var caf = window.cancelAnimationFrame ? window.cancelAnimationFrame.bind(window) : clearTimeout;
+      var clock = function () { return window.performance && performance.now ? performance.now() : Date.now(); };
+      var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
+      var ease = function (t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+      var pad2 = function (k) { return (k < 10 ? '0' : '') + k; };
+      var wantPlate = root.getAttribute('data-plate') === 'on', wantLogo = root.getAttribute('data-logo') === 'on';
+      var GUIDES = /[?&]guides\b/.test(window.location.search || '');
+
+      if (skip) { skip.addEventListener('click', function () { ctx.track('lineup_skip', { from: 'lineup', to: 'shelf' }); }); }
+
+      // ---- the catalogue, read exactly as the shelf reads it: same file, same 12 second limit, same price rule
+      root.setAttribute('data-state', 'loading');
+      var stop = window.AbortController ? new AbortController() : null;
+      var giveUp = setTimeout(function () { if (stop) { stop.abort(); } }, 12000);
+      return fetch('assets/catalogue.json', stop ? { signal: stop.signal } : {})
+        .then(function (r) { if (!r.ok) { throw new Error('catalogue ' + r.status); } return r.json(); })
+        .then(function (d) { if (!d || !Array.isArray(d.products) || !d.products.length) { throw new Error('catalogue empty'); } return d; })
+        .then(null, function () { return null; })
+        .then(function (d) {
+          clearTimeout(giveUp);
+          if (d) { try { start(d); return; } catch (e) { if (window.console && console.error) { console.error('lineup: the catalogue could not be used', e); } } }
+          root.setAttribute('data-state', 'failed'); if (failLine) { failLine.hidden = false; } if (way) { way.hidden = true; }
+        });
+
+      /* ================================================ build ================================================ */
+      function start(data) {
+        var cur = data.currency || 'CAD';
+        var whole = new Intl.NumberFormat('en-CA', { style: 'currency', currency: cur, minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        var cents = new Intl.NumberFormat('en-CA', { style: 'currency', currency: cur });
+        var money = function (v) { return v % 1 ? cents.format(v) : whole.format(v); };
+        var products = data.products.filter(function (p) {
+          // a name that still carries a bracketed placeholder is for the owner's eyes: preview only
+          return p && p.sku && p.name && (flags.PREVIEW || String(p.name).indexOf('[') < 0);
+        });
+        if (!products.length) { throw new Error('no products'); }
+        n = products.length;
+
+        products.forEach(function (p, i) {
+          var li = caseTpl.content.firstElementChild.cloneNode(true), name = String(p.name);
+          var w = { i: i, sku: String(p.sku), li: li, img: q('[data-img]', li), shade: q('[data-shade]', li), glow: q('[data-under]', li), sweep: q('[data-sweep]', li),
+            asked: false, on: false, face: null, z: '', tf: '', sh: '', gl: '', stf: '', sop: '' };
+          if (!i) { li.setAttribute('data-effect', 'lay-23'); }     // the vial in its lit glass case (one tagged root is enough for the effect check)
+          q('[data-no]', li).textContent = pad2(i + 1);
+          q('[data-fam]', li).textContent = String(p.family || '');
+          var nameEl = q('[data-name]', li);
+          nameEl.textContent = name;
+          if (name.length > 20) { nameEl.setAttribute('data-fit', 'long'); } else if (name.length > 11) { nameEl.setAttribute('data-fit', 'mid'); }
+          // the picture: its words come from the template, the name from the data. Its file is asked for only near the centre.
+          if (w.img) { w.img.alt = (w.img.getAttribute('data-alt') || '').replace('{name}', name); w.img.removeAttribute('data-alt'); }
+
+          var sizesEl = q('[data-sizes]', li), rows = 0;
+          (p.sizes || []).filter(function (s) { return s && s.id && s.label; }).forEach(function (s) {
+            var priced = typeof s.priceCAD === 'number' && isFinite(s.priceCAD) && s.priceCAD > 0;       // zero or below is not a price
+            var row = tpl(priced ? 'size' : 'size-soon');
+            if (!row) { return; }
+            q('[data-size-label]', row).textContent = String(s.label);
+            if (priced) { q('[data-size-price]', row).textContent = money(s.priceCAD); }
+            sizesEl.appendChild(row); rows++;
+          });
+          var flag = p.soldOut ? tpl('out') : !rows ? tpl('soon') : null;
+          if (flag) { sizesEl.appendChild(flag); }
+
+          // the calm list: one slow light across the case the pointer comes to (a mouse only)
+          li.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && !ctx.motion.reduced && !root.hasAttribute('data-held')) { li.classList.remove('pep-lineup-sweeping'); void li.offsetWidth; li.classList.add('pep-lineup-sweeping'); } });
+          if (w.sweep) { w.sweep.addEventListener('animationend', function () { li.classList.remove('pep-lineup-sweeping'); }); }
+          wins.push(w);
+          rail.appendChild(li);
+        });
+
+        root.style.setProperty('--pep-lineup-steps', String(Math.max(1, n - 1)));
+        if (totalEl) { totalEl.textContent = pad2(n); }
+        if (way) { way.hidden = false; }
+        root.setAttribute('data-state', 'ready');
+        wire();
+      }
+
+      // the picture of a case is asked for only when the case is near the centre
+      function ask(i) {
+        var w = wins[i];
+        if (!w || w.asked || !w.img) { return; }
+        w.asked = true;
+        w.img.addEventListener('load', function () { w.img.setAttribute('data-loaded', ''); });
+        w.img.src = 'assets/vials/' + encodeURIComponent(w.sku) + '.webp';
+      }
+      function askNear(c) { for (var k = c - 3; k <= c + 3; k++) { if (k >= 0 && k < n) { ask(k); } } }
+
+      /* ================================================ the journey ================================================ */
+      function wire() {
+        var mqHeld = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: no-preference) and (min-width: 600px) and (min-height: 600px)') : null;   // the same test as lineup.css
+        var mode = '', live = false, tick = 0, last = 0, lastScroll = -1e9;
+        var SW = 0, SH = 0, W = 0, step = 0, stepL = 0, railMax = 0, per = 1;
+        var pos = 0, cur = -1, bar = 0, dir = 1, lastT = 0, latch = null, goalNow = 0, glide = 1, glideDrawn = -1;
+        var ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+        var hairTf = '', plateTf = '', originTf = '', markTf = '', markOp = '';
+        var LEAD = 0.012;                                       // a short rest on the first and the last case
+        var PERSP = 1300, OPEN = 0;                             // OPEN: screens of opening picture before the cases (the logo layer sets it)
+        var logo = null, letters = [], sheets = qa('[data-sheet]'), frameNow = -1, spinTimer = 0;
+
+        function measure() {
+          SW = stage.clientWidth; SH = stage.clientHeight;
+          W = wins.length ? wins[0].li.offsetWidth : 0;
+          step = W + clamp(SW * 0.022, 12, 32);                 // the same gap as lineup.css
+          stepL = wins.length > 1 ? wins[1].li.offsetLeft - wins[0].li.offsetLeft : 0;
+          railMax = Math.max(0, rail.scrollWidth - rail.clientWidth);
+          per = stepL > 0 ? Math.max(1, Math.floor((rail.clientWidth + 34) / stepL)) : 1;
+          layoutLogo();
+        }
+
+        /* ---------------- ONE CAMERA: the vanishing point of the stage picture, in stage pixels ----------------
+           The picture is placed (lineup.css) so that its own vanishing point lands on the middle of the stage whatever the
+           crop. The cases' perspective and the logo layer's perspective both take that point as their origin. */
+        function origin(dx, dy) {
+          var v = (SW / 2 + dx).toFixed(1) + 'px ' + ((mode === 'held' ? SH : (scene ? scene.clientHeight : SH)) / 2 + dy).toFixed(1) + 'px';
+          if (v === originTf) { return; }
+          originTf = v;
+          if (mode === 'held') { rail.style.perspectiveOrigin = v; }
+          if (floor) { floor.style.perspectiveOrigin = v; }
+        }
+
+        /* ---------------- HELD: the stage ---------------- */
+        function read() {                                       // the one rectangle
+          var rect = root.getBoundingClientRect();
+          var range = rect.height - SH, y = clamp(-rect.top, 0, Math.max(0, range));
+          var openPx = Math.min(OPEN * SH, range * 0.4), travel = Math.max(1, range - openPx);
+          var p = clamp((y - openPx) / travel, 0, 1);
+          return { top: rect.top, range: range, openPx: openPx, travel: travel, o: openPx > 0 ? clamp(y / openPx, 0, 1) : 1,
+            share: p, t: clamp((p - LEAD) / (1 - 2 * LEAD), 0, 1) * (n - 1) };
+        }
+        function setCur(c) {
+          if (c === cur) { return; }
+          cur = c;
+          if (nowEl) { nowEl.textContent = pad2(c + 1); }
+          if (prevBtn) { prevBtn.setAttribute('aria-disabled', c <= 0 ? 'true' : 'false'); }
+          if (nextBtn) { nextBtn.setAttribute('aria-disabled', c >= n - 1 ? 'true' : 'false'); }
+          askNear(c);
+        }
+
+        function draw(share) {
+          var i, w, d, a, f, v, c, st, slide = (1 - glide) * SW * 0.95;
+          for (i = 0; i < n; i++) {
+            w = wins[i]; d = i - pos; a = Math.abs(d);
+            if (a > 2.3 || glide <= 0.001) {
+              if (w.on) { w.on = false; w.li.removeAttribute('data-on'); }
+              if (w.face) { w.face = false; w.li.removeAttribute('data-face'); }
+              continue;
+            }
+            st = w.li.style;
+            if (!w.on) { w.on = true; w.li.setAttribute('data-on', ''); }
+            v = a < 0.5;
+            if (w.face !== v) { w.face = v; if (v) { w.li.setAttribute('data-face', ''); } else { w.li.removeAttribute('data-face'); } }
+            /* THE TURN UP: a case stands on its foot line. Beside the centre it lies back and stands a little away; at the
+               centre it has risen to face you and come forward to the glass of the screen (exactly one to one, so its words
+               are sharp). The one facing you also turns a breath toward the pointer. */
+            f = ease(1 - a);
+            // never more than three in sight at rest: beyond its neighbours the rail opens out, so the next case waits off the edge
+            v = 'translate3d(' + (d * step + (a > 1 ? (d < 0 ? -1 : 1) * (a - 1) * SW * 0.24 : 0) + slide - ptr.x * 6).toFixed(1) + 'px,0,' + (-130 * (1 - f) - (a > 1 ? (a - 1) * 70 : 0)).toFixed(1) + 'px) rotateX(' + (27 * (1 - f) - ptr.y * 1.6 * f).toFixed(2) + 'deg) rotateY(' + (ptr.x * 3 * f).toFixed(2) + 'deg)';
+            if (w.tf !== v) { w.tf = v; st.transform = v; }
+            v = String(100 - Math.round(a * 10));
+            if (w.z !== v) { w.z = v; st.zIndex = v; }
+            // dim: a shade on the pane and less light under the vial (never an opacity on the case itself: its glass must see the room)
+            v = (0.58 * (1 - f)).toFixed(3);
+            if (w.sh !== v && w.shade) { w.sh = v; w.shade.style.opacity = v; }
+            v = (0.4 + 0.52 * f).toFixed(3);
+            if (w.gl !== v && w.glow) { w.gl = v; w.glow.style.opacity = v; }
+            // THE LIGHT crosses the case ONCE while it rises (the last 0.6 of the way in), scrubbed like everything else
+            c = a < 0.6 ? 1 - a / 0.6 : -1;
+            if (w.sweep) {
+              v = c < 0 ? '' : 'translateX(' + (487 * c).toFixed(1) + '%) skewX(-16deg)';
+              if (w.stf !== v) { w.stf = v; w.sweep.style.transform = v; }
+              v = c < 0 ? '0' : (0.9 * Math.sin(Math.PI * c)).toFixed(3);
+              if (w.sop !== v) { w.sop = v; w.sweep.style.opacity = v; }
+            }
+          }
+          v = 'scaleX(' + bar.toFixed(4) + ')';
+          if (hair && hairTf !== v) { hairTf = v; hair.style.transform = v; }
+          // the room: the picture pushes in slowly toward its vanishing point as the travel goes on; the pointer moves the eye a little
+          var ox = ptr.x * SW * 0.008, oy = ptr.y * SH * 0.006;
+          origin(ox, oy);
+          if (plate && wantPlate) {
+            v = 'translate3d(' + ox.toFixed(1) + 'px,' + oy.toFixed(1) + 'px,0) scale(' + (1.01 + 0.08 * share).toFixed(4) + ')';
+            if (v !== plateTf) { plateTf = v; plate.style.transform = v; }
+          }
+          drawLogo();
+        }
+
+        function frame(now) {
+          tick = 0;
+          if (mode !== 'held') { return; }
+          var r = read();
+          var dt = last ? clamp(now - last, 0, 120) : 16;        // by the clock, so a slow device travels in the same time
+          last = now;
+          var idle = now - lastScroll > 140;
+          // the opening picture (logo layer): held for the first part, then the P glides back and the cases slide in
+          var g = OPEN ? ease((r.o - 0.62) / 0.38) : 1;
+          glide += (g - glide) * (1 - Math.exp(-dt / 70));
+          if (Math.abs(g - glide) < 0.002) { glide = g; }
+          if (Math.abs(r.t - lastT) > 0.0005) { dir = r.t > lastT ? 1 : -1; lastT = r.t; }
+          /* While the page moves, the rail follows the scroll, as fast as the visitor goes. When the page rests part way
+             between two cases, the turn finishes the way they were going (or falls back, if it had barely begun), so ONE
+             case always ends up facing them and nothing is left half turned. */
+          var lo = Math.floor(r.t), part = r.t - lo, goal;
+          if (part < 0.0005) { latch = null; goal = r.t; }
+          else if (idle) { latch = dir > 0 ? (part > 0.15 ? lo + 1 : lo) : (part < 0.85 ? lo : lo + 1); goal = latch; }
+          else if (latch !== null && ((latch === lo + 1 && dir > 0) || (latch === lo && dir < 0))) { goal = latch; }
+          else { latch = null; goal = r.t; }
+          goal = clamp(goal, 0, n - 1); goalNow = goal;
+          pos += (goal - pos) * (1 - Math.exp(-dt / (idle ? 120 : 64)));
+          if (Math.abs(goal - pos) < 0.0015) { pos = goal; }
+          ptr.x += (ptr.tx - ptr.x) * (1 - Math.exp(-dt / 170));
+          ptr.y += (ptr.ty - ptr.y) * (1 - Math.exp(-dt / 170));
+          if (Math.abs(ptr.tx - ptr.x) < 0.002) { ptr.x = ptr.tx; }
+          if (Math.abs(ptr.ty - ptr.y) < 0.002) { ptr.y = ptr.ty; }
+          bar += (r.share - bar) * (1 - Math.exp(-dt / 80));
+          if (Math.abs(r.share - bar) < 0.0005) { bar = r.share; }
+          setCur(clamp(Math.round(pos), 0, n - 1));
+          draw(r.share);
+          if (!idle || pos !== goal || bar !== r.share || glide !== g || ptr.x !== ptr.tx || ptr.y !== ptr.ty) { tick = raf(frame); }
+          else { last = 0; }
+        }
+        function wake() { if (mode === 'held' && live && !tick) { tick = raf(frame); } }
+        // no history to keep (first paint, back on screen, a new window size): go straight to the right case
+        function snap() {
+          if (mode !== 'held') { return; }
+          var r = read();
+          pos = clamp(Math.round(r.t), 0, n - 1); goalNow = pos; lastT = r.t; latch = r.t === pos ? null : pos;
+          bar = r.share; glide = OPEN ? ease((r.o - 0.62) / 0.38) : 1;
+          setCur(pos);
+          draw(r.share);
+        }
+
+        /* ---------------- LIST: the calm version ---------------- */
+        function listFrame() {
+          tick = 0;
+          if (mode !== 'list') { return; }
+          var sl = rail.scrollLeft, atEnd = railMax > 0 && sl >= railMax - 2;
+          var p = stepL > 0 ? clamp(sl / stepL, 0, n - 1) : 0;
+          setCur(atEnd ? n - 1 : clamp(Math.round(p), 0, n - 1));
+          var v = 'scaleX(' + (railMax > 0 ? clamp(sl / railMax, 0, 1) : 0).toFixed(4) + ')';
+          if (hair && hairTf !== v) { hairTf = v; hair.style.transform = v; }
+        }
+        function wakeList() { if (mode === 'list' && !tick) { tick = raf(listFrame); } }
+
+        /* ---------------- going to a case (a click, a key: the visitor's own ask) ---------------- */
+        var aim = -1, aimAt = 0;
+        // where "one on" starts from: the case just asked for (so quick presses add up), else the one facing you
+        function from() { return aim > -1 && clock() - aimAt < 900 ? aim : (mode === 'held' ? Math.round(goalNow) : cur); }
+        function go(i) {
+          i = clamp(i, 0, n - 1);
+          aim = i; aimAt = clock();
+          var smooth = ctx.motion.reduced ? 'auto' : 'smooth';
+          if (mode === 'held') {
+            var r = read();
+            var y = (window.pageYOffset || document.documentElement.scrollTop || 0) + r.top + r.openPx + r.travel * (LEAD + (n > 1 ? i / (n - 1) : 0) * (1 - 2 * LEAD));
+            try { window.scrollTo({ top: Math.round(y), behavior: smooth }); } catch (e) { window.scrollTo(0, Math.round(y)); }
+          } else {
+            try { rail.scrollTo({ left: i * stepL, behavior: smooth }); } catch (e2) { rail.scrollLeft = i * stepL; }
+          }
+        }
+        function index(el) {
+          var li = el && el.closest ? el.closest('.vc') : null;
+          if (!li) { return -1; }
+          for (var k = 0; k < n; k++) { if (wins[k].li === li) { return k; } }
+          return -1;
+        }
+        function centred() {
+          var r = stage.getBoundingClientRect(), h = window.innerHeight || 0;
+          return r.top < h * 0.5 && r.bottom > h * 0.5;
+        }
+        if (prevBtn) { prevBtn.addEventListener('click', function () { go(from() - 1); }); }
+        if (nextBtn) { nextBtn.addEventListener('click', function () { go(from() + 1); }); }
+        // a case beside the centre is clicked: bring it up
+        rail.addEventListener('click', function (e) { var k = index(e.target); if (mode === 'held' && k > -1 && k !== cur) { go(k); } });
+        // arrow keys move ONE case, while the lineup is the thing on screen and the keyboard is not inside another section or a field
+        window.addEventListener('keydown', function (e) {
+          if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) { return; }
+          var t = e.target;
+          if (t && t !== document.body && t !== document.documentElement && !root.contains(t)) { return; }
+          if (t && t.matches && t.matches('input, textarea, select, [contenteditable]')) { return; }
+          if (!live || !n || !centred()) { return; }
+          e.preventDefault();
+          go(from() + (e.key === 'ArrowRight' ? 1 : -1));
+        });
+        // a sideways swipe with a finger or a pen on the held stage: one case on or back
+        var swipe = null;
+        stage.addEventListener('pointerdown', function (e) { swipe = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY }; }, { passive: true });
+        stage.addEventListener('pointerup', function (e) {
+          if (!swipe || mode !== 'held') { swipe = null; return; }
+          var dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+          swipe = null;
+          if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.3) { go(from() + (dx < 0 ? 1 : -1)); }
+        }, { passive: true });
+        stage.addEventListener('pointercancel', function () { swipe = null; }, { passive: true });
+        // the pointer (mouse only): the eye moves a little, so near things shift against far things
+        stage.addEventListener('pointermove', function (e) {
+          if (mode !== 'held' || e.pointerType !== 'mouse' || !SW || !SH) { return; }
+          ptr.tx = clamp(e.clientX / SW * 2 - 1, -1, 1); ptr.ty = clamp(e.clientY / SH * 2 - 1, -1, 1);
+          wake();
+        }, { passive: true });
+        stage.addEventListener('pointerleave', function () { ptr.tx = 0; ptr.ty = 0; wake(); }, { passive: true });
+
+        /* ================================ THE LOGO LAYER: pictures of the real engine's own drawing ================================
+           The word stands along the floor's centre line, each letter at its own depth; the P stands up front and turns
+           (a turntable of frames). Both stand on ONE floor seen by the cases' own camera: a thing further away is only
+           given a bigger distance, and the browser does the projection. Nothing is recoloured, stretched or redrawn. */
+        function layoutLogo() {
+          if (!logo || !floor) { return; }
+          var H = mode === 'held' ? SH : (scene ? scene.clientHeight : 0), cx = SW / 2, cy = H / 2;
+          if (!H) { return; }
+          var P = PERSP * H / 900, E = H * 0.4;                  // camera distance, and how far below eye level the near foot line is (the cases stand on it too)
+          floor.style.perspective = P.toFixed(0) + 'px';
+          logo.P = P;
+          /* THE WORD runs up the centre line, read from the top down: it starts far away and small and comes in, and the last
+             letter stands nearest, just above the P. Every letter is its own capture standing at its own depth, so the letters
+             shift against each other when the eye moves. NEAR_FIRST turns the reading order round (first letter nearest). */
+          var NEAR_FIRST = false, m = letters.length, r = 0.945, s0 = 0.8, gap = H * 0.013;   // gentle depth steps: the far letters stay readable and the word still recedes
+          var colTop = H * 0.098, colBot = H * 0.509, sum = (1 - Math.pow(r, m)) / (1 - r), gaps = gap * (sum - 1);
+          var hb = (colBot - colTop - gaps) / sum / s0, yb = colBot;
+          for (var k = 0; k < m; k++) {
+            var im = NEAR_FIRST ? letters[k] : letters[m - 1 - k], s = s0 * Math.pow(r, k), wpx = hb * im._w / im._h;
+            im.style.height = hb.toFixed(1) + 'px'; im.style.width = wpx.toFixed(1) + 'px';
+            im.style.left = (cx - wpx / 2).toFixed(1) + 'px'; im.style.top = (cy - hb).toFixed(1) + 'px'; im.style.bottom = 'auto';
+            im._away = P * (1 / s - 1); im._foot = yb; im._s = s; im._k = k;
+            im.style.transform = 'translate3d(0,' + ((yb - cy) / s).toFixed(1) + 'px,' + (-im._away).toFixed(1) + 'px)';
+            yb -= (hb + gap / s0) * s;
+          }
+          // the P: its frame is sized so the P itself stands 0.4 of the stage high when it is up front
+          var fh = H * 0.28 / logo.body, fw = fh * logo.fw / logo.fh;      // owner, Nov 11: the opening P about 15 to 20 percent smaller, same place
+          mark.style.width = fw.toFixed(1) + 'px'; mark.style.height = fh.toFixed(1) + 'px';
+          mark.style.left = (cx - fw / 2).toFixed(1) + 'px'; mark.style.top = (cy + E - logo.foot * fh).toFixed(1) + 'px';
+          mark.style.transformOrigin = 'center ' + (logo.foot * 100).toFixed(2) + '%';
+          sheets.forEach(function (im) { im.style.width = (fw * logo.cols).toFixed(1) + 'px'; im.style.height = (fh * logo.rows).toFixed(1) + 'px'; });
+          var mirror = q('.pep-lineup-mark-frame--mirror'), shadow = q('.pep-lineup-mark-shadow');
+          if (mirror) { mirror.style.transformOrigin = 'center ' + (logo.foot * 100).toFixed(2) + '%'; }
+          if (shadow) { shadow.style.top = (logo.foot * 100 - 6).toFixed(2) + '%'; }
+          logo.fwPx = fw; logo.fhPx = fh;
+          logo.far = P * (1 / 0.3 - 1) * 0.5;                    // where it stands once it has gone back. Owner, Nov 11: half as far as before, so it still reads
+          frameNow = -1; showFrame(logo.rest || 0);
+          markTf = ''; markOp = ''; glideDrawn = -1;
+          if (mode !== 'held') { originTf = ''; origin(0, 0); }      // the calm version: the eye stands still, on the picture's vanishing point
+          drawGuides(cx, cy, E, H);
+        }
+        function showFrame(k) {
+          if (!logo || k === frameNow) { return; }
+          frameNow = k;
+          var v = 'translate3d(' + (-(k % logo.cols) * logo.fwPx).toFixed(1) + 'px,' + (-Math.floor(k / logo.cols) * logo.fhPx).toFixed(1) + 'px,0)';
+          sheets.forEach(function (im) { im.style.transform = v; });
+        }
+        function drawLogo() {
+          if (!logo || !mark) { return; }
+          var g = mode === 'held' ? glide : 0;
+          // the P glides back along the floor to the far end and dims; the pointer moves it a little while it is up front
+          var v = 'translate3d(' + (-ptr.x * 12 * (1 - g)).toFixed(1) + 'px,0,' + (-logo.far * g).toFixed(1) + 'px)';
+          if (v !== markTf) { markTf = v; mark.style.transform = v; }
+          v = (1 - 0.2 * g).toFixed(3);
+          if (v !== markOp) { markOp = v; mark.style.opacity = v; }
+          if (g !== glideDrawn) {
+            glideDrawn = g;
+            letters.forEach(function (im) { im.style.opacity = ((1 - 0.018 * (im._k || 0)) * (1 - 0.08 * g)).toFixed(3); });      // the word stays bright: every letter has to read
+          }
+        }
+        // the P's own turn, as the lock has it: it faces front, then makes ONE slow full turn, every 8 seconds
+        function spin() {
+          clearTimeout(spinTimer); spinTimer = 0;
+          if (!logo || ctx.motion.reduced || !live || document.hidden) { showFrame(logo ? (logo.rest || 0) : 0); return; }
+          var k = 0, each = logo.turnMs / logo.frames;
+          function nextFrame() {
+            showFrame(k % logo.frames);
+            if (k >= logo.frames) { spinTimer = setTimeout(spin, 0); return; }
+            k++; spinTimer = setTimeout(nextFrame, each);
+          }
+          showFrame(logo.rest || 0);
+          spinTimer = setTimeout(nextFrame, logo.holdMs);          // it faces front first, then turns
+        }
+        // ?guides: proof that page and picture share one camera. Lines from the vanishing point down the floor's centre line
+        // and along the picture's two floor edges, and a mark at the foot of every letter and of the P.
+        function drawGuides(cx, cy, E, H) {
+          if (!GUIDES || !scene) { return; }
+          var old = q('.pep-lineup-guides'); if (old) { old.parentNode.removeChild(old); }
+          var box = document.createElement('div'); box.className = 'pep-lineup-guides';
+          var line = function (x1, y1, x2, y2, col) {
+            var el = document.createElement('i'), len = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            el.style.cssText = 'position:absolute;left:' + x1 + 'px;top:' + (y1 - 1) + 'px;width:' + len + 'px;height:2px;transform-origin:left center;transform:rotate(' + Math.atan2(y2 - y1, x2 - x1) + 'rad);background:' + col;
+            box.appendChild(el);
+          };
+          var edge = parseFloat(root.getAttribute('data-plate-edge')) || 0.729;       // where the picture's floor edges leave its sides, as a share of its height
+          var img = new Image();
+          img.onload = function () {
+            var bw = SW * 1.06, bh = H * 1.13, k = Math.max(bw / img.naturalWidth, bh / img.naturalHeight);
+            var y0 = -0.1283 * H + (bh - img.naturalHeight * k) * 0.556, x0 = -0.03 * SW + (bw - img.naturalWidth * k) * 0.5;
+            var ey = y0 + edge * img.naturalHeight * k, exL = x0, exR = x0 + img.naturalWidth * k;
+            line(cx, cy, exL, ey, 'rgba(127,102,255,.95)'); line(cx, cy, exR, ey, 'rgba(127,102,255,.95)');
+          };
+          if (wantPlate) { img.src = 'assets/lineup-stage.webp'; }
+          line(cx, cy, cx, cy + E, 'rgba(255,255,255,.9)');
+          line(cx - 40, cy, cx + 40, cy, 'rgba(255,255,255,.9)');
+          letters.concat(logo && mark ? [{ _away: 0, _mark: 1 }] : []).forEach(function (im) {
+            var s = im._mark ? 1 : im._s, y = im._mark ? cy + E : im._foot;
+            line(cx - 26 * s - 8, y, cx + 26 * s + 8, y, im._mark ? 'rgba(255,255,255,.95)' : 'rgba(200,188,255,.95)');
+          });
+          scene.appendChild(box);
+        }
+        function loadLogo() {
+          if (!wantLogo || !floor || !mark || !sheets.length) { return; }
+          fetch('assets/lineup/logo.json').then(function (r) { if (!r.ok) { throw new Error('logo ' + r.status); } return r.json(); }).then(function (d) {
+            if (!d || !d.sheet || !d.cols || !d.rows || !d.frames || !Array.isArray(d.letters)) { return; }
+            logo = { cols: d.cols, rows: d.rows, frames: d.frames, fw: d.fw, fh: d.fh, foot: d.foot, body: d.body, rest: d.rest || 0,
+              holdMs: d.holdMs || 5200, turnMs: d.turnMs || 2800 };
+            d.letters.forEach(function (L) {
+              var im = document.createElement('img');
+              im.className = 'pep-lineup-letter'; im.alt = ''; im.setAttribute('aria-hidden', 'true'); im.decoding = 'async';
+              im._w = L.w; im._h = L.h; im.src = 'assets/lineup/' + L.file;
+              floor.insertBefore(im, mark); letters.push(im);
+            });
+            sheets.forEach(function (im) { im.src = 'assets/lineup/' + d.sheet; });
+            floor.hidden = false;
+            root.setAttribute('data-logo-on', '');
+            OPEN = 0.96;                                         // 0.6 of a screen on the opening picture, then the glide
+            root.style.setProperty('--pep-lineup-open', String(OPEN));
+            measure();
+            if (mode === 'held') { snap(); } else { drawLogo(); listFrame(); }
+            spin();
+          }).then(null, function () { /* no logo layer: the stage stands without it */ });
+        }
+
+        /* ---------------- which version, and when ---------------- */
+        function clearDrawn() {
+          wins.forEach(function (w) {
+            w.li.style.transform = ''; w.li.style.zIndex = '';
+            if (w.shade) { w.shade.style.opacity = ''; }
+            if (w.glow) { w.glow.style.opacity = ''; }
+            if (w.sweep) { w.sweep.style.transform = ''; w.sweep.style.opacity = ''; }
+            w.li.removeAttribute('data-on'); w.li.removeAttribute('data-face');
+            w.on = false; w.face = null; w.z = w.tf = w.sh = w.gl = w.stf = w.sop = '';
+          });
+          if (hair) { hair.style.transform = ''; }
+          if (plate) { plate.style.transform = ''; }
+          rail.style.perspectiveOrigin = '';
+          hairTf = plateTf = originTf = markTf = markOp = ''; glideDrawn = -1;
+          ptr.x = ptr.y = ptr.tx = ptr.ty = 0; last = 0;
+        }
+        function setMode() {
+          var want = mqHeld && mqHeld.matches && !ctx.motion.reduced ? 'held' : 'list';
+          if (want === mode) { return false; }
+          var keep = cur < 0 ? 0 : cur;
+          if (tick) { caf(tick); tick = 0; }
+          clearDrawn();
+          mode = want; cur = -1;
+          if (mode === 'held') { root.setAttribute('data-held', ''); rail.removeAttribute('tabindex'); }
+          else { root.removeAttribute('data-held'); rail.setAttribute('tabindex', '0'); }       // a scrolling list must be reachable by keyboard
+          measure();
+          if (mode === 'held') { snap(); }
+          else { rail.scrollLeft = keep * stepL; origin(0, 0); drawLogo(); listFrame(); for (var k = 0; k < n && k < 4; k++) { ask(k); } }
+          return true;
+        }
+
+        window.addEventListener('scroll', function () {
+          if (mode !== 'held' || !live) { return; }
+          lastScroll = clock();
+          wake();
+        }, { passive: true });
+        rail.addEventListener('scroll', wakeList, { passive: true });
+        var again = 0;
+        window.addEventListener('resize', function () {
+          if (again) { return; }
+          again = setTimeout(function () {
+            again = 0;
+            if (!setMode()) { measure(); if (mode === 'held') { snap(); } else { origin(0, 0); drawLogo(); listFrame(); } }
+          }, 140);
+        }, { passive: true });
+        if (mqHeld) { if (mqHeld.addEventListener) { mqHeld.addEventListener('change', setMode); } else if (mqHeld.addListener) { mqHeld.addListener(setMode); } }
+        document.addEventListener('visibilitychange', function () { if (logo) { spin(); } });
+
+        // will-change only while the lineup is on screen; coming on screen goes straight to the right case
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            live = entries[entries.length - 1].isIntersecting;
+            if (live) { root.setAttribute('data-live', ''); if (mode === 'held') { measure(); snap(); } }
+            else { root.removeAttribute('data-live'); }
+            if (logo) { spin(); }
+          }).observe(root);
+        } else { live = true; root.setAttribute('data-live', ''); }
+
+        setMode();
+        loadLogo();
+      }
     }
   });
 })();
