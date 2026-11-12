@@ -500,7 +500,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 clamp(16px, 4vw, 64px) clamp(20px, 4vh, 48px);
+  padding: clamp(8px, 1.6vh, 18px) clamp(16px, 4vw, 64px) clamp(20px, 4vh, 48px);
   overflow-x: clip;
 }
 
@@ -515,17 +515,18 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 
 /* the giant word: real extruded metal, drawn by 02-logo3d into .pep-hero-word */
-/* the title box is only as tall as the letters; the 3D slot is larger and centred on it (the engine sizes the word from the slot's height) */
-.pep-hero-title { position: relative; height: clamp(84px, 13.2vw, 200px); margin: clamp(4px, 1vh, 12px) 0 0; font-family: var(--pep-font-display); font-weight: 400; }
-/* the slot is wider than the page on purpose: the engine keeps a margin round the word, so this makes the word itself span the screen */
+/* the title box is only as tall as the letters; the 3D slot is larger and centred on it, so the depth of the letters has room */
+.pep-hero-title { position: relative; height: clamp(92px, 12.9vw, 236px); margin: clamp(6px, 1.2vh, 14px) 0 0; font-family: var(--pep-font-display); font-weight: 400; }
+/* the slot runs edge to edge of the window. hero.html says how much of it the word takes (data-span) and how the camera sees it */
 .pep-hero-word {
   position: absolute;
-  left: 48.4%;                /* the word is posed a few degrees off square, which leans it right; this centres what the eye sees */
+  left: 50%;
   top: 50%;
   display: block;
-  width: min(128vw, 1900px);
-  aspect-ratio: 1 / .26;
+  width: min(100vw, 250vh);
+  height: 210%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 /* the same word as type: read by screen readers always, shown only if 3D is off */
 .pep-hero-word-text {
@@ -547,12 +548,14 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 [data-module="hero"][data-3d="pending"] .pep-hero-word-text,
 [data-module="hero"][data-3d="on"] .pep-hero-word-text { opacity: 0; }
 
+/* the ask and the bottle stand together under the word, as one pair about the page's centre line */
 .pep-hero-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr) minmax(0, .9fr);
+  grid-template-columns: minmax(0, clamp(440px, 39vw, 620px)) auto;
+  justify-content: center;
   align-items: center;
-  gap: clamp(12px, 2.2vw, 40px);
-  margin-top: clamp(6px, 1.2vh, 16px);
+  gap: clamp(28px, 5.4vw, 112px);
+  margin-top: clamp(8px, 1.6vh, 18px);
 }
 
 /* ---------- the ask: a see-through glass card with chamfered corners ---------- */
@@ -560,8 +563,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   --pep-hero-rx: 0deg;
   --pep-hero-ry: 0deg;
   position: relative;
-  justify-self: end;
-  width: min(100%, 560px);
+  justify-self: stretch;
+  width: 100%;
   padding: clamp(20px, 2.3vw, 34px);
   background: linear-gradient(145deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .03));
   -webkit-backdrop-filter: blur(14px) saturate(150%);
@@ -608,6 +611,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   font-size: clamp(26px, 2.9vw, 44px);
   line-height: 1.08;
   letter-spacing: .1em;
+  text-wrap: balance;          /* two even lines at every width, never one word left alone on the second */
   color: var(--pep-plat-4);
   background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-2) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
   -webkit-background-clip: text;
@@ -785,20 +789,13 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 .pep-hero-skip:hover { color: var(--pep-plat-5); border-color: var(--pep-plat-4); }
 
-/* ---------- the logo and the bottle ---------- */
-.pep-hero-mark {
-  justify-self: center;
-  align-self: start;
-  width: min(118%, 500px);
-  aspect-ratio: 1 / .82;
-  margin: clamp(-64px, -3.6vw, -16px) -9% 0;
-  cursor: pointer;
-}
-.pep-hero-mark:focus-visible { outline: 1px solid var(--pep-plat-3); outline-offset: 4px; }
+/* ---------- the bottle (the P that stood between the ask and the bottle is now the crest, 11-crest) ---------- */
 .pep-hero-bottle {
   justify-self: start;
-  height: min(54vh, 560px);
+  height: min(57vh, 620px);
   aspect-ratio: 560 / 1058;
+  /* the vial's picture has clear air at its sides; this takes the spare air off the outer side so the pair reads centred */
+  margin-right: calc(min(57vh, 620px) * -.09);
   cursor: pointer;
 }
 .pep-hero-bottle:focus-visible { outline: 1px solid var(--pep-plat-3); outline-offset: 2px; }
@@ -806,8 +803,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 /* short desktop and laptop screens: everything tightens so the whole ask stays on the first screen */
 @media (min-width: 900px) and (max-height: 800px) {
   .pep-hero-eyebrow { font-size: 15px; }
-  .pep-hero-title { height: clamp(80px, 19vh, 150px); }
-  .pep-hero-word { width: min(128vw, 1900px, 200vh); }
+  .pep-hero-title { height: clamp(84px, min(13.4vw, 25vh), 190px); margin-top: 4px; }
+  .pep-hero-row { margin-top: 6px; }
   .pep-hero-card { padding: 18px 26px 20px; }
   .pep-hero-ask { margin-bottom: 6px; font-size: clamp(22px, 4.6vh, 36px); }
   .pep-hero-offer { margin-bottom: 10px; font-size: 17px; }
@@ -816,25 +813,21 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-hero-btn { height: 52px; }
   .pep-hero-consent { margin-top: 10px; }
   .pep-hero-fine { margin-top: 8px; }
-  .pep-hero-mark { width: min(100%, 52vh); }
-  .pep-hero-bottle { height: min(52vh, 560px); }
+  .pep-hero-bottle { height: min(56vh, 560px); margin-right: calc(min(56vh, 560px) * -.09); }
 }
 
 @media (max-width: 899px) {
   [data-module="hero"] { min-height: 0; justify-content: flex-start; padding-top: 4px; }
   .pep-hero-eyebrow { font-size: 15px; letter-spacing: .44em; text-indent: .44em; }
-  .pep-hero-title { height: clamp(64px, 20vw, 110px); }
-  .pep-hero-word { width: 138vw; left: 47.6%; }
-  .pep-hero-row { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 0; }
-  .pep-hero-mark { order: 1; width: 150px; margin: 0; align-self: center; }
-  .pep-hero-card { order: 2; justify-self: stretch; width: 100%; padding: 20px 18px 22px; }
-  .pep-hero-bottle { order: 3; justify-self: center; height: auto; width: min(80vw, 330px); margin-top: 8px; }
+  .pep-hero-title { height: clamp(72px, 23vw, 150px); margin: 2px 0 6px; }
+  .pep-hero-row { grid-template-columns: minmax(0, 1fr); justify-content: stretch; gap: 12px; margin-top: 0; }
+  .pep-hero-card { order: 1; justify-self: stretch; width: 100%; padding: 20px 18px 22px; }
+  .pep-hero-bottle { order: 2; justify-self: center; height: auto; width: min(80vw, 330px); margin: 8px 0 0; }
   .pep-hero-ask { font-size: 26px; }
 }
 /* short phones: keep the button on the first screen */
 @media (max-width: 899px) and (max-height: 700px) {
-  .pep-hero-title { height: 56px; }
-  .pep-hero-mark { width: 104px; }
+  .pep-hero-title { height: 64px; margin-bottom: 2px; }
   .pep-hero-card { padding: 16px 16px 18px; }
   .pep-hero-ask { font-size: 23px; }
   .pep-hero-offer { margin-bottom: 10px; }
@@ -844,6 +837,828 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 @media (prefers-reduced-motion: reduce) {
   .pep-hero-card { transform: none; }
   .pep-hero-step { animation-name: none; }
+}
+</style>
+<style data-pep-src="modules/11-crest/crest.css">
+/* 11-crest. Every selector starts with [data-module="crest"] or .pep-crest-
+   Platinum does the work. The only warm light is the logo's own pale-gold beam light, as a breath in the floor pool under the
+   3D P (never without it). No violet.
+   The root and the stage are never transformed, faded, filtered or pinned (the 3D slot inside them could not follow). */
+
+/* DEFAULT = no 3D (no script, or the engine is off): a slim, calm band with the horizon line alone */
+[data-module="crest"] {
+  --pep-crest-dy: 0px;                              /* the beam's rise and fall, written by crest.js from the engine */
+  --pep-crest-hh: min(33vh, 35vw);                  /* half the P's height and width on screen, until crest.js has the true ones */
+  --pep-crest-hw: min(30vh, 32vw);
+  position: relative;
+  z-index: 1;
+  height: clamp(120px, 22vh, 220px);
+  overflow: clip;
+}
+/* 3D on its way or on: the stage. About one screen on a desktop; on a narrow screen it is only as tall as the P needs */
+[data-module="crest"][data-3d="pending"],
+[data-module="crest"][data-3d="on"] {
+  height: min(100vh, 124vw);
+  height: min(100svh, 124vw);
+  min-height: 380px;
+}
+
+.pep-crest-stage { position: absolute; inset: 0; }
+
+/* the 3D slot: the engine draws the P here, centred on the slot's middle line (which is where its beam rests: 46% down the
+   stage). The slot is taller than the stage on purpose: when the P turns, its near edge comes toward the lens and stands
+   taller for a moment, and it must never meet the edge of its own drawing area. */
+.pep-crest-slot { position: absolute; left: 0; right: 0; top: -14%; bottom: -6%; display: none; pointer-events: none; }
+[data-module="crest"][data-3d="pending"] .pep-crest-slot,
+[data-module="crest"][data-3d="on"] .pep-crest-slot { display: block; }
+
+/* the P itself answers a pointer, a tap and the keyboard (one extra turn): this box sits on the P and nowhere else */
+.pep-crest-mark {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  display: none;
+  width: calc(var(--pep-crest-hw) * 2);
+  height: calc(var(--pep-crest-hh) * 2);
+  margin: calc(var(--pep-crest-hh) * -1) 0 0 calc(var(--pep-crest-hw) * -1);
+  cursor: pointer;
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-mark,
+[data-module="crest"][data-3d="on"] .pep-crest-mark { display: block; }
+.pep-crest-mark:focus-visible { outline: 1px solid var(--pep-plat-3); outline-offset: 10px; }
+
+/* ---------- the horizon: one hairline, dead level, the whole width, through the P's waist ---------- */
+.pep-crest-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translate3d(0, var(--pep-crest-dy), 0);
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-horizon,
+[data-module="crest"][data-3d="on"] .pep-crest-horizon { top: 46%; }
+.pep-crest-ray {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(185, 190, 197, 0) 0%,
+    rgba(185, 190, 197, .34) 14%,
+    rgba(230, 233, 237, .78) 34%,
+    var(--pep-plat-5) 50%,
+    rgba(230, 233, 237, .78) 66%,
+    rgba(185, 190, 197, .34) 86%,
+    rgba(185, 190, 197, 0) 100%);
+  transform: scaleX(1);
+  transition: transform 1.7s var(--pep-ease);
+}
+/* a breath of platinum haze on the line, so it reads as light and not as a rule */
+.pep-crest-ray::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: -7px;
+  height: 15px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(230, 233, 237, .16), rgba(230, 233, 237, .05) 55%, rgba(230, 233, 237, 0) 100%);
+}
+/* no 3D: the band has no P, so the line itself is a little stronger at its centre. Platinum only: gold stays inside the logo */
+.pep-crest-ray::before {
+  content: "";
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  top: -1px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(230, 233, 237, 0), rgba(230, 233, 237, .5) 30%, var(--pep-plat-5) 50%, rgba(230, 233, 237, .5) 70%, rgba(230, 233, 237, 0));
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-ray::before,
+[data-module="crest"][data-3d="on"] .pep-crest-ray::before { display: none; }
+
+/* ---------- the floor: light pooled under the P's foot (flat, as a floor is seen from standing height) ---------- */
+.pep-crest-pool {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  display: none;
+  width: calc(var(--pep-crest-hw) * 5.2);
+  height: calc(var(--pep-crest-hh) * .56);
+  margin: calc(var(--pep-crest-hh) * .78) 0 0 calc(var(--pep-crest-hw) * -2.6);
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 19% 8% at 50% 50%, rgba(255, 255, 255, .34), rgba(255, 233, 189, .16) 50%, rgba(255, 233, 189, 0) 100%),
+    radial-gradient(ellipse 32% 28% at 50% 50%, rgba(255, 233, 189, .13), rgba(230, 233, 237, .07) 60%, rgba(230, 233, 237, 0) 100%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(230, 233, 237, .1), rgba(185, 190, 197, .035) 55%, rgba(185, 190, 197, 0) 100%);
+  transition: opacity 2.2s var(--pep-ease);
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-pool,
+[data-module="crest"][data-3d="on"] .pep-crest-pool { display: block; }
+
+/* the stage lights once, when the crest comes on screen: the line draws out from the P and the floor takes the light.
+   (crest.js sets data-crest="dark" only when it will also set "lit"; with no script the line is simply there) */
+[data-module="crest"][data-crest="dark"] .pep-crest-ray { transform: scaleX(0); transition-duration: 0s; }
+[data-module="crest"][data-crest="dark"] .pep-crest-pool { opacity: 0; transition-duration: 0s; }
+
+@media (max-width: 899px) {
+  .pep-crest-pool { width: calc(var(--pep-crest-hw) * 3.6); margin-left: calc(var(--pep-crest-hw) * -1.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-crest-ray, .pep-crest-pool { transition: none; }
+}
+</style>
+<style data-pep-src="modules/12-standard/standard.css">
+/* 12-standard. Every selector starts with [data-module="standard"] or .pep-standard-
+   Platinum only: no gold and no violet here. Nothing in this module asks for a 3D logo.
+   DEFAULT (scripts off, reduced motion, or a screen too short to hold the scene): a plain, readable stack with the sentence
+   fully lit and the word shown once at a calm size. The scroll scene is switched on by the script with
+   data-standard-mode="live" and lives in the no-preference block further down. */
+[data-module="standard"] {
+  --pep-standard-fs: min(clamp(34px, 6.2vw, 104px), 12.6vh);
+  --pep-standard-ls: .04em;
+  --pep-standard-ramp: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 30%, var(--pep-plat-3) 52%, var(--pep-plat-4) 72%, var(--pep-plat-5) 100%);
+  --pep-standard-chrome: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-2) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  position: relative;
+  z-index: 1;
+  padding: clamp(48px, 9vh, 120px) clamp(16px, 4vw, 64px);
+  overflow-x: clip;
+}
+
+/* ---------- the small label ---------- */
+.pep-standard-label {
+  display: flex;
+  align-items: center;
+  gap: 1.1em;
+  margin: 0 0 clamp(18px, 3.4vh, 36px);
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: clamp(15px, 1.5vw, 22px);
+  line-height: 1;
+  letter-spacing: .5em;
+  color: var(--pep-plat-3);
+}
+.pep-standard-label::before {
+  content: "";
+  flex: 0 0 auto;
+  width: clamp(28px, 4vw, 60px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--pep-plat-5), var(--pep-plat-2));
+}
+
+/* ---------- TXT-04: the sentence ---------- */
+.pep-standard-line {
+  position: relative;
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: var(--pep-standard-fs);
+  line-height: 1.02;
+  letter-spacing: var(--pep-standard-ls);
+  color: var(--pep-plat-4);
+}
+/* the sentence as ordinary text, for screen readers only */
+.pep-standard-read {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.pep-standard-words { position: relative; display: block; }
+/* one row per phrase; each row is only as wide as its own words and wraps by itself on a narrow screen */
+.pep-standard-row { display: block; width: -moz-fit-content; width: fit-content; }
+/* each word carries its own slice of ONE sheen that runs across the whole block (the script sets the slice) */
+.pep-standard-w {
+  display: inline-block;
+  color: var(--pep-plat-4);
+  background-color: var(--pep-plat-4);          /* if a slice ever misses, the letters stay platinum, never empty */
+  background-image: var(--pep-standard-ramp);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* The owner's type has no comma, and the fallback differs on every device. This one is drawn to that type's own measure:
+   the full stop is a square .141em wide on the baseline, so the comma is that square with a tail cut at 45 degrees. */
+.pep-standard-comma {
+  --pep-standard-bw: 100%;
+  --pep-standard-bh: 100%;
+  --pep-standard-bx: 0px;
+  --pep-standard-by: 0px;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  width: .141em;
+  height: .312em;
+  margin: 0 calc(.042em + var(--pep-standard-ls)) 0 .047em;
+  vertical-align: -.171em;
+  letter-spacing: 0;
+}
+.pep-standard-comma::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--pep-plat-4);
+  background-image: var(--pep-standard-ramp);
+  background-repeat: no-repeat;
+  background-size: var(--pep-standard-bw) var(--pep-standard-bh);
+  background-position: var(--pep-standard-bx) var(--pep-standard-by);
+  clip-path: polygon(0 0, 100% 0, 100% 54.8%, 0 100%);
+}
+/* the real character stays in the page as text, but the drawn one is what shows */
+.pep-standard-comma-ch { position: absolute; left: 0; top: 0; visibility: hidden; }
+/* marks the baseline of a word so the script can line two words up exactly */
+.pep-standard-base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+
+/* ---------- SCR-17: the word (calm version) ---------- */
+.pep-standard-portal { margin-top: clamp(44px, 9vh, 104px); text-align: center; }
+.pep-standard-word {
+  position: relative;
+  display: inline-block;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: min(clamp(40px, 9vw, 140px), 22vh);
+  line-height: 1;
+  letter-spacing: var(--pep-standard-ls);
+  white-space: nowrap;
+  color: var(--pep-plat-4);
+}
+/* The chrome is painted once per group (PEPT, ICITY), not once per letter: each group shows its own slice of ONE ramp that
+   runs across the whole word (the script sets the slice). Two painted layers instead of nine keeps the flight light. */
+.pep-standard-half {
+  display: inline-block;
+  background-color: var(--pep-plat-4);
+  background-image: var(--pep-standard-chrome);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-standard-half:last-of-type .pep-standard-l:last-of-type { letter-spacing: 0; }
+
+/* ---------- the scroll scene ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* a tall section with one screen held in place inside it. 2.2 screens in all, so the hold itself is 1.2 screens. */
+  [data-module="standard"][data-standard-mode="live"] {
+    height: 220vh;
+    height: 220svh;
+    padding: 0;
+  }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    height: 100svh;
+    padding: 0 clamp(16px, 7vw, 132px);
+  }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-say { transform-origin: 28% 62%; }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-w { opacity: .16; }
+
+  /* the word's own layer: exactly the held screen, clipped, so the giant letters can never widen or lengthen the page and
+     never reach into the next section. They sink into shadow toward the bottom edge, where the next section comes up.
+     Never takes a click. */
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-portal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
+  }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-word {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    width: -moz-max-content;
+    width: max-content;
+    margin: -.5em auto 0;
+    font-size: min(clamp(48px, 13.5vw, 320px), 36vh);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* the blur that clears. A soft twin of the word (its text comes from data-word in the html) with ONE fixed blur; the
+     script fades it in over the sentence's own word and then brings the sharp letters up through it, all before the word
+     moves. A blur that changed size every frame would stutter the first time through. */
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-word[data-standard-soft]::before {
+    content: attr(data-word);
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    color: var(--pep-plat-4);
+    background-image: var(--pep-standard-chrome);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(.05em);
+    opacity: var(--pep-standard-soft, 0);
+    will-change: opacity;
+  }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-half { opacity: var(--pep-standard-sharp, 1); }
+
+  /* layers are promoted only while the section is on screen (the script sets and clears data-standard-on) */
+  [data-module="standard"][data-standard-mode="live"][data-standard-on] .pep-standard-w { will-change: opacity; }
+  [data-module="standard"][data-standard-mode="live"][data-standard-on] .pep-standard-say { will-change: opacity, transform; }
+}
+
+/* phones: a shorter run (1.9 screens) and the word a little wider on the narrow screen */
+@media (prefers-reduced-motion: no-preference) and (max-width: 899px) {
+  [data-module="standard"][data-standard-mode="live"] {
+    height: 190vh;
+    height: 190svh;
+  }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-stage { padding: 0 clamp(16px, 4vw, 64px); }
+  [data-module="standard"][data-standard-mode="live"] .pep-standard-word { font-size: min(14.6vw, 36vh); }
+}
+
+/* reduced motion: nothing held, nothing flown through. The stack above is the whole section. */
+@media (prefers-reduced-motion: reduce) {
+  .pep-standard-say,
+  .pep-standard-w,
+  .pep-standard-word,
+  .pep-standard-half {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    filter: none !important;
+    will-change: auto !important;
+  }
+}
+</style>
+<style data-pep-src="modules/14-story/story.css">
+/* 14-story. Every selector starts with [data-module="story"] or .pep-story-
+   Platinum only: no gold here, and violet is only the light inside the vial (drawn by 06-bottle).
+   The rules in the first half are the CALM version: an ordinary ordered list on one glass plate with the vial beside it.
+   That is what shows with scripts off, when less motion is asked for, and on very short screens.
+   The HELD stage (position: sticky inside a tall section, never fixed) is added in the second half, inside one media
+   query, and only once the script has marked the root with data-held. The vial is mounted plain, so it may sit on the
+   sticky stage; its host is never transformed, faded or filtered. */
+[data-module="story"] {
+  --pep-story-vh: 1vh;
+  position: relative;
+  z-index: 1;
+  padding: clamp(44px, 8vh, 104px) clamp(16px, 4vw, 64px);
+}
+/* small-viewport units where the browser has them, so the stage fits a phone with its address bar showing */
+@supports (height: 1svh) {
+  [data-module="story"] { --pep-story-vh: 1svh; }
+}
+
+.pep-story-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "head  figure"
+    "steps figure";
+  column-gap: clamp(20px, 4vw, 72px);
+  row-gap: clamp(18px, 3vh, 34px);
+}
+
+/* ---------- heading and the way past ---------- */
+.pep-story-head {
+  grid-area: head;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(12px, 2vh, 20px);
+  min-width: 0;
+}
+.pep-story-title {
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 110px);
+  line-height: 1;
+  letter-spacing: .06em;
+  color: var(--pep-plat-4);
+  background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-2) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-story-title-row { display: block; white-space: nowrap; }
+
+.pep-story-skip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  padding: 0 20px 0 22px;
+  overflow: hidden;
+  font-family: var(--pep-font-display);
+  font-size: clamp(14px, 1.05vw, 17px);
+  letter-spacing: .22em;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--pep-plat-4);
+  border: 1px solid var(--pep-plat-2);
+  border-radius: var(--pep-radius);
+  background: rgba(255, 255, 255, .04);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  transition: border-color .4s ease, color .4s ease;
+}
+/* a small square-cut arrow pointing down the page */
+.pep-story-skip-mark {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  margin-top: -5px;
+  border-right: 2px solid var(--pep-plat-3);
+  border-bottom: 2px solid var(--pep-plat-3);
+  transform: rotate(45deg);
+  transition: border-color .4s ease;
+}
+/* house hover: one slow light sweep, left to right */
+.pep-story-skip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 50%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .22), rgba(255, 255, 255, 0));
+  transform: translateX(0);
+  transition: transform 0s;
+}
+.pep-story-skip:hover,
+.pep-story-skip:focus-visible { border-color: var(--pep-plat-4); color: var(--pep-plat-5); }
+.pep-story-skip:hover .pep-story-skip-mark,
+.pep-story-skip:focus-visible .pep-story-skip-mark { border-color: var(--pep-plat-5); }
+.pep-story-skip:hover::after,
+.pep-story-skip:focus-visible::after { transform: translateX(340%); transition: transform 1.4s ease-in-out; }
+.pep-story-skip:focus-visible { outline: 1px solid var(--pep-plat-5); outline-offset: -5px; }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .pep-story-skip { background: rgba(20, 20, 22, .82); }
+}
+
+/* ---------- the steps: one see-through glass plate, cut at two corners on the right ---------- */
+.pep-story-steps {
+  grid-area: steps;
+  position: relative;
+  align-self: start;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(4px, .8vh, 10px) clamp(20px, 2.6vw, 38px) clamp(4px, .8vh, 10px) clamp(22px, 2.8vw, 40px);
+  list-style: none;
+  background:
+    linear-gradient(var(--pep-plat-4), var(--pep-plat-4)) left top / 3px 100% no-repeat,
+    linear-gradient(145deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .03));
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+          backdrop-filter: blur(14px) saturate(150%);
+  clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+}
+/* thin chrome edge that follows the cuts */
+.pep-story-steps::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .7;
+  background: linear-gradient(135deg, var(--pep-plat-5), var(--pep-plat-2) 40%, var(--pep-plat-1) 58%, var(--pep-plat-4));
+  clip-path: polygon(evenodd,
+    0 0, calc(100% - 34px) 0, 100% 34px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 0,
+    1px 1px, 1px calc(100% - 1px), calc(100% - 12.4px) calc(100% - 1px), calc(100% - 1px) calc(100% - 12.4px), calc(100% - 1px) 34.4px, calc(100% - 34.4px) 1px, 1px 1px);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .pep-story-steps {
+    background:
+      linear-gradient(var(--pep-plat-4), var(--pep-plat-4)) left top / 3px 100% no-repeat,
+      rgba(20, 20, 22, .82);
+  }
+}
+.pep-story-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: clamp(18px, 2.6vw, 40px);
+  align-items: baseline;
+  margin: 0;
+  padding: clamp(16px, 2.4vh, 26px) 0;
+}
+.pep-story-step + .pep-story-step { border-top: 1px solid rgba(255, 255, 255, .1); }
+.pep-story-num {
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-size: clamp(15px, 1.2vw, 18px);
+  letter-spacing: .2em;
+  white-space: nowrap;
+  color: var(--pep-plat-3);
+  min-width: 5.7em;                     /* the figures differ in width (a 1 is narrow): one width, so the four titles start on one line */
+}
+.pep-story-text { min-width: 0; }
+.pep-story-name {
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: .08em;
+  color: var(--pep-plat-4);
+  /* the same chrome sweep as the headings, with a lighter low point: a step title is one short word and every letter must read */
+  background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-3) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-story-line {
+  margin: clamp(6px, 1vh, 10px) 0 0;
+  font-size: clamp(17px, 1.3vw, 20px);
+  line-height: 1.45;
+  color: var(--pep-plat-3);
+}
+
+/* ---------- the ONE vial ---------- */
+.pep-story-figure {
+  grid-area: figure;
+  position: relative;
+  align-self: center;
+  justify-self: center;
+}
+.pep-story-vial {
+  height: min(72vh, 680px);
+  aspect-ratio: 560 / 1058;
+}
+/* SCR-16 slot: sits over the vial at the same frame. Empty and hidden until the layer images exist. */
+.pep-story-layers { position: absolute; inset: 0; pointer-events: none; }
+
+/* the counter and the hairline belong to the held stage only */
+.pep-story-count,
+.pep-story-rail { display: none; }
+
+@media (max-width: 899px) {
+  .pep-story-stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "head"
+      "figure"
+      "steps";
+  }
+  .pep-story-vial { height: clamp(300px, 50vh, 440px); }
+  .pep-story-step { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
+  .pep-story-num { min-width: 0; }
+  .pep-story-skip { padding: 0 16px 0 18px; letter-spacing: .18em; }
+}
+
+/* =====================================================================================================================
+   THE HELD STAGE. Scroll is always the visitor's: the stage is position: sticky inside a tall section and every change
+   on it is a function of where the page is scrolled to. Length: 3.8 screens on a wide screen, 3 on a phone.
+   ===================================================================================================================== */
+@media (prefers-reduced-motion: no-preference) and (min-height: 540px) {
+  [data-module="story"][data-held] {
+    height: calc(var(--pep-story-vh) * 380);
+    padding: 0;
+  }
+  [data-module="story"][data-held] .pep-story-stage {
+    position: sticky;
+    top: 0;
+    --pep-story-pt: clamp(18px, calc(var(--pep-story-vh) * 4.4), 46px);
+    --pep-story-pb: clamp(16px, calc(var(--pep-story-vh) * 3.4), 34px);
+    --pep-story-gap: clamp(10px, calc(var(--pep-story-vh) * 2.4), 26px);
+    height: calc(var(--pep-story-vh) * 100);
+    padding: var(--pep-story-pt) clamp(16px, 4vw, 64px) var(--pep-story-pb);
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "head  figure"
+      "count figure"
+      "steps figure"
+      "rail  rail";
+    row-gap: var(--pep-story-gap);
+  }
+  [data-module="story"][data-held] .pep-story-title { font-size: clamp(40px, min(7vw, calc(var(--pep-story-vh) * 11)), 110px); }
+  /* the way past: top right of the stage, on screen from the first frame */
+  [data-module="story"][data-held] .pep-story-skip {
+    position: absolute;
+    top: var(--pep-story-pt);
+    right: clamp(16px, 4vw, 64px);
+    z-index: 2;
+  }
+
+  /* ---- TXT-11: the split-flap counter. Platinum figures on dark glass cards, square corners. ---- */
+  [data-module="story"][data-held] .pep-story-count {
+    grid-area: count;
+    align-self: end;
+    justify-self: start;
+    display: flex;
+    align-items: flex-end;
+    gap: .07em;
+    margin: 0;
+    --pep-story-fig: clamp(92px, calc(var(--pep-story-vh) * 24), 232px);
+    font-family: var(--pep-font-display);
+    font-size: var(--pep-story-fig);
+    line-height: 1;
+  }
+  .pep-story-cell {
+    position: relative;
+    display: block;
+    flex: 0 0 auto;
+    width: .84em;
+    height: 1.2em;
+    border-radius: var(--pep-radius);
+    box-shadow: 0 .1em .28em rgba(0, 0, 0, .5);
+  }
+  .pep-story-cell--turn { perspective: 3.4em; }
+  /* each card is two halves, so the turning leaf and the still card carry the same face */
+  .pep-story-half {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50%;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+  }
+  .pep-story-half--top {
+    top: 0;
+    border-radius: var(--pep-radius) var(--pep-radius) 0 0;
+    transform-origin: 50% 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .04)), var(--pep-black-1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), inset 1px 0 0 rgba(255, 255, 255, .1), inset -1px 0 0 rgba(255, 255, 255, .1);
+  }
+  .pep-story-half--low {
+    bottom: 0;
+    border-radius: 0 0 var(--pep-radius) var(--pep-radius);
+    transform-origin: 50% 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .075)), var(--pep-black-1);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .16), inset 1px 0 0 rgba(255, 255, 255, .1), inset -1px 0 0 rgba(255, 255, 255, .1);
+  }
+  /* the figure is as tall as the whole card and each half shows its own part of it */
+  .pep-story-digit {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    display: grid;
+    place-items: center;
+    padding-top: .12em;                 /* the face sits high in its line: this puts the hinge through its middle */
+    color: var(--pep-plat-4);
+    background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-3) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .pep-story-half--top .pep-story-digit { top: 0; }
+  .pep-story-half--low .pep-story-digit { bottom: 0; }
+  /* the hinge */
+  .pep-story-cell::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% - 1px);
+    z-index: 3;
+    height: 2px;
+    background: var(--pep-black-0);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .09);
+  }
+  .pep-story-leaf { z-index: 2; }
+  .pep-story-leaf.pep-story-half--low { opacity: 0; }
+  .pep-story-of {
+    /* stands on the same baseline as the big figures (measured: their foot is .249 of the figure size above the card's
+       foot, and this line's own foot is .233 of its size above its box) */
+    margin: 0 0 calc(var(--pep-story-fig) * .249 - .233em) .12em;
+    font-size: max(18px, .27em);
+    letter-spacing: .14em;
+    white-space: nowrap;
+    color: var(--pep-plat-3);
+  }
+
+  /* ---- TRN-02: the four steps share one place on the plate; the script softens the one leaving and sharpens the one arriving ---- */
+  [data-module="story"][data-held] .pep-story-steps {
+    align-self: end;
+    justify-self: start;
+    display: grid;
+    width: min(100%, 720px);
+    padding: clamp(16px, calc(var(--pep-story-vh) * 2.6), 28px) clamp(46px, 4.4vw, 64px) clamp(16px, calc(var(--pep-story-vh) * 2.8), 30px) clamp(24px, 2.8vw, 40px);
+  }
+  /* one soft band of light crosses the plate while a step hands over to the next. Its place IS the hand-over (the script
+     writes it from the scroll), so it is off the plate whenever a step is held. */
+  [data-module="story"][data-held] .pep-story-steps::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 34%;
+    pointer-events: none;
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .1), rgba(255, 255, 255, 0));
+    transform: translateX(calc(var(--pep-story-pass, 0) * 420%));
+  }
+  [data-module="story"][data-held] .pep-story-step {
+    grid-area: 1 / 1;
+    display: block;
+    align-self: start;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+  }
+  [data-module="story"][data-held] .pep-story-step:first-child { opacity: 1; }
+  [data-module="story"][data-held] .pep-story-num { display: none; }
+  [data-module="story"][data-held] .pep-story-name { font-size: clamp(30px, min(4.6vw, calc(var(--pep-story-vh) * 7.6)), 70px); }
+
+  /* ---- the vial: big, on the right, never moved. It stands on the plate's foot line and is as tall as the stage allows
+          under the way-past link (48px link, 12px of air). ---- */
+  [data-module="story"][data-held] .pep-story-figure { align-self: end; }
+  [data-module="story"][data-held] .pep-story-vial {
+    height: min(calc(var(--pep-story-vh) * 100 - var(--pep-story-pt) - var(--pep-story-pb) - var(--pep-story-gap) - 62px), 800px);
+  }
+
+  /* THE LIGHT CLIMBS A LITTLE AT EACH STEP. 06-bottle's bus has on and off only (bottle:rise, called once per step
+     change). So that the light stands a little higher in the glass at each step, the HEIGHT of the bottle's own light
+     layer is set here from the host's data-level (1 to 4, written by story.js). Level 4 is the bottle's own fully lit
+     state, untouched. Colour, outline mask and timing all stay the bottle's. */
+  [data-module="story"][data-held] .pep-story-vial[data-level] .pep-bottle-fill { transform-origin: 50% 100%; }
+  [data-module="story"][data-held] .pep-story-vial[data-level="1"] .pep-bottle-fill { opacity: .5; transform: scaleY(.34); }
+  [data-module="story"][data-held] .pep-story-vial[data-level="2"] .pep-bottle-fill { opacity: .68; transform: scaleY(.56); }
+  [data-module="story"][data-held] .pep-story-vial[data-level="3"] .pep-bottle-fill { opacity: .85; transform: scaleY(.78); }
+  [data-module="story"][data-held] .pep-story-vial[data-level="4"] .pep-bottle-fill { opacity: 1; transform: scaleY(1); }
+
+  /* ---- the progress hairline ---- */
+  [data-module="story"][data-held] .pep-story-rail {
+    grid-area: rail;
+    position: relative;
+    display: block;
+    height: 2px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .12);
+  }
+  .pep-story-rail-fill {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--pep-plat-2), var(--pep-plat-4) 62%, var(--pep-plat-5));
+  }
+
+  /* only while the story is on screen (set by an IntersectionObserver) */
+  [data-module="story"][data-held][data-live] .pep-story-step { will-change: transform, opacity, filter; }
+  [data-module="story"][data-held][data-live] .pep-story-leaf { will-change: transform, opacity, filter; }
+  [data-module="story"][data-held][data-live] .pep-story-rail-fill { will-change: transform; }
+}
+
+/* ---- the held stage on a phone: the counter stands on the plate, the vial stands beside it on the right ---- */
+@media (prefers-reduced-motion: no-preference) and (min-height: 540px) and (max-width: 899px) {
+  [data-module="story"][data-held] { height: calc(var(--pep-story-vh) * 300); }
+  [data-module="story"][data-held] .pep-story-stage {
+    overflow: hidden;               /* the vial's empty margin runs a little past the right edge; nothing may widen the page */
+    --pep-story-pt: clamp(10px, calc(var(--pep-story-vh) * 2), 18px);
+    --pep-story-pb: clamp(12px, calc(var(--pep-story-vh) * 2.2), 20px);
+    --pep-story-gap: clamp(8px, calc(var(--pep-story-vh) * 1.5), 14px);
+    padding: var(--pep-story-pt) 16px var(--pep-story-pb);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "count"
+      "steps"
+      "rail";
+  }
+  /* the way past comes first on a phone too: top right, on screen as soon as the story's top edge is */
+  [data-module="story"][data-held] .pep-story-head { gap: 8px; }
+  [data-module="story"][data-held] .pep-story-skip { position: relative; top: auto; right: auto; order: -1; align-self: flex-end; min-height: 44px; }
+  [data-module="story"][data-held] .pep-story-count {
+    align-self: end;
+    z-index: 1;
+    --pep-story-fig: clamp(54px, min(calc(var(--pep-story-vh) * 8.6), 17vw), 84px);
+  }
+  [data-module="story"][data-held] .pep-story-figure {
+    grid-area: count;
+    align-self: stretch;
+    justify-self: stretch;
+    min-height: 0;
+  }
+  /* sized by the narrower of the row, the screen height and the screen width, so the glass always clears the counter */
+  [data-module="story"][data-held] .pep-story-vial {
+    position: absolute;
+    right: calc(-1 * min(10vw, 40px));
+    bottom: 0;
+    height: min(100%, calc(var(--pep-story-vh) * 64), 133vw);
+  }
+  /* the wide right margin keeps every word clear of the page's corner (a fixed launcher from another section may stand there) */
+  [data-module="story"][data-held] .pep-story-steps {
+    width: 100%;
+    padding: 14px 64px 16px 20px;
+  }
+  [data-module="story"][data-held] .pep-story-name { font-size: clamp(26px, 7.4vw, 40px); }
 }
 </style>
 <style data-pep-src="modules/20-shelf/shelf.css">
@@ -2139,6 +2954,11 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-cart-btn2::after,
   .pep-cart-btn::after { display: none; }
 }
+
+/* the temporary payment step: Interac e-transfer to Grace's address (a placeholder until she has it) */
+.pep-cart-pay { margin: 14px 0 6px; font-family: var(--pep-font-display); font-size: 20px; letter-spacing: .14em; color: var(--pep-plat-5); }
+.pep-cart-pay-how { margin: 0 0 12px; font-size: 18px; line-height: 1.45; color: var(--pep-plat-4); }
+.pep-cart-pay-to { color: var(--pep-plat-5); font-weight: 600; overflow-wrap: anywhere; }
 </style>
 <style data-pep-src="modules/40-guide/guide.css">
 /* 40-guide. Every selector starts with [data-module="guide"] or .pep-guide- */
@@ -2750,14 +3570,22 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   </template>
 </div>
 <!-- module:10-hero -->
-<!-- 10-hero: the first screen. Giant 3D PEPTICITY word, the spinning G5 P, the lit bottle, and ONE ask: join the team (hook H01).
+<!-- 10-hero: the first screen. Giant 3D PEPTICITY word, the lit bottle, and ONE ask: join the team (hook H01).
+     The spinning G5 P no longer stands in the middle of this screen (owner, Nov 11 2026): it is the crest, the next section (11-crest).
      The offer line shows in preview builds and, on the live site, only once flags.COUNSEL_CLEARED.offer is true; otherwise the
-     member-card wording shows in the same place. No health wording anywhere in this file. -->
+     member-card wording shows in the same place. No health wording anywhere in this file.
+     HOW THE WORD IS SEEN (the numbers on .pep-hero-word; the logo itself is never touched): data-dist = how far the camera
+     stands (the engine's own number is 9), data-span = how much of the slot's width the word takes, data-low = how far below the
+     word the camera stands (radians, lens shifted so the letters stay upright), data-square = the camera faces the word dead
+     on, so it reads level and even from end to end, data-lean = how far the word itself leans to the pointer (1 = the
+     engine's own; 0 here: the word does not move at all), data-look-x / -y = how far the CAMERA steps aside for the pointer
+     (radians): the letter faces stay put and only their depth swings into view, data-light = how far the light travels
+     across the metal (1 = the engine's own). -->
 <section data-module="hero" id="top" aria-labelledby="pep-hero-title">
   <p class="pep-hero-eyebrow">GRAND OPENING</p>
 
   <h1 class="pep-hero-title" id="pep-hero-title">
-    <span class="pep-hero-word" aria-hidden="true"></span>
+    <span class="pep-hero-word" aria-hidden="true" data-dist="5.2" data-span="0.88" data-low="0.4" data-square="1" data-lean="0" data-look-x="0.28" data-look-y="0.12" data-light="0.5"></span>
     <span class="pep-hero-word-text">PEPTICITY</span>
   </h1>
 
@@ -2814,11 +3642,149 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
       </form>
     </div>
 
-    <div class="pep-hero-mark" tabindex="0" role="button" aria-label="Spin the PEPTICITY P mark"></div>
-
     <div class="pep-hero-bottle" tabindex="0" role="button" aria-label="Raise the light under the PEPTICITY vial"
          data-bottle-alt="PEPTICITY vial in clear glass with the platinum and gold P printed on it, violet light coming up through the bottle"></div>
     <span data-gate="names" data-bottle-line-source hidden>BPC-157 · 10 MG</span>
+  </div>
+</section>
+<!-- module:11-crest -->
+<!-- 11-crest: THE CREST. The grand separator between the hero and the next section (owner, Nov 11 2026: take the P out of
+     the middle of the hero, put it lower, make it big, "a separator between the hero and the next section... by itself... a big
+     one... grandness... next level, in your face, pop out").
+     The P is the locked G5 FULL GOLD CORE mark, drawn by the shared 3D engine (02-logo3d) into .pep-crest-slot exactly as every
+     other P on the page: same shape, same metal, same colours, same horizontal spin. Nothing here redraws or recolours it.
+     Only HOW IT IS SEEN is set here, by the numbers on .pep-crest-slot: data-lens = the lens angle (the engine's own is 30),
+     data-fill = how much of the slot's height the P takes, data-fill-w = the most of the slot's width it may take (this is what
+     sizes it on a phone), data-level = the camera nods with the P's own slight nod, so the beam stays dead level on the page
+     line, data-answer-x / -y = how far it turns to the pointer (1 = the engine's own, kept), data-light = how far the room's
+     light travels across the metal (0 = the engine's own, kept: with more, the P's face spends seconds reflecting the dark).
+     THE STAGE is page drawing under the 3D canvas, in platinum with a breath of the logo's own pale-gold light, never violet:
+     .pep-crest-horizon = a hairline across the whole width at the height of the P's beam (it follows the beam's slight rise
+     and fall); .pep-crest-pool = light pooled on the floor under the P's foot.
+     This section is never pinned, moved, faded or filtered: a 3D slot cannot live inside an element that is.
+     NO 3D (engine off, or no script): the section folds down to a slim band that shows the horizon line alone, brighter at
+     its centre, in platinum only. It never shows a stand-in logo. No wording here beyond the two spoken labels below. -->
+<section data-module="crest" id="crest" aria-label="THE PEPTICITY MARK">
+  <div class="pep-crest-stage">
+    <i class="pep-crest-pool" aria-hidden="true"></i>
+    <i class="pep-crest-horizon" aria-hidden="true"><i class="pep-crest-ray"></i></i>
+    <div class="pep-crest-slot" aria-hidden="true" data-lens="44" data-fill="0.565" data-fill-w="0.64" data-level="1" data-answer-x="1" data-answer-y="1" data-light="0"></div>
+    <div class="pep-crest-mark" tabindex="0" role="button" aria-label="Spin the PEPTICITY P mark"></div>
+  </div>
+</section>
+<!-- module:12-standard -->
+<!-- 12-standard: THE STANDARD. One sentence that lights word by word as the visitor scrolls (TXT-04), then the word PEPTICITY
+     lifts out of that sentence, grows, and the visitor passes between its letters into the next section (SCR-17).
+     The wording is fixed by the Stage 4 brief: do not change it. No ask and no form here. No 3D logo slot here: the word is
+     plain type because it is held in place and scaled, which the shared 3D canvas cannot follow.
+     Screen readers get the sentence ONCE, as ordinary text (.pep-standard-read). The word-by-word copy and the nine-letter
+     word are for the eye only (aria-hidden): the brand name is already spoken inside the sentence.
+     The comma is not in the owner's type, so it is drawn to match that type's full stop (see standard.css).
+     The nine letters sit in two groups, PEPT and ICITY: the way through the word is between the T and the I, and the two
+     groups part there. data-word feeds the soft twin of the word that the css draws for the blur that clears. -->
+<section data-module="standard" id="standard" aria-label="THE STANDARD">
+  <div class="pep-standard-stage">
+    <div class="pep-standard-say">
+      <h2 class="pep-standard-label">THE STANDARD</h2>
+      <p class="pep-standard-line" data-effect="txt-04">
+        <span class="pep-standard-read">NO PROMISES. NO STORIES. A NAME, A SIZE AND A PRICE. THAT IS THE PEPTICITY STANDARD.</span>
+        <span class="pep-standard-words" aria-hidden="true">
+          <span class="pep-standard-row"><span class="pep-standard-w">NO</span> <span class="pep-standard-w">PROMISES.</span></span>
+          <span class="pep-standard-row"><span class="pep-standard-w">NO</span> <span class="pep-standard-w">STORIES.</span></span>
+          <span class="pep-standard-row"><span class="pep-standard-w">A</span> <span class="pep-standard-w">NAME<span class="pep-standard-comma"><span class="pep-standard-comma-ch">,</span></span></span> <span class="pep-standard-w">A</span> <span class="pep-standard-w">SIZE</span></span>
+          <span class="pep-standard-row"><span class="pep-standard-w">AND</span> <span class="pep-standard-w">A</span> <span class="pep-standard-w">PRICE.</span></span>
+          <span class="pep-standard-row"><span class="pep-standard-w">THAT</span> <span class="pep-standard-w">IS</span> <span class="pep-standard-w">THE</span></span>
+          <span class="pep-standard-row"><span class="pep-standard-w" data-standard-anchor>PEPTICITY<i class="pep-standard-base"></i></span> <span class="pep-standard-w">STANDARD.</span></span>
+        </span>
+      </p>
+    </div>
+
+    <div class="pep-standard-portal" data-effect="scr-17" aria-hidden="true">
+      <div class="pep-standard-word" data-word="PEPTICITY"><span class="pep-standard-half"><span class="pep-standard-l">P</span><span class="pep-standard-l">E</span><span class="pep-standard-l">P</span><span class="pep-standard-l">T</span></span><span class="pep-standard-half"><span class="pep-standard-l">I</span><span class="pep-standard-l">C</span><span class="pep-standard-l">I</span><span class="pep-standard-l">T</span><span class="pep-standard-l">Y</span></span><i class="pep-standard-base"></i></div>
+    </div>
+  </div>
+</section>
+<!-- module:14-story -->
+<!-- 14-story: FROM VIAL TO SHELF. Four steps on a sticky stage, moved only by the visitor's own scroll (never position: fixed,
+     never a timed sequence). TXT-11: the step counter turns like a split-flap board. TRN-02: the leaving step softens and
+     the arriving one pulls sharp. ONE plain vial from 06-bottle (nothing printed on it, so it may sit on a sticky stage);
+     its light is raised once per step change. The way past is the SKIP link, first in the reading order after the heading.
+     With scripts off, with less motion asked for, or on a very short screen, the same four steps read as an ordinary
+     ordered list with the vial beside them. The four lines are facts only Grace can give: preview-only placeholders that a
+     launch build cuts out, so the script works without them. No ask and no form in this section. -->
+<section data-module="story" id="story" aria-label="FROM VIAL TO SHELF">
+  <div class="pep-story-stage">
+    <header class="pep-story-head">
+      <h2 class="pep-story-title"><span class="pep-story-title-row">FROM VIAL</span> <span class="pep-story-title-row">TO SHELF</span></h2>
+      <a class="pep-story-skip" href="#shelf">SKIP TO THE SHELF<i class="pep-story-skip-mark" aria-hidden="true"></i></a>
+    </header>
+
+    <!-- the split-flap counter. Screen readers get the same count from the ordered list below, so this one is hidden from them. -->
+    <p class="pep-story-count" data-effect="txt-11" data-count data-no-cover aria-hidden="true">
+      <span class="pep-story-cell">
+        <span class="pep-story-half pep-story-half--top"><span class="pep-story-digit">0</span></span>
+        <span class="pep-story-half pep-story-half--low"><span class="pep-story-digit">0</span></span>
+      </span>
+      <span class="pep-story-cell pep-story-cell--turn" data-flap>
+        <span class="pep-story-half pep-story-half--top"><span class="pep-story-digit" data-next-top>1</span></span>
+        <span class="pep-story-half pep-story-half--low"><span class="pep-story-digit" data-now-low>1</span></span>
+        <span class="pep-story-half pep-story-half--top pep-story-leaf" data-leaf-top><span class="pep-story-digit" data-now-top>1</span></span>
+        <span class="pep-story-half pep-story-half--low pep-story-leaf" data-leaf-low><span class="pep-story-digit" data-next-low>1</span></span>
+      </span>
+      <span class="pep-story-of">/ 04</span>
+    </p>
+
+    <!-- the four steps, in reading order, on one glass plate. data-no-cover (here, on the counter and on the vial) is the
+         project's mark for a story's focal points: nothing that glides in or floats should sit on them. -->
+    <ol class="pep-story-steps" role="list" data-effect="trn-02" data-steps data-no-cover>
+      <li class="pep-story-step" data-step="1">
+        <p class="pep-story-num" aria-hidden="true"><span data-num>01</span> / 04</p>
+        <div class="pep-story-text">
+          <h3 class="pep-story-name">SOURCED</h3>
+          <p class="pep-story-line" data-gate="preview" hidden>[FROM GRACE: where each lot comes from, in one sentence]</p>
+        </div>
+      </li>
+      <li class="pep-story-step" data-step="2">
+        <p class="pep-story-num" aria-hidden="true"><span data-num>02</span> / 04</p>
+        <div class="pep-story-text">
+          <h3 class="pep-story-name">DOCUMENTED</h3>
+          <p class="pep-story-line" data-gate="preview" hidden>[FROM GRACE: the lot document that comes with each lot, in one sentence]</p>
+        </div>
+      </li>
+      <li class="pep-story-step" data-step="3">
+        <p class="pep-story-num" aria-hidden="true"><span data-num>03</span> / 04</p>
+        <div class="pep-story-text">
+          <h3 class="pep-story-name">PACKED</h3>
+          <p class="pep-story-line" data-gate="preview" hidden>[FROM GRACE: how an order is packed, in one sentence]</p>
+        </div>
+      </li>
+      <li class="pep-story-step" data-step="4">
+        <p class="pep-story-num" aria-hidden="true"><span data-num>04</span> / 04</p>
+        <div class="pep-story-text">
+          <h3 class="pep-story-name">SHIPPED</h3>
+          <p class="pep-story-line" data-gate="preview" hidden>[FROM GRACE: where you ship and how long it takes, in one sentence]</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="pep-story-figure">
+      <div class="pep-story-vial" data-vial data-no-cover data-bottle-plain data-bottle-keep
+           data-bottle-alt="PEPTICITY vial in clear glass with nothing printed on it, violet light coming up through the bottle"></div>
+
+      <!-- SCR-16 LAYER SLOT. Empty on purpose: the layers must be Higgsfield images and they do not exist yet. Nothing is
+           drawn, cut or faked in code. While this slot is empty the story uses the single vial above.
+           Images that go here, back to front, one img each, every one 880x1168 on transparency with the SAME framing as
+           assets/vial-front-clear.webp, each with an alt: glass, liquid, stopper, crimp ring, cap.
+           How the script would spread them: when the slot holds images it is shown and laid over the vial at the same
+           frame (the 560 by 1058 window of that frame). The script already has the story position as one number from
+           0 to 3. Each image is moved up or down by transform only: its own share of the spread (cap furthest up, then
+           crimp ring, then stopper; glass stays; liquid a little down) times how far the story is into its middle steps,
+           so the vial is whole at step 01, apart through 02 and 03, and whole again at 04. The single vial is hidden
+           only while the layers are loaded and showing. -->
+      <div class="pep-story-layers" data-effect="scr-16" data-layers hidden></div>
+    </div>
+
+    <div class="pep-story-rail" aria-hidden="true"><i class="pep-story-rail-fill" data-rail></i></div>
   </div>
 </section>
 <!-- module:20-shelf -->
@@ -3061,6 +4027,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
         <div class="pep-cart-view" data-view="end" hidden>
           <button class="pep-cart-back" type="button" data-back>BACK</button>
           <h3 class="pep-cart-h3" tabindex="-1" data-view-head>CHECKOUT</h3>
+          <p class="pep-cart-pay">PAY BY INTERAC E-TRANSFER.</p>
+          <p class="pep-cart-pay-how">Send your order total to <span class="pep-cart-pay-to">[FROM GRACE: e-transfer email]</span>. Put your name in the message.</p>
           <p class="pep-cart-end">PREVIEW ONLY: NO ORDER WAS PLACED.</p>
           <ul class="pep-cart-sum" data-sum></ul>
           <div data-totals-slot></div>
@@ -3827,6 +4795,10 @@ window.PEP_CONFIG = {
         await tick();
         G.wM = extrude(D.wordRim, 2.2, 0.15, 0, 0, 0);
         await tick();
+        // read-only measurements (scene units) for slots that ask to be framed by size through the opt-in view below
+        G.shF.computeBoundingBox(); G.wF.computeBoundingBox();
+        var SIZE = { markW: (G.shF.boundingBox.max.x - G.shF.boundingBox.min.x) * 0.1, markH: (G.shF.boundingBox.max.y - G.shF.boundingBox.min.y) * 0.1,
+          wordW: (G.wF.boundingBox.max.x - G.wF.boundingBox.min.x) * 0.0135, beamY: yb * 0.1 };
 
         function halo(w) {
           var rgb = function (i) { return HG.slice(i * 3, i * 3 + 3).join(','); };
@@ -3863,6 +4835,7 @@ window.PEP_CONFIG = {
         canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); off('WebGL context lost'); });
         var damp = function (c, t, l, dt) { return c + (t - c) * (1 - Math.exp(-l * dt)); };
         var FLAT = 3 * Math.PI / 180;        // label words use a 6 degree lens so they sit flat on the label
+        var WORD_REST = new THREE.Euler(-0.04, -0.12, 0);      // the word's resting pose, as set in the frame loop below (read by the opt-in view only)
 
         var slots = [];
         var io = new IntersectionObserver(function (es) {
@@ -3882,8 +4855,23 @@ window.PEP_CONFIG = {
           camera.position.set(0, 0, kind === 'word' ? 14 : 25);
           var s = { el: req.el, kind: kind, scene: scene, camera: camera, group: group, visible: false, hold: !!req.hold,
             ry: 0, rx: 0, spin: 0, spinT: 0, hover: false, phase: Number(req.phase || 0) };
+          // OPT-IN VIEW (kinds 'mark' and 'word' only). A slot that sends no `view` is drawn exactly as before.
+          // A view changes how the logo is SEEN, never the logo: the lens, where the camera stands, how far the logo answers
+          // the pointer, and the light that moves across the metal. Geometry, materials, colours and the spin are untouched.
+          //   mark: { lens, fill, fillW, level, pointer: [x, y], light, hit, track }    word: { dist, span, low, square, pointer: [x, y], look: [x, y], light }
+          var view = (kind === 'mark' || kind === 'word') && req.view && typeof req.view === 'object' ? req.view : null;
+          if (view) {
+            var num = function (x, d, lo, hi) { x = Number(x); return isFinite(x) ? Math.min(hi, Math.max(lo, x)) : d; };
+            var pg = Array.isArray(view.pointer) ? view.pointer : [view.pointer, view.pointer];
+            var lk = Array.isArray(view.look) ? view.look : [0, 0];
+            s.view = { lens: num(view.lens, 30, 20, 60), fill: num(view.fill, 0.61, 0.2, 0.9), fillW: num(view.fillW, 0.9, 0.2, 0.95),
+              dist: num(view.dist, 9, 4, 30), span: num(view.span, 0.62, 0.3, 0.98), low: num(view.low, 0, 0, 0.9),
+              px: num(pg[0], 1, 0, 3), py: num(pg[1], 1, 0, 3), lx: num(lk[0], 0, 0, 0.8), ly: num(lk[1], 0, 0, 0.4), light: num(view.light, kind === 'word' ? 1 : 0, 0, 2),
+              square: !!view.square, level: !!view.level, track: typeof view.track === 'function' ? view.track : null, ty: 1e9, tu: -1, cx: 0, cy: 0 };
+            if (kind === 'mark') { camera.fov = s.view.lens; }
+          }
           if (kind === 'mark' && req.interactive) {
-            var stage = req.el;
+            var stage = view && view.hit && view.hit.addEventListener ? view.hit : req.el;
             stage.addEventListener('pointerenter', function (e) { s.hover = true; if (e.pointerType !== 'touch') { s.spinT += Math.PI * 2; } kick(); });
             stage.addEventListener('pointerleave', function () { s.hover = false; kick(); });
             stage.addEventListener('click', function () { s.spinT += Math.PI * 2; kick(); });
@@ -3921,22 +4909,67 @@ window.PEP_CONFIG = {
             if (r.bottom < 0 || r.top > H || r.right < 0 || r.left > W || r.width < 2 || r.height < 2) { continue; }
             s.camera.aspect = r.width / r.height;
             if (s.kind === 'mark') {
+              var mv = s.view || null;                 // opt-in view, or null: then every number below is the locked one
               if (REDUCED) { s.group.rotation.set(-0.06, -0.36, 0); }
               else {
                 s.spin = damp(s.spin, s.spinT, 2.6, dt);
                 // faces front and sways, then makes one slow full turn every 8 s (a P read from behind is mirrored, so it never parks there)
                 var cyc = (t + s.phase * 1.7) % 8, k = Math.min(1, Math.max(0, (cyc - 5.2) / 2.8));
                 var turn = Math.floor((t + s.phase * 1.7) / 8) * Math.PI * 2 + (k * k * (3 - 2 * k)) * Math.PI * 2;
-                var yaw = -0.32 + Math.sin(t * 0.42 + s.phase) * 0.28 + pointer.x * 0.35 + s.spin + turn;
-                var pitch = Math.sin(t * 0.31 + s.phase) * 0.06 + pointer.y * 0.18 - 0.05;
+                var yaw = -0.32 + Math.sin(t * 0.42 + s.phase) * 0.28 + pointer.x * (mv ? 0.35 * mv.px : 0.35) + s.spin + turn;
+                var pitch = Math.sin(t * 0.31 + s.phase) * 0.06 + pointer.y * (mv ? 0.18 * mv.py : 0.18) - 0.05;
                 s.ry = damp(s.ry, yaw, 4, dt); s.rx = damp(s.rx, pitch, 4, dt);
                 s.group.rotation.set(s.rx, s.ry, 0);
                 s.group.position.y = Math.sin(t * 0.9 + s.phase) * 0.1 + (s.hover ? 0.15 : 0);
+              }
+              if (mv) {
+                // the camera stands level with the beam, so the beam lies on the lens's own horizon; it stands as near as the
+                // asked size needs: the P fills `fill` of the slot's height, and never more than `fillW` of its width
+                var mh = Math.tan(mv.lens * Math.PI / 360);
+                var mz = Math.max(9, Math.max(SIZE.markH / mv.fill, SIZE.markW / mv.fillW / s.camera.aspect) / (2 * mh));
+                // `level`: the P nods a few degrees as it sways (unchanged). The camera nods with it, about the beam, so on
+                // screen the beam stays dead level and the P's uprights stay upright; the room's light still shows the nod.
+                var mn = mv.level ? s.group.rotation.x : 0;
+                s.camera.position.set(0, SIZE.beamY * Math.cos(mn) - Math.sin(mn) * mz, SIZE.beamY * Math.sin(mn) + Math.cos(mn) * mz);
+                s.camera.rotation.set(mn, 0, 0);
+                if (mv.light) { s.scene.environmentRotation.set(0, REDUCED ? 0 : Math.sin(t * 0.3 + s.phase) * mv.light, 0); }
+                if (mv.track) {
+                  // tells the slot's own module where the beam is on screen (px above or below the slot's middle line) and how
+                  // big the P is drawn (px per scene unit), so that module can lay its own page lines on the beam and under the foot
+                  var mu = r.height / (2 * mz * mh);
+                  var my = -(mv.level ? s.group.position.y * Math.cos(mn) : s.group.position.y + SIZE.beamY * Math.cos(s.group.rotation.x) - SIZE.beamY) * mu;
+                  if (Math.abs(my - mv.ty) > 0.2 || Math.abs(mu - mv.tu) > 0.01) {
+                    mv.ty = my; mv.tu = mu;
+                    try { mv.track({ dy: my, unit: mu, markW: SIZE.markW, markH: SIZE.markH }); } catch (err) {}
+                  }
+                }
               }
             } else if (s.kind === 'labelmark') {
               // printed on the label: dead straight, faces front; only the light moves across the metal
               s.group.rotation.set(0, 0, 0);
               s.scene.environmentRotation.set(0, REDUCED ? 0.3 : Math.sin(t * 0.3 + s.phase) * 0.7, 0);
+            } else if (s.kind === 'word' && s.view) {
+              // opt-in view of the word. It still stays still: only the light moves across it (and, if `pointer` is not 0, it
+              // leans a breath to the pointer exactly as below, by that share of the locked amount)
+              var wv = s.view;
+              s.group.rotation.set(-0.04 + pointer.y * 0.04 * wv.py, -0.12 + pointer.x * 0.08 * wv.px, 0);
+              s.scene.environmentRotation.set(0, REDUCED ? 0.3 : Math.sin(t * 0.35 + s.phase) * 0.9 * wv.light, 0);
+              // the camera stands `dist` away and the lens opens until the word spans `span` of the slot's width. `low` (radians)
+              // puts the camera below the word WITHOUT tipping it back: the lens is shifted instead, as for a tall building, so
+              // every letter face keeps its drawn shape and stays upright while its underside and depth come into view
+              var wh = SIZE.wordW / wv.span / s.camera.aspect / 2;            // half the height the lens sees at the word
+              s.camera.fov = Math.min(80, Math.max(8, Math.atan(wh / wv.dist) * 360 / Math.PI));
+              // `look`: the camera (never the word) answers the pointer. It steps to the side and up or down by that many
+              // radians, with the lens shifted to match, so the faces of the letters do not move, lean or change size at all:
+              // only the depth behind them swings into view, as it does when you walk past a sign.
+              wv.cx = damp(wv.cx, pointer.x, 5, dt); wv.cy = damp(wv.cy, pointer.y, 5, dt);       // the camera glides, it never jumps
+              var wside = Math.tan(wv.cx * wv.lx) * wv.dist;
+              var wdrop = Math.tan(wv.low + wv.cy * wv.ly) * wv.dist;
+              s.camera.position.set(wside, -wdrop, wv.dist);
+              // `square`: the camera stands on the word's own axis (the word rests a few degrees off the page's axis), so the
+              // word is seen dead level and even from end to end
+              if (wv.square) { s.camera.position.applyEuler(WORD_REST); s.camera.quaternion.setFromEuler(WORD_REST); }
+              s.camera.setViewOffset(s.camera.aspect, 1, -wside / (2 * wh), -wdrop / (2 * wh), s.camera.aspect, 1);
             } else if (s.kind === 'word') {
               // the word stays still: only the light moves across it
               s.group.rotation.set(-0.04 + pointer.y * 0.04, -0.12 + pointer.x * 0.08, 0);
@@ -4154,11 +5187,14 @@ window.PEP_CONFIG = {
       if (offerText && offerOn) { offerText.textContent = cfg.offer.text; }
       var previewNote = q('[data-preview-note]');
 
-      // ---- 3D: the word, the P, the bottle
-      var word = q('.pep-hero-word'), mark = q('.pep-hero-mark'), bottle = q('.pep-hero-bottle');
+      // ---- 3D: the word and the bottle (the P stands in the next section, 11-crest)
+      var word = q('.pep-hero-word'), bottle = q('.pep-hero-bottle');
+      // how the word is seen: the numbers live on the element in hero.html (camera and light only; the engine clamps them)
+      var seen = function (key) { var n = parseFloat(word.getAttribute('data-' + key)); return isFinite(n) ? n : undefined; };
+      var view = word ? { dist: seen('dist'), span: seen('span'), low: seen('low'), square: seen('square') === 1, pointer: seen('lean'), look: [seen('look-x'), seen('look-y')], light: seen('light') } : null;
       function announce() {
-        if (mark) { ctx.emit('logo3d:slot', { el: mark, kind: 'mark', phase: 0.75, interactive: true }); }
-        if (word) { ctx.emit('logo3d:slot', { el: word, kind: 'word', phase: 0.75 }); }
+        // phase only times the light that crosses the word: -0.5 has the whole word lit while the page opens
+        if (word) { ctx.emit('logo3d:slot', { el: word, kind: 'word', phase: -0.5, view: view }); }
       }
       root.setAttribute('data-3d', 'pending');     // script is running: the flat word steps aside for the 3D one
       ctx.on('logo3d:ready', announce); announce();
@@ -4278,6 +5314,476 @@ window.PEP_CONFIG = {
       if (first) { first.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); save.click(); } }); }
 
       ctx.track('ask_view', { hook: 'H01', slot: 'hero', state: (flow && flow.stage) || 'NEW' });
+    }
+  });
+})();
+</script>
+<script data-pep-src="modules/11-crest/crest.js">
+(function () {
+  'use strict';
+  PEP.register('crest', {
+    init: function (root, ctx) {
+      var slot = root.querySelector('.pep-crest-slot');
+      var hit = root.querySelector('.pep-crest-mark');
+      if (!slot) { return; }
+
+      // how the P is seen: the numbers live on the slot in crest.html (lens, size, pointer answer, light). The engine clamps them.
+      var seen = function (key) { var n = parseFloat(slot.getAttribute('data-' + key)); return isFinite(n) ? n : undefined; };
+
+      // the engine tells us where the beam is and how big the P is drawn; the page line and the floor light are laid from that.
+      // No layout is read here: two numbers are written, and only when they change.
+      var sized = 0;
+      function place(info) {
+        root.style.setProperty('--pep-crest-dy', info.dy.toFixed(1) + 'px');
+        if (info.unit !== sized) {
+          sized = info.unit;
+          root.style.setProperty('--pep-crest-hh', (info.markH * info.unit / 2).toFixed(1) + 'px');
+          root.style.setProperty('--pep-crest-hw', (info.markW * info.unit / 2).toFixed(1) + 'px');
+        }
+      }
+
+      var view = { lens: seen('lens'), fill: seen('fill'), fillW: seen('fill-w'), level: seen('level') === 1, pointer: [seen('answer-x'), seen('answer-y')],
+        light: seen('light'), hit: hit, track: place };
+      // the same contract as every P on the page. hold: it waits for the entrance, so nothing below the first screen is the
+      // entrance's starting point. phase 0.75 is the phase this P had when it stood in the hero.
+      function announce() { ctx.emit('logo3d:slot', { el: slot, kind: 'mark', phase: 0.75, interactive: true, hold: true, view: view }); }
+
+      root.setAttribute('data-3d', 'pending');          // script is running: the stage opens for the 3D P
+      ctx.on('logo3d:ready', announce); announce();
+      ctx.on('logo3d:on', function () { root.setAttribute('data-3d', 'on'); });
+      ctx.on('logo3d:off', function () { root.setAttribute('data-3d', 'off'); });   // no 3D: fold down to the calm band
+
+      // the stage lights once, the first time a good part of the crest is on screen
+      if (ctx.motion.reduced || typeof IntersectionObserver !== 'function') { return; }
+      root.setAttribute('data-crest', 'dark');
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) { root.setAttribute('data-crest', 'lit'); io.disconnect(); return; }
+        }
+      }, { threshold: 0.3 });
+      io.observe(root);
+    }
+  });
+})();
+</script>
+<script data-pep-src="modules/12-standard/standard.js">
+(function () {
+  'use strict';
+  /* 12-standard: TXT-04 (the sentence lights word by word) and SCR-17 (the visitor passes through the word PEPTICITY).
+     Everything on screen is a pure function of the scroll position, so it scrubs both ways and never holds the visitor.
+     One passive scroll listener, the work in requestAnimationFrame, one rectangle read per frame, and only transform and
+     opacity are written (the one blur in the scene is a fixed one in the css, faded by opacity).
+     Reduced motion, scripts off or a very short screen: the plain stack in the css. */
+  PEP.register('standard', {
+    init: function (root, ctx) {
+      var q = function (s) { return root.querySelector(s); };
+      var qa = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+      var stage = q('.pep-standard-stage'), say = q('.pep-standard-say'), block = q('.pep-standard-words');
+      var words = qa('.pep-standard-w'), comma = q('.pep-standard-comma');
+      var anchor = q('[data-standard-anchor]'), anchorBase = anchor && anchor.querySelector('.pep-standard-base');
+      var word = q('.pep-standard-word'), halves = qa('.pep-standard-half'), letters = qa('.pep-standard-l');
+      var wordBase = word && word.querySelector('.pep-standard-base');
+      if (!stage || !say || !block || !words.length || !anchor || !anchorBase || !word || !wordBase || halves.length !== 2 || letters.length !== 9) { return; }
+
+      /* ---- the timeline. p = how far through the held part (0 at the moment it holds, 1 when it lets go) ---- */
+      var LIT_END = 0.44;                 // the last word is fully lit here
+      var OFF_A = 0.47, OFF_B = 0.74;     // the sentence lets go and the word lifts out of it between these
+      var FLY_A = 0.70;                   // the flight starts here...
+      var FLY_TAIL = 0.72;                // ...and ends this many screens after the hold lets go, as the next section rises
+      var DIM = 0.16, SOFT = 2.4;         // unlit words; how many words are part-lit at once
+      var GROW = Math.log(24);            // the word ends 24 times its size, by which time its letters have left the screen
+      var MIN_H = 430;                    // below this height the scene cannot fit: use the plain stack
+      var GATE = 3;                       // the way through is between letter 3 (T) and letter 4 (I)
+      // the owner's type, in ems: the T's stem ends .445 in, the I starts .047 in; the middle of the opening is .33 above the baseline
+      var T_STEM = 0.445, I_INK = 0.047, GATE_UP = 0.33;
+
+      var n = words.length, anchorIx = words.indexOf(anchor);
+      var live = false, seen = false, raf = 0, M = null;
+      var lastOp = [], lastSay = '', lastWord = '', lastSpread = -1, lastVis = '', lastSoft = '', lastSharp = '', twin = false;
+
+      function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+      function smooth(v) { v = clamp(v); return v * v * (3 - 2 * v); }
+      function inOut(v) { v = clamp(v); return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; }
+      function mix(a, b, k) { return a + (b - a) * k; }
+      // where a box sits inside another, from layout alone (transforms do not move these numbers)
+      function placeIn(el, box) {
+        var x = 0, y = 0;
+        while (el && el !== box) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
+        return { x: x, y: y };
+      }
+
+      /* ---- measured once per layout (load, fonts in, resize): never inside the frame loop ---- */
+      function measure() {
+        // TXT-04: one sheen across the whole sentence, cut into a slice for each word
+        var bw = block.offsetWidth, bh = block.offsetHeight;
+        words.forEach(function (w) {
+          w.style.backgroundSize = bw + 'px ' + bh + 'px';
+          w.style.backgroundPosition = (-w.offsetLeft) + 'px ' + (-w.offsetTop) + 'px';
+        });
+        if (comma) {
+          comma.style.setProperty('--pep-standard-bw', bw + 'px');
+          comma.style.setProperty('--pep-standard-bh', bh + 'px');
+          comma.style.setProperty('--pep-standard-bx', (-comma.offsetLeft) + 'px');
+          comma.style.setProperty('--pep-standard-by', (-comma.offsetTop) + 'px');
+        }
+        // SCR-17: one chrome ramp across the whole word, cut into a slice for each of its two groups
+        var ww = word.offsetWidth, wh = word.offsetHeight;
+        halves.forEach(function (h) {
+          h.style.backgroundSize = ww + 'px ' + wh + 'px';
+          h.style.backgroundPosition = (-placeIn(h, word).x) + 'px 0px';
+        });
+        if (!live) { M = null; return; }
+
+        var fs = parseFloat(getComputedStyle(word).fontSize) || 100;
+        var afs = parseFloat(getComputedStyle(anchor).fontSize) || 50;
+        // the way through: the open space under the T's arm, between its stem and the I
+        var ox = (placeIn(letters[GATE], word).x + T_STEM * fs + placeIn(letters[GATE + 1], word).x + I_INK * fs) / 2;
+        var oy = placeIn(wordBase, word).y - GATE_UP * fs;
+        word.style.transformOrigin = ox.toFixed(2) + 'px ' + oy.toFixed(2) + 'px';
+        var wp = placeIn(word, stage), ap = placeIn(anchor, stage), ab = placeIn(anchorBase, stage);
+        var s0 = afs / fs;
+        var S = stage.offsetHeight;
+        M = {
+          S: S,
+          T: Math.max(1, root.offsetHeight - S),
+          fs: fs,
+          s0: s0,
+          home: { x: wp.x + ox, y: wp.y + oy },                       // the opening, with the word at rest in the middle
+          from: { x: ap.x + ox * s0, y: ab.y - GATE_UP * afs },       // the same point on the word inside the sentence
+          mid: { x: stage.offsetWidth / 2, y: S / 2 }
+        };
+      }
+
+      // the soft twin is the word's ::before (its text comes from data-word in the html). It exists only while it shows.
+      function soften(soft, sharp) {
+        var a = soft.toFixed(3), c = sharp.toFixed(3);
+        if (a !== lastSoft) {
+          lastSoft = a;
+          if ((soft > 0) !== twin) { twin = soft > 0; if (twin) { word.setAttribute('data-standard-soft', ''); } else { word.removeAttribute('data-standard-soft'); } }
+          word.style.setProperty('--pep-standard-soft', a);
+        }
+        if (c !== lastSharp) { lastSharp = c; word.style.setProperty('--pep-standard-sharp', c); }
+      }
+
+      /* ---- one frame: read one rectangle, then write ---- */
+      function frame() {
+        raf = 0;
+        if (!live || !seen || !M) { return; }
+        var y = -root.getBoundingClientRect().top;
+        var p = y / M.T;
+        var b = clamp((p - OFF_A) / (OFF_B - OFF_A));
+        var f = clamp((y - FLY_A * M.T) / ((1 - FLY_A) * M.T + FLY_TAIL * M.S));
+        var i, k, v, s;
+
+        // TXT-04: the light runs through the words in reading order
+        var head = clamp(p / LIT_END) * (n + SOFT);
+        var swap = 1 - smooth((b - 0.06) / 0.14);        // the sentence's own PEPTICITY hands over to the big one
+        for (i = 0; i < n; i++) {
+          k = smooth((head - i) / SOFT);
+          v = (DIM + (1 - DIM) * k) * (i === anchorIx ? swap : 1);
+          s = v.toFixed(3);
+          if (lastOp[i] !== s) { lastOp[i] = s; words[i].style.opacity = s; }
+        }
+
+        // the sentence steps back as the word comes forward: opacity and a breath of scale. No blur here: a blur whose size
+        // changes every frame makes the graphics card build a new program for each size, and that stutters the first time.
+        var out = smooth(b / 0.4);
+        s = out <= 0 ? '1|none' : out >= 1 ? '0|none' : (1 - out).toFixed(3) + '|scale(' + (1 - 0.05 * out).toFixed(4) + ')';
+        if (s !== lastSay) {
+          lastSay = s;
+          var parts = s.split('|');
+          say.style.opacity = parts[0]; say.style.transform = parts[1];
+        }
+
+        // SCR-17: the word
+        var vis = (b > 0 && f < 1) ? 'visible' : 'hidden';
+        if (vis !== lastVis) { lastVis = vis; word.style.visibility = vis; word.style.opacity = vis === 'visible' ? '1' : '0'; }
+        if (vis === 'hidden') { soften(0, 1); return; }
+        // the blur that clears: while the rest of the sentence lets go, a soft twin of the word (ONE fixed blur) takes the
+        // place of the sentence's own word, then the sharp letters come up through it. All of it happens before the word
+        // moves, so the blur never changes size.
+        soften(smooth((b - 0.06) / 0.14) * (1 - smooth((b - 0.2) / 0.24)), smooth((b - 0.18) / 0.26));
+        var e = inOut((b - 0.44) / 0.56);                // lift-off: from its place in the sentence to the middle, full size
+        var g = Math.pow(f, 1.15);                       // flight: constant speed to the eye (the size grows by ratio)
+        var scale = mix(M.s0, 1, e) * Math.exp(GROW * g);
+        var c = smooth(f / 0.42);                        // the opening settles on the middle of the screen early in the flight
+        var gx = mix(mix(M.from.x, M.home.x, e), M.mid.x, c);
+        // once the hold lets go the screen moves up with the page: the word is moved back down by the same amount, so the
+        // gate stays where it is and the next section rises in front of it
+        var gy = mix(mix(M.from.y, M.home.y, e), M.mid.y, c) + (y > M.T ? Math.min(y - M.T, M.S) : 0);
+        s = 'translate(' + (gx - M.home.x).toFixed(2) + 'px,' + (gy - M.home.y).toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
+        if (s !== lastWord) { lastWord = s; word.style.transform = s; }
+        // a little spread: the two groups of letters part at the opening. They leave by the sides of the screen, whole:
+        // nothing is faded here, so the flight asks the graphics card for as few layers as it can. The last push makes
+        // sure both groups are off the sides on a screen of any shape before the word is put away (a tall phone never
+        // grows the letters past its top and bottom edges).
+        var spread = Math.round(M.fs * (0.12 * Math.pow(f, 1.5) + 0.3 * smooth((f - 0.78) / 0.2)) * 100) / 100;
+        if (spread !== lastSpread) {
+          lastSpread = spread;
+          halves[0].style.transform = spread ? 'translateX(' + (-spread).toFixed(2) + 'px)' : 'none';
+          halves[1].style.transform = spread ? 'translateX(' + spread.toFixed(2) + 'px)' : 'none';
+        }
+      }
+
+      function forget() { lastOp = []; lastSay = ''; lastWord = ''; lastSpread = -1; lastVis = ''; lastSoft = ''; lastSharp = ''; twin = word.hasAttribute('data-standard-soft'); }
+      function clear() {
+        words.forEach(function (w) { w.style.opacity = ''; });
+        halves.forEach(function (h) { h.style.transform = ''; });
+        say.style.opacity = ''; say.style.transform = '';
+        word.style.opacity = ''; word.style.transform = ''; word.style.visibility = ''; word.style.transformOrigin = '';
+        word.style.removeProperty('--pep-standard-soft'); word.style.removeProperty('--pep-standard-sharp'); word.removeAttribute('data-standard-soft');
+        forget();
+      }
+
+      /* ---- choose the scene or the plain stack, then lay out ---- */
+      function apply() {
+        var want = !ctx.motion.reduced && window.innerHeight >= MIN_H;
+        if (want !== live) {
+          live = want;
+          if (live) { root.setAttribute('data-standard-mode', 'live'); } else { root.removeAttribute('data-standard-mode'); clear(); }
+        }
+        measure();
+        if (live) { forget(); frame(); }
+      }
+
+      var queued = 0;
+      function relayout() {
+        if (queued) { return; }
+        queued = requestAnimationFrame(function () { queued = 0; apply(); });
+      }
+
+      // promote layers only while the section is on screen
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          var now = entries[entries.length - 1].isIntersecting;
+          if (now) { seen = true; root.setAttribute('data-standard-on', ''); frame(); }
+          else { frame(); seen = false; root.removeAttribute('data-standard-on'); }      // leave it in its true last state
+        }, { rootMargin: '12% 0px 12% 0px' }).observe(root);
+      } else {
+        seen = true; root.setAttribute('data-standard-on', '');
+      }
+
+      // the ONE scroll listener
+      window.addEventListener('scroll', function () {
+        if (live && seen && !raf) { raf = requestAnimationFrame(frame); }
+      }, { passive: true });
+      window.addEventListener('resize', relayout);
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(relayout); }
+      if (typeof ResizeObserver === 'function') { new ResizeObserver(relayout).observe(block); }
+      try {
+        var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (mq.addEventListener) { mq.addEventListener('change', relayout); }
+      } catch (err) { /* no media query list: the first choice stands */ }
+
+      apply();
+    }
+  });
+})();
+</script>
+<script data-pep-src="modules/14-story/story.js">
+/* 14-story: FROM VIAL TO SHELF. A sticky stage inside a tall section; everything on it is a function of where the page is
+   scrolled to. The page scroll is never taken from the visitor: no fixed position, no body class, no scroll writes.
+   One passive scroll listener, work in requestAnimationFrame, only transform / opacity / filter written, and one
+   rectangle read per frame. All wording is in story.html: this file holds none.
+   Bus: asks 06-bottle for the ONE plain vial (bottle:mount) and raises its light once per step change (bottle:rise). */
+(function () {
+  'use strict';
+  PEP.register('story', {
+    init: function (root, ctx) {
+      var flags = (ctx.config && ctx.config.flags) || {};
+      var q = function (s) { return root.querySelector(s); };
+      var qa = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+
+      // the four lines are preview-only placeholders. A launch build cuts them out of the page, so this may find none.
+      if (flags.PREVIEW) { qa('[data-gate="preview"]').forEach(function (el) { el.hidden = false; }); }
+
+      // ---- the ONE vial, mounted plain (the host carries data-bottle-plain and data-bottle-keep in the html)
+      var host = q('[data-vial]');
+      function mount() { if (host) { ctx.emit('bottle:mount', { el: host, lit: false }); } }
+      ctx.on('bottle:ready', mount); mount();
+      // asked for outside the frame: the bottle restarts its light with a layout read of its own
+      function rise() { if (host) { setTimeout(function () { ctx.emit('bottle:rise', { el: host }); }, 0); } }
+
+      var skip = q('.pep-story-skip');
+      if (skip) { skip.addEventListener('click', function () { ctx.track('story_skip', { from: 'story', to: 'shelf' }); }); }
+
+      // SCR-16: the layer slot is empty until the Higgsfield layer images exist; the story then uses the single vial.
+      // (When images are placed in it, this is where they would be spread by the story position: see story.html.)
+
+      var stage = q('.pep-story-stage');
+      var steps = qa('.pep-story-step');
+      var n = steps.length;
+      if (!stage || !n || !window.requestAnimationFrame || !window.matchMedia) { return; }
+
+      // ---- what the frame writes to
+      var railFill = q('[data-rail]'), plate = q('[data-steps]');
+      var leafTop = q('[data-leaf-top]'), leafLow = q('[data-leaf-low]');
+      var faces = { nowTop: q('[data-now-top]'), nowLow: q('[data-now-low]'), nextTop: q('[data-next-top]'), nextLow: q('[data-next-low]') };
+      var flap = !!(leafTop && leafLow && faces.nowTop && faces.nowLow && faces.nextTop && faces.nextLow);
+      // the figure each step shows comes from its own number in the html (01 to 04): the last character turns
+      var digits = steps.map(function (li) { var el = li.querySelector('[data-num]'); return el ? el.textContent.trim().slice(-1) : ''; });
+
+      // ---- where each step hands over to the next, as a share of the scroll range (4 steps: .20, .45, .70),
+      //      so a step is fully held at 0, 25, 50, 75 and 100 percent
+      var marks = [];
+      for (var m = 0; m < n - 1; m++) { marks.push((m + 0.8) / n); }
+      var wideScreen = window.matchMedia('(min-width: 900px)');
+      function band() { return wideScreen.matches ? 0.07 : 0.09; }
+      function place(p) {                       // scroll progress 0..1  ->  story position 0..n-1 (whole number = a held step)
+        var w = band(), s = 0;
+        for (var i = 0; i < marks.length; i++) { s += Math.min(1, Math.max(0, (p - (marks[i] - w / 2)) / w)); }
+        return s;
+      }
+
+      var mode = window.matchMedia('(prefers-reduced-motion: no-preference) and (min-height: 540px)');   // the same test as story.css
+      var held = false, live = false;
+      var stageH = 0, viewH = 0;
+      var raf = 0, last = 0, lastScroll = -1e9;
+      var pos = 0, bar = 0;                     // what is drawn now: story position and hairline length
+      var dir = 1, lastS = 0, latch = null;     // which way the page last moved the story, and the step a rest finished to
+      var drawn = [], flapBase = -1, litStep = -1, pass = -1, seen = {};
+
+      function measure() { stageH = stage.offsetHeight; viewH = window.innerHeight || document.documentElement.clientHeight || 0; }
+
+      function read() {                         // the one rectangle
+        var rect = root.getBoundingClientRect();
+        var range = rect.height - stageH;
+        var p = range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0;
+        return { p: p, s: place(p), onStage: rect.top < viewH * 0.55 && rect.bottom > viewH * 0.45 };
+      }
+
+      function draw() {
+        var i, d, a, st;
+        // TRN-02: the step leaving softens (blur and fade), the step arriving pulls sharp
+        for (i = 0; i < n; i++) {
+          d = pos - i;
+          a = Math.max(0, 1 - Math.abs(d) / 0.8);
+          a = Math.round(a * 500) / 500;
+          if (drawn[i] === a) { continue; }
+          drawn[i] = a;
+          st = steps[i].style;
+          st.zIndex = a > 0.5 ? '1' : '0';
+          if (a === 0) { st.opacity = '0'; st.filter = 'none'; st.transform = 'none'; }
+          else if (a === 1) { st.opacity = '1'; st.filter = 'none'; st.transform = 'none'; }
+          else {
+            st.opacity = (a * a * (3 - 2 * a)).toFixed(3);
+            st.filter = 'blur(' + ((1 - a) * 16).toFixed(2) + 'px)';
+            // a short drift (14px at most), so the arriving words never start outside the plate's own padding
+            st.transform = 'translate3d(0,' + (-d * 14).toFixed(1) + 'px,0) scale(' + (1 + (d < 0 ? 0.04 : -0.03) * (1 - a)).toFixed(4) + ')';
+          }
+        }
+        var base = Math.min(Math.floor(pos + 0.0005), n - 1), f = Math.max(0, pos - base);
+        if (f < 0.001) { f = 0; }
+        // the band of light that crosses the plate during a hand-over (a custom property read by a transform in story.css)
+        if (plate && f !== pass) { pass = f; plate.style.setProperty('--pep-story-pass', f.toFixed(3)); }
+        // TXT-11: the top leaf falls to the hinge, then the bottom leaf lands
+        if (flap) {
+          if (base !== flapBase) {
+            flapBase = base;
+            var now = digits[base], next = digits[Math.min(base + 1, n - 1)];
+            faces.nowTop.textContent = now; faces.nowLow.textContent = now;
+            faces.nextTop.textContent = next; faces.nextLow.textContent = next;
+          }
+          var shade = 'brightness(' + (1 - 0.5 * Math.sin(Math.PI * f)).toFixed(3) + ')';
+          if (f === 0) {
+            leafTop.style.opacity = '1'; leafTop.style.transform = 'none'; leafTop.style.filter = 'none';
+            leafLow.style.opacity = '0';
+          } else if (f < 0.5) {
+            leafTop.style.opacity = '1'; leafTop.style.transform = 'rotateX(' + (-180 * f).toFixed(2) + 'deg)'; leafTop.style.filter = shade;
+            leafLow.style.opacity = '0';
+          } else {
+            leafTop.style.opacity = '0';
+            leafLow.style.opacity = '1'; leafLow.style.transform = 'rotateX(' + (180 * (1 - f)).toFixed(2) + 'deg)'; leafLow.style.filter = shade;
+          }
+        }
+        if (railFill) { railFill.style.transform = 'scaleX(' + bar.toFixed(4) + ')'; }
+      }
+
+      // the light rises inside the glass once per step change, and stays on (data-bottle-keep)
+      function light(onStage) {
+        if (!onStage) { return; }
+        var k = Math.round(pos);
+        if (k === litStep) { return; }
+        litStep = k;
+        if (host) { host.setAttribute('data-level', String(k + 1)); }
+        rise();
+        if (!seen[k]) { seen[k] = true; ctx.track('story_step', { step: k + 1 }); }
+      }
+
+      function frame(now) {
+        raf = 0;
+        if (!held) { return; }
+        var v = read();
+        var dt = last ? Math.min(400, Math.max(0, now - last)) : 16;      // by the clock, so a slow device finishes a turn in the same time
+        last = now;
+        var idle = now - lastScroll > 150;
+        if (Math.abs(v.s - lastS) > 0.0005) { dir = v.s > lastS ? 1 : -1; lastS = v.s; }
+        // While the page moves, the story follows the scroll. When the page rests part way through a hand-over, the turn
+        // finishes the way the visitor was going (or falls back, if it had barely begun), so nothing is ever left half
+        // turned or soft. A finished turn is not undone while the page keeps going the same way.
+        var lo = Math.floor(v.s), part = v.s - lo, goal;
+        if (part === 0) { latch = null; goal = v.s; }
+        else if (idle) { latch = dir > 0 ? (part > 0.15 ? lo + 1 : lo) : (part < 0.85 ? lo : lo + 1); goal = latch; }
+        else if (latch !== null && ((latch === lo + 1 && dir > 0) || (latch === lo && dir < 0))) { goal = latch; }
+        else { latch = null; goal = v.s; }
+        pos += (goal - pos) * (1 - Math.exp(-dt / (idle ? 95 : 60)));
+        if (Math.abs(goal - pos) < 0.008) { pos = goal; }
+        bar += (v.p - bar) * (1 - Math.exp(-dt / 80));
+        if (Math.abs(v.p - bar) < 0.0005) { bar = v.p; }
+        draw();
+        light(v.onStage);
+        if (!idle || pos !== goal || bar !== v.p) { raf = requestAnimationFrame(frame); } else { last = 0; }
+      }
+      function ask() { if (held && !raf) { raf = requestAnimationFrame(frame); } }
+
+      // no history to keep (first paint, coming back on screen, a new screen size): go straight to the right step
+      function snap() {
+        if (!held) { return; }
+        var v = read();
+        pos = Math.round(v.s); bar = v.p;
+        lastS = v.s; latch = v.s === pos ? null : pos;
+        draw();
+        light(v.onStage);
+      }
+
+      function clear() {
+        steps.forEach(function (li) { li.style.opacity = ''; li.style.filter = ''; li.style.transform = ''; li.style.zIndex = ''; });
+        [leafTop, leafLow].forEach(function (el) { if (el) { el.style.opacity = ''; el.style.filter = ''; el.style.transform = ''; } });
+        if (railFill) { railFill.style.transform = ''; }
+        if (plate) { plate.style.removeProperty('--pep-story-pass'); }
+        if (host) { host.removeAttribute('data-level'); }
+        drawn = []; flapBase = -1; litStep = -1; pass = -1;
+      }
+
+      function setMode() {
+        var want = mode.matches && !ctx.motion.reduced;
+        if (want === held) { return; }
+        held = want;
+        if (held) { root.setAttribute('data-held', ''); measure(); snap(); }
+        else { root.removeAttribute('data-held'); if (raf) { cancelAnimationFrame(raf); raf = 0; } clear(); }
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!held || !live) { return; }
+        lastScroll = window.performance && performance.now ? performance.now() : Date.now();
+        ask();
+      }, { passive: true });
+      window.addEventListener('resize', function () { setMode(); if (held) { measure(); ask(); } }, { passive: true });
+      if (mode.addEventListener) { mode.addEventListener('change', setMode); } else if (mode.addListener) { mode.addListener(setMode); }
+
+      // will-change only while the story is on screen; coming on screen goes straight to the right step
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          live = entries[entries.length - 1].isIntersecting;
+          if (live) {
+            root.setAttribute('data-live', '');
+            if (held) { measure(); snap(); }
+            else if (litStep < 0 && !ctx.motion.reduced) { litStep = 0; rise(); }     // the calm version on a short screen: light it once
+          } else { root.removeAttribute('data-live'); }
+        }).observe(root);
+      } else { live = true; root.setAttribute('data-live', ''); }
+
+      setMode();
     }
   });
 })();
