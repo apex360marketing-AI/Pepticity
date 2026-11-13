@@ -4,8 +4,8 @@
 
    variant (optional; 'A' when left out, the owner's pick; 'none' for the still look from before the variants):
    - Every variant: a faint blue glow in every hole even with no pointer, breathing (rises and falls, eased, never off),
-     still stronger near the pointer; a thin cool-platinum rim light along the edge of each diamond cushion.
-   - 'A' CALM: one breath across the whole wall every 6 s, faint rim on every diamond.
+     still stronger near the pointer; a thin rim light along the edge of each diamond cushion (cool platinum in B and C).
+   - 'A' CALM: one breath across the whole wall every 6 s; a very faint rim in the logo blue #2a78ff on every diamond.
    - 'B' POOL: the blue gathers in a soft pool that drifts slowly on its own and breathes (8 s); rims brighter on the lit diamonds.
    - 'C' WAVE: a slow diagonal wave of blue rolls through the holes (9 s a cycle); rims catch it as it passes.
    - Animated at 30 fps at most, never while the tab is hidden. Reduced motion: no breathing or drift, a still glow.
@@ -15,7 +15,7 @@
 
    - The quilt surface (leather, stitching, perforation) shows at `surface` (default SURFACE, 0.10 to 0.15) over whatever
      is behind the canvas: the page's black #0b0b0c.
-   - The pointer lights the holes of the cushions near it in the logo blue (halo rgb 70,140,255) at full strength, not
+   - The pointer lights the holes of the cushions near it in the logo blue (#2a78ff, rgb 42,120,255) at full strength, not
      scaled by `surface`. The cushions near the pointer lift a little. Nothing else follows the pointer: the leather
      is lit by #21's own lamp parked where the engine parks it for reduced motion, plus the engine's fixed window light.
    - Draws only when something changes (pointer moves, easing to rest, resize), never while the tab is hidden.
@@ -35,14 +35,17 @@
   if (win.PEPQuilt) { return; }
 
   var SURFACE = 0.12;                          // the one constant to tune: how much of the quilt surface shows
-  var BLUE = [70 / 255, 140 / 255, 1];         // the logo's halo blue, rgb(70,140,255): hole light and lamp tint
+  var BLUE = [42 / 255, 120 / 255, 1];         // ONE BLUE (owner, Nov 13 2026): the logo's #2a78ff, rgb(42,120,255): hole light and lamp tint
   var REST = [0.62, 0.40];                     // where the engine parks #21's lamp for reduced motion (share of the canvas)
-  var RIM = [230 / 255, 233 / 255, 237 / 255]; // rim light: cool platinum #e6e9ed from the brand ramp
+  var RIM = [230 / 255, 233 / 255, 237 / 255]; // rim light in B and C: cool platinum #e6e9ed from the brand ramp
+  var ROD = [42 / 255, 120 / 255, 1];          // rim light in A: the logo's blue #2a78ff, nothing else
   var VARIANT = { A: 1, B: 2, C: 3 };
-  // per variant: seconds per breath or wave, hole glow floor and peak (light intensity, before display gamma), rim base and extra
+  // per variant: seconds per breath or wave, hole glow floor and peak (light intensity, before display gamma), rim base,
+  // rim extra, rim colour
   // A (owner, Nov 13 2026): every 6 s, and the swing a quarter larger on screen than the first cut (0.010-0.045), widened
-  // evenly around the same middle brightness (a little extra, since the black behind a lit hole fades as it brightens)
-  var LOOK = { 1: { T: 6, am: [0.0073, 0.0519], rm: [0.045, 0] }, 2: { T: 8, am: [0.010, 0.14], rm: [0.035, 0.07] }, 3: { T: 9, am: [0.010, 0.11], rm: [0.035, 0.075] } };
+  // evenly around the same middle brightness (a little extra, since the black behind a lit hole fades as it brightens);
+  // the rim only in the logo blue and much fainter (0.035 of the blue, about a third of the first cut's platinum on screen)
+  var LOOK = { 1: { T: 6, am: [0.0073, 0.0519], rm: [0.035, 0], rc: ROD }, 2: { T: 8, am: [0.010, 0.14], rm: [0.035, 0.07], rc: RIM }, 3: { T: 9, am: [0.010, 0.11], rm: [0.035, 0.075], rc: RIM } };
   // 'A' when nothing is given; 'none' (or 0) draws no variant
   function variantCode(v) {
     if (v === undefined || v === null || v === '') { return 1; }
@@ -263,6 +266,7 @@
         gl.uniform1f(U.uWl, 0.6 * (cw + chh));
         gl.uniform2f(U.uAm, L.am[0], L.am[1]);
         gl.uniform2f(U.uRm, L.rm[0], L.rm[1]);
+        gl.uniform3f(U.uRc, L.rc[0], L.rc[1], L.rc[2]);
       }
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       it.frames++;
