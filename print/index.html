@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PEPTICITY · PRINT ROOM</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:,">
+<link rel="preload" href="assets/fonts/PepticityBlack.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* PEPTICITY PRINT ROOM. Brand tokens as the site's tokens.css, ONE blue (the logo's), platinum chrome, chrome gold as a
+   rare accent. No pills, nothing over 3px round: big angled cuts. Every heading shines and never moves. */
+:root {
+  --pep-black-0: #0b0b0c;
+  --pep-black-1: #141416;
+  --pep-uv-black: #120f1a;
+  --pep-plat-1: #2a2d31;
+  --pep-plat-2: #6b7077;
+  --pep-plat-3: #b9bec5;
+  --pep-plat-4: #e6e9ed;
+  --pep-plat-5: #ffffff;
+  --pep-gold-1: #332814;
+  --pep-gold-2: #68513d;
+  --pep-gold-3: #a4845d;
+  --pep-gold-4: #f0e6c7;
+  --pep-gold-5: #fef9e8;
+  --pep-radius: 2px;
+  --pep-beam: #cfe6ff;
+  --pep-light: #2a78ff;
+  --pep-light-rgb: 42, 120, 255;
+  --pep-font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --pep-font-display: "PepticityBlack", "PepUIBlack", "Bahnschrift", "Segoe UI", system-ui, sans-serif;
+  --pep-ease: cubic-bezier(.16, 1, .3, 1);
+  /* platinum chrome with the logo's blue light through its waist, the sheen that glides across it, the frost for numbers */
+  --pp-chrome: linear-gradient(180deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 24%, var(--pep-plat-3) 40%, var(--pep-plat-2) 46%, var(--pep-light) 49%, var(--pep-beam) 51%, var(--pep-light) 53%, var(--pep-plat-2) 57%, var(--pep-plat-3) 66%, var(--pep-plat-4) 82%, var(--pep-plat-3) 100%);
+  --pp-chrome-sm: linear-gradient(180deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 34%, var(--pep-plat-3) 47%, var(--pep-beam) 53%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  --pp-ink: linear-gradient(180deg, var(--pep-plat-1) 0%, var(--pep-black-0) 48%, var(--pep-light) 52%, var(--pep-black-0) 56%, var(--pep-plat-1) 100%);
+  --pp-gold: linear-gradient(180deg, var(--pep-gold-5) 0%, var(--pep-gold-4) 25%, var(--pep-gold-3) 46%, var(--pep-gold-2) 52%, var(--pep-gold-3) 58%, var(--pep-gold-4) 78%, var(--pep-gold-3) 100%);
+  --pp-sheen: linear-gradient(105deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, .9) 50%, rgba(255, 255, 255, 0) 60%);
+  --pp-frost: linear-gradient(180deg, rgba(255, 255, 255, .96) 0%, rgba(207, 230, 255, .82) 50%, rgba(255, 255, 255, .92) 100%);
+  --pp-rim: linear-gradient(180deg, var(--pep-plat-4), var(--pep-plat-2) 50%, var(--pep-plat-3));
+  --pp-wide: min(1320px, calc(100% - 28px));
+}
+@font-face { font-family: "PepticityBlack"; src: url("assets/fonts/PepticityBlack.woff2") format("woff2"); font-display: block; font-weight: 100 900; unicode-range: U+0020-0041, U+0043-007E; }
+@font-face { font-family: "PepUIBlack"; src: url("assets/fonts/pep-ui-900.woff2") format("woff2"); font-display: block; font-weight: 100 900; }
+@font-face { font-family: "PepUI"; src: url("assets/fonts/pep-ui-500.woff2") format("woff2"); font-display: block; font-weight: 500; }
+@font-face { font-family: "PepUI"; src: url("assets/fonts/pep-ui-600.woff2") format("woff2"); font-display: block; font-weight: 600; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--pep-black-0); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; color: var(--pep-plat-4); font: 400 16px/1.55 var(--pep-font-ui); background: transparent; overflow-x: hidden; }
+img, svg, canvas { max-width: 100%; }
+button, input, select { font: inherit; color: inherit; border-radius: var(--pep-radius); }
+:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light); }
+[hidden] { display: none !important; }
+.pp-vh { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* ---------------- the ground: the store's matte black, UV corners, fluted glass and grain ---------------- */
+.pp-ground {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background:
+    radial-gradient(70% 44% at 50% -8%, var(--pep-black-1) 0%, rgba(20, 20, 22, 0) 70%),
+    radial-gradient(46% 40% at 90% 100%, var(--pep-uv-black) 0%, rgba(18, 15, 26, 0) 72%),
+    radial-gradient(40% 36% at 6% 92%, var(--pep-uv-black) 0%, rgba(18, 15, 26, 0) 70%),
+    var(--pep-black-0);
+}
+.pp-ground-light {
+  position: absolute; left: -18vmax; top: -30vmax; width: 70vmax; height: 70vmax;
+  background: radial-gradient(closest-side, rgba(var(--pep-light-rgb), .10), rgba(var(--pep-light-rgb), .035) 45%, rgba(var(--pep-light-rgb), 0) 100%);
+  animation: pp-drift 46s ease-in-out infinite alternate;
+}
+@keyframes pp-drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(34vmax, 14vmax, 0); } }
+.pp-ground-flutes {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, .034) 5px, rgba(255, 255, 255, .012) 11px, rgba(0, 0, 0, 0) 17px, rgba(0, 0, 0, .2) 27px, rgba(0, 0, 0, .05) 31px, rgba(255, 255, 255, 0) 34px);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .9), rgba(0, 0, 0, .5) 55%, rgba(0, 0, 0, .85));
+          mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .9), rgba(0, 0, 0, .5) 55%, rgba(0, 0, 0, .85));
+}
+.pp-ground-grain {
+  position: absolute; inset: 0; opacity: .055;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .8  0 0 0 0 .8  0 0 0 0 .82  0 0 0 .9 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+}
+@media (max-width: 899px) {
+  .pp-ground-flutes { background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, .034) 3px, rgba(255, 255, 255, .012) 7px, rgba(0, 0, 0, 0) 11px, rgba(0, 0, 0, .2) 17px, rgba(0, 0, 0, .05) 20px, rgba(255, 255, 255, 0) 22px); }
+}
+@media (prefers-reduced-motion: reduce) { .pp-ground-light { animation: none; } }
+
+/* ---------------- lettering: 3D chrome headings that shine (a slow sheen) and never move ---------------- */
+.pp-h3d {
+  --pp-step: .02em;
+  position: relative; isolation: isolate; display: block; margin: 0;
+  font-family: var(--pep-font-display); font-weight: 400; text-transform: uppercase; letter-spacing: .08em; line-height: 1.14;
+  color: var(--pep-plat-3); overflow-wrap: anywhere;
+}
+.pp-h3d::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  color: var(--pep-black-0); -webkit-text-fill-color: currentColor;
+  text-shadow:
+    calc(var(--pp-step) * 1) calc(var(--pp-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pp-step) * 2) calc(var(--pp-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pp-step) * 3) calc(var(--pp-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pp-step) * 4) calc(var(--pp-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pp-step) * 5) calc(var(--pp-step) * 6) 0 var(--pep-black-0),
+    .1em .15em .14em rgba(0, 0, 0, .85),
+    0 0 .5em rgba(var(--pep-light-rgb), .3);
+}
+.pp-face {
+  display: block;
+  background-image: var(--pp-sheen), var(--pp-chrome);
+  background-size: 300% 100%, 100% 100%;
+  background-size: 300% 100%, 100% 1lh;
+  background-position: 120% 0, 0 0;
+  background-repeat: no-repeat, repeat-y;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: pp-sheen 8s ease-in-out infinite;
+}
+@keyframes pp-sheen { 0% { background-position: 120% 0, 0 0; } 50%, 100% { background-position: -20% 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .pp-face { animation: none; } }
+.pp-chrome, .pp-chrome-sm, .pp-gold-text, .pp-num {
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+}
+.pp-chrome { background-image: var(--pp-sheen), var(--pp-chrome); background-size: 300% 100%, 100% 100%; background-position: 120% 0, 0 0; background-repeat: no-repeat; }
+.pp-chrome-sm { background-image: var(--pp-chrome-sm); }
+.pp-gold-text { background-image: var(--pp-gold); }
+/* numbers are frosted: an icy face and a blue drop shadow */
+.pp-num { font-family: var(--pep-font-display); background-image: var(--pp-frost); filter: drop-shadow(0 0 5px rgba(var(--pep-light-rgb), .45)); }
+
+/* ---------------- buttons and keys: a chrome rim round a dark recessed face, chrome lettering ---------------- */
+.pp-btn {
+  --cut: 10px;
+  -webkit-appearance: none; appearance: none;
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; min-width: 48px; margin: 0; padding: 0 20px;
+  border: 0; border-radius: 0; cursor: pointer;
+  font: 400 15px/1 var(--pep-font-display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; white-space: nowrap;
+  color: var(--pep-plat-4);
+  clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
+  background: var(--pp-rim);
+  transform: translateY(0);
+  transition: transform .35s var(--pep-ease);
+}
+.pp-btn::before {
+  content: ""; position: absolute; inset: 1.5px; z-index: -1;
+  clip-path: polygon(calc(var(--cut) - 1px) 0, calc(100% - var(--cut) + 1px) 0, 100% calc(var(--cut) - 1px), 100% calc(100% - var(--cut) + 1px), calc(100% - var(--cut) + 1px) 100%, calc(var(--cut) - 1px) 100%, 0 calc(100% - var(--cut) + 1px), 0 calc(var(--cut) - 1px));
+  background: linear-gradient(180deg, var(--pep-black-0), var(--pep-black-1) 58%, var(--pep-plat-1));
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, .7), inset 0 -1px 0 rgba(230, 233, 237, .08);
+}
+.pp-btn-l {
+  display: inline-block; padding: 3px 0;
+  background-image: var(--pp-sheen), var(--pp-chrome);
+  background-size: 300% 100%, 100% 100%; background-position: 120% 0, 0 0; background-repeat: no-repeat;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .55));
+  transition: background-position 0s, transform .35s var(--pep-ease);
+}
+/* hover and keyboard: the key lifts, its lettering grows and one slow sheen crosses it */
+.pp-btn:hover, .pp-btn:focus-visible { transform: translateY(-2px); }
+.pp-btn:hover .pp-btn-l, .pp-btn:focus-visible .pp-btn-l { transform: scale(1.06); background-position: -20% 0, 0 0; transition: background-position 1.4s ease-in-out, transform .35s var(--pep-ease); }
+.pp-btn:focus-visible { outline: 0; box-shadow: none; }
+.pp-btn:focus-visible::before { box-shadow: inset 0 3px 6px rgba(0, 0, 0, .7), inset 0 -3px 0 var(--pep-light); }
+.pp-btn[aria-pressed="true"]::before {
+  background: linear-gradient(180deg, rgba(var(--pep-light-rgb), .34), var(--pep-black-1) 62%, var(--pep-plat-1));
+  box-shadow: inset 0 0 16px rgba(var(--pep-light-rgb), .38), inset 0 -2px 0 rgba(var(--pep-light-rgb), .95);
+}
+.pp-btn[aria-pressed="true"]:focus-visible::before { box-shadow: inset 0 0 16px rgba(var(--pep-light-rgb), .38), inset 0 -4px 0 var(--pep-light); }
+.pp-btn--sm { min-height: 44px; padding: 0 14px; font-size: 13px; --cut: 8px; }
+/* the primary action: a platinum chrome face, the lettering in ink */
+.pp-btn--primary { background: linear-gradient(180deg, var(--pep-plat-3), var(--pep-plat-1) 50%, var(--pep-plat-2)); }
+.pp-btn--primary::before {
+  background: linear-gradient(100deg, var(--pep-plat-3) 0%, var(--pep-plat-5) 16%, var(--pep-plat-4) 30%, var(--pep-plat-2) 50%, var(--pep-plat-4) 66%, var(--pep-plat-5) 80%, var(--pep-plat-3) 100%);
+  box-shadow: inset 0 -2px 0 rgba(var(--pep-light-rgb), .55), inset 0 1px 0 rgba(255, 255, 255, .5);
+}
+.pp-btn--primary .pp-btn-l { background-image: var(--pp-sheen), var(--pp-ink); filter: none; }
+.pp-btn--primary:focus-visible::before { box-shadow: inset 0 -4px 0 var(--pep-light), inset 0 1px 0 rgba(255, 255, 255, .5); }
+.pp-btn[disabled] { cursor: progress; }
+@media (prefers-reduced-motion: reduce) {
+  .pp-btn:hover, .pp-btn:focus-visible { transform: none; }
+  .pp-btn:hover .pp-btn-l, .pp-btn:focus-visible .pp-btn-l { transform: none; }
+}
+
+/* ---------------- the header bar: smoked glass with a chrome rim, cut to a blade ---------------- */
+.pp-head {
+  --cut: 26px;
+  position: relative; z-index: 2; isolation: isolate;
+  width: var(--pp-wide); min-height: 78px; margin: 12px auto 0;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px clamp(12px, 2vw, 24px);
+  padding: 10px calc(var(--cut) + 8px);
+}
+.pp-head::before, .pp-head::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% 50%, calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 50%);
+}
+.pp-head::before { background: linear-gradient(180deg, var(--pep-plat-4), var(--pep-plat-2) 45%, var(--pep-plat-3) 70%, var(--pep-plat-1)); }
+.pp-head::after {
+  inset: 1.5px;
+  background:
+    radial-gradient(150px 120% at 70px 50%, rgba(var(--pep-light-rgb), .24), rgba(var(--pep-light-rgb), 0) 72%),
+    linear-gradient(180deg, rgba(42, 45, 49, .96), rgba(11, 11, 12, .97) 60%, rgba(20, 20, 22, .97));
+}
+.pp-brand { display: inline-flex; align-items: center; gap: 14px; min-height: 48px; color: inherit; text-decoration: none; }
+/* the live P: the real turning render, frame by frame (one slow turn, then it rests facing front) */
+.pp-logo {
+  position: relative; flex: none; width: 66px; height: 53px;
+  background: url("assets/logo/p-turn.webp") 0 0 / 600% 500% no-repeat;
+}
+.pp-logo::before {
+  content: ""; position: absolute; inset: -30% -25%; z-index: -1;
+  background: radial-gradient(closest-side, rgba(var(--pep-light-rgb), .42), rgba(var(--pep-light-rgb), .12) 55%, rgba(var(--pep-light-rgb), 0));
+}
+.pp-brand-word { font-size: clamp(22px, 2.6vw, 36px); letter-spacing: .18em; line-height: 1.3; }
+.pp-head-div { width: 1px; height: 34px; flex: none; background: linear-gradient(var(--pep-plat-2), var(--pep-plat-1), var(--pep-plat-2)); box-shadow: 1px 0 0 rgba(230, 233, 237, .14); }
+.pp-head-tag { font: 400 13px/1.2 var(--pep-font-display); letter-spacing: .3em; text-transform: uppercase; }
+.pp-nav { display: flex; gap: 12px; margin-left: auto; }
+@media (max-width: 760px) {
+  .pp-head { --cut: 18px; padding: 12px calc(var(--cut) + 6px) 14px; justify-content: center; }
+  .pp-head::before, .pp-head::after { clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); }
+  .pp-head-div { display: none; }
+  .pp-head-tag { width: 100%; text-align: center; margin-top: -4px; }
+  .pp-nav { width: 100%; margin-left: 0; }
+  .pp-nav .pp-btn { flex: 1 1 0; padding: 0 10px; font-size: 13px; letter-spacing: .08em; }
+}
+@media (max-width: 420px) { .pp-nav .pp-btn { padding: 0 6px; letter-spacing: .03em; } }
+
+/* ---------------- rooms: each section stands in its own cut-glass room with real space round it ---------------- */
+main { position: relative; z-index: 1; }
+.pp-room {
+  --cut: clamp(22px, 3vw, 40px);
+  position: relative; isolation: isolate;
+  width: var(--pp-wide); margin: clamp(44px, 7vw, 92px) auto;
+  padding: clamp(26px, 4vw, 56px) clamp(16px, 3.4vw, 48px);
+}
+.pp-room::before, .pp-room::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+.pp-room::before { background: linear-gradient(160deg, rgba(230, 233, 237, .42), rgba(107, 112, 119, .16) 30%, rgba(185, 190, 197, .1) 62%, rgba(230, 233, 237, .3)); }
+.pp-room::after {
+  inset: 1px;
+  clip-path: polygon(calc(var(--cut) - .4px) 0, 100% 0, 100% calc(100% - var(--cut) + .4px), calc(100% - var(--cut) + .4px) 100%, 0 100%, 0 calc(var(--cut) - .4px));
+  background: linear-gradient(145deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .025)), rgba(11, 11, 12, .78);
+}
+.pp-room-head { display: grid; gap: 12px; margin-bottom: clamp(22px, 3vw, 36px); }
+/* the intro: two live cards beside the words (they change as the fields are typed) */
+.pp-intro { display: grid; gap: clamp(26px, 4vw, 44px); align-items: center; }
+@media (min-width: 1100px) { .pp-intro { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); } }
+.pp-show { position: relative; width: 100%; max-width: 620px; margin: 0 auto; aspect-ratio: 1.42; }
+.pp-show-cv { position: absolute; display: block; width: 76%; height: auto; aspect-ratio: 3.5 / 2; box-shadow: 0 0 0 1px rgba(230, 233, 237, .16), 0 30px 50px rgba(0, 0, 0, .65), 0 4px 10px rgba(0, 0, 0, .5); }
+.pp-show-a { left: 0; top: 0; z-index: 1; }
+.pp-show-b { right: 0; bottom: 0; z-index: 2; }
+.pp-show::before {
+  content: ""; position: absolute; left: 10%; right: 10%; top: 40%; height: 26%; z-index: 0;
+  background: radial-gradient(closest-side, rgba(var(--pep-light-rgb), .35), rgba(var(--pep-light-rgb), 0));
+}
+.pp-eyebrow { margin: 0; font: 400 13px/1.3 var(--pep-font-display); letter-spacing: .32em; text-transform: uppercase; }
+.pp-h1 { font-size: clamp(40px, 7.4vw, 104px); letter-spacing: .1em; }
+.pp-h2 { font-size: clamp(26px, 4.4vw, 60px); }
+.pp-lede { max-width: 66ch; margin: 0; color: var(--pep-plat-3); font-size: clamp(15px, 1.25vw, 18px); }
+.pp-sub { margin: 0; font: 400 clamp(13px, 1.1vw, 15px)/1.4 var(--pep-font-display); letter-spacing: .2em; text-transform: uppercase; }
+.pp-stats { list-style: none; margin: clamp(18px, 3vw, 30px) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px clamp(22px, 4vw, 54px); }
+.pp-stats li { display: grid; gap: 4px; }
+.pp-stats .pp-num { font-size: clamp(34px, 4.6vw, 58px); line-height: 1; letter-spacing: .04em; }
+.pp-stats .pp-stat-l { font: 400 12px/1.3 var(--pep-font-display); letter-spacing: .24em; text-transform: uppercase; }
+.pp-note { margin: 0; color: var(--pep-plat-3); font-size: 14px; }
+.pp-note .pp-tagline { margin-right: 8px; font: 400 12px/1 var(--pep-font-display); letter-spacing: .22em; text-transform: uppercase; }
+
+/* ---------------- fields ---------------- */
+.pp-fields {
+  --cut: 18px;
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px 18px;
+  padding: clamp(16px, 2.2vw, 26px);
+  margin: 0 0 22px;
+}
+.pp-fields::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  background: linear-gradient(180deg, rgba(42, 45, 49, .7), rgba(20, 20, 22, .6)); box-shadow: inset 0 0 0 1px rgba(230, 233, 237, .12);
+}
+.pp-fields .pp-note { grid-column: 1 / -1; }
+@media (max-width: 1100px) { .pp-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .pp-fields { grid-template-columns: minmax(0, 1fr); } }
+.pp-field { display: grid; gap: 8px; min-width: 0; }
+.pp-field-l { font: 400 13px/1.2 var(--pep-font-display); letter-spacing: .18em; text-transform: uppercase; }
+.pp-box {
+  --cut: 12px;
+  position: relative; display: block; padding: 1.5px;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  background: linear-gradient(180deg, rgba(230, 233, 237, .6), rgba(107, 112, 119, .4) 50%, rgba(185, 190, 197, .55));
+  transition: transform .35s var(--pep-ease);
+}
+.pp-box:hover, .pp-box:focus-within { transform: translateY(-2px); }
+.pp-input {
+  display: block; width: 100%; min-height: 48px; margin: 0; padding: 11px 14px;
+  border: 0; border-radius: 0; outline: 0;
+  clip-path: polygon(calc(var(--cut) - .6px) 0, 100% 0, 100% calc(100% - var(--cut) + .6px), calc(100% - var(--cut) + .6px) 100%, 0 100%, 0 calc(var(--cut) - .6px));
+  background: linear-gradient(180deg, var(--pep-black-0), var(--pep-black-1));
+  color: var(--pep-plat-4); font: 500 16px/1.25 var(--pep-font-ui); letter-spacing: .02em;
+  transition: font-size .25s var(--pep-ease);
+}
+.pp-box:hover .pp-input, .pp-input:focus { font-size: 17px; }
+.pp-input:focus, .pp-input:focus-visible { box-shadow: inset 0 -3px 0 var(--pep-light); }
+.pp-input::placeholder { color: var(--pep-plat-2); }
+select.pp-input { -webkit-appearance: none; appearance: none; padding-right: 40px; cursor: pointer; text-overflow: ellipsis; }
+select.pp-input option, select.pp-input optgroup { background: var(--pep-black-1); color: var(--pep-plat-4); }
+.pp-box--select::after {
+  content: ""; position: absolute; right: 18px; top: 50%; width: 9px; height: 9px; margin-top: -7px;
+  border-right: 2px solid var(--pep-plat-3); border-bottom: 2px solid var(--pep-plat-3); transform: rotate(45deg); pointer-events: none;
+}
+input[type="number"].pp-input { -moz-appearance: textfield; appearance: textfield; }
+input[type="number"].pp-input::-webkit-inner-spin-button, input[type="number"].pp-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+@media (prefers-reduced-motion: reduce) { .pp-box:hover, .pp-box:focus-within { transform: none; } }
+
+/* ---------------- the card tools ---------------- */
+.pp-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 22px; margin: 0 0 14px; }
+.pp-filter { display: flex; flex-wrap: wrap; gap: 10px; }
+.pp-filter .pp-num-in { font-family: var(--pep-font-display); }
+.pp-spec { margin: 0 0 clamp(20px, 3vw, 30px); color: var(--pep-plat-3); font-size: 14px; max-width: 90ch; }
+.pp-spec b { font-weight: 600; color: var(--pep-plat-4); }
+
+/* ---------------- the gallery ---------------- */
+.pp-gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr)); gap: clamp(18px, 2.4vw, 30px); }
+.pp-card {
+  --cut: 18px;
+  position: relative; isolation: isolate; min-width: 0;
+  padding: clamp(14px, 1.6vw, 20px);
+  display: grid; gap: 14px; align-content: start;
+}
+.pp-card::before, .pp-card::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+.pp-card::before { background: linear-gradient(160deg, rgba(230, 233, 237, .36), rgba(107, 112, 119, .14) 40%, rgba(230, 233, 237, .22)); }
+.pp-card::after {
+  inset: 1px;
+  clip-path: polygon(calc(var(--cut) - .4px) 0, 100% 0, 100% calc(100% - var(--cut) + .4px), calc(100% - var(--cut) + .4px) 100%, 0 100%, 0 calc(var(--cut) - .4px));
+  background: linear-gradient(150deg, rgba(42, 45, 49, .72), rgba(11, 11, 12, .9));
+}
+.pp-card[data-starred]::before { background: linear-gradient(160deg, rgba(var(--pep-light-rgb), .9), rgba(107, 112, 119, .2) 40%, rgba(var(--pep-light-rgb), .55)); }
+.pp-card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; }
+.pp-card-no { font-size: clamp(30px, 3vw, 40px); line-height: 1; letter-spacing: .02em; }
+.pp-card-name { margin: 0; font: 400 clamp(16px, 1.5vw, 20px)/1.2 var(--pep-font-display); letter-spacing: .12em; text-transform: uppercase; }
+.pp-card-tag { margin: 4px 0 0; font: 400 12px/1.3 var(--pep-font-display); letter-spacing: .2em; text-transform: uppercase; color: var(--pep-plat-3); }
+.pp-card-tag .pp-gold-text { font-family: var(--pep-font-display); }
+.pp-star .pp-star-mark { font-family: var(--pep-font-ui); font-size: 15px; letter-spacing: 0; }
+.pp-star[aria-pressed="true"] .pp-btn-l { background-image: var(--pp-sheen), var(--pp-chrome-sm); }
+.pp-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .pp-sides { grid-template-columns: 1fr; } }
+.pp-side { margin: 0; display: grid; gap: 8px; min-width: 0; }
+/* the preview is a button that opens the big view; its keyboard ring is a bar of light under the card */
+.pp-side-btn { position: relative; display: block; width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; color: inherit; cursor: zoom-in; }
+.pp-side-btn::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 3px; background: var(--pep-light); box-shadow: 0 0 12px rgba(var(--pep-light-rgb), .85); opacity: 0; transition: opacity .25s ease; }
+.pp-side-btn:hover::after { opacity: .55; }
+.pp-side-btn:focus-visible { outline: 0; box-shadow: none; }
+.pp-side-btn:focus-visible::after { opacity: 1; }
+.pp-msg:empty { display: none; }
+/* the card itself is the 3.5 x 2 in print shape (a true rectangle, as it will be cut) */
+.pp-cv { display: block; width: 100%; height: auto; aspect-ratio: 3.5 / 2; background: var(--pep-black-1); box-shadow: 0 0 0 1px rgba(230, 233, 237, .14), 0 14px 26px rgba(0, 0, 0, .55), 0 2px 5px rgba(0, 0, 0, .5); cursor: zoom-in; }
+.pp-cap { font: 400 12px/1 var(--pep-font-display); letter-spacing: .3em; text-transform: uppercase; color: var(--pep-plat-3); }
+.pp-card-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.pp-status { margin: 0; flex: 1 1 200px; min-height: 1.4em; color: var(--pep-plat-3); font-size: 14px; }
+.pp-status[data-bad] { color: var(--pep-plat-4); }
+.pp-empty { margin: 8px 0 0; color: var(--pep-plat-3); font-size: 15px; }
+
+/* ---------------- the big view ---------------- */
+.pp-zoom { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; background: rgba(11, 11, 12, .9); }
+.pp-zoom-in { position: relative; display: grid; gap: 14px; width: min(1050px, 100%); }
+.pp-zoom-cv { display: block; width: 100%; height: auto; aspect-ratio: 3.5 / 2; box-shadow: 0 30px 60px rgba(0, 0, 0, .7); cursor: default; }
+.pp-zoom-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.pp-zoom-ttl { margin: 0; font: 400 clamp(15px, 1.6vw, 20px)/1.2 var(--pep-font-display); letter-spacing: .14em; text-transform: uppercase; }
+.pp-zoom-keys { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---------------- the label maker ---------------- */
+.pp-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: clamp(18px, 2.2vw, 28px); }
+.pp-slot {
+  --cut: 18px;
+  position: relative; isolation: isolate; min-width: 0;
+  display: grid; gap: 14px; align-content: start;
+  padding: clamp(16px, 1.8vw, 22px);
+}
+.pp-slot::before, .pp-slot::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+.pp-slot::before { background: linear-gradient(160deg, rgba(230, 233, 237, .36), rgba(107, 112, 119, .14) 40%, rgba(230, 233, 237, .22)); }
+.pp-slot::after {
+  inset: 1px;
+  clip-path: polygon(calc(var(--cut) - .4px) 0, 100% 0, 100% calc(100% - var(--cut) + .4px), calc(100% - var(--cut) + .4px) 100%, 0 100%, 0 calc(var(--cut) - .4px));
+  background: linear-gradient(150deg, rgba(42, 45, 49, .72), rgba(11, 11, 12, .9));
+}
+.pp-slot-h { font-size: clamp(22px, 2.2vw, 30px); letter-spacing: .14em; }
+.pp-size { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: end; gap: 10px; }
+.pp-x { padding-bottom: 12px; font: 400 18px/1 var(--pep-font-display); color: var(--pep-plat-3); }
+.pp-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.pp-stage {
+  --cut: 16px;
+  position: relative; display: grid; place-items: center;
+  height: clamp(210px, 22vw, 270px); padding: 14px;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  background:
+    radial-gradient(60% 70% at 50% 45%, rgba(var(--pep-light-rgb), .1), rgba(var(--pep-light-rgb), 0)),
+    linear-gradient(180deg, rgba(11, 11, 12, .9), rgba(20, 20, 22, .9));
+  box-shadow: inset 0 0 0 1px rgba(230, 233, 237, .1);
+}
+.pp-lcv { display: block; box-shadow: 0 12px 22px rgba(0, 0, 0, .6), 0 0 0 1px rgba(230, 233, 237, .14); }
+.pp-readout { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: 14px; }
+.pp-readout dt { font: 400 12px/1.5 var(--pep-font-display); letter-spacing: .2em; text-transform: uppercase; }
+.pp-readout dd { margin: 0; color: var(--pep-plat-3); }
+.pp-readout .pp-num { font-size: 15px; letter-spacing: .03em; }
+.pp-warn { color: var(--pep-plat-4); }
+.pp-warn::before { content: "\25B2 "; color: var(--pep-light); }
+.pp-flag { margin: 0; padding: 8px 12px; font: 400 12px/1.4 var(--pep-font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--pep-plat-4);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  background: linear-gradient(90deg, rgba(var(--pep-light-rgb), .22), rgba(var(--pep-light-rgb), .06)); box-shadow: inset 2px 0 0 var(--pep-light); }
+
+/* ---------------- footer ---------------- */
+.pp-foot { position: relative; z-index: 1; width: var(--pp-wide); margin: 0 auto 40px; padding: 26px 0 0; display: grid; gap: 12px; justify-items: center; text-align: center; }
+.pp-foot-word { font-size: clamp(24px, 3vw, 40px); letter-spacing: .2em; }
+.pp-foot p { margin: 0; max-width: 80ch; color: var(--pep-plat-3); font-size: 14px; }
+.pp-foot-tag { font: 400 12px/1.4 var(--pep-font-display); letter-spacing: .22em; text-transform: uppercase; }
+.pp-skip { position: absolute; left: 50%; top: 8px; z-index: 40; transform: translate(-50%, -160%); }
+.pp-skip:focus { transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div class="pp-ground" aria-hidden="true"><div class="pp-ground-light"></div><div class="pp-ground-flutes"></div><div class="pp-ground-grain"></div></div>
+<a class="pp-btn pp-btn--sm pp-skip" href="#cards"><span class="pp-btn-l">SKIP TO THE CARDS</span></a>
+
+<header class="pp-head">
+  <a class="pp-brand" href="#top" aria-label="PEPTICITY PRINT ROOM, BACK TO THE TOP">
+    <span class="pp-logo" role="img" aria-label="THE PEPTICITY P, TURNING"></span>
+    <span class="pp-h3d pp-brand-word" data-text="PEPTICITY" aria-hidden="true"><span class="pp-face">PEPTICITY</span></span>
+  </a>
+  <span class="pp-head-div" aria-hidden="true"></span>
+  <span class="pp-head-tag pp-chrome-sm">PRINT ROOM</span>
+  <nav class="pp-nav" aria-label="PRINT ROOM">
+    <a class="pp-btn" href="#cards"><span class="pp-btn-l">BUSINESS CARDS</span></a>
+    <a class="pp-btn" href="#labels"><span class="pp-btn-l">LABEL MAKER</span></a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="pp-room" aria-labelledby="pp-h-intro">
+    <div class="pp-intro">
+    <div class="pp-intro-text">
+    <div class="pp-room-head">
+      <p class="pp-eyebrow pp-chrome-sm">FOR GRACE · PREVIEW ONLY</p>
+      <h1 id="pp-h-intro" class="pp-h3d pp-h1" data-text="PRINT ROOM"><span class="pp-face">PRINT ROOM</span></h1>
+      <p class="pp-lede">Twenty-five business cards and a label maker in the new PEPTICITY look. Type your details once and every card changes with you. Type a label size and the label re-fits right in front of you. Everything stays on this screen: nothing you type is stored or sent.</p>
+    </div>
+    <ul class="pp-stats">
+      <li><span class="pp-num">25</span><span class="pp-stat-l pp-chrome-sm">CARD DESIGNS</span></li>
+      <li><span class="pp-num" id="pp-n-light">10</span><span class="pp-stat-l pp-chrome-sm">LIGHT STOCK</span></li>
+      <li><span class="pp-num" id="pp-n-dark">15</span><span class="pp-stat-l pp-chrome-sm">DARK STOCK</span></li>
+      <li><span class="pp-num">3</span><span class="pp-stat-l pp-chrome-sm">LABEL SIZES</span></li>
+      <li><span class="pp-num">300</span><span class="pp-stat-l pp-chrome-sm">DPI PRINT FILES</span></li>
+    </ul>
+    </div>
+    <div class="pp-show" aria-hidden="true">
+      <canvas class="pp-show-cv pp-show-a" data-card="1" data-side="front" width="640" height="366"></canvas>
+      <canvas class="pp-show-cv pp-show-b" data-card="9" data-side="back" width="640" height="366"></canvas>
+    </div>
+    </div>
+  </section>
+
+  <section id="cards" class="pp-room" aria-labelledby="pp-h-cards">
+    <div class="pp-room-head">
+      <h2 id="pp-h-cards" class="pp-h3d pp-h2" data-text="BUSINESS CARDS"><span class="pp-face">BUSINESS CARDS</span></h2>
+      <p class="pp-sub pp-chrome-sm">3.5 × 2 IN · FRONT AND BACK · TYPE ONCE, ALL 25 CHANGE</p>
+    </div>
+    <form class="pp-fields" id="pp-fields" autocomplete="off" novalidate>
+      <label class="pp-field"><span class="pp-field-l pp-chrome-sm">NAME</span><span class="pp-box"><input class="pp-input" id="f-name" name="pp-name" value="GRACE" maxlength="40" spellcheck="false" autocomplete="off"></span></label>
+      <label class="pp-field"><span class="pp-field-l pp-chrome-sm">TITLE</span><span class="pp-box"><input class="pp-input" id="f-title" name="pp-title" value="FOUNDER" maxlength="40" spellcheck="false" autocomplete="off"></span></label>
+      <label class="pp-field"><span class="pp-field-l pp-chrome-sm">PHONE</span><span class="pp-box"><input class="pp-input" id="f-phone" name="pp-phone" value="[PHONE]" maxlength="32" inputmode="tel" spellcheck="false" autocomplete="off"></span></label>
+      <label class="pp-field"><span class="pp-field-l pp-chrome-sm">EMAIL</span><span class="pp-box"><input class="pp-input" id="f-email" name="pp-email" value="[EMAIL]" maxlength="60" inputmode="email" spellcheck="false" autocomplete="off"></span></label>
+      <label class="pp-field"><span class="pp-field-l pp-chrome-sm">WEBSITE</span><span class="pp-box"><input class="pp-input" id="f-web" name="pp-web" value="PEPTICITY.COM" maxlength="40" spellcheck="false" autocomplete="off"></span></label>
+      <p class="pp-note"><span class="pp-tagline pp-chrome-sm">PREVIEW ONLY</span>What you type lives in this tab and nowhere else: it is not saved, not stored and not sent. A field left empty is left off the cards.</p>
+    </form>
+    <div class="pp-tools">
+      <div class="pp-filter" role="group" aria-label="SHOW THE CARDS">
+        <button class="pp-btn pp-btn--sm" type="button" data-filter="all" aria-pressed="true"><span class="pp-btn-l">ALL <span data-count="all">25</span></span></button>
+        <button class="pp-btn pp-btn--sm" type="button" data-filter="light" aria-pressed="false"><span class="pp-btn-l">LIGHT <span data-count="light">10</span></span></button>
+        <button class="pp-btn pp-btn--sm" type="button" data-filter="dark" aria-pressed="false"><span class="pp-btn-l">DARK <span data-count="dark">15</span></span></button>
+        <button class="pp-btn pp-btn--sm" type="button" data-filter="starred" aria-pressed="false"><span class="pp-btn-l">★ STARRED <span data-count="starred">0</span></span></button>
+      </div>
+      <button class="pp-btn pp-btn--sm" type="button" id="pp-marks" aria-pressed="false"><span class="pp-btn-l">CROP MARKS: <span data-state>OFF</span></span></button>
+    </div>
+    <p class="pp-spec">SAVE FOR PRINT gives two PNG files for a card, its front and its back: <b>1125 × 675 px</b> at 300 dpi, the 3.5 × 2 in card plus a 0.125 in bleed all round. With crop marks on, each file is <b>1275 × 825 px</b> and the marks sit outside the bleed. Tap a card to see it big. Stars are kept in this tab only.</p>
+    <ol class="pp-gallery" id="pp-gallery" aria-label="THE 25 CARD DESIGNS"></ol>
+    <p class="pp-empty" id="pp-empty" hidden>NO STARRED CARDS YET. TAP ★ STAR ON THE CARDS YOU LIKE.</p>
+  </section>
+
+  <section id="labels" class="pp-room" aria-labelledby="pp-h-labels">
+    <div class="pp-room-head">
+      <h2 id="pp-h-labels" class="pp-h3d pp-h2" data-text="LABEL MAKER"><span class="pp-face">LABEL MAKER</span></h2>
+      <p class="pp-sub pp-chrome-sm">TYPE THE SIZE · THE LABEL RE-FITS AS YOU TYPE · 300 DPI</p>
+      <p class="pp-lede">Three label sizes, side by side. Type the width and height in inches or millimetres and pick the product. Tall labels run PEPTICITY up the side like the vial, wide wrap-around labels lay it out sideways, and every line re-sizes so nothing runs over or gets cut. The label carries the P, PEPTICITY, the product name and size, LOT and EXP blanks, and one line held for counsel. SAVE FOR PRINT gives a PNG at exactly the size typed.</p>
+    </div>
+    <div class="pp-slots" id="pp-slots"></div>
+  </section>
+</main>
+
+<footer class="pp-foot">
+  <p class="pp-h3d pp-foot-word" data-text="PEPTICITY" aria-hidden="true"><span class="pp-face">PEPTICITY</span></p>
+  <p><span class="pp-foot-tag pp-chrome-sm">PREVIEW ONLY · SAMPLE DATA</span></p>
+  <p>Nothing on this page is sent anywhere. Print files are made in your browser and saved to your own downloads. Lettering: the owner's PEPTICITY BLACK; the small print lines use an open-licence typeface bundled with this page, so every computer makes the same file.</p>
+</footer>
+
+<script type="application/json" id="pp-catalogue">{"currency":"CAD","build":"preview","products":[{"sku":"tirzepatide","name":"Tirzepatide","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"tirzepatide-15mg","label":"15 mg","priceCAD":150},{"id":"tirzepatide-30mg","label":"30 mg","priceCAD":275}]},{"sku":"retatrutide","name":"Retatrutide","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"retatrutide-10mg","label":"10 mg","priceCAD":135},{"id":"retatrutide-15mg","label":"15 mg","priceCAD":165},{"id":"retatrutide-20mg","label":"20 mg","priceCAD":190}]},{"sku":"tesamorelin","name":"Tesamorelin","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"tesamorelin-10mg","label":"10 mg","priceCAD":160}]},{"sku":"aod-9604","name":"AOD-9604","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"aod-9604-5mg","label":"5 mg","priceCAD":65}]},{"sku":"5-amino-1mq","name":"5-Amino-1MQ","family":"NON-PEPTIDE COMPOUND","soldOut":false,"comingSoon":false,"sizes":[{"id":"5-amino-1mq-10mg","label":"10 mg","priceCAD":100}]},{"sku":"blend-contents-tbc","name":"BLEND [CONTENTS TO CONFIRM]","family":"BLEND","soldOut":false,"comingSoon":false,"sizes":[{"id":"blend-contents-tbc-80mg","label":"80 mg","priceCAD":170}]},{"sku":"bpc-157","name":"BPC-157","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"bpc-157-10mg","label":"10 mg","priceCAD":80}]},{"sku":"tb-500","name":"TB-500","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"tb-500-10mg","label":"10 mg","priceCAD":90}]},{"sku":"bpc-157-tb-500-blend","name":"BPC-157 + TB-500 BLEND","family":"BLEND","soldOut":false,"comingSoon":false,"sizes":[{"id":"bpc-157-tb-500-blend-10mg","label":"10 mg","priceCAD":100},{"id":"bpc-157-tb-500-blend-20mg","label":"20 mg","priceCAD":195}]},{"sku":"bpc-157-tb-500-ghk-cu-blend","name":"BPC-157 + TB-500 + GHK-Cu BLEND","family":"BLEND","soldOut":false,"comingSoon":false,"sizes":[{"id":"bpc-157-tb-500-ghk-cu-blend-70mg","label":"70 mg","priceCAD":150}]},{"sku":"kpv","name":"KPV","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"kpv-10mg","label":"10 mg","priceCAD":90}]},{"sku":"thymosin-alpha-1","name":"Thymosin Alpha-1","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"thymosin-alpha-1-10mg","label":"10 mg","priceCAD":90}]},{"sku":"hgh","name":"HGH","family":"PEPTIDE","soldOut":false,"comingSoon":true,"sizes":[]},{"sku":"cjc-1295","name":"CJC-1295","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"cjc-1295-with-dac-5mg","label":"5 mg (with DAC)","priceCAD":100},{"id":"cjc-1295-no-dac-10mg","label":"10 mg (without DAC)","priceCAD":100}]},{"sku":"ipamorelin","name":"Ipamorelin","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"ipamorelin-10mg","label":"10 mg","priceCAD":110}]},{"sku":"igf-1-lr3","name":"IGF-1 LR3","family":"PEPTIDE","soldOut":false,"comingSoon":true,"sizes":[]},{"sku":"epitalon","name":"Epitalon","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"epitalon-10mg","label":"10 mg","priceCAD":60},{"id":"epitalon-50mg","label":"50 mg","priceCAD":200}]},{"sku":"mots-c","name":"MOTS-c","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"mots-c-10mg","label":"10 mg","priceCAD":75},{"id":"mots-c-40mg","label":"40 mg","priceCAD":125}]},{"sku":"ss-31","name":"SS-31","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"ss-31-10mg","label":"10 mg","priceCAD":75}]},{"sku":"nad","name":"NAD+","family":"NON-PEPTIDE COMPOUND","soldOut":false,"comingSoon":false,"sizes":[{"id":"nad-1000mg","label":"1000 mg","priceCAD":190}]},{"sku":"glutathione","name":"Glutathione","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"glutathione-1500mg","label":"1500 mg","priceCAD":85}]},{"sku":"semax","name":"Semax","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"semax-10mg","label":"10 mg","priceCAD":75}]},{"sku":"selank","name":"Selank","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"selank-10mg","label":"10 mg","priceCAD":75}]},{"sku":"oxytocin","name":"Oxytocin","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"oxytocin-2mg","label":"2 mg","priceCAD":80}]},{"sku":"ghk-cu","name":"GHK-Cu","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"ghk-cu-50mg","label":"50 mg","priceCAD":50},{"id":"ghk-cu-100mg","label":"100 mg","priceCAD":100}]},{"sku":"pt-141","name":"PT-141","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"pt-141-10mg","label":"10 mg","priceCAD":50}]},{"sku":"melanotan-ii","name":"Melanotan II","family":"PEPTIDE","soldOut":false,"comingSoon":false,"sizes":[{"id":"melanotan-ii-10mg","label":"10 mg","priceCAD":50}]},{"sku":"slu-pp-332","name":"SLU-PP-332","family":"NON-PEPTIDE COMPOUND","soldOut":false,"comingSoon":false,"sizes":[{"id":"slu-pp-332-10mg","label":"10 mg","priceCAD":80}]}]}</script>
+<script src="assets/print-engine.js"></script>
+<script src="assets/print-cards.js"></script>
+<script src="assets/print-labels.js"></script>
+<script src="assets/print-app.js"></script>
+</body>
+</html>
