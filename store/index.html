@@ -69,7 +69,7 @@ body {
 }
 img, svg, video, canvas { max-width: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; border-radius: var(--pep-radius); }
-:focus-visible { outline: 1px solid var(--pep-plat-4); outline-offset: 2px; }
+:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }   /* NOV12-FINAL: a bar of the logo's light at the foot, never a box round a cut shape */
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -213,6 +213,58 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   height: 100vh;
   max-width: none;
 }
+
+/* 07: the backlight. A cool glow BEHIND each P and word (never on it), under the canvas, so the black glass stands out
+   against it; a faint sweep crosses it every 7 s. Numbers from logo-21-pop/src.html .pg-l. Labels never get it. */
+.pep-logo3d-back { isolation: isolate; }
+.pep-logo3d-back-pos { position: relative; }
+.pep-logo3d-back::before,
+.pep-logo3d-back::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+}
+.pep-logo3d-back-mark::before,
+.pep-logo3d-back-mark::after { height: 100%; aspect-ratio: 1.1; }
+.pep-logo3d-back-mark::before {
+  background: radial-gradient(closest-side, rgba(190, 214, 255, .8) 0%, rgba(100, 146, 236, .42) 40%, rgba(30, 50, 110, 0) 76%);
+}
+.pep-logo3d-back-word::before,
+.pep-logo3d-back-word::after { width: 74%; height: 150%; }
+.pep-logo3d-back-word::before {
+  background: radial-gradient(closest-side, rgba(150, 180, 236, .34) 0%, rgba(60, 90, 160, .16) 50%, rgba(40, 60, 110, 0) 100%);
+}
+.pep-logo3d-back::after {
+  background: linear-gradient(105deg, transparent 35%, rgba(190, 215, 255, .13) 48%, rgba(190, 215, 255, .02) 56%, transparent 66%);
+  background-size: 260% 100%;
+  -webkit-mask-image: radial-gradient(closest-side, #000 40%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 40%, transparent 100%);
+  animation-name: pep-logo3d-sweep;
+  animation-duration: 7s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes pep-logo3d-sweep { 0% { background-position: 120% 0; } 60%, 100% { background-position: -60% 0; } }
+@media (prefers-reduced-motion: reduce) { .pep-logo3d-back::after { animation-name: none; } }
+
+/* OPT-IN EDGE LIGHT (a slot sent with edge: true: the header P, the owner's pick of Nov 12 2026, sample 5). logo3d.js lifts
+   that slot's own pixels onto this small canvas; here it gets a thin ice-white line and a soft logo-blue glow round its
+   outside. Nothing else on the big canvas is outlined. It does not move, so reduced motion keeps it as it is.
+   Nov 13 2026, the owner's "B · tuned": a finer ice line and a softer, wider backlight-blue glow (was: 1px ice .95 + 3px
+   logo-blue .9, the strong outline "A"). */
+.pep-logo3d-edge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+  visibility: hidden;
+  filter: drop-shadow(0 0 1px rgba(207, 230, 255, .85)) drop-shadow(0 0 6px rgba(100, 146, 236, .5));
+}
 </style>
 <style data-pep-src="modules/03-entrance/entrance.css">
 /* 03-entrance. Every selector starts with [data-module="entrance"] or .pep-entrance- */
@@ -299,13 +351,22 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   gap: 16px;
   margin: clamp(8px, 1.2vh, 14px) clamp(10px, 1.6vw, 24px) 0;
   padding: clamp(6px, .9vh, 10px) clamp(12px, 2.6vw, 40px);
+}
+/* NOV12 BIG P: the bar's glass sits on a layer of its own behind the bar, with the same cut, fill and blur as before. The bar
+   itself is no longer cut to shape, so the bigger P and its backlight can reach past the bar's edge without being clipped. */
+[data-module="header"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background: linear-gradient(145deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018));
   -webkit-backdrop-filter: blur(10px) saturate(140%);
           backdrop-filter: blur(10px) saturate(140%);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px));
 }
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  [data-module="header"] { background: rgba(20, 20, 22, .8); }
+  [data-module="header"]::before { background: rgba(20, 20, 22, .8); }
 }
 .pep-header-brand {
   display: inline-flex;
@@ -316,8 +377,9 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 .pep-header-mark {
   display: block;
-  width: 58px;
+  width: 145px;                 /* NOV12 BIG P: 2.5 times the old 58 px box (the owner's pick, sample 5) */
   aspect-ratio: 1 / .82;
+  margin: -24px 0 -60px;        /* the box overhangs the bar, so the bar keeps its height and the P hangs a little below it */
 }
 .pep-header-name {
   font-family: var(--pep-font-display);
@@ -370,10 +432,218 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 .pep-header-link:focus-visible::after { transform: translateX(340%); transition: transform 1.4s ease-in-out; }
 
 @media (max-width: 899px) {
-  .pep-header-mark { width: 54px; }
+  /* NOV12 BIG P on narrow windows: the P grows to 2.5 times the old 54 px box (135 px) wherever the menu leaves room, and
+     otherwise as large as fits. The brand takes the room left of the menu (a size container, so its width never depends on
+     the P); the P's box may reach 12 px into the bar's padding on the left and past its own room on the right, because the
+     drawn P and its light fill only the middle 70% of the box: the light still stops about 10 px short of the menu. */
+  .pep-header-brand { flex: 1 1 0; min-width: 0; container-type: inline-size; }
+  .pep-header-mark {
+    --pep-header-mark-w: min(135px, calc((100cqw + 18px) / .85));
+    width: var(--pep-header-mark-w);
+    margin: calc(var(--pep-header-mark-w) * -.1655) calc(100cqw - var(--pep-header-mark-w) + 12px) calc(var(--pep-header-mark-w) * -.414) -12px;
+  }
   .pep-header-name { display: none; }
   .pep-header-link { padding: 0 12px; font-size: 13px; letter-spacing: .12em; }
   .pep-header-nav { gap: 8px; }
+}
+/* NOV12 BIG P on phones and narrow windows (under 600 wide): the P sits centred on the bar instead of hanging below it,
+   where it would crowd the GRAND OPENING line and poke out of the bar's foot; same total overhang, so the bar keeps its
+   height. Its box stops at 108 px (twice the old 54) so the whole P stays inside the bar with a little air round it. */
+@media (max-width: 599px) {
+  .pep-header-mark {
+    --pep-header-mark-w: min(108px, calc((100cqw + 18px) / .85));
+    margin-top: calc(var(--pep-header-mark-w) * -.29);
+    margin-bottom: calc(var(--pep-header-mark-w) * -.29);
+  }
+}
+
+/* ===== NOV12-FINAL, on top of NOV12 BIG P (the owner's "Number 5", untouched): SLASHED BLADES AND A DEEP-CUT BAR =====
+   Owner, Nov 12 night: "Get rid of this rectangles up top that say join the team... Same with cart"; "bigger, bolder... you
+   gotta be able to see it"; "I like the chrome and like how the blue flickers off it". The bar's glass (on ::before, where
+   NOV12 BIG P put it) is cut deep at both lower corners and carries the logo's blue behind the P; a chrome rim (::after)
+   runs along the cuts; JOIN THE TEAM and CART are slashed chrome blades with a rim on both slashes; the count is a frosted
+   diamond. Hover lifts and grows everything; the P turns once and lifts (the engine's own hover). */
+[data-module="header"] { --pep-hd-cut: clamp(24px, 2.4vw, 38px); }
+[data-module="header"]::before {
+  background:
+    radial-gradient(16% 150% at 6% 50%, rgba(var(--pep-light-rgb, 47, 125, 255), .2), rgba(var(--pep-light-rgb, 47, 125, 255), 0) 70%),
+    linear-gradient(160deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .02) 46%, rgba(255, 255, 255, .045));
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pep-hd-cut)), calc(100% - var(--pep-hd-cut) * 1.5) 100%, calc(var(--pep-hd-cut) * 1.5) 100%, 0 calc(100% - var(--pep-hd-cut)));
+}
+[data-module="header"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .7;
+  background: linear-gradient(100deg, var(--pep-plat-4), var(--pep-plat-1) 30%, var(--pep-plat-3) 55%, var(--pep-plat-1) 78%, var(--pep-plat-4));
+  clip-path: polygon(evenodd,
+    0 0, 100% 0, 100% calc(100% - var(--pep-hd-cut)), calc(100% - var(--pep-hd-cut) * 1.5) 100%, calc(var(--pep-hd-cut) * 1.5) 100%, 0 calc(100% - var(--pep-hd-cut)), 0 0,
+    0 1px, 0 calc(100% - var(--pep-hd-cut) - .6px), calc(var(--pep-hd-cut) * 1.5 + .4px) calc(100% - 1.2px), calc(100% - var(--pep-hd-cut) * 1.5 - .4px) calc(100% - 1.2px), 100% calc(100% - var(--pep-hd-cut) - .6px), 100% 1px, 0 1px);
+}
+.pep-header-brand { position: relative; z-index: 1; }
+@media (min-width: 900px) {
+  .pep-header-name { display: inline-block; font-size: clamp(22px, 2vw, 32px); letter-spacing: .32em; transition: transform .45s var(--pep-ease), filter .45s ease; }
+  .pep-header-brand:hover .pep-header-name,
+  .pep-header-brand:focus-visible .pep-header-name { transform: translateY(-3px) scale(1.06); filter: brightness(1.15); }
+}
+.pep-header-brand:focus-visible { outline: 0; }
+.pep-header-brand:focus-visible .pep-header-mark { box-shadow: 0 3px 0 -1px var(--pep-light, #2f7dff); }
+
+.pep-header-nav { position: relative; z-index: 1; gap: clamp(8px, .9vw, 14px); }
+.pep-header-link {
+  --s: 18px;
+  min-height: 54px;
+  padding: 0 calc(var(--s) + 20px);
+  white-space: nowrap;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .035) 55%, rgba(255, 255, 255, .075));
+  clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+  transform: translateY(0) scale(1);
+  transition: transform .45s var(--pep-ease), filter .45s ease, color .4s ease;
+}
+.pep-header-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-5), var(--pep-plat-2) 38%, var(--pep-plat-1) 60%, var(--pep-plat-4));
+  opacity: .8;
+  clip-path: polygon(evenodd,
+    var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%, var(--s) 0,
+    calc(var(--s) + 1.5px) 1.4px, calc(100% - 2.4px) 1.4px, calc(100% - var(--s) - 1.5px) calc(100% - 1.4px), 2.4px calc(100% - 1.4px), calc(var(--s) + 1.5px) 1.4px);
+  transition: opacity .4s ease;
+}
+.pep-header-link:hover,
+.pep-header-link:focus-visible { transform: translateY(-3px) scale(1.06); filter: brightness(1.18); color: var(--pep-plat-5); }
+.pep-header-link:hover::before,
+.pep-header-link:focus-visible::before { opacity: 1; }
+.pep-header-link:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+.pep-header-link:active { transform: translateY(0) scale(1); }
+.pep-header-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: var(--pep-plat-5);
+  text-shadow: 0 0 8px rgba(var(--pep-light-rgb, 47, 125, 255), .85);
+  background: linear-gradient(150deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .12) 55%, rgba(255, 255, 255, .24));
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+  border-radius: 0;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+@media (max-width: 899px) {
+  [data-module="header"] { --pep-hd-cut: 30px; }
+  .pep-header-link { --s: 14px; min-height: 46px; padding: 0 calc(var(--s) + 7px); font-size: 12.5px; letter-spacing: .1em; }
+  .pep-header-count { min-width: 28px; height: 28px; padding: 0 8px; font-size: 12px; }
+}
+/* phones: the two blades stack beside the P, one line each, and leave the P its room */
+@media (max-width: 520px) {
+  .pep-header-nav { flex: 0 0 auto; width: clamp(160px, 50vw, 232px); flex-direction: column; align-items: stretch; gap: 5px; }
+  .pep-header-link { min-height: 38px; justify-content: center; font-size: 13px; letter-spacing: .14em; }
+  .pep-header-count { min-width: 26px; height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-header-link:hover, .pep-header-link:focus-visible, .pep-header-brand:hover .pep-header-name { transform: none; }
+}
+@media (max-width: 520px) { [data-module="header"] { padding-right: 22px; } }
+
+/* ===== NOV12-FINAL, round 2 (second opinion on the pictures: the wordmark read as a caption beside the big P, and the P hung
+   under the bar with nothing built to hold it). The P itself, its size and its edge light are untouched (his Number 5).
+   1. PEPTICITY beside the P in the house 3D chrome, bigger and tighter. 2. Where the P hangs (600 px up), the bar's glass
+   drops a tab under it: the left cut runs on into the tab, so the overhang reads as built. The header element stays uncut. */
+@media (min-width: 900px) {
+  .pep-header-name.pep-header-3d { --pep-header-3d-step: .02em; position: relative; isolation: isolate; font-size: clamp(30px, 2.8vw, 42px); letter-spacing: .18em; background: none; -webkit-text-fill-color: currentColor; color: var(--pep-plat-3); }
+  .pep-header-3d::before {
+    content: attr(data-text);
+    content: attr(data-text) / "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    color: var(--pep-black-0);
+    -webkit-text-fill-color: currentColor;
+    text-shadow:
+      calc(var(--pep-header-3d-step) * 1) calc(var(--pep-header-3d-step) * 1.2) 0 var(--pep-plat-1),
+      calc(var(--pep-header-3d-step) * 2) calc(var(--pep-header-3d-step) * 2.4) 0 var(--pep-plat-2),
+      calc(var(--pep-header-3d-step) * 3) calc(var(--pep-header-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+      calc(var(--pep-header-3d-step) * 4) calc(var(--pep-header-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+      calc(var(--pep-header-3d-step) * 5) calc(var(--pep-header-3d-step) * 6) 0 var(--pep-black-0),
+      .1em .15em .14em rgba(0, 0, 0, .85);
+  }
+  .pep-header-3d-face {
+    display: block;
+    background-image: linear-gradient(180deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 28%, var(--pep-plat-2) 47%, color-mix(in srgb, var(--pep-plat-2) 58%, var(--pep-plat-1)) 52%, var(--pep-plat-4) 61%, var(--pep-plat-3) 84%, var(--pep-plat-4) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+/* NOV13: the tab re-fitted to the P (owner's "B · tuned" moved the P on computers; the tab also let the P's foot hang outside
+   it from 600 to 899 wide). Measured with tools/final-checks/tab-fit.cjs over a full 8 s cycle of the P (sway and one full
+   turn, the mirrored half included): glass round the P's hanging part on the left, below and on the right at every width
+   from 600 up. The tab leaves the bar's lower-left cut at --pep-hd-tab-cx, a clear step above the bar's foot (never a soft
+   bend just above it), and its sides drop steeply (--pep-hd-tab-k px across per px down, about 68 degrees), so the cut runs
+   on into the tab. How far the P hangs follows the header's foot padding and, from 900 up, the height of the name's line:
+   these numbers mirror the header's padding (clamp(6px, .9vh, 10px) clamp(12px, 2.6vw, 40px)), the P's margins and the
+   name's size, so change them together and re-run tab-fit (hero.css keeps the hero card 18 px below the tab's floor).
+   600-899: the step sits about 20 px up and the wall clears the P's waist light by about 6 px. */
+@media (min-width: 600px) {
+  [data-module="header"] {
+    --pep-hd-tab-k: .4;
+    --pep-hd-tab-d: calc(38px - clamp(6px, .9vh, 10px));
+    --pep-hd-tab-cx: min(calc(var(--pep-hd-cut) * 1.5), calc(clamp(12px, 2.6vw, 40px) - 4px));
+    --pep-hd-tab-r: calc(clamp(12px, 2.6vw, 40px) + 94px + (var(--pep-hd-tab-d) - 8px) * var(--pep-hd-tab-k));
+  }
+  [data-module="header"]::before,
+  [data-module="header"]::after { bottom: calc(var(--pep-hd-tab-d) * -1); }
+  [data-module="header"]::before {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut)), calc(100% - var(--pep-hd-cut) * 1.5) calc(100% - var(--pep-hd-tab-d)),
+      var(--pep-hd-tab-r) calc(100% - var(--pep-hd-tab-d)), calc(var(--pep-hd-tab-r) - var(--pep-hd-tab-d) * var(--pep-hd-tab-k)) 100%,
+      calc(var(--pep-hd-tab-cx) + (var(--pep-hd-tab-d) + var(--pep-hd-cut) - var(--pep-hd-tab-cx) / 1.5) * var(--pep-hd-tab-k)) 100%,
+      var(--pep-hd-tab-cx) calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut) + var(--pep-hd-tab-cx) / 1.5), 0 calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut)));
+  }
+  [data-module="header"]::after {
+    clip-path: polygon(evenodd,
+      0 0, 100% 0, 100% calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut)), calc(100% - var(--pep-hd-cut) * 1.5) calc(100% - var(--pep-hd-tab-d)),
+      var(--pep-hd-tab-r) calc(100% - var(--pep-hd-tab-d)), calc(var(--pep-hd-tab-r) - var(--pep-hd-tab-d) * var(--pep-hd-tab-k)) 100%,
+      calc(var(--pep-hd-tab-cx) + (var(--pep-hd-tab-d) + var(--pep-hd-cut) - var(--pep-hd-tab-cx) / 1.5) * var(--pep-hd-tab-k)) 100%,
+      var(--pep-hd-tab-cx) calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut) + var(--pep-hd-tab-cx) / 1.5), 0 calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut)), 0 0,
+      0 1px, 0 calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut) - .6px),
+      calc(var(--pep-hd-tab-cx) + .98px) calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut) + var(--pep-hd-tab-cx) / 1.5 - .79px),
+      calc(var(--pep-hd-tab-cx) + (var(--pep-hd-tab-d) + var(--pep-hd-cut) - var(--pep-hd-tab-cx) / 1.5) * var(--pep-hd-tab-k) + .81px) calc(100% - 1.2px),
+      calc(var(--pep-hd-tab-r) - var(--pep-hd-tab-d) * var(--pep-hd-tab-k) - .81px) calc(100% - 1.2px),
+      calc(var(--pep-hd-tab-r) - .81px) calc(100% - var(--pep-hd-tab-d) - 1.2px), calc(100% - var(--pep-hd-cut) * 1.5 - .4px) calc(100% - var(--pep-hd-tab-d) - 1.2px),
+      100% calc(100% - var(--pep-hd-tab-d) - var(--pep-hd-cut) - .6px), 100% 1px, 0 1px);
+  }
+}
+/* computers: the bar is as tall as the name's line (1.5 times the name's size) or the 54 px blades, whichever is taller, and
+   the P sits in the middle of that row, so the P hangs (52 px - half that row - the foot padding) below the bar; the tab is
+   never shallower than 20 px (on big screens the P dips only about 11 px: a seat, not a bump), and its step sits 12 px up */
+@media (min-width: 900px) {
+  [data-module="header"] {
+    --pep-hd-tab-d: max(20px, calc(58px - max(27px, clamp(30px, 2.8vw, 42px) * .75) - clamp(6px, .9vh, 10px)));
+    --pep-hd-tab-cx: calc((var(--pep-hd-cut) - 12px) * 1.5);
+    --pep-hd-tab-r: calc(clamp(12px, 2.6vw, 40px) + 97px + (var(--pep-hd-tab-d) - 8px) * var(--pep-hd-tab-k));
+  }
+}
+/* the count: a pointed shard, wider than tall (a diamond is a turned square) */
+.pep-header-count { min-width: 42px; height: 28px; padding: 0 13px; clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%); }
+@media (max-width: 899px) { .pep-header-count { min-width: 36px; height: 26px; padding: 0 11px; clip-path: polygon(9.5px 0, calc(100% - 9.5px) 0, 100% 50%, calc(100% - 9.5px) 100%, 9.5px 100%, 0 50%); } }
+
+/* ===== NOV13 B · TUNED (the owner's pick, Nov 13 2026: "B · tuned") =====
+   Computers (900 wide and up): the P moves 16 px left and up, and its light sits on the name's base; the total overhang is
+   unchanged (-84 px), so the bar keeps its height. Phones keep their own margins. The softer edge light is in logo3d.css.
+   B's sample was -36px 0 -48px -16px, measured when the name beside the P was the small 18-24 px line; the name is now the
+   30-42 px 3D chrome word, whose foot sits lower, so the P sits 4 px lower than the sample to keep its light on that foot
+   (measured: within 2.2 px at 900, 1024, 1280, 1440 and 1920 wide; tools/final-checks/headerP-align.cjs). */
+@media (min-width: 900px) {
+  .pep-header-mark { margin: -32px 0 -52px -16px; }
 }
 </style>
 <style data-pep-src="modules/06-bottle/bottle.css">
@@ -838,6 +1108,324 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-hero-card { transform: none; }
   .pep-hero-step { animation-name: none; }
 }
+
+/* ===== NOV12-FINAL: THE HERO CARD AND THE JOIN ROOM =====
+   Owner, Nov 12 night: "Make the top actually have a hero card"; "grand opening pepticity and join the pepticity team are
+   all jammed so tight together... create a cohesive room for each one"; "I do not want to see a single rectangle, a single
+   square, or a single pill button". The glass recipes are the ones above; what changes: the cuts are big, every rim follows
+   its cut, and the two rooms stand apart. The join room draws its frame on its own pseudo layers (never a clip-path on the
+   row), so the join card's glass still sees the ground behind it. */
+[data-module="hero"] {
+  min-height: 0;
+  justify-content: flex-start;
+  padding: 0 clamp(12px, 2.4vw, 40px) clamp(28px, 5vh, 64px);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .pep-hero-stage { background: rgba(20, 20, 22, .82); }
+}
+
+/* ---------- room 1: the hero card ---------- */
+.pep-hero-stage {
+  --a: clamp(40px, 4.4vw, 76px);
+  --b: clamp(12px, 1.3vw, 22px);
+  position: relative;
+  width: 100%;
+  max-width: 1680px;
+  margin: clamp(12px, 1.6vh, 22px) auto 0;
+  padding: clamp(20px, 2.6vw, 38px) clamp(18px, 3.2vw, 56px) clamp(20px, 2.4vw, 40px);
+  background:
+    radial-gradient(56% 90% at 50% 100%, rgba(var(--pep-light-rgb, 47, 125, 255), .13), rgba(var(--pep-light-rgb, 47, 125, 255), 0) 72%),
+    linear-gradient(160deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .014) 44%, rgba(255, 255, 255, .042));
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+          backdrop-filter: blur(10px) saturate(150%);
+  clip-path: polygon(var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--a)), calc(100% - var(--a)) 100%, var(--b) 100%, 0 calc(100% - var(--b)), 0 var(--a));
+}
+/* the chrome rim, along every cut */
+.pep-hero-stage::before,
+.pep-hero-row::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .82;
+  background: linear-gradient(135deg, var(--pep-plat-5), var(--pep-plat-2) 32%, var(--pep-plat-1) 54%, var(--pep-plat-4) 80%, var(--pep-plat-5));
+}
+.pep-hero-stage::before {
+  clip-path: polygon(evenodd,
+    var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--a)), calc(100% - var(--a)) 100%, var(--b) 100%, 0 calc(100% - var(--b)), 0 var(--a), var(--a) 0,
+    calc(var(--a) + .5px) 1.2px, 1.2px calc(var(--a) + .5px), 1.2px calc(100% - var(--b) - .5px), calc(var(--b) + .5px) calc(100% - 1.2px), calc(100% - var(--a) - .5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - var(--a) - .5px), calc(100% - 1.2px) calc(var(--b) + .5px), calc(100% - var(--b) - .5px) 1.2px, calc(var(--a) + .5px) 1.2px);
+}
+.pep-hero-stage .pep-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 30px);
+  font-size: clamp(15px, 1.45vw, 22px);
+  color: var(--pep-plat-4);
+}
+.pep-hero-stage .pep-hero-eyebrow::before,
+.pep-hero-stage .pep-hero-eyebrow::after {
+  content: "";
+  flex: 0 1 clamp(26px, 9vw, 170px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--pep-plat-3));
+}
+.pep-hero-stage .pep-hero-eyebrow::after { background: linear-gradient(270deg, rgba(255, 255, 255, 0), var(--pep-plat-3)); }
+/* the word fills the card, not the window: its slot is the card's inner width (capped by the screen's height on short
+   screens) and the title box is as tall as the letters that width makes */
+.pep-hero-stage .pep-hero-title { height: clamp(44px, min(10.4vw, 17.6vh), 184px); margin: clamp(14px, 1.9vw, 28px) 0 0; }
+.pep-hero-stage .pep-hero-word { width: min(100%, 150vh); }
+.pep-hero-stage .pep-hero-word-text { font-size: clamp(30px, 8.6vw, 150px); }
+
+/* ---------- room 2: the join room (the ask and the vial) ---------- */
+.pep-hero-row {
+  --a: clamp(40px, 4.4vw, 76px);
+  --b: clamp(12px, 1.3vw, 22px);
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  max-width: 1680px;
+  margin: clamp(36px, 4.2vw, 72px) auto 0;
+  padding: clamp(18px, 2.2vw, 40px) clamp(18px, 3.2vw, 56px);
+}
+.pep-hero-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 70% at 74% 100%, rgba(var(--pep-light-rgb, 47, 125, 255), .17), rgba(var(--pep-light-rgb, 47, 125, 255), 0) 72%),
+    linear-gradient(200deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .01) 48%, rgba(255, 255, 255, .032));
+  clip-path: polygon(var(--b) 0, calc(100% - var(--a)) 0, 100% var(--a), 100% calc(100% - var(--b)), calc(100% - var(--b)) 100%, var(--a) 100%, 0 calc(100% - var(--a)), 0 var(--b));
+}
+.pep-hero-row::after {
+  z-index: -1;
+  opacity: .62;
+  clip-path: polygon(evenodd,
+    var(--b) 0, calc(100% - var(--a)) 0, 100% var(--a), 100% calc(100% - var(--b)), calc(100% - var(--b)) 100%, var(--a) 100%, 0 calc(100% - var(--a)), 0 var(--b), var(--b) 0,
+    calc(var(--b) + .5px) 1.2px, 1.2px calc(var(--b) + .5px), 1.2px calc(100% - var(--a) - .5px), calc(var(--a) + .5px) calc(100% - 1.2px), calc(100% - var(--b) - .5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - var(--b) - .5px), calc(100% - 1.2px) calc(var(--a) + .5px), calc(100% - var(--a) - .5px) 1.2px, calc(var(--b) + .5px) 1.2px);
+}
+
+/* the join card: big cuts at the top left and bottom right, the rim along them */
+.pep-hero-card {
+  --a: clamp(40px, 4vw, 64px);
+  --b: clamp(12px, 1.2vw, 18px);
+  padding-top: clamp(30px, 2.9vw, 44px);
+  clip-path: polygon(var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--a)), calc(100% - var(--a)) 100%, var(--b) 100%, 0 calc(100% - var(--b)), 0 var(--a));
+}
+.pep-hero-card::before {
+  clip-path: polygon(evenodd,
+    var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--a)), calc(100% - var(--a)) 100%, var(--b) 100%, 0 calc(100% - var(--b)), 0 var(--a), var(--a) 0,
+    calc(var(--a) + .4px) 1px, 1px calc(var(--a) + .4px), 1px calc(100% - var(--b) - .4px), calc(var(--b) + .4px) calc(100% - 1px), calc(100% - var(--a) - .4px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--a) - .4px), calc(100% - 1px) calc(var(--b) + .4px), calc(100% - var(--b) - .4px) 1px, calc(var(--a) + .4px) 1px);
+}
+
+/* the email and name fields: cut at two corners, the rim drawn along the cuts (a field has no pseudo layers) */
+.pep-hero-input {
+  --k: 18px;
+  --rim: var(--pep-plat-2);
+  --rim-cut: var(--pep-plat-3);
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 0 0 / var(--k) var(--k) no-repeat,
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 100% 100% / var(--k) var(--k) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) var(--k) 0 / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 100% / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 var(--k) / 1px calc(100% - var(--k)) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 100% 0 / 1px calc(100% - var(--k)) no-repeat,
+    rgba(255, 255, 255, .045);
+  clip-path: polygon(var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k));
+  transition: background-color .3s ease;
+}
+.pep-hero-input:hover { --rim: var(--pep-plat-3); --rim-cut: var(--pep-plat-4); }
+.pep-hero-input:focus-visible { --rim: var(--pep-plat-5); --rim-cut: var(--pep-plat-5); background-color: rgba(255, 255, 255, .07); }
+.pep-hero-input[aria-invalid="true"] { --rim: var(--pep-light, #2f7dff); --rim-cut: var(--pep-light, #2f7dff); }
+
+/* the tick box: a chrome frame cut at two corners round a black well, ticked in black on platinum (as the doors' tick) */
+.pep-hero-tick {
+  flex: 0 0 auto;
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-top: -3px;
+  padding: 1.5px;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 45%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  clip-path: polygon(11px 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%, 0 11px);
+  transition: transform .4s var(--pep-ease);
+}
+.pep-hero-consent:hover .pep-hero-tick { transform: translateY(-2px) scale(1.08); }
+.pep-hero-check {
+  -webkit-appearance: none;
+          appearance: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  cursor: pointer;
+  background: var(--pep-black-0) no-repeat 50% 50% / 20px 20px;
+  clip-path: polygon(10.4px 0, 100% 0, 100% calc(100% - 10.4px), calc(100% - 10.4px) 100%, 0 100%, 0 10.4px);
+  transition: background-color .25s ease;
+}
+.pep-hero-check:checked {
+  background-color: var(--pep-plat-4);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M3.5 10.5 8 15 16.5 5' fill='none' stroke='%230b0b0c' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'/></svg>");
+}
+.pep-hero-tick:has(.pep-hero-check:focus-visible) { background: var(--pep-light, #2f7dff); padding: 2.5px; }
+.pep-hero-tick:has(.pep-hero-check[aria-invalid="true"]) { background: var(--pep-light, #2f7dff); padding: 2.5px; }
+
+/* the button: a slashed chrome blade (the same blade as the header's); hover lifts it and grows its words */
+.pep-hero-btn {
+  --s: clamp(20px, 1.7vw, 26px);
+  border-radius: 0;
+  clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+}
+.pep-hero-btn:hover,
+.pep-hero-btn:focus-visible { transform: translateY(-3px) scale(1.02); }
+.pep-hero-btn:focus-visible { outline: 0; box-shadow: inset 0 0 0 3px var(--pep-light, #2f7dff); }
+.pep-hero-btn-label { transition: opacity .3s ease, transform .45s var(--pep-ease); }
+.pep-hero-btn:hover .pep-hero-btn-label,
+.pep-hero-btn:focus-visible .pep-hero-btn-label { transform: scale(1.07); }
+
+/* short laptop screens: the two rooms keep their space, a little tighter */
+@media (min-width: 900px) and (max-height: 800px) {
+  .pep-hero-stage { margin-top: 12px; padding-top: 16px; padding-bottom: 20px; }
+  .pep-hero-stage .pep-hero-title { margin-top: 10px; }
+  .pep-hero-row { margin-top: 36px; padding-top: 24px; padding-bottom: 24px; }
+}
+@media (max-width: 899px) {
+  [data-module="hero"] { padding: 0 12px 28px; }
+  .pep-hero-stage { margin-top: 14px; padding: 18px 14px 22px; }
+  .pep-hero-stage .pep-hero-title { margin-top: 12px; }
+  .pep-hero-row { margin-top: 40px; padding: 24px 14px 18px; gap: 20px; }
+  .pep-hero-card { padding: 32px 18px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-hero-btn:hover, .pep-hero-btn:focus-visible { transform: none; }
+  .pep-hero-consent:hover .pep-hero-tick { transform: none; }
+}
+/* NOV12-FINAL: air under the header's P, which hangs below the bar from 600 px wide (the owner's Number 5).
+   NOV13: and never less than 18 px of air under the glass tab that holds the P (less read as the tab sitting on this card:
+   its floor and this card's double rim made three hairlines in about 17 px). The other numbers are the tab's depth plus
+   18 px, as header.css works it out (600-899: 38 px - the foot padding; computers: at least 20 px, else 58 px - max(27 px,
+   .75 x the name's size) - the foot padding): change them together. On short screens the tab had come within 3 px of this
+   card (700 x 500: 2 px over it); on tall screens the first number still wins and nothing moves. */
+@media (min-width: 600px) { .pep-hero-stage { margin-top: max(clamp(30px, 4vh, 44px), calc(56px - clamp(6px, .9vh, 10px))); } }
+@media (min-width: 900px) { .pep-hero-stage { margin-top: max(clamp(30px, 4vh, 44px), 38px, calc(76px - max(27px, clamp(30px, 2.8vw, 42px) * .75) - clamp(6px, .9vh, 10px))); } }
+@media (min-width: 900px) and (max-height: 800px) { .pep-hero-stage { margin-top: max(38px, calc(76px - max(27px, clamp(30px, 2.8vw, 42px) * .75) - clamp(6px, .9vh, 10px))); } }
+/* NOV12-FINAL: JOIN THE PEPTICITY TEAM in the house 3D chrome (owner, Nov 12: "3D chrome headings"); the tagline under it in
+   capitals (owner: capitals for every tagline; sentence case only in real paragraphs) */
+.pep-hero-ask.pep-hero-3d { --pep-hero-3d-step: .02em; position: relative; isolation: isolate; background: none; -webkit-text-fill-color: currentColor; color: var(--pep-plat-3); }
+.pep-hero-3d::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--pep-black-0);
+  -webkit-text-fill-color: currentColor;
+  text-shadow:
+    calc(var(--pep-hero-3d-step) * 1) calc(var(--pep-hero-3d-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pep-hero-3d-step) * 2) calc(var(--pep-hero-3d-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pep-hero-3d-step) * 3) calc(var(--pep-hero-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pep-hero-3d-step) * 4) calc(var(--pep-hero-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pep-hero-3d-step) * 5) calc(var(--pep-hero-3d-step) * 6) 0 color-mix(in srgb, var(--pep-plat-1) 78%, var(--pep-plat-2)),
+    calc(var(--pep-hero-3d-step) * 6) calc(var(--pep-hero-3d-step) * 7.2) 0 var(--pep-black-0),
+    .1em .15em .14em rgba(0, 0, 0, .85);
+}
+.pep-hero-3d-face {
+  display: block;
+  background-image: linear-gradient(180deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 28%, var(--pep-plat-2) 47%, color-mix(in srgb, var(--pep-plat-2) 58%, var(--pep-plat-1)) 52%, var(--pep-plat-4) 61%, var(--pep-plat-3) 84%, var(--pep-plat-4) 100%);
+  background-size: 100% 1.08em;
+  background-repeat: repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-hero-offer { text-transform: uppercase; font-family: var(--pep-font-display); font-size: clamp(15px, 1.1vw, 17px); letter-spacing: .1em; }
+
+/* ===== NOV12-FINAL, round 2 (second opinion on the pictures: "the top is a banner, not a hero"; "one card instead of a box
+   inside a box"; the side lines and the plain blade read as stock). The hero card becomes the first screen's room, with a
+   lamp of its own BEHIND the glass (so the glass has light to bend) and a fuller edge; the join room is one card and the
+   vial, held together by its floor light instead of a second frame; CLAIM gets the doors' arrow end. ===== */
+[data-module="hero"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: clamp(40px, 7vh, 96px);
+  width: min(48vw, 780px);
+  height: clamp(220px, 40svh, 440px);
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(var(--pep-light-rgb, 47, 125, 255), .36), rgba(var(--pep-light-rgb, 47, 125, 255), .12) 56%, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 100%);
+  transform: translateX(-50%);
+  animation: pep-hero-lamp 14s ease-in-out infinite alternate;
+}
+@keyframes pep-hero-lamp { from { transform: translateX(-64%); } to { transform: translateX(-36%); } }
+.pep-hero-stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: clamp(360px, 58svh, 620px);
+}
+.pep-hero-stage::before { opacity: .96; }
+/* the pale band just inside the rim */
+.pep-hero-stage::after {
+  --a2: calc(var(--a) - 3px);
+  --b2: calc(var(--b) - 3px);
+  content: "";
+  position: absolute;
+  inset: 7px;
+  pointer-events: none;
+  opacity: .3;
+  background: linear-gradient(135deg, var(--pep-plat-5), var(--pep-plat-3) 30%, rgba(255, 255, 255, .2) 50%, var(--pep-plat-3) 70%, var(--pep-plat-5));
+  clip-path: polygon(evenodd,
+    var(--a2) 0, calc(100% - var(--b2)) 0, 100% var(--b2), 100% calc(100% - var(--a2)), calc(100% - var(--a2)) 100%, var(--b2) 100%, 0 calc(100% - var(--b2)), 0 var(--a2), var(--a2) 0,
+    calc(var(--a2) + .4px) 1px, 1px calc(var(--a2) + .4px), 1px calc(100% - var(--b2) - .4px), calc(var(--b2) + .4px) calc(100% - 1px), calc(100% - var(--a2) - .4px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--a2) - .4px), calc(100% - 1px) calc(var(--b2) + .4px), calc(100% - var(--b2) - .4px) 1px, calc(var(--a2) + .4px) 1px);
+}
+.pep-hero-stage .pep-hero-eyebrow::before,
+.pep-hero-stage .pep-hero-eyebrow::after { content: none; }
+.pep-hero-row { margin-top: clamp(56px, 7vw, 112px); }
+.pep-hero-row::after { content: none; }
+.pep-hero-row::before {
+  background: radial-gradient(42% 64% at 72% 100%, rgba(var(--pep-light-rgb, 47, 125, 255), .2), rgba(var(--pep-light-rgb, 47, 125, 255), 0) 72%);
+  clip-path: none;
+}
+.pep-hero-offer, .pep-hero-offer-big { text-wrap: balance; }
+.pep-hero-btn { clip-path: polygon(var(--s) 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%); }
+.pep-hero-input { --k: 26px; padding-left: 20px; }
+.pep-hero-tick { clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px); }
+.pep-hero-check { clip-path: polygon(12.4px 0, 100% 0, 100% calc(100% - 12.4px), calc(100% - 12.4px) 100%, 0 100%, 0 12.4px); }
+@media (max-width: 899px) {
+  .pep-hero-stage { min-height: clamp(280px, 44svh, 440px); }
+  .pep-hero-row { margin-top: 64px; }
+}
+/* phones: the join room keeps a strip down the right for the guide's light */
+@media (max-width: 599px) { .pep-hero-row { padding-right: 42px; } }
+@media (prefers-reduced-motion: reduce) { [data-module="hero"]::before { animation: none; } }
+/* phones: the word is small there, so the card holds it with air but no empty floor */
+@media (max-width: 599px) { .pep-hero-stage { min-height: clamp(220px, 30svh, 300px); } [data-module="hero"]::before { width: 80vw; height: 30svh; } }
+/* NOV12-FINAL, round 3 (look-rules inspection): SKIP MY NAME lifts and grows; the preview note in capitals; the vial lifts on
+   hover and shows the keyboard as a bar; the offer line's figures frosted (15% OFF YOUR FIRST ORDER, 15% OFF IS SAVED). */
+.pep-hero-skip { display: inline-block; transform: translateY(0) scale(1); transition: transform .45s var(--pep-ease), color .3s ease, border-color .3s ease; }
+.pep-hero-skip:hover, .pep-hero-skip:focus-visible { transform: translateY(-2px) scale(1.06); }
+.pep-hero-preview { text-transform: uppercase; font-family: var(--pep-font-display); letter-spacing: .06em; line-height: 1.5; }
+.pep-hero-bottle { transition: transform .6s var(--pep-ease); }
+.pep-hero-bottle:hover { transform: translateY(-6px) scale(1.02); }
+.pep-hero-bottle:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+.pep-hero-offer-big {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .98) 0%, rgba(222, 232, 246, .86) 46%, rgba(188, 204, 228, .94) 54%, rgba(255, 255, 255, .97) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(var(--pep-light-rgb, 47, 125, 255), .5));
+}
+@media (prefers-reduced-motion: reduce) { .pep-hero-skip:hover, .pep-hero-bottle:hover { transform: none; } }
+/* NOV12-FINAL, round 3: the join room's floor light is gone; its glow was cut off at the room's foot and drew a faint box. The vial keeps its own rising light. */
+.pep-hero-row::before { content: none; }
 </style>
 <style data-pep-src="modules/11-crest/crest.css">
 /* 11-crest. Every selector starts with [data-module="crest"] or .pep-crest-
@@ -965,6 +1553,12 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 @media (prefers-reduced-motion: reduce) {
   .pep-crest-ray, .pep-crest-pool { transition: none; }
 }
+/* NOV12-FINAL, round 3 (look-rules inspection): the crest P lifts and grows on hover; the keyboard shows as a bar of the
+   light at its foot, never a box round it. The logo itself is untouched: only its slot moves. */
+.pep-crest-mark { transition: transform .6s var(--pep-ease); }
+.pep-crest-mark:hover { transform: translateY(-6px) scale(1.03); }
+.pep-crest-mark:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+@media (prefers-reduced-motion: reduce) { .pep-crest-mark:hover { transform: none; } }
 </style>
 <style data-pep-src="modules/12-standard/standard.css">
 /* 12-standard. Every selector starts with [data-module="standard"] or .pep-standard-
@@ -1706,6 +2300,104 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   }
   [data-module="story"][data-held] .pep-story-name { font-size: clamp(26px, 7.4vw, 40px); }
 }
+
+/* ============================== NOV12-POLISH (owner: "do the polish fixes, 3D chrome headings") ============================== */
+/* HEADING: FROM VIAL / TO SHELF in the 3D chrome of FOR THE LAB, one row at a time (each row carries its own sides) */
+[data-module="story"] .pep-story-title { background: none; -webkit-text-fill-color: currentColor; color: var(--pep-plat-3); }
+[data-module="story"] .pep-story-3d { --pep-story-3d-step: .016em; position: relative; isolation: isolate; }
+[data-module="story"] .pep-story-3d::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--pep-black-0);
+  -webkit-text-fill-color: currentColor;
+  text-shadow:
+    calc(var(--pep-story-3d-step) * 1) calc(var(--pep-story-3d-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pep-story-3d-step) * 2) calc(var(--pep-story-3d-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pep-story-3d-step) * 3) calc(var(--pep-story-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pep-story-3d-step) * 4) calc(var(--pep-story-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pep-story-3d-step) * 5) calc(var(--pep-story-3d-step) * 6) 0 color-mix(in srgb, var(--pep-plat-1) 78%, var(--pep-plat-2)),
+    calc(var(--pep-story-3d-step) * 6) calc(var(--pep-story-3d-step) * 7.2) 0 var(--pep-black-0),
+    calc(var(--pep-story-3d-step) * 7) calc(var(--pep-story-3d-step) * 8.4) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    .13em .19em .16em rgba(0, 0, 0, .88);
+}
+[data-module="story"] .pep-story-3d-face {
+  display: block;
+  background-image: linear-gradient(180deg, var(--pep-plat-4) 0%, var(--pep-plat-3) 30%, var(--pep-plat-2) 47%, color-mix(in srgb, var(--pep-plat-2) 58%, var(--pep-plat-1)) 52%, var(--pep-plat-4) 61%, var(--pep-plat-3) 84%, var(--pep-plat-2) 100%);
+  background-size: 100% 1em;
+  background-repeat: repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* COUNTER: the split-flap tiles get cut corners, each its own (no squares), and the figures the frosted finish */
+[data-module="story"] .pep-story-count {
+  --pep-lineup-speck: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .95  0 0 0 0 .96  0 0 0 0 .98  0 0 0 4.2 -2.05'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23f)'/%3E%3C/svg%3E");
+  --pep-lineup-speck-dk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2' seed='19' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1  0 0 0 0 .11  0 0 0 0 .13  0 0 0 3.6 -1.95'/%3E%3C/filter%3E%3Crect width='70' height='70' filter='url(%23f)'/%3E%3C/svg%3E");
+  --pep-lineup-face-frost: linear-gradient(180deg, rgba(230, 233, 237, .95) 0%, rgba(205, 210, 216, .9) 44%, rgba(160, 166, 174, .86) 52%, rgba(185, 190, 197, .8) 100%);
+  filter: drop-shadow(0 .08em .16em rgba(0, 0, 0, .5));
+}
+[data-module="story"] .pep-story-cell { box-shadow: none; }
+[data-module="story"] .pep-story-cell:nth-child(1) { clip-path: polygon(.2em 0, 100% 0, 100% calc(100% - .08em), calc(100% - .08em) 100%, 0 100%, 0 .2em); }
+[data-module="story"] .pep-story-cell:nth-child(2) { clip-path: polygon(0 0, calc(100% - .2em) 0, 100% .2em, 100% 100%, .08em 100%, 0 calc(100% - .08em)); }
+[data-module="story"] .pep-story-digit,
+[data-module="story"] .pep-story-of {
+  background-image: var(--pep-lineup-speck-dk), var(--pep-lineup-speck), var(--pep-lineup-face-frost);
+  background-size: 70px 70px, 90px 90px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* THE WAY PAST: a cut plate, not a box: bigger angled cuts, its rim drawn along them, and the house hover */
+[data-module="story"] .pep-story-skip {
+  border: 0;
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+  transition: color .4s ease, transform .4s var(--pep-ease), font-size .35s var(--pep-ease);
+}
+[data-module="story"] .pep-story-skip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-3), var(--pep-plat-1) 48%, var(--pep-plat-3));
+  clip-path: polygon(evenodd, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px, 16px 0, calc(16px + .41px) 1px, 1px calc(16px + .41px), 1px calc(100% - 1px), calc(100% - 16px - .41px) calc(100% - 1px), calc(100% - 1px) calc(100% - 16px - .41px), calc(100% - 1px) 1px, calc(16px + .41px) 1px);
+  transition: background .4s ease;
+}
+[data-module="story"] .pep-story-skip:hover,
+[data-module="story"] .pep-story-skip:focus-visible { transform: translateY(-3px) scale(1.04); font-size: clamp(15px, 1.12vw, 18px); }
+[data-module="story"] .pep-story-skip:hover::before,
+[data-module="story"] .pep-story-skip:focus-visible::before { background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 48%, var(--pep-plat-4)); }
+/* NOV12-POLISH-STORY-ROOM */
+@media (max-width: 599px) { [data-module="story"][data-held] .pep-story-steps { width: calc(100% - 36px); padding-right: 30px; } }   /* the plate itself ends before the tab (its 64px inner margin was only keeping the words clear) */
+
+/* ===== NOV12-FINAL: the steps plate cut deep at both right corners; the counter tiles cut deep at two corners each
+   (owner, Nov 12 night: "I do not want to see a single rectangle, a single square, or a single pill button"). ===== */
+.pep-story-steps { clip-path: polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%); }
+.pep-story-steps::before {
+  clip-path: polygon(evenodd,
+    0 0, calc(100% - 36px) 0, 100% 36px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 0,
+    1.2px 1.2px, 1.2px calc(100% - 1.2px), calc(100% - 30.5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 30.5px), calc(100% - 1.2px) 36.5px, calc(100% - 36.5px) 1.2px, 1.2px 1.2px);
+}
+[data-module="story"] .pep-story-cell:nth-child(1) { clip-path: polygon(.26em 0, 100% 0, 100% calc(100% - .26em), calc(100% - .26em) 100%, 0 100%, 0 .26em); }
+[data-module="story"] .pep-story-cell:nth-child(2) { clip-path: polygon(0 0, calc(100% - .26em) 0, 100% .26em, 100% 100%, .26em 100%, 0 calc(100% - .26em)); }
+/* NOV12-FINAL: the step numbers frosted (owner: "Numbers get a frosted, stand-out treatment") */
+.pep-story-num {
+  color: var(--pep-plat-4);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .96) 0%, rgba(214, 226, 244, .8) 50%, rgba(255, 255, 255, .92) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 5px rgba(var(--pep-light-rgb, 47, 125, 255), .4));
+}
+/* NOV12-FINAL, round 2: SKIP TO THE LINEUP cut deeper (it read as a box) */
+[data-module="story"] .pep-story-skip { clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px); padding-left: 28px; }
+[data-module="story"] .pep-story-skip::before { clip-path: polygon(evenodd, 22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px, 22px 0, calc(22px + .41px) 1px, 1px calc(22px + .41px), 1px calc(100% - 1px), calc(100% - 22px - .41px) calc(100% - 1px), calc(100% - 1px) calc(100% - 22px - .41px), calc(100% - 1px) 1px, calc(22px + .41px) 1px); }
+/* NOV12-FINAL, round 3: the keyboard ring on SKIP TO THE LINEUP is a bar of the light, never a box */
+.pep-story-skip:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
 </style>
 <style data-pep-src="modules/16-lineup/lineup.css">
 /* 16-lineup. Every selector starts with [data-module="lineup"] or .pep-lineup-
@@ -2926,6 +3618,146 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-lineup-buy > .pep-lineup-add { flex: 1 1 0; padding: 0 10px; letter-spacing: .1em; }
   .pep-lineup-buy .pep-lineup-bar-note { font-size: 9.5px; letter-spacing: .1em; }   /* the second line under a size (a note in brackets in the price sheet) */
 }
+
+/* ============================== NOV12-POLISH (owner: "do the polish fixes, 3D chrome headings") ============================== */
+/* HEADING: THE LINEUP in the 3D chrome of FOR THE LAB: a platinum chrome face over black chrome sides and a cast shadow.
+   The face is a child; the sides are the same words from data-text, stepped down and right. */
+[data-module="lineup"] .pep-lineup-title.pep-lineup-3d {
+  --pep-lineup-3d-step: .016em;
+  position: relative;
+  isolation: isolate;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--pep-plat-3);
+}
+[data-module="lineup"] .pep-lineup-3d::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--pep-black-0);
+  -webkit-text-fill-color: currentColor;
+  text-shadow:
+    calc(var(--pep-lineup-3d-step) * 1) calc(var(--pep-lineup-3d-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pep-lineup-3d-step) * 2) calc(var(--pep-lineup-3d-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pep-lineup-3d-step) * 3) calc(var(--pep-lineup-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pep-lineup-3d-step) * 4) calc(var(--pep-lineup-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pep-lineup-3d-step) * 5) calc(var(--pep-lineup-3d-step) * 6) 0 color-mix(in srgb, var(--pep-plat-1) 78%, var(--pep-plat-2)),
+    calc(var(--pep-lineup-3d-step) * 6) calc(var(--pep-lineup-3d-step) * 7.2) 0 var(--pep-black-0),
+    calc(var(--pep-lineup-3d-step) * 7) calc(var(--pep-lineup-3d-step) * 8.4) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    .13em .19em .16em rgba(0, 0, 0, .88);
+}
+[data-module="lineup"] .pep-lineup-3d-face {
+  display: block;
+  background-image: linear-gradient(180deg, var(--pep-plat-4) 0%, var(--pep-plat-3) 30%, var(--pep-plat-2) 47%, color-mix(in srgb, var(--pep-plat-2) 58%, var(--pep-plat-1)) 52%, var(--pep-plat-4) 61%, var(--pep-plat-3) 84%, var(--pep-plat-2) 100%);
+  background-size: 100% 1em;
+  background-repeat: repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* GLASS LAMP: one slow lamp in the logo blue behind the upper half of each case, so the glass has light to bend.
+   It takes the place of the two grey glows; the light under the vial stays. Drifts while the lineup is on screen. */
+[data-module="lineup"] .vc-glow {
+  background: radial-gradient(54% 30% at 50% 70%, rgba(var(--pep-light-rgb, 47, 125, 255), .26), rgba(var(--pep-light-rgb, 47, 125, 255), .07) 55%, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 100%);
+}
+[data-module="lineup"] .vc-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .8;
+  background: radial-gradient(40% 25% at 50% 25%, rgba(var(--pep-light-rgb, 47, 125, 255), .36), rgba(var(--pep-light-rgb, 47, 125, 255), .1) 55%, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 100%);
+  transition: opacity .6s ease;
+}
+[data-module="lineup"][data-live] .vc-glow::before { animation: pep-lineup-lamp 12s ease-in-out infinite alternate; }
+@keyframes pep-lineup-lamp { from { transform: translateX(-12%); } to { transform: translateX(12%); } }
+[data-module="lineup"][data-held] .vc[data-face]:hover .vc-glow::before,
+[data-module="lineup"]:not([data-held]) .vc:hover .vc-glow::before { opacity: 1; }
+[data-module="lineup"][data-held] .vc[data-face] .vc-grain { opacity: .3; }
+@media (prefers-reduced-motion: reduce) { [data-module="lineup"] .vc-glow::before { animation: none !important; } }
+/* QUIET SIDE CASES: until a case faces you, its words and its buy row sit back in gunmetal (no bright chrome); the vial
+   stays bright. The filter is on parts INSIDE the pane, never on anything above it, so the glass stays see-through. */
+[data-module="lineup"][data-held] .vc .vc-top,
+[data-module="lineup"][data-held] .vc .vc-name,
+[data-module="lineup"][data-held] .vc .vc-class,
+[data-module="lineup"][data-held] .vc .pep-lineup-buy { transition: filter .5s ease, opacity .25s ease; }
+[data-module="lineup"][data-held] .vc:not([data-face]) .vc-top,
+[data-module="lineup"][data-held] .vc:not([data-face]) .vc-name,
+[data-module="lineup"][data-held] .vc:not([data-face]) .vc-class { filter: brightness(.62) saturate(.7); }
+[data-module="lineup"][data-held] .vc:not([data-face]) .pep-lineup-buy { filter: brightness(.46) saturate(.5); }
+/* SIZE LIST: exactly the bar's width (lineup.js), and the name steps back while the list is open */
+[data-module="lineup"] .vc:has(.pep-lineup-bar[aria-expanded="true"]) .vc-name,
+[data-module="lineup"] .vc:has(.pep-lineup-bar[aria-expanded="true"]) .vc-class { opacity: .1; }
+/* LOOK RULES: taglines and labels in capitals; the counter's total and the bar's size frosted like every number;
+   the round buttons' rims drawn along their cuts (a border is cut off at the corners and reads as a square) */
+[data-module="lineup"] .pep-lineup-sub,
+[data-module="lineup"] .pep-lineup-d-label { text-transform: uppercase; letter-spacing: .12em; }
+[data-module="lineup"] .pep-lineup-count-of,
+[data-module="lineup"] .pep-lineup-bar-size {
+  background-image: var(--pep-lineup-speck-dk), var(--pep-lineup-speck), var(--pep-lineup-face-frost);
+  background-size: 70px 70px, 90px 90px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-module="lineup"] .pep-lineup-step,
+[data-module="lineup"] .pep-lineup-x { border: 0; }
+[data-module="lineup"] .pep-lineup-step { --pep-lineup-k: 13px; }
+[data-module="lineup"] .pep-lineup-x { --pep-lineup-k: 12px; }
+[data-module="lineup"] .pep-lineup-step::before,
+[data-module="lineup"] .pep-lineup-x::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-3), var(--pep-plat-1) 48%, var(--pep-plat-3));
+  clip-path: polygon(evenodd, var(--pep-lineup-k) 0, 100% 0, 100% calc(100% - var(--pep-lineup-k)), calc(100% - var(--pep-lineup-k)) 100%, 0 100%, 0 var(--pep-lineup-k), var(--pep-lineup-k) 0, calc(var(--pep-lineup-k) + .41px) 1px, 1px calc(var(--pep-lineup-k) + .41px), 1px calc(100% - 1px), calc(100% - var(--pep-lineup-k) - .41px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--pep-lineup-k) - .41px), calc(100% - 1px) 1px, calc(var(--pep-lineup-k) + .41px) 1px);
+  transition: background .4s ease;
+}
+[data-module="lineup"] .pep-lineup-step:hover::before,
+[data-module="lineup"] .pep-lineup-step:focus-visible::before,
+[data-module="lineup"] .pep-lineup-x:hover::before,
+[data-module="lineup"] .pep-lineup-x:focus-visible::before { background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 48%, var(--pep-plat-4)); }
+[data-module="lineup"] .pep-lineup-step[aria-disabled="true"]::before { background: var(--pep-plat-1); }
+
+/* ===== NOV12-FINAL: deeper cuts on the step buttons, the close button and the 3D/4D keys (owner, Nov 12 night: "I do not
+   want to see a single rectangle, a single square, or a single pill button"). Nothing here sits above a pane. ===== */
+[data-module="lineup"] .pep-lineup-step,
+[data-module="lineup"] .pep-lineup-x { --pep-lineup-k: 16px; clip-path: polygon(var(--pep-lineup-k) 0, 100% 0, 100% calc(100% - var(--pep-lineup-k)), calc(100% - var(--pep-lineup-k)) 100%, 0 100%, 0 var(--pep-lineup-k)); }
+.pep-lineup-depth-key { clip-path: polygon(15px 0, 100% 0, calc(100% - 15px) 100%, 0 100%); padding: 0 17px; }
+.pep-lineup-depth-key::before { clip-path: polygon(14.4px 0, 100% 0, calc(100% - 14.4px) 100%, 0 100%); }
+/* NOV12-FINAL, the case faces: the price bar's cuts deeper (and its inner well with them), the size rows, the COMING SOON /
+   SOLD OUT plates and the MORE DETAIL COMING plate pointed harder. All of these sit on a pane's face, never above a pane. */
+.pep-lineup-bar { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
+.pep-lineup-bar::before { clip-path: polygon(14.4px 0, 100% 0, 100% calc(100% - 14.4px), calc(100% - 14.4px) 100%, 0 100%, 0 14.4px); }
+[data-module="lineup"] .vc-sizes li { clip-path: polygon(14.5px 0, 100% 0, 100% calc(100% - 14.5px), calc(100% - 14.5px) 100%, 0 100%, 0 14.5px); padding-left: 18px; }
+.pep-lineup-flag { clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 18px 100%, 0 50%); }
+.pep-lineup-flag::before { clip-path: polygon(17.4px 0, calc(100% - 17.4px) 0, 100% 50%, calc(100% - 17.4px) 100%, 17.4px 100%, 0 50%); }
+.pep-lineup-d-coming { clip-path: polygon(17px 0, calc(100% - 17px) 0, 100% 50%, calc(100% - 17px) 100%, 17px 100%, 0 50%); }
+.pep-lineup-d-coming { clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 22px 100%, 0 50%); padding-left: 26px; padding-right: 26px; }
+/* NOV12-FINAL, round 2: the step and close buttons cut deeper (they read as boxes) */
+[data-module="lineup"] .pep-lineup-step,
+[data-module="lineup"] .pep-lineup-x { --pep-lineup-k: 20px; }
+/* NOV12-FINAL, round 3 (look-rules inspection, measured with a case facing at 1440): the list of sizes cut deeper (and its
+   rows), the price bar and ADD TO CART a little deeper; the keyboard rings are bars of the light, never boxes. Nothing here
+   sits above a pane. */
+.pep-lineup-menu-list { clip-path: polygon(28px 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%, 0 28px); padding-left: 14px; }
+.pep-lineup-menu-list::before { clip-path: polygon(27.4px 0, 100% 0, 100% calc(100% - 27.4px), calc(100% - 27.4px) 100%, 0 100%, 0 27.4px); }
+.pep-lineup-opt { clip-path: polygon(14.5px 0, 100% 0, 100% calc(100% - 14.5px), calc(100% - 14.5px) 100%, 0 100%, 0 14.5px); }
+.pep-lineup-bar { clip-path: polygon(17px 0, 100% 0, 100% calc(100% - 17px), calc(100% - 17px) 100%, 0 100%, 0 17px); }
+.pep-lineup-bar::before { clip-path: polygon(16.4px 0, 100% 0, 100% calc(100% - 16.4px), calc(100% - 16.4px) 100%, 0 100%, 0 16.4px); }
+.pep-lineup-add { clip-path: polygon(17px 0, 100% 0, calc(100% - 17px) 100%, 0 100%); }
+.pep-lineup-add::before { clip-path: polygon(16.4px 0, 100% 0, calc(100% - 16.4px) 100%, 0 100%); }
+.pep-lineup-skip:focus-visible,
+.pep-lineup-depth-key:focus-visible,
+.pep-lineup-rail:focus-visible,
+.pep-lineup-more:focus-visible,
+.pep-lineup-x:focus-visible,
+.pep-lineup-step:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
 </style>
 <style data-pep-src="modules/22-doors/doors.css">
 /* 22-doors. Every selector starts with [data-module="doors"] or .pep-doors-
@@ -3625,6 +4457,50 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-doors-step { animation-name: none; }
   .pep-doors-sending .pep-doors-btn-ring { animation-name: none; }
 }
+
+/* ============================== NOV12-POLISH (owner: "do the polish fixes, 3D chrome headings") ============================== */
+/* GLASS LAMP: one slow lamp in the logo blue behind the upper third of each door, so the glass reads as glass
+   (the glow is a sibling under the pane, cut to the door's shape, so the lamp is too) */
+.pep-doors-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(42% 24% at 50% 20%, rgba(var(--pep-light-rgb, 47, 125, 255), .42), rgba(var(--pep-light-rgb, 47, 125, 255), .12) 55%, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 100%);
+  animation: pep-doors-lamp 12s ease-in-out infinite alternate;
+}
+@keyframes pep-doors-lamp { from { transform: translateX(-12%); } to { transform: translateX(12%); } }
+@media (prefers-reduced-motion: reduce) { .pep-doors-glow::before { animation: none !important; } }
+/* LOOK RULES: the tagline under FOR THE LAB in capitals; the house hover on the plates (lift, grow, cast a shadow) */
+.pep-doors-sub { text-transform: uppercase; letter-spacing: .14em; font-size: clamp(15px, 1.1vw, 18px); }
+.pep-doors-go,
+.pep-doors-again { transition: transform .45s var(--pep-ease), filter .45s ease, font-size .35s var(--pep-ease); }
+@media (hover: hover) {
+  .pep-doors-btn:hover { transform: translateY(-3px) scale(1.03); filter: brightness(1.08) drop-shadow(0 8px 8px rgba(0, 0, 0, .55)); }
+  .pep-doors-go:hover,
+  .pep-doors-again:hover { letter-spacing: .16em; font-size: 16.2px; }
+}
+/* ROOM FOR THE GUIDE: a clear strip down the right for the ASK THE GUIDE tab, so it never sits on a door */
+[data-module="doors"] { padding-right: max(var(--pep-doors-pad), 84px); }
+@media (max-width: 899px) { [data-module="doors"] { padding-right: max(var(--pep-doors-pad), 76px); } }
+@media (max-width: 599px) { [data-module="doors"] { padding-right: max(var(--pep-doors-pad), 50px); } }
+
+/* ===== NOV12-FINAL: deeper cuts on the fields and the tick boxes (owner, Nov 12 night: "I do not want to see a single
+   rectangle, a single square, or a single pill button"). Same shapes, cut deep enough to read as cut. ===== */
+.pep-doors-well { --k: 19px; }
+.pep-doors-tick { clip-path: polygon(11px 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%, 0 11px); }
+.pep-doors-check { clip-path: polygon(10.4px 0, 100% 0, 100% calc(100% - 10.4px), calc(100% - 10.4px) 100%, 0 100%, 0 10.4px); }
+/* NOV12-FINAL, round 2: fields and tick boxes cut deeper still (they read as boxes) */
+.pep-doors-well { --k: 24px; }
+.pep-doors-tick { clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px); }
+.pep-doors-check { clip-path: polygon(12.4px 0, 100% 0, 100% calc(100% - 12.4px), calc(100% - 12.4px) 100%, 0 100%, 0 12.4px); }
+/* NOV12-FINAL, round 3 (look-rules inspection): the done-state plates cut deeper (their rings with them); the preview note in
+   capitals. */
+.pep-doors-go { clip-path: polygon(18px 0, 100% 0, calc(100% - 20px) 100%, 0 100%, 0 18px); }
+.pep-doors-go::before { clip-path: polygon(evenodd, 18px 0, 100% 0, calc(100% - 20px) 100%, 0 100%, 0 18px, 18px 0, 19.2px 3px, 3px 19.2px, 3px calc(100% - 3px), calc(100% - 22px) calc(100% - 3px), calc(100% - 4.4px) 3px, 19.2px 3px); }
+.pep-doors-again { clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%); }
+.pep-doors-again::before { clip-path: polygon(evenodd, 20px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 20px 0, 22px 3px, 4.4px calc(100% - 3px), calc(100% - 19.2px) calc(100% - 3px), calc(100% - 3px) calc(100% - 19.2px), calc(100% - 3px) 3px, 22px 3px); }
+.pep-doors-preview { text-transform: uppercase; font-family: var(--pep-font-display); font-size: 14px; letter-spacing: .1em; }
 </style>
 <style data-pep-src="modules/20-shelf/shelf.css">
 /* 20-shelf. Every selector starts with [data-module="shelf"] or .pep-shelf-
@@ -4611,6 +5487,105 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-footer-link,
   .pep-footer-link::after { transition: none; }
 }
+
+/* ===== NOV12-FINAL: no nicked boxes in the footer (owner, Nov 12 night: "I do not want to see a single rectangle, a single
+   square, or a single pill button"). The slab's cuts are big, JOIN THE TEAM is a slashed blade, the four door tiles are
+   cut deep at two corners; hover lifts and grows. ===== */
+.pep-footer-pane { clip-path: polygon(46px 0, 100% 0, 100% calc(100% - 46px), calc(100% - 46px) 100%, 0 100%, 0 46px); }
+.pep-footer-pane::before {
+  clip-path: polygon(evenodd, 46px 0, 100% 0, 100% calc(100% - 46px), calc(100% - 46px) 100%, 0 100%, 0 46px, 46px 0,
+    46.5px 1.2px, 1.2px 46.5px, 1.2px calc(100% - 1.2px), calc(100% - 46.5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 46.5px), calc(100% - 1.2px) 1.2px, 46.5px 1.2px);
+}
+.pep-footer-join {
+  --s: 18px;
+  padding: 0 calc(var(--s) + 16px);
+  clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+  transform: translateY(0) scale(1);
+  transition: background-position 1.4s var(--pep-ease), transform .45s var(--pep-ease);
+}
+.pep-footer-join:hover,
+.pep-footer-join:focus-visible { transform: translateY(-3px) scale(1.05); }
+.pep-footer-link {
+  --k: 26px;
+  padding-left: 30px;
+  clip-path: polygon(var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k));
+  transform: translateY(0) scale(1);
+  transition: color .4s var(--pep-ease), transform .45s var(--pep-ease);
+}
+.pep-footer-link:hover,
+.pep-footer-link:focus-visible { transform: translateY(-3px) scale(1.04); }
+@media (max-width: 899px) {
+  .pep-footer-pane { padding-top: 34px; padding-left: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-footer-join:hover, .pep-footer-link:hover { transform: none; }
+}
+/* NOV12-FINAL: the footer's PEPTICITY in the house 3D chrome (owner, Nov 12: "3D chrome headings") */
+.pep-footer-name.pep-footer-3d { --pep-footer-3d-step: .016em; position: relative; isolation: isolate; background: none; -webkit-text-fill-color: currentColor; color: var(--pep-plat-3); }
+.pep-footer-3d::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--pep-black-0);
+  -webkit-text-fill-color: currentColor;
+  text-shadow:
+    calc(var(--pep-footer-3d-step) * 1) calc(var(--pep-footer-3d-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pep-footer-3d-step) * 2) calc(var(--pep-footer-3d-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pep-footer-3d-step) * 3) calc(var(--pep-footer-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pep-footer-3d-step) * 4) calc(var(--pep-footer-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pep-footer-3d-step) * 5) calc(var(--pep-footer-3d-step) * 6) 0 color-mix(in srgb, var(--pep-plat-1) 78%, var(--pep-plat-2)),
+    calc(var(--pep-footer-3d-step) * 6) calc(var(--pep-footer-3d-step) * 7.2) 0 var(--pep-black-0),
+    calc(var(--pep-footer-3d-step) * 7) calc(var(--pep-footer-3d-step) * 8.4) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    .13em .19em .16em rgba(0, 0, 0, .88);
+}
+.pep-footer-3d-face {
+  display: block;
+  background-image: linear-gradient(180deg, var(--pep-plat-4) 0%, var(--pep-plat-3) 30%, var(--pep-plat-2) 47%, color-mix(in srgb, var(--pep-plat-2) 58%, var(--pep-plat-1)) 52%, var(--pep-plat-4) 61%, var(--pep-plat-3) 84%, var(--pep-plat-2) 100%);
+  background-size: 100% 1em;
+  background-repeat: repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* NOV12-FINAL, round 3 (look-rules inspection): the PRIVACY / TERMS / SHIPPING / CONTACT sheet cut deep at two corners with
+   a chrome rim along the cuts (it was a plain box), its CLOSE a slashed blade; hover lifts and grows. */
+.pep-footer-sheet { box-shadow: none; clip-path: polygon(46px 0, 100% 0, 100% calc(100% - 46px), calc(100% - 46px) 100%, 0 100%, 0 46px); }
+.pep-footer-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: .8;
+  background: linear-gradient(150deg, var(--pep-plat-5), var(--pep-plat-3) 20%, var(--pep-plat-1) 55%, var(--pep-plat-3) 86%, var(--pep-plat-5));
+  clip-path: polygon(evenodd, 46px 0, 100% 0, 100% calc(100% - 46px), calc(100% - 46px) 100%, 0 100%, 0 46px, 46px 0,
+    46.5px 1.2px, 1.2px 46.5px, 1.2px calc(100% - 1.2px), calc(100% - 46.5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 46.5px), calc(100% - 1.2px) 1.2px, 46.5px 1.2px);
+}
+.pep-footer-sheet-in { padding-top: clamp(34px, 4vw, 44px); padding-left: clamp(30px, 4vw, 44px); }
+.pep-footer-close {
+  --s: 16px;
+  position: relative;
+  padding: 0 calc(var(--s) + 14px);
+  box-shadow: none;
+  clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+  transform: translateY(0) scale(1);
+  transition: transform .45s var(--pep-ease), color .3s ease, background-color .3s ease;
+}
+.pep-footer-close::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-5), var(--pep-plat-2) 38%, var(--pep-plat-1) 60%, var(--pep-plat-4));
+  clip-path: polygon(evenodd, var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%, var(--s) 0,
+    calc(var(--s) + 1.5px) 1.4px, calc(100% - 2.4px) 1.4px, calc(100% - var(--s) - 1.5px) calc(100% - 1.4px), 2.4px calc(100% - 1.4px), calc(var(--s) + 1.5px) 1.4px);
+}
+.pep-footer-close:hover,
+.pep-footer-close:focus-visible { transform: translateY(-3px) scale(1.05); }
+@media (prefers-reduced-motion: reduce) { .pep-footer-close:hover { transform: none; } }
 </style>
 <style data-pep-src="modules/30-cart/cart.css">
 /* 30-cart. Every selector starts with [data-module="cart"] or .pep-cart- */
@@ -5145,6 +6120,181 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 .pep-cart-shared-btns button { min-height: 48px; padding: 6px 10px; font-family: var(--pep-font-display); font-size: 14px; line-height: 1.2; letter-spacing: .1em; color: var(--pep-plat-5); background: rgba(255, 255, 255, .08); border: 0; box-shadow: inset 0 0 0 1px rgba(185, 190, 197, .5); cursor: pointer; }
 .pep-cart-shared-btns button:hover,
 .pep-cart-shared-btns button:focus-visible { background: rgba(255, 255, 255, .16); }
+
+/* ===== NOV12-FINAL: no nicked boxes in the cart (owner, Nov 12 night: "I do not want to see a single rectangle, a single
+   square, or a single pill button"). The drawer's cuts are big, CLOSE / SEE THE LINEUP / the checkout button are slashed
+   blades like the header's, the stepper's cuts are deep; every rim follows its cut; hover lifts and grows. ===== */
+.pep-cart-drawer { clip-path: polygon(72px 0, 100% 0, 100% 100%, 56px 100%, 0 calc(100% - 56px), 0 72px); }
+.pep-cart-drawer::before {
+  clip-path: polygon(evenodd,
+    72px 0, 100% 0, 100% 100%, 56px 100%, 0 calc(100% - 56px), 0 72px, 72px 0,
+    72.5px 1.2px, 1.2px 72.5px, 1.2px calc(100% - 56.5px), 56.5px calc(100% - 1.2px), 100% calc(100% - 1.2px), 100% 1.2px, 72.5px 1.2px);
+}
+.pep-cart-head { padding-top: 44px; }
+.pep-cart-x,
+.pep-cart-btn2,
+.pep-cart-btn { --s: 18px; border-radius: 0; clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); }
+.pep-cart-btn2 { --s: 22px; }
+.pep-cart-btn { --s: 24px; }
+.pep-cart-x { padding: 0 calc(var(--s) + 10px); }
+.pep-cart-x::before,
+.pep-cart-btn2::before {
+  clip-path: polygon(evenodd,
+    var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%, var(--s) 0,
+    calc(var(--s) + 1.5px) 1.4px, calc(100% - 2.4px) 1.4px, calc(100% - var(--s) - 1.5px) calc(100% - 1.4px), 2.4px calc(100% - 1.4px), calc(var(--s) + 1.5px) 1.4px);
+}
+.pep-cart-x,
+.pep-cart-btn2 { transform: translateY(0) scale(1); transition: color .4s ease, background-color .4s ease, transform .45s var(--pep-ease); }
+.pep-cart-x:hover,
+.pep-cart-x:focus-visible,
+.pep-cart-btn2:hover,
+.pep-cart-btn2:focus-visible,
+.pep-cart-btn:hover,
+.pep-cart-btn:focus-visible { transform: translateY(-3px) scale(1.04); }
+.pep-cart-x:focus-visible,
+.pep-cart-btn2:focus-visible,
+.pep-cart-btn:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+.pep-cart-step { clip-path: polygon(17px 0, 100% 0, 100% calc(100% - 17px), calc(100% - 17px) 100%, 0 100%, 0 17px); }
+.pep-cart-step::before {
+  clip-path: polygon(evenodd,
+    17px 0, 100% 0, 100% calc(100% - 17px), calc(100% - 17px) 100%, 0 100%, 0 17px, 17px 0,
+    17.5px 1.2px, 1.2px 17.5px, 1.2px calc(100% - 1.2px), calc(100% - 17.5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 17.5px), calc(100% - 1.2px) 1.2px, 17.5px 1.2px);
+}
+@media (max-width: 699px) {
+  .pep-cart-drawer { clip-path: polygon(46px 0, calc(100% - 46px) 0, 100% 46px, 100% 100%, 0 100%, 0 46px); }
+  .pep-cart-drawer::before {
+    clip-path: polygon(evenodd,
+      46px 0, calc(100% - 46px) 0, 100% 46px, 100% 100%, 0 100%, 0 46px, 46px 0,
+      46.5px 1.2px, 1.2px 46.5px, 1.2px 100%, calc(100% - 1.2px) 100%, calc(100% - 1.2px) 46.5px, calc(100% - 46.5px) 1.2px, 46.5px 1.2px);
+  }
+  .pep-cart-head { padding: 32px 28px 12px 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-cart-x:hover, .pep-cart-btn2:hover, .pep-cart-btn:hover { transform: none; }
+}
+/* NOV12-FINAL: the figures frosted (owner: "Numbers get a frosted, stand-out treatment"): prices, the count, the totals */
+.pep-cart-line-price,
+.pep-cart-sum-price,
+.pep-cart-step-n,
+.pep-cart-v [data-t],
+.pep-cart-v[data-t] {
+  color: var(--pep-plat-5);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .98) 0%, rgba(222, 232, 246, .84) 46%, rgba(188, 204, 228, .92) 54%, rgba(255, 255, 255, .96) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px rgba(var(--pep-light-rgb, 47, 125, 255), .45));
+}
+/* NOV12-FINAL: the size under each line in capitals, as the lineup prints it (15 MG, not 15 mg) */
+.pep-cart-line-size { text-transform: uppercase; font-family: var(--pep-font-display); font-size: 15px; letter-spacing: .12em; }
+/* NOV12-FINAL, round 2: the stepper cut deeper (it read as a box) */
+.pep-cart-step { clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px); }
+.pep-cart-step::before { clip-path: polygon(evenodd, 22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px, 22px 0, 22.5px 1.2px, 1.2px 22.5px, 1.2px calc(100% - 1.2px), calc(100% - 22.5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 22.5px), calc(100% - 1.2px) 1.2px, 22.5px 1.2px); }
+.pep-cart-step-b:first-child { padding-left: 8px; }
+/* NOV12-FINAL, round 3 (look-rules inspection, the states the shape probe never opened): the age form's fields and lists
+   cut at two corners with the rim along the cuts; the shared-cart box cut and its two buttons slashed; the keyboard rings
+   are bars; capitals on the labels, the lists, the summary and the plain lines; the team and join figures frosted; hover
+   lifts and grows on the steppers, REMOVE, BACK TO MY CART and the join link. */
+.pep-cart-input,
+.pep-cart-select {
+  --k: 20px;
+  --rim: var(--pep-plat-2);
+  --rim-cut: var(--pep-plat-3);
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 0 0 / var(--k) var(--k) no-repeat,
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 100% 100% / var(--k) var(--k) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) var(--k) 0 / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 100% / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 var(--k) / 1px calc(100% - var(--k)) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 100% 0 / 1px calc(100% - var(--k)) no-repeat,
+    rgba(255, 255, 255, .045);
+  clip-path: polygon(var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k));
+  padding-left: 18px;
+}
+.pep-cart-select {
+  background:
+    linear-gradient(45deg, rgba(255, 255, 255, 0) 50%, var(--pep-plat-3) 50%) calc(100% - 26px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, var(--pep-plat-3) 50%, rgba(255, 255, 255, 0) 50%) calc(100% - 20px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 0 0 / var(--k) var(--k) no-repeat,
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 100% 100% / var(--k) var(--k) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) var(--k) 0 / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 100% / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 var(--k) / 1px calc(100% - var(--k)) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 100% 0 / 1px calc(100% - var(--k)) no-repeat,
+    rgba(255, 255, 255, .045);
+  padding-right: 44px;
+  text-transform: uppercase;
+  font-family: var(--pep-font-display);
+  font-size: 16px;
+  letter-spacing: .08em;
+}
+.pep-cart-select option { text-transform: uppercase; }
+.pep-cart-input:hover, .pep-cart-select:hover { --rim: var(--pep-plat-3); --rim-cut: var(--pep-plat-4); }
+.pep-cart-input:focus-visible, .pep-cart-select:focus-visible { --rim: var(--pep-plat-5); --rim-cut: var(--pep-plat-5); box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+.pep-cart-select[aria-invalid="true"] { --rim: var(--pep-light, #2f7dff); --rim-cut: var(--pep-light, #2f7dff); }
+.pep-cart-slabel { font-family: var(--pep-font-display); letter-spacing: .24em; text-transform: uppercase; }
+.pep-cart-sum-size { text-transform: uppercase; font-family: var(--pep-font-display); font-size: 15px; letter-spacing: .12em; }
+.pep-cart-plain { text-transform: uppercase; font-family: var(--pep-font-display); font-size: 15px; letter-spacing: .12em; }
+.pep-cart-k-b,
+.pep-cart-join [data-pct],
+.pep-cart-sum-size {
+  color: var(--pep-plat-5);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .98) 0%, rgba(222, 232, 246, .84) 46%, rgba(188, 204, 228, .92) 54%, rgba(255, 255, 255, .96) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px rgba(var(--pep-light-rgb, 47, 125, 255), .45));
+}
+.pep-cart-shared {
+  position: relative;
+  padding: 18px 18px 16px 24px;
+  box-shadow: none;
+  clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+}
+.pep-cart-shared::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, var(--pep-plat-4), var(--pep-plat-2) 45%, var(--pep-plat-2) 60%, var(--pep-plat-4));
+  clip-path: polygon(evenodd, 22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px, 22px 0,
+    22.5px 1.2px, 1.2px 22.5px, 1.2px calc(100% - 1.2px), calc(100% - 22.5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 22.5px), calc(100% - 1.2px) 1.2px, 22.5px 1.2px);
+}
+.pep-cart-shared-btns button {
+  --s: 15px;
+  position: relative;
+  padding: 6px calc(var(--s) + 8px);
+  box-shadow: none;
+  clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+  transform: translateY(0) scale(1);
+  transition: transform .45s var(--pep-ease), background-color .3s ease;
+}
+.pep-cart-shared-btns button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-5), var(--pep-plat-2) 38%, var(--pep-plat-1) 60%, var(--pep-plat-4));
+  clip-path: polygon(evenodd, var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%, var(--s) 0,
+    calc(var(--s) + 1.5px) 1.4px, calc(100% - 2.4px) 1.4px, calc(100% - var(--s) - 1.5px) calc(100% - 1.4px), 2.4px calc(100% - 1.4px), calc(var(--s) + 1.5px) 1.4px);
+}
+.pep-cart-shared-btns button:hover,
+.pep-cart-shared-btns button:focus-visible { transform: translateY(-3px) scale(1.05); }
+.pep-cart-step-b,
+.pep-cart-remove,
+.pep-cart-back,
+.pep-cart-join { display: inline-block; transform: translateY(0) scale(1); transition: transform .45s var(--pep-ease), color .3s ease, text-decoration-color .3s ease, background-color .3s ease; }
+.pep-cart-step-b:hover, .pep-cart-step-b:focus-visible,
+.pep-cart-remove:hover, .pep-cart-remove:focus-visible,
+.pep-cart-back:hover, .pep-cart-back:focus-visible,
+.pep-cart-join:hover, .pep-cart-join:focus-visible { transform: translateY(-2px) scale(1.06); }
+.pep-cart-step-b:focus-visible,
+.pep-cart-btn2:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+@media (prefers-reduced-motion: reduce) {
+  .pep-cart-step-b:hover, .pep-cart-remove:hover, .pep-cart-back:hover, .pep-cart-join:hover, .pep-cart-shared-btns button:hover { transform: none; }
+}
 </style>
 <style data-pep-src="modules/40-guide/guide.css">
 /* 40-guide. Every selector starts with [data-module="guide"] or .pep-guide- */
@@ -5694,6 +6844,103 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   .pep-guide-join::after,
   .pep-guide-send::after { display: none; }
 }
+
+/* ============================== NOV12-POLISH (owner: "do the polish fixes") ============================== */
+/* BLUE: the guide's light is logo 21's blue now (owner: blue only, no gold); its violet tokens point at the blues */
+[data-module="guide"] { --pep-uv-light-1: rgb(var(--pep-light-rgb, 47, 125, 255)); --pep-uv-light-2: rgb(70, 140, 255); --pep-uv-light-3: rgb(156, 198, 255); --pep-uv-light-4: rgb(207, 230, 255); }
+/* ON A PHONE: the tab keeps its height but stands thinner and closer to the edge, so it never sits on the lineup's case */
+@media (max-width: 599px) {
+  [data-module="guide"] { --pep-guide-edge: max(12px, env(safe-area-inset-right, 0px)); --pep-guide-bw: 30px; }
+}
+
+/* ===== NOV12-FINAL: no nicked boxes in the guide (owner, Nov 12 night: "I do not want to see a single rectangle, a single
+   square, or a single pill button"). The screen keeps its unrolling, with big cuts (top left, top right, bottom left);
+   CLOSE, the chips, ASK and JOIN THE TEAM are slashed blades; the field is cut at two corners with its rim along the cuts;
+   the answers are cut too. Colours stay tokens and rgb (guide-test). ===== */
+.pep-guide-panel { clip-path: polygon(100% 0, 100% 0, 100% 44px, 100% 100%, 100% 100%, 100% calc(100% - 36px), 100% 56px); }
+[data-module="guide"][data-open] .pep-guide-panel { clip-path: polygon(56px 0, calc(100% - 44px) 0, 100% 44px, 100% 100%, 36px 100%, 0 calc(100% - 36px), 0 56px); }
+.pep-guide-panel::before {
+  clip-path: polygon(evenodd,
+    56px 0, calc(100% - 44px) 0, 100% 44px, 100% 100%, 36px 100%, 0 calc(100% - 36px), 0 56px, 56px 0,
+    56.5px 1.2px, 1.2px 56.5px, 1.2px calc(100% - 36.5px), 36.5px calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - 1.2px), calc(100% - 1.2px) 44.5px, calc(100% - 44.5px) 1.2px, 56.5px 1.2px);
+}
+.pep-guide-head { padding-top: 34px; padding-left: 42px; padding-right: 26px; }
+.pep-guide-head::after { left: 42px; }
+.pep-guide-form { padding-bottom: 24px; }
+.pep-guide-x,
+.pep-guide-chip,
+.pep-guide-join,
+.pep-guide-send { --s: 16px; border-radius: 0; clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); transform: translateY(0) scale(1); transition: color .3s ease, background-color .3s ease, filter .4s ease, transform .45s var(--pep-ease); }
+.pep-guide-chip { --s: 15px; padding: 0 calc(var(--s) + 8px); }
+.pep-guide-x { padding: 0 calc(var(--s) + 8px); }
+.pep-guide-join { --s: 18px; padding: 0 calc(var(--s) + 12px); }
+.pep-guide-send { --s: 19px; padding: 0 calc(var(--s) + 6px); }
+.pep-guide-x::before,
+.pep-guide-chip::before {
+  clip-path: polygon(evenodd,
+    var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%, var(--s) 0,
+    calc(var(--s) + 1.5px) 1.4px, calc(100% - 2.4px) 1.4px, calc(100% - var(--s) - 1.5px) calc(100% - 1.4px), 2.4px calc(100% - 1.4px), calc(var(--s) + 1.5px) 1.4px);
+}
+.pep-guide-x:hover, .pep-guide-x:focus-visible,
+.pep-guide-chip:hover, .pep-guide-chip:focus-visible,
+.pep-guide-join:hover, .pep-guide-join:focus-visible,
+.pep-guide-send:hover, .pep-guide-send:focus-visible { transform: translateY(-2px) scale(1.05); }
+.pep-guide-x:focus-visible, .pep-guide-chip:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-uv-light-2); }
+.pep-guide-join:focus-visible, .pep-guide-send:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-black-0); }
+.pep-guide-input {
+  --k: 18px;
+  --rim: color-mix(in srgb, var(--pep-plat-3) 36%, transparent);
+  --rim-cut: color-mix(in srgb, var(--pep-plat-3) 60%, transparent);
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 0 0 / var(--k) var(--k) no-repeat,
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 100% 100% / var(--k) var(--k) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) var(--k) 0 / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 100% / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 var(--k) / 1px calc(100% - var(--k)) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 100% 0 / 1px calc(100% - var(--k)) no-repeat;
+  background-color: color-mix(in srgb, var(--pep-black-0) 30%, transparent);
+  clip-path: polygon(var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k));
+  padding-left: 20px;
+}
+.pep-guide-input:hover { --rim: var(--pep-plat-3); --rim-cut: var(--pep-plat-4); }
+.pep-guide-input:focus-visible { --rim: var(--pep-uv-light-3); --rim-cut: var(--pep-uv-light-4); box-shadow: inset 3px 3px 8px color-mix(in srgb, var(--pep-black-0) 66%, transparent); }
+.pep-guide-msg { padding-top: 16px; }
+.pep-guide-msg--guide { clip-path: polygon(28px 0, 100% 0, 100% calc(100% - min(28px, 40%)), calc(100% - 28px) 100%, 0 100%, 0 min(28px, 40%)); padding-left: 22px; }
+.pep-guide-msg--you { clip-path: polygon(0 0, calc(100% - 28px) 0, 100% min(28px, 40%), 100% 100%, 28px 100%, 0 calc(100% - min(28px, 40%))); padding-right: 22px; }
+@media (max-width: 699px) {
+  .pep-guide-head { padding: 30px 14px 12px 36px; }
+  .pep-guide-head::after { left: 36px; }
+  .pep-guide-form { padding-bottom: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-guide-x:hover, .pep-guide-chip:hover, .pep-guide-join:hover, .pep-guide-send:hover { transform: none; }
+}
+/* NOV12-FINAL, round 2: the field cut deeper; the line under the guide's name in capitals (it is a tagline) */
+.pep-guide-input { --k: 24px; padding-left: 22px; }
+.pep-guide-note { text-transform: uppercase; font-family: var(--pep-font-display); font-size: 14px; letter-spacing: .1em; line-height: 1.45; }
+/* NOV12-FINAL, round 3 (look-rules inspection): the keyboard rings are bars of the light (tokens, no raw hex: guide-test);
+   the beacon and the links lift and grow on hover; the prices and the step numbers frosted. */
+.pep-guide-launch { transform: translateY(0) scale(1); }
+.pep-guide-launch:hover, .pep-guide-launch:focus-visible { transform: translateY(-3px) scale(1.04); }
+.pep-guide-launch:focus-visible,
+.pep-guide-chip:focus-visible,
+.pep-guide-x:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-uv-light-1); }
+.pep-guide-send:focus-visible,
+.pep-guide-join:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-black-0); }
+.pep-guide-link { transform: translateY(0) scale(1); transition: transform .45s var(--pep-ease), color .3s ease, text-decoration-color .3s ease; }
+.pep-guide-link:hover, .pep-guide-link:focus-visible { transform: translateY(-2px) scale(1.06); }
+.pep-guide-size-price {
+  background: linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(222, 232, 246) 46%, rgb(188, 204, 228) 54%, rgb(255, 255, 255) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--pep-uv-light-1) 50%, transparent));
+}
+.pep-guide-steps li::marker { color: var(--pep-plat-5); font-family: var(--pep-font-display); }
+@media (prefers-reduced-motion: reduce) { .pep-guide-launch:hover, .pep-guide-link:hover { transform: none; } }
+.pep-guide-launch { transition: height .7s var(--pep-ease), opacity .35s ease, filter .4s ease, visibility 0s linear 0s, transform .45s var(--pep-ease); }
 </style>
 </head>
 <body>
@@ -5707,7 +6954,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   <div class="pep-ground-grain"></div>
 </div>
 <!-- module:02-logo3d -->
-<!-- 02-logo3d: ONE WebGL canvas for every 3D logo on the page (locked NUMBER 21, SMOKED GLASS, BLUE LIGHT). Sections ask for a logo over the bus:
+<!-- 02-logo3d: ONE WebGL canvas for every 3D logo on the page (locked 07, NUMBER 21 BACKLIT + CHROME LINES). Sections ask for a logo over the bus:
      ctx.emit('logo3d:slot', { el, kind: 'mark' | 'word' | 'labelmark' | 'wordv', phase, hold, interactive }). No wording here. -->
 <div data-module="logo3d" aria-hidden="true">
   <canvas class="pep-logo3d-canvas"></canvas>
@@ -5725,7 +6972,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 <header data-module="header">
   <a class="pep-header-brand" href="#top" aria-label="PEPTICITY, back to the top">
     <span class="pep-header-mark" aria-hidden="true"></span>
-    <span class="pep-header-name">PEPTICITY</span>
+    <span class="pep-header-name pep-header-3d" data-text="PEPTICITY"><span class="pep-header-3d-face">PEPTICITY</span></span>
   </a>
   <nav class="pep-header-nav" aria-label="Main">
     <a class="pep-header-link" href="#join">JOIN THE TEAM</a>
@@ -5768,17 +7015,22 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
      (radians): the letter faces stay put and only their depth swings into view, data-light = how far the light travels
      across the metal (1 = the engine's own). -->
 <section data-module="hero" id="top" aria-labelledby="pep-hero-title">
-  <p class="pep-hero-eyebrow">GRAND OPENING</p>
+  <!-- NOV12-FINAL: the hero card. GRAND OPENING and the giant word share one glass card (owner: "Make the top actually have
+       a hero card"); the join ask has its own room below it ("create a cohesive room for each one"). The word's slot now
+       spans the card, not the window, so data-span is the share of the card's inner width. -->
+  <div class="pep-hero-stage">
+    <p class="pep-hero-eyebrow">GRAND OPENING</p>
 
-  <h1 class="pep-hero-title" id="pep-hero-title">
-    <span class="pep-hero-word" aria-hidden="true" data-dist="5.2" data-span="0.88" data-low="0.4" data-square="1" data-lean="0" data-look-x="0.28" data-look-y="0.12" data-light="0.5"></span>
-    <span class="pep-hero-word-text">PEPTICITY</span>
-  </h1>
+    <h1 class="pep-hero-title" id="pep-hero-title">
+      <span class="pep-hero-word" aria-hidden="true" data-dist="5.2" data-span="0.92" data-low="0.4" data-square="1" data-lean="0" data-look-x="0.28" data-look-y="0.12" data-light="0.5"></span>
+      <span class="pep-hero-word-text">PEPTICITY</span>
+    </h1>
+  </div>
 
   <div class="pep-hero-row">
     <div class="pep-hero-card" id="join" data-slot="hero" data-effect="hov-02">
       <form class="pep-hero-form" method="post" action="" data-hook="H01" data-ghl-form="team-join" data-effect="frm-103" novalidate>
-        <h2 class="pep-hero-ask">JOIN THE PEPTICITY TEAM</h2>
+        <h2 class="pep-hero-ask pep-hero-3d" data-text="JOIN THE PEPTICITY TEAM"><span class="pep-hero-3d-face">JOIN THE PEPTICITY TEAM</span></h2>
 
         <p class="pep-hero-offer" data-gate="offer" hidden><strong class="pep-hero-offer-big" data-offer-text></strong> <span data-gate="restock" hidden>First word on every new lot.</span></p>
         <p class="pep-hero-offer" data-gate-off="offer">Grand-opening news, straight to you.</p>
@@ -5797,7 +7049,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
           <p class="pep-hero-err" id="pep-hero-email-err" role="alert" hidden>That email looks incomplete.</p>
 
           <label class="pep-hero-consent">
-            <input class="pep-hero-check" type="checkbox" name="consent_email" data-consent aria-describedby="pep-hero-consent-err">
+            <span class="pep-hero-tick"><input class="pep-hero-check" type="checkbox" name="consent_email" data-consent aria-describedby="pep-hero-consent-err"></span>
             <span class="pep-hero-consent-text" data-consent-text>Yes, PEPTICITY may email me my welcome and PEPTICITY news. I can unsubscribe any time.</span>
           </label>
           <p class="pep-hero-err" id="pep-hero-consent-err" role="alert" hidden>Tick the box so we can email your welcome.</p>
@@ -5815,7 +7067,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
             <input class="pep-hero-input" id="pep-hero-first" name="first_name" type="text" autocomplete="given-name" maxlength="40">
             <button class="pep-hero-btn" type="button" data-save-name><span class="pep-hero-btn-label">ADD MY NAME</span></button>
           </div>
-          <button class="pep-hero-skip" type="button" data-skip-name>SKIP</button>
+          <button class="pep-hero-skip" type="button" data-skip-name>SKIP MY NAME</button>
         </div>
 
         <div class="pep-hero-step" data-step="done" hidden>
@@ -5903,7 +7155,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 <section data-module="story" id="story" aria-label="FROM VIAL TO SHELF">
   <div class="pep-story-stage">
     <header class="pep-story-head">
-      <h2 class="pep-story-title"><span class="pep-story-title-row">FROM VIAL</span> <span class="pep-story-title-row">TO SHELF</span></h2>
+      <h2 class="pep-story-title"><span class="pep-story-title-row pep-story-3d" data-text="FROM VIAL"><span class="pep-story-3d-face">FROM VIAL</span></span> <span class="pep-story-title-row pep-story-3d" data-text="TO SHELF"><span class="pep-story-3d-face">TO SHELF</span></span></h2>
       <a class="pep-story-skip" href="#lineup" data-gate="names" data-skip-to="lineup" hidden>SKIP TO THE LINEUP<i class="pep-story-skip-mark" aria-hidden="true"></i></a>
       <a class="pep-story-skip" href="#shelf" data-gate-off="names" data-skip-to="shelf">SKIP TO THE SHELF<i class="pep-story-skip-mark" aria-hidden="true"></i></a>
     </header>
@@ -6017,7 +7269,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 
     <header class="pep-lineup-head">
       <div class="pep-lineup-heading">
-        <h2 class="pep-lineup-title">THE LINEUP</h2>
+        <h2 class="pep-lineup-title pep-lineup-3d" data-text="THE LINEUP"><span class="pep-lineup-3d-face">THE LINEUP</span></h2>
         <p class="pep-lineup-sub">Every vial in its own glass case.</p>
       </div>
       <!-- PREVIEW ONLY (a live build cuts this out): the owner's switch between the two kinds of lettering.
@@ -6436,7 +7688,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 <footer data-module="footer">
   <div class="pep-footer-pane">
     <div class="pep-footer-brand">
-      <p class="pep-footer-name">PEPTICITY</p>
+      <p class="pep-footer-name pep-footer-3d" data-text="PEPTICITY"><span class="pep-footer-3d-face">PEPTICITY</span></p>
       <p class="pep-footer-label" data-footer-label></p>
       <a class="pep-footer-join" href="#join">JOIN THE TEAM</a>
     </div>
@@ -6581,14 +7833,14 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 
         <!-- VIEW: province and age (hook H30). Shown on the live site, and in a preview only when the address has ?gate -->
         <div class="pep-cart-view" data-view="age" hidden>
-          <button class="pep-cart-back" type="button" data-back>BACK</button>
+          <button class="pep-cart-back" type="button" data-back>BACK TO MY CART</button>
           <h3 class="pep-cart-h3" tabindex="-1" data-view-head>PROVINCE AND AGE</h3>
           <p class="pep-cart-body">PEPTICITY is for adults of legal age in their province or territory. Your date of birth is checked on this device and is never kept.</p>
 
           <form class="pep-cart-age" method="post" action="" data-hook="H30" data-age-form novalidate>
             <label class="pep-cart-flabel" for="pep-cart-prov">PROVINCE OR TERRITORY</label>
             <select class="pep-cart-select" id="pep-cart-prov" name="province" autocomplete="off" aria-describedby="pep-cart-prov-err">
-              <option value="">Choose one</option>
+              <option value="">CHOOSE ONE</option>
               <option value="AB">Alberta</option>
               <option value="BC">British Columbia</option>
               <option value="MB">Manitoba</option>
@@ -6609,15 +7861,15 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
               <legend class="pep-cart-flabel">DATE OF BIRTH</legend>
               <div class="pep-cart-dob-row">
                 <div class="pep-cart-dob-cell">
-                  <label class="pep-cart-slabel" for="pep-cart-day">Day</label>
+                  <label class="pep-cart-slabel" for="pep-cart-day">DAY</label>
                   <select class="pep-cart-select" id="pep-cart-day" name="birth_day" autocomplete="off" data-days>
-                    <option value="">Day</option>
+                    <option value="">DAY</option>
                   </select>
                 </div>
                 <div class="pep-cart-dob-cell">
-                  <label class="pep-cart-slabel" for="pep-cart-month">Month</label>
+                  <label class="pep-cart-slabel" for="pep-cart-month">MONTH</label>
                   <select class="pep-cart-select" id="pep-cart-month" name="birth_month" autocomplete="off">
-                    <option value="">Month</option>
+                    <option value="">MONTH</option>
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -6633,9 +7885,9 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
                   </select>
                 </div>
                 <div class="pep-cart-dob-cell">
-                  <label class="pep-cart-slabel" for="pep-cart-year">Year</label>
+                  <label class="pep-cart-slabel" for="pep-cart-year">YEAR</label>
                   <select class="pep-cart-select" id="pep-cart-year" name="birth_year" autocomplete="off" data-years>
-                    <option value="">Year</option>
+                    <option value="">YEAR</option>
                   </select>
                 </div>
               </div>
@@ -6645,7 +7897,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
               <p class="pep-cart-err" role="alert" data-err="date-wrong" hidden>That date does not look right. Please check it.</p>
             </div>
 
-            <button class="pep-cart-btn" type="submit"><span class="pep-cart-btn-label">CONTINUE</span></button>
+            <button class="pep-cart-btn" type="submit"><span class="pep-cart-btn-label">CONFIRM MY AGE</span></button>
           </form>
         </div>
 
@@ -6658,7 +7910,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 
         <!-- VIEW: the end of the preview. There is no payment step behind this yet. -->
         <div class="pep-cart-view" data-view="end" hidden>
-          <button class="pep-cart-back" type="button" data-back>BACK</button>
+          <button class="pep-cart-back" type="button" data-back>BACK TO MY CART</button>
           <h3 class="pep-cart-h3" tabindex="-1" data-view-head>CHECKOUT</h3>
           <p class="pep-cart-pay">PAY BY INTERAC E-TRANSFER.</p>
           <p class="pep-cart-pay-how">Send your order total to <span class="pep-cart-pay-to">[FROM GRACE: e-transfer email]</span>. Put your name in the message.</p>
@@ -6819,7 +8071,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
       <div data-gate="names" hidden>
         <h3 class="pep-guide-h">HOW ORDERING WORKS</h3>
         <ol class="pep-guide-steps">
-          <li>Choose a product on THE SHELF and pick a size.</li>
+          <li>Choose a product in THE LINEUP and pick a size.</li>
           <li>Set the quantity and press ADD TO CART.</li>
           <li>Open your cart and press CHECKOUT.</li>
         </ol>
@@ -6905,7 +8157,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 
     <div data-a="restock">
       <h3 class="pep-guide-h">STOCK</h3>
-      <p data-gate="names" hidden>A product that is sold out shows SOLD OUT on THE SHELF. One with no price yet shows COMING SOON.</p>
+      <p data-gate="names" hidden>A product that is sold out shows SOLD OUT in THE LINEUP. One with no price yet shows COMING SOON.</p>
       <p data-gate-off="names">THE SHELF OPENS SOON.</p>
       <p data-gate="restock" hidden>Team members get first word on every new lot by email.</p>
       <p data-gate-off="restock">There is nothing more to announce on that yet.</p>
@@ -6914,8 +8166,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
     <div data-a="prices">
       <div data-gate="names" hidden>
         <h3 class="pep-guide-h">SIZES AND PRICES</h3>
-        <p>Every product on THE SHELF shows its sizes and prices in Canadian dollars.</p>
-        <p data-if="cat">The shelf lists <span data-fill="cat-count"></span> products. The lowest price is <span data-fill="cat-lo"></span> CAD and the highest is <span data-fill="cat-hi"></span> CAD.</p>
+        <p>Every product in THE LINEUP shows its sizes and prices in Canadian dollars.</p>
+        <p data-if="cat">THE LINEUP lists <span data-fill="cat-count"></span> products. The lowest price is <span data-fill="cat-lo"></span> CAD and the highest is <span data-fill="cat-hi"></span> CAD.</p>
         <p>Name a product and I will list its sizes and prices. Tax and shipping are shown before you pay.</p>
         <p><a class="pep-guide-link" href="#lineup" data-leave>SEE THE LINEUP</a></p>
       </div>
@@ -6927,7 +8179,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 
     <!-- a named product: name, sizes and prices from assets/catalogue.json and nothing else. Never beside a goal. -->
     <div data-a="product" data-gate="names" hidden>
-      <p data-if="p-many">I found more than three. Here are the first three. The rest are on THE SHELF.</p>
+      <p data-if="p-many">I found more than three. Here are the first three. The rest are in THE LINEUP.</p>
       <div data-products></div>
       <p>Prices are in Canadian dollars. Tax and shipping are shown before you pay.</p>
       <p><a class="pep-guide-link" href="#lineup" data-leave>SEE THE LINEUP</a></p>
@@ -6946,13 +8198,13 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
     </div>
 
     <div data-a="notfound" data-gate="names" hidden>
-      <p>I could not find that on THE SHELF. Every product PEPTICITY lists is there, with its sizes and prices.</p>
+      <p>I could not find that in THE LINEUP. Every product PEPTICITY lists is there, with its sizes and prices.</p>
       <p><a class="pep-guide-link" href="#lineup" data-leave>SEE THE LINEUP</a></p>
     </div>
 
     <div data-a="opening">
       <div data-gate="names" hidden>
-        <p>THE SHELF is open on this page.</p>
+        <p>THE LINEUP is open on this page.</p>
         <p data-gate="preview" hidden>Preview only: no order is placed yet.</p>
         <p><a class="pep-guide-link" href="#lineup" data-leave>SEE THE LINEUP</a></p>
       </div>
@@ -7302,7 +8554,12 @@ window.PEP_CONFIG = {
 <script data-pep-src="modules/02-logo3d/logo3d.js">
 (function () {
   'use strict';
-  /* PEPTICITY logo engine: NUMBER 21, SMOKED GLASS, BLUE LIGHT (LOGO-LOCK.md, locked Nov 12 2026).
+  /* PEPTICITY logo engine: 07 = NUMBER 21 BACKLIT + CHROME LINES (LOGO-LOCK.md, locked Nov 12 2026, night).
+     07 is number 21 (below, unchanged) plus three things from Jeff_builds/logo-21-pop/src.html entry 07
+     { studio:'pop', exp:1.18, bg:'back', lines:true }: the rim-light room and exposure 1.18, chrome lines (a gunmetal band
+     round the middle of the P's thick edge, thin chrome lines on every outline with a glint running along them), and a
+     cool backlight behind each P and word (CSS, under the canvas, see logo3d.css). Labels get the lines, never the backlight.
+     NUMBER 21, as it was: (LOGO-LOCK.md, locked Nov 12 2026).
      The build of the logo is copied value for value from the page the owner picked from, Jeff_builds/logo-15/src.html,
      entry 21 of window.__V:  { fam:'E', name:'SMOKED GLASS', light:'blue', p:{ face:'glass', edge:'glass' }, w:{ edge:'gunEdge' } }
      That covers: how deep the P and the word are cut, the two materials, the thin blue light through the P's waist and its
@@ -7361,6 +8618,9 @@ window.PEP_CONFIG = {
             map.integrity[CDN + 'build/three.module.js'] = 'sha384-Ecdwhw2t8c3nTR0hkEDZbwj+5rkKqzJ376RCQN2x1uofujOCuW/EvGg3BQzE7TS6';
             map.integrity[CDN + 'build/three.core.js'] = 'sha384-tfsIoyn3ACQbjob5Sw0zEGbcRscYZPCUEypq6YYs/TKQlq7Yg9jILDm/oZnfpq3D';
             map.integrity[CDN + 'examples/jsm/utils/BufferGeometryUtils.js'] = 'sha384-05mkYituMJObxUkTK7xbW9SA45DEaxOge7FQUGrhW3dsFz0fckzykM6RMAPN26rD';
+            map.integrity[CDN + 'examples/jsm/lines/LineSegments2.js'] = 'sha384-PodS3f4Ob57FETbMdk39akLP+W9/ScGjH/bBDerYOTsUt6dZc/i2Cbx7GW47tr5u';
+            map.integrity[CDN + 'examples/jsm/lines/LineSegmentsGeometry.js'] = 'sha384-c1W/XWY1D45CznDDaXT87QmzD1YKNwYHvQegG8dXjCyf5ZaKzaWqEUwHZTYfBw64';
+            map.integrity[CDN + 'examples/jsm/lines/LineMaterial.js'] = 'sha384-ijlzWpc1yHwTvvgLgdhkrcd5RQTKG/twLNwGumhKSFZHITTXMnzRdHIrw8fmvM3o';
           }
           var im = document.createElement('script');
           im.type = 'importmap';
@@ -7375,6 +8635,8 @@ window.PEP_CONFIG = {
         var THREE = await import('three');
         var utils = await import('three/addons/utils/BufferGeometryUtils.js');
         var toCreasedNormals = utils.toCreasedNormals;
+        var lineMods = await Promise.all([import('three/addons/lines/LineSegments2.js'), import('three/addons/lines/LineSegmentsGeometry.js'), import('three/addons/lines/LineMaterial.js')]);
+        var LineSegments2 = lineMods[0].LineSegments2, LineSegmentsGeometry = lineMods[1].LineSegmentsGeometry, LineMaterial = lineMods[2].LineMaterial;
 
         var MOBILE = window.matchMedia('(max-width: 899px)').matches;
         var REDUCED = ctx.motion.reduced || location.hash === '#still';
@@ -7382,20 +8644,20 @@ window.PEP_CONFIG = {
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MOBILE ? 1.5 : 2));
         renderer.setClearColor(0, 0); renderer.autoClear = false;
         renderer.outputColorSpace = THREE.SRGBColorSpace;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;      // number 21: ACES filmic, exposure 1.0, sRGB out
+        renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.18;     // 07: ACES filmic, exposure 1.18 (number 21 was 1.0), sRGB out
 
         // the studio room of number 21, copied from src.html studio(BLUE). No big white wall in front: a dim wall with two
         // slanted blades of light, so a flat face shows dark glass with a highlight travelling over it instead of mirroring white.
         var BLUE = 0x2f7dff;                                     // the light's colour: three strips of it stand in the room
         var pmrem = new THREE.PMREMGenerator(renderer);
         var room = new THREE.Scene();
-        room.add(new THREE.Mesh(new THREE.SphereGeometry(40, 32, 16), new THREE.MeshBasicMaterial({ color: 0x16181d, side: THREE.BackSide })));
+        room.add(new THREE.Mesh(new THREE.SphereGeometry(40, 32, 16), new THREE.MeshBasicMaterial({ color: 0x1c1f26, side: THREE.BackSide })));   // 07 (21: 0x16181d)
         var box = function (x, y, z, w, h, d, k, col, roll) {
           var m = new THREE.MeshBasicMaterial({ color: col === undefined ? 0xffffff : col }); m.color.multiplyScalar(k);
           var b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.lookAt(0, 0, 0); b.rotateZ(roll || 0); room.add(b);
         };
         // soft walls all round, so a face holds a dark grey at every angle instead of dropping to black
-        box(0, 3, 30, 60, 34, .4, .42); box(0, 24, 0, 60, 60, .4, .6); box(0, -18, 0, 60, 60, .4, .22);
+        box(0, 3, 30, 60, 34, .4, .42); box(0, 24, 0, 60, 60, .4, .6); box(0, -18, 0, 60, 60, .4, .5);    // 07: floor .5 (21: .22)
         // tall soft bands round the sides and back, with dark between them
         [40, 68, 96, 124, 152, 180, 208, 236, 264, 292, 320].forEach(function (deg, n) { var a = deg * Math.PI / 180; box(28 * Math.sin(a), 3, 28 * Math.cos(a), 6.5, 30, .4, n % 2 ? .95 : 1.9); });
         box(0, 16, 5, 16, 12, .4, 4.5);               // top key
@@ -7407,9 +8669,20 @@ window.PEP_CONFIG = {
         box(-10, -3, -14, 1.3, 18, .4, 14, BLUE);     // coloured strips: the light's colour lands in the glass and the edges
         box(16, -6, 11, 1.5, 14, .4, 12, BLUE);
         box(-15, 9, 14, 1.2, 10, .4, 9, BLUE);
+        // 07: a tall ring of light all the way round the camera, 70 degrees off its line of sight. Whichever way a bevel faces,
+        // it finds part of the ring, so the whole outline of the P and the word carries a line of light. The flat faces still
+        // see only the dim wall behind the camera, so the glass stays black.
+        (function () {
+          var th = 70 * Math.PI / 180, R = 25;
+          for (var k = 0; k < 20; k++) { var ph = k / 20 * Math.PI * 2;
+            box(R * Math.sin(th) * Math.cos(ph), R * Math.sin(th) * Math.sin(ph), R * Math.cos(th), 7.6, 15, .4, k % 2 ? 10 : 13, 0xffffff, ph + Math.PI / 2); }
+        })();
+        box(-21, 2, -19, 1.8, 28, .4, 26); box(21, 2, -19, 1.8, 28, .4, 26);   // behind: the thick edge lights up as it turns
+        box(0, 2, -26, 2.2, 30, .4, 18);                                          // straight behind: the edge reads when side-on
+        box(0, -14, 16, 28, 2.2, .4, 10, BLUE);                                  // the light's blue from below, into the lower bevels
         var envRT = pmrem.fromScene(room, 0.012); pmrem.dispose();
         // how the room's light travels over the logo (src.html: .2 + sin(T * .42) * 1.05 radians; held at .35 when nothing moves)
-        var ENVBASE = 0.2, ENVSWING = 1.05, ENVRATE = 0.42, ENVSTILL = 0.35;
+        var ENVBASE = -0.62, ENVSWING = 0.4, ENVRATE = 0.42, ENVSTILL = -0.5;   // 07 on the store (21: .2, 1.05, .42, .35): keeps the rim ring off the flat faces
         await tick();
 
         // the two materials of number 21 and its light, copied from src.html (M.glass, M.gunEdge, LIGHT.blue)
@@ -7453,6 +8726,25 @@ window.PEP_CONFIG = {
         await tick();
         G.word = extrude(D.word, WD, WB, 0, 0, 0);
         await tick();
+        // 07: a gunmetal band between the letter's outline and the rim outline, set in the middle of the P's thick edge
+        G.ring = extrude(D.p.face.map(function (f, i) { return { o: D.p.rim[i].o, h: [f.o].concat(f.h || []) }; }), 1.2, .1, 0);
+        // 07: thin lines on every outline, front and back, a third of the way into the bevel (z = depth/2 + bevel * cos 30)
+        var outlineSegs = function (list, ox, oy, zs) {
+          var a = [];
+          zs.forEach(function (z) { list.forEach(function (p) { [p.o].concat(p.h || []).forEach(function (ring) {
+            for (var k = 0; k < ring.length; k++) { var p0 = ring[k], p1 = ring[(k + 1) % ring.length]; a.push(p0[0] - ox, oy - p0[1], z, p1[0] - ox, oy - p1[1], z); }
+          }); }); });
+          var g = new LineSegmentsGeometry(); g.setPositions(a); return g;
+        };
+        var zP = PD / 2 + PB * .866 + .06, zW = WD / 2 + WB * .866 + .06;
+        var LG = { p: outlineSegs(D.p.face, 50, 50, [zP, -zP]), w: outlineSegs(D.word, 0, 0, [zW, -zW]) };
+        var LM = {
+          p: new LineMaterial({ color: 0xc3ccd9, linewidth: 1.6 }), w: new LineMaterial({ color: 0xc3ccd9, linewidth: 1.3 }),
+          pG: new LineMaterial({ color: 0xffffff, linewidth: 2.4, dashed: true, dashSize: 34, gapSize: 300 }),
+          wG: new LineMaterial({ color: 0xffffff, linewidth: 2.0, dashed: true, dashSize: 220, gapSize: 2400 })
+        };
+        var lineObj = function (geo, m) { var l = new LineSegments2(geo, m); l.computeLineDistances(); return l; };
+        await tick();
         // read-only measurements (scene units) for slots that ask to be framed by size through the opt-in view below
         G.face.computeBoundingBox(); G.word.computeBoundingBox();
         var SIZE = { markW: (G.face.boundingBox.max.x - G.face.boundingBox.min.x) * 0.1, markH: (G.face.boundingBox.max.y - G.face.boundingBox.min.y) * 0.1,
@@ -7474,6 +8766,8 @@ window.PEP_CONFIG = {
         function buildMark() {
           var g = new THREE.Group();
           g.add(new THREE.Mesh(G.face, [glass, glass]));
+          g.add(new THREE.Mesh(G.ring, [gunEdge, gunEdge]));                 // 07: the gunmetal band in the thick edge
+          g.add(lineObj(LG.p, LM.p), lineObj(LG.p, LM.pG));                  // 07: chrome lines and their glint
           g.add(new THREE.Mesh(G.slot, LIGHT.slot));
           g.add(new THREE.Mesh(G.rod, LIGHT.rod)); g.add(new THREE.Mesh(G.rodCore, LIGHT.core));
           var cx = (XL + XR) / 2 - 50, cy = 50 - YB, len = (XR - XL) * 1.02;
@@ -7485,6 +8779,7 @@ window.PEP_CONFIG = {
         function buildWord() {
           var g = new THREE.Group();
           g.add(new THREE.Mesh(G.word, [glass, gunEdge]));
+          g.add(lineObj(LG.w, LM.w), lineObj(LG.w, LM.wG));                  // 07: chrome lines and their glint
           return g;
         }
 
@@ -7512,6 +8807,10 @@ window.PEP_CONFIG = {
           var group = isWord ? buildWord() : buildMark();
           group.scale.setScalar(isWord ? 0.0135 : 0.1); scene.add(group);
           if (kind === 'wordv') { group.rotation.z = Math.PI / 2; }      // reads bottom to top, as on the approved label
+          if (kind === 'mark' || kind === 'word') {
+            req.el.classList.add('pep-logo3d-back', kind === 'mark' ? 'pep-logo3d-back-mark' : 'pep-logo3d-back-word');
+            if (window.getComputedStyle(req.el).position === 'static') { req.el.classList.add('pep-logo3d-back-pos'); }
+          }
           var camera = new THREE.PerspectiveCamera(kind === 'wordv' ? 6 : 30, 1, 0.1, 400);
           camera.position.set(0, 0, kind === 'word' ? 14 : 25);
           var s = { el: req.el, kind: kind, scene: scene, camera: camera, group: group, visible: false, hold: !!req.hold,
@@ -7539,6 +8838,15 @@ window.PEP_CONFIG = {
             var pn = function (x, d) { x = Number(x); return isFinite(x) ? x : d; }, p3 = function (a) { return Array.isArray(a) && a.length === 3 ? a.map(function (x) { return pn(x, 0); }) : null; };
             s.pose = { yaw: pn(req.pose.yaw, 0), pitch: pn(req.pose.pitch, 0), env: pn(req.pose.env, ENVSTILL), lens: pn(req.pose.lens, 30), cam: p3(req.pose.cam), aim: p3(req.pose.aim) || [0, 0, 0] };
           }
+          // OPT-IN EDGE LIGHT (kind 'mark' only). A slot that sends no `edge` is drawn exactly as before. With `edge: true`
+          // (the header P: the owner's pick of Nov 12 2026, sample 5, "ICE-BLUE EDGE LIGHT") the slot is drawn first in every
+          // frame, its pixels are lifted onto a small canvas of its own (liftEdge, below) and logo3d.css outlines that canvas:
+          // a thin ice-white line and a soft blue glow round the outside of the P. Like a view, it changes how the logo is
+          // SEEN, never the logo: the pixels are the engine's own, copied 1:1, and nothing else on the big canvas is outlined.
+          if (kind === 'mark' && req.edge) {
+            s.edge = document.createElement('canvas'); s.edge.className = 'pep-logo3d-edge'; s.edge.setAttribute('aria-hidden', 'true');
+            s.edgeCx = s.edge.getContext('2d'); s.edgeOn = false; s.edgeFrame = -1; root.appendChild(s.edge);
+          }
           if (kind === 'mark' && req.interactive) {
             var stage = view && view.hit && view.hit.addEventListener ? view.hit : req.el;
             stage.addEventListener('pointerenter', function (e) { s.hover = true; if (e.pointerType !== 'touch') { s.spinT += Math.PI * 2; } kick(); });
@@ -7550,10 +8858,12 @@ window.PEP_CONFIG = {
           s.ready = false;
           var done = function () { s.ready = true; kick(); };
           if (renderer.compileAsync) { renderer.compileAsync(scene, camera).then(done, done); } else { done(); }
-          slots.push(s); io.observe(req.el); kick();
+          // edge slots draw first in each frame, so what is lifted off the big canvas is their own P and nothing else
+          if (s.edge) { slots.unshift(s); } else { slots.push(s); }
+          io.observe(req.el); kick();
         }
 
-        var raf = 0, last = performance.now(), t = 0, rw = 0, rh = 0, shown = false, lastDraw = 0;
+        var raf = 0, last = performance.now(), t = 0, rw = 0, rh = 0, shown = false, lastDraw = 0, fno = 0, EDGEVP = new THREE.Vector4();
         function frame(now) {
           raf = 0;
           // phones: 30 frames a second is plenty for a slow turn and halves the work (motion is time-based, so the speed is unchanged)
@@ -7561,6 +8871,7 @@ window.PEP_CONFIG = {
           lastDraw = now;
           var dt = Math.min(Math.max((now - last) / 1000, 0), 1 / 15); last = Math.max(last, now); if (!REDUCED) { t += dt; }
           if (dead) { return; }
+          fno++;                                 // counts drawn frames (the edge light uses it to know what was drawn this time)
           // keep the canvas over the viewport; the slot rects below are measured in the same frame
           root.style.transform = 'translate3d(0,' + (window.scrollY || window.pageYOffset || 0) + 'px,0)';
           var W = canvas.clientWidth, H = canvas.clientHeight;
@@ -7570,6 +8881,7 @@ window.PEP_CONFIG = {
             renderer.setSize(W, H, false);
           }
           renderer.setScissorTest(false); renderer.clear(); renderer.setScissorTest(true);
+          LM.pG.dashOffset = -(t * 70) % 334; LM.wG.dashOffset = -(t * 520) % 2620;      // 07: the glint runs along the lines
           var drew = false;
           for (var i = 0; i < slots.length; i++) {
             var s = slots[i];
@@ -7659,16 +8971,39 @@ window.PEP_CONFIG = {
               if (ps.cam) { s.camera.clearViewOffset(); s.camera.fov = ps.lens; s.camera.position.set(ps.cam[0], ps.cam[1], ps.cam[2]); s.camera.lookAt(ps.aim[0], ps.aim[1], ps.aim[2]); }
             }
             s.camera.updateProjectionMatrix();
+            // 07: line widths in screen pixels (P 1.6, word 1.3, glint 2.4 / 2.0) times the slot width / 420, held between .8 and 1.9
+            var lk = Math.min(1.9, Math.max(.8, r.width / 420));
+            LM.p.resolution.set(r.width, r.height); LM.w.resolution.set(r.width, r.height); LM.pG.resolution.set(r.width, r.height); LM.wG.resolution.set(r.width, r.height);
+            LM.p.linewidth = 1.6 * lk; LM.w.linewidth = 1.3 * lk; LM.pG.linewidth = 2.4 * lk; LM.wG.linewidth = 2.0 * lk;
             var y = H - r.bottom;
             renderer.setViewport(r.left, y, r.width, r.height); renderer.setScissor(r.left, y, r.width, r.height);
             renderer.clearDepth();
             renderer.render(s.scene, s.camera);
+            if (s.edge) { liftEdge(s); }
             drew = true;
           }
+          // an edge slot that was not drawn this frame (scrolled away, waiting for the entrance, hidden) takes its copy away too
+          for (var e = 0; e < slots.length; e++) { var se = slots[e]; if (se.edge && se.edgeOn && se.edgeFrame !== fno) { se.edgeOn = false; se.edge.style.visibility = 'hidden'; } }
           if (drew && !shown) { shown = true; root.setAttribute('data-pep3d-state', 'on'); ctx.emit('logo3d:on'); }
           var anyVisible = false;
           for (var j = 0; j < slots.length; j++) { if (slots[j].visible) { anyVisible = true; } }
           if (!REDUCED && !document.hidden && anyVisible) { raf = requestAnimationFrame(frame); }
+        }
+        // OPT-IN EDGE LIGHT (see add): the pixels just drawn for this slot, copied 1:1 in device pixels onto its own small
+        // canvas (placed exactly where they were), then cleared from the big canvas, so the P shows once, on the small canvas,
+        // where logo3d.css outlines it. The copy is made in the same frame as the drawing, before the browser shows it.
+        function liftEdge(s) {
+          renderer.getCurrentViewport(EDGEVP);
+          var pr = renderer.getPixelRatio(), cw = canvas.width, ch = canvas.height;
+          var w = EDGEVP.z, h = EDGEVP.w, x0 = EDGEVP.x, y0 = ch - EDGEVP.y - h;
+          if (s.edge.width !== w || s.edge.height !== h) { s.edge.width = w; s.edge.height = h; s.edge.style.width = (w / pr) + 'px'; s.edge.style.height = (h / pr) + 'px'; }
+          s.edge.style.transform = 'translate(' + (x0 / pr) + 'px,' + (y0 / pr) + 'px)';
+          s.edgeCx.clearRect(0, 0, w, h);
+          var sx = Math.max(0, x0), sy = Math.max(0, y0), ex = Math.min(cw, x0 + w), ey = Math.min(ch, y0 + h);
+          if (ex > sx && ey > sy) { s.edgeCx.drawImage(canvas, sx, sy, ex - sx, ey - sy, sx - x0, sy - y0, ex - sx, ey - sy); }
+          renderer.clear();                      // the scissor still holds this slot, so only its pixels leave the big canvas
+          s.edgeFrame = fno;
+          if (!s.edgeOn) { s.edgeOn = true; s.edge.style.visibility = 'visible'; }
         }
         function kick() { if (!raf) { raf = requestAnimationFrame(frame); } }
         window.addEventListener('scroll', kick, { passive: true });
@@ -7775,7 +9110,8 @@ window.PEP_CONFIG = {
     init: function (root, ctx) {
       // the small live G5 mark beside the name; it waits for the entrance so only the hero logo stands on the dark
       var mark = root.querySelector('.pep-header-mark');
-      function announce() { if (mark) { ctx.emit('logo3d:slot', { el: mark, kind: 'mark', phase: 2.1, hold: true }); } }
+      // edge: the ice-blue edge light round the P, drawn by the logo engine (the owner's pick of Nov 12 2026, sample 5)
+      function announce() { if (mark) { ctx.emit('logo3d:slot', { el: mark, kind: 'mark', phase: 2.1, hold: true, edge: true, interactive: true }); } }
       ctx.on('logo3d:ready', announce);
       announce();
       ctx.on('logo3d:off', function () { root.setAttribute('data-3d', 'off'); });
@@ -8766,7 +10102,7 @@ window.PEP_CONFIG = {
       function placeMenu() {
         if (!menuW || !menu) { return; }
         var b = menuW.bar.getBoundingClientRect(), s = stage.getBoundingClientRect();
-        var wide = Math.max(b.width, Math.min(230, s.width - 16));
+        var wide = b.width;                                   // NOV12 polish: the list is exactly the price bar's width
         menu.style.width = wide.toFixed(1) + 'px';
         var h = menu.offsetHeight, up = s.bottom - b.bottom < h + 14;      // no room under the bar: it opens upward, as a list near the foot of a screen does
         menu.style.left = clamp(b.left - s.left + (b.width - wide) / 2, 8, Math.max(8, s.width - wide - 8)).toFixed(1) + 'px';
@@ -10876,7 +12212,7 @@ window.PEP_CONFIG = {
         ['opening', [[4, /\b(when (do|does|will|are|is) (you|the (shelf|store|shop|site|website)|pepticity|it|orders?|ordering) (open|opening|launch|launching|start|starting|go live|going live|live)|opening (date|day)|launch (date|day)|are you open( yet| now| already| for (orders|business))? $|open yet|opens? soon|is the (store|shop|shelf|site) (open|live|up)|is (it|this) (open|live) yet|when can i (order|buy|shop))\b/]]],
         ['cart', [[3, /\b(cart|basket|bag)\b/], [2, /\b(remov(e|ing) (an |the |a |my )?(item|product|vial|thing)|chang(e|ing) (the |my )?(quantity|qty|amount|number)|quantit(y|ies)|qty|how many ([a-z]+ )?(can|may|could) i (order|buy|add|get|have)|how many i can|limits?( on| to| per)?|max(imum)? (quantity|per order|i can)|add(ed|ing)? to (my |the )?cart|save my cart|share (my |a |the )?cart|cart link|copy (the |my )?(cart )?link|empty (my |the )?cart|clear (my |the )?cart|mix (and match|different|sizes|products|items|vials)|more than one|multiple (items|products|vials))\b/]]],
         ['order', [[4, /\b(how (do|can|would|could|should) (i|we|you) (order|buy|purchase|shop|get (it|one|some|them|started))|how to (order|buy|purchase|shop|get started)|how does (ordering|it|this|that|the (store|site|shop|website|process|checkout)|checkout|pepticity|buying) work|how it works|how this works|how (do|does) (ordering|buying|orders) work|plac(e|ing) (an|my|the) order|order process|steps to order|mak(e|ing) (an order|a purchase)|walk me through|get started|where do i start|how do i start)\b/], [2, /\b(order(s|ing|ed)?|buy(ing)?|purchas(e|es|ed|ing)|checkout|check out|shop(ping)?|forsale)\b/], [3, /\b(accounts?|sign(ing)? in|log(ging)? ?in|login|register(ing)?|registration|passwords?|guest|minimum order|min order|maximum order|order minimum)\b/]]],
-        ['prices', [[3, /\b(prices?|pricing|priced|cost(s|ing)?|how much|expensive|cheap(er|est)?|afford\w*|price (list|range)|dollars?|cad|usd|currency|currencies|taxe?s?|hst|gst|pst|qst|duty|duties)\b/], [3, /\b(sizes?|what do you sell|what (do|does) (you|pepticity|the (store|shelf|shop)) (sell|have|carry|stock)|what (products?|peptides?|items?|vials?|compounds?|blends?) (do you|are|have you)|product list|catalog(ue)?s?|range|selection|inventory|menu|browse|browsing|the shelf|shelf|what('s| is) (on the shelf|available|forsale|in stock)|list (of|your) (products|peptides|items)|show me|see (the|your) (products|peptides|range|shelf))\b/], [1, /\b(products?|vials?|peptides?|compounds?|blends?|items?)\b/]]],
+        ['prices', [[3, /\b(prices?|pricing|priced|cost(s|ing)?|how much|expensive|cheap(er|est)?|afford\w*|price (list|range)|dollars?|cad|usd|currency|currencies|taxe?s?|hst|gst|pst|qst|duty|duties)\b/], [3, /\b(sizes?|what do you sell|what (do|does) (you|pepticity|the (store|shelf|shop)) (sell|have|carry|stock)|what (products?|peptides?|items?|vials?|compounds?|blends?) (do you|are|have you)|product list|catalog(ue)?s?|range|selection|inventory|menu|browse|browsing|the shelf|shelf|the lineup|lineup|what('s| is) (on the shelf|available|forsale|in stock)|list (of|your) (products|peptides|items)|show me|see (the|your) (products|peptides|range|shelf))\b/], [1, /\b(products?|vials?|peptides?|compounds?|blends?|items?)\b/]]],
         ['payment', [[3, /\b(pay(s|ing|ment|ments)?|paid|creditcard|credit|debit|visa|master ?card|amex|american express|e ?transfers?|etransfer|interac|paypal|crypto(currency)?|bitcoin|btc|ethereum|usdt|apple pay|google pay|cash|cod|cheques?|afterpay|klarna|sezzle|instal?lments?|financing|billing|bill|charged?|charges?|cards?)\b/]]],
         ['contact', [[3, /\b(contact(ing)?|get in touch|reach (you|someone|out|a person|pepticity)|email (you|address|pepticity|someone)|your email|phone( number)?|call (you|me|someone|us)|telephone|text (you|me)|whatsapp|talk to|speak (to|with)|chat with|(a|real|live|actual) (person|human|agent)|humans?|someone|somebody|agents?|representatives?|rep|customer (service|care)|help ?desk|live chat|support|staff|manager|owner|grace|feedback)\b/], [3, /\b(who (are you guys|owns|runs|is behind|founded|started)|about (you|pepticity|the company|us)|the company|real company|company|business|where (are|is) (you|pepticity|the (store|company|business))( located| based)?|located|location|based|headquarters|office|store hours|hours|open (today|now|late)|your address|legit(imate)?|scam|trust(ed|worthy)?|(a|physical|retail|real) (store|shop)|store ?front|walk in|in (stores?|shops?)|stores? near|retail(ers?)?|locations?|what time|close[sd]?|closing|(opening|business) hours|weekends?|holidays?|what('s| is) (pepticity|this (site|store|place|website|company)))\b/]]],
         ['guide', [[4, /\b(are (you|u) (a |an |the )?(real|human|person|bot|robot|ai|a i|machine|computer|chat ?bot|live|doctor|nurse|pharmacist|clinician|physician|expert|scientist|llm|gpt|chatgpt|claude|salesperson|sales rep|employee|alive)|who (are|r) (you|u)|what are (you|u)|what is this (chat|guide|bot|thing)|what can (you|i) (do|ask|answer)|what do you (do|know|answer)|your name|who made you|who built you|how do you work|are you trained|what are you trained on|is this (a |an )?(bot|ai|robot|real person|human))\b/], [2, /^ (help|menu|options|start|commands?|topics|help me) $/]]],
