@@ -1,0 +1,316 @@
+/* 05-header: THE MENU = the owner's pick, MENU 58, exactly (Tyson, Nov 14 2026: "use number 58 exactly the way it is").
+   Every selector starts with [data-module="header"] or .pep-header-
+   - The bar, the keys and the crystal are the REAL pixels of render 58 (Higgsfield, blue toned down 25%), cut out of it
+     by tools/slice58.py into assets/menu58/. Nothing here is redrawn in CSS. Do not swap them for a CSS look-alike.
+   - The only things laid over the art are live: the words on the keys (the PEPTICITY font, bigger and bolder: owner,
+     Nov 13), the cart count once it is above 0, hover and keyboard light, and the drop-down.
+   - PEPTICITY on the bar is the wordmark baked in render 58 (the blue line through its first P). No separate P mark.
+   - Lights: the ONE blue is the logo's #2a78ff (rgb 42,120,255), hot core #cfe6ff. The only violet on the page is the
+     faint backlight round the keys, and it is part of render 58's own pixels.
+   - Computers (1200 px up): the whole bar is one picture; each key is a live button placed over its plate in the picture.
+     Under 1200 px: the same blade in three pieces (left end with the wordmark, a stretch, right end) with MENU and CART
+     as keys cut from the same render; MENU opens SHOP, PEPTIDES, RESEARCH and ABOUT. */
+[data-module="header"] {
+  --pep-header-blue: 42, 120, 255;          /* the logo's light, #2a78ff: the one blue */
+  --pep-header-ice: 207, 230, 255;          /* its hot core, #cfe6ff */
+  --pep-header-hb: .55;                     /* the light under PEPTIDES, toned down (owner, Nov 13) */
+  position: sticky;
+  top: -6px;
+  z-index: 2;
+  display: block;
+  width: min(1320px, calc(100% - 24px));
+  aspect-ratio: 2578 / 345;                 /* render 58's bar, with the room the crystal rises into */
+  margin: 0 auto;
+  container-type: inline-size;
+  transition: transform .45s var(--pep-ease);
+}
+[data-module="header"][data-float],
+[data-module="header"][data-drop-open] { z-index: 10; }
+[data-module="header"][data-menu-open] { z-index: 25; }
+[data-module="header"][data-tuck] { transform: translateY(calc(-100% - 28px)); }
+[data-module="header"]::before {            /* the bar: render 58 */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("assets/menu58/bar.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55));
+}
+.pep-header-row { position: absolute; inset: 0; }
+/* the wordmark is in the picture; this is its link */
+.pep-header-brand { position: absolute; left: 2.2%; top: 41%; width: 27.4%; height: 42%; display: block; text-decoration: none; }
+.pep-header-brand:focus-visible { outline: 0; box-shadow: 0 3px 0 0 var(--pep-light, #2a78ff); }
+.pep-header-div { display: none; }
+.pep-header-nav, .pep-header-keys { display: block; margin: 0; padding: 0; list-style: none; }
+.pep-header-keys > li { position: static; display: block; }
+
+/* ---------- the keys: live buttons over render 58's plates ---------- */
+.pep-header-kwrap { position: absolute; top: 41.45%; height: 41.2%; display: block; }
+.pep-header-kwrap--shop { left: 32.43%; width: 10.47%; }
+.pep-header-kwrap--hero { left: 42.44%; width: 20.95%; top: 30.4%; height: 63.8%; }
+.pep-header-kwrap--research { left: 62.45%; width: 14.12%; }
+.pep-header-kwrap--about { left: 77.08%; width: 10.43%; }
+.pep-header-kwrap--cart { left: 87.82%; width: 9.77%; }
+.pep-header-kwrap--menu { display: none; }
+.pep-header-key {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5em;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+  /* the PEPTICITY font on every key, bigger and bolder (owner, Nov 13) */
+  font: 400 clamp(15px, 1.36vw, 19px)/1 var(--pep-font-display);
+  font-size: clamp(15px, 1.5cqw, 20px);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: #f4f6f9;
+}
+.pep-header-label {
+  display: inline-block;
+  padding-left: .1em;                       /* balances the letter-spacing after the last letter */
+  -webkit-text-stroke: .7px currentColor;   /* the same lettering, set bolder */
+  background: linear-gradient(180deg, #ffffff 18%, #e6e9ed 46%, #b9bec5 54%, #e6e9ed 78%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1.5px 0 rgba(0, 0, 0, .8)) drop-shadow(0 0 5px rgba(0, 0, 0, .55));
+  transition: transform .3s var(--pep-ease), filter .3s ease;
+}
+.pep-header-key::after {                    /* hover and keyboard: light gathers on the key */
+  content: "";
+  position: absolute;
+  inset: 14% 6%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(60% 90% at 50% 50%, rgba(var(--pep-header-ice), .2), rgba(var(--pep-header-ice), 0) 72%);
+  transition: opacity .3s ease;
+}
+.pep-header-key:hover::after,
+.pep-header-key:focus-visible::after { opacity: 1; }
+.pep-header-key:hover .pep-header-label,
+.pep-header-key:focus-visible .pep-header-label { transform: scale(1.06); filter: drop-shadow(0 1.5px 0 rgba(0, 0, 0, .8)) drop-shadow(0 0 8px rgba(var(--pep-header-ice), .6)); }
+.pep-header-key:focus-visible { outline: none; }
+.pep-header-key:focus-visible::before {     /* keyboard focus: a bar of the logo's light at the key's foot */
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 9%;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(var(--pep-header-blue), 0), var(--pep-light, #2a78ff) 25%, #cfe6ff 50%, var(--pep-light, #2a78ff) 75%, rgba(var(--pep-header-blue), 0));
+}
+.pep-header-key--hero { padding-right: 6%; }                         /* the word sits on the crystal's face */
+.pep-header-key--hero::after { inset: 24% 14%; background: radial-gradient(60% 90% at 50% 50%, rgba(var(--pep-header-ice), .26), rgba(var(--pep-header-ice), 0) 72%); }
+.pep-header-glow {                          /* the soft blue spill under the crystal */
+  position: absolute;
+  left: 8%;
+  right: 16%;
+  top: 92%;
+  height: 26%;
+  pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(var(--pep-header-blue), calc(.8 * var(--pep-header-hb))), rgba(var(--pep-header-blue), 0));
+  filter: blur(5px);
+}
+.pep-header-count {                         /* the cart count: shown once something is in the cart */
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5em;
+  height: 1.5em;
+  padding: 0 .3em;
+  font: 700 .72em/1 var(--pep-font-ui);
+  letter-spacing: 0;
+  color: var(--pep-black-0);
+  background: linear-gradient(180deg, #ffffff, #b9bec5);
+  clip-path: polygon(22% 0, 100% 0, 100% 78%, 78% 100%, 0 100%, 0 22%);
+}
+.pep-header-key:not([data-has]) .pep-header-count { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); }
+
+/* ---------- the drop-down under PEPTIDES: render 58's smoked glass sheet with its blue edge ---------- */
+.pep-header-drop {
+  position: absolute;
+  top: 93%;
+  left: var(--pep-header-dx, 50%);
+  z-index: -2;                              /* its top edge tucks under the bar, as in render 58 */
+  width: min(1140px, calc(100vw - 24px));
+  transform: translate(-50%, -8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .22s ease, transform .22s ease, visibility 0s .22s;
+}
+[data-module="header"][data-drop-open] .pep-header-drop { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity .22s ease, transform .22s ease; }
+.pep-header-drop-glow,
+.pep-header-drop-glow i { position: absolute; inset: 0; pointer-events: none; }
+.pep-header-drop-glow { filter: blur(12px); opacity: .75; }                 /* the edge's bloom, following the cut corners */
+.pep-header-drop-glow i { clip-path: var(--pep-header-sheet); background: rgb(var(--pep-header-blue)); }
+.pep-header-drop {
+  --c: 26px;
+  --pep-header-sheet: polygon(var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c));
+}
+.pep-header-drop-in {
+  position: relative;
+  padding: 44px 34px 16px;
+  clip-path: var(--pep-header-sheet);
+  background:
+    linear-gradient(118deg, rgba(230, 233, 237, 0) 30%, rgba(230, 233, 237, .05) 38%, rgba(230, 233, 237, 0) 46%, rgba(230, 233, 237, 0) 68%, rgba(230, 233, 237, .04) 76%, rgba(230, 233, 237, 0) 84%),
+    linear-gradient(170deg, rgba(24, 30, 40, .9), rgba(9, 11, 15, .93));
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+}
+.pep-header-drop-rim {                      /* the 2 px edge in the logo's blue */
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: polygon(evenodd, var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c), var(--c) 0,
+    calc(var(--c) + .83px) 2px, 2px calc(var(--c) + .83px), 2px calc(100% - 2px), calc(100% - var(--c) - .83px) calc(100% - 2px), calc(100% - 2px) calc(100% - var(--c) - .83px), calc(100% - 2px) 2px, calc(var(--c) + .83px) 2px);
+  background: linear-gradient(180deg, rgb(var(--pep-header-blue)), rgb(var(--pep-header-ice)) 50%, rgb(var(--pep-header-blue)));
+}
+.pep-header-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+.pep-header-col { min-width: 0; padding: 0 26px; border-left: 1px solid rgba(185, 190, 197, .28); }
+.pep-header-col:first-child { border-left: 0; padding-left: 6px; }
+/* the headings: the PEPTICITY font, lit, with a thin light under each that thins to nothing at both ends */
+.pep-header-col-h {
+  position: relative;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 12px;
+  padding-bottom: 12px;
+  font: 400 18px/1.15 var(--pep-font-display);
+  letter-spacing: .14em;
+  -webkit-text-stroke: .6px currentColor;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(var(--pep-header-blue), .95), 0 0 22px rgba(var(--pep-header-blue), .55);
+  overflow-wrap: anywhere;
+}
+.pep-header-col-h::before,
+.pep-header-col-h::after {
+  content: "";
+  position: absolute;
+  left: 4%;
+  right: 4%;                                 /* a little narrower than the word */
+  bottom: 0;
+  pointer-events: none;
+}
+.pep-header-col-h::before {                 /* its bloom */
+  height: 9px;
+  bottom: -3px;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(var(--pep-header-blue), .75), rgba(var(--pep-header-blue), 0));
+  filter: blur(2px);
+}
+.pep-header-col-h::after {                  /* the light itself: 3 px at the middle, 0 at both ends */
+  height: 3px;
+  clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+  background: linear-gradient(90deg, rgb(var(--pep-header-blue)), rgb(var(--pep-header-ice)) 50%, rgb(var(--pep-header-blue)));
+}
+.pep-header-col-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.pep-header-item {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font: 500 16px/1.3 var(--pep-font-ui);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--pep-plat-3);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color .25s ease, text-shadow .25s ease;
+}
+.pep-header-item:hover,
+.pep-header-item:focus-visible { color: #ffffff; text-shadow: 0 0 10px rgba(var(--pep-header-blue), .9); }
+.pep-header-item:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
+.pep-header-drop-note { margin: 0 4px; font: 500 15px/1.4 var(--pep-font-ui); color: var(--pep-plat-3); }
+.pep-header-drop-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin: 16px 4px 0; padding-top: 6px; border-top: 1px solid rgba(185, 190, 197, .2); }
+.pep-header-drop-foot a,
+.pep-header-drop-note--soon { font: 400 14px/1.2 var(--pep-font-display); letter-spacing: .2em; -webkit-text-stroke: .4px currentColor; color: var(--pep-plat-4); }
+.pep-header-drop-foot a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; transition: color .25s ease, text-shadow .25s ease; }
+.pep-header-drop-foot a:hover,
+.pep-header-drop-foot a:focus-visible { color: #ffffff; text-shadow: 0 0 10px rgba(var(--pep-header-blue), .9); }
+.pep-header-drop-foot a:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
+.pep-header-drop-count { font: 600 14px/1.3 var(--pep-font-ui); letter-spacing: .06em; color: var(--pep-plat-3); }
+
+/* ---------- under 1200 px: the same blade in three pieces; the wordmark, MENU and CART on it ---------- */
+@media (max-width: 1199px) {
+  [data-module="header"] {
+    --pep-header-h: clamp(46px, 15.2vw, 76px);
+    top: 8px;
+    aspect-ratio: auto;
+    height: var(--pep-header-h);
+    margin-top: 8px;
+  }
+  [data-module="header"]::before {
+    background:
+      url("assets/menu58/bar-left.webp") left top / auto 100% no-repeat,
+      url("assets/menu58/bar-right.webp") right top / auto 100% no-repeat,
+      url("assets/menu58/bar-mid.webp") calc(var(--pep-header-h) * 2.88) top / calc(100% - var(--pep-header-h) * 3.09) 100% no-repeat;
+  }
+  .pep-header-row { display: flex; align-items: center; justify-content: flex-end; padding-right: calc(var(--pep-header-h) * .28); }
+  .pep-header-brand { left: 0; top: 0; width: calc(var(--pep-header-h) * 2.89); height: 100%; }
+  .pep-header-nav { display: flex; align-items: center; gap: calc(var(--pep-header-h) * .1); }
+  .pep-header-kwrap { position: relative; left: auto; top: auto; width: auto; height: auto; display: flex; }
+  .pep-header-kwrap--menu { display: flex; }
+  .pep-header-key {                         /* a key cut from render 58: left end, a stretch, right end */
+    width: auto;
+    height: calc(var(--pep-header-h) * .7);
+    min-height: 40px;
+    padding: 0 calc(var(--pep-header-h) * .2);
+    font-size: clamp(13px, calc(var(--pep-header-h) * .25), 18px);
+    letter-spacing: .08em;
+    background:
+      url("assets/menu58/key-left.webp") left top / auto 100% no-repeat,
+      url("assets/menu58/key-right.webp") right top / auto 100% no-repeat,
+      url("assets/menu58/key-mid.webp") center top / calc(100% - var(--pep-header-h) * .7) 100% no-repeat;
+  }
+  .pep-header-key::after { inset: 18% 8%; }
+  /* MENU opens the other keys in a sheet under the bar */
+  .pep-header-keys {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    max-height: calc(100vh - 120px);
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 18px 16px 20px;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+    background: linear-gradient(170deg, rgba(24, 30, 40, .96), rgba(9, 11, 15, .97));
+    box-shadow: inset 0 0 0 2px rgba(var(--pep-header-blue), .8);
+  }
+  [data-module="header"][data-menu-open] .pep-header-keys { display: flex; }
+  .pep-header-keys .pep-header-key { width: 100%; height: 54px; font-size: 17px; letter-spacing: .14em; }
+  .pep-header-keys .pep-header-key--hero { padding: 0; background: url("assets/menu58/gem.webp") center / 100% 100% no-repeat; }
+  .pep-header-keys .pep-header-kwrap--hero { height: 62px; }
+  .pep-header-keys .pep-header-key--hero { height: 62px; }
+  .pep-header-glow { display: none; }
+  .pep-header-drop { position: relative; display: none; width: auto; margin-top: 12px; opacity: 1; visibility: visible; transform: none; transition: none; z-index: auto; --c: 16px; }
+  [data-module="header"][data-drop-open] .pep-header-drop { display: block; transform: none; }
+  .pep-header-drop { left: 0; top: auto; }
+  .pep-header-drop-glow { display: none; }
+  .pep-header-drop-in { padding: 20px 14px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .pep-header-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
+  .pep-header-col { padding: 0 12px; }
+  .pep-header-col:nth-child(odd) { border-left: 0; padding-left: 4px; }
+  .pep-header-col-h { font-size: clamp(11px, 3.3vw, 15px); letter-spacing: .06em; white-space: nowrap; }   /* PERFORMANCE stays on one line */
+  .pep-header-item { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-header-key:hover .pep-header-label, .pep-header-key:focus-visible .pep-header-label { transform: none; }
+}

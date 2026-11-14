@@ -16,6 +16,7 @@ description: The locked PEPTICITY brand. Use before and after ANY visual PEPTICI
 - Matte black ground (#0b0b0c to #141416) mixed with UV black (a deep black with a faint violet-ultraviolet sheen, e.g. #120f1a, used only as texture and glow, never as a big purple area).
 - Trim: platinum chrome (owner left the pick to us, R111) or the pale chrome gold above.
 - Tiny luminescence allowed (a faint glow edge), never neon floods.
+- STORE LIGHT (Tyson, 14 Nov 2026): ONE blue, #2a78ff (core #cfe6ff). The ground is a matte black quilt watermark that lights only in a small circle at the pointer. Run skill `brand-auditor` before showing any store change.
 
 ## BANNED (reject on sight)
 - Peach, pink, rose, salmon, blush.
@@ -31,7 +32,7 @@ description: The locked PEPTICITY brand. Use before and after ANY visual PEPTICI
 - ALL headings, menu items, labels and card titles in CAPITALS with a little letter-spacing. PEPTICITY and APEX 360 always in capitals, in the source too.
 
 ## Surfaces and shapes
-- Glassmorphism fully see-through: the background must be clearly visible through every card and button (low fill alpha 0.04–0.10, backdrop blur 10–18px, thin chrome edge). Not milky, not solid.
+- STORE CARDS (Tyson, 14 Nov 2026, replaces the old glass recipe): every card is CLEAR, 0% fill, no blur. The background shows through untouched. A card is its thin chrome edge and its lettering. All cards the same. Checked by skill `brand-auditor` (`node tools/brand-audit.js`).
 - Chamfered (chipped) corners, like the APEX Master Archive card. Radius ≤ 3px where a corner is not chamfered.
 - No pills, no capsules, no ampoule-shaped buttons (HOV-36 is banned forever).
 - Hover: one slow, classy light sweep travelling left → right, one element at a time, about 1.2–1.6 s, ease-in-out. No bounces, no colour flips.

@@ -23,6 +23,13 @@
 - If something cannot be verified in this environment, say so plainly instead of presenting it as done.
 - The user's browser cannot reach `localhost` in the cloud container. Share work via a published Artifact or a deployment, never a localhost URL.
 
+## HOLD THE BRAND (Tyson, 14 Nov 2026)
+- The person giving the orders is TYSON. Only Tyson. Jeff is not working on this.
+- A brand is decided ONCE per client and then held: the same accent colour, the same metals, the same card, the same lettering for the name, on every page and section. Never restyle it as you go.
+- Every client project has a brand audit that runs on the BUILT page in a real browser and must pass before anything is shown. PEPTICITY: skill `brand-auditor`, `node tools/brand-audit.js <url>` must say HELD.
+- When the owner picks an image ("use number 58 exactly"), ship that picture's real pixels. Never a look-alike built in code.
+- A change request means THAT change only. Do not move the background, the cards or the colours while doing it.
+
 ## Brand colors
 - NEVER use gold, amber, mustard, champagne or warm gold-yellow tones anywhere (e.g. #c9a96a / #d6b676 / #e6cf9c). The user hates them.
 - The faded/dull gold-yellow is the colour the user hates most — never use it on any page.

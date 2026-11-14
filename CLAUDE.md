@@ -2,6 +2,19 @@
 
 These are final. Do not change any of them unless the owner asks in so many words.
 
+## Who is working (14 Nov 2026)
+- The person giving the orders is TYSON. Only Tyson. Jeff is not working on this and will not touch it again.
+- Call him Tyson. "The owner" in these files and in every skill means Tyson.
+
+## Brand hold: the store /new/ (Tyson, 14 Nov)
+- Before showing ANY store change: `node tools/brand-audit.js <url>` (skill brand-auditor). It must say HELD. Fix a FAIL first.
+- MENU = his pick, menu 58, EXACT: the real picture (new/assets/menu58/, source brand/menu58/). Never a CSS look-alike. Labels live, in the PEPTICITY lettering.
+- Drop-down headings RECOVERY / PERFORMANCE / LONGEVITY / SKIN: PEPTICITY lettering, lit, a thin light under each that tapers to nothing at both ends, narrower than the word.
+- ONE BLUE: #2a78ff (42,120,255), core #cfe6ff. No second blue. No violet outside the menu-58 picture.
+- GROUND: matte black quilt as a watermark (surface 0.10). No blue at rest, no breathing. Holes light ONLY in a small circle at the pointer (reach 75). No blue pools behind sections or cards.
+- CARDS: every card CLEAR, 0% fill, no blur, all the same (block brand/brand-lock.css, loaded last). Sheets that open over the page keep smoked glass.
+- PEPTICITY is always the same lettering, in capitals. Never restyled per section.
+
 ## Sharing
 - Anything for Grace goes out as a PUBLIC no-login link on GitHub Pages: https://apex360marketing-ai.github.io/Pepticity/<page>/ (gh-pages branch). Never send a private Claude Artifact link for Grace.
 - Live pages: site/, graces-dashboard/ (one link, owner+client switch), dashboard/, client/, dashboard-color/, previous/, previous-client/, concierge/, arsenal/, research/, grace/ (review + picks).

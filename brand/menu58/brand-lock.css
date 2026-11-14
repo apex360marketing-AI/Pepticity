@@ -1,0 +1,46 @@
+/* BRAND LOCK (Tyson, Nov 14 2026). Loaded last, so it holds whatever a module says. Checked by tools/brand-audit.mjs.
+   ONE CARD: every card on the site is CLEAR: 0% fill and no blur, so the background shows through it untouched.
+   A card is drawn by its chrome edge and its lettering, never by a tint. Do not give any card its own fill again.
+   (Sheets that open OVER the page - the menu's drop-down, the phone menu, the cart, the guide, the policy pages, a
+   pop-up - are not cards: they keep smoked glass so their words stay readable over what is behind them.) */
+:root {
+  --pep-card-fill: transparent;
+  --pep-card-blur: none;
+}
+.pep-hero-card::before,
+[data-module="lineup"] .vc-pane,
+.pep-lineup-step,
+.pep-lineup-item-btn,
+.pep-story-skip,
+.pep-doors-glass,
+.pep-shelf-slat,
+.pep-shelf-pane,
+.pep-shelf-soon,
+.pep-shelf-plate,
+.pep-shelf-filter,
+.pep-footer-pane,
+.pep-hooks-glass,
+.pep-hooks-way,
+.pep-hooks-tile,
+.pep-hooks-card,
+.pep-footer-link,
+.pep-shelf-filter[aria-pressed="true"] {    /* a pressed filter is marked by its bright edge and underline, not a tint */
+  background: var(--pep-card-fill);
+  -webkit-backdrop-filter: var(--pep-card-blur);
+          backdrop-filter: var(--pep-card-blur);
+}
+[data-module="lineup"] .vc-pane::after,     /* the corner glare was a tint too: gone */
+.pep-doors-glass::after,
+.pep-hooks-glass::after { background: none; }
+/* ONE GROUND: matte black quilt, a watermark. No blue pool behind a section or inside a card. The ground lights only in
+   the small circle that follows the pointer. A card's own light is the thin line along its bottom edge, the same on every card. */
+[data-module="hero"]::before,
+.pep-doors-glow::before,
+[data-module="lineup"] .vc-glow,
+[data-module="lineup"] .vc-glow::before,
+[data-module="lineup"] .vc-glow::after { background: none; animation: none; }
+.pep-story-steps {                          /* its 3 px light on the left stays; the fill goes */
+  background: linear-gradient(var(--pep-plat-4), var(--pep-plat-4)) left top / 3px 100% no-repeat, var(--pep-card-fill);
+  -webkit-backdrop-filter: var(--pep-card-blur);
+          backdrop-filter: var(--pep-card-blur);
+}
