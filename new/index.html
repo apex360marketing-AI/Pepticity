@@ -972,7 +972,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   color: var(--pep-black-0);
   background: linear-gradient(100deg, #b9bec5 0%, #ffffff 16%, #e6e9ed 30%, #6b7077 50%, #e6e9ed 66%, #ffffff 80%, #b9bec5 100%);
   box-shadow: inset 0 -3px 0 rgba(var(--pep-hero-blue), .85), inset 0 -10px 14px -8px rgba(var(--pep-hero-blue), .5);
-  clip-path: polygon(var(--s) 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%);
+  clip-path: polygon(var(--s) 0, 100% 0, 100% calc(100% - var(--s)), calc(100% - var(--s)) 100%, 0 100%, 0 var(--s)); /* no-points: cut corners, never an arrow end (owner, Nov 14) */
   transform: translateY(0);
   transition: transform .45s var(--pep-ease), filter .45s ease;
 }
@@ -2826,9 +2826,9 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   letter-spacing: .24em;
   white-space: nowrap;
   background: linear-gradient(150deg, #4c5766, #1a1d21 40%, #0c0f13 60%, #39424e);
-  clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
 }
-.pep-lineup-flag::before { content: ""; position: absolute; inset: 1.5px; background: rgba(6, 7, 9, .86); clip-path: polygon(14.5px 0, calc(100% - 14.5px) 0, 100% 50%, calc(100% - 14.5px) 100%, 14.5px 100%, 0 50%); }
+.pep-lineup-flag::before { content: ""; position: absolute; inset: 1.5px; background: rgba(6, 7, 9, .86); clip-path: polygon(7.4px 0, 100% 0, 100% calc(100% - 7.4px), calc(100% - 7.4px) 100%, 0 100%, 0 7.4px); }
 .pep-lineup-flag > * { position: relative; }
 .pep-lineup-outbox { display: flex; flex-direction: column; gap: var(--pep-lineup-buy-gap); }
 .pep-lineup-restock {
@@ -3024,7 +3024,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   text-shadow: .5px .7px 0 #040506, 1.5px 2px 2px rgba(0, 0, 0, .8);
   background: rgba(0, 0, 0, .22);
   box-shadow: inset 2px 2px 7px rgba(0, 0, 0, .6), inset -1px -1px 0 rgba(230, 233, 237, .08);
-  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
 }
 [data-module="lineup"] .pep-lineup-detail .vc-sizes { margin: auto 0 0; }
 .pep-lineup-d-label { margin: 0; font-size: 15px; line-height: 1.4; color: var(--pep-plat-3); }
@@ -3446,10 +3446,10 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 .pep-lineup-bar { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
 .pep-lineup-bar::before { clip-path: polygon(14.4px 0, 100% 0, 100% calc(100% - 14.4px), calc(100% - 14.4px) 100%, 0 100%, 0 14.4px); }
 [data-module="lineup"] .vc-sizes li { clip-path: polygon(14.5px 0, 100% 0, 100% calc(100% - 14.5px), calc(100% - 14.5px) 100%, 0 100%, 0 14.5px); padding-left: 18px; }
-.pep-lineup-flag { clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 18px 100%, 0 50%); }
-.pep-lineup-flag::before { clip-path: polygon(17.4px 0, calc(100% - 17.4px) 0, 100% 50%, calc(100% - 17.4px) 100%, 17.4px 100%, 0 50%); }
-.pep-lineup-d-coming { clip-path: polygon(17px 0, calc(100% - 17px) 0, 100% 50%, calc(100% - 17px) 100%, 17px 100%, 0 50%); }
-.pep-lineup-d-coming { clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 22px 100%, 0 50%); padding-left: 26px; padding-right: 26px; }
+.pep-lineup-flag { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+.pep-lineup-flag::before { clip-path: polygon(9.4px 0, 100% 0, 100% calc(100% - 9.4px), calc(100% - 9.4px) 100%, 0 100%, 0 9.4px); }
+.pep-lineup-d-coming { clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px); }
+.pep-lineup-d-coming { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); padding-left: 26px; padding-right: 26px; }
 /* NOV12-FINAL, round 2: the step and close buttons cut deeper (they read as boxes) */
 [data-module="lineup"] .pep-lineup-step,
 [data-module="lineup"] .pep-lineup-x { --pep-lineup-k: 20px; }
@@ -4270,7 +4270,7 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   text-wrap: balance;
   color: var(--pep-black-0);
   background: linear-gradient(100deg, var(--pep-plat-3) 0%, var(--pep-plat-4) 16%, var(--pep-plat-3) 30%, var(--pep-plat-2) 50%, var(--pep-plat-3) 66%, var(--pep-plat-4) 82%, var(--pep-plat-3) 100%);
-  clip-path: polygon(18px 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 0 18px);
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
   transform: translateY(0);
   transition: transform .45s var(--pep-ease), filter .45s ease;
 }
@@ -4296,8 +4296,8 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
   pointer-events: none;
   opacity: 0;
   background: var(--pep-light, #2f7dff);
-  clip-path: polygon(evenodd, 18px 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 0 18px, 18px 0,
-    19.2px 3px, 3px 19.2px, 3px calc(100% - 3px), calc(100% - 29.4px) calc(100% - 3px), calc(100% - 4px) 50%, calc(100% - 29.4px) 3px, 19.2px 3px);
+  clip-path: polygon(evenodd, 18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px, 18px 0,
+    19.2px 3px, 3px 19.2px, 3px calc(100% - 3px), calc(100% - 19.2px) calc(100% - 3px), calc(100% - 3px) calc(100% - 19.2px), calc(100% - 3px) 3px, 19.2px 3px);
 }
 .pep-doors-btn:focus-visible { outline: 0; transform: translateY(-3px); filter: brightness(1.08); }
 .pep-doors-btn:focus-visible::before { opacity: 1; }
@@ -7894,7 +7894,7 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
   text-wrap: balance;
   color: var(--pep-black-0);
   background: linear-gradient(100deg, var(--pep-plat-3) 0%, var(--pep-plat-4) 16%, var(--pep-plat-3) 30%, var(--pep-plat-2) 50%, var(--pep-plat-3) 66%, var(--pep-plat-4) 82%, var(--pep-plat-3) 100%);
-  clip-path: polygon(18px 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 0 18px);
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
   transform: translateY(0);
   transition: transform .45s var(--pep-ease), filter .45s ease;
 }
@@ -7917,8 +7917,8 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
   pointer-events: none;
   opacity: 0;
   background: var(--pep-hooks-blue);
-  clip-path: polygon(evenodd, 18px 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 0 18px, 18px 0,
-    19.2px 3px, 3px 19.2px, 3px calc(100% - 3px), calc(100% - 29.4px) calc(100% - 3px), calc(100% - 4px) 50%, calc(100% - 29.4px) 3px, 19.2px 3px);
+  clip-path: polygon(evenodd, 18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px, 18px 0,
+    19.2px 3px, 3px 19.2px, 3px calc(100% - 3px), calc(100% - 19.2px) calc(100% - 3px), calc(100% - 3px) calc(100% - 19.2px), calc(100% - 3px) 3px, 19.2px 3px);
 }
 .pep-hooks-btn:focus-visible { outline: 0; box-shadow: none; transform: translateY(-3px); filter: brightness(1.08); }
 .pep-hooks-btn:focus-visible::before { opacity: 1; }
