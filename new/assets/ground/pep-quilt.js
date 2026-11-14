@@ -10,7 +10,9 @@
    - 'C' WAVE: a slow diagonal wave of blue rolls through the holes (9 s a cycle); rims catch it as it passes.
    - Animated at 30 fps at most, never while the tab is hidden. Reduced motion: no breathing or drift, a still glow.
      Touch screens: breathing on, no pointer glow.
-   Instance: .set({ variant, surface }) changes them live; .freeze(t) holds the animation at t seconds (stills and
+   reach (optional, px): the pointer lights only the holes within a tight circle of about this radius (owner, Nov 14 2026:
+   "they only illuminate when I'm hovering in that area"). Left out: #21's own wide light, cushion by cushion.
+   Instance: .set({ variant, surface, reach }) changes them live; .freeze(t) holds the animation at t seconds (stills and
    tests), .freeze(null) lets it run; .unmount() removes everything.
 
    - The quilt surface (leather, stitching, perforation) shows at `surface` (default SURFACE, 0.10 to 0.15) over whatever
@@ -62,7 +64,7 @@
     '#endif',
     'uniform vec2 uR; uniform float uPx; uniform vec2 uM; uniform vec2 uP; uniform float uH; uniform float uG;',
     'uniform vec3 uA; uniform vec3 uB; uniform float uFin; uniform float uGl; uniform vec3 uLamp; uniform float uMix; uniform float uFill;',
-    'uniform float uS; uniform vec3 uC; uniform sampler2D uT0;',
+    'uniform float uS; uniform vec3 uC; uniform sampler2D uT0; uniform float uRr;',
     'uniform float uV; uniform float uBr; uniform vec2 uPl; uniform float uPr; uniform float uWt; uniform float uWl; uniform vec2 uAm; uniform vec2 uRm; uniform vec3 uRc;',
     'vec3 gAlb; float gSpec; float gGloss; float gOcc; float gGlow; float gRim;',
     // engine helpers used by #21 (verbatim)
@@ -94,7 +96,8 @@
     '  gAlb *= 1. - hole * .9; gSpec *= 1. - hole;',
     '  gOcc = mix(.36, 1., smoothstep(0., 14., e.x));',
     '  float th = stch(e.x, e.y, 10., 1.7); gAlb = mix(gAlb, uB * 2.6 + .006, th);',
-    '  gGlow = hole * near(diac(g, S), uP, 190.) * uG;',
+    // reach (uRr > 0): a tight circle of light round the pointer, measured hole by hole; 0: #21's own wide light, cushion by cushion
+    '  gGlow = hole * (uRr > 0. ? near(hexg(p, P).zw, uP, uRr) : near(diac(g, S), uP, 190.)) * uG;',
     // variants: a glow in every hole on top of the pointer's, and a thin rim line along each cushion edge
     '  if (uV > .5) {',
     '    vec2 hc = hexg(p, P).zw, cc = diac(g, S);',                                      // this hole's centre, this cushion's centre
@@ -167,6 +170,7 @@
     if (!gl) { return null; }
 
     var vcode = variantCode(opts.variant);
+    var reach = typeof opts.reach === 'number' && opts.reach > 0 ? opts.reach : 0;      // px (of a 1440 page): 0 = #21's own wide light
     var it = { canvas: cv, frames: 0, dpr: 1, mode: still ? 'still' : 'pointer', surface: surface, variant: vcode ? 'ABC'.charAt(vcode - 1) : null, unmount: unmount };
     var prog = null, U = {}, tex = null, img = null, ready = false, lost = false, dead = false;
     var raf = 0, last = 0, dirty = true;
@@ -177,6 +181,7 @@
       o = o || {};
       if (o.variant !== undefined) { vcode = variantCode(o.variant); it.variant = vcode ? 'ABC'.charAt(vcode - 1) : null; }
       if (typeof o.surface === 'number') { it.surface = Math.max(0, Math.min(1, o.surface)); }
+      if (typeof o.reach === 'number') { reach = Math.max(0, o.reach); }
       dirty = true; kick();
     };
     it.freeze = function (t) { frozen = typeof t === 'number' && isFinite(t) ? t : null; dirty = true; kick(); };
@@ -212,7 +217,7 @@
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { throw new Error(gl.getProgramInfoLog(prog) || 'link'); }
       gl.useProgram(prog);
       ['uR', 'uPx', 'uM', 'uP', 'uH', 'uG', 'uA', 'uB', 'uFin', 'uGl', 'uLamp', 'uMix', 'uFill', 'uS', 'uC', 'uT0',
-        'uV', 'uBr', 'uPl', 'uPr', 'uWt', 'uWl', 'uAm', 'uRm', 'uRc'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
+        'uV', 'uBr', 'uPl', 'uPr', 'uWt', 'uWl', 'uAm', 'uRm', 'uRc', 'uRr'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       gl.enableVertexAttribArray(0);
@@ -254,6 +259,7 @@
       gl.uniform1f(U.uH, reduced.matches ? 0 : h);                  // lift
       gl.uniform1f(U.uG, h);                                        // hole light
       gl.uniform1f(U.uS, it.surface);
+      gl.uniform1f(U.uRr, reach);
       gl.uniform1f(U.uV, vcode);
       if (vcode) {
         // reduced motion holds the clock a quarter of the way in: half-way up the breath, nothing drifting

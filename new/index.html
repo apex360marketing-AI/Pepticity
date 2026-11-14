@@ -265,404 +265,286 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
 }
 </style>
 <style data-pep-src="modules/05-header/header.css">
-/* 05-header: THE MENU (menu 58, the owner's pick, Nov 13 2026) with the store's HEADER P seated in it ("B · TUNED").
+/* 05-header: THE MENU = the owner's pick, MENU 58, exactly (Tyson, Nov 14 2026: "use number 58 exactly the way it is").
    Every selector starts with [data-module="header"] or .pep-header-
-   TOP-APPLY v2 (Jeff, Nov 13: "brand that top part so it looks like our branding"; "use the branding from the one up top")
-   - The bar is the store's smoked glass with a chrome rim, cut to menu 58's blade (trimmed tips), on the header's own
-     ::before (glass) and ::after (rim). The header element itself carries no clip-path, filter or backdrop-filter, so the
-     P and its backlight are never cut.
-   - The live 3D P (02-logo3d, kind mark, edge light) hangs from the bar into a glass tab that steps out of the bar's
-     lower-left cut (12 px up, walls at about 68 degrees, at least 20 px deep on computers), so the P stays inside glass
-     through a full turn, the mirrored half included.
-   - PEPTICITY beside the P in the house 3D chrome. Every key label in the same lettering, bigger and bolder, in platinum
-     chrome with the logo's blue light through its waist; nothing is flat white. Headings shine (a slow sheen) and never move.
-   - ONE BLUE: every blue here is the logo's #2a78ff (rgba 42,120,255) and its hot core #cfe6ff, the keys' edge light included.
-     The PEPTIDES centre light is toned down.
-   - The 3D logo canvas stands at z-index 5. At its home at the top of the page the bar stands under it (z 2), so the P is
-     drawn in front of the glass with its backlight behind it. Once the bar floats over the page, or a panel is open, it
-     stands over the canvas (10, the MENU panel 25) so the panel covers the page's 3D; then the backlight steps away and the
-     glass clears where the P is, so the P still shows. */
+   - The bar, the keys and the crystal are the REAL pixels of render 58 (Higgsfield, blue toned down 25%), cut out of it
+     by tools/slice58.py into assets/menu58/. Nothing here is redrawn in CSS. Do not swap them for a CSS look-alike.
+   - The only things laid over the art are live: the words on the keys (the PEPTICITY font, bigger and bolder: owner,
+     Nov 13), the cart count once it is above 0, hover and keyboard light, and the drop-down.
+   - PEPTICITY on the bar is the wordmark baked in render 58 (the blue line through its first P). No separate P mark.
+   - Lights: the ONE blue is the logo's #2a78ff (rgb 42,120,255), hot core #cfe6ff. The only violet on the page is the
+     faint backlight round the keys, and it is part of render 58's own pixels.
+   - Computers (1200 px up): the whole bar is one picture; each key is a live button placed over its plate in the picture.
+     Under 1200 px: the same blade in three pieces (left end with the wordmark, a stretch, right end) with MENU and CART
+     as keys cut from the same render; MENU opens SHOP, PEPTIDES, RESEARCH and ABOUT. */
 [data-module="header"] {
   --pep-header-blue: 42, 120, 255;          /* the logo's light, #2a78ff: the one blue */
-  --pep-header-hb: .3;                      /* the PEPTIDES centre light: toned down again (owner, Nov 13) */
-  --pep-header-edge-a: .34;                 /* the keys' edge light, in the logo blue */
-  --pep-header-cut: 26px;
-  --pep-header-h: 76px;
-  /* the glass tab under the P: depth, wall slope (px across per px down), where it leaves the lower-left cut (x, and how far
-     above the bar's foot), where its right wall meets the foot, and how far the glass clears for the P when the bar floats */
-  --pep-hd-tab-d: 22px;
-  --pep-hd-tab-k: .4;
-  --pep-hd-tab-up: 12px;
-  --pep-hd-tab-cx: 15.2px;                  /* = cut x (1 - up / (.38 x bar height)): the point on the lower-left cut */
-  --pep-hd-tab-r: 152px;
-  --pep-hd-clear: 182px;
-  /* platinum chrome with the logo's blue light through its waist, and the sheen that glides across it */
-  --pep-header-chrome: linear-gradient(180deg, #ffffff 0%, #e6e9ed 24%, #b9bec5 40%, #6b7077 46%, rgba(42, 120, 255, 1) 49%, #cfe6ff 51%, rgba(42, 120, 255, 1) 53%, #6b7077 57%, #b9bec5 66%, #e6e9ed 82%, #b9bec5 100%);
-  --pep-header-sheen: linear-gradient(105deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, .9) 50%, rgba(255, 255, 255, 0) 60%);
+  --pep-header-ice: 207, 230, 255;          /* its hot core, #cfe6ff */
+  --pep-header-hb: .55;                     /* the light under PEPTIDES, toned down (owner, Nov 13) */
   position: sticky;
-  top: 10px;
+  top: -6px;
   z-index: 2;
   display: block;
   width: min(1320px, calc(100% - 24px));
-  margin: 12px auto 0;
+  aspect-ratio: 2578 / 345;                 /* render 58's bar, with the room the crystal rises into */
+  margin: 0 auto;
+  container-type: inline-size;
   transition: transform .45s var(--pep-ease);
 }
-/* floating over the page, or a panel open: the bar stands over the 3D canvas (5), below the guide (20) and the cart (30) */
 [data-module="header"][data-float],
 [data-module="header"][data-drop-open] { z-index: 10; }
 [data-module="header"][data-menu-open] { z-index: 25; }
-[data-module="header"][data-tuck] { transform: translateY(calc(-100% - 28px - var(--pep-hd-tab-d))); }
-
-/* ---------- the bar: smoked glass (::before) and its chrome rim (::after), cut to menu 58's blade, with the tab ---------- */
-[data-module="header"]::before,
-[data-module="header"]::after {
+[data-module="header"][data-tuck] { transform: translateY(calc(-100% - 28px)); }
+[data-module="header"]::before {            /* the bar: render 58 */
   content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: calc(var(--pep-header-h) + var(--pep-hd-tab-d));
-  z-index: -1;
-  pointer-events: none;
-}
-[data-module="header"]::before {
-  background:
-    radial-gradient(150px 120% at 104px 52%, rgba(var(--pep-header-blue), .22), rgba(var(--pep-header-blue), 0) 72%),
-    linear-gradient(180deg, rgba(255, 255, 255, .11) 0, rgba(255, 255, 255, .03) 2px, rgba(255, 255, 255, .02) 46%, rgba(255, 255, 255, .05) 100%),
-    linear-gradient(160deg, rgba(20, 20, 22, .58), rgba(11, 11, 12, .72));
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-          backdrop-filter: blur(14px) saturate(140%);
-  clip-path: polygon(
-    0 calc(var(--pep-header-h) * .38), var(--pep-header-cut) 0, calc(100% - var(--pep-header-cut)) 0, 100% calc(var(--pep-header-h) * .38),
-    100% calc(var(--pep-header-h) * .62), calc(100% - var(--pep-header-cut)) var(--pep-header-h),
-    var(--pep-hd-tab-r) var(--pep-header-h),
-    calc(var(--pep-hd-tab-r) - var(--pep-hd-tab-d) * var(--pep-hd-tab-k)) calc(var(--pep-header-h) + var(--pep-hd-tab-d)),
-    calc(var(--pep-hd-tab-cx) + (var(--pep-hd-tab-up) + var(--pep-hd-tab-d)) * var(--pep-hd-tab-k)) calc(var(--pep-header-h) + var(--pep-hd-tab-d)),
-    var(--pep-hd-tab-cx) calc(var(--pep-header-h) - var(--pep-hd-tab-up)),
-    0 calc(var(--pep-header-h) * .62));
-  transition: -webkit-mask-position .3s ease, mask-position .3s ease;
-}
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  [data-module="header"]::before { background: rgba(16, 17, 19, .92); }
-}
-[data-module="header"]::after {                 /* a 1.2 px chrome rim along every cut, the tab included */
-  background: linear-gradient(100deg, #e6e9ed, #2a2d31 22%, #b9bec5 46%, #2a2d31 70%, #e6e9ed);
-  opacity: .85;
-  clip-path: polygon(evenodd,
-    0 calc(var(--pep-header-h) * .38), var(--pep-header-cut) 0, calc(100% - var(--pep-header-cut)) 0, 100% calc(var(--pep-header-h) * .38),
-    100% calc(var(--pep-header-h) * .62), calc(100% - var(--pep-header-cut)) var(--pep-header-h),
-    var(--pep-hd-tab-r) var(--pep-header-h),
-    calc(var(--pep-hd-tab-r) - var(--pep-hd-tab-d) * var(--pep-hd-tab-k)) calc(var(--pep-header-h) + var(--pep-hd-tab-d)),
-    calc(var(--pep-hd-tab-cx) + (var(--pep-hd-tab-up) + var(--pep-hd-tab-d)) * var(--pep-hd-tab-k)) calc(var(--pep-header-h) + var(--pep-hd-tab-d)),
-    var(--pep-hd-tab-cx) calc(var(--pep-header-h) - var(--pep-hd-tab-up)),
-    0 calc(var(--pep-header-h) * .62), 0 calc(var(--pep-header-h) * .38),
-    1.2px calc(var(--pep-header-h) * .38 + .48px),
-    1.2px calc(var(--pep-header-h) * .62 - .48px),
-    calc(var(--pep-hd-tab-cx) + 1.03px) calc(var(--pep-header-h) - var(--pep-hd-tab-up) - .66px),
-    calc(var(--pep-hd-tab-cx) + (var(--pep-hd-tab-up) + var(--pep-hd-tab-d)) * var(--pep-hd-tab-k) + .81px) calc(var(--pep-header-h) + var(--pep-hd-tab-d) - 1.2px),
-    calc(var(--pep-hd-tab-r) - var(--pep-hd-tab-d) * var(--pep-hd-tab-k) - .81px) calc(var(--pep-header-h) + var(--pep-hd-tab-d) - 1.2px),
-    calc(var(--pep-hd-tab-r) - .81px) calc(var(--pep-header-h) - 1.2px),
-    calc(100% - var(--pep-header-cut) - .52px) calc(var(--pep-header-h) - 1.2px),
-    calc(100% - 1.2px) calc(var(--pep-header-h) * .62 - .48px),
-    calc(100% - 1.2px) calc(var(--pep-header-h) * .38 + .48px),
-    calc(100% - var(--pep-header-cut) - .52px) 1.2px,
-    calc(var(--pep-header-cut) + .52px) 1.2px,
-    1.2px calc(var(--pep-header-h) * .38 + .48px));
-}
-/* floating or a panel open: the backlight steps away and the glass clears where the P is, so the P (on the canvas,
-   now under the bar) still shows clean. A mask does not reach a backdrop blur on a cut layer, so here the glass is
-   smoked (a deeper tint, no blur) and fades out over the P. */
-[data-module="header"]:is([data-float], [data-drop-open], [data-menu-open])::before {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, .1) 0, rgba(255, 255, 255, .03) 2px, rgba(255, 255, 255, .02) 46%, rgba(255, 255, 255, .05) 100%),
-    linear-gradient(160deg, rgba(18, 19, 21, .88), rgba(11, 11, 12, .93));
-  -webkit-backdrop-filter: none;
-          backdrop-filter: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent var(--pep-hd-clear), #000 calc(var(--pep-hd-clear) + 36px));
-          mask-image: linear-gradient(90deg, transparent var(--pep-hd-clear), #000 calc(var(--pep-hd-clear) + 36px));
-}
-[data-module="header"] .pep-header-mark::before,
-[data-module="header"] .pep-header-mark::after { transition: opacity .25s ease; }
-[data-module="header"]:is([data-float], [data-drop-open], [data-menu-open]) .pep-header-mark::before,
-[data-module="header"]:is([data-float], [data-drop-open], [data-menu-open]) .pep-header-mark::after { opacity: 0; }
-
-.pep-header-row {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: clamp(10px, 1.4vw, 22px);
-  height: var(--pep-header-h);
-  padding: 0 calc(var(--pep-header-cut) + 20px);
-}
-
-/* ---------- the brand: the live P (02-logo3d draws it into .pep-header-mark) and PEPTICITY in the house 3D chrome ---------- */
-.pep-header-brand { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 48px; flex: none; text-decoration: none; }
-.pep-header-mark {
-  display: block;
-  flex: none;
-  width: 145px;                             /* the store's NOV12 BIG P box */
-  aspect-ratio: 1 / .82;
-  margin: -24px 0 -60px;
-}
-.pep-header-brand:focus-visible { outline: 0; }
-.pep-header-brand:focus-visible .pep-header-mark { box-shadow: 0 3px 0 -1px var(--pep-light, #2a78ff); }
-.pep-header-name { display: none; }
-.pep-header-3d {
-  --pep-header-3d-step: .02em;
-  position: relative;
-  isolation: isolate;
-  font-family: var(--pep-font-display);
-  font-weight: 400;
-  line-height: 1.5;
-  white-space: nowrap;
-  color: var(--pep-plat-3);
-}
-.pep-header-3d::before {                    /* the depth: the same word stepped back in gunmetal to black */
-  content: attr(data-text);
-  content: attr(data-text) / "";
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  color: var(--pep-black-0);
-  -webkit-text-fill-color: currentColor;
-  text-shadow:
-    calc(var(--pep-header-3d-step) * 1) calc(var(--pep-header-3d-step) * 1.2) 0 var(--pep-plat-1),
-    calc(var(--pep-header-3d-step) * 2) calc(var(--pep-header-3d-step) * 2.4) 0 var(--pep-plat-2),
-    calc(var(--pep-header-3d-step) * 3) calc(var(--pep-header-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
-    calc(var(--pep-header-3d-step) * 4) calc(var(--pep-header-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
-    calc(var(--pep-header-3d-step) * 5) calc(var(--pep-header-3d-step) * 6) 0 var(--pep-black-0),
-    .1em .15em .14em rgba(0, 0, 0, .85),
-    0 0 .5em rgba(var(--pep-header-blue), .28);
+  background: url("assets/menu58/bar.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55));
 }
-.pep-header-3d-face {                       /* the face: platinum chrome, the blue light through its waist, a slow sheen */
-  display: block;
-  background-image: var(--pep-header-sheen), var(--pep-header-chrome);
-  background-size: 300% 100%, 100% 100%;
-  background-position: 120% 0, 0 0;
-  background-repeat: no-repeat;
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: pep-header-sheen 8s ease-in-out infinite;
-}
-@keyframes pep-header-sheen { 0% { background-position: 120% 0, 0 0; } 50%, 100% { background-position: -20% 0, 0 0; } }
-.pep-header-div { width: 1px; height: 34px; flex: none; background: linear-gradient(#6b7077, #2a2d31, #6b7077); box-shadow: 1px 0 0 rgba(230, 233, 237, .14); }
+.pep-header-row { position: absolute; inset: 0; }
+/* the wordmark is in the picture; this is its link */
+.pep-header-brand { position: absolute; left: 2.2%; top: 41%; width: 27.4%; height: 42%; display: block; text-decoration: none; }
+.pep-header-brand:focus-visible { outline: 0; box-shadow: 0 3px 0 0 var(--pep-light, #2a78ff); }
+.pep-header-div { display: none; }
+.pep-header-nav, .pep-header-keys { display: block; margin: 0; padding: 0; list-style: none; }
+.pep-header-keys > li { position: static; display: block; }
 
-/* ---------- the keys: a chrome rim round a dark recessed face, the label in the wordmark lettering ---------- */
-.pep-header-nav { display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); margin-left: auto; }
-.pep-header-keys { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); }
-.pep-header-keys > li { position: relative; display: flex; }
-.pep-header-keys > .pep-header-li--drop { position: static; }        /* its drop-down is placed against the bar */
-.pep-header-kwrap {                         /* holds a key and its edge light: the logo blue, faint, round the key's edge */
-  position: relative;
-  display: flex;
-  filter: drop-shadow(0 0 1.5px rgba(var(--pep-header-blue), calc(var(--pep-header-edge-a) * .9))) drop-shadow(0 0 7px rgba(var(--pep-header-blue), calc(var(--pep-header-edge-a) * .5)));
-}
+/* ---------- the keys: live buttons over render 58's plates ---------- */
+.pep-header-kwrap { position: absolute; top: 41.45%; height: 41.2%; display: block; }
+.pep-header-kwrap--shop { left: 32.43%; width: 10.47%; }
+.pep-header-kwrap--hero { left: 42.44%; width: 20.95%; top: 30.4%; height: 63.8%; }
+.pep-header-kwrap--research { left: 62.45%; width: 14.12%; }
+.pep-header-kwrap--about { left: 77.08%; width: 10.43%; }
+.pep-header-kwrap--cart { left: 87.82%; width: 9.77%; }
 .pep-header-kwrap--menu { display: none; }
 .pep-header-key {
   -webkit-appearance: none;
   appearance: none;
   position: relative;
-  isolation: isolate;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  height: 48px;
+  gap: .5em;
+  width: 100%;
+  height: 100%;
   margin: 0;
-  padding: 0 20px;
+  padding: 0;
   border: 0;
   border-radius: 0;
+  background: none;
   cursor: pointer;
-  font: 700 18px/1 var(--pep-font-display);
-  letter-spacing: .12em;
+  /* the PEPTICITY font on every key, bigger and bolder (owner, Nov 13) */
+  font: 400 clamp(15px, 1.36vw, 19px)/1 var(--pep-font-display);
+  font-size: clamp(15px, 1.5cqw, 20px);
+  letter-spacing: .1em;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  color: var(--pep-plat-4);
-  clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 9px, 100% calc(100% - 9px), calc(100% - 9px) 100%, 9px 100%, 0 calc(100% - 9px), 0 9px);
-  background: linear-gradient(180deg, #e6e9ed, #6b7077 50%, #b9bec5);                         /* chrome rim */
-  transform: translateY(0);
-  transition: transform .35s var(--pep-ease);
+  color: #f4f6f9;
 }
-.pep-header-key::before {                   /* the dark recessed face: pushed in */
-  content: "";
-  position: absolute;
-  inset: 1.5px;
-  z-index: -1;
-  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-  background: linear-gradient(180deg, #0b0b0c, #141416 58%, #2a2d31);
-  box-shadow: inset 0 3px 6px rgba(0, 0, 0, .7), inset 0 -1px 0 rgba(230, 233, 237, .08);
-}
-.pep-header-label {                         /* platinum chrome lettering with the blue light through its waist */
+.pep-header-label {
   display: inline-block;
-  padding: 2px 0;
-  background-image: var(--pep-header-sheen), var(--pep-header-chrome);
-  background-size: 300% 100%, 100% 100%;
-  background-position: 120% 0, 0 0;
-  background-repeat: no-repeat;
+  padding-left: .1em;                       /* balances the letter-spacing after the last letter */
+  -webkit-text-stroke: .7px currentColor;   /* the same lettering, set bolder */
+  background: linear-gradient(180deg, #ffffff 18%, #e6e9ed 46%, #b9bec5 54%, #e6e9ed 78%);
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .55));
-  transition: background-position 0s, transform .35s var(--pep-ease);
+  filter: drop-shadow(0 1.5px 0 rgba(0, 0, 0, .8)) drop-shadow(0 0 5px rgba(0, 0, 0, .55));
+  transition: transform .3s var(--pep-ease), filter .3s ease;
 }
-/* hover and keyboard: the key lifts, its lettering grows and one slow sheen crosses it */
-.pep-header-key:hover,
-.pep-header-key:focus-visible { transform: translateY(-2px); }
+.pep-header-key::after {                    /* hover and keyboard: light gathers on the key */
+  content: "";
+  position: absolute;
+  inset: 14% 6%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(60% 90% at 50% 50%, rgba(var(--pep-header-ice), .2), rgba(var(--pep-header-ice), 0) 72%);
+  transition: opacity .3s ease;
+}
+.pep-header-key:hover::after,
+.pep-header-key:focus-visible::after { opacity: 1; }
 .pep-header-key:hover .pep-header-label,
-.pep-header-key:focus-visible .pep-header-label { transform: scale(1.06); background-position: -20% 0, 0 0; transition: background-position 1.4s ease-in-out, transform .35s var(--pep-ease); }
+.pep-header-key:focus-visible .pep-header-label { transform: scale(1.06); filter: drop-shadow(0 1.5px 0 rgba(0, 0, 0, .8)) drop-shadow(0 0 8px rgba(var(--pep-header-ice), .6)); }
 .pep-header-key:focus-visible { outline: none; }
-/* keyboard focus: a bar of light at the key's foot (never a box round a cut shape) */
-.pep-header-key:focus-visible::before { box-shadow: inset 0 3px 6px rgba(0, 0, 0, .7), inset 0 -3px 0 var(--pep-light, #2a78ff); }
-.pep-header-count {                         /* the cart count: a frosted figure in a pointed glass shard */
-  position: relative;
+.pep-header-key:focus-visible::before {     /* keyboard focus: a bar of the logo's light at the key's foot */
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 9%;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(var(--pep-header-blue), 0), var(--pep-light, #2a78ff) 25%, #cfe6ff 50%, var(--pep-light, #2a78ff) 75%, rgba(var(--pep-header-blue), 0));
+}
+.pep-header-key--hero { padding-right: 6%; }                         /* the word sits on the crystal's face */
+.pep-header-key--hero::after { inset: 24% 14%; background: radial-gradient(60% 90% at 50% 50%, rgba(var(--pep-header-ice), .26), rgba(var(--pep-header-ice), 0) 72%); }
+.pep-header-glow {                          /* the soft blue spill under the crystal */
+  position: absolute;
+  left: 8%;
+  right: 16%;
+  top: 92%;
+  height: 26%;
+  pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(var(--pep-header-blue), calc(.8 * var(--pep-header-hb))), rgba(var(--pep-header-blue), 0));
+  filter: blur(5px);
+}
+.pep-header-count {                         /* the cart count: shown once something is in the cart */
   display: inline-grid;
   place-items: center;
-  min-width: 40px;
-  height: 26px;
-  padding: 0 12px;
-  font: 700 14px/1 var(--pep-font-ui);
+  min-width: 1.5em;
+  height: 1.5em;
+  padding: 0 .3em;
+  font: 700 .72em/1 var(--pep-font-ui);
   letter-spacing: 0;
-  background: linear-gradient(180deg, #ffffff, #cfe6ff 48%, #b9bec5 52%, #e6e9ed);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 4px rgba(var(--pep-header-blue), .75));
+  color: var(--pep-black-0);
+  background: linear-gradient(180deg, #ffffff, #b9bec5);
+  clip-path: polygon(22% 0, 100% 0, 100% 78%, 78% 100%, 0 100%, 0 22%);
 }
-.pep-header-count::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 9px 100%, 0 50%);
-  background: linear-gradient(150deg, rgba(230, 233, 237, .3), rgba(185, 190, 197, .1) 55%, rgba(230, 233, 237, .22));
-}
+.pep-header-key:not([data-has]) .pep-header-count { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); }
 
-/* PEPTIDES: the crystal key. The centre light is toned down: smoked glass with a little of the logo blue in it and a thin
-   blue light through its foot, like the light through the P */
-.pep-header-kwrap--hero { filter: none; }
-.pep-header-key--hero {
-  padding: 0 30px;
-  clip-path: polygon(16px 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
-  background:
-    linear-gradient(115deg, rgba(230, 233, 237, .32), rgba(230, 233, 237, 0) 30%, rgba(230, 233, 237, 0) 62%, rgba(230, 233, 237, .2) 74%, rgba(230, 233, 237, 0) 86%),
-    linear-gradient(180deg, rgba(var(--pep-header-blue), calc(.1 + .3 * var(--pep-header-hb))), rgba(var(--pep-header-blue), calc(.16 + .4 * var(--pep-header-hb))) 47%, rgba(11, 11, 12, .9) 53%, rgba(var(--pep-header-blue), calc(.1 + .34 * var(--pep-header-hb))));
-}
-.pep-header-key--hero::before {
-  inset: auto 18px 4px;
-  height: 3px;
-  clip-path: polygon(0 50%, 14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%);
-  background: linear-gradient(90deg, rgba(var(--pep-header-blue), 0), rgba(var(--pep-header-blue), .9) 22%, #cfe6ff 50%, rgba(var(--pep-header-blue), .9) 78%, rgba(var(--pep-header-blue), 0));
-  box-shadow: none;
-}
-.pep-header-key--hero:focus-visible::before { height: 4px; box-shadow: none; }
-.pep-header-key--hero:focus-visible { box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
-.pep-header-glow {                          /* the soft blue spill under the crystal, onto the bar's foot */
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 140%;
-  height: 24px;
-  transform: translate(-50%, -12px);
-  pointer-events: none;
-  background: radial-gradient(50% 50% at 50% 50%, rgba(var(--pep-header-blue), calc(.5 * var(--pep-header-hb))), rgba(var(--pep-header-blue), 0));
-  filter: blur(4px);
-}
-
-/* ---------- the drop-down under PEPTIDES: four columns, a thin blue edge ---------- */
+/* ---------- the drop-down under PEPTIDES: render 58's smoked glass sheet with its blue edge ---------- */
 .pep-header-drop {
   position: absolute;
-  top: calc(100% + 18px);
+  top: 93%;
   left: var(--pep-header-dx, 50%);
-  z-index: 2;
-  width: min(880px, calc(100vw - 24px));
-  transform: translate(-50%, 6px);
+  z-index: -2;                              /* its top edge tucks under the bar, as in render 58 */
+  width: min(1140px, calc(100vw - 24px));
+  transform: translate(-50%, -8px);
   opacity: 0;
   visibility: hidden;
   transition: opacity .22s ease, transform .22s ease, visibility 0s .22s;
 }
 [data-module="header"][data-drop-open] .pep-header-drop { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity .22s ease, transform .22s ease; }
-.pep-header-drop-in {
-  --c: 18px;
-  position: relative;
-  padding: 22px 30px 18px;
-  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
-  background: linear-gradient(160deg, rgba(30, 34, 40, .88), rgba(8, 9, 11, .92));
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-          backdrop-filter: blur(16px) saturate(140%);
+.pep-header-drop-glow,
+.pep-header-drop-glow i { position: absolute; inset: 0; pointer-events: none; }
+.pep-header-drop-glow { filter: blur(12px); opacity: .75; }                 /* the edge's bloom, following the cut corners */
+.pep-header-drop-glow i { clip-path: var(--pep-header-sheet); background: rgb(var(--pep-header-blue)); }
+.pep-header-drop {
+  --c: 26px;
+  --pep-header-sheet: polygon(var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c));
 }
-.pep-header-drop-rim {                      /* a thin, dim blue edge: the bar's light carried down */
-  --c: 18px;
+.pep-header-drop-in {
+  position: relative;
+  padding: 44px 34px 16px;
+  clip-path: var(--pep-header-sheet);
+  background:
+    linear-gradient(118deg, rgba(230, 233, 237, 0) 30%, rgba(230, 233, 237, .05) 38%, rgba(230, 233, 237, 0) 46%, rgba(230, 233, 237, 0) 68%, rgba(230, 233, 237, .04) 76%, rgba(230, 233, 237, 0) 84%),
+    linear-gradient(170deg, rgba(24, 30, 40, .9), rgba(9, 11, 15, .93));
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+}
+.pep-header-drop-rim {                      /* the 2 px edge in the logo's blue */
   position: absolute;
   inset: 0;
   pointer-events: none;
-  clip-path: polygon(evenodd, var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c), var(--c) 0,
-    calc(var(--c) + .4px) 1.2px, 1.2px calc(var(--c) + .4px), 1.2px calc(100% - var(--c) - .4px), calc(var(--c) + .4px) calc(100% - 1.2px), calc(100% - var(--c) - .4px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - var(--c) - .4px), calc(100% - 1.2px) calc(var(--c) + .4px), calc(100% - var(--c) - .4px) 1.2px, calc(var(--c) + .4px) 1.2px);
-  background: linear-gradient(180deg, rgba(var(--pep-header-blue), .7), rgba(var(--pep-header-blue), .26) 40%, rgba(185, 190, 197, .35));
+  clip-path: polygon(evenodd, var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c), var(--c) 0,
+    calc(var(--c) + .83px) 2px, 2px calc(var(--c) + .83px), 2px calc(100% - 2px), calc(100% - var(--c) - .83px) calc(100% - 2px), calc(100% - 2px) calc(100% - var(--c) - .83px), calc(100% - 2px) 2px, calc(var(--c) + .83px) 2px);
+  background: linear-gradient(180deg, rgb(var(--pep-header-blue)), rgb(var(--pep-header-ice)) 50%, rgb(var(--pep-header-blue)));
 }
 .pep-header-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
-.pep-header-col { min-width: 0; padding: 0 22px; border-left: 1px solid rgba(185, 190, 197, .16); }
-.pep-header-col:first-child { border-left: 0; padding-left: 4px; }
-.pep-header-col-h,
-.pep-header-drop-foot a,
-.pep-header-drop-note--soon {               /* the drop-down's labels: the same chrome lettering as the keys */
-  font: 700 14px/1.2 var(--pep-font-display);
-  letter-spacing: .2em;
-  background-image: var(--pep-header-chrome);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
+.pep-header-col { min-width: 0; padding: 0 26px; border-left: 1px solid rgba(185, 190, 197, .28); }
+.pep-header-col:first-child { border-left: 0; padding-left: 6px; }
+/* the headings: the PEPTICITY font, lit, with a thin light under each that thins to nothing at both ends */
+.pep-header-col-h {
+  position: relative;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 12px;
+  padding-bottom: 12px;
+  font: 400 18px/1.15 var(--pep-font-display);
+  letter-spacing: .14em;
+  -webkit-text-stroke: .6px currentColor;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(var(--pep-header-blue), .95), 0 0 22px rgba(var(--pep-header-blue), .55);
+  overflow-wrap: anywhere;
 }
-.pep-header-col-h { margin: 0 0 4px; }
+.pep-header-col-h::before,
+.pep-header-col-h::after {
+  content: "";
+  position: absolute;
+  left: 4%;
+  right: 4%;                                 /* a little narrower than the word */
+  bottom: 0;
+  pointer-events: none;
+}
+.pep-header-col-h::before {                 /* its bloom */
+  height: 9px;
+  bottom: -3px;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(var(--pep-header-blue), .75), rgba(var(--pep-header-blue), 0));
+  filter: blur(2px);
+}
+.pep-header-col-h::after {                  /* the light itself: 3 px at the middle, 0 at both ends */
+  height: 3px;
+  clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+  background: linear-gradient(90deg, rgb(var(--pep-header-blue)), rgb(var(--pep-header-ice)) 50%, rgb(var(--pep-header-blue)));
+}
 .pep-header-col-list { list-style: none; margin: 0; padding: 0; display: grid; }
 .pep-header-item {
   display: flex;
   align-items: center;
   min-height: 44px;
-  font: 500 15px/1.3 var(--pep-font-ui);
-  letter-spacing: .04em;
+  font: 500 16px/1.3 var(--pep-font-ui);
+  letter-spacing: .06em;
+  text-transform: uppercase;
   color: var(--pep-plat-3);
   text-decoration: none;
   overflow-wrap: anywhere;
   transition: color .25s ease, text-shadow .25s ease;
 }
 .pep-header-item:hover,
-.pep-header-item:focus-visible { color: var(--pep-plat-4); text-shadow: 0 0 10px rgba(var(--pep-header-blue), .8); }
+.pep-header-item:focus-visible { color: #ffffff; text-shadow: 0 0 10px rgba(var(--pep-header-blue), .9); }
 .pep-header-item:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
 .pep-header-drop-note { margin: 0 4px; font: 500 15px/1.4 var(--pep-font-ui); color: var(--pep-plat-3); }
-.pep-header-drop-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin: 14px 4px 0; padding-top: 6px; border-top: 1px solid rgba(185, 190, 197, .14); }
-.pep-header-drop-foot a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.pep-header-drop-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin: 16px 4px 0; padding-top: 6px; border-top: 1px solid rgba(185, 190, 197, .2); }
+.pep-header-drop-foot a,
+.pep-header-drop-note--soon { font: 400 14px/1.2 var(--pep-font-display); letter-spacing: .2em; -webkit-text-stroke: .4px currentColor; color: var(--pep-plat-4); }
+.pep-header-drop-foot a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; transition: color .25s ease, text-shadow .25s ease; }
+.pep-header-drop-foot a:hover,
+.pep-header-drop-foot a:focus-visible { color: #ffffff; text-shadow: 0 0 10px rgba(var(--pep-header-blue), .9); }
 .pep-header-drop-foot a:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
-.pep-header-drop-count {                    /* the count: a frosted figure */
-  font: 600 14px/1.3 var(--pep-font-ui);
-  letter-spacing: .06em;
-  background: linear-gradient(180deg, #ffffff, #cfe6ff 50%, #b9bec5);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 4px rgba(var(--pep-header-blue), .6));
-}
+.pep-header-drop-count { font: 600 14px/1.3 var(--pep-font-ui); letter-spacing: .06em; color: var(--pep-plat-3); }
 
-/* ---------- computers 900 up: the P moves 16 px left and up and its light lands on the foot of the name ---------- */
-@media (min-width: 900px) {
-  .pep-header-mark { margin: -32px 0 -52px -16px; }
-  .pep-header-name { display: inline-block; font-size: clamp(30px, 2.8vw, 42px); letter-spacing: .18em; }
-}
-
-/* ---------- windows under 1200 px: the brand, a MENU key and CART stay on the bar; MENU opens the other keys ---------- */
+/* ---------- under 1200 px: the same blade in three pieces; the wordmark, MENU and CART on it ---------- */
 @media (max-width: 1199px) {
-  [data-module="header"] { --pep-hd-tab-r: 152px; }
-  .pep-header-row { gap: 12px; padding: 0 calc(var(--pep-header-cut) + 8px); }
-  .pep-header-div { display: none; }
-  .pep-header-nav { gap: 10px; }
+  [data-module="header"] {
+    --pep-header-h: clamp(46px, 15.2vw, 76px);
+    top: 8px;
+    aspect-ratio: auto;
+    height: var(--pep-header-h);
+    margin-top: 8px;
+  }
+  [data-module="header"]::before {
+    background:
+      url("assets/menu58/bar-left.webp") left top / auto 100% no-repeat,
+      url("assets/menu58/bar-right.webp") right top / auto 100% no-repeat,
+      url("assets/menu58/bar-mid.webp") calc(var(--pep-header-h) * 2.88) top / calc(100% - var(--pep-header-h) * 3.09) 100% no-repeat;
+  }
+  .pep-header-row { display: flex; align-items: center; justify-content: flex-end; padding-right: calc(var(--pep-header-h) * .28); }
+  .pep-header-brand { left: 0; top: 0; width: calc(var(--pep-header-h) * 2.89); height: 100%; }
+  .pep-header-nav { display: flex; align-items: center; gap: calc(var(--pep-header-h) * .1); }
+  .pep-header-kwrap { position: relative; left: auto; top: auto; width: auto; height: auto; display: flex; }
   .pep-header-kwrap--menu { display: flex; }
-  .pep-header-key { padding: 0 16px; font-size: 16px; letter-spacing: .12em; }
+  .pep-header-key {                         /* a key cut from render 58: left end, a stretch, right end */
+    width: auto;
+    height: calc(var(--pep-header-h) * .7);
+    min-height: 40px;
+    padding: 0 calc(var(--pep-header-h) * .2);
+    font-size: clamp(13px, calc(var(--pep-header-h) * .25), 18px);
+    letter-spacing: .08em;
+    background:
+      url("assets/menu58/key-left.webp") left top / auto 100% no-repeat,
+      url("assets/menu58/key-right.webp") right top / auto 100% no-repeat,
+      url("assets/menu58/key-mid.webp") center top / calc(100% - var(--pep-header-h) * .7) 100% no-repeat;
+  }
+  .pep-header-key::after { inset: 18% 8%; }
+  /* MENU opens the other keys in a sheet under the bar */
   .pep-header-keys {
     position: absolute;
-    top: calc(100% + 14px + var(--pep-hd-tab-d));
+    top: calc(100% + 12px);
     left: 0;
     right: 0;
     z-index: 2;
@@ -675,73 +557,29 @@ button, input, select, textarea { font: inherit; color: inherit; border-radius: 
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: 18px 16px 20px;
-    clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
-    background: linear-gradient(160deg, rgba(30, 34, 40, .95), rgba(8, 9, 11, .97));
-    box-shadow: inset 0 0 0 1px rgba(185, 190, 197, .3);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-            backdrop-filter: blur(16px) saturate(140%);
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+    background: linear-gradient(170deg, rgba(24, 30, 40, .96), rgba(9, 11, 15, .97));
+    box-shadow: inset 0 0 0 2px rgba(var(--pep-header-blue), .8);
   }
   [data-module="header"][data-menu-open] .pep-header-keys { display: flex; }
-  .pep-header-keys > li { display: block; }
-  .pep-header-keys .pep-header-key { width: 100%; height: 52px; font-size: 17px; letter-spacing: .16em; }
-  .pep-header-keys .pep-header-key--hero { height: 52px; }
-  .pep-header-drop { position: static; display: none; width: auto; margin-top: 12px; opacity: 1; visibility: visible; transform: none; transition: none; }
+  .pep-header-keys .pep-header-key { width: 100%; height: 54px; font-size: 17px; letter-spacing: .14em; }
+  .pep-header-keys .pep-header-key--hero { padding: 0; background: url("assets/menu58/gem.webp") center / 100% 100% no-repeat; }
+  .pep-header-keys .pep-header-kwrap--hero { height: 62px; }
+  .pep-header-keys .pep-header-key--hero { height: 62px; }
+  .pep-header-glow { display: none; }
+  .pep-header-drop { position: relative; display: none; width: auto; margin-top: 12px; opacity: 1; visibility: visible; transform: none; transition: none; z-index: auto; --c: 16px; }
   [data-module="header"][data-drop-open] .pep-header-drop { display: block; transform: none; }
-  .pep-header-drop-in { padding: 18px 14px 12px; -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .pep-header-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 18px; }
+  .pep-header-drop { left: 0; top: auto; }
+  .pep-header-drop-glow { display: none; }
+  .pep-header-drop-in { padding: 20px 14px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .pep-header-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
   .pep-header-col { padding: 0 12px; }
-  .pep-header-col:nth-child(3) { border-left: 0; padding-left: 4px; }
+  .pep-header-col:nth-child(odd) { border-left: 0; padding-left: 4px; }
+  .pep-header-col-h { font-size: clamp(11px, 3.3vw, 15px); letter-spacing: .06em; white-space: nowrap; }   /* PERFORMANCE stays on one line */
+  .pep-header-item { font-size: 15px; }
 }
-
-/* ---------- 600 to 899: the name steps aside; the P (as large as the room allows, at most 135 px) hangs in a deeper tab ---------- */
-@media (max-width: 899px) {
-  [data-module="header"] {
-    --pep-header-h: 64px;
-    --pep-header-cut: 22px;
-    --pep-hd-tab-d: 30px;
-    --pep-hd-tab-up: 20px;
-    --pep-hd-tab-cx: 3.9px;
-    --pep-hd-tab-r: 136px;
-    --pep-hd-clear: 150px;
-  }
-  .pep-header-brand { flex: 1 1 0; min-width: 0; container-type: inline-size; }
-  .pep-header-mark {
-    --pep-header-mark-w: min(135px, calc((100cqw + 18px) / .85));
-    width: var(--pep-header-mark-w);
-    margin: calc(var(--pep-header-mark-w) * -.1655) calc(100cqw - var(--pep-header-mark-w) + 12px) calc(var(--pep-header-mark-w) * -.414) -12px;
-  }
-}
-
-/* ---------- phones under 600: the P stands centred on the bar, inside it; no tab ---------- */
-@media (max-width: 599px) {
-  [data-module="header"] {
-    --pep-header-h: 66px;
-    --pep-header-cut: 18px;
-    --pep-hd-tab-d: 0px;
-    --pep-hd-tab-up: 0px;
-    --pep-hd-tab-cx: var(--pep-header-cut);
-    --pep-hd-tab-r: var(--pep-header-cut);
-    --pep-hd-clear: 104px;
-  }
-  .pep-header-row { gap: 8px; padding: 0 calc(var(--pep-header-cut) + 4px); }
-  .pep-header-mark {
-    --pep-header-mark-w: min(92px, calc((100cqw + 18px) / .85));
-    margin-top: calc(var(--pep-header-mark-w) * -.29);
-    margin-bottom: calc(var(--pep-header-mark-w) * -.29);
-  }
-  .pep-header-nav { gap: 8px; }
-  .pep-header-nav > .pep-header-kwrap .pep-header-key { height: 46px; padding: 0 12px; font-size: 15px; letter-spacing: .1em; }
-  .pep-header-count { min-width: 34px; height: 24px; padding: 0 10px; }
-}
-
-/* no 3D (no WebGL): the P cannot be drawn, so the name stands alone at every width */
-[data-module="header"][data-3d="off"] .pep-header-mark { display: none; }
-[data-module="header"][data-3d="off"] .pep-header-name { display: inline-block; font-size: clamp(18px, 2.8vw, 42px); letter-spacing: .16em; }
-
 @media (prefers-reduced-motion: reduce) {
-  .pep-header-3d-face { animation: none; }
-  .pep-header-key:hover, .pep-header-key:focus-visible { transform: none; }
-  .pep-header-key:hover .pep-header-label, .pep-header-key:focus-visible .pep-header-label { transform: none; transition: none; }
+  .pep-header-key:hover .pep-header-label, .pep-header-key:focus-visible .pep-header-label { transform: none; }
 }
 </style>
 <style data-pep-src="modules/06-bottle/bottle.css">
@@ -8621,6 +8459,54 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
   .pep-hooks-btn:hover, .pep-hooks-alt:hover, .pep-hooks-go:hover, .pep-hooks-tile:hover, .pep-hooks-add:hover, .pep-hooks-x:hover { transform: none; }
 }
 </style>
+<style data-pep-src="brand/brand-lock.css">
+/* BRAND LOCK (Tyson, Nov 14 2026). Loaded last, so it holds whatever a module says. Checked by tools/brand-audit.mjs.
+   ONE CARD: every card on the site is CLEAR: 0% fill and no blur, so the background shows through it untouched.
+   A card is drawn by its chrome edge and its lettering, never by a tint. Do not give any card its own fill again.
+   (Sheets that open OVER the page - the menu's drop-down, the phone menu, the cart, the guide, the policy pages, a
+   pop-up - are not cards: they keep smoked glass so their words stay readable over what is behind them.) */
+:root {
+  --pep-card-fill: transparent;
+  --pep-card-blur: none;
+}
+.pep-hero-card::before,
+[data-module="lineup"] .vc-pane,
+.pep-lineup-step,
+.pep-lineup-item-btn,
+.pep-story-skip,
+.pep-doors-glass,
+.pep-shelf-slat,
+.pep-shelf-pane,
+.pep-shelf-soon,
+.pep-shelf-plate,
+.pep-shelf-filter,
+.pep-footer-pane,
+.pep-hooks-glass,
+.pep-hooks-way,
+.pep-hooks-tile,
+.pep-hooks-card,
+.pep-footer-link,
+.pep-shelf-filter[aria-pressed="true"] {    /* a pressed filter is marked by its bright edge and underline, not a tint */
+  background: var(--pep-card-fill);
+  -webkit-backdrop-filter: var(--pep-card-blur);
+          backdrop-filter: var(--pep-card-blur);
+}
+[data-module="lineup"] .vc-pane::after,     /* the corner glare was a tint too: gone */
+.pep-doors-glass::after,
+.pep-hooks-glass::after { background: none; }
+/* ONE GROUND: matte black quilt, a watermark. No blue pool behind a section or inside a card. The ground lights only in
+   the small circle that follows the pointer. A card's own light is the thin line along its bottom edge, the same on every card. */
+[data-module="hero"]::before,
+.pep-doors-glow::before,
+[data-module="lineup"] .vc-glow,
+[data-module="lineup"] .vc-glow::before,
+[data-module="lineup"] .vc-glow::after { background: none; animation: none; }
+.pep-story-steps {                          /* its 3 px light on the left stays; the fill goes */
+  background: linear-gradient(var(--pep-plat-4), var(--pep-plat-4)) left top / 3px 100% no-repeat, var(--pep-card-fill);
+  -webkit-backdrop-filter: var(--pep-card-blur);
+          backdrop-filter: var(--pep-card-blur);
+}
+</style>
 <!-- HOOKS:END css -->
 </head>
 <body>
@@ -8657,20 +8543,19 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
 <header data-module="header">
   <div class="pep-header-row">
     <a class="pep-header-brand" href="#top" aria-label="PEPTICITY, back to the top">
-      <span class="pep-header-mark" aria-hidden="true"></span>
-      <span class="pep-header-name pep-header-3d" data-text="PEPTICITY" aria-hidden="true"><span class="pep-header-3d-face">PEPTICITY</span></span>
     </a>
     <span class="pep-header-div" aria-hidden="true"></span>
     <nav class="pep-header-nav" aria-label="Main">
       <span class="pep-header-kwrap pep-header-kwrap--menu"><button class="pep-header-key pep-header-menu" type="button" data-menu-key aria-expanded="false" aria-controls="pep-header-keys"><span class="pep-header-label">MENU</span></button></span>
       <ul class="pep-header-keys" id="pep-header-keys">
-        <li><span class="pep-header-kwrap"><a class="pep-header-key" href="#shelf" data-key="shop" data-to-shop><span class="pep-header-label">SHOP</span></a></span></li>
+        <li><span class="pep-header-kwrap pep-header-kwrap--shop"><a class="pep-header-key" href="#shelf" data-key="shop" data-to-shop><span class="pep-header-label">SHOP</span></a></span></li>
         <li class="pep-header-li--drop">
           <span class="pep-header-kwrap pep-header-kwrap--hero"><button class="pep-header-key pep-header-key--hero" type="button" data-key="peptides" aria-expanded="false" aria-controls="pep-header-drop"><span class="pep-header-label">PEPTIDES</span></button><i class="pep-header-glow" aria-hidden="true"></i></span>
           <div class="pep-header-drop" id="pep-header-drop" data-drop>
+            <div class="pep-header-drop-glow" aria-hidden="true"><i></i></div>
             <div class="pep-header-drop-in">
               <i class="pep-header-drop-rim" aria-hidden="true"></i>
-              <div class="pep-header-cols" data-cols data-head-peptide="PEPTIDES" data-head-blend="BLENDS" data-head-other="COMPOUNDS"></div>
+              <div class="pep-header-cols" data-cols data-groups='[{"head":"RECOVERY","skus":["bpc-157","tb-500","bpc-157-tb-500-blend","kpv"]},{"head":"PERFORMANCE","skus":["cjc-1295","ipamorelin","tesamorelin","igf-1-lr3"]},{"head":"LONGEVITY","skus":["epitalon","mots-c","ss-31","nad","thymosin-alpha-1"]},{"head":"SKIN","skus":["ghk-cu","bpc-157-tb-500-ghk-cu-blend","glutathione"]}]'></div>
               <p class="pep-header-drop-note" data-drop-fail role="status" hidden>The catalogue could not load. Please refresh.</p>
               <p class="pep-header-drop-note pep-header-drop-note--soon" data-gate-off="names">THE SHELF OPENS SOON.</p>
               <div class="pep-header-drop-foot">
@@ -8681,10 +8566,10 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
             </div>
           </div>
         </li>
-        <li><span class="pep-header-kwrap"><a class="pep-header-key" href="#doors" data-key="research"><span class="pep-header-label">RESEARCH</span></a></span></li>
-        <li><span class="pep-header-kwrap"><a class="pep-header-key" href="#story" data-key="about"><span class="pep-header-label">ABOUT</span></a></span></li>
+        <li><span class="pep-header-kwrap pep-header-kwrap--research"><a class="pep-header-key" href="#doors" data-key="research"><span class="pep-header-label">RESEARCH</span></a></span></li>
+        <li><span class="pep-header-kwrap pep-header-kwrap--about"><a class="pep-header-key" href="#story" data-key="about"><span class="pep-header-label">ABOUT</span></a></span></li>
       </ul>
-      <span class="pep-header-kwrap"><button class="pep-header-key" type="button" data-key="cart" data-cart-open aria-haspopup="dialog"><span class="pep-header-label">CART</span> <span class="pep-header-count" data-cart-count aria-label="items in cart">0</span></button></span>
+      <span class="pep-header-kwrap pep-header-kwrap--cart"><button class="pep-header-key" type="button" data-key="cart" data-cart-open aria-haspopup="dialog"><span class="pep-header-label">CART</span> <span class="pep-header-count" data-cart-count aria-label="items in cart">0</span></button></span>
     </nav>
   </div>
   <!-- one column of the drop-down -->
@@ -10778,8 +10663,12 @@ window.PEP_CONFIG = {
       // same one). It handles touch screens, reduced motion and hidden tabs itself. If it cannot load or there is no
       // WebGL, nothing is added. It starts once the 3D logo is on screen (or has given up), so its first frame never
       // competes with the logo's start.
+      // Tyson, Nov 14 2026: plain matte black quilt, a watermark (the surface at SURFACE). No blue in the holes and no
+      // breathing: variant 'none'. The holes light ONLY in a circle round the pointer, in the logo blue.
+      var SURFACE = 0.10;
+      var REACH = 75;                           // the circle of light round the pointer, px
       var started = false;
-      function mount() { if (window.PEPQuilt) { window.PEPQuilt.mount(root, { surface: 0.12, variant: 'A' }); } }
+      function mount() { if (window.PEPQuilt) { window.PEPQuilt.mount(root, { surface: SURFACE, variant: 'none', reach: REACH }); } }
       function start() {
         if (started) { return; }
         started = true;
@@ -11403,7 +11292,7 @@ window.PEP_CONFIG = {
       var mq = function (s) { return window.matchMedia ? window.matchMedia(s) : { matches: false }; };
 
       // ---- the P: the live 3D mark with its edge light (02-logo3d). If the 3D engine is off, the name stands alone.
-      var mark = q('.pep-header-mark');
+      var mark = q('.pep-header-mark');                 // menu 58 has no separate P: the wordmark is in the bar's picture
       function announce() { if (mark) { ctx.emit('logo3d:slot', { el: mark, kind: 'mark', phase: 2.1, hold: true, edge: true, interactive: true }); } }
       ctx.on('logo3d:ready', announce);
       announce();
@@ -11516,7 +11405,11 @@ window.PEP_CONFIG = {
       // ---- cart: the key asks the cart to open; the count arrives from the cart over the bus
       var cartKey = q('[data-cart-open]'), count = q('[data-cart-count]');
       if (cartKey) { cartKey.addEventListener('click', function () { closeAll(); ctx.emit('cart:open', { from: cartKey }); }); }
-      ctx.on('cart:changed', function (c) { if (count && c) { count.textContent = String(c.count || 0); } });
+      ctx.on('cart:changed', function (c) {
+        if (!count || !c) { return; }
+        count.textContent = String(c.count || 0);
+        if (c.count > 0) { cartKey.setAttribute('data-has', ''); } else { cartKey.removeAttribute('data-has'); }    // render 58's CART key is clean while the cart is empty
+      });
 
       // ---- the catalogue, names only, while names show
       var cols = q('[data-cols]'), colTpl = q('[data-tpl="col"]'), countEl = q('[data-count]'), failLine = q('[data-drop-fail]');
@@ -11540,19 +11433,15 @@ window.PEP_CONFIG = {
             return p && p.sku && p.name && (flags.PREVIEW || String(p.name).indexOf('[') < 0) && hidden.indexOf(String(p.sku)) < 0;
           });
           if (!list.length) { throw new Error('catalogue empty'); }
-          var by = function (a, b) { return String(a.name).localeCompare(String(b.name), 'en', { sensitivity: 'base' }); };
-          var fam = function (p) { return String(p.family || '').toUpperCase(); };
-          var peps = list.filter(function (p) { return fam(p) === 'PEPTIDE'; }).sort(by);
-          var blends = list.filter(function (p) { return fam(p) === 'BLEND'; }).sort(by);
-          var other = list.filter(function (p) { return fam(p) !== 'PEPTIDE' && fam(p) !== 'BLEND'; }).sort(by);
-          var half = Math.ceil(peps.length / 2), first = function (p) { return String(p.name).charAt(0).toUpperCase(); };
-          var span = function (g) { return g.length ? ' ' + first(g[0]) + '–' + first(g[g.length - 1]) : ''; };
-          var groups = [
-            { head: cols.getAttribute('data-head-peptide') + span(peps.slice(0, half)), items: peps.slice(0, half) },
-            { head: cols.getAttribute('data-head-peptide') + span(peps.slice(half)), items: peps.slice(half) },
-            { head: cols.getAttribute('data-head-blend'), items: blends },
-            { head: cols.getAttribute('data-head-other'), items: other }
-          ];
+          // render 58's four columns: the headings and which products stand under each are in header.html (data-groups)
+          var bySku = {};
+          list.forEach(function (p) { bySku[String(p.sku)] = p; });
+          var groups = [];
+          try { groups = JSON.parse(cols.getAttribute('data-groups') || '[]'); } catch (e) { groups = []; }
+          groups = groups.map(function (g) {
+            return { head: String(g.head || ''), items: (g.skus || []).map(function (k) { return bySku[k]; }).filter(Boolean) };
+          });
+          if (!groups.some(function (g) { return g.items.length; })) { throw new Error('catalogue groups empty'); }
           groups.forEach(function (g, i) {
             if (!g.items.length) { return; }
             var col = colTpl.content.firstElementChild.cloneNode(true), h = q('.pep-header-col-h', col), ul = q('ul', col);
