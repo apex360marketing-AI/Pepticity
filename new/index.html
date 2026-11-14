@@ -8508,6 +8508,43 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
 }
 </style>
 <!-- HOOKS:END css -->
+<style data-pep-src="modules/16-lineup/lineup-vials.css">
+/* THE WHOLE LINEUP as vials (owner, Nov 14 2026): the vial, its name under it, a small arrow. The description, sizes and
+   price show only once the arrow is opened. Nothing here sets a fill: the glass stays clear. */
+.pep-lineup-all-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 168px), 1fr)); gap: 18px 14px; }
+.pep-lineup-item-btn,
+.pep-lineup-item-btn:hover,
+.pep-lineup-item-btn:focus-visible { flex-direction: column; flex-wrap: nowrap; align-items: center; justify-content: flex-start; gap: 8px; min-height: 0; padding: 14px 10px 16px; text-align: center; }
+.pep-lineup-item-vial { display: block; width: 100%; height: clamp(150px, 17vw, 218px); }
+.pep-lineup-item-vial img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .55)) drop-shadow(0 0 12px rgba(42, 120, 255, .22)); transition: transform .45s var(--pep-ease), filter .45s ease; }
+.pep-lineup-item-btn:hover .pep-lineup-item-vial img,
+.pep-lineup-item-btn:focus-visible .pep-lineup-item-vial img { transform: scale(1.06); filter: drop-shadow(0 16px 20px rgba(0, 0, 0, .6)) drop-shadow(0 0 20px rgba(42, 120, 255, .5)); }
+.pep-lineup-item-top { display: block; flex: 0 0 auto; width: 100%; max-width: 100%; }
+[data-module="lineup"] .pep-lineup-item-no,
+.pep-lineup-item-meta { display: none; }
+.pep-lineup-item-name { display: block; font-size: 15px; line-height: 1.25; letter-spacing: .12em; text-align: center; overflow-wrap: anywhere; }
+/* the arrow: two short chrome strokes, lit in the logo blue; it turns over when its description is open */
+.pep-lineup-item-arrow { position: relative; flex: 0 0 auto; width: 44px; height: 22px; margin-top: 2px; }
+.pep-lineup-item-arrow::before { content: ""; position: absolute; left: 50%; top: 2px; width: 11px; height: 11px; border-right: 2px solid #cfe6ff; border-bottom: 2px solid #cfe6ff; transform: translateX(-50%) rotate(45deg); filter: drop-shadow(0 0 5px rgba(42, 120, 255, .9)); transition: transform .35s var(--pep-ease), top .35s var(--pep-ease); }
+.pep-lineup-item-btn:hover .pep-lineup-item-arrow::before,
+.pep-lineup-item-btn:focus-visible .pep-lineup-item-arrow::before { top: 5px; }
+.pep-lineup-item[data-open] .pep-lineup-item-arrow::before,
+.pep-lineup-item-btn[aria-expanded="true"] .pep-lineup-item-arrow::before { top: 8px; transform: translateX(-50%) rotate(225deg); }
+/* the HIDE BEFORE LAUNCH band sits across the foot of the vial, level, never over the name */
+.pep-lineup-item-btn .pep-lineup-wm--item { position: absolute; left: 0; right: 0; top: clamp(118px, 13vw, 170px); bottom: auto; flex: none; height: 22px; margin: 0; }
+.pep-lineup-item-btn .pep-lineup-wm--item .pep-lineup-wm-t { font-size: 9px; letter-spacing: .1em; white-space: nowrap; }
+@media (min-width: 600px) { .pep-lineup-item-btn { padding-bottom: 16px; } }
+@media (max-width: 599px) {
+  .pep-lineup-all-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; }
+  .pep-lineup-item-vial { height: 150px; }
+  .pep-lineup-item-btn .pep-lineup-wm--item { top: 118px; }
+  .pep-lineup-item-name { font-size: 13.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-lineup-item-vial img, .pep-lineup-item-arrow::before { transition: none; }
+  .pep-lineup-item-btn:hover .pep-lineup-item-vial img, .pep-lineup-item-btn:focus-visible .pep-lineup-item-vial img { transform: none; }
+}
+</style>
 </head>
 <body>
 <!-- module:01-ground -->
@@ -9251,7 +9288,7 @@ a.pep-footer-link { display: flex; align-items: center; text-decoration: none; }
   <template data-tpl="item">
     <li class="pep-lineup-item">
       <button class="pep-lineup-item-btn" type="button" data-item aria-expanded="false">
-        <span class="pep-lineup-item-top"><span class="pep-lineup-item-no vc-no pep-lineup-t" data-i-no></span><span class="pep-lineup-item-name" data-i-name></span></span>
+        <span class="pep-lineup-item-vial"><img data-i-img alt="" width="592" height="1120" loading="lazy" decoding="async"></span><span class="pep-lineup-item-top"><span class="pep-lineup-item-no vc-no pep-lineup-t" data-i-no></span><span class="pep-lineup-item-name" data-i-name></span></span><span class="pep-lineup-item-arrow" aria-hidden="true"></span>
         <span class="pep-lineup-item-meta">
           <span class="pep-lineup-item-size" data-i-size hidden></span>
           <span class="pep-lineup-item-size" data-i-sizes hidden><span class="pep-lineup-item-count pep-lineup-t" data-i-count></span> SIZES</span>
@@ -12588,6 +12625,13 @@ window.PEP_CONFIG = {
           li.setAttribute('data-sku', w.sku);
           put(q('[data-i-no]', li), pad2(w.i + 1));
           if (nm) { nm.textContent = w.title; }
+          var vimg = q('[data-i-img]', li);
+          if (vimg) {
+            var own = 'assets/vials/' + encodeURIComponent(w.sku) + '.webp';
+            vimg.alt = w.title + ' vial';
+            vimg.addEventListener('error', function () { if (vimg.getAttribute('src') !== own) { vimg.src = own; } });
+            vimg.src = picture(w) || own;
+          }
           itemMeta(w, li);
           if (w.flag) { li.setAttribute('data-flagged', ''); qa('[data-wm]', li).forEach(function (el) { el.hidden = false; }); }
           btn.id = 'pep-lineup-item-' + w.i;
