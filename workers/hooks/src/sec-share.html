@@ -1,0 +1,72 @@
+<!-- 45-hooks / 04 SHARE PEPTICITY (hook H66). HOOKS worker, Nov 13 2026. After THE LINEUP, before the doors. The reward words read
+     from the referral switch (data-gate="referral": preview, or once COUNSEL_CLEARED.referral); the words and the numbers come
+     from PEP_CONFIG.hooks.referral, never from this file. While the switch is closed the same slot shows the safe wording.
+     ONE field (email) and its own unticked box, then the visitor's share link: ?ref= and a random code only, never an
+     email or a name. The link shows only after this form was sent with that code; once it really went to the list the code
+     is kept (the code alone) so a member has ONE link. CASL: nobody types a friend's address here; the friend joins themselves.
+     The three ways sit UNDER the pane with a clear screen below them, so the doors' forms never share a screen with it. -->
+<section data-module="hooks" data-hooks="share" class="pep-hooks-room" id="share" aria-labelledby="pep-hooks-share-title">
+  <div class="pep-hooks-frame" data-hooks-ask>
+    <span class="pep-hooks-glow" aria-hidden="true"></span>
+    <div class="pep-hooks-glass">
+      <span class="pep-hooks-bevel" aria-hidden="true"></span>
+      <span class="pep-hooks-sweep" aria-hidden="true"></span>
+      <span class="pep-hooks-sill" aria-hidden="true"></span>
+      <div class="pep-hooks-in">
+        <div class="pep-hooks-copy">
+          <p class="pep-hooks-eyebrow">SHARE</p>
+          <h2 class="pep-chrome-head pep-hooks-head" id="pep-hooks-share-title" data-text="SHARE PEPTICITY"><span class="pep-hooks-face">SHARE PEPTICITY</span></h2>
+          <!-- the reward words and numbers are NOT in this file: hooks.js writes them from PEP_CONFIG.hooks.referral, and only
+               while the referral switch is open -->
+          <div data-gate="referral" data-reward hidden>
+            <p class="pep-hooks-reward" data-reward-head></p>
+            <p class="pep-hooks-lede" data-reward-line></p>
+          </div>
+          <p class="pep-hooks-lede" data-gate-off="referral" data-reward-off>Send your link to a friend. They choose to join the FOUNDER CIRCLE themselves.</p>
+          <p class="pep-hooks-lede">PEPTICITY never emails anyone you share with.</p>
+        </div>
+
+        <form class="pep-hooks-form" method="post" action="" data-hook="H66" data-ghl-form="share-link" data-effect="frm-103" novalidate>
+          <div class="pep-hooks-step" data-step="email">
+            <p class="pep-hooks-prompt">WHERE SHOULD WE SEND YOUR LINK?</p>
+            <div class="pep-hooks-field">
+              <label class="pep-hooks-label" for="pep-hooks-share-email">EMAIL</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-share-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-share-email-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-share-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-share-consent-err"></span>
+              <span class="pep-hooks-consent-text" data-consent-text>Yes, PEPTICITY may email me my share link and PEPTICITY news. I can unsubscribe any time.</span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-share-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can email your link.</p>
+            <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word">GET MY SHARE LINK</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+            <p class="pep-hooks-fine">For adults. Your details never go to ad platforms.</p>
+          </div>
+
+          <div class="pep-hooks-step" data-step="link" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOUR SHARE LINK"><span class="pep-hooks-face">YOUR SHARE LINK</span></p>
+            <p class="pep-hooks-next" data-joined-line>You're in the FOUNDER CIRCLE. Send this link to a friend.</p>
+            <div class="pep-hooks-linkrow">
+              <label class="pep-hooks-label" for="pep-hooks-share-link">YOUR LINK</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-share-link" type="text" readonly spellcheck="false" autocomplete="off" data-link></span>
+            </div>
+            <div class="pep-hooks-row">
+              <button class="pep-hooks-btn" type="button" data-copy><span class="pep-hooks-btn-word"><span data-copy-idle>COPY MY LINK</span><span data-copy-done hidden>LINK COPIED</span></span></button>
+              <button class="pep-hooks-alt" type="button" data-share hidden><span>SHARE FROM MY PHONE</span></button>
+            </div>
+            <p class="pep-hooks-hint" role="status" aria-live="polite" data-copy-live></p>
+          </div>
+          <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW SHARING WORKS: information, not an ask -->
+  <ol class="pep-hooks-ways" role="list" aria-label="How sharing works">
+    <li class="pep-hooks-way"><span class="pep-hooks-num" aria-hidden="true">01</span><p class="pep-hooks-way-head">GET YOUR LINK</p><p class="pep-hooks-way-line">One field: your email.</p></li>
+    <li class="pep-hooks-way"><span class="pep-hooks-num" aria-hidden="true">02</span><p class="pep-hooks-way-head">SEND IT TO A FRIEND</p><p class="pep-hooks-way-line">Copy it, or share it from your phone.</p></li>
+    <li class="pep-hooks-way"><span class="pep-hooks-num" aria-hidden="true">03</span><p class="pep-hooks-way-head">THEY JOIN THEMSELVES</p><p class="pep-hooks-way-line">We never email anyone you share with.</p></li>
+  </ol>
+</section>

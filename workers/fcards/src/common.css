@@ -1,0 +1,192 @@
+/* FCX: one founder card. Every selector starts with .FCX (scoped). Colours: platinum ramp, the one logo blue, pale chrome gold as a small accent. */
+.FCX {
+  --fc-blue: #2a78ff; --fc-blue-rgb: 42, 120, 255; --fc-hot: #cfe6ff;
+  --fc-k0: #0b0b0c; --fc-p1: #2a2d31; --fc-p2: #6b7077; --fc-p3: #b9bec5; --fc-p4: #e6e9ed; --fc-p5: #ffffff;
+  --fc-chrome: linear-gradient(180deg, #ffffff 0%, #e6e9ed 20%, #b9bec5 38%, #6b7077 47%, #2a78ff 50.5%, #cfe6ff 54%, #e6e9ed 62%, #b9bec5 82%, #e6e9ed 100%);
+  --fc-gold: linear-gradient(180deg, #fef9e8 0%, #f0e6c7 28%, #a4845d 47%, #68513d 52%, #f0e6c7 63%, #a4845d 100%);
+  --fc-frost: linear-gradient(180deg, #ffffff 0%, #e6e9ed 26%, #cfe6ff 48%, #b9bec5 56%, #e6e9ed 78%, #cfe6ff 100%);
+  --fc-sheen: linear-gradient(100deg, rgba(207, 230, 255, 0) 43%, rgba(255, 255, 255, .96) 50%, rgba(207, 230, 255, 0) 57%);
+  --fc-display: "PepticityBlack", "Bahnschrift", "Segoe UI", system-ui, sans-serif;
+  --fc-ui: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fc-ease: cubic-bezier(.16, 1, .3, 1);
+  --fc-rx0: 0deg; --fc-ry0: 0deg; --fc-rx: 0deg; --fc-ry: 0deg; --fc-lift: 0px; --fc-mx: 30%; --fc-my: 20%;
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+  perspective: 1500px;
+  font-family: var(--fc-ui);
+  color: var(--fc-p3);
+  line-height: 1.45;
+  text-align: left;
+}
+.FCX *, .FCX *::before, .FCX *::after { box-sizing: border-box; }
+.FCX [hidden] { display: none !important; }
+
+/* THE SEAT: the whole card sits in real depth and turns a few degrees with the pointer */
+.FCX-seat {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: translateZ(var(--fc-lift)) rotateX(calc(var(--fc-rx0) + var(--fc-rx))) rotateY(calc(var(--fc-ry0) + var(--fc-ry)));
+  transition: transform .6s var(--fc-ease);
+}
+.FCX:hover .FCX-seat, .FCX:focus-within .FCX-seat { --fc-lift: 30px; }
+.FCX-floor, .FCX-under { position: absolute; pointer-events: none; }
+.FCX-floor {
+  left: 4%; right: 4%; bottom: -46px; height: 76px;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .82), rgba(0, 0, 0, .4) 55%, rgba(0, 0, 0, 0));
+  transform: translateZ(-80px);
+}
+.FCX-under {
+  left: 16%; right: 16%; bottom: -30px; height: 52px;
+  background: radial-gradient(closest-side, rgba(var(--fc-blue-rgb), .6), rgba(var(--fc-blue-rgb), .18) 55%, rgba(var(--fc-blue-rgb), 0));
+  opacity: .55;
+  transform: translateZ(-46px);
+  transition: opacity .6s var(--fc-ease), transform .6s var(--fc-ease);
+}
+.FCX:hover .FCX-under, .FCX:focus-within .FCX-under { opacity: 1; transform: translateZ(-46px) scale(1.18, 1.35); }
+
+/* THE GLASS: clear. Fill at most 10 percent, a light blur so the ground stays readable through it, lifted and sharpened. */
+.FCX-glass {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-color: rgba(207, 230, 255, .045);
+  -webkit-backdrop-filter: blur(2px) saturate(1.35) brightness(1.5);
+          backdrop-filter: blur(2px) saturate(1.35) brightness(1.5);
+  border: 1px solid rgba(230, 233, 237, .1);
+  transition: background-color .6s var(--fc-ease);
+}
+.FCX:hover .FCX-glass, .FCX:focus-within .FCX-glass { background-color: rgba(var(--fc-blue-rgb), .07); }
+/* the P in the back of the card, about 3 percent */
+.FCX-mark {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 86%;
+  aspect-ratio: 548 / 438;
+  background: url("assets/lineup/p-turn.webp") 0 0 / 600% 500% no-repeat;
+  opacity: .035;
+  transform: translate(-50%, -50%);
+}
+/* the wet highlight, top left, and the light that follows the pointer */
+.FCX-wet {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(128deg, rgba(255, 255, 255, .2) 0%, rgba(255, 255, 255, .06) 9%, rgba(255, 255, 255, 0) 19%),
+    linear-gradient(114deg, rgba(255, 255, 255, 0) 27%, rgba(255, 255, 255, .075) 27.2%, rgba(255, 255, 255, .075) 28.6%, rgba(255, 255, 255, 0) 28.8%, rgba(255, 255, 255, 0) 30.6%, rgba(255, 255, 255, .04) 30.8%, rgba(255, 255, 255, .04) 36.4%, rgba(255, 255, 255, 0) 36.6%, rgba(255, 255, 255, 0) 71%, rgba(207, 230, 255, .05) 71.2%, rgba(207, 230, 255, .05) 73%, rgba(255, 255, 255, 0) 73.2%);
+}
+.FCX-spec {
+  position: absolute; inset: 0;
+  background: radial-gradient(260px circle at var(--fc-mx) var(--fc-my), rgba(207, 230, 255, .13), rgba(var(--fc-blue-rgb), .05) 45%, rgba(var(--fc-blue-rgb), 0) 72%);
+  opacity: 0;
+  transition: opacity .5s var(--fc-ease);
+}
+.FCX:hover .FCX-spec { opacity: 1; }
+/* the rim light (drawn by the runtime along the cut shape) */
+.FCX .fc-rim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.FCX .fc-rim-band { fill: none; stroke: rgba(230, 233, 237, .085); stroke-width: 16; stroke-linejoin: miter; }
+.FCX .fc-rim-line { fill: none; stroke-width: 3; stroke-linejoin: miter; opacity: .78; transition: opacity .5s var(--fc-ease); }
+.FCX:hover .FCX-glass .fc-rim-line, .FCX:focus-within .FCX-glass .fc-rim-line { opacity: 1; }
+.FCX .fc-rs1 { stop-color: #ffffff; stop-opacity: .95; }
+.FCX .fc-rs2 { stop-color: #2a78ff; stop-opacity: .5; }
+.FCX .fc-rs3 { stop-color: #b9bec5; stop-opacity: .1; }
+.FCX .fc-rs4 { stop-color: #2a78ff; stop-opacity: .55; }
+.FCX .fc-rs5 { stop-color: #cfe6ff; stop-opacity: .95; }
+
+/* THE CONTENT floats above the glass */
+.FCX-body { position: relative; margin: 0; transform-style: preserve-3d; transform: translateZ(22px); }
+.FCX-kicker { margin: 0 0 14px; font-family: var(--fc-display); font-size: clamp(12.5px, 2.2cqi, 15px); letter-spacing: .34em; line-height: 1.2; text-transform: uppercase; }
+.FCX-kicker-face { background-image: var(--fc-gold); -webkit-background-clip: text; background-clip: text; color: #f0e6c7; -webkit-text-fill-color: transparent; }
+
+/* the heading: house 3D chrome. It never moves; a slow sheen glides across its face */
+.FCX-ask { margin: 0; font-family: var(--fc-display); font-weight: 400; font-size: clamp(26px, 7.6cqi, 54px); line-height: 1.08; letter-spacing: .03em; text-transform: uppercase; }
+.FCX-line { position: relative; display: block; width: fit-content; isolation: isolate; color: var(--fc-p3); }
+.FCX-line::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute; left: 0; top: 0; z-index: -1; white-space: nowrap; pointer-events: none;
+  color: var(--fc-k0); -webkit-text-fill-color: currentColor;
+  text-shadow: .02em .024em 0 #2a2d31, .04em .048em 0 #6b7077, .06em .072em 0 #1c1e21, .08em .096em 0 #0b0b0c, .1em .15em .16em rgba(0, 0, 0, .85), 0 .1em .7em rgba(var(--fc-blue-rgb), .4);
+}
+.FCX-face {
+  display: inline-block; white-space: nowrap;
+  background-image: var(--fc-sheen), var(--fc-chrome);
+  background-size: 300% 100%, 100% 100%;
+  background-repeat: no-repeat, no-repeat;
+  background-position: 92% 0, 0 0;
+  -webkit-background-clip: text; background-clip: text;
+  color: #e6e9ed; -webkit-text-fill-color: transparent;
+  animation: FCX-shine 7s ease-in-out infinite;
+}
+@keyframes FCX-shine { 0%, 38% { background-position: 92% 0, 0 0; } 78%, 100% { background-position: 18% 0, 0 0; } }
+
+.FCX-offer { text-wrap: balance; margin: 14px 0 0; font-family: var(--fc-display); font-size: clamp(14.5px, 3cqi, 20px); line-height: 1.5; letter-spacing: .1em; text-transform: uppercase; background-image: var(--fc-chrome); -webkit-background-clip: text; background-clip: text; color: #e6e9ed; -webkit-text-fill-color: transparent; }
+.FCX-fig { font-weight: 400; font-size: 1.28em; letter-spacing: .04em; background-image: var(--fc-frost); -webkit-background-clip: text; background-clip: text; color: #cfe6ff; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 9px rgba(var(--fc-blue-rgb), .75)); }
+
+/* THE LENS LIGHT: the light through the logo's P. Thickest and brightest in the middle, gone well before the card's edges */
+.FCX-light { position: relative; display: block; width: 62%; height: 26px; margin: 12px auto 8px; pointer-events: none; }
+.FCX-light::before, .FCX-light::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; }
+.FCX-light::before { height: 22px; margin-top: -11px; background: radial-gradient(closest-side, rgba(var(--fc-blue-rgb), .5), rgba(var(--fc-blue-rgb), .14) 52%, rgba(var(--fc-blue-rgb), 0) 100%); transition: opacity .5s var(--fc-ease); opacity: .8; }
+.FCX-light::after { height: 7px; margin-top: -3.5px; background: radial-gradient(closest-side, #ffffff 0%, #cfe6ff 16%, rgba(var(--fc-blue-rgb), .95) 36%, rgba(var(--fc-blue-rgb), .35) 68%, rgba(var(--fc-blue-rgb), 0) 100%); }
+.FCX:hover .FCX-light::before, .FCX:focus-within .FCX-light::before { opacity: 1; }
+
+/* the field */
+.FCX-label { display: block; margin: 0 0 8px; font-family: var(--fc-display); font-size: 13px; letter-spacing: .32em; line-height: 1.2; text-transform: uppercase; }
+.FCX-label-face { background-image: var(--fc-chrome); -webkit-background-clip: text; background-clip: text; color: #b9bec5; -webkit-text-fill-color: transparent; }
+.FCX-well { position: relative; display: block; height: 56px; background-color: rgba(11, 11, 12, .3); box-shadow: inset 0 10px 18px -10px rgba(0, 0, 0, .7); transition: background-color .3s, box-shadow .3s; }
+.FCX-well:hover { background-color: rgba(var(--fc-blue-rgb), .08); }
+.FCX-well:focus-within { background-color: rgba(var(--fc-blue-rgb), .1); box-shadow: inset 0 10px 18px -10px rgba(0, 0, 0, .7), inset 0 -3px 0 var(--fc-blue); }
+.FCX-well .fc-rim-line { stroke-width: 2.4; opacity: .7; }
+.FCX-well .fc-rim-band { stroke-width: 0; }
+.FCX-well:focus-within .fc-rim-line { opacity: 1; }
+.FCX-input { display: block; width: 100%; height: 100%; margin: 0; padding: 0 20px; border: 0; outline: 0; background: transparent; font: 500 17px/1.2 var(--fc-ui); letter-spacing: .02em; color: #e6e9ed; caret-color: var(--fc-blue); -webkit-appearance: none; appearance: none; }
+.FCX-input:-webkit-autofill { -webkit-text-fill-color: #e6e9ed; transition: background-color 9999s; }
+.FCX-err { margin: 8px 0 0; font-size: 14px; color: #cfe6ff; }
+.FCX-done { margin: 12px 0 0; font-family: var(--fc-display); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; background-image: var(--fc-frost); -webkit-background-clip: text; background-clip: text; color: #cfe6ff; -webkit-text-fill-color: transparent; }
+
+/* THE KEY: comes off the screen toward you, light blooms below it */
+.FCX-key { position: relative; display: block; margin: 14px 0 0; transform-style: preserve-3d; }
+.FCX-btn {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 60px; margin: 0; padding: 0 26px; border: 0; cursor: pointer;
+  font-family: var(--fc-display); font-size: clamp(14px, 2.9cqi, 17px); letter-spacing: .15em; line-height: 1.15; text-transform: uppercase; text-align: center;
+  -webkit-appearance: none; appearance: none; -webkit-tap-highlight-color: transparent;
+  transform: translateZ(0);
+  transition: transform .45s var(--fc-ease), filter .45s var(--fc-ease), background-color .45s var(--fc-ease);
+}
+.FCX-btn-label { position: relative; display: inline-block; transition: transform .45s var(--fc-ease); }
+.FCX-btn:hover, .FCX-btn:focus-visible { transform: translateZ(34px) translateY(-4px) scale(1.055); }
+.FCX-btn:hover .FCX-btn-label, .FCX-btn:focus-visible .FCX-btn-label { transform: scale(1.05); }
+.FCX-btn:active { transform: translateZ(4px) translateY(1px) scale(.992); transition-duration: .12s; }
+.FCX-btn:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--fc-blue); }
+.FCX-bloom {
+  position: absolute; left: 6%; right: 6%; top: calc(100% - 17px); height: 52px; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(207, 230, 255, .95) 0%, rgba(var(--fc-blue-rgb), .85) 22%, rgba(var(--fc-blue-rgb), .28) 58%, rgba(var(--fc-blue-rgb), 0) 100%);
+  opacity: .3;
+  transform: translateZ(-2px) scale(.72, .6);
+  transition: opacity .45s var(--fc-ease), transform .45s var(--fc-ease);
+}
+.FCX-btn:hover + .FCX-bloom, .FCX-btn:focus-visible + .FCX-bloom { opacity: 1; transform: translateZ(-2px) translateY(7px) scale(1.12, 1.5); }
+.FCX-btn:active + .FCX-bloom { opacity: .7; transform: translateZ(-2px) scale(.9, .9); }
+.FCX-btn[data-fc-state="done"] { cursor: default; }
+
+/* consent: a separate, unticked choice */
+.FCX-consent { display: flex; align-items: flex-start; gap: 12px; min-height: 44px; margin: 16px 0 0; cursor: pointer; font-size: 15px; line-height: 1.45; color: #cdd1d7; }
+.FCX-tick { position: relative; flex: 0 0 auto; width: 30px; height: 30px; margin-top: 1px; }
+.FCX-check { position: absolute; left: -7px; top: -7px; width: 44px; height: 44px; margin: 0; opacity: 0; cursor: pointer; }
+.FCX-tick-box { position: absolute; inset: 0; background-color: rgba(11, 11, 12, .35); clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px); box-shadow: inset 0 0 0 1.5px rgba(185, 190, 197, .7); transition: transform .3s var(--fc-ease), box-shadow .3s; }
+.FCX-tick-box::before { content: ""; position: absolute; left: 0; top: 0; width: 13.5px; height: 1.5px; background: rgba(185, 190, 197, .7); transform-origin: 0 0; transform: translate(0, 9px) rotate(-45deg); }
+.FCX-tick-box::after { content: ""; position: absolute; inset: 6px; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); background: radial-gradient(circle at 40% 35%, #ffffff 0%, #cfe6ff 18%, #2a78ff 62%, #2a78ff 100%); opacity: 0; transform: scale(.4); transition: opacity .25s, transform .3s var(--fc-ease); }
+.FCX-check:checked + .FCX-tick-box { box-shadow: inset 0 0 0 1.5px var(--fc-blue), inset 0 0 12px rgba(var(--fc-blue-rgb), .6); }
+.FCX-check:checked + .FCX-tick-box::after { opacity: 1; transform: scale(1); }
+.FCX-consent:hover .FCX-tick-box { transform: scale(1.1); box-shadow: inset 0 0 0 1.5px #cfe6ff, inset 0 0 10px rgba(var(--fc-blue-rgb), .5); }
+.FCX-check:focus-visible + .FCX-tick-box { box-shadow: inset 0 0 0 1.5px #cfe6ff, inset 0 -4px 0 var(--fc-blue); }
+.FCX-fine { margin: 10px 0 0; font-size: 14px; line-height: 1.45; color: #b9bec5; }
+
+@container (max-width: 479px) { .FCX-btn { padding: 0 14px; letter-spacing: .08em; white-space: nowrap; } }
+@media (prefers-reduced-motion: reduce) {
+  .FCX-face { animation: none; }
+  .FCX-seat, .FCX-btn, .FCX-btn-label, .FCX-bloom, .FCX-under, .FCX-tick-box { transition: none; }
+  .FCX:hover .FCX-seat, .FCX:focus-within .FCX-seat { --fc-lift: 0px; }
+  .FCX-btn:hover, .FCX-btn:focus-visible, .FCX-btn:active, .FCX-btn:hover .FCX-btn-label, .FCX-btn:focus-visible .FCX-btn-label { transform: none; }
+  .FCX-btn:hover + .FCX-bloom, .FCX-btn:focus-visible + .FCX-bloom { transform: translateZ(-2px) scale(.72, .6); }
+  .FCX-consent:hover .FCX-tick-box { transform: none; }
+}

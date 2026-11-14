@@ -1,0 +1,91 @@
+<!-- module:45-hooks -->
+<!-- 45-hooks: THE OVERLAYS (HOOKS worker, Nov 13 2026). A direct child of body, so the cart's inert mark covers it too.
+     EXIT (hook H67): ONE quiet slide-in when a visitor leaves (desktop: the pointer leaves through the top edge, armed after
+     PEP_CONFIG.hooks.exit.armAfterMs; phones: a fast flick back up after half the page). Once per session, at most
+     PEP_CONFIG.hooks.exit.maxEver times ever, never to a member, never over another ask, the scroll story, the showcase, the
+     cart or the guide. Its reason is GRACE'S LETTER.
+     PHONE BAR (hook H68): phones only. The main ask, JOIN THE FOUNDER CIRCLE, in a slim bar left of the guide's beacon. It hides
+     while any other ask, the scroll story, the showcase, the cart, the guide, the exit slide-in or the keyboard is on screen,
+     and for members. Tapping JOIN opens it into one field and its own unticked box.
+     Both use the lead engine's own sending (PEP_CONFIG.form.endpoint; empty = nothing is sent) and keep nothing personal. -->
+<div data-module="hooks" data-hooks="overlays" class="pep-hooks-overlays">
+
+  <aside class="pep-hooks-pop" role="dialog" aria-modal="false" aria-labelledby="pep-hooks-exit-title" data-hooks-exit data-hooks-pop>
+    <div class="pep-hooks-glass">
+      <span class="pep-hooks-bevel" aria-hidden="true"></span>
+      <span class="pep-hooks-sill" aria-hidden="true"></span>
+      <button class="pep-hooks-x" type="button" data-hooks-exit-close aria-label="Close GRACE'S LETTER"></button>
+      <div class="pep-hooks-in">
+        <p class="pep-hooks-eyebrow">BEFORE YOU GO</p>
+        <h2 class="pep-chrome-head pep-hooks-head" id="pep-hooks-exit-title" data-text="GRACE'S LETTER"><span class="pep-hooks-face">GRACE'S LETTER</span></h2>
+        <form class="pep-hooks-form" method="post" action="" data-hook="H67" data-ghl-form="graces-letter" data-effect="frm-103" novalidate>
+          <div class="pep-hooks-step" data-step="email">
+            <p class="pep-hooks-lede">Once a month, Grace writes to the FOUNDER CIRCLE: what is new on the shelf and what is coming next.</p>
+            <div class="pep-hooks-field pep-hooks-field--gap">
+              <label class="pep-hooks-label" for="pep-hooks-exit-email">EMAIL</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-exit-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-exit-email-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-exit-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-exit-consent-err"></span>
+              <span class="pep-hooks-consent-text" data-consent-text>Yes, PEPTICITY may email me GRACE'S LETTER each month and PEPTICITY news. I can unsubscribe any time.</span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-exit-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can send the letter.</p>
+            <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word">SEND ME THE LETTER</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+          </div>
+          <div class="pep-hooks-step" data-step="done" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'RE IN THE FOUNDER CIRCLE."><span class="pep-hooks-face">YOU'RE IN THE FOUNDER CIRCLE.</span></p>
+            <p class="pep-hooks-next">The next letter comes to your inbox.</p>
+            <div class="pep-hooks-row"><button class="pep-hooks-alt" type="button" data-hooks-exit-close><span>CLOSE</span></button></div>
+          </div>
+          <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <div class="pep-hooks-bar" role="region" aria-label="JOIN THE FOUNDER CIRCLE" data-hooks-bar>
+    <div class="pep-hooks-glass">
+      <span class="pep-hooks-bevel" aria-hidden="true"></span>
+      <span class="pep-hooks-sill" aria-hidden="true"></span>
+      <div class="pep-hooks-bar-row" data-hooks-bar-row>
+        <p class="pep-hooks-bar-text">
+          <span class="pep-hooks-bar-name">FOUNDER CIRCLE</span>
+          <span class="pep-hooks-bar-line" data-gate="restock" hidden>First access to every new lot.</span>
+          <span class="pep-hooks-bar-line" data-gate-off="restock">Your founder card, and store news first.</span>
+        </p>
+        <button class="pep-hooks-btn" type="button" data-hooks-bar-open aria-expanded="false" aria-controls="pep-hooks-bar-sheet"><span class="pep-hooks-btn-word">JOIN</span></button>
+      </div>
+      <div class="pep-hooks-sheet" id="pep-hooks-bar-sheet" data-hooks-bar-sheet hidden>
+        <button class="pep-hooks-x" type="button" data-hooks-bar-close aria-label="Close"></button>
+        <p class="pep-hooks-eyebrow">FOUNDER CIRCLE</p>
+        <h2 class="pep-chrome-head pep-hooks-head" tabindex="-1" data-hooks-bar-head data-text="JOIN THE FOUNDER CIRCLE"><span class="pep-hooks-face">JOIN THE FOUNDER CIRCLE</span></h2>
+        <form class="pep-hooks-form" method="post" action="" data-hook="H68" data-ghl-form="team-join" data-effect="frm-103" novalidate>
+          <div class="pep-hooks-step" data-step="email">
+            <p class="pep-hooks-lede" data-gate="restock" hidden>First access to every new lot, and your founder card.</p>
+            <p class="pep-hooks-lede" data-gate-off="restock">Your founder card, and store news first.</p>
+            <div class="pep-hooks-field pep-hooks-field--gap">
+              <label class="pep-hooks-label" for="pep-hooks-bar-email">EMAIL</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-bar-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-bar-email-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-bar-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-bar-consent-err"></span>
+              <span class="pep-hooks-consent-text" data-consent-text>Yes, PEPTICITY may email me my welcome and PEPTICITY news. I can unsubscribe any time.</span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-bar-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can email your welcome.</p>
+            <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word">JOIN THE FOUNDER CIRCLE</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+          </div>
+          <div class="pep-hooks-step" data-step="done" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'RE IN THE FOUNDER CIRCLE."><span class="pep-hooks-face">YOU'RE IN THE FOUNDER CIRCLE.</span></p>
+            <p class="pep-hooks-next">Your welcome is on its way.</p>
+            <div class="pep-hooks-row"><button class="pep-hooks-alt" type="button" data-hooks-bar-close><span>CLOSE</span></button></div>
+          </div>
+          <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

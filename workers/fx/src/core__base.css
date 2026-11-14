@@ -1,0 +1,28 @@
+<style data-pep-src="core/base.css">
+/* The ONLY unscoped CSS in the build. Reset and ground, nothing visual. Keep it tiny.
+   Anything a section needs goes in that section's own css. */
+/* The owner's type draws the letter B like the figure 3, which makes product codes misread. Until he rules on it,
+   B (U+0042) is left out of the range so that one letter falls to the next font in the stack. */
+@font-face { font-family: "PepticityBlack"; src: url("assets/fonts/PepticityBlack.woff2") format("woff2"); font-display: swap; unicode-range: U+0020-0041, U+0043-007E; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--pep-black-0);
+  color: var(--pep-plat-4);
+  font-family: var(--pep-font-ui);
+  line-height: 1.5;
+}
+img, svg, video, canvas { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; border-radius: var(--pep-radius); }
+:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }   /* NOV12-FINAL: a bar of the logo's light at the foot, never a box round a cut shape */
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>

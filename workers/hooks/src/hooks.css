@@ -1,0 +1,1015 @@
+/* 45-hooks. Every selector starts with [data-module="hooks"] or .pep-hooks-
+   THE HOOKS (HOOKS worker, Nov 13 2026): four asks placed as you go down the page (after THE CREST, after THE STANDARD,
+   after FROM VIAL TO SHELF, after THE LINEUP), one quiet exit slide-in and one slim bar on phones. Each gives a real
+   reason, asks for ONE field and joins the visitor to the FOUNDER CIRCLE.
+   THE GLASS is the house glass of 22-doors, value for value (the same fill, blur(4px) saturate(160%), the chrome hairline
+   round a cut shape, the wet light across the top corner). SEE-THROUGH RULE: nothing above a pane carries clip-path,
+   filter, mask or an opacity below 1, so the reveal moves the frame with transform only and fades the pane itself.
+   THE ONE BLUE: the logo's light, var(--pep-light) #2a78ff, its hot core var(--pep-beam) #cfe6ff. Light only.
+   THE ONE GOLD: the FOUNDER badge on the card, the house chrome-gold ramp, nowhere else.
+   HEADINGS: the store's 3D chrome (black chrome sides from data-text, a platinum face with the blue light through its
+   waist) and a slow sheen that glides across the face. They never move. No flat white anywhere. */
+[data-module="hooks"] {
+  --pep-hooks-blue: var(--pep-light, #2a78ff);
+  --pep-hooks-rgb: var(--pep-light-rgb, 42, 120, 255);
+  --pep-hooks-ice: var(--pep-beam, #cfe6ff);
+  --pep-hooks-cut: clamp(34px, 4.4vw, 72px);
+  --pep-hooks-nick: clamp(12px, 1.2vw, 18px);
+  --pep-hooks-pad-x: clamp(16px, 4vw, 64px);
+  --pep-hooks-heavy: 700;
+  --pep-hooks-chrome: linear-gradient(180deg,
+    var(--pep-plat-4) 0%,
+    var(--pep-plat-3) 28%,
+    var(--pep-plat-2) 45%,
+    color-mix(in srgb, var(--pep-hooks-blue) 62%, var(--pep-plat-1)) 51%,
+    var(--pep-hooks-ice) 55%,
+    var(--pep-plat-4) 62%,
+    var(--pep-plat-3) 82%,
+    var(--pep-plat-2) 100%);
+  --pep-hooks-sheen: linear-gradient(100deg,
+    rgba(var(--pep-hooks-rgb), 0) 0 40%,
+    rgba(var(--pep-hooks-rgb), .5) 46%,
+    var(--pep-hooks-ice) 50%,
+    rgba(var(--pep-hooks-rgb), .5) 54%,
+    rgba(var(--pep-hooks-rgb), 0) 60% 100%);
+  position: relative;
+  z-index: 1;
+  color-scheme: dark;
+  font-synthesis: none;
+  color: var(--pep-plat-3);
+}
+
+/* ---------- a room: one ask, with real space round it ---------- */
+.pep-hooks-room {
+  --pep-hooks-pad-top: clamp(72px, 11vh, 132px);
+  --pep-hooks-pad-bottom: clamp(72px, 11vh, 132px);
+  padding: calc(var(--pep-hooks-pad-top) + var(--pep-hooks-extra-top, 0px)) var(--pep-hooks-pad-x) calc(var(--pep-hooks-pad-bottom) + var(--pep-hooks-extra-bottom, 0px));
+}
+/* the room before the doors keeps a clear screen under its ask, so the doors' forms never share a screen with it */
+.pep-hooks-room[data-hooks="share"] { --pep-hooks-pad-bottom: max(56px, calc(100svh - 420px)); }
+
+/* ---------- the frame (moves) > the glow (light under the pane) + the pane (see-through) ---------- */
+.pep-hooks-frame {
+  --a: var(--pep-hooks-cut);
+  --b: var(--pep-hooks-nick);
+  --c: var(--pep-hooks-cut);
+  --d: var(--pep-hooks-nick);
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  transform: translateY(0);
+  transition: transform .8s var(--pep-ease);
+}
+.pep-hooks-room[data-hooks="finder"] .pep-hooks-frame,
+.pep-hooks-room[data-hooks="share"] .pep-hooks-frame { --a: var(--pep-hooks-nick); --b: var(--pep-hooks-cut); --c: var(--pep-hooks-nick); --d: var(--pep-hooks-cut); }
+.pep-hooks-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .7;
+  background:
+    radial-gradient(50% 100% at 50% 100%, rgba(var(--pep-hooks-rgb), .55), rgba(var(--pep-hooks-rgb), .16) 38%, rgba(var(--pep-hooks-rgb), 0) 100%) left var(--d) bottom 0 / calc(100% - var(--c) - var(--d)) 52px no-repeat,
+    radial-gradient(60% 100% at 50% 100%, rgba(var(--pep-hooks-rgb), .12), rgba(var(--pep-hooks-rgb), 0) 100%) left 0 bottom 0 / 100% 26% no-repeat,
+    radial-gradient(40% 60% at 12% 0%, rgba(var(--pep-hooks-rgb), .1), rgba(var(--pep-hooks-rgb), 0) 100%);
+  clip-path: polygon(var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--d) 100%, 0 calc(100% - var(--d)), 0 var(--a));
+  transition: opacity .8s var(--pep-ease);
+}
+.pep-hooks-glass {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;                         /* never a scroll container: the travelling light must not let the pane be scrolled sideways */
+  background: linear-gradient(158deg, rgba(230, 233, 237, .05), rgba(230, 233, 237, .006) 44%, rgba(230, 233, 237, .024));
+  -webkit-backdrop-filter: blur(4px) saturate(160%);
+          backdrop-filter: blur(4px) saturate(160%);
+  clip-path: polygon(var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--d) 100%, 0 calc(100% - var(--d)), 0 var(--a));
+  transition: opacity .8s var(--pep-ease);
+}
+@supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  .pep-hooks-glass { background: rgba(26, 26, 29, .9); }
+}
+/* the chrome hairline round the cut shape */
+.pep-hooks-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: .9;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-3) 20%, color-mix(in srgb, var(--pep-plat-2) 50%, var(--pep-plat-1)) 52%, var(--pep-plat-3) 84%, var(--pep-plat-4));
+  clip-path: polygon(evenodd, var(--a) 0, calc(100% - var(--b)) 0, 100% var(--b), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--d) 100%, 0 calc(100% - var(--d)), 0 var(--a), var(--a) 0,
+    calc(var(--a) + .42px) 1px, 1px calc(var(--a) + .42px), 1px calc(100% - var(--d) - .42px), calc(var(--d) + .42px) calc(100% - 1px), calc(100% - var(--c) - .42px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--c) - .42px), calc(100% - 1px) calc(var(--b) + .42px), calc(100% - var(--b) - .42px) 1px, calc(var(--a) + .42px) 1px);
+}
+/* wet light across the top corner */
+.pep-hooks-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(230, 233, 237, .18) 0, rgba(230, 233, 237, .045) 13%, rgba(230, 233, 237, 0) 28%),
+    linear-gradient(302deg, rgba(230, 233, 237, .08) 0, rgba(230, 233, 237, 0) 16%);
+}
+.pep-hooks-bevel {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: var(--pep-black-0);
+  opacity: .7;
+  clip-path: polygon(evenodd,
+    calc(var(--a) + .42px) 1px, calc(100% - var(--b) - .42px) 1px, calc(100% - 1px) calc(var(--b) + .42px), calc(100% - 1px) calc(100% - var(--c) - .42px), calc(100% - var(--c) - .42px) calc(100% - 1px), calc(var(--d) + .42px) calc(100% - 1px), 1px calc(100% - var(--d) - .42px), 1px calc(var(--a) + .42px), calc(var(--a) + .42px) 1px,
+    calc(var(--a) + .84px) 2px, 2px calc(var(--a) + .84px), 2px calc(100% - var(--d) - .84px), calc(var(--d) + .84px) calc(100% - 2px), calc(100% - var(--c) - .84px) calc(100% - 2px), calc(100% - 2px) calc(100% - var(--c) - .84px), calc(100% - 2px) calc(var(--b) + .84px), calc(100% - var(--b) - .84px) 2px, calc(var(--a) + .84px) 2px);
+}
+/* the logo's blade of light along the foot of the pane: an ice core inside the blue; it breathes, never blinks */
+.pep-hooks-sill {
+  position: absolute;
+  z-index: 3;
+  left: var(--d);
+  right: var(--c);
+  bottom: 2px;
+  height: 3px;
+  pointer-events: none;
+  opacity: .85;
+  background:
+    linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0) 10%, var(--pep-hooks-ice) 36%, var(--pep-hooks-ice) 64%, rgba(var(--pep-hooks-rgb), 0) 90%) 0 1px / 100% 1px no-repeat,
+    linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0) 2%, var(--pep-hooks-blue) 26%, var(--pep-hooks-blue) 74%, rgba(var(--pep-hooks-rgb), 0) 98%);
+  animation: pep-hooks-breath 7s ease-in-out infinite alternate;
+}
+@keyframes pep-hooks-breath { from { opacity: .6; } to { opacity: .95; } }
+/* ONE slow light, left to right, across the pane when it arrives */
+.pep-hooks-sweep {
+  position: absolute;
+  z-index: 1;
+  top: -20%;
+  bottom: -20%;
+  left: -60%;
+  width: 38%;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-16deg);
+  background: linear-gradient(100deg, rgba(var(--pep-hooks-rgb), 0), rgba(var(--pep-hooks-rgb), .06) 28%, rgba(var(--pep-hooks-rgb), .22) 45%, color-mix(in srgb, var(--pep-hooks-ice) 44%, transparent) 50%, rgba(var(--pep-hooks-rgb), .22) 55%, rgba(var(--pep-hooks-rgb), .06) 72%, rgba(var(--pep-hooks-rgb), 0));
+}
+@keyframes pep-hooks-sweep {
+  0% { transform: translateX(0) skewX(-16deg); opacity: 0; }
+  10% { opacity: .55; }
+  82% { opacity: .55; }
+  100% { transform: translateX(480%) skewX(-16deg); opacity: 0; }
+}
+.pep-hooks-in {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(26px, 3.4vw, 56px);
+  padding: calc(var(--pep-hooks-cut) * .7) clamp(20px, 3.4vw, 60px) clamp(34px, 3.6vw, 56px);
+}
+@media (min-width: 900px) {
+  .pep-hooks-in { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+}
+
+/* the reveal (only once the script runs): the pane glides up and its light comes on. It is never hidden, so the pane
+   reads even if the page holds its frames back. */
+[data-module="hooks"][data-hooks-js] .pep-hooks-frame { transform: translateY(26px); }
+[data-module="hooks"][data-hooks-js] .pep-hooks-frame > .pep-hooks-glow { opacity: .3; }
+[data-module="hooks"][data-hooks-js] .pep-hooks-frame[data-revealed] { transform: translateY(0); }
+[data-module="hooks"][data-hooks-js] .pep-hooks-frame[data-revealed] > .pep-hooks-glow { opacity: .7; }
+.pep-hooks-frame[data-revealed] .pep-hooks-sweep { animation: pep-hooks-sweep 1.5s ease-in-out .25s 1 both; }
+
+/* ---------- 3D CHROME HEADINGS: black chrome sides from data-text, a platinum face, the blue light through its waist,
+   and the slow sheen. Nothing here moves the heading: only the light travels. ---------- */
+.pep-hooks-head,
+.pep-hooks-done {
+  --pep-hooks-lh: 1.08;
+  --pep-hooks-step: .016em;
+  position: relative;
+  isolation: isolate;
+  display: block;
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  line-height: var(--pep-hooks-lh);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--pep-plat-3);
+}
+.pep-hooks-head { font-size: clamp(32px, 4.3vw, 66px); }
+.pep-hooks-done { font-size: clamp(24px, 2.6vw, 38px); outline: 0; }
+.pep-hooks-head::before,
+.pep-hooks-done::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--pep-black-0);
+  text-shadow:
+    calc(var(--pep-hooks-step) * 1) calc(var(--pep-hooks-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pep-hooks-step) * 2) calc(var(--pep-hooks-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pep-hooks-step) * 3) calc(var(--pep-hooks-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pep-hooks-step) * 4) calc(var(--pep-hooks-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pep-hooks-step) * 5) calc(var(--pep-hooks-step) * 6) 0 color-mix(in srgb, var(--pep-plat-1) 78%, var(--pep-plat-2)),
+    calc(var(--pep-hooks-step) * 6) calc(var(--pep-hooks-step) * 7.2) 0 var(--pep-black-0),
+    calc(var(--pep-hooks-step) * 7) calc(var(--pep-hooks-step) * 8.4) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    .13em .19em .16em rgba(0, 0, 0, .88);
+}
+.pep-hooks-face {
+  display: block;
+  background-image: var(--pep-hooks-sheen), var(--pep-hooks-chrome);
+  background-size: 300% 100%, 100% calc(var(--pep-hooks-lh) * 1em);
+  background-position: 130% 0, 0 0;
+  background-repeat: no-repeat, repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pep-hooks-shine 8s ease-in-out infinite;
+}
+@keyframes pep-hooks-shine {
+  0% { background-position: 130% 0, 0 0; }
+  60%, 100% { background-position: -30% 0, 0 0; }
+}
+/* small chrome lettering: eyebrows, labels, notes on chrome (never flat white) */
+.pep-hooks-eyebrow,
+.pep-hooks-label,
+.pep-hooks-q,
+.pep-hooks-tag {
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  text-transform: uppercase;
+  background-image: linear-gradient(180deg, var(--pep-plat-4), var(--pep-plat-3) 46%, color-mix(in srgb, var(--pep-hooks-blue) 40%, var(--pep-plat-3)) 54%, var(--pep-plat-4));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-hooks-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 clamp(12px, 1.6vh, 20px);
+  font-size: 14px;
+  letter-spacing: .26em;
+}
+.pep-hooks-eyebrow::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 34px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0), var(--pep-hooks-blue) 40%, var(--pep-hooks-ice));
+}
+.pep-hooks-lede {
+  margin: clamp(14px, 2vh, 22px) 0 0;
+  max-width: 34em;
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.55;
+  color: var(--pep-plat-3);
+}
+.pep-hooks-lede b, .pep-hooks-lede strong { font-weight: 600; color: var(--pep-plat-4); }
+
+/* ---------- forms ---------- */
+.pep-hooks-form { position: relative; min-width: 0; margin: 0; }
+.pep-hooks-step { animation: pep-hooks-step-in .6s var(--pep-ease) both; }
+@keyframes pep-hooks-step-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.pep-hooks-prompt {
+  margin: 0 0 16px;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(18px, 1.5vw, 23px);
+  line-height: 1.25;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background-image: var(--pep-hooks-chrome);
+  background-size: 100% 1.25em;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-hooks-prompt--gap { margin-top: 24px; }
+.pep-hooks-field--gap { margin-top: 18px; }
+.pep-hooks-field { display: flex; flex-direction: column; min-width: 0; }
+.pep-hooks-label { display: block; margin: 0 0 8px; font-size: 14px; line-height: 1.2; letter-spacing: .2em; }
+.pep-hooks-well {
+  --k: 16px;
+  --t: 1px;
+  position: relative;
+  display: block;
+  height: 58px;
+  background: rgba(0, 0, 0, .3);
+  clip-path: polygon(var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k));
+  transition: background-color .3s ease;
+}
+.pep-hooks-well::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .62;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 34%, var(--pep-plat-1) 58%, var(--pep-plat-3));
+  clip-path: polygon(evenodd, var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k), var(--k) 0,
+    calc(var(--k) + var(--t) * .42) var(--t), var(--t) calc(var(--k) + var(--t) * .42), var(--t) calc(100% - var(--t)), calc(100% - var(--k) - var(--t) * .42) calc(100% - var(--t)), calc(100% - var(--t)) calc(100% - var(--k) - var(--t) * .42), calc(100% - var(--t)) var(--t), calc(var(--k) + var(--t) * .42) var(--t));
+}
+.pep-hooks-well::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0), var(--pep-hooks-blue) 24%, var(--pep-hooks-ice) 50%, var(--pep-hooks-blue) 76%, rgba(var(--pep-hooks-rgb), 0));
+  transform: scaleX(0);
+  transition: transform .45s var(--pep-ease);
+}
+.pep-hooks-input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 18px;
+  font-size: 18px;
+  color: var(--pep-plat-4);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  caret-color: var(--pep-hooks-blue);
+}
+.pep-hooks-input:focus-visible { box-shadow: none; }
+.pep-hooks-input[readonly] { font-size: 15px; letter-spacing: .02em; color: var(--pep-plat-3); }
+.pep-hooks-well:focus-within { --t: 2px; background: rgba(var(--pep-hooks-rgb), .1); }
+.pep-hooks-well:focus-within::before { opacity: 1; background: linear-gradient(150deg, var(--pep-hooks-ice), var(--pep-hooks-blue) 34%, var(--pep-hooks-blue) 66%, var(--pep-hooks-ice)); }
+.pep-hooks-well:focus-within::after { transform: scaleX(1); }
+.pep-hooks-well[data-bad] { --t: 2px; }
+.pep-hooks-well[data-bad]::before { opacity: 1; background: linear-gradient(150deg, var(--pep-hooks-ice), var(--pep-hooks-blue) 50%, var(--pep-hooks-ice)); }
+.pep-hooks-hint { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--pep-plat-3); }
+.pep-hooks-err {
+  position: relative;
+  margin: 8px 0 0;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--pep-hooks-ice);
+}
+.pep-hooks-err::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .22em;
+  width: 13px;
+  height: 13px;
+  background: var(--pep-hooks-blue);
+  clip-path: polygon(0 0, 100% 50%, 0 100%, 34% 50%);
+}
+/* consent: a cut tick box in a chrome rim; the whole row is the target */
+.pep-hooks-consent {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  min-height: 44px;
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--pep-plat-3);
+  cursor: pointer;
+}
+.pep-hooks-tick {
+  flex: 0 0 auto;
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-top: 1px;
+  padding: 1.5px;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 45%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.pep-hooks-check {
+  -webkit-appearance: none;
+          appearance: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  cursor: pointer;
+  background: var(--pep-black-0) no-repeat 50% 50% / 20px 20px;
+  clip-path: polygon(9.4px 0, 100% 0, 100% calc(100% - 9.4px), calc(100% - 9.4px) 100%, 0 100%, 0 9.4px);
+  transition: background-color .25s ease;
+}
+.pep-hooks-check:focus-visible { box-shadow: none; }
+.pep-hooks-check:checked {
+  background-color: var(--pep-plat-4);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M3.5 10.5 8 15 16.5 5' fill='none' stroke='%230b0b0c' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'/></svg>");
+}
+.pep-hooks-tick:has(.pep-hooks-check:focus-visible) { background: var(--pep-hooks-blue); padding: 2.5px; }
+.pep-hooks-tick:has(.pep-hooks-check[aria-invalid="true"]) { background: linear-gradient(150deg, var(--pep-hooks-ice), var(--pep-hooks-blue)); padding: 2.5px; }
+.pep-hooks-consent:has(.pep-hooks-check:focus-visible) .pep-hooks-consent-text { color: var(--pep-plat-4); }
+.pep-hooks-fine { margin: 14px 0 0; font-size: 14px; line-height: 1.45; color: var(--pep-plat-3); }
+/* the preview line, as the hero's: shown after a success only while a preview build has no list connected */
+.pep-hooks-preview { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--pep-plat-1); font: 400 14px/1.5 var(--pep-font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--pep-plat-3); }
+/* the line a friend sees when a member's share link brought them: chrome with the blue through it, like the eyebrows */
+.pep-hooks-invited {
+  margin: 0 0 clamp(10px, 1.4vh, 16px);
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(15px, 1.3vw, 19px);
+  line-height: 1.25;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background-image: linear-gradient(180deg, var(--pep-hooks-ice), color-mix(in srgb, var(--pep-hooks-blue) 55%, var(--pep-plat-4)) 58%, var(--pep-hooks-ice));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* the button: a chrome plate with a cut corner and an arrow end; it keeps its size while it sends.
+   Hover and keyboard focus lift it and grow its words. */
+.pep-hooks-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 62px;
+  margin: 18px 0 0;
+  padding: 10px 48px 10px 30px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(16px, 1.25vw, 20px);
+  line-height: 1.2;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--pep-black-0);
+  background: linear-gradient(100deg, var(--pep-plat-3) 0%, var(--pep-plat-4) 16%, var(--pep-plat-3) 30%, var(--pep-plat-2) 50%, var(--pep-plat-3) 66%, var(--pep-plat-4) 82%, var(--pep-plat-3) 100%);
+  clip-path: polygon(18px 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 0 18px);
+  transform: translateY(0);
+  transition: transform .45s var(--pep-ease), filter .45s ease;
+}
+.pep-hooks-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 55%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(var(--pep-hooks-rgb), 0), color-mix(in srgb, var(--pep-hooks-ice) 82%, transparent), rgba(var(--pep-hooks-rgb), 0));
+  transform: translateX(0);
+}
+.pep-hooks-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--pep-hooks-blue);
+  clip-path: polygon(evenodd, 18px 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 0 18px, 18px 0,
+    19.2px 3px, 3px 19.2px, 3px calc(100% - 3px), calc(100% - 29.4px) calc(100% - 3px), calc(100% - 4px) 50%, calc(100% - 29.4px) 3px, 19.2px 3px);
+}
+.pep-hooks-btn:focus-visible { outline: 0; box-shadow: none; transform: translateY(-3px); filter: brightness(1.08); }
+.pep-hooks-btn:focus-visible::before { opacity: 1; }
+.pep-hooks-btn:active { transform: translateY(1px); filter: brightness(.96); }
+.pep-hooks-btn-word { position: relative; z-index: 1; display: inline-block; transform: scale(1); transition: opacity .3s ease, transform .45s var(--pep-ease); }
+.pep-hooks-btn:focus-visible .pep-hooks-btn-word { transform: scale(1.05); }
+.pep-hooks-btn-ring,
+.pep-hooks-btn-done { position: absolute; left: 50%; top: 50%; opacity: 0; }
+.pep-hooks-btn-ring { width: 20px; height: 20px; margin: -10px 0 0 -10px; border: 2px solid rgba(11, 11, 12, .25); border-top-color: var(--pep-black-0); border-right-color: var(--pep-black-0); border-radius: 0; }
+.pep-hooks-btn-done { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+.pep-hooks-btn-done::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 9px;
+  height: 16px;
+  border-right: 3px solid var(--pep-black-0);
+  border-bottom: 3px solid var(--pep-black-0);
+  transform: rotate(45deg) scale(.4);
+  transition: transform .35s var(--pep-ease);
+}
+.pep-hooks-sending .pep-hooks-btn-word,
+.pep-hooks-sent .pep-hooks-btn-word { opacity: 0; }
+.pep-hooks-sending .pep-hooks-btn-ring { opacity: 1; animation: pep-hooks-turn .7s linear infinite; }
+.pep-hooks-sent .pep-hooks-btn-done { opacity: 1; }
+.pep-hooks-sent .pep-hooks-btn-done::before { transform: rotate(45deg) scale(1); }
+@keyframes pep-hooks-turn { to { transform: rotate(360deg); } }
+
+/* the quiet second action: a slashed blade with a chrome rim */
+.pep-hooks-alt,
+.pep-hooks-go {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin: 14px 12px 0 0;
+  padding: 10px 30px 10px 24px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: 15px;
+  line-height: 1.2;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--pep-plat-4);
+  background: rgba(230, 233, 237, .06);
+  clip-path: polygon(16px 0, 100% 0, calc(100% - 18px) 100%, 0 100%, 0 16px);
+  transform: translateY(0);
+  transition: transform .45s var(--pep-ease), background-color .3s ease;
+}
+.pep-hooks-alt::before,
+.pep-hooks-go::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 40%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  clip-path: polygon(evenodd, 16px 0, 100% 0, calc(100% - 18px) 100%, 0 100%, 0 16px, 16px 0,
+    17.2px 1.5px, 1.5px 17.2px, 1.5px calc(100% - 1.5px), calc(100% - 19.6px) calc(100% - 1.5px), calc(100% - 2.2px) 1.5px, 17.2px 1.5px);
+}
+.pep-hooks-go { color: var(--pep-hooks-ice); background: rgba(var(--pep-hooks-rgb), .14); }
+.pep-hooks-alt span,
+.pep-hooks-go span { display: inline-block; transform: scale(1); transition: transform .45s var(--pep-ease); }
+.pep-hooks-alt:focus-visible,
+.pep-hooks-go:focus-visible { outline: 0; transform: translateY(-3px); background-color: rgba(var(--pep-hooks-rgb), .22); }
+.pep-hooks-alt:focus-visible span,
+.pep-hooks-go:focus-visible span { transform: scale(1.05); }
+
+.pep-hooks-next { margin: 12px 0 0; font-size: clamp(16px, 1.2vw, 18px); line-height: 1.5; color: var(--pep-plat-3); }
+
+/* NO FLAT WHITE (Jeff, Nov 13): words on tiles, quiet buttons, facts, ways and picks wear the chrome, never a flat fill */
+.pep-hooks-tile-word,
+.pep-hooks-alt span,
+.pep-hooks-fact-line,
+.pep-hooks-way-head,
+.pep-hooks-pick-name {
+  background-image: linear-gradient(180deg, var(--pep-plat-4), var(--pep-plat-3) 46%, color-mix(in srgb, var(--pep-hooks-blue) 40%, var(--pep-plat-3)) 54%, var(--pep-plat-4));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-hooks-go span {
+  background-image: linear-gradient(180deg, var(--pep-hooks-ice), color-mix(in srgb, var(--pep-hooks-blue) 55%, var(--pep-plat-4)) 58%, var(--pep-hooks-ice));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* frosted numbers: a speckled near-opaque face with the blue under it */
+.pep-hooks-num {
+  display: inline-block;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  line-height: 1;
+  letter-spacing: .04em;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .9  0 0 0 0 .93  0 0 0 0 1  0 0 0 3 -1.45'/></filter><rect width='140' height='140' filter='url(%23s)'/></svg>"),
+    linear-gradient(180deg, rgba(230, 233, 237, .94), rgba(185, 190, 197, .76) 55%, rgba(107, 112, 119, .84));
+  background-size: 140px 140px, 100% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(var(--pep-hooks-rgb), .45));
+}
+
+/* ---------- 01 THE FOUNDER CARD (H63) ---------- */
+.pep-hooks-cardwrap { display: flex; justify-content: center; min-width: 0; }
+.pep-hooks-card {
+  --ck: clamp(22px, 2.6vw, 38px);
+  position: relative;
+  width: min(100%, 470px);
+  aspect-ratio: 1.586;
+  padding: clamp(16px, 2vw, 28px) clamp(18px, 2.2vw, 30px);
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  overflow: hidden;
+  overflow: clip;
+  background:
+    radial-gradient(90% 70% at 18% 108%, rgba(var(--pep-hooks-rgb), .38), rgba(var(--pep-hooks-rgb), 0) 62%),
+    linear-gradient(135deg, rgba(42, 45, 49, .92), rgba(11, 11, 12, .94) 46%, rgba(20, 20, 22, .96) 70%, rgba(42, 45, 49, .9));
+  clip-path: polygon(var(--ck) 0, 100% 0, 100% calc(100% - var(--ck)), calc(100% - var(--ck)) 100%, 0 100%, 0 var(--ck));
+  box-shadow: inset 0 0 0 1px rgba(185, 190, 197, .2);
+}
+.pep-hooks-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 30%, var(--pep-plat-1) 55%, var(--pep-plat-3) 80%, var(--pep-plat-4));
+  clip-path: polygon(evenodd, var(--ck) 0, 100% 0, 100% calc(100% - var(--ck)), calc(100% - var(--ck)) 100%, 0 100%, 0 var(--ck), var(--ck) 0,
+    calc(var(--ck) + .6px) 1.5px, 1.5px calc(var(--ck) + .6px), 1.5px calc(100% - 1.5px), calc(100% - var(--ck) - .6px) calc(100% - 1.5px), calc(100% - 1.5px) calc(100% - var(--ck) - .6px), calc(100% - 1.5px) 1.5px, calc(var(--ck) + .6px) 1.5px);
+}
+/* the card's own slow light, gliding across it */
+.pep-hooks-card::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: -50%;
+  width: 34%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(var(--pep-hooks-rgb), 0), rgba(var(--pep-hooks-rgb), .14) 40%, color-mix(in srgb, var(--pep-hooks-ice) 30%, transparent) 50%, rgba(var(--pep-hooks-rgb), .14) 60%, rgba(var(--pep-hooks-rgb), 0));
+  transform: translateX(0) skewX(-16deg);
+  animation: pep-hooks-cardlight 9s ease-in-out infinite;
+}
+@keyframes pep-hooks-cardlight {
+  0%, 30% { transform: translateX(0) skewX(-16deg); opacity: 0; }
+  36% { opacity: 1; }
+  70% { opacity: 1; }
+  76%, 100% { transform: translateX(520%) skewX(-16deg); opacity: 0; }
+}
+.pep-hooks-card-top { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+/* the brand on the card: the live P (02-logo3d draws it into the slot, logo 07) and PEPTICITY in the owner's type */
+.pep-hooks-card-brand { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.pep-hooks-card-mark { display: block; flex: none; width: clamp(48px, 4.6vw, 66px); aspect-ratio: 1 / .82; margin: -12px -6px -14px -10px; }
+.pep-hooks-room[data-hooks-3d="off"] .pep-hooks-card-mark { display: none; }
+.pep-hooks-card-word {
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(14px, 1.35vw, 19px);
+  line-height: 1.1;
+  letter-spacing: .14em;
+  white-space: nowrap;
+  background-image: var(--pep-hooks-chrome);
+  background-size: 100% 1.1em;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* THE ONE GOLD: the founder badge, in the house chrome-gold ramp */
+.pep-hooks-badge {
+  position: relative;
+  padding: 7px 16px 7px 14px;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: 13px;
+  letter-spacing: .24em;
+  color: var(--pep-gold-1);
+  background: linear-gradient(100deg, var(--pep-gold-3) 0%, var(--pep-gold-4) 22%, var(--pep-gold-3) 46%, var(--pep-gold-2) 60%, var(--pep-gold-3) 78%, var(--pep-gold-4) 100%);
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
+.pep-hooks-card-circle {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  margin: 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: 13px;
+  letter-spacing: .3em;
+  color: var(--pep-plat-3);
+}
+.pep-hooks-card-name {
+  position: relative;
+  z-index: 1;
+  margin: 6px 0 0;
+  min-height: 1.1em;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(26px, 3.1vw, 44px);
+  line-height: 1.1;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  background-image: var(--pep-hooks-sheen), var(--pep-hooks-chrome);
+  background-size: 300% 100%, 100% 1.1em;
+  background-position: 130% 0, 0 0;
+  background-repeat: no-repeat, repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pep-hooks-shine 8s ease-in-out infinite;
+}
+.pep-hooks-card-name[data-empty] { opacity: .42; }
+/* the logo's own accent: a short blade of the blue light under the name */
+.pep-hooks-card-light {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 46%;
+  height: 3px;
+  margin: 10px 0 0;
+  background:
+    linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0), var(--pep-hooks-ice) 30%, var(--pep-hooks-ice) 60%, rgba(var(--pep-hooks-rgb), 0)) 0 1px / 100% 1px no-repeat,
+    linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0), var(--pep-hooks-blue) 20%, var(--pep-hooks-blue) 70%, rgba(var(--pep-hooks-rgb), 0));
+  filter: drop-shadow(0 0 6px rgba(var(--pep-hooks-rgb), .9));
+}
+.pep-hooks-card-foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 12px 0 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: 13px;
+  letter-spacing: .22em;
+  color: var(--pep-plat-3);
+}
+.pep-hooks-card-foot .pep-hooks-num { font-size: 18px; letter-spacing: .14em; }
+
+/* ---------- 02 FIND YOUR PICKS (H64) ---------- */
+.pep-hooks-in--wide { grid-template-columns: minmax(0, 1fr) !important; }
+.pep-hooks-finder { min-width: 0; }
+.pep-hooks-notches { display: flex; gap: 10px; margin: 0 0 18px; padding: 0; list-style: none; }
+.pep-hooks-notch {
+  width: 44px;
+  height: 6px;
+  background: rgba(185, 190, 197, .22);
+  clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  transition: background-color .4s ease;
+}
+.pep-hooks-notch[data-lit] { background: linear-gradient(90deg, var(--pep-hooks-blue), var(--pep-hooks-ice)); }
+.pep-hooks-q { margin: 0 0 16px; font-size: clamp(18px, 1.6vw, 24px); line-height: 1.25; letter-spacing: .1em; }
+.pep-hooks-tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(10px, 1.2vw, 18px); margin: 0; padding: 0; list-style: none; }
+@media (min-width: 640px) { .pep-hooks-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pep-hooks-tile {
+  --tk: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 84px;
+  padding: 14px 22px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.2;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--pep-plat-4);
+  background: linear-gradient(158deg, rgba(230, 233, 237, .07), rgba(230, 233, 237, .015) 50%, rgba(var(--pep-hooks-rgb), .06));
+  clip-path: polygon(var(--tk) 0, 100% 0, 100% calc(100% - var(--tk)), calc(100% - var(--tk)) 100%, 0 100%, 0 var(--tk));
+  transform: translateY(0);
+  transition: transform .45s var(--pep-ease), background-color .3s ease;
+}
+.pep-hooks-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 36%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  opacity: .75;
+  clip-path: polygon(evenodd, var(--tk) 0, 100% 0, 100% calc(100% - var(--tk)), calc(100% - var(--tk)) 100%, 0 100%, 0 var(--tk), var(--tk) 0,
+    calc(var(--tk) + .6px) 1.5px, 1.5px calc(var(--tk) + .6px), 1.5px calc(100% - 1.5px), calc(100% - var(--tk) - .6px) calc(100% - 1.5px), calc(100% - 1.5px) calc(100% - var(--tk) - .6px), calc(100% - 1.5px) 1.5px, calc(var(--tk) + .6px) 1.5px);
+}
+.pep-hooks-tile::after {
+  content: "";
+  position: absolute;
+  left: var(--tk);
+  right: var(--tk);
+  bottom: 2px;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(var(--pep-hooks-rgb), 0), var(--pep-hooks-blue) 30%, var(--pep-hooks-ice) 50%, var(--pep-hooks-blue) 70%, rgba(var(--pep-hooks-rgb), 0));
+  transform: scaleX(0);
+  transition: transform .45s var(--pep-ease);
+}
+.pep-hooks-tile-word { display: inline-block; transform: scale(1); transform-origin: 0 50%; transition: transform .45s var(--pep-ease); }
+.pep-hooks-tile:focus-visible { outline: 0; box-shadow: none; transform: translateY(-4px); background-color: rgba(var(--pep-hooks-rgb), .12); }
+.pep-hooks-tile:focus-visible::after { transform: scaleX(1); }
+.pep-hooks-tile:focus-visible .pep-hooks-tile-word { transform: scale(1.06); }
+.pep-hooks-picks { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.pep-hooks-pick {
+  --pk: 16px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px 18px;
+  padding: 14px 18px 14px 22px;
+  background: linear-gradient(158deg, rgba(230, 233, 237, .06), rgba(230, 233, 237, .01) 60%);
+  clip-path: polygon(var(--pk) 0, 100% 0, 100% calc(100% - var(--pk)), calc(100% - var(--pk)) 100%, 0 100%, 0 var(--pk));
+}
+.pep-hooks-pick::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .6;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 36%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  clip-path: polygon(evenodd, var(--pk) 0, 100% 0, 100% calc(100% - var(--pk)), calc(100% - var(--pk)) 100%, 0 100%, 0 var(--pk), var(--pk) 0,
+    calc(var(--pk) + .5px) 1px, 1px calc(var(--pk) + .5px), 1px calc(100% - 1px), calc(100% - var(--pk) - .5px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--pk) - .5px), calc(100% - 1px) 1px, calc(var(--pk) + .5px) 1px);
+}
+.pep-hooks-pick-name { min-width: 0; font-family: var(--pep-font-display); font-weight: var(--pep-hooks-heavy); font-size: clamp(16px, 1.4vw, 21px); letter-spacing: .08em; text-transform: uppercase; color: var(--pep-plat-4); overflow-wrap: anywhere; }
+.pep-hooks-pick-size { display: block; margin-top: 3px; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--pep-plat-3); }
+.pep-hooks-pick-price { font-size: clamp(22px, 1.9vw, 28px); }
+.pep-hooks-pick-cad { margin-left: 6px; font-family: var(--pep-font-display); font-size: 13px; letter-spacing: .16em; color: var(--pep-plat-3); }
+.pep-hooks-pick-deal { display: inline-flex; align-items: baseline; white-space: nowrap; }
+.pep-hooks-add {
+  position: relative;
+  min-height: 44px;
+  padding: 8px 18px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: 14px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pep-black-0);
+  background: linear-gradient(100deg, var(--pep-plat-3), var(--pep-plat-4) 30%, var(--pep-plat-2) 60%, var(--pep-plat-3));
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transform: translateY(0);
+  transition: transform .45s var(--pep-ease);
+}
+.pep-hooks-add:focus-visible { outline: 0; transform: translateY(-3px); box-shadow: inset 0 -3px 0 var(--pep-hooks-blue); }
+.pep-hooks-add[data-added] { color: var(--pep-hooks-ice); background: rgba(var(--pep-hooks-rgb), .3); }
+@media (max-width: 560px) {
+  .pep-hooks-pick { grid-template-columns: minmax(0, 1fr) auto; }
+  .pep-hooks-add { grid-column: 1 / -1; }
+}
+.pep-hooks-row { display: flex; flex-wrap: wrap; align-items: center; }
+
+/* ---------- 03 FIRST ACCESS (H65): three frosted facts beside the form ---------- */
+.pep-hooks-facts { display: grid; gap: 14px; margin: clamp(18px, 2.4vh, 28px) 0 0; padding: 0; list-style: none; }
+.pep-hooks-fact { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px; }
+.pep-hooks-fact .pep-hooks-num { min-width: 1.5em; font-size: clamp(30px, 2.8vw, 42px); }
+.pep-hooks-fact-line { font-family: var(--pep-font-display); font-weight: var(--pep-hooks-heavy); font-size: clamp(14px, 1.1vw, 17px); line-height: 1.35; letter-spacing: .12em; text-transform: uppercase; color: var(--pep-plat-4); }
+
+/* ---------- 04 SHARE (H66): the link, and the three ways under the pane ---------- */
+.pep-hooks-reward {
+  margin: clamp(14px, 2vh, 22px) 0 0;
+  font-family: var(--pep-font-display);
+  font-weight: var(--pep-hooks-heavy);
+  font-size: clamp(22px, 2.2vw, 32px);
+  line-height: 1.2;
+  letter-spacing: .08em;
+  background-image: var(--pep-hooks-chrome);
+  background-size: 100% 1.2em;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(var(--pep-hooks-rgb), .35));
+}
+.pep-hooks-ways {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(12px, 1.6vw, 22px);
+  max-width: 1200px;
+  margin: clamp(22px, 3vh, 36px) auto 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 760px) { .pep-hooks-ways { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pep-hooks-way {
+  --wk: 20px;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 16px;
+  padding: 18px 22px;
+  background: linear-gradient(158deg, rgba(230, 233, 237, .05), rgba(230, 233, 237, .008) 55%, rgba(var(--pep-hooks-rgb), .05));
+  -webkit-backdrop-filter: blur(4px) saturate(160%);
+          backdrop-filter: blur(4px) saturate(160%);
+  clip-path: polygon(var(--wk) 0, 100% 0, 100% calc(100% - var(--wk)), calc(100% - var(--wk)) 100%, 0 100%, 0 var(--wk));
+}
+.pep-hooks-way::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .7;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 36%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  clip-path: polygon(evenodd, var(--wk) 0, 100% 0, 100% calc(100% - var(--wk)), calc(100% - var(--wk)) 100%, 0 100%, 0 var(--wk), var(--wk) 0,
+    calc(var(--wk) + .5px) 1px, 1px calc(var(--wk) + .5px), 1px calc(100% - 1px), calc(100% - var(--wk) - .5px) calc(100% - 1px), calc(100% - 1px) calc(100% - var(--wk) - .5px), calc(100% - 1px) 1px, calc(var(--wk) + .5px) 1px);
+}
+.pep-hooks-way .pep-hooks-num { grid-row: span 2; min-width: 1.5em; font-size: clamp(34px, 3vw, 46px); }
+.pep-hooks-way-head { margin: 0; font-family: var(--pep-font-display); font-weight: var(--pep-hooks-heavy); font-size: clamp(15px, 1.15vw, 18px); letter-spacing: .12em; text-transform: uppercase; color: var(--pep-plat-4); }
+.pep-hooks-way-line { margin: 0; font-size: 15px; line-height: 1.45; color: var(--pep-plat-3); }
+.pep-hooks-linkrow { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; margin: 6px 0 0; }
+
+/* ---------- OVERLAYS: the exit slide-in (H67) and the phone bar (H68). Below the guide (20) and the cart (30). ---------- */
+.pep-hooks-overlays { position: static; z-index: auto; }
+.pep-hooks-pop {
+  --a: 30px; --b: 10px; --c: 30px; --d: 10px;
+  position: fixed;
+  z-index: 15;
+  left: 24px;
+  bottom: 24px;
+  width: min(400px, calc(100vw - 48px));
+  transform: translateY(18px);
+  visibility: hidden;
+  transition: transform .7s var(--pep-ease), visibility 0s linear .7s;
+}
+/* it appears at once and glides the last few pixels: never an opacity fade, so it can never be left half-seen */
+.pep-hooks-pop[data-on] { transform: translateY(0); visibility: visible; transition: transform .7s var(--pep-ease), visibility 0s; }
+.pep-hooks-pop .pep-hooks-glass { opacity: 1; background: linear-gradient(158deg, rgba(20, 20, 22, .62), rgba(11, 11, 12, .72)); }
+.pep-hooks-pop .pep-hooks-in { display: block; padding: 26px 26px 26px; }
+.pep-hooks-pop .pep-hooks-head { font-size: clamp(26px, 2.4vw, 34px); margin-right: 44px; }
+.pep-hooks-pop .pep-hooks-eyebrow { margin-bottom: 10px; }
+.pep-hooks-pop .pep-hooks-lede { margin-top: 10px; font-size: 15px; }
+.pep-hooks-pop .pep-hooks-btn { min-height: 56px; margin-top: 14px; }
+.pep-hooks-pop .pep-hooks-consent { margin-top: 12px; font-size: 14px; }
+.pep-hooks-x {
+  position: absolute;
+  z-index: 4;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  background: rgba(230, 233, 237, .06);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: background-color .3s ease, transform .45s var(--pep-ease);
+}
+.pep-hooks-x::before,
+.pep-hooks-x::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 2px;
+  margin: -1px 0 0 -9px;
+  background: linear-gradient(90deg, var(--pep-plat-3), var(--pep-plat-4));
+  transform: rotate(45deg);
+}
+.pep-hooks-x::after { transform: rotate(-45deg); }
+.pep-hooks-x:focus-visible { outline: 0; transform: translateY(-2px); background-color: rgba(var(--pep-hooks-rgb), .25); }
+
+/* the phone bar: phones only, slim, left of the guide's beacon */
+.pep-hooks-bar {
+  --a: 14px; --b: 6px; --c: 14px; --d: 6px;
+  position: fixed;
+  z-index: 15;
+  left: 8px;
+  right: 50px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  display: none;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: transform .6s var(--pep-ease), visibility 0s linear .6s;
+}
+.pep-hooks-bar[data-on] { visibility: visible; transform: translateY(0); transition: transform .6s var(--pep-ease), visibility 0s; }
+@media (max-width: 767px) { .pep-hooks-bar { display: block; } }
+.pep-hooks-bar .pep-hooks-glass { opacity: 1; background: linear-gradient(158deg, rgba(20, 20, 22, .72), rgba(11, 11, 12, .8)); }
+.pep-hooks-bar-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; min-height: 60px; padding: 8px 8px 8px 16px; }
+.pep-hooks-bar-text { min-width: 0; flex: 1 1 auto; }
+.pep-hooks-bar-name { display: block; font-family: var(--pep-font-display); font-weight: var(--pep-hooks-heavy); font-size: 15px; line-height: 1.2; letter-spacing: .14em; background-image: var(--pep-hooks-chrome); background-size: 100% 1.2em; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.pep-hooks-bar-line { display: block; font-size: 14px; line-height: 1.3; color: var(--pep-plat-3); }
+.pep-hooks-bar .pep-hooks-btn { width: auto; flex: 0 0 auto; min-height: 44px; margin: 0; padding: 8px 30px 8px 18px; font-size: 15px; }
+.pep-hooks-sheet { position: relative; z-index: 2; padding: 22px 18px 20px; }
+.pep-hooks-sheet .pep-hooks-head { font-size: 26px; margin-right: 48px; }
+.pep-hooks-sheet .pep-hooks-lede { font-size: 15px; margin-top: 10px; }
+.pep-hooks-sheet .pep-hooks-consent { font-size: 14px; }
+@media (max-width: 767px) {
+  .pep-hooks-pop { left: 8px; right: 50px; bottom: max(10px, env(safe-area-inset-bottom)); width: auto; max-height: calc(100svh - 120px); overflow-y: auto; }
+  .pep-hooks-pop .pep-hooks-in { padding: 18px 16px 18px; }
+  .pep-hooks-pop .pep-hooks-head { font-size: 24px; }
+  .pep-hooks-room { --pep-hooks-pad-top: 72px; --pep-hooks-pad-bottom: 72px; }
+}
+
+/* less motion asked for: no glide, no sweep, no sheen; a short fade only */
+@media (prefers-reduced-motion: reduce) {
+  [data-module="hooks"][data-hooks-js] .pep-hooks-frame,
+  [data-module="hooks"][data-hooks-js] .pep-hooks-frame[data-revealed] { transform: none; transition: none; }
+  .pep-hooks-glass, .pep-hooks-glow { transition: opacity .2s linear; }
+  .pep-hooks-face, .pep-hooks-card-name { animation: none; background-position: 130% 0, 0 0; }
+  .pep-hooks-sweep, .pep-hooks-card::after, .pep-hooks-sill { animation: none; }
+  .pep-hooks-frame[data-revealed] .pep-hooks-sweep { animation: none; }
+  .pep-hooks-pop, .pep-hooks-bar, .pep-hooks-pop[data-on], .pep-hooks-bar[data-on] { transition: visibility 0s; transform: none; }
+  .pep-hooks-step { animation: none; }
+}
+/* hover (pointer devices only): lift and grow the words */
+@media (hover: hover) and (pointer: fine) {
+  .pep-hooks-btn:hover { transform: translateY(-3px); filter: brightness(1.06); }
+  .pep-hooks-btn:hover .pep-hooks-btn-word { transform: scale(1.05); }
+  .pep-hooks-btn:hover::after { transform: translateX(330%); transition: transform 1.3s ease-in-out; }
+  .pep-hooks-alt:hover, .pep-hooks-go:hover { transform: translateY(-3px); background-color: rgba(var(--pep-hooks-rgb), .18); }
+  .pep-hooks-alt:hover span, .pep-hooks-go:hover span { transform: scale(1.05); }
+  .pep-hooks-tile:hover { transform: translateY(-4px); background-color: rgba(var(--pep-hooks-rgb), .1); }
+  .pep-hooks-tile:hover::after { transform: scaleX(1); }
+  .pep-hooks-tile:hover .pep-hooks-tile-word { transform: scale(1.06); }
+  .pep-hooks-add:hover { transform: translateY(-3px); }
+  .pep-hooks-x:hover { transform: translateY(-2px); background-color: rgba(var(--pep-hooks-rgb), .2); }
+  .pep-hooks-frame:hover .pep-hooks-glow { opacity: 1; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  .pep-hooks-btn:hover, .pep-hooks-alt:hover, .pep-hooks-go:hover, .pep-hooks-tile:hover, .pep-hooks-add:hover, .pep-hooks-x:hover { transform: none; }
+}

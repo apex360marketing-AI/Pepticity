@@ -1,0 +1,27 @@
+<style data-pep-src="modules/01-ground/ground.css">
+/* 01-ground. Every selector starts with [data-module="ground"] or .pep-ground- */
+[data-module="ground"] {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 44% at 50% -8%, var(--pep-black-1) 0%, rgba(20, 20, 22, 0) 70%),
+    radial-gradient(46% 40% at 90% 100%, var(--pep-uv-black) 0%, rgba(18, 15, 26, 0) 72%),
+    radial-gradient(40% 36% at 6% 92%, var(--pep-uv-black) 0%, rgba(18, 15, 26, 0) 70%),
+    var(--pep-black-0);
+}
+
+/* BG-21 PERFORATED QUILT is a WebGL canvas that ground.js adds (assets/ground/pep-quilt.js). It styles itself:
+   fixed, full viewport, z-index -1 inside this module, so it sits over the gradients above and under the grain.
+   The two drifting lights are gone: the platinum one washed the quilt out under it, the violet one tinted it. */
+
+/* fine grain so the black reads matte, not flat */
+.pep-ground-grain {
+  position: absolute;
+  inset: 0;
+  opacity: .055;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .8  0 0 0 0 .8  0 0 0 0 .82  0 0 0 .9 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+}
+</style>

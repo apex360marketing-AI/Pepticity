@@ -1,0 +1,42 @@
+/* fc2 DOCK: a raised tab on top carries the opening line, a notch below takes the key. Everything centred. */
+.fc2 { max-width: 660px; --fc-rx0: 2deg; --fc-ry0: -3deg; text-align: center; }
+.fc2-glass {
+  --t: 36px; --tw: clamp(196px, 44cqi, 270px); --c: clamp(26px, 7cqi, 46px); --nw: clamp(232px, 60cqi, 372px); --nd: 34px;
+  clip-path: polygon(
+    var(--c) var(--t), calc(50% - var(--tw) / 2 - var(--t)) var(--t), calc(50% - var(--tw) / 2) 0, calc(50% + var(--tw) / 2) 0, calc(50% + var(--tw) / 2 + var(--t)) var(--t), calc(100% - var(--c)) var(--t),
+    100% calc(var(--t) + var(--c)), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%,
+    calc(50% + var(--nw) / 2 + var(--nd)) 100%, calc(50% + var(--nw) / 2) calc(100% - var(--nd)), calc(50% - var(--nw) / 2) calc(100% - var(--nd)), calc(50% - var(--nw) / 2 - var(--nd)) 100%,
+    var(--c) 100%, 0 calc(100% - var(--c)), 0 calc(var(--t) + var(--c)));
+}
+.fc2-mark { top: 46%; width: 78%; }
+.fc2-body { padding: 0 clamp(20px, 7.4cqi, 54px) 0; }
+.fc2-kicker { display: flex; align-items: center; justify-content: center; height: 36px; margin: 0 0 clamp(18px, 4.4cqi, 30px); padding-top: 4px; }
+.fc2-ask { transform: translateZ(14px); }
+.fc2-line { margin-left: auto; margin-right: auto; }
+.fc2-offer { margin-top: 12px; }
+.fc2-light { width: 56%; margin: 10px auto 6px; }
+.fc2-label { text-align: left; }
+.fc2-well { clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px); }
+.fc2-input { text-align: center; }
+.fc2-consent { text-align: left; margin-top: 14px; }
+.fc2-fine { margin-top: 8px; margin-bottom: 18px; }
+.fc2-err, .fc2-done { margin-bottom: 4px; }
+/* the key plugs into the notch and hangs below the card: a dark-glass keystone with a bright bevel */
+.fc2-key { width: calc(clamp(232px, 60cqi, 372px) + 96px); max-width: 100%; margin: 0 auto -36px; }
+.fc2-btn {
+  min-height: 66px; padding: 0 44px;
+  letter-spacing: .1em;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .3) 0%, rgba(255, 255, 255, .07) 44%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(70% 90% at 50% 120%, rgba(42, 120, 255, .75), rgba(42, 120, 255, 0) 70%),
+    linear-gradient(180deg, #6b7077 0%, #2a2d31 10%, #141416 46%, #0b0b0c 58%, #141416 100%);
+  clip-path: polygon(52px 0, calc(100% - 52px) 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.fc2-btn .fc-rim-line { stroke-width: 3.4; opacity: .95; }
+.fc2-btn .fc-rim-band { stroke: rgba(230, 233, 237, .16); stroke-width: 10; }
+.fc2-btn:hover, .fc2-btn:focus-visible { filter: brightness(1.25); }
+.fc2-btn-label { background-image: var(--fc-chrome); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.fc2-bloom { left: 4%; right: 4%; top: calc(100% - 16px); height: 52px; }
+@container (max-width: 479px) { .fc2-btn { padding: 0 40px; font-size: 13px; letter-spacing: .04em; } }
+.fc2-floor { bottom: -74px; }
+.fc2-under { bottom: -62px; }

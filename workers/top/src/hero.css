@@ -1,0 +1,463 @@
+/* 10-hero. Every selector starts with [data-module="hero"] or .pep-hero-
+   TOP-APPLY v2: the first screen is ONE card that sells (owner, Nov 13 2026). The card is sized to its content and sits right
+   under the bar, so the join field is on the first screen at every size. It is the store's smoked glass with a chrome rim,
+   cut with big angled corners, and it carries the same glass tab as the header's P (steep walls stepping out of the card's
+   upper-left cut, 12 px in), where GRAND OPENING stands in chrome. JOIN THE FOUNDER CIRCLE is the house 3D chrome with the
+   logo's blue light through its waist; the founder line is the one chrome-gold accent; the logo's light runs through the card
+   like the light through the P, overhanging both sides. Headings shine (a slow sheen) and never move; nothing is flat white. */
+[data-module="hero"] {
+  --pep-hero-blue: 42, 120, 255;            /* the logo's light, #2a78ff */
+  --pep-hero-chrome: linear-gradient(180deg, #ffffff 0%, #e6e9ed 24%, #b9bec5 40%, #6b7077 46%, rgba(42, 120, 255, 1) 49%, #cfe6ff 51%, rgba(42, 120, 255, 1) 53%, #6b7077 57%, #b9bec5 66%, #e6e9ed 82%, #b9bec5 100%);
+  /* chrome gold from the owner's pale ramp; its two deeper stops are cut with platinum so every lit pixel stays inside the
+     brand-lock gold limits (LAB b* at most 20, a* at most 6): never yellow, never orange */
+  --pep-hero-gold: linear-gradient(180deg, var(--pep-gold-5) 0%, var(--pep-gold-4) 32%, color-mix(in srgb, var(--pep-gold-3) 65%, var(--pep-plat-3)) 48%, color-mix(in srgb, var(--pep-gold-2) 70%, var(--pep-plat-2)) 54%, color-mix(in srgb, var(--pep-gold-3) 65%, var(--pep-plat-3)) 61%, var(--pep-gold-4) 76%, var(--pep-gold-5) 100%);
+  --pep-hero-sheen: linear-gradient(105deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, .85) 50%, rgba(255, 255, 255, 0) 60%);
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 40px clamp(12px, 2.4vw, 40px) clamp(28px, 6vh, 72px);   /* the top clears the header's tab by 18 px */
+  overflow-x: clip;
+}
+/* a lamp of its own behind the glass, so the card has the logo's light to bend */
+[data-module="hero"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(70vw, 1000px);
+  height: min(80svh, 640px);
+  pointer-events: none;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(var(--pep-hero-blue), .26), rgba(var(--pep-hero-blue), .08) 58%, rgba(var(--pep-hero-blue), 0) 100%);
+}
+.pep-hero-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* the card and the vial stand together, as one pair about the page's centre line */
+.pep-hero-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 56vw) auto;
+  justify-content: start;
+  align-items: start;
+  gap: clamp(28px, 4.4vw, 84px);
+}
+
+/* ---------- the card: glass with a chrome rim, big cuts, and the header's tab echoed at its upper left ---------- */
+.pep-hero-card {
+  --t: 32px;                                /* the tab's height */
+  --tw: 236px;                              /* the tab's top, wide enough for GRAND OPENING */
+  --a: 40px;                                /* the big cuts (upper left, lower right) */
+  --b: 14px;                                /* the small nicks (upper right, lower left) */
+  --k: .4;                                  /* the tab's walls: .4 px across per px down (about 68 degrees), as the header's */
+  --px: clamp(22px, 2.4vw, 36px);           /* side padding */
+  --over: 22px;                             /* how far the light runs out past each side */
+  --x1: calc(var(--a) - 12px);              /* where the tab leaves the upper-left cut: 12 px in, as the header's leaves its cut */
+  --x2: calc(var(--x1) + (var(--t) + 12px) * var(--k));
+  --x3: calc(var(--x2) + var(--tw));
+  --x4: calc(var(--x3) + var(--t) * var(--k));
+  position: relative;
+  justify-self: stretch;
+  width: 100%;
+  padding: calc(var(--t) + 22px) var(--px) 24px;
+}
+.pep-hero-card::before,
+.pep-hero-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.pep-hero-card::before {                    /* smoked glass, lit from the upper middle */
+  background:
+    radial-gradient(70% 46% at 50% 0%, rgba(var(--pep-hero-blue), .16), rgba(var(--pep-hero-blue), 0) 100%),
+    linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .02) 44%, rgba(255, 255, 255, .05)),
+    linear-gradient(180deg, rgba(20, 20, 22, .55), rgba(11, 11, 12, .7));
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+          backdrop-filter: blur(14px) saturate(150%);
+  clip-path: polygon(
+    0 calc(var(--t) + var(--a)), var(--x1) calc(var(--t) + 12px), var(--x2) 0, var(--x3) 0, var(--x4) var(--t),
+    calc(100% - var(--b)) var(--t), 100% calc(var(--t) + var(--b)), 100% calc(100% - var(--a)), calc(100% - var(--a)) 100%,
+    var(--b) 100%, 0 calc(100% - var(--b)));
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .pep-hero-card::before { background: rgba(16, 17, 19, .92); }
+}
+.pep-hero-card::after {                     /* the chrome rim, 1.2 px, along every cut and both walls of the tab */
+  opacity: .9;
+  background: linear-gradient(135deg, #ffffff, #6b7077 30%, #2a2d31 52%, #e6e9ed 78%, #b9bec5);
+  clip-path: polygon(evenodd,
+    0 calc(var(--t) + var(--a)), var(--x1) calc(var(--t) + 12px), var(--x2) 0, var(--x3) 0, var(--x4) var(--t),
+    calc(100% - var(--b)) var(--t), 100% calc(var(--t) + var(--b)), 100% calc(100% - var(--a)), calc(100% - var(--a)) 100%,
+    var(--b) 100%, 0 calc(100% - var(--b)), 0 calc(var(--t) + var(--a)),
+    1.2px calc(var(--t) + var(--a) + .5px), 1.2px calc(100% - var(--b) - .5px), calc(var(--b) + .5px) calc(100% - 1.2px),
+    calc(100% - var(--a) - .5px) calc(100% - 1.2px), calc(100% - 1.2px) calc(100% - var(--a) - .5px),
+    calc(100% - 1.2px) calc(var(--t) + var(--b) + .5px), calc(100% - var(--b) - .5px) calc(var(--t) + 1.2px),
+    calc(var(--x4) - .81px) calc(var(--t) + 1.2px), calc(var(--x3) - .81px) 1.2px, calc(var(--x2) + .81px) 1.2px,
+    calc(var(--x1) + 1.02px) calc(var(--t) + 12.67px), 1.2px calc(var(--t) + var(--a) + .5px));
+}
+.pep-hero-form { position: relative; z-index: 1; }
+
+/* ---------- GRAND OPENING: chrome, in the tab ---------- */
+.pep-hero-kicker {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: calc(var(--x2) - 4px);
+  width: calc(var(--tw) + 8px);
+  height: var(--t);
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0 0 0 .32em;
+  font: 700 15px/1 var(--pep-font-display);
+  letter-spacing: .32em;
+  white-space: nowrap;
+}
+.pep-hero-kicker-face,
+.pep-hero-label,
+.pep-hero-done,
+.pep-hero-skip {                            /* platinum chrome with the blue light through its waist, and a slow sheen */
+  background-image: var(--pep-hero-sheen), var(--pep-hero-chrome);
+  background-size: 300% 100%, 100% 100%;
+  background-position: 120% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pep-hero-kicker-face { display: block; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .6)); animation: pep-hero-sheen 8s ease-in-out 1.2s infinite; }
+@keyframes pep-hero-sheen { 0% { background-position: 120% 0, 0 0; } 50%, 100% { background-position: -20% 0, 0 0; } }
+
+/* ---------- the ask: the house 3D chrome (stepped depth behind a chrome face), the blue light through its waist ---------- */
+.pep-hero-ask {
+  --pep-hero-3d-step: .02em;
+  position: relative;
+  isolation: isolate;
+  margin: 0 0 12px;
+  font-family: var(--pep-font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.05vw, 46px);
+  line-height: 1.08;
+  letter-spacing: .06em;
+  text-wrap: balance;
+  color: var(--pep-plat-3);
+}
+.pep-hero-3d::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--pep-black-0);
+  -webkit-text-fill-color: currentColor;
+  text-shadow:
+    calc(var(--pep-hero-3d-step) * 1) calc(var(--pep-hero-3d-step) * 1.2) 0 var(--pep-plat-1),
+    calc(var(--pep-hero-3d-step) * 2) calc(var(--pep-hero-3d-step) * 2.4) 0 var(--pep-plat-2),
+    calc(var(--pep-hero-3d-step) * 3) calc(var(--pep-hero-3d-step) * 3.6) 0 color-mix(in srgb, var(--pep-plat-1) 55%, var(--pep-black-0)),
+    calc(var(--pep-hero-3d-step) * 4) calc(var(--pep-hero-3d-step) * 4.8) 0 color-mix(in srgb, var(--pep-black-0) 45%, black),
+    calc(var(--pep-hero-3d-step) * 5) calc(var(--pep-hero-3d-step) * 6) 0 color-mix(in srgb, var(--pep-plat-1) 78%, var(--pep-plat-2)),
+    calc(var(--pep-hero-3d-step) * 6) calc(var(--pep-hero-3d-step) * 7.2) 0 var(--pep-black-0),
+    .1em .15em .14em rgba(0, 0, 0, .85),
+    0 0 .45em rgba(var(--pep-hero-blue), .35);
+}
+.pep-hero-3d-face {
+  display: block;
+  background-image: var(--pep-hero-sheen), var(--pep-hero-chrome);
+  background-size: 300% 100%, 100% 1.08em;
+  background-position: 120% 0, 0 0;
+  background-repeat: no-repeat, repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pep-hero-sheen 8s ease-in-out infinite;
+}
+
+/* ---------- the founder line: the one chrome-gold accent on the card ---------- */
+.pep-hero-offer { margin: 0; font: 400 clamp(17px, 1.62vw, 24px)/1.3 var(--pep-font-display); letter-spacing: .07em; text-transform: uppercase; text-wrap: balance; color: var(--pep-plat-3); }
+.pep-hero-offer-big {
+  display: block;
+  font-weight: 400;
+  background-image: var(--pep-hero-sheen), var(--pep-hero-gold);
+  background-size: 300% 100%, 100% 1.3em;
+  background-position: 120% 0, 0 0;
+  background-repeat: no-repeat, repeat-y;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .7)) drop-shadow(0 0 10px rgba(var(--pep-hero-blue), .22));
+  animation: pep-hero-sheen 8s ease-in-out 2.4s infinite;
+}
+
+/* ---------- the logo's light through the card: a blade with a hot core, tapering to a point at both ends, overhanging both
+   sides like the light through the P; one slow glint travels along it ---------- */
+.pep-hero-light {
+  position: relative;
+  display: block;
+  height: 18px;
+  margin: 12px 7% 8px;                      /* a lens that thins to nothing well before the card's edges */
+  pointer-events: none;
+}
+.pep-hero-light::before {                   /* the halo */
+  content: "";
+  position: absolute;
+  inset: 0 6%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(var(--pep-hero-blue), .38), rgba(var(--pep-hero-blue), .1) 60%, rgba(var(--pep-hero-blue), 0) 100%);
+}
+.pep-hero-light::after {                    /* the rod and its core */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  clip-path: polygon(0 50%, 9% 0, 91% 0, 100% 50%, 91% 100%, 9% 100%);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .95), rgba(255, 255, 255, 0)) -40% 0 / 22% 100% no-repeat,
+    linear-gradient(180deg, rgba(var(--pep-hero-blue), 0), rgba(var(--pep-hero-blue), .55) 30%, rgba(var(--pep-hero-blue), .55) 70%, rgba(var(--pep-hero-blue), 0)),
+    linear-gradient(90deg, rgba(var(--pep-hero-blue), 0) 0%, rgba(var(--pep-hero-blue), .95) 16%, #cfe6ff 50%, rgba(var(--pep-hero-blue), .95) 84%, rgba(var(--pep-hero-blue), 0) 100%);
+  animation: pep-hero-glint 7s ease-in-out 1s infinite;
+}
+@keyframes pep-hero-glint { 0% { background-position: -40% 0, 0 0, 0 0; } 45%, 100% { background-position: 140% 0, 0 0, 0 0; } }
+
+/* ---------- the field, the button, the consent ---------- */
+.pep-hero-label { display: inline-block; margin: 0 0 6px; font: 700 14px/1.2 var(--pep-font-display); letter-spacing: .3em; }
+.pep-hero-fieldrow { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.pep-hero-input {                           /* cut at two corners, the rim drawn along the cuts (a field has no pseudo layers) */
+  --k: 22px;
+  --rim: var(--pep-plat-2);
+  --rim-cut: var(--pep-plat-3);
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 56px;
+  padding: 0 16px 0 22px;
+  font-size: 18px;
+  color: var(--pep-plat-4);
+  caret-color: var(--pep-light, #2a78ff);
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 0 0 / var(--k) var(--k) no-repeat,
+    linear-gradient(135deg, transparent calc(50% - .8px), var(--rim-cut) 50%, transparent calc(50% + .8px)) 100% 100% / var(--k) var(--k) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) var(--k) 0 / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 100% / calc(100% - var(--k)) 1px no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 0 var(--k) / 1px calc(100% - var(--k)) no-repeat,
+    linear-gradient(var(--rim), var(--rim)) 100% 0 / 1px calc(100% - var(--k)) no-repeat,
+    rgba(255, 255, 255, .05);
+  clip-path: polygon(var(--k) 0, 100% 0, 100% calc(100% - var(--k)), calc(100% - var(--k)) 100%, 0 100%, 0 var(--k));
+  transition: background-color .3s ease;
+}
+.pep-hero-input:hover { --rim: var(--pep-plat-3); --rim-cut: var(--pep-plat-4); }
+.pep-hero-input:focus-visible { outline: 0; --rim: var(--pep-light, #2a78ff); --rim-cut: var(--pep-light, #2a78ff); background-color: rgba(255, 255, 255, .08); box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
+.pep-hero-input[aria-invalid="true"] { --rim: var(--pep-light, #2a78ff); --rim-cut: var(--pep-light, #2a78ff); }
+
+/* BTN-109 / TXT-09: a slashed chrome blade with the doors' arrow end, the logo's light along its foot; hover lifts it and
+   grows its words, and one sheen crosses it */
+.pep-hero-btn {
+  --s: clamp(20px, 1.7vw, 26px);
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 58px;
+  padding: 0 34px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  font: 700 clamp(16px, 1.25vw, 19px)/1 var(--pep-font-display);
+  letter-spacing: .16em;
+  white-space: nowrap;
+  color: var(--pep-black-0);
+  background: linear-gradient(100deg, #b9bec5 0%, #ffffff 16%, #e6e9ed 30%, #6b7077 50%, #e6e9ed 66%, #ffffff 80%, #b9bec5 100%);
+  box-shadow: inset 0 -3px 0 rgba(var(--pep-hero-blue), .85), inset 0 -10px 14px -8px rgba(var(--pep-hero-blue), .5);
+  clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);   /* slashed, never pointed */
+  transform: translateY(0);
+  transition: transform .45s var(--pep-ease), filter .45s ease;
+}
+.pep-hero-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 55%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .85), rgba(255, 255, 255, 0));
+  transform: translateX(0);
+  transition: transform 0s;
+}
+.pep-hero-btn:hover,
+.pep-hero-btn:focus-visible { transform: translateY(-3px); filter: brightness(1.08); }
+.pep-hero-btn:hover::after,
+.pep-hero-btn:focus-visible::after { transform: translateX(330%); transition: transform 1.4s ease-in-out; }
+.pep-hero-btn:active { transform: translateY(1px); filter: brightness(.96); }
+.pep-hero-btn:focus-visible { outline: 0; box-shadow: inset 0 -5px 0 var(--pep-light, #2a78ff), inset 0 -14px 16px -8px rgba(var(--pep-hero-blue), .7); }
+.pep-hero-btn-label { position: relative; z-index: 1; display: inline-block; transition: opacity .3s ease, transform .45s var(--pep-ease); }
+.pep-hero-btn:hover .pep-hero-btn-label,
+.pep-hero-btn:focus-visible .pep-hero-btn-label { transform: scale(1.06); }
+
+/* FRM-103: the button keeps its size; the label gives way to a ring, then a tick */
+.pep-hero-btn-ring,
+.pep-hero-btn-tick { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; opacity: 0; }
+.pep-hero-btn-ring { width: 20px; height: 20px; margin: -10px 0 0 -10px; border: 2px solid rgba(11, 11, 12, .25); border-top-color: var(--pep-black-0); border-right-color: var(--pep-black-0); border-radius: 0; }
+.pep-hero-btn-tick::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  width: 9px;
+  height: 16px;
+  border-right: 3px solid var(--pep-black-0);
+  border-bottom: 3px solid var(--pep-black-0);
+  transform: rotate(45deg) scale(.4);
+  transition: transform .35s var(--pep-ease);
+}
+.pep-hero-sending .pep-hero-btn-label { opacity: 0; }
+.pep-hero-sending .pep-hero-btn-ring { opacity: 1; animation: pep-hero-turn .7s linear infinite; }
+.pep-hero-sent .pep-hero-btn-label { opacity: 0; }
+.pep-hero-sent .pep-hero-btn-tick { opacity: 1; }
+.pep-hero-sent .pep-hero-btn-tick::before { transform: rotate(45deg) scale(1); }
+@keyframes pep-hero-turn { to { transform: rotate(360deg); } }
+
+.pep-hero-err { margin: 8px 0 0; font-size: 15px; color: var(--pep-plat-4); }
+.pep-hero-consent { display: flex; gap: 12px; align-items: flex-start; min-height: 44px; margin: 14px 0 0; font-size: 15px; line-height: 1.45; color: var(--pep-plat-3); cursor: pointer; }
+/* the tick box: a chrome frame cut at two corners round a black well, ticked in black on platinum */
+.pep-hero-tick {
+  flex: 0 0 auto;
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-top: -3px;
+  padding: 1.5px;
+  background: linear-gradient(150deg, var(--pep-plat-4), var(--pep-plat-2) 45%, var(--pep-plat-1) 60%, var(--pep-plat-3));
+  clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px);
+  transition: transform .4s var(--pep-ease);
+}
+.pep-hero-consent:hover .pep-hero-tick { transform: translateY(-2px) scale(1.08); }
+.pep-hero-check {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  cursor: pointer;
+  background: var(--pep-black-0) no-repeat 50% 50% / 20px 20px;
+  clip-path: polygon(12.4px 0, 100% 0, 100% calc(100% - 12.4px), calc(100% - 12.4px) 100%, 0 100%, 0 12.4px);
+  transition: background-color .25s ease;
+}
+.pep-hero-check:checked {
+  background-color: var(--pep-plat-4);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M3.5 10.5 8 15 16.5 5' fill='none' stroke='%230b0b0c' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'/></svg>");
+}
+.pep-hero-tick:has(.pep-hero-check:focus-visible) { background: var(--pep-light, #2a78ff); padding: 2.5px; }
+.pep-hero-tick:has(.pep-hero-check[aria-invalid="true"]) { background: var(--pep-light, #2a78ff); padding: 2.5px; }
+.pep-hero-fine { margin: 10px 0 0; font-size: 14px; color: var(--pep-plat-3); }
+.pep-hero-preview { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--pep-plat-1); font: 400 14px/1.5 var(--pep-font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--pep-plat-3); }
+
+/* ---------- after joining: the member's own lines ---------- */
+.pep-hero-done { display: inline-block; margin: 0 0 8px; font: 400 clamp(22px, 2.2vw, 32px)/1.15 var(--pep-font-display); letter-spacing: .1em; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .6)); }
+.pep-hero-done:focus { outline: 0; }
+.pep-hero-joined > .pep-hero-ask,
+.pep-hero-joined > .pep-hero-offer { display: none; }
+.pep-hero-next { margin: 0 0 16px; font-size: clamp(16px, 1.25vw, 19px); color: var(--pep-plat-3); }
+.pep-hero-step { animation: pep-hero-step-in .6s var(--pep-ease) both; }
+@keyframes pep-hero-step-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.pep-hero-skip {
+  display: inline-block;
+  margin-top: 12px;
+  min-height: 44px;
+  padding: 0 4px;
+  font: 700 14px/1 var(--pep-font-display);
+  letter-spacing: .26em;
+  border: 0;
+  border-bottom: 1px solid var(--pep-plat-2);
+  border-radius: 0;
+  cursor: pointer;
+  transform: translateY(0) scale(1);
+  transition: transform .45s var(--pep-ease), border-color .3s ease;
+}
+.pep-hero-skip:hover,
+.pep-hero-skip:focus-visible { transform: translateY(-2px) scale(1.06); border-color: var(--pep-plat-4); outline: 0; }
+.pep-hero-skip:focus-visible { box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
+
+/* ---------- the vial (06-bottle mounts it here; it never tilts: its label must stay square) ---------- */
+.pep-hero-bottle {
+  justify-self: start;
+  height: min(56vh, 560px);
+  aspect-ratio: 560 / 1058;
+  margin-right: calc(min(56vh, 560px) * -.09);   /* the picture's spare air on the outer side, so the pair reads centred */
+  cursor: pointer;
+}
+.pep-hero-bottle:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2a78ff); }
+
+/* short laptop screens: the card tightens so the whole ask stays on the first screen */
+@media (min-width: 900px) and (max-height: 800px) {
+  [data-module="hero"] { padding-top: 40px; }
+  .pep-hero-card { padding-bottom: 20px; }
+  .pep-hero-ask { margin-bottom: 8px; font-size: clamp(28px, 5.2vh, 40px); }
+  .pep-hero-offer { font-size: clamp(17px, 2.7vh, 21px); }
+  .pep-hero-light { margin-top: 8px; margin-bottom: 4px; }
+  .pep-hero-input { height: 52px; }
+  .pep-hero-btn { height: 54px; }
+  .pep-hero-consent { margin-top: 10px; }
+  .pep-hero-fine { margin-top: 6px; }
+  .pep-hero-bottle { height: min(60vh, 520px); margin-right: calc(min(60vh, 520px) * -.09); }
+}
+/* narrow windows and phones: the card first, the vial under it */
+@media (max-width: 899px) {
+  [data-module="hero"] { padding: 48px 12px 28px; }
+  .pep-hero-row { grid-template-columns: minmax(0, 1fr); justify-content: stretch; gap: 22px; }
+  .pep-hero-card { --px: 18px; --over: 10px; }
+  .pep-hero-bottle { justify-self: center; height: auto; width: min(78vw, 330px); margin: 0; }
+}
+@media (max-width: 599px) {
+  [data-module="hero"] { padding-top: 16px; }
+  .pep-hero-card { --t: 28px; --tw: 196px; --a: 30px; --b: 12px; padding-bottom: 20px; padding-top: calc(var(--t) + 18px); }
+  .pep-hero-kicker { font-size: 13px; letter-spacing: .3em; }
+  .pep-hero-ask { font-size: 27px; }
+  .pep-hero-offer { font-size: 16px; }
+  .pep-hero-input { height: 54px; }
+  .pep-hero-btn { height: 56px; padding: 0 30px 0 26px; font-size: 16px; letter-spacing: .12em; }
+  .pep-hero-consent { font-size: 14.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-hero-kicker-face, .pep-hero-3d-face, .pep-hero-offer-big, .pep-hero-light::after { animation: none; }
+  .pep-hero-step { animation: none; }
+  .pep-hero-btn:hover, .pep-hero-btn:focus-visible, .pep-hero-skip:hover, .pep-hero-skip:focus-visible { transform: none; }
+  .pep-hero-consent:hover .pep-hero-tick { transform: none; }
+}
+
+/* ===== ROUND 3 (Jeff, Nov 14 2026): the card stands at the far left of the page, wider, and SITS IN 3D (the glass-cards
+   skill): real depth (perspective, the lettering and the form a layer nearer than the glass), a floor shadow and a blue
+   under-glow below it. It is seated, not moving: nothing here follows the pointer, so the headings never move. The card's
+   own design is the owner's next pick; only its place, width and seat are set here. ===== */
+.pep-hero-row { perspective: 1800px; perspective-origin: 28% 40%; }
+.pep-hero-card { transform-style: preserve-3d; }
+.pep-hero-floor {                           /* under the card: the shadow it casts and the logo's light spilling from below */
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: calc(100% - 8px);
+  height: 54px;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 46% at 50% 22%, rgba(var(--pep-hero-blue), .5), rgba(var(--pep-hero-blue), 0) 100%),
+    radial-gradient(50% 60% at 50% 40%, rgba(0, 0, 0, .75), rgba(0, 0, 0, 0) 100%);
+  transform: translateZ(-40px);
+}
+@media (min-width: 900px) {
+  .pep-hero-card { transform: rotateY(3deg) rotateX(1.2deg); transform-origin: 0 50%; }
+  .pep-hero-kicker,
+  .pep-hero-form { transform: translateZ(26px); }
+  .pep-hero-fieldrow { flex-direction: row; }
+  .pep-hero-btn { flex: 0 0 auto; width: auto; padding: 0 40px; }
+}
+@media (max-width: 899px) {
+  .pep-hero-floor { left: 6%; right: 6%; height: 40px; }
+}

@@ -1,0 +1,66 @@
+/* fc6 FOUNDER CARD: a member card with a stub. Notches mark the tear; the lens light stands in it. Offer set large on the stub. */
+.fc6 { max-width: 840px; --fc-rx0: 2.5deg; --fc-ry0: 3.5deg; --st: 33%; --n: 20px; --c: clamp(30px, 5.6cqi, 48px); }
+.fc6-glass {
+  clip-path: polygon(
+    var(--c) 0, calc(var(--st) - var(--n) - 12px) 0, calc(var(--st) - 12px) var(--n), calc(var(--st) + 12px) var(--n), calc(var(--st) + var(--n) + 12px) 0, calc(100% - 16px) 0, 100% 16px,
+    100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, calc(var(--st) + var(--n) + 12px) 100%, calc(var(--st) + 12px) calc(100% - var(--n)), calc(var(--st) - 12px) calc(100% - var(--n)), calc(var(--st) - var(--n) - 12px) 100%, 16px 100%, 0 calc(100% - 16px),
+    0 var(--c));
+}
+.fc6-mark { left: 68%; top: 50%; width: 62%; }
+.fc6-body { display: grid; grid-template-columns: var(--st) minmax(0, 1fr); padding: 0; }
+.fc6-stub { position: relative; padding: clamp(30px, 4.6cqi, 40px) 14px clamp(26px, 4cqi, 36px) clamp(22px, 3.6cqi, 30px); transform-style: preserve-3d; }
+.fc6-main { position: relative; padding: clamp(30px, 4.6cqi, 40px) clamp(22px, 4.4cqi, 38px) clamp(24px, 3.8cqi, 34px) clamp(24px, 4.4cqi, 38px); transform-style: preserve-3d; }
+.fc6-kicker { margin-bottom: 18px; font-size: 12.5px; letter-spacing: .26em; }
+/* the offer, set like the print on a stub */
+.fc6-offer { margin: 0; font-size: clamp(13px, 1.75cqi, 14.5px); line-height: 1.5; letter-spacing: .14em; text-wrap: wrap; }
+.fc6-fig { display: block; font-size: clamp(50px, 9cqi, 76px); line-height: .98; letter-spacing: .01em; margin: 2px 0 4px; }
+.fc6-fig:first-of-type { font-size: clamp(38px, 6.4cqi, 54px); }
+/* the standing lens in the tear */
+.fc6-light { position: absolute; left: calc(var(--st) - 15px); top: 14%; width: 30px; height: 72%; margin: 0; transform: translateZ(10px); }
+.fc6-light::before, .fc6-light::after { left: 50%; right: auto; top: 0; bottom: 0; height: auto; margin-top: 0; }
+.fc6-light::before { width: 24px; margin-left: -12px; }
+.fc6-light::after { width: 6px; margin-left: -3px; }
+.fc6-ask { font-size: clamp(26px, 5.2cqi, 42px); transform: translateZ(14px); }
+.fc6-label { margin-top: 18px; }
+.fc6-well { clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px)); }
+/* frosted ice key, notched on top, a chrome-gold line along its foot */
+.fc6-btn {
+  min-height: 62px;
+  font-size: clamp(14px, 1.9cqi, 16px);
+  background:
+    linear-gradient(90deg, rgba(240, 230, 199, 0) 18%, rgba(240, 230, 199, .95) 42%, #fef9e8 50%, rgba(240, 230, 199, .95) 58%, rgba(240, 230, 199, 0) 82%) 50% calc(100% - 7px) / 100% 2px no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, .34) 0%, rgba(255, 255, 255, .1) 40%, rgba(255, 255, 255, 0) 41%),
+    linear-gradient(180deg, rgba(230, 233, 237, .3) 0%, rgba(207, 230, 255, .14) 52%, rgba(230, 233, 237, .24) 100%);
+  clip-path: polygon(12px 0, calc(50% - 52px) 0, calc(50% - 42px) 9px, calc(50% + 42px) 9px, calc(50% + 52px) 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 12px);
+}
+.fc6-btn:hover, .fc6-btn:focus-visible { background-color: rgba(42, 120, 255, .34); }
+.fc6-btn .fc-rim-line { stroke-width: 3.2; opacity: 1; }
+.fc6-btn .fc-rim-band { stroke-width: 0; }
+.fc6-btn .fc-rs3 { stop-opacity: .55; }
+.fc6-btn-label { padding-top: 4px; background-image: var(--fc-chrome); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.fc6-consent { margin-top: 14px; }
+.fc6-fine { margin-top: 6px; padding-right: var(--c); }
+
+@container (max-width: 619px) {
+  .fc6-seat { --sh: 172px; --n: 16px; }
+  .fc6-glass {
+    clip-path: polygon(
+      var(--c) 0, calc(100% - 16px) 0, 100% 16px,
+      100% calc(var(--sh) - var(--n) - 10px), calc(100% - var(--n)) calc(var(--sh) - 10px), calc(100% - var(--n)) calc(var(--sh) + 10px), 100% calc(var(--sh) + var(--n) + 10px),
+      100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 16px 100%, 0 calc(100% - 16px),
+      0 calc(var(--sh) + var(--n) + 10px), var(--n) calc(var(--sh) + 10px), var(--n) calc(var(--sh) - 10px), 0 calc(var(--sh) - var(--n) - 10px),
+      0 var(--c));
+  }
+  .fc6-mark { left: 50%; top: 60%; width: 96%; }
+  .fc6-body { grid-template-columns: minmax(0, 1fr); }
+  .fc6-stub { height: var(--sh); padding: 24px 22px 0 clamp(34px, 11cqi, 48px); }
+  .fc6-kicker { margin-bottom: 8px; }
+  .fc6-offer { font-size: 13px; }
+  .fc6-fig, .fc6-fig:first-of-type { display: inline-block; vertical-align: -.08em; margin: 0 .08em; font-size: 40px; line-height: 1; }
+  .fc6-main { padding: 28px 20px 26px; }
+  .fc6-ask { font-size: clamp(26px, 7.4cqi, 44px); }
+  .fc6-light { left: 14%; top: calc(var(--sh) - 15px); width: 72%; height: 30px; }
+  .fc6-light::before, .fc6-light::after { left: 0; right: 0; top: 50%; bottom: auto; width: auto; margin-left: 0; }
+  .fc6-light::before { height: 22px; margin-top: -11px; }
+  .fc6-light::after { height: 6px; margin-top: -3px; }
+}

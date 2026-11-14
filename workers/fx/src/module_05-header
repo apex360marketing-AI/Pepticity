@@ -1,0 +1,47 @@
+<!-- module:05-header -->
+<!-- 05-header: THE MENU, the owner's pick (menu 58, Nov 13 2026) with the store's HEADER P seated in it (his "B · TUNED",
+     Nov 13 2026): the live 3D P (logo 07, drawn by 02-logo3d with its edge light) hangs in a glass tab under the bar's
+     lower-left cut, the name PEPTICITY beside it in the house 3D chrome, then the keys SHOP / PEPTIDES / RESEARCH / ABOUT /
+     CART. PEPTIDES opens the four-column catalogue (header.js fills it from assets/catalogue.json, names only; each name
+     opens that product in THE LINEUP; products held back in config.js are left out). SHOP goes to THE LINEUP while product
+     names show (the plate of THE SHELF otherwise), RESEARCH to the research doors, ABOUT to FROM VIAL TO SHELF, CART opens
+     the cart drawer. Windows under 1200 px keep the brand, a MENU key and CART on the bar; MENU opens SHOP, PEPTIDES,
+     RESEARCH and ABOUT. Under 900 px the name steps aside and the P stands alone. The bar's glass and its chrome rim live on
+     the header's own ::before and ::after, so nothing cuts the P or its backlight. Every word is in this file except the
+     product names and the count. -->
+<header data-module="header">
+  <div class="pep-header-row">
+    <a class="pep-header-brand" href="#top" aria-label="PEPTICITY, back to the top">
+      <span class="pep-header-mark" aria-hidden="true"></span>
+      <span class="pep-header-name pep-header-3d" data-text="PEPTICITY" aria-hidden="true"><span class="pep-header-3d-face">PEPTICITY</span></span>
+    </a>
+    <span class="pep-header-div" aria-hidden="true"></span>
+    <nav class="pep-header-nav" aria-label="Main">
+      <span class="pep-header-kwrap pep-header-kwrap--menu"><button class="pep-header-key pep-header-menu" type="button" data-menu-key aria-expanded="false" aria-controls="pep-header-keys"><span class="pep-header-label">MENU</span></button></span>
+      <ul class="pep-header-keys" id="pep-header-keys">
+        <li><span class="pep-header-kwrap"><a class="pep-header-key" href="#shelf" data-key="shop" data-to-shop><span class="pep-header-label">SHOP</span></a></span></li>
+        <li class="pep-header-li--drop">
+          <span class="pep-header-kwrap pep-header-kwrap--hero"><button class="pep-header-key pep-header-key--hero" type="button" data-key="peptides" aria-expanded="false" aria-controls="pep-header-drop"><span class="pep-header-label">PEPTIDES</span></button><i class="pep-header-glow" aria-hidden="true"></i></span>
+          <div class="pep-header-drop" id="pep-header-drop" data-drop>
+            <div class="pep-header-drop-in">
+              <i class="pep-header-drop-rim" aria-hidden="true"></i>
+              <div class="pep-header-cols" data-cols data-head-peptide="PEPTIDES" data-head-blend="BLENDS" data-head-other="COMPOUNDS"></div>
+              <p class="pep-header-drop-note" data-drop-fail role="status" hidden>The catalogue could not load. Please refresh.</p>
+              <p class="pep-header-drop-note pep-header-drop-note--soon" data-gate-off="names">THE SHELF OPENS SOON.</p>
+              <div class="pep-header-drop-foot">
+                <a href="#lineup" data-gate="names" data-to-shop data-leave hidden>SEE THE WHOLE LINEUP</a>
+                <a href="#shelf" data-gate-off="names" data-leave>SEE THE SHELF</a>
+                <span class="pep-header-drop-count" data-count data-one="PRODUCT" data-many="PRODUCTS"></span>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li><span class="pep-header-kwrap"><a class="pep-header-key" href="#doors" data-key="research"><span class="pep-header-label">RESEARCH</span></a></span></li>
+        <li><span class="pep-header-kwrap"><a class="pep-header-key" href="#story" data-key="about"><span class="pep-header-label">ABOUT</span></a></span></li>
+      </ul>
+      <span class="pep-header-kwrap"><button class="pep-header-key" type="button" data-key="cart" data-cart-open aria-haspopup="dialog"><span class="pep-header-label">CART</span> <span class="pep-header-count" data-cart-count aria-label="items in cart">0</span></button></span>
+    </nav>
+  </div>
+  <!-- one column of the drop-down -->
+  <template data-tpl="col"><div class="pep-header-col" data-col><p class="pep-header-col-h"></p><ul class="pep-header-col-list" role="list"></ul></div></template>
+</header>

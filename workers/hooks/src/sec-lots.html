@@ -1,0 +1,81 @@
+<!-- 45-hooks / 03 FIRST ACCESS (hook H65). HOOKS worker, Nov 13 2026. After FROM VIAL TO SHELF. The lot wording reads from the
+     restock switch (data-gate="restock"); while it is closed the same slot offers store news first (data-gate-off).
+     ONE field (email) with its own unticked box; then an OPTIONAL second step for a text, with its own unticked text box.
+     The email is held in memory for that second step only, never stored. No dates, no counts, no queue numbers. -->
+<section data-module="hooks" data-hooks="lots" class="pep-hooks-room" id="first-access" aria-labelledby="pep-hooks-lots-title">
+  <div class="pep-hooks-frame" data-hooks-ask>
+    <span class="pep-hooks-glow" aria-hidden="true"></span>
+    <div class="pep-hooks-glass">
+      <span class="pep-hooks-bevel" aria-hidden="true"></span>
+      <span class="pep-hooks-sweep" aria-hidden="true"></span>
+      <span class="pep-hooks-sill" aria-hidden="true"></span>
+      <div class="pep-hooks-in">
+        <div class="pep-hooks-copy">
+          <p class="pep-hooks-eyebrow">FIRST ACCESS</p>
+          <div id="pep-hooks-lots-title">
+            <h2 class="pep-chrome-head pep-hooks-head" data-gate="restock" data-text="FIRST ACCESS TO NEW LOTS" hidden><span class="pep-hooks-face">FIRST ACCESS TO NEW LOTS</span></h2>
+            <h2 class="pep-chrome-head pep-hooks-head" data-gate-off="restock" data-text="FIRST WORD FROM THE STORE"><span class="pep-hooks-face">FIRST WORD FROM THE STORE</span></h2>
+          </div>
+          <p class="pep-hooks-lede" data-gate="restock" hidden>When a new lot is posted, the FOUNDER CIRCLE hears first.</p>
+          <p class="pep-hooks-lede" data-gate-off="restock">Opening dates and store news reach the FOUNDER CIRCLE first.</p>
+          <ul class="pep-hooks-facts" role="list">
+            <li class="pep-hooks-fact"><span class="pep-hooks-num" aria-hidden="true">01</span><span class="pep-hooks-fact-line">FIRST WORD, STRAIGHT TO YOUR INBOX</span></li>
+            <li class="pep-hooks-fact"><span class="pep-hooks-num" aria-hidden="true">02</span><span class="pep-hooks-fact-line">A TEXT TOO, ONLY IF YOU ADD YOUR NUMBER</span></li>
+            <li class="pep-hooks-fact"><span class="pep-hooks-num" aria-hidden="true">03</span><span class="pep-hooks-fact-line">UNSUBSCRIBE IN ONE CLICK</span></li>
+          </ul>
+        </div>
+
+        <form class="pep-hooks-form" method="post" action="" data-hook="H65" data-ghl-form="first-access" data-effect="frm-103" novalidate>
+          <div class="pep-hooks-step" data-step="email">
+            <p class="pep-hooks-prompt">WHERE SHOULD WE SEND IT?</p>
+            <div class="pep-hooks-field">
+              <label class="pep-hooks-label" for="pep-hooks-lots-email">EMAIL</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-lots-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-lots-email-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-lots-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-lots-consent-err"></span>
+              <span class="pep-hooks-consent-text"><span data-consent-text data-gate="restock" hidden>Yes, PEPTICITY may email me when a new lot is posted, and PEPTICITY news. I can unsubscribe any time.</span><span data-consent-text data-gate-off="restock">Yes, PEPTICITY may email me store news first, and PEPTICITY news. I can unsubscribe any time.</span></span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-lots-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can email you first.</p>
+            <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word"><span data-gate="restock" hidden>GET FIRST ACCESS</span><span data-gate-off="restock">SEND ME STORE NEWS FIRST</span></span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+            <p class="pep-hooks-fine">For adults. Your details never go to ad platforms.</p>
+          </div>
+
+          <!-- OPTIONAL second step: a text as well. Its own field and its own unticked box. -->
+          <div class="pep-hooks-step" data-step="sms" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'RE IN. WANT A TEXT TOO?"><span class="pep-hooks-face">YOU'RE IN. WANT A TEXT TOO?</span></p>
+            <div class="pep-hooks-field pep-hooks-field--gap">
+              <label class="pep-hooks-label" for="pep-hooks-lots-phone">MOBILE NUMBER (OPTIONAL)</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-lots-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" data-field="phone" aria-describedby="pep-hooks-lots-phone-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-lots-phone-err" role="alert" data-err="phone" hidden>That number looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_sms" data-consent="sms" aria-describedby="pep-hooks-lots-sms-err"></span>
+              <span class="pep-hooks-consent-text"><span data-sms-text data-gate="restock" hidden>Yes, PEPTICITY may text me when a new lot is posted at this number. Message and data rates may apply. Reply STOP to stop.</span><span data-sms-text data-gate-off="restock">Yes, PEPTICITY may text me store news at this number. Message and data rates may apply. Reply STOP to stop.</span></span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-lots-sms-err" role="alert" data-err="sms" hidden>Tick the box so we can text you.</p>
+            <p class="pep-hooks-err" role="alert" data-err="sms-send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="button" data-sms-send><span class="pep-hooks-btn-word">TEXT ME TOO</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+            <div class="pep-hooks-row">
+              <button class="pep-hooks-alt" type="button" data-sms-skip><span>EMAIL IS ENOUGH</span></button>
+            </div>
+          </div>
+
+          <div class="pep-hooks-step" data-step="done" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'LL HEAR FIRST."><span class="pep-hooks-face">YOU'LL HEAR FIRST.</span></p>
+            <p class="pep-hooks-next">You're in the FOUNDER CIRCLE.<span data-sms-done hidden> Texts too, at the number you gave.</span></p>
+          </div>
+
+          <div class="pep-hooks-step" data-step="member" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'RE IN THE FOUNDER CIRCLE."><span class="pep-hooks-face">YOU'RE IN THE FOUNDER CIRCLE.</span></p>
+            <p class="pep-hooks-next" data-gate="restock" hidden>Members hear first when a new lot is posted.</p>
+            <p class="pep-hooks-next" data-gate-off="restock">Members hear store news first.</p>
+          </div>
+          <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

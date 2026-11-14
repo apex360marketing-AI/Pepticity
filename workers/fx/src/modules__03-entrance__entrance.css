@@ -1,0 +1,74 @@
+<style data-pep-src="modules/03-entrance/entrance.css">
+/* 03-entrance. Every selector starts with [data-module="entrance"] or .pep-entrance- */
+[data-module="entrance"] {
+  --pep-entrance-x: 50vw;
+  --pep-entrance-y: 44vh;
+  --pep-entrance-r: 0px;
+  position: fixed;
+  inset: 0;
+  z-index: 4;                 /* above the page, below the 3D logo canvas: the logo stands on the dark */
+  pointer-events: none;
+  /* failsafe: if the script never runs, the cover still leaves by itself at 5 s */
+  animation-name: pep-entrance-failsafe;
+  animation-duration: .4s;
+  animation-delay: 5s;
+  animation-fill-mode: forwards;
+}
+@keyframes pep-entrance-failsafe {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* the dark, with the iris cut out of it */
+.pep-entrance-shade {
+  position: absolute;
+  inset: 0;
+  background: var(--pep-black-0);
+  -webkit-mask-image: radial-gradient(circle at var(--pep-entrance-x) var(--pep-entrance-y), rgba(0, 0, 0, 0) var(--pep-entrance-r), #000 calc(var(--pep-entrance-r) + 1.5px));
+          mask-image: radial-gradient(circle at var(--pep-entrance-x) var(--pep-entrance-y), rgba(0, 0, 0, 0) var(--pep-entrance-r), #000 calc(var(--pep-entrance-r) + 1.5px));
+}
+
+/* a hairline of platinum on the lip of the iris */
+.pep-entrance-ring {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at var(--pep-entrance-x) var(--pep-entrance-y),
+    rgba(230, 233, 237, 0) calc(var(--pep-entrance-r) - 2px),
+    rgba(230, 233, 237, .85) calc(var(--pep-entrance-r) - .5px),
+    rgba(255, 255, 255, .95) var(--pep-entrance-r),
+    rgba(230, 233, 237, 0) calc(var(--pep-entrance-r) + 1.5px));
+}
+.pep-entrance-ring.pep-entrance-open { opacity: 1; }
+
+/* the logo's beam, drawn across the dark through the P */
+.pep-entrance-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--pep-entrance-y);
+  height: 2px;
+  margin-top: -1px;
+  transform: scaleX(.14);
+  transform-origin: var(--pep-entrance-x) 50%;
+  opacity: .9;
+  /* beat 1: ignition. A compositor animation, so it stays smooth while the 3D engine is loading. */
+  animation-name: pep-entrance-ignite;
+  animation-duration: 2.6s;
+  animation-timing-function: cubic-bezier(.2, .6, .2, 1);
+  animation-fill-mode: both;
+  background: linear-gradient(90deg, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 0%, rgba(var(--pep-light-rgb, 47, 125, 255), .5) 18%, #cfe6ff 50%, rgba(var(--pep-light-rgb, 47, 125, 255), .5) 82%, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 100%);   /* logo 21's light */
+  box-shadow: 0 0 14px rgba(var(--pep-light-rgb, 47, 125, 255), .45), 0 0 40px rgba(var(--pep-light-rgb, 47, 125, 255), .18);
+  transition: transform .76s cubic-bezier(.3, .1, .2, 1), opacity .5s ease;
+}
+@keyframes pep-entrance-ignite {
+  from { transform: scaleX(.004); opacity: 0; }
+  12% { opacity: .9; }
+  to { transform: scaleX(.14); opacity: .9; }
+}
+.pep-entrance-beam.pep-entrance-draw { transform: scaleX(1); opacity: 1; }
+.pep-entrance-beam.pep-entrance-fade { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-module="entrance"] { display: none; }
+}
+</style>

@@ -1,0 +1,41 @@
+/* fc7 CREST: a crest that narrows to a flat foot. Centred. A bezel key (chrome frame, glass core) seated in the taper. */
+.fc7 { max-width: 640px; --fc-rx0: 3deg; --fc-ry0: 0deg; --k: 64%; --tp: 17%; --c: clamp(28px, 7cqi, 46px); text-align: center; }
+.fc7-glass { clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% var(--k), calc(100% - var(--tp)) 100%, var(--tp) 100%, 0 var(--k), 0 var(--c)); }
+.fc7-mark { top: 40%; width: 80%; }
+.fc7-body { padding: clamp(32px, 7cqi, 48px) clamp(20px, 7.4cqi, 52px) clamp(28px, 6cqi, 40px); }
+.fc7-ask { transform: translateZ(16px); }
+.fc7-line { margin-left: auto; margin-right: auto; }
+.fc7-light { width: 58%; margin: 10px auto 6px; }
+.fc7-label { text-align: center; padding-left: .32em; }
+.fc7-well { clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%, 0 22px); }
+.fc7-input { text-align: center; }
+.fc7-consent { text-align: left; margin: 14px 3% 0; }
+.fc7-key { width: 72%; margin: 14px auto 0; }
+/* the bezel key: a chrome frame round a glass core, wide at the top like the crest */
+.fc7-btn {
+  min-height: 66px; padding: 0 30px;
+  font-size: clamp(14px, 2.5cqi, 16px); letter-spacing: .12em;
+  background: linear-gradient(180deg, #ffffff 0%, #e6e9ed 10%, #6b7077 34%, #2a2d31 50%, #6b7077 66%, #b9bec5 88%, #e6e9ed 100%);
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, calc(100% - 22px) 100%, 22px 100%, 0 14px);
+}
+.fc7-btn::before {
+  content: ""; position: absolute; inset: 5px 7px 5px 7px;
+  clip-path: polygon(11px 0, calc(100% - 11px) 0, 100% 11px, calc(100% - 19px) 100%, 19px 100%, 0 11px);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .2) 0%, rgba(255, 255, 255, .04) 44%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(64% 100% at 50% 125%, rgba(207, 230, 255, .85), rgba(42, 120, 255, .7) 34%, rgba(42, 120, 255, 0) 78%),
+    linear-gradient(180deg, #141416, #0b0b0c);
+  transition: filter .45s var(--fc-ease);
+}
+.fc7-btn:hover::before, .fc7-btn:focus-visible::before { filter: brightness(1.6); }
+.fc7-btn .fc-rim { display: none; }
+.fc7-btn-label { background-image: var(--fc-chrome); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.fc7-fine { margin: 12px auto 0; max-width: 66%; }
+.fc7-under { left: 24%; right: 24%; }
+.fc7-floor { left: 14%; right: 14%; }
+@container (max-width: 519px) {
+  .fc7-seat { --tp: 9%; --k: 72%; }
+  .fc7-key { width: 96%; }
+  .fc7-btn { padding: 0 22px; letter-spacing: .05em; font-size: 13.5px; }
+  .fc7-fine { max-width: 72%; }
+}

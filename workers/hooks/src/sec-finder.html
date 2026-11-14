@@ -1,0 +1,130 @@
+<!-- 45-hooks / 02 FIND YOUR PICKS (hook H64). HOOKS worker, Nov 13 2026. After THE STANDARD. A 3-tap catalogue finder: it sorts
+     the SHELF, never the visitor. The questions use only catalogue facts (family, size, price); the picks show name, size
+     and price only, read from assets/catalogue.json at run time, without the products held back in config (hidden and
+     flagged). Then ONE field: "where should we send your picks?". With the names switch closed the finder cannot name a
+     product, so the same slot shows its safe twin: THE SHELF OPENS SOON, with one field. Every word is in this file. -->
+<section data-module="hooks" data-hooks="finder" class="pep-hooks-room" id="picks" aria-labelledby="pep-hooks-twin-title">
+  <div class="pep-hooks-frame" data-hooks-ask data-effect="frm-102">
+    <span class="pep-hooks-glow" aria-hidden="true"></span>
+    <div class="pep-hooks-glass">
+      <span class="pep-hooks-bevel" aria-hidden="true"></span>
+      <span class="pep-hooks-sweep" aria-hidden="true"></span>
+      <span class="pep-hooks-sill" aria-hidden="true"></span>
+
+      <!-- names open (preview, or once counsel clears names): the finder -->
+      <div class="pep-hooks-in" data-gate="names" hidden>
+        <div class="pep-hooks-copy">
+          <p class="pep-hooks-eyebrow">THREE TAPS</p>
+          <h2 class="pep-chrome-head pep-hooks-head" id="pep-hooks-finder-title" data-text="FIND YOUR PICKS"><span class="pep-hooks-face">FIND YOUR PICKS</span></h2>
+          <p class="pep-hooks-lede">Three taps through the shelf. You get a short list: the name, size and price of each pick.</p>
+        </div>
+
+        <div class="pep-hooks-finder" data-finder>
+          <ol class="pep-hooks-notches" aria-hidden="true">
+            <li class="pep-hooks-notch" data-notch data-lit></li>
+            <li class="pep-hooks-notch" data-notch></li>
+            <li class="pep-hooks-notch" data-notch></li>
+          </ol>
+
+          <!-- the three questions share one stage; the script swaps the question and its tiles -->
+          <div data-ask-stage>
+            <p class="pep-hooks-q" tabindex="-1" data-q aria-live="polite">WHAT ARE YOU BROWSING?</p>
+            <ul class="pep-hooks-tiles" role="list" data-tiles></ul>
+            <p class="pep-hooks-hint" data-finder-wait>Opening the shelf.</p>
+            <p class="pep-hooks-err" role="alert" data-finder-fail hidden>The shelf could not load. Please refresh.</p>
+            <div class="pep-hooks-row">
+              <button class="pep-hooks-alt" type="button" data-back hidden><span>BACK</span></button>
+              <a class="pep-hooks-alt" href="#lineup" data-skip><span>SEE THE WHOLE LINEUP</span></a>
+            </div>
+          </div>
+
+          <div data-result hidden>
+            <p class="pep-hooks-q" tabindex="-1" data-result-head>YOUR PICKS</p>
+            <ol class="pep-hooks-picks" role="list" data-picks></ol>
+
+            <form class="pep-hooks-form" method="post" action="" data-hook="H64" data-ghl-form="finder-picks" data-effect="frm-103" data-finder-form novalidate>
+              <div class="pep-hooks-step" data-step="email">
+                <p class="pep-hooks-prompt pep-hooks-prompt--gap">WHERE SHOULD WE SEND YOUR PICKS?</p>
+                <div class="pep-hooks-field">
+                  <label class="pep-hooks-label" for="pep-hooks-finder-email">EMAIL</label>
+                  <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-finder-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-finder-email-err"></span>
+                  <p class="pep-hooks-err" id="pep-hooks-finder-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+                </div>
+                <label class="pep-hooks-consent">
+                  <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-finder-consent-err"></span>
+                  <span class="pep-hooks-consent-text" data-consent-text>Yes, PEPTICITY may email me my picks and PEPTICITY news. I can unsubscribe any time.</span>
+                </label>
+                <p class="pep-hooks-err" id="pep-hooks-finder-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can email your picks.</p>
+                <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+                <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word">SEND MY PICKS</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+                <p class="pep-hooks-fine">For adults. Your details never go to ad platforms.</p>
+              </div>
+              <div class="pep-hooks-step" data-step="done" hidden>
+                <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOUR PICKS ARE ON THEIR WAY."><span class="pep-hooks-face">YOUR PICKS ARE ON THEIR WAY.</span></p>
+                <p class="pep-hooks-next">And you're in the FOUNDER CIRCLE.</p>
+              </div>
+              <div class="pep-hooks-step" data-step="member" hidden>
+                <p class="pep-hooks-next" tabindex="-1" data-step-head>You're in the FOUNDER CIRCLE. Add a pick to your cart, or start again.</p>
+              </div>
+              <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+            </form>
+            <div class="pep-hooks-row">
+              <button class="pep-hooks-alt" type="button" data-again><span>START AGAIN</span></button>
+            </div>
+          </div>
+
+          <!-- the words the script puts on tiles and picks -->
+          <template data-words>
+            <span data-w="fam-PEPTIDE">PEPTIDES</span>
+            <span data-w="fam-BLEND">BLENDS</span>
+            <span data-w="fam-NON-PEPTIDE COMPOUND">OTHER COMPOUNDS</span>
+            <span data-w="q-1">WHAT ARE YOU BROWSING?</span>
+            <span data-w="q-2">WHICH SIZE?</span>
+            <span data-w="q-3">YOUR PRICE RANGE?</span>
+            <span data-w="size-1">UP TO 10 MG</span>
+            <span data-w="size-2">11 TO 50 MG</span>
+            <span data-w="size-3">OVER 50 MG</span>
+            <span data-w="to">TO</span>
+            <span data-w="cad">CAD</span>
+            <span data-w="add">ADD TO CART</span>
+            <span data-w="added">ADDED</span>
+          </template>
+        </div>
+      </div>
+
+      <!-- names closed (a live build before counsel clears names): the safe twin, one field -->
+      <div class="pep-hooks-in" data-gate-off="names">
+        <div class="pep-hooks-copy">
+          <p class="pep-hooks-eyebrow">THE SHELF</p>
+          <h2 class="pep-chrome-head pep-hooks-head" id="pep-hooks-twin-title" data-text="THE SHELF OPENS SOON"><span class="pep-hooks-face">THE SHELF OPENS SOON</span></h2>
+          <p class="pep-hooks-lede">Be the first to hear when it opens. The FOUNDER CIRCLE hears first.</p>
+        </div>
+        <form class="pep-hooks-form" method="post" action="" data-hook="H64" data-ghl-form="shelf-opens" data-effect="frm-103" data-twin-form novalidate>
+          <div class="pep-hooks-step" data-step="email">
+            <div class="pep-hooks-field">
+              <label class="pep-hooks-label" for="pep-hooks-twin-email">EMAIL</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-twin-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-twin-email-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-twin-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-twin-consent-err"></span>
+              <span class="pep-hooks-consent-text" data-consent-text>Yes, PEPTICITY may email me when the shelf opens, and PEPTICITY news. I can unsubscribe any time.</span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-twin-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can email you.</p>
+            <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word">TELL ME WHEN IT OPENS</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+            <p class="pep-hooks-fine">For adults. Your details never go to ad platforms.</p>
+          </div>
+          <div class="pep-hooks-step" data-step="done" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'LL HEAR FIRST."><span class="pep-hooks-face">YOU'LL HEAR FIRST.</span></p>
+            <p class="pep-hooks-next">And you're in the FOUNDER CIRCLE.</p>
+          </div>
+          <div class="pep-hooks-step" data-step="member" hidden>
+            <p class="pep-hooks-next" tabindex="-1" data-step-head>You're in the FOUNDER CIRCLE: you'll hear first when the shelf opens.</p>
+          </div>
+          <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

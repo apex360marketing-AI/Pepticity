@@ -1,0 +1,72 @@
+<!-- module:10-hero -->
+<!-- 10-hero: the first screen is ONE card that sells (owner, Nov 13 2026: "where is my hook?"; the card "not selling anything";
+     "so much wasted space"; "no white GRAND OPENING"; "the same type of indent in the card" as the header has under the P):
+     GRAND OPENING folded into the ask as chrome, standing in a glass tab cut like the header's tab under the P; JOIN THE
+     FOUNDER CIRCLE in the house 3D chrome; the founder line in chrome gold (the offer gate: in preview builds and, on the
+     live site, only once flags.COUNSEL_CLEARED.offer is true; otherwise the safe wording shows in the same place); the
+     logo's blue light running through the card like the light through the P; one email field, one button, the unticked
+     consent (hook H01). The vial stands beside it. Headings shine but never move. No health wording anywhere in this file. -->
+<section data-module="hero" id="top" aria-labelledby="pep-hero-title">
+  <div class="pep-hero-row">
+    <div class="pep-hero-card" id="join" data-slot="hero">
+      <i class="pep-hero-floor" aria-hidden="true"></i>
+      <h1 class="pep-hero-kicker" id="pep-hero-title"><span class="pep-hero-sr">PEPTICITY </span><span class="pep-hero-kicker-face">GRAND OPENING</span></h1>
+      <form class="pep-hero-form" method="post" action="" data-hook="H01" data-ghl-form="team-join" data-effect="frm-103" novalidate>
+        <h2 class="pep-hero-ask pep-hero-3d" data-text="JOIN THE FOUNDER CIRCLE"><span class="pep-hero-3d-face">JOIN THE FOUNDER CIRCLE</span></h2>
+
+        <p class="pep-hero-offer" data-gate="offer" hidden><strong class="pep-hero-offer-big" data-offer-text></strong></p>
+        <!-- the safe line has its own restock pair: the new-lot wording shows only in a preview or once restock is cleared -->
+        <p class="pep-hero-offer" data-gate-off="offer"><strong class="pep-hero-offer-big" data-gate="restock" hidden>FIRST ACCESS TO EVERY NEW LOT, AND YOUR FOUNDER CARD.</strong><strong class="pep-hero-offer-big" data-gate-off="restock">YOUR FOUNDER CARD AND PEPTICITY NEWS.</strong></p>
+
+        <i class="pep-hero-light" aria-hidden="true"></i>
+
+        <div class="pep-hero-step" data-step="email">
+          <label class="pep-hero-label" for="pep-hero-email">EMAIL</label>
+          <div class="pep-hero-fieldrow">
+            <input class="pep-hero-input" id="pep-hero-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-describedby="pep-hero-email-err">
+            <button class="pep-hero-btn" type="submit" data-effect="txt-09">
+              <span class="pep-hero-btn-label" data-gate="offer" hidden>CLAIM MY FOUNDER SPOT</span>
+              <span class="pep-hero-btn-label" data-gate-off="offer">GET MY FOUNDER CARD</span>
+              <span class="pep-hero-btn-ring" aria-hidden="true"></span>
+              <span class="pep-hero-btn-tick" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="pep-hero-err" id="pep-hero-email-err" role="alert" hidden>That email looks incomplete.</p>
+
+          <label class="pep-hero-consent">
+            <span class="pep-hero-tick"><input class="pep-hero-check" type="checkbox" name="consent_email" data-consent aria-describedby="pep-hero-consent-err"></span>
+            <span class="pep-hero-consent-text" data-consent-text>Yes, PEPTICITY may email me my welcome and PEPTICITY news. I can unsubscribe any time.</span>
+          </label>
+          <p class="pep-hero-err" id="pep-hero-consent-err" role="alert" hidden>Tick the box so we can email your welcome.</p>
+
+          <p class="pep-hero-err" data-send-err role="alert" hidden>That did not go through. Please try again.</p>
+
+          <p class="pep-hero-fine">For adults. Your details never go to ad platforms.</p>
+        </div>
+
+        <div class="pep-hero-step" data-step="name" hidden>
+          <p class="pep-hero-done" tabindex="-1" data-step-head>YOU'RE IN.</p>
+          <p class="pep-hero-next">Add your first name for your founder card.</p>
+          <label class="pep-hero-label" for="pep-hero-first">FIRST NAME</label>
+          <div class="pep-hero-fieldrow">
+            <input class="pep-hero-input" id="pep-hero-first" name="first_name" type="text" autocomplete="given-name" maxlength="40">
+            <button class="pep-hero-btn" type="button" data-save-name><span class="pep-hero-btn-label">ADD MY NAME</span></button>
+          </div>
+          <button class="pep-hero-skip" type="button" data-skip-name>SKIP MY NAME</button>
+        </div>
+
+        <div class="pep-hero-step" data-step="done" hidden>
+          <p class="pep-hero-done" tabindex="-1" data-step-head>WELCOME TO THE FOUNDER CIRCLE<span data-first-name></span>.</p>
+          <p class="pep-hero-offer" data-gate="offer" hidden><strong class="pep-hero-offer-big">WE'LL EMAIL YOUR PLACE IN LINE FOR THE FOUNDER OFFER.</strong></p>
+          <p class="pep-hero-next">You're on the list. <span data-gate="restock" hidden>You will hear first when a new lot is posted.</span></p>
+        </div>
+
+        <p class="pep-hero-preview" data-gate="preview" data-preview-note hidden>Preview only: nothing was sent. The offer shows for review and goes live once cleared.</p>
+      </form>
+    </div>
+
+    <div class="pep-hero-bottle" tabindex="0" role="button" aria-label="Raise the light under the PEPTICITY vial"
+         data-bottle-alt="PEPTICITY vial in clear glass with the PEPTICITY P printed on it, the logo's blue light coming up through the bottle"></div>
+    <span data-gate="names" data-bottle-line-source hidden>BPC-157 · 10 MG</span>
+  </div>
+</section>

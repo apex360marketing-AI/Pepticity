@@ -1,0 +1,83 @@
+<!-- 45-hooks / 01 THE FOUNDER CARD (hook H63). HOOKS worker, Nov 13 2026. After THE CREST, a screen or more below the hero's
+     ask. Reward first: the visitor's first name writes onto a live FOUNDER CIRCLE card as it is typed (FRM-02), then ONE
+     field (email) and its own unticked box. The name lives on this page only; it is sent with the email when a list is
+     connected and is never kept in the browser. Only "joined" (yes or no) is kept, in the shared pep_flow_v1. -->
+<section data-module="hooks" data-hooks="card" class="pep-hooks-room" id="founder-card" aria-labelledby="pep-hooks-card-title">
+  <div class="pep-hooks-frame" data-hooks-ask data-effect="frm-02">
+    <span class="pep-hooks-glow" aria-hidden="true"></span>
+    <div class="pep-hooks-glass">
+      <span class="pep-hooks-bevel" aria-hidden="true"></span>
+      <span class="pep-hooks-sweep" aria-hidden="true"></span>
+      <span class="pep-hooks-sill" aria-hidden="true"></span>
+      <div class="pep-hooks-in">
+        <div class="pep-hooks-copy">
+          <p class="pep-hooks-eyebrow">FOUNDER CIRCLE</p>
+          <!-- shown only to a visitor who arrived by a member's share link (?ref= and a valid code). Nothing personal. -->
+          <p class="pep-hooks-invited" data-invited hidden>A TEAM MEMBER INVITED YOU.</p>
+          <h2 class="pep-chrome-head pep-hooks-head" id="pep-hooks-card-title" data-text="YOUR FOUNDER CARD"><span class="pep-hooks-face">YOUR FOUNDER CARD</span></h2>
+          <p class="pep-hooks-lede">Type your first name and watch your card being made. It is yours the moment you join the FOUNDER CIRCLE.</p>
+          <div class="pep-hooks-cardwrap">
+            <!-- the card is a picture of the form: screen readers get the same words from the form itself -->
+            <div class="pep-hooks-card" aria-hidden="true">
+              <div class="pep-hooks-card-top">
+                <!-- the live P: an empty slot the shared 3D engine (02-logo3d, logo 07) draws into, as the header's. If 3D is
+                     off, the slot folds away and PEPTICITY stands alone in the owner's type. -->
+                <span class="pep-hooks-card-brand">
+                  <span class="pep-hooks-card-mark" data-card-mark></span>
+                  <span class="pep-hooks-card-word">PEPTICITY</span>
+                </span>
+                <span class="pep-hooks-badge">FOUNDER</span>
+              </div>
+              <p class="pep-hooks-card-circle">FOUNDER CIRCLE</p>
+              <p class="pep-hooks-card-name" data-card-name data-empty data-placeholder="YOUR NAME" data-member="MEMBER">YOUR NAME</p>
+              <i class="pep-hooks-card-light"></i>
+              <p class="pep-hooks-card-foot"><span>MEMBER SINCE</span> <b class="pep-hooks-num" data-card-year>2026</b></p>
+            </div>
+          </div>
+        </div>
+
+        <form class="pep-hooks-form" method="post" action="" data-hook="H63" data-ghl-form="founder-card" data-effect="frm-103" novalidate>
+          <div class="pep-hooks-step" data-step="name">
+            <p class="pep-hooks-prompt">WHAT NAME GOES ON YOUR CARD?</p>
+            <div class="pep-hooks-field">
+              <label class="pep-hooks-label" for="pep-hooks-card-first">FIRST NAME</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-card-first" name="first_name" type="text" autocomplete="given-name" maxlength="20" spellcheck="false" data-field="name" aria-describedby="pep-hooks-card-first-hint"></span>
+              <p class="pep-hooks-hint" id="pep-hooks-card-first-hint">Written on your card as you type. Nothing is kept in your browser.</p>
+            </div>
+            <button class="pep-hooks-btn" type="button" data-make><span class="pep-hooks-btn-word">MAKE MY CARD</span></button>
+          </div>
+
+          <div class="pep-hooks-step" data-step="email" hidden>
+            <p class="pep-hooks-prompt" tabindex="-1" data-step-head>WHERE SHOULD WE SEND YOUR CARD?</p>
+            <div class="pep-hooks-field">
+              <label class="pep-hooks-label" for="pep-hooks-card-email">EMAIL</label>
+              <span class="pep-hooks-well"><input class="pep-hooks-input" id="pep-hooks-card-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="160" required data-field="email" aria-describedby="pep-hooks-card-email-err"></span>
+              <p class="pep-hooks-err" id="pep-hooks-card-email-err" role="alert" data-err="email" hidden>That email looks incomplete.</p>
+            </div>
+            <label class="pep-hooks-consent">
+              <span class="pep-hooks-tick"><input class="pep-hooks-check" type="checkbox" name="consent_email" data-consent="email" aria-describedby="pep-hooks-card-consent-err"></span>
+              <span class="pep-hooks-consent-text" data-consent-text>Yes, PEPTICITY may email me my FOUNDER CIRCLE card and PEPTICITY news. I can unsubscribe any time.</span>
+            </label>
+            <p class="pep-hooks-err" id="pep-hooks-card-consent-err" role="alert" data-err="consent" hidden>Tick the box so we can email your card.</p>
+            <p class="pep-hooks-err" role="alert" data-err="send" hidden>That did not go through. Please try again.</p>
+            <button class="pep-hooks-btn" type="submit"><span class="pep-hooks-btn-word">SEND MY CARD</span><span class="pep-hooks-btn-ring" aria-hidden="true"></span><span class="pep-hooks-btn-done" aria-hidden="true"></span></button>
+            <div class="pep-hooks-row">
+              <button class="pep-hooks-alt" type="button" data-edit><span>CHANGE THE NAME</span></button>
+            </div>
+            <p class="pep-hooks-fine">For adults. Your details never go to ad platforms.</p>
+          </div>
+
+          <div class="pep-hooks-step" data-step="done" hidden>
+            <p class="pep-hooks-done" tabindex="-1" data-step-head data-text="YOU'RE IN THE FOUNDER CIRCLE."><span class="pep-hooks-face">YOU'RE IN THE FOUNDER CIRCLE.</span></p>
+            <p class="pep-hooks-next">Your card comes with your welcome email.</p>
+            <div class="pep-hooks-row">
+              <a class="pep-hooks-go" href="#lineup" data-gate="names" hidden><span>SEE THE LINEUP</span></a>
+              <a class="pep-hooks-go" href="#shelf" data-gate-off="names"><span>SEE THE SHELF</span></a>
+            </div>
+          </div>
+          <p class="pep-hooks-preview" data-gate="preview" data-preview-note role="status" hidden>Preview only: nothing was sent.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

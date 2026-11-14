@@ -1,0 +1,23 @@
+<!-- module:06-bottle -->
+<!-- 06-bottle: the ONE bottle, used by every section that shows a vial. The approved Higgsfield vial, revision 3 (owner,
+     Nov 11 2026): clear glass with NO label band, the print straight on the glass (product line vertical between the helix and
+     PEPTICITY, G5 P to the right), and the blue-violet light coming up THROUGH the bottle, never around it.
+     A section asks for one with ctx.emit('bottle:mount', { el }) and gives the wording on its own element:
+     data-bottle-line="NAME · SIZE" data-bottle-alt="...". Label positions are in the 880x1168 vial frame. Do not nudge them:
+     they were measured (stage1/straightness-audit.txt). -->
+<div data-module="bottle" hidden>
+  <template class="pep-bottle-tpl">
+    <div class="pep-bottle-crop">
+      <div class="pep-bottle-vial">
+        <img class="pep-bottle-img" src="assets/vial-front-clear.webp" width="880" height="1168" alt="" decoding="async">
+        <div class="pep-bottle-ul" aria-hidden="true">
+          <div class="pep-bottle-ul-in"><i class="pep-bottle-fill"></i><i class="pep-bottle-core"></i><i class="pep-bottle-sweep"></i></div>
+        </div>
+        <i class="pep-bottle-film" aria-hidden="true"></i>
+        <span class="pep-bottle-line"></span>
+        <div class="pep-bottle-slot pep-bottle-slot--word" aria-hidden="true"></div>
+        <div class="pep-bottle-slot pep-bottle-slot--mark" aria-hidden="true"></div>
+      </div>
+    </div>
+  </template>
+</div>

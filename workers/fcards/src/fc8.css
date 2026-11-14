@@ -1,0 +1,47 @@
+/* fc8 STACK: three sheets of glass in real depth. A back sheet, the main sheet with the words, and the form sheet out in front. */
+.fc8 { max-width: 720px; --fc-rx0: 3deg; --fc-ry0: 6deg; }
+.fc8-seat { margin: 22px clamp(14px, 4cqi, 30px) 30px 22px; }
+/* back sheet: behind and up-left */
+.fc8-back { position: absolute; left: -22px; top: -20px; right: 26px; bottom: 40px; transform-style: preserve-3d; transform: translateZ(-60px); pointer-events: none; }
+.fc8-glass-back { -webkit-backdrop-filter: blur(2px) saturate(1.2) brightness(1.12); backdrop-filter: blur(2px) saturate(1.2) brightness(1.12); --a: clamp(50px, 13cqi, 96px); --b: clamp(40px, 10cqi, 72px); clip-path: polygon(20px 0, calc(100% - var(--a)) 0, 100% var(--a), 100% 100%, var(--b) 100%, 0 calc(100% - var(--b)), 0 20px); background-color: rgba(207, 230, 255, .03); }
+.fc8-glass-main { -webkit-backdrop-filter: blur(2px) saturate(1.3) brightness(1.3); backdrop-filter: blur(2px) saturate(1.3) brightness(1.3); --a: clamp(50px, 13cqi, 96px); --b: clamp(40px, 10cqi, 72px); clip-path: polygon(20px 0, calc(100% - var(--a)) 0, 100% var(--a), 100% 100%, var(--b) 100%, 0 calc(100% - var(--b)), 0 20px); }
+.fc8-mark { left: 60%; top: 34%; width: 88%; }
+.fc8-body { padding: clamp(28px, 6cqi, 42px) 0 0 clamp(20px, 6cqi, 44px); transform: translateZ(0); }
+.fc8-words { position: relative; padding-right: clamp(40px, 12cqi, 90px); transform-style: preserve-3d; transform: translateZ(40px); }
+.fc8-ask { margin-left: clamp(-34px, -4.6cqi, -16px); font-size: clamp(27px, 8cqi, 58px); }
+.fc8-offer { margin-top: 12px; font-size: clamp(14.5px, 2.8cqi, 19px); }
+.fc8-light { width: 60%; margin: 12px 0 0 16%; transform: translateZ(60px); }
+/* the form sheet: floats out in front and overhangs the main sheet */
+.fc8-front { position: relative; margin: -6px clamp(-30px, -4cqi, -14px) -30px clamp(18px, 9cqi, 70px); transform-style: preserve-3d; transform: translateZ(64px); transition: transform .6s var(--fc-ease); }
+.fc8:hover .fc8-front, .fc8:focus-within .fc8-front { transform: translateZ(96px); }
+.fc8-glass-front { clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 46px), calc(100% - 46px) 100%, 0 100%, 0 30px); background-color: rgba(207, 230, 255, .07); -webkit-backdrop-filter: blur(3px) saturate(1.3) brightness(1.14); backdrop-filter: blur(3px) saturate(1.3) brightness(1.14); }
+.fc8-in { position: relative; padding: clamp(22px, 4.4cqi, 30px) clamp(18px, 4.6cqi, 32px) clamp(20px, 4cqi, 28px); transform-style: preserve-3d; transform: translateZ(16px); }
+.fc8-well { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+/* the light slab: glass with a lens of light in its foot; the light leaves through the notch */
+.fc8-btn {
+  min-height: 64px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .24) 0%, rgba(255, 255, 255, .05) 38%, rgba(255, 255, 255, 0) 39%),
+    radial-gradient(closest-side, #ffffff 0%, #cfe6ff 14%, rgba(42, 120, 255, .9) 40%, rgba(42, 120, 255, 0) 100%) 50% calc(100% + 13px) / 62% 34px no-repeat,
+    linear-gradient(180deg, rgba(230, 233, 237, .14), rgba(42, 120, 255, .16));
+  clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, calc(50% + 66px) 100%, calc(50% + 56px) calc(100% - 9px), calc(50% - 56px) calc(100% - 9px), calc(50% - 66px) 100%, 26px 100%, 0 calc(100% - 26px));
+  transition: transform .45s var(--fc-ease), background-size .45s var(--fc-ease), background-color .45s var(--fc-ease);
+}
+.fc8-btn:hover, .fc8-btn:focus-visible { background-size: auto, 96% 62px, auto; background-color: rgba(42, 120, 255, .26); }
+.fc8-btn .fc-rim-line { stroke-width: 3.4; opacity: 1; }
+.fc8-btn .fc-rim-band { stroke: rgba(207, 230, 255, .12); stroke-width: 9; }
+.fc8-btn .fc-rs3 { stop-opacity: .5; }
+.fc8-btn-label { background-image: var(--fc-chrome); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.fc8-bloom { left: 22%; right: 22%; top: calc(100% - 20px); }
+.fc8-consent { font-size: 14.5px; }
+.fc8-fine { padding-right: 40px; }
+.fc8-floor { bottom: -76px; left: 8%; right: 0; }
+.fc8-under { bottom: -58px; left: 26%; right: 10%; }
+@container (max-width: 519px) {
+  .fc8-seat { margin: 16px 18px 26px 12px; --fc-ry0: 2deg; }
+  .fc8-back { left: -12px; top: -16px; }
+  .fc8-front { margin-left: 4px; margin-right: -8px; }
+  .fc8-ask { margin-left: -8px; }
+  .fc8-consent { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .fc8-front { transition: none; } .fc8:hover .fc8-front, .fc8:focus-within .fc8-front { transform: translateZ(64px); } }

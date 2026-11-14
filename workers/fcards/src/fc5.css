@@ -1,0 +1,39 @@
+/* fc5 CRYSTAL: cut like a gem, facets in the glass, everything centred, the key a blue crystal */
+.fc5 { max-width: 660px; --fc-rx0: 2deg; --fc-ry0: -2.5deg; text-align: center; }
+.fc5-glass { clip-path: polygon(15% 0, 80% 0, 100% 14%, 100% 76%, 87% 100%, 22% 100%, 0 83%, 0 17%); }
+.fc5-mark { top: 47%; width: 84%; }
+/* facets: planes of the cut, very faint */
+.fc5-facet { position: absolute; inset: 0; }
+.fc5-facet-a { clip-path: polygon(15% 0, 52% 0, 0 52%, 0 17%); background: linear-gradient(135deg, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, .02) 60%, rgba(255, 255, 255, 0) 100%); }
+.fc5-facet-b { clip-path: polygon(100% 38%, 100% 76%, 87% 100%, 46% 100%); background: linear-gradient(315deg, rgba(42, 120, 255, .16) 0%, rgba(42, 120, 255, .03) 60%, rgba(42, 120, 255, 0) 100%); }
+.fc5-facet-c { clip-path: polygon(80% 0, 100% 14%, 100% 38%, 64% 0); background: linear-gradient(225deg, rgba(207, 230, 255, .12) 0%, rgba(207, 230, 255, 0) 80%); }
+.fc5-facet-d { clip-path: polygon(0 60%, 0 83%, 22% 100%, 46% 100%); background: linear-gradient(45deg, rgba(42, 120, 255, .1) 0%, rgba(42, 120, 255, 0) 80%); }
+.fc5-body { padding: clamp(40px, 9cqi, 62px) clamp(26px, 10cqi, 70px) clamp(34px, 7.4cqi, 52px); }
+.fc5-kicker { margin-bottom: 12px; }
+.fc5-ask { font-size: clamp(26px, 7cqi, 48px); transform: translateZ(16px); }
+.fc5-line { margin-left: auto; margin-right: auto; }
+.fc5-light { width: 52%; margin: 10px auto 6px; }
+.fc5-label { text-align: center; padding-left: .32em; }
+.fc5-well { clip-path: polygon(22px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 14px 100%, 0 calc(100% - 14px), 0 22px); }
+.fc5-input { text-align: center; }
+.fc5-key { width: 88%; margin: 16px auto 0; }
+/* the blue crystal: lit low at rest, bright when you come to it (never full) */
+.fc5-btn {
+  min-height: 66px;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .08) 12%, rgba(255, 255, 255, 0) 22%),
+    linear-gradient(64deg, rgba(42, 120, 255, 0) 44%, rgba(207, 230, 255, .5) 49.5%, rgba(42, 120, 255, .12) 50%, rgba(42, 120, 255, 0) 62%),
+    linear-gradient(112deg, rgba(42, 120, 255, 0) 60%, rgba(207, 230, 255, .42) 69.5%, rgba(42, 120, 255, .1) 70%, rgba(42, 120, 255, 0) 86%),
+    linear-gradient(180deg, rgba(42, 120, 255, .62) 0%, rgba(42, 120, 255, .3) 46%, rgba(42, 120, 255, .46) 54%, rgba(42, 120, 255, .8) 100%);
+  clip-path: polygon(9% 0, 86% 0, 100% 32%, 100% 64%, 93% 100%, 13% 100%, 0 70%, 0 34%);
+  filter: brightness(.82) saturate(.9);
+}
+.fc5-btn:hover, .fc5-btn:focus-visible { filter: brightness(1.32) saturate(1.1); }
+.fc5-btn .fc-rim-line { stroke-width: 3.6; opacity: 1; }
+.fc5-btn .fc-rim-band { stroke: rgba(207, 230, 255, .2); stroke-width: 10; }
+.fc5-btn .fc-rs2, .fc5-btn .fc-rs4 { stop-color: #cfe6ff; stop-opacity: .8; }
+.fc5-btn .fc-rs3 { stop-color: #2a78ff; stop-opacity: .9; }
+.fc5-btn-label { background-image: var(--fc-frost); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 2px rgba(11, 11, 12, .75)); }
+.fc5-consent { text-align: left; margin-top: 18px; }
+.fc5-fine { margin-top: 8px; padding: 0 6%; }
+@container (max-width: 479px) { .fc5-key { width: 100%; } .fc5-btn { padding: 0 10px; letter-spacing: .05em; } }

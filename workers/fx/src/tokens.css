@@ -1,0 +1,52 @@
+<style data-pep-src="tokens.css">
+/* PEPTICITY tokens. Custom properties ONLY, every one prefixed --pep-.
+   Starter set from the brand lock (BLACK version). build.mjs rejects anything else in this file.
+   Chrome gold is a RAMP across a surface, never one flat fill. Run `npm run colour` to see
+   which stops fail the colour rules when used flat. */
+:root {
+  /* matte black ground */
+  --pep-black-0: #0b0b0c;
+  --pep-black-1: #141416;
+  /* UV black: texture and glow only, never a big area */
+  --pep-uv-black: #120f1a;
+
+  /* platinum chrome ramp, shadow to hot */
+  --pep-plat-1: #2a2d31;
+  --pep-plat-2: #6b7077;
+  --pep-plat-3: #b9bec5;
+  --pep-plat-4: #e6e9ed;
+  --pep-plat-5: #ffffff;
+
+  /* pale chrome gold ramp, shadow to hot */
+  --pep-gold-1: #332814;
+  --pep-gold-2: #68513d;
+  --pep-gold-3: #a4845d;
+  --pep-gold-4: #f0e6c7;
+  --pep-gold-5: #fef9e8;
+
+  /* shape: pills are banned, nothing above 3px */
+  --pep-radius: 2px;
+
+  /* underlight (owner, Nov 11 2026: "a nice blue or purple"). Light only, never a flat fill. */
+  --pep-uv-light-1: #5a3ef0;
+  --pep-uv-light-2: #7f66ff;
+  --pep-uv-light-3: #b3a2ff;
+  --pep-uv-light-4: #c8bcff;
+
+  /* the logo's own beam (LOGO-LOCK pale gold-hot). Only for the beam and the one live ask. */
+  --pep-beam: #cfe6ff;
+
+  /* ONE BLUE ONLY (owner, Nov 13 2026): the logo's blue #2a78ff, the light through the P. The modules write every accent light
+     as var(--pep-light, ...) and rgba(var(--pep-light-rgb, ...), a), so this one pair sets them all (their #2f7dff fallback
+     never shows). The entrance beam, the crest's floor light and THE LINEUP's lights follow it. */
+  --pep-light: #2a78ff;
+  --pep-light-rgb: 42, 120, 255;
+
+  /* body copy stack */
+  --pep-font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  /* the owner's PEPTICITY BLACK type (A-Z, 0-9, dash, full stop); other characters fall through */
+  --pep-font-display: "PepticityBlack", "Bahnschrift", "Segoe UI", system-ui, sans-serif;
+
+  --pep-ease: cubic-bezier(.16, 1, .3, 1);
+}
+</style>

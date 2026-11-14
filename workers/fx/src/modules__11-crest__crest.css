@@ -1,0 +1,133 @@
+<style data-pep-src="modules/11-crest/crest.css">
+/* 11-crest. Every selector starts with [data-module="crest"] or .pep-crest-
+   Platinum does the work. The only warm light is the logo's own pale-gold beam light, as a breath in the floor pool under the
+   3D P (never without it). No violet.
+   The root and the stage are never transformed, faded, filtered or pinned (the 3D slot inside them could not follow). */
+
+/* DEFAULT = no 3D (no script, or the engine is off): a slim, calm band with the horizon line alone */
+[data-module="crest"] {
+  --pep-crest-dy: 0px;                              /* the beam's rise and fall, written by crest.js from the engine */
+  --pep-crest-hh: min(33vh, 35vw);                  /* half the P's height and width on screen, until crest.js has the true ones */
+  --pep-crest-hw: min(30vh, 32vw);
+  position: relative;
+  z-index: 1;
+  height: clamp(120px, 22vh, 220px);
+  overflow: clip;
+}
+/* 3D on its way or on: the stage. About one screen on a desktop; on a narrow screen it is only as tall as the P needs */
+[data-module="crest"][data-3d="pending"],
+[data-module="crest"][data-3d="on"] {
+  height: min(100vh, 124vw);
+  height: min(100svh, 124vw);
+  min-height: 380px;
+}
+
+.pep-crest-stage { position: absolute; inset: 0; }
+
+/* the 3D slot: the engine draws the P here, centred on the slot's middle line (which is where its beam rests: 46% down the
+   stage). The slot is taller than the stage on purpose: when the P turns, its near edge comes toward the lens and stands
+   taller for a moment, and it must never meet the edge of its own drawing area. */
+.pep-crest-slot { position: absolute; left: 0; right: 0; top: -14%; bottom: -6%; display: none; pointer-events: none; }
+[data-module="crest"][data-3d="pending"] .pep-crest-slot,
+[data-module="crest"][data-3d="on"] .pep-crest-slot { display: block; }
+
+/* the P itself answers a pointer, a tap and the keyboard (one extra turn): this box sits on the P and nowhere else */
+.pep-crest-mark {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  display: none;
+  width: calc(var(--pep-crest-hw) * 2);
+  height: calc(var(--pep-crest-hh) * 2);
+  margin: calc(var(--pep-crest-hh) * -1) 0 0 calc(var(--pep-crest-hw) * -1);
+  cursor: pointer;
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-mark,
+[data-module="crest"][data-3d="on"] .pep-crest-mark { display: block; }
+.pep-crest-mark:focus-visible { outline: 1px solid var(--pep-plat-3); outline-offset: 10px; }
+
+/* ---------- the horizon: one hairline, dead level, the whole width, through the P's waist ---------- */
+.pep-crest-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translate3d(0, var(--pep-crest-dy), 0);
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-horizon,
+[data-module="crest"][data-3d="on"] .pep-crest-horizon { top: 46%; }
+.pep-crest-ray {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(185, 190, 197, 0) 0%,
+    rgba(185, 190, 197, .34) 14%,
+    rgba(230, 233, 237, .78) 34%,
+    var(--pep-plat-5) 50%,
+    rgba(230, 233, 237, .78) 66%,
+    rgba(185, 190, 197, .34) 86%,
+    rgba(185, 190, 197, 0) 100%);
+  transform: scaleX(1);
+  transition: transform 1.7s var(--pep-ease);
+}
+/* a breath of platinum haze on the line, so it reads as light and not as a rule */
+.pep-crest-ray::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: -7px;
+  height: 15px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(230, 233, 237, .16), rgba(230, 233, 237, .05) 55%, rgba(230, 233, 237, 0) 100%);
+}
+/* no 3D: the band has no P, so the line itself is a little stronger at its centre. Platinum only: gold stays inside the logo */
+.pep-crest-ray::before {
+  content: "";
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  top: -1px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(230, 233, 237, 0), rgba(230, 233, 237, .5) 30%, var(--pep-plat-5) 50%, rgba(230, 233, 237, .5) 70%, rgba(230, 233, 237, 0));
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-ray::before,
+[data-module="crest"][data-3d="on"] .pep-crest-ray::before { display: none; }
+
+/* ---------- the floor: light pooled under the P's foot (flat, as a floor is seen from standing height) ---------- */
+.pep-crest-pool {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  display: none;
+  width: calc(var(--pep-crest-hw) * 5.2);
+  height: calc(var(--pep-crest-hh) * .56);
+  margin: calc(var(--pep-crest-hh) * .78) 0 0 calc(var(--pep-crest-hw) * -2.6);
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 19% 8% at 50% 50%, rgba(207, 230, 255, .3), rgba(var(--pep-light-rgb, 47, 125, 255), .16) 50%, rgba(var(--pep-light-rgb, 47, 125, 255), 0) 100%),   /* logo 21's light */
+    radial-gradient(ellipse 32% 28% at 50% 50%, rgba(var(--pep-light-rgb, 47, 125, 255), .13), rgba(230, 233, 237, .07) 60%, rgba(230, 233, 237, 0) 100%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(230, 233, 237, .1), rgba(185, 190, 197, .035) 55%, rgba(185, 190, 197, 0) 100%);
+  transition: opacity 2.2s var(--pep-ease);
+}
+[data-module="crest"][data-3d="pending"] .pep-crest-pool,
+[data-module="crest"][data-3d="on"] .pep-crest-pool { display: block; }
+
+/* the stage lights once, when the crest comes on screen: the line draws out from the P and the floor takes the light.
+   (crest.js sets data-crest="dark" only when it will also set "lit"; with no script the line is simply there) */
+[data-module="crest"][data-crest="dark"] .pep-crest-ray { transform: scaleX(0); transition-duration: 0s; }
+[data-module="crest"][data-crest="dark"] .pep-crest-pool { opacity: 0; transition-duration: 0s; }
+
+@media (max-width: 899px) {
+  .pep-crest-pool { width: calc(var(--pep-crest-hw) * 3.6); margin-left: calc(var(--pep-crest-hw) * -1.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-crest-ray, .pep-crest-pool { transition: none; }
+}
+/* NOV12-FINAL, round 3 (look-rules inspection): the crest P lifts and grows on hover; the keyboard shows as a bar of the
+   light at its foot, never a box round it. The logo itself is untouched: only its slot moves. */
+.pep-crest-mark { transition: transform .6s var(--pep-ease); }
+.pep-crest-mark:hover { transform: translateY(-6px) scale(1.03); }
+.pep-crest-mark:focus-visible { outline: 0; box-shadow: inset 0 -3px 0 var(--pep-light, #2f7dff); }
+@media (prefers-reduced-motion: reduce) { .pep-crest-mark:hover { transform: none; } }
+</style>

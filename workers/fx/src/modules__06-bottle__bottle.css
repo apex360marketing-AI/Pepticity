@@ -1,0 +1,115 @@
+<style data-pep-src="modules/06-bottle/bottle.css">
+/* 06-bottle. Every selector starts with [data-module="bottle"] or .pep-bottle- */
+
+/* .pep-bottle-crop shows the bottle region of the 880x1168 frame (x 160-720, y 110-1168): big bottle, soft edges, no box */
+.pep-bottle-crop {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 560 / 1058;
+  margin: 0 auto;
+  overflow: hidden;
+  /* the vial image carries real transparency (tools/make-vial.py): no blend modes anywhere in this file */
+  /* soft edges all round (same mask as the approved stage 1 sample): the floor reflection fades out, it never ends on a line */
+  -webkit-mask: radial-gradient(ellipse 60% 57% at 50% 46%, #000 80%, transparent 100%);
+          mask: radial-gradient(ellipse 60% 57% at 50% 46%, #000 80%, transparent 100%);
+}
+.pep-bottle-vial {
+  position: absolute;
+  left: -28.57%;
+  top: -10.4%;
+  width: 157.14%;
+  aspect-ratio: 880 / 1168;
+  container-type: inline-size;
+}
+.pep-bottle-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; max-width: none; }
+
+/* ---- the approved label (owner, Nov 11 2026). Percentages of the vial frame. ---- */
+.pep-bottle-slot { position: absolute; }
+.pep-bottle-slot--word { left: 43.41%; top: 45.91%; width: 5.23%; height: 26.07%; }
+.pep-bottle-slot--mark { left: 46.82%; top: 50.43%; width: 22.73%; height: 16.78%; }
+.pep-bottle-line {
+  position: absolute;
+  left: 40.97%;
+  bottom: 28.55%;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  line-height: 1;
+  white-space: nowrap;
+  font-family: "Bahnschrift", "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(9px, 1.9cqw, 14px);
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--pep-plat-4);
+  background: linear-gradient(100deg, var(--pep-plat-5) 0%, var(--pep-plat-4) 38%, var(--pep-plat-2) 52%, var(--pep-plat-4) 70%, var(--pep-plat-3) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: .92;
+}
+
+/* ---- THE LIGHT: blue-violet, coming up THROUGH the glass from behind the print (owner, Nov 11 2026) ---- */
+/* The plate itself carries the violet light inside the liquid. These layers only make it rise, and every one of them is
+   cut to the bottle's own outline (.pep-bottle-ul-in), so nothing glows in the air around the bottle. The print (the 3D
+   logos and the product line) sits above the light, so it keeps its own colour. */
+.pep-bottle-ul { position: absolute; inset: 0; pointer-events: none; }
+/* the label is a clear film: 1 percent, no edge, so no rectangle shows */
+.pep-bottle-film { position: absolute; left: 30.7%; top: 46.5%; width: 38.2%; height: 24.8%; background: rgba(255, 255, 255, .01); pointer-events: none; }
+.pep-bottle-ul-in {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask: url("assets/vial-mask.png") center / 100% 100% no-repeat;
+          mask: url("assets/vial-mask.png") center / 100% 100% no-repeat;
+}
+.pep-bottle-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 13.5%;
+  height: 51%;
+  opacity: .12;
+  transform: translateY(10%);
+  background: linear-gradient(to top, rgba(200, 188, 255, .80) 0%, rgba(150, 128, 255, .50) 9%, rgba(112, 86, 244, .32) 30%, rgba(96, 72, 228, .20) 62%, rgba(90, 66, 222, .08) 86%, rgba(88, 64, 220, 0) 100%);
+  transition: opacity 1.4s var(--pep-ease), transform 1.6s var(--pep-ease);
+}
+.pep-bottle-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 13.5%;
+  height: 9%;
+  opacity: 0;
+  filter: blur(6px);
+  background: linear-gradient(to top, rgba(190, 175, 255, 0), rgba(190, 175, 255, .6) 45%, rgba(190, 175, 255, 0));
+}
+.pep-bottle-core {
+  position: absolute;
+  left: 50%;
+  top: 84.6%;
+  width: 38%;
+  aspect-ratio: 1 / .22;
+  transform: translate(-50%, -50%) scale(.7);
+  opacity: .2;
+  background: radial-gradient(closest-side, rgba(200, 188, 255, .92), rgba(150, 125, 255, .5) 45%, rgba(150, 125, 255, 0) 100%);
+  transition: opacity 1.2s var(--pep-ease), transform 1.5s var(--pep-ease);
+}
+/* lit: the host element gets .pep-bottle-lit (on load, hover, focus, tap, or when its product is chosen) */
+.pep-bottle-lit .pep-bottle-fill { opacity: 1; transform: translateY(0); }
+.pep-bottle-lit .pep-bottle-core { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.pep-bottle-lit .pep-bottle-sweep {
+  animation-name: pep-bottle-sweep;
+  animation-duration: 2.6s;
+  animation-timing-function: cubic-bezier(.3, .1, .2, 1);
+  animation-fill-mode: both;
+}
+@keyframes pep-bottle-sweep {
+  0% { opacity: 0; transform: translateY(0); }
+  16% { opacity: .8; }
+  100% { opacity: 0; transform: translateY(-560%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pep-bottle-fill, .pep-bottle-core { transition: none; }
+  .pep-bottle-lit .pep-bottle-sweep { animation-name: none; }
+}
+</style>
