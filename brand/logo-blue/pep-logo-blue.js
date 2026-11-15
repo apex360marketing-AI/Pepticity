@@ -35,9 +35,9 @@ async function boot() {
   };
   const D = MARKS, yb = 50 - D.p.yb;
   const G = {
-    shF: extrude(D.p.face, 2.7, 1.5, 2.15), shB: extrude(D.p.face, 2.7, 0.8, -2.15), mid: extrude(D.p.rim, 1.9, 0.12, 0),
+    face: extrude(D.p.face, 7, 1.2),          // one solid piece: no layer seams, no outline lines
     beam: extrude(D.p.beam, 2.0, 0.4, 2.6),
-    wF: extrude(D.word, 3.6, 2.2, 2.7, 0, 0), wB: extrude(D.word, 3.6, 1.0, -2.7, 0, 0), wM: extrude(D.wordRim, 2.2, 0.15, 0, 0, 0)
+    word: extrude(D.word, 9, 1.8, 0, 0, 0)
   };
 
   // ---- materials: tinted metals and a clearcoat black glass face
@@ -45,7 +45,9 @@ async function boot() {
   const M = {
     glass: new THREE.MeshPhysicalMaterial({ color: 0x4a5262, metalness: 1, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.03,
       envMapIntensity: 1.5 }),                 // smoked liquid black glass over chrome
-    plat: phys({ color: 0xd6dbe2, roughness: 0.1, envMapIntensity: 1.3 }),   // platinum edges
+    chrome: new THREE.MeshPhysicalMaterial({ color: 0xc4cad3, metalness: 1, roughness: 0.035, clearcoat: 1, clearcoatRoughness: 0.02,
+      envMapIntensity: 1.25 }),            // near-mirror chrome face: it shows whatever colour of the room it faces
+    plat: phys({ color: 0xd6dbe2, roughness: 0.1, envMapIntensity: 1.3 }),
     gold: phys({ color: 0xcfb07a, roughness: 0.12, envMapIntensity: 1.4 }), // chrome gold core (her pale chrome gold, never orange)
     goldHi: phys({ color: 0xe6d2a6, roughness: 0.08, envMapIntensity: 1.4 })
   };
@@ -65,7 +67,7 @@ async function boot() {
   }
   function buildMark() {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(G.shF, [M.glass, M.gold]), new THREE.Mesh(G.shB, [M.glass, M.plat]), new THREE.Mesh(G.mid, [M.gold, M.goldHi]));
+    g.add(new THREE.Mesh(G.face, [M.chrome, M.gold]));
     g.add(new THREE.Mesh(G.beam, beamMat));
     const core = new THREE.Mesh(G.beam, coreMat); core.scale.set(0.97, 0.28, 1.05); core.position.y = yb * (1 - 0.28); g.add(core);
     g.add(halo(104));
@@ -75,7 +77,7 @@ async function boot() {
   }
   function buildWord() {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(G.wF, [M.glass, M.gold]), new THREE.Mesh(G.wB, [M.glass, M.plat]), new THREE.Mesh(G.wM, [M.gold, M.goldHi]));
+    g.add(new THREE.Mesh(G.word, [M.chrome, M.gold]));
     g.scale.setScalar(0.0345);
     return g;
   }
@@ -98,7 +100,7 @@ async function boot() {
     // the studio room, tinted: cool-blue key boxes, one warm-platinum strip for the gold, a dark room so black glass stays black
     const pmrem = new THREE.PMREMGenerator(renderer);
     const room = new THREE.Scene();
-    room.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: 0x101217, side: THREE.BackSide })));
+    room.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: 0x3a3f49, side: THREE.BackSide })));
     const box = (x, y, z, w, h, d, hex, k, rz = 0) => { const m = new THREE.MeshBasicMaterial({ color: hex }); m.color.multiplyScalar(k);
       const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.lookAt(0, 0, 0); b.rotateZ(rz); room.add(b); };
     box(0, 14, 6, 14, 14, .4, 0xdfe9ff, 4.2);      // top key, cool
@@ -107,9 +109,11 @@ async function boot() {
     box(0, 7, 20, 22, 5, .4, 0xe6eeff, 2.6);
     box(-4, -3, 21, 9, 1.2, .4, 0x9fc2ff, 5);      // low blue strip across the front
     box(0, -9, 14, 22, 3, .4, 0x2a78ff, 1.6);      // blue floor bounce
-    box(0, 2, 24, 34, 20, .4, 0x7884a0, 2.4);      // dim front fill: the black glass face mirrors a dark wall, not white
-    box(3, 3, 23, 4, 30, .4, 0xdfe9ff, 9, 0.55);  // the liquid streak: one bright diagonal softbox across the front and centre
-    box(-7, -2, 23, 1.2, 26, .4, 0xbcd4ff, 5, 0.55);
+    // the colour zones across the front: turn the P and its mirror face runs gold -> platinum -> blue steel
+    box(-15, 4, 20, 12, 22, .4, 0xffd29a, 1.9);    // left front: warm chrome gold
+    box(0, 6, 25, 9, 22, .4, 0xf2f5fa, 2.3);       // centre front: platinum white
+    box(15, 4, 20, 12, 22, .4, 0x5f93ff, 3.4);     // right front: blue steel (the logo blue's hue)
+    box(0, -6, 24, 36, 6, .4, 0x2c3038, 1);        // soft gunmetal band low in front: contrast without going black
     box(0, 16, 14, 30, 2, .4, 0xffe9c4, 9);          // warm top strip: the gold chamfers catch it at rest
     box(-9, 10, 18, 2, 10, .4, 0xffefd6, 7, 0.9);
     box(-22, 0, 4, 3, 22, .4, 0xd6e4ff, 6); box(22, 0, 4, 3, 22, .4, 0xffeed4, 5);   // side strips: a turning P never goes dead black
