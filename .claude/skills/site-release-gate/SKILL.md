@@ -35,6 +35,12 @@ unchanged page at least once, passing on the release. Typical set:
 - 0 page errors, 0 console errors, no sideways scroll at any width
 A flaky check is re-run under CPU throttling until it is understood: never wave it through.
 
+**Preview or launch?** Decide which build this is before publishing. A preview build
+(preview flag on: uncleared offers and names, products marked HIDE BEFORE LAUNCH, age
+check relaxed) must be kept private (access control, `noindex`) and never sent to the
+public. A public launch build must have the preview flag OFF, the age check on, and
+only counsel-cleared wording: fail the release if any of these is wrong.
+
 ## 3. Look at it
 
 Take the first screen and the changed sections at 390 and 1440 and open the pictures.
