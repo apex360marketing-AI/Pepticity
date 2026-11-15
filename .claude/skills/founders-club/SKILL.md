@@ -15,6 +15,9 @@ marketing practice. Build the programme so the scarcity is real and provable.
   chrome-and-blue finish as the PEPTICITY word.
 - Exactly 25 members, numbered `No. 01 of 25` to `No. 25 of 25`, in joining order. A number
   is never reused.
+- Tiers (owner, Nov 15): the first 25 are the **PLATINUM RESERVE**. Only once all 25 are
+  full does a **GOLD RESERVE** open for members 26 to 50. Never show or sell Gold before
+  Platinum is full; the page always shows the tier that is open now.
 - Qualifying (all three, in any order): signed up, placed a first order, referred a friend
   who placed an order. The card unlocks when the third is met; until then the page shows
   progress ("2 of 3 done").
