@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>APEX · HOLOGRAM</title>
+<style>
+  html,body{margin:0;height:100%;background:#060708;color:#e9ebee;overflow:hidden}
+  #gl{position:fixed;inset:0;width:100%;height:100%;display:block}
+  .tag{position:fixed;left:24px;bottom:20px;font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.24em;color:#7d838c;text-transform:uppercase}
+  .off{position:fixed;inset:0;display:none;place-items:center;font:500 12px ui-monospace,monospace;letter-spacing:.2em;color:#7d838c}
+  html.no3d .off{display:grid}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-label="APEX logo as a live hologram" role="img"></canvas>
+<p class="tag">APEX · FLARE CUT · HOLOGRAM</p>
+<p class="off">3D IS OFF IN THIS BROWSER</p>
+<script>window.__marks = {"glint":{"face":[{"o":[[45.263,62.526],[44.879,62.496],[44.048,62.434],[43.217,62.373],[42.386,62.313],[41.555,62.254],[40.724,62.197],[39.893,62.14],[39.062,62.085],[38.231,62.031],[37.399,61.978],[36.568,61.926],[35.737,61.876],[34.906,61.826],[34.075,61.778],[33.244,61.731],[32.413,61.685],[31.582,61.64],[30.751,61.596],[29.919,61.554],[29.088,61.513],[28.257,61.473],[27.426,61.434],[26.595,61.396],[25.788,61.36],[12.0,92.0],[32.0,92.0]],"h":[]},{"o":[[48.9,54.444],[48.9,10.0],[27.772,56.95],[28.257,56.927],[29.088,56.887],[29.919,56.846],[30.751,56.804],[31.582,56.76],[32.413,56.715],[33.244,56.669],[34.075,56.622],[34.906,56.574],[35.737,56.524],[36.568,56.474],[37.399,56.422],[38.231,56.369],[39.062,56.315],[39.893,56.26],[40.724,56.203],[41.555,56.146],[42.386,56.087],[43.217,56.027],[44.048,55.966],[44.879,55.904],[45.71,55.84],[46.542,55.776],[47.373,55.71],[48.204,55.643],[48.367,55.63]],"h":[]},{"o":[[59.911,56.246],[60.107,56.26],[60.938,56.315],[61.769,56.369],[62.601,56.422],[63.432,56.474],[64.263,56.524],[65.094,56.574],[65.925,56.622],[66.756,56.669],[67.587,56.715],[68.418,56.76],[69.249,56.804],[70.081,56.846],[70.912,56.887],[71.743,56.927],[72.228,56.95],[51.1,10.0],[51.1,36.667]],"h":[]},{"o":[[76.0,92.0],[88.0,92.0],[74.212,61.36],[73.405,61.396],[72.574,61.434],[71.743,61.473],[70.912,61.513],[70.081,61.554],[69.249,61.596],[68.418,61.64],[67.587,61.685],[66.756,61.731],[65.925,61.778],[65.094,61.826],[64.263,61.876],[63.432,61.926],[62.601,61.978],[62.493,61.985]],"h":[]}],"chrome":[{"o":[[0.0,59.2],[0.833,59.201],[1.667,59.202],[2.5,59.205],[3.333,59.209],[4.167,59.215],[5.0,59.221],[5.833,59.229],[6.667,59.237],[7.5,59.247],[8.333,59.258],[9.167,59.271],[10.0,59.284],[10.833,59.299],[11.667,59.314],[12.5,59.331],[13.333,59.349],[14.167,59.369],[15.0,59.389],[15.833,59.411],[16.667,59.433],[17.5,59.457],[18.333,59.482],[19.167,59.509],[20.0,59.536],[20.833,59.565],[21.667,59.594],[22.5,59.625],[23.333,59.657],[24.167,59.691],[25.0,59.725],[25.833,59.761],[26.667,59.797],[27.5,59.835],[28.333,59.874],[29.167,59.915],[30.0,59.956],[30.833,59.999],[31.667,60.042],[32.5,60.087],[33.333,60.133],[34.167,60.181],[35.0,60.229],[35.833,60.279],[36.667,60.329],[37.5,60.381],[38.333,60.434],[39.167,60.489],[40.0,60.544],[40.833,60.601],[41.667,60.658],[42.5,60.717],[43.333,60.777],[44.167,60.839],[45.0,60.901],[45.833,60.965],[46.667,61.029],[47.5,61.095],[48.333,61.162],[49.167,61.231],[50.0,61.3],[50.833,61.231],[51.667,61.162],[52.5,61.095],[53.333,61.029],[54.167,60.965],[55.0,60.901],[55.833,60.839],[56.667,60.777],[57.5,60.717],[58.333,60.658],[59.167,60.601],[60.0,60.544],[60.833,60.489],[61.667,60.434],[62.5,60.381],[63.333,60.329],[64.167,60.279],[65.0,60.229],[65.833,60.181],[66.667,60.133],[67.5,60.087],[68.333,60.042],[69.167,59.999],[70.0,59.956],[70.833,59.915],[71.667,59.874],[72.5,59.835],[73.333,59.797],[74.167,59.761],[75.0,59.725],[75.833,59.691],[76.667,59.657],[77.5,59.625],[78.333,59.594],[79.167,59.565],[80.0,59.536],[80.833,59.509],[81.667,59.482],[82.5,59.457],[83.333,59.433],[84.167,59.411],[85.0,59.389],[85.833,59.369],[86.667,59.349],[87.5,59.331],[88.333,59.314],[89.167,59.299],[90.0,59.284],[90.833,59.271],[91.667,59.258],[92.5,59.247],[93.333,59.237],[94.167,59.229],[95.0,59.221],[95.833,59.215],[96.667,59.209],[97.5,59.205],[98.333,59.202],[99.167,59.201],[100.0,59.2],[99.167,59.199],[98.333,59.198],[97.5,59.195],[96.667,59.191],[95.833,59.185],[95.0,59.179],[94.167,59.171],[93.333,59.163],[92.5,59.153],[91.667,59.142],[90.833,59.129],[90.0,59.116],[89.167,59.101],[88.333,59.086],[87.5,59.069],[86.667,59.051],[85.833,59.031],[85.0,59.011],[84.167,58.989],[83.333,58.967],[82.5,58.943],[81.667,58.918],[80.833,58.891],[80.0,58.864],[79.167,58.835],[78.333,58.806],[77.5,58.775],[76.667,58.743],[75.833,58.709],[75.0,58.675],[74.167,58.639],[73.333,58.603],[72.5,58.565],[71.667,58.526],[70.833,58.485],[70.0,58.444],[69.167,58.401],[68.333,58.358],[67.5,58.313],[66.667,58.267],[65.833,58.219],[65.0,58.171],[64.167,58.121],[63.333,58.071],[62.5,58.019],[61.667,57.966],[60.833,57.911],[60.0,57.856],[59.167,57.799],[58.333,57.742],[57.5,57.683],[56.667,57.623],[55.833,57.561],[55.0,57.499],[54.167,57.435],[53.333,57.371],[52.5,57.305],[51.667,57.238],[50.833,57.169],[50.0,57.1],[49.167,57.169],[48.333,57.238],[47.5,57.305],[46.667,57.371],[45.833,57.435],[45.0,57.499],[44.167,57.561],[43.333,57.623],[42.5,57.683],[41.667,57.742],[40.833,57.799],[40.0,57.856],[39.167,57.911],[38.333,57.966],[37.5,58.019],[36.667,58.071],[35.833,58.121],[35.0,58.171],[34.167,58.219],[33.333,58.267],[32.5,58.313],[31.667,58.358],[30.833,58.401],[30.0,58.444],[29.167,58.485],[28.333,58.526],[27.5,58.565],[26.667,58.603],[25.833,58.639],[25.0,58.675],[24.167,58.709],[23.333,58.743],[22.5,58.775],[21.667,58.806],[20.833,58.835],[20.0,58.864],[19.167,58.891],[18.333,58.918],[17.5,58.943],[16.667,58.967],[15.833,58.989],[15.0,59.011],[14.167,59.031],[13.333,59.051],[12.5,59.069],[11.667,59.086],[10.833,59.101],[10.0,59.116],[9.167,59.129],[8.333,59.142],[7.5,59.153],[6.667,59.163],[5.833,59.171],[5.0,59.179],[4.167,59.185],[3.333,59.191],[2.5,59.195],[1.667,59.198],[0.833,59.199]],"h":[]}]}};</script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from 'three';
+import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches || location.hash === '#still';
+const canvas = document.getElementById('gl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); } catch (e) { document.documentElement.classList.add('no3d'); throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x060708, 1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x1a1c20);
+const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 200);
+camera.position.set(0, 1.2, 30); camera.lookAt(0, 0.6, 0);
+
+// ---- colour: APEX hologram = platinum-white light with a faint ice tint (hologram-3d-object §4)
+const HOLO = new THREE.Color(0xa8d6ff), EDGE = new THREE.Color(0xeef6ff), BEAM = new THREE.Color(0xffffff);
+
+// ---- geometry: the FLARE CUT A, exact (marks.json from build_logo.py)
+const D = window.__marks.glint;
+const toShapes = list => list.map(p => {
+  const v = ([x, y]) => new THREE.Vector2(x - 50, 50 - y);
+  let o = p.o.map(v); if (THREE.ShapeUtils.isClockWise(o)) o.reverse();
+  const s = new THREE.Shape(o);
+  p.h.forEach(h => { let hh = h.map(v); if (!THREE.ShapeUtils.isClockWise(hh)) hh.reverse(); s.holes.push(new THREE.Path(hh)); });
+  return s; });
+const extrude = (list, depth, bevel, z = 0) => {
+  let g = new THREE.ExtrudeGeometry(toShapes(list), { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * .7,
+    bevelOffset: -bevel * .35, bevelSegments: 4, curveSegments: 10 });
+  g = toCreasedNormals(g, Math.PI / 4.5); g.translate(0, 0, -depth / 2 + z); return g; };
+const faceGeo = extrude(D.face, 7, 1.0), beamGeo = extrude(D.chrome, 2.4, .5, 2.6);
+
+// ---- hologram shader (hologram-3d-object §2)
+const U = { uT: { value: 0 }, uGlitch: { value: 0 } };
+const holoMat = (color, base = .07, gain = 1.35) => new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, toneMapped: false,
+  uniforms: { uT: U.uT, uGlitch: U.uGlitch, uColor: { value: color }, uBase: { value: base }, uGain: { value: gain } },
+  vertexShader: `uniform float uT, uGlitch; varying vec3 vN, vV, vW;
+    void main(){ vec3 p = position;
+      float slice = step(.86, fract(sin(floor(p.y * .22 + floor(uT * 14.)) * 91.7) * 437.5));
+      p.x += uGlitch * slice * 5.0 * sin(uT * 70.);
+      vec4 w = modelMatrix * vec4(p, 1.); vW = w.xyz;
+      vN = normalize(mat3(modelMatrix) * normal); vV = normalize(cameraPosition - w.xyz);
+      gl_Position = projectionMatrix * viewMatrix * w; }`,
+  fragmentShader: `uniform float uT, uBase, uGain; uniform vec3 uColor; varying vec3 vN, vV, vW;
+    void main(){ float fr = pow(1. - abs(dot(normalize(vN), normalize(vV))), 2.2);
+      float scan = .82 + .18 * sin(gl_FragCoord.y * 2.1 - uT * 4.);
+      float band = smoothstep(.07, 0., abs(fract(vW.y * .09 - uT * .16) - .5) - .0);
+      float flick = 1. - .05 * step(.62, sin(uT * 31.) * sin(uT * 7.3));
+      float a = (uBase + fr * (1. - uBase)) * scan * flick + band * .28;
+      gl_FragColor = vec4(uColor * a * uGain, a); }` });
+
+const holo = new THREE.Group(); scene.add(holo);
+const S = 0.1;                                  // mark units -> scene
+const A = new THREE.Group(); A.scale.setScalar(S); holo.add(A);
+A.add(new THREE.Mesh(faceGeo, holoMat(HOLO)));
+const edgeMat = new THREE.LineBasicMaterial({ color: EDGE, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+const edgeSoft = edgeMat.clone(); edgeSoft.opacity = .22;
+const eg = new THREE.EdgesGeometry(faceGeo, 25);
+A.add(new THREE.LineSegments(eg, edgeMat));
+const e2 = new THREE.LineSegments(eg, edgeSoft); e2.scale.setScalar(1.012); A.add(e2);
+// the FLARE CUT beam: the brightest thing, pure light
+const beamMat = new THREE.MeshBasicMaterial({ color: BEAM, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+beamMat.color.multiplyScalar(1.6);
+A.add(new THREE.Mesh(beamGeo, beamMat));
+A.add(new THREE.LineSegments(new THREE.EdgesGeometry(beamGeo, 25), edgeMat));
+
+// ---- projector: emitter ring, light cone, dust, floor pool (hologram-3d-object §1.5)
+const BASE_Y = -5.6;
+const proj = new THREE.Group(); proj.position.y = BASE_Y; scene.add(proj);
+const ringMat = new THREE.MeshBasicMaterial({ color: HOLO, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+const ring = new THREE.Mesh(new THREE.RingGeometry(2.3, 2.42, 96), ringMat); ring.rotation.x = -Math.PI / 2; proj.add(ring);
+const ring2 = new THREE.Mesh(new THREE.RingGeometry(1.2, 1.26, 96), ringMat.clone()); ring2.material.opacity = .6; ring2.rotation.x = -Math.PI / 2; proj.add(ring2);
+// matte base disc so the projector reads as an object (matte-material)
+const disc = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.8, .35, 96), new THREE.MeshStandardMaterial({ color: 0x141518, roughness: .6, metalness: .5 }));
+disc.position.y = -.2; proj.add(disc);
+scene.add(new THREE.HemisphereLight(0x9fb3c8, 0x050506, .35));
+const coneMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, toneMapped: false,
+  uniforms: { uColor: { value: HOLO }, uT: U.uT },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `uniform vec3 uColor; uniform float uT; varying vec2 vUv;
+    void main(){ float a = pow(1. - vUv.y, 2.2) * .07; a *= .85 + .15 * sin(vUv.x * 40. + uT * .7); gl_FragColor = vec4(uColor * a, a); }` });
+const cone = new THREE.Mesh(new THREE.CylinderGeometry(5.8, 2.3, 11.5, 96, 1, true), coneMat); cone.position.y = 5.75; proj.add(cone);
+// dust in the beam
+const N = 260, dp = new Float32Array(N * 3), seeds = new Float32Array(N);
+for (let i = 0; i < N; i++) { const r = Math.sqrt(Math.random()) * 3.6, a = Math.random() * 6.283; dp[i*3] = Math.cos(a) * r; dp[i*3+1] = Math.random() * 11; dp[i*3+2] = Math.sin(a) * r; seeds[i] = Math.random(); }
+const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: HOLO, size: .045, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+proj.add(dust);
+// floor light pool
+const pc = document.createElement('canvas'); pc.width = pc.height = 128; const px = pc.getContext('2d');
+const pg = px.createRadialGradient(64, 64, 0, 64, 64, 64); pg.addColorStop(0, 'rgba(168,214,255,.28)'); pg.addColorStop(.4, 'rgba(168,214,255,.06)'); pg.addColorStop(1, 'rgba(207,233,255,0)');
+px.fillStyle = pg; px.fillRect(0, 0, 128, 128);
+const pool = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(pc), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+pool.rotation.x = -Math.PI / 2; pool.position.y = -.38; proj.add(pool);
+
+// ---- bloom (hologram-3d-object §3)
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .4, .18, .72); composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---- motion (hologram-3d-object §5)
+const pointer = { x: 0, y: 0 };
+addEventListener('pointermove', e => { pointer.x = e.clientX / innerWidth * 2 - 1; pointer.y = e.clientY / innerHeight * 2 - 1; }, { passive: true });
+const damp = (c, t, l, dt) => c + (t - c) * (1 - Math.exp(-l * dt));
+let ry = -0.24, rx = 0, t = 0, last = performance.now(), nextGlitch = 4, glitchEnd = 0;
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w, h);
+  camera.aspect = w / h; camera.position.z = w / h < .8 ? 44 : 30; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+function frame(now) {
+  const dt = Math.min(Math.max((now - last) / 1000, 0), 1 / 15); last = now;
+  if (!REDUCED) t += dt;
+  U.uT.value = t;
+  if (!REDUCED && t > nextGlitch) { glitchEnd = t + .16; nextGlitch = t + 6 + Math.random() * 4; }
+  U.uGlitch.value = t < glitchEnd ? 1 : 0;
+  const turn = REDUCED ? 0 : t * (Math.PI * 2 / 12);             // one slow turn every 12 s
+  ry = damp(ry, -0.24 + turn + pointer.x * .35, 4, dt); rx = damp(rx, pointer.y * .12, 4, dt);
+  holo.rotation.set(rx, ry, 0);
+  holo.position.y = 1.0 + (REDUCED ? 0 : Math.sin(t * .9) * .12);
+  ring.material.opacity = .85 + .15 * Math.sin(t * 2.3);
+  const pos = dg.attributes.position.array;
+  if (!REDUCED) for (let i = 0; i < N; i++) { pos[i*3+1] += dt * (.25 + seeds[i] * .45); if (pos[i*3+1] > 11) pos[i*3+1] = 0; }
+  dg.attributes.position.needsUpdate = true;
+  dust.rotation.y = t * .05;
+  composer.render();
+  if (!REDUCED) requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+window.__holo = { get t() { return t; } };
+</script>
+</body>
+</html>
