@@ -12,23 +12,11 @@ Repo: `apex360marketing-AI/Pepticity` (and `apex360marketing-AI/Apex_Agents_Bots
 - Store asks from 15 Nov, for the site session to do:
   1. **Different hero card.** "Make the card a different hero card as the Founders Reserve is right below in another section. I don't want two in a row, and the other one looks much nicer and has more to it." (The top GRAND OPENING / JOIN THE FOUNDER CIRCLE card duplicates the FOUNDER RESERVE section below.)
   2. **Buttons are not on brand.** "Change the buttons as they are not the brand at all." Use the brand's chrome / glass, not the current ones.
-  3. **Logo** (see section 1): PEPTICITY word more platinum chrome, glimmering, flatter (face-on); brighter silver on the top of the P; suit the vial.
+  3. **Logo:** no change, keep the current logo (see section 1).
 
-## 1. THE NEW LOGO (ready to drop in once Tyson approves)
-- **Status:** rebuilt 15-16 Nov in the owner-approved APEX STUDIO **platinum chrome**. Waiting on Tyson's final OK (his Question 2).
-- **Live preview:** `previews/logo-platinum.html` (runs on its own), and the choices page https://claude.ai/artifact/CaaLsiaP8SJyDLzmVptVKc
-- **Files** (branch `claude/pepticity-blue-logo`):
-  - `brand/logo-blue/pep-logo-blue.js`: the renderer, marks inlined. It uses `vendor/three/three.module.js` next to it.
-  - `brand/logo-blue/pep-logo-blue.css` + `brand/logo-blue/fallback/{lockup,mark}.png`: the still picture shown when WebGL is off.
-  - `brand/logo-blue/apply.py`: a small patch script that adds the lockup to a page. **Re-target it before use.** It was written for `/new/` (lockup at the top of the hero, compact copy under the floating bar), and the hero card is changing.
-  - `brand/logo-blue/marks.json`: the exact P from PEPTICITY BLACK with the FLARE CUT beam, plus the PEPTICITY wordmark. Source: Apex_Agents_Bots `design/logo/pepticity-flarecut/build.py`.
-- **Look:**
-  - neutral platinum mirror (face `0xe6e9ed` r 0.06, edge `0xebedf0` r 0.08)
-  - the APEX STUDIO studio room exactly, plus a top strip (bright P top) and one thin #2a78ff strip from below (the vial's light)
-  - beam #2a78ff with core #cfe6ff
-  - P rests at 12° and turns once every 9 s; the word is face-on and still, with a light sweep
-- **Brand audit:** the earlier version passed `tools/brand-audit.js` (HELD). Re-run it after placing the logo.
-- **Menu 58 conflict:** menu 58's picture already has PEPTICITY in it, so the 3D lockup must not cover the menu (CLAUDE.md lock). It went in the hero instead. Tyson to confirm placement.
+## 1. LOGO: KEEP THE CURRENT ONE (Tyson, 16 Nov)
+- "We don't need it. Let's stick with what we've got, our own logo. It's done. Moving on."
+- **Do NOT** add the new platinum/blue 3D logo. The store and dashboards keep their existing logo. The `brand/logo-blue/` files on `claude/pepticity-blue-logo` are reference only.
 
 ## 2. NEW SKILLS EVERY PEPTICITY SESSION SHOULD USE (installed in both repos)
 - **Our own (owner-approved values):**
