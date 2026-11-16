@@ -40,16 +40,11 @@ async function boot() {
     word: extrude(D.word, 9, 1.8, 0, 0, 0)
   };
 
-  // ---- materials: tinted metals and a clearcoat black glass face
+  // ---- materials: the approved APEX STUDIO platinum chrome (skill chrome-material §3). Neutral mirror metal, no tint.
   const phys = o => new THREE.MeshPhysicalMaterial(Object.assign({ metalness: 1 }, o));
   const M = {
-    glass: new THREE.MeshPhysicalMaterial({ color: 0x4a5262, metalness: 1, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.03,
-      envMapIntensity: 1.5 }),                 // smoked liquid black glass over chrome
-    chrome: new THREE.MeshPhysicalMaterial({ color: 0xc4cad3, metalness: 1, roughness: 0.035, clearcoat: 1, clearcoatRoughness: 0.02,
-      envMapIntensity: 1.25 }),            // near-mirror chrome face: it shows whatever colour of the room it faces
-    plat: phys({ color: 0xd6dbe2, roughness: 0.1, envMapIntensity: 1.3 }),
-    gold: phys({ color: 0xcfb07a, roughness: 0.12, envMapIntensity: 1.4 }), // chrome gold core (her pale chrome gold, never orange)
-    goldHi: phys({ color: 0xe6d2a6, roughness: 0.08, envMapIntensity: 1.4 })
+    platF: phys({ color: 0xe6e9ed, roughness: 0.06 }),   // platinum face, a touch more mirror than 0.2 so the word glimmers
+    platE: phys({ color: 0xebedf0, roughness: 0.08 })    // platinum edges
   };
   const BLUE = 0x2a78ff, CORE = 0xcfe6ff;
   const beamMat = new THREE.MeshBasicMaterial({ color: BLUE, toneMapped: false });
@@ -67,17 +62,17 @@ async function boot() {
   }
   function buildMark() {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(G.face, [M.chrome, M.gold]));
+    g.add(new THREE.Mesh(G.face, [M.platF, M.platE]));
     g.add(new THREE.Mesh(G.beam, beamMat));
     const core = new THREE.Mesh(G.beam, coreMat); core.scale.set(0.97, 0.28, 1.05); core.position.y = yb * (1 - 0.28); g.add(core);
     g.add(halo(104));
-    const l = new THREE.PointLight(BLUE, 520, 40, 2); l.position.set(0, yb, 7); g.add(l);
+    
     g.scale.setScalar(0.1);
     return g;
   }
   function buildWord() {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(G.word, [M.chrome, M.gold]));
+    g.add(new THREE.Mesh(G.word, [M.platF, M.platE]));
     g.scale.setScalar(0.0345);
     return g;
   }
@@ -95,29 +90,26 @@ async function boot() {
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     renderer.setClearColor(0, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.12;   // controlled: colour holds when still
+    renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
 
-    // the studio room, tinted: cool-blue key boxes, one warm-platinum strip for the gold, a dark room so black glass stays black
+    // the APEX STUDIO studio room, unchanged (skill chrome-material §2): near-black room, hard white strips
     const pmrem = new THREE.PMREMGenerator(renderer);
     const room = new THREE.Scene();
-    room.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: 0x3a3f49, side: THREE.BackSide })));
-    const box = (x, y, z, w, h, d, hex, k, rz = 0) => { const m = new THREE.MeshBasicMaterial({ color: hex }); m.color.multiplyScalar(k);
-      const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.lookAt(0, 0, 0); b.rotateZ(rz); room.add(b); };
-    box(0, 14, 6, 14, 14, .4, 0xdfe9ff, 4.2);      // top key, cool
-    box(-12, 2, 6, .8, 16, .8, 0xcfe0ff, 11);      // left strip, cool
-    box(12, 4, 2, .6, 14, .6, 0xfff3dc, 8);        // right strip, warm platinum (lights the gold)
-    box(0, 7, 20, 22, 5, .4, 0xe6eeff, 2.6);
-    box(-4, -3, 21, 9, 1.2, .4, 0x9fc2ff, 5);      // low blue strip across the front
-    box(0, -9, 14, 22, 3, .4, 0x2a78ff, 1.6);      // blue floor bounce
-    // the colour zones across the front: turn the P and its mirror face runs gold -> platinum -> blue steel
-    box(-15, 4, 20, 12, 22, .4, 0xffd29a, 1.9);    // left front: warm chrome gold
-    box(0, 6, 25, 9, 22, .4, 0xf2f5fa, 2.3);       // centre front: platinum white
-    box(15, 4, 20, 12, 22, .4, 0x5f93ff, 3.4);     // right front: blue steel (the logo blue's hue)
-    box(0, -6, 24, 36, 6, .4, 0x2c3038, 1);        // soft gunmetal band low in front: contrast without going black
-    box(0, 16, 14, 30, 2, .4, 0xffe9c4, 9);          // warm top strip: the gold chamfers catch it at rest
-    box(-9, 10, 18, 2, 10, .4, 0xffefd6, 7, 0.9);
-    box(-22, 0, 4, 3, 22, .4, 0xd6e4ff, 6); box(22, 0, 4, 3, 22, .4, 0xffeed4, 5);   // side strips: a turning P never goes dead black
-    box(-14, -6, 16, 10, 12, .4, 0xc9d6ee, 1.6); box(14, -4, 16, 8, 12, .4, 0xf2e6cf, 1.4);
+    room.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: 0x1b1c1f, side: THREE.BackSide })));
+    const box = (x, y, z, w, h, d, k, hex = 0xffffff) => { const m = new THREE.MeshBasicMaterial({ color: hex }); m.color.multiplyScalar(k);
+      const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.lookAt(0, 0, 0); room.add(b); };
+    box(0, 14, 6, 14, 14, .4, 5);      // big overhead softbox
+    box(-12, 2, 6, .8, 16, .8, 14);    // left strip
+    box(12, 4, 2, .6, 14, .6, 10);     // right strip
+    box(0, 7, 20, 22, 5, .4, 3.2);     // front key band
+    box(-4, -3, 21, 9, 1.2, .4, 6);    // front hairline strip: the sharp chrome streak
+    box(0, -9, 14, 22, 3, .4, 1.4);    // low front sweep
+    box(6, 2, -14, 8, 10, .4, 1.6);    // back fill
+    box(0, 5, 24, 90, 7, .4, 2.4); box(-22, 5, 16, 24, 7, .4, 2.4);   // front horizon wall: face-on letters get a bright upper half and a dark lower half (the chrome horizon)
+    // (no broad front wall: on a face-on P it gave one flat grey; the face must show a bright top, a dark horizon and streaks)
+    box(-14, -6, 16, 10, 12, .4, 2.2); box(14, -4, 16, 8, 12, .4, 1.8);
+    box(0, 11, 22, 26, 2.2, .4, 7);    // Tyson 15 Nov: brighter silver along the TOP of the P and the word
+    box(0, -11, 20, 24, 1.6, .4, 5, 0x2a78ff);   // the vial's light from below: one thin blue strip (the ONE blue)
     const env = pmrem.fromScene(room, 0.02); pmrem.dispose();
 
     const scene = new THREE.Scene(); scene.environment = env.texture;
@@ -159,8 +151,8 @@ async function boot() {
         s.mark.rotation.set(-0.05, s.ry, 0);
       }
       if (s.word) {
-        s.word.rotation.set(-0.03, s.mark ? -0.16 : -0.2, 0);                    // still, turned a little toward the P
-        s.scene.environmentRotation.set(0, REDUCED ? 0.35 : Math.sin(t * 0.5 + s.phase) * 0.6, 0);   // the light sweeps
+        s.word.rotation.set(-0.02, -0.04, 0);                    // Tyson 15 Nov: flatter, face-on
+        s.scene.environmentRotation.set(0, REDUCED ? 0.35 : Math.sin(t * 0.5 + s.phase) * 0.9, 0);   // the glimmer: streaks sweep across the word   // the light sweeps
       }
       s.renderer.render(s.scene, s.camera);
       if (!s.ready) { s.ready = true; s.el.setAttribute('data-pep-logo-live', ''); }
