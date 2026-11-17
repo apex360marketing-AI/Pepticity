@@ -1,0 +1,37 @@
+### H5-1 SMS consent on 8965
+safe   H63 founders nothing is sent without the consent box | endpoint http://127.0.0.1:8965/__collect; filled first_name,email,phone,radio,consent_sms=false,consent_email=false; POSTs 0
+safe   H63 founders one POST with consent | POSTs 1
+BROKEN H63 founders phone number is not sent when the text-message box is left unticked | POSTs 1; phone in payload "4165550199"; consent_sms null
+safe   H63 founders no page errors | 
+-- forms rc5 desktop 1 BROKEN, 3 safe --
+### H5-2 phone menu on 8965
+BROKEN phone: tapping the PEPTICITY logo with the menu open closes the menu | {"exp":"true","keysVisible":true,"y":0,"box":[68,298]}
+safe   phone: the last PEPTIDES item can be brought on screen | before {"last":"Glutathione","top":624,"bottom":668,"vh":664,"scroller":"pep-header-keys 947/544","docScroll":"visible/visible"}; after a swipe {"top":222,"bottom":266,"open":"true"}
+-- phone menu rc5 1 BROKEN, 1 safe --
+### H5-1 SMS consent on 8966
+safe   H63 founders nothing is sent without the consent box | endpoint http://127.0.0.1:8966/__collect; filled first_name,email,phone,radio,consent_sms=false,consent_email=false; POSTs 0
+safe   H63 founders one POST with consent | POSTs 1
+safe   H63 founders phone number is not sent when the text-message box is left unticked | POSTs 1; phone in payload undefined; consent_sms null
+safe   H63 founders no page errors | 
+-- forms rc5 desktop 0 BROKEN, 4 safe --
+### H5-2 phone menu on 8966
+safe   phone: tapping the PEPTICITY logo with the menu open closes the menu | {"exp":"false","keysVisible":false,"y":0,"box":[0,0]}
+safe   phone: the last PEPTIDES item can be brought on screen | before {"last":"Glutathione","top":624,"bottom":668,"vh":664,"scroller":"pep-header-keys 947/544","docScroll":"visible/visible"}; after a swipe {"top":222,"bottom":266,"open":"true"}
+-- phone menu rc5 0 BROKEN, 2 safe --
+### founders.test rc6
+33
+FAIL phone engraves the typed name · card reads " / engraving" after ENGRAVE MY CARD
+-- 1 FAIL --
+### menu.test rc6
+PASS menu bar · 1056x64 px (was 1320x141); old bar picture false; card glass frame true; PEPTICITY wordmark true
+PASS menu keys in chrome lettering · keys SHOP,PEPTIDES,RESEARCH,ABOUT,CART; letter fill rgba(0, 0, 0, 0) (chrome gradient shows through)
+PASS drop-down 01 (the sheet) · opens true, 26 px under the bar, glass frame true, 16 products listed
+PASS button 25: hollow at rest, comes out with the light running round it · .pep-hx-keys .pep-k25: at rest flat, face hollow; hover matrix3d(1.07, 0, 0, 0, 0, 1.0 | #founder-card .pep-hooks-btn: at rest flat, face hollow; hover matrix3d(1.07, 0, 0, 0, 0, 1.0 | #founder-card .pep-fr-right [data-refer-open]: at rest flat, face hollow; hover matrix3d(1.06998, 0, 0, 0, 0, 
+PASS no errors · 0 page errors 
+-- all PASS --
+### security repros rc6
+-- 8 claims, 0 BROKEN --
+-- 3 claims, 0 BROKEN --
+### frame guard rc6
+-- 8/8 pass, 0 fail
+### DONE

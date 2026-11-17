@@ -1,0 +1,10 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+  const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctx.addInitScript(() => { try { sessionStorage.setItem('pep_entrance_seen', '1'); } catch (e) {} });
+  const p = await ctx.newPage(); await p.goto('http://127.0.0.1:8964/new/', { waitUntil: 'load' }); await p.waitForTimeout(1500);
+  const r = await p.evaluate(() => { const m = {}; document.querySelectorAll('button, a[class], [role="button"]').forEach((e) => { const c = (e.className && e.className.baseVal === undefined ? String(e.className) : '').split(/\s+/)[0] || e.tagName; const s = getComputedStyle(e);
+      const k = c; if (!m[k]) m[k] = { n: 0, tr: s.transform === 'none' ? '-' : s.transform.slice(0, 34), pos: s.position, bg: (s.backgroundImage !== 'none' || s.backgroundColor !== 'rgba(0, 0, 0, 0)') ? 'bg' : 'clear', txt: (e.textContent || '').trim().slice(0, 18) }; m[k].n++; });
+    return m; });
+  for (const k of Object.keys(r).sort()) console.log(k.padEnd(28), String(r[k].n).padStart(3), r[k].pos.padEnd(9), r[k].bg.padEnd(6), r[k].tr.padEnd(36), r[k].txt);
+  await b.close(); })();

@@ -1,0 +1,13 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+  const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctx.addInitScript(() => { try { sessionStorage.setItem('pep_entrance_seen', '1'); } catch (e) {} });
+  const p = await ctx.newPage(); await p.goto('http://127.0.0.1:8963/new/', { waitUntil: 'load' }); await p.waitForTimeout(1500);
+  await p.evaluate(() => document.getElementById("founder-card").scrollIntoView({ block: 'center' }));
+  await p.fill('#pep-hooks-card-first', 'Grace');
+  await p.evaluate(() => document.querySelector('#founder-card [data-make]').click());
+  await p.waitForTimeout(4000);
+  console.log(JSON.stringify(await p.evaluate(() => { const f = document.querySelector('#founder-card form.pep-hooks-form');
+    const out = [...document.getElementById('founder-card').querySelectorAll('*')].filter((e) => { const q = e.getBoundingClientRect(); return q.width > 0 && (q.right > window.innerWidth + 1 || q.left < -1); }).map((e) => e.className + ' ' + JSON.stringify(e.getBoundingClientRect()));
+    return { steps: [...f.querySelectorAll('[data-step]')].map((s) => s.getAttribute('data-step') + ':' + s.hidden + ':' + getComputedStyle(s).display), out }; }), null, 1));
+  await b.close(); })();
